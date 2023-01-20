@@ -4,12 +4,12 @@
     <t t-name="mail.message" owl="1">
         <div class="o-mail-message position-relative py-1"
             t-att-class="{
-                'o-mail-message-clicked': isClicked,
-                'o-mail-message-highlighted-from-mention': message.isHighlightedFromMention,
-                'o-mail-message-highlighted bg-view shadow-lg': props.highlighted,
-                'o-mail-is-author': message.isSelfAuthored,
-                'o-mail-message-is-selected': props.messageToReplyTo?.isSelected(props.thread, props.message),
-                'o-mail-message-is-squashed pt-1': props.squashed,
+                'o-clicked': isClicked,
+                'o-highlighted-from-mention': message.isHighlightedFromMention,
+                'o-highlighted bg-view shadow-lg': props.highlighted,
+                'o-self-author': message.isSelfAuthored,
+                'o-selected': props.messageToReplyTo?.isSelected(props.thread, props.message),
+                'o-squashed pt-1': props.squashed,
                 'mt-1': !props.squashed and props.thread,
                 'px-3': !props.isInChatWindow,
                 'px-1': props.isInChatWindow,
@@ -47,9 +47,7 @@
                 <div class="flex-grow-1">
                     <div t-if="!props.squashed" class="o-mail-msg-header d-flex flex-wrap align-items-baseline">
                         <span t-if="message.author and shouldDisplayAuthorName" class="o-mail-own-name" t-att-class="{ 'cursor-pointer o_redirect': hasOpenChatFeature }" t-on-click="openChatAvatar">
-                            <strong class="me-1 text-truncate">
-                            <t t-esc="message.author.name"/>
-                            </strong>
+                            <strong class="me-1 text-truncate" t-esc="message.author.name"/>
                         </span>
                         <small t-if="!message.isTransient" class="o-mail-message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.dateTimeStr">
                             <t t-if="shouldDisplayAuthorName">-</t>
@@ -60,7 +58,7 @@
                             className="'ms-1'"
                             message="props.message"
                             thread="props.thread"/>
-                        <small t-if="!isOriginThread and !message.isTransient" t-on-click.prevent="openRecord" class="o-mail-message-recod-name ms-1 text-500">
+                        <small t-if="!isOriginThread and !message.isTransient" t-on-click.prevent="openRecord" class="ms-1 text-500">
                             <t t-if="message.resModel !== 'mail.channel'">
                                 on <a t-att-href="message.url"><t t-esc="message.originThread?.displayName"/></a>
                             </t>
@@ -69,11 +67,11 @@
                             </t>
                         </small>
                         <div t-if="message.originThread === props.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
-                            <span t-if="message.failureNotifications.length > 0" class="o-mail-message-notification-icon-clickable cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
-                                <i class="o-mail-message-notification-icon" t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
+                            <span t-if="message.failureNotifications.length > 0" class="o-mail-message-notification cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
+                                <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
                             </span>
-                            <span t-else="" class="o-mail-message-notification-icon-clickable text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
-                                <i class="o-mail-message-notification-icon" t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
+                            <span t-else="" class="o-mail-message-notification text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
+                                <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
                             </span>
                         </div>
                     </div>
@@ -90,7 +88,7 @@
                             </div>
                         </t>
                         <t t-if="message.type !== 'notification' and !message.isTransient and !message.isBodyEmpty">
-                            <div class="o-mail-message-bubble-wrap position-relative">
+                            <div class="position-relative">
                                 <div class="o-mail-message-bubble border rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                         'bg-info-light border-info': !message.isSelfAuthored,
                                         'bg-success-light border-success opacity-25': message.isSelfAuthored,
@@ -124,22 +122,22 @@
                                     'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                 }"
                             >
-                                <i t-if="canAddReaction" class="o-mail-message-action-add-reaction cursor-pointer px-1 py-2 fa fa-lg fa-smile-o"
+                                <i t-if="canAddReaction" class="cursor-pointer px-1 py-2 fa fa-lg fa-smile-o"
                                     role="button" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"/>
                                 <i t-if="env.inChatWindow" class="cursor-pointer px-1 py-2 fa fa-lg fa-ellipsis-h order-1"
                                     t-on-click="() => state.isActionListSquashed = !state.isActionListSquashed" role="button" tabindex="1" title="Compact" aria-label="Compact"/>
                                 <t t-if="!env.inChatWindow or !state.isActionListSquashed">
-                                    <i t-if="canToggleStar" class="o-mail-message-action-toggle-star cursor-pointer px-1 py-2 fa fa-lg"
-                                        t-att-class="message.isStarred ? 'fa-star o-mail-message-actions-is-starred' : 'fa-star-o'"
+                                    <i t-if="canToggleStar" class="cursor-pointer px-1 py-2 fa fa-lg"
+                                        t-att-class="message.isStarred ? 'fa-star o-mail-message-starred' : 'fa-star-o'"
                                         t-on-click="() => messageService.toggleStar(props.message)"
                                         role="button" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"/>
                                     <i t-if="deletable" class="cursor-pointer px-1 py-2 fa fa-lg fa-trash" t-on-click="onClickDelete"
                                         role="button" tabindex="0" title="Delete" aria-label="Delete"/>
                                     <i t-if="editable" class="cursor-pointer px-1 py-2 fa fa-lg fa-pencil" t-on-click="onClickEdit"
                                         role="button" tabindex="1" title="Edit" aria-label="Edit"/>
-                                    <i t-if="canReplyTo" class="o-mail-message-action-reply-to cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-on-click.stop="onClickReplyTo"
+                                    <i t-if="canReplyTo" class="cursor-pointer px-1 py-2 fa fa-lg fa-reply" t-on-click.stop="onClickReplyTo"
                                         role="button" tabindex="1" title="Reply" aria-label="Reply"/>
-                                    <i t-if="isInInbox" class="o-mail-message-action-mark-read cursor-pointer px-1 py-2 fa fa-lg fa-check" t-on-click="() => messageService.setDone(props.message)"
+                                    <i t-if="isInInbox" class="cursor-pointer px-1 py-2 fa fa-lg fa-check" t-on-click="() => messageService.setDone(props.message)"
                                         role="button" tabindex="0" title="Mark as Read" aria-label="Mark as Read"/>
                                 </t>
                             </div>
@@ -150,7 +148,7 @@
                                 'bg-info-light border-info': !message.isSelfAuthored,
                                 'bg-success-light border-success opacity-25': message.isSelfAuthored,
                             }"/>
-                        <div class="o-mail-message-editable-content position-relative flex-grow-1" t-att-class="{
+                        <div class="o-mail-message-editable position-relative flex-grow-1" t-att-class="{
                             'p-1': message.isNote,
                             'o-mail-message-body mb-0 p-3': !message.isNote,
                         }">

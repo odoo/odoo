@@ -30,7 +30,7 @@ QUnit.test("click on message in reply to highlight the parent message", async fu
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(`.o-mail-message[data-message-id="${messageId_2}"] .o-mail-message-in-reply-body`);
-    assert.containsOnce(target, `.o-mail-message-highlighted[data-message-id="${messageId_1}"]`);
+    assert.containsOnce(target, `.o-mail-message.o-highlighted[data-message-id="${messageId_1}"]`);
 });
 
 QUnit.test("click on message in reply to scroll to the parent message", async function (assert) {

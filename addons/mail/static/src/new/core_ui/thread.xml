@@ -11,7 +11,7 @@
                 <t t-foreach="props.order === 'asc' ? props.thread.messages : [...props.thread.messages].reverse()" t-as="messageId" t-key="messageId">
                     <t t-set="msg" t-value="store.messages[messageId]"/>
                     <t t-if="!msg.isEmpty and msg.dateDay !== currentDay">
-                        <div class="o-mail-thread-date-separator d-flex align-items-center fw-bolder pt-4">
+                        <div class="o-mail-thread-date d-flex align-items-center fw-bolder pt-4">
                             <hr class="flex-grow-1 border-top"/>
                             <span class="px-3"><t t-esc="msg.dateDay"/></span>
                             <hr class="flex-grow-1 border-top"/>
@@ -34,7 +34,7 @@
                         />
                     </t>
                     <Transition visible="props.thread.serverLastSeenMsgBySelf === msg.id and !messageId_last" name="'o-fade'" t-slot-scope="transition">
-                        <div class="o-mail-thread-new-message-separator d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
+                        <div class="o-mail-thread-new-message d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
                             <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
                         </div>
                     </Transition>

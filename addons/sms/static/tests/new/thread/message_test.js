@@ -30,14 +30,14 @@ QUnit.test("Notification Sent", async function (assert) {
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification-icon-clickable");
-    assert.containsOnce(target, ".o-mail-message-notification-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-icon"), "fa-mobile");
+    assert.containsOnce(target, ".o-mail-message-notification");
+    assert.containsOnce(target, ".o-mail-message-notification i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-mobile");
 
-    await click(".o-mail-message-notification-icon-clickable");
+    await click(".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification-popover");
-    assert.containsOnce(target, ".o-mail-message-notification-popover-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-popover-icon"), "fa-check");
+    assert.containsOnce(target, ".o-mail-message-notification-popover i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification-popover i"), "fa-check");
     assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
     assert.strictEqual(
         target
@@ -75,10 +75,10 @@ QUnit.test("Notification Error", async function (assert) {
     });
 
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification-icon-clickable");
-    assert.containsOnce(target, ".o-mail-message-notification-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-icon"), "fa-mobile");
-    click(".o-mail-message-notification-icon-clickable").catch(() => {});
+    assert.containsOnce(target, ".o-mail-message-notification");
+    assert.containsOnce(target, ".o-mail-message-notification i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-mobile");
+    click(".o-mail-message-notification").catch(() => {});
     await openResendActionDef;
     assert.verifySteps(["do_action"]);
 });

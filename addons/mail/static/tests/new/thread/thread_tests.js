@@ -137,7 +137,7 @@ QUnit.test("display day separator before first message of the day", async functi
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, ".o-mail-thread-date-separator");
+    assert.containsOnce(target, ".o-mail-thread-date");
 });
 
 QUnit.test(
@@ -152,7 +152,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsNone(target, ".o-mail-thread-date-separator");
+        assert.containsNone(target, ".o-mail-thread-date");
     }
 );
 

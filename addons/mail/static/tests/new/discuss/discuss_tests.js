@@ -482,13 +482,10 @@ QUnit.test("reply to message from inbox (message linked to document)", async fun
     });
     await openDiscuss();
     assert.containsOnce(target, ".o-mail-message");
-    assert.strictEqual(
-        target.querySelector(".o-mail-message-recod-name").textContent,
-        " on Refactoring"
-    );
+    assert.containsOnce(target, ".o-mail-msg-header:contains(on Refactoring)");
 
     await click("i[aria-label='Reply']");
-    assert.hasClass(target.querySelector(".o-mail-message"), "o-mail-message-is-selected");
+    assert.hasClass(target.querySelector(".o-mail-message"), "o-selected");
     assert.ok(target.querySelector(".o-mail-composer"));
     assert.strictEqual(
         target.querySelector(".o-mail-composer-origin-thread").textContent,
@@ -502,7 +499,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async fun
     assert.containsNone(target, ".o-mail-composer");
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}]`);
-    assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-mail-message-is-selected");
+    assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-selected");
 });
 
 QUnit.test("Can reply to starred message", async function (assert) {
@@ -797,13 +794,12 @@ QUnit.test("rendering of inbox message", async function (assert) {
     await openDiscuss();
     assert.containsOnce(target, ".o-mail-message");
     const $message = $(target).find(".o-mail-message");
-    assert.containsOnce($message, ".o-mail-message-recod-name");
-    assert.strictEqual($message.find(".o-mail-message-recod-name").text(), " on Refactoring");
+    assert.containsOnce($message, ".o-mail-msg-header:contains(on Refactoring)");
     assert.containsN($message, ".o-mail-message-actions i", 4);
-    assert.containsOnce($message, ".o-mail-message-action-add-reaction");
-    assert.containsOnce($message, ".o-mail-message-action-toggle-star");
-    assert.containsOnce($message, ".o-mail-message-action-reply-to");
-    assert.containsOnce($message, ".o-mail-message-action-mark-read");
+    assert.containsOnce($message, "i[aria-label='Add a Reaction']");
+    assert.containsOnce($message, "i[aria-label='Mark as Todo']");
+    assert.containsOnce($message, "i[aria-label='Reply']");
+    assert.containsOnce($message, "i[aria-label='Mark as Read']");
 });
 
 QUnit.test('messages marked as read move to "History" mailbox', async function (assert) {
@@ -893,7 +889,7 @@ QUnit.test(
         assert.containsN(target, ".o-mail-message", 2);
 
         await click(
-            `.o-mail-message[data-message-id="${messageId_1}"] .o-mail-message-action-mark-read`
+            `.o-mail-message[data-message-id="${messageId_1}"] i[aria-label='Mark as Read']`
         );
         assert.containsOnce(target, ".o-mail-message");
         assert.containsOnce(target, `.o-mail-message[data-message-id="${messageId_2}"]`);

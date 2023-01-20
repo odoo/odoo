@@ -559,12 +559,12 @@ QUnit.test("inbox messages are never squashed", async function (assert) {
     assert.containsN(target, ".o-mail-message", 2);
     const message1 = target.querySelector(`.o-mail-message[data-message-id="${messageId_1}"]`);
     const message2 = target.querySelector(`.o-mail-message[data-message-id="${messageId_2}"]`);
-    assert.doesNotHaveClass(message1, "o-mail-message-is-squashed");
-    assert.doesNotHaveClass(message2, "o-mail-message-is-squashed");
+    assert.doesNotHaveClass(message1, "o-squashed");
+    assert.doesNotHaveClass(message2, "o-squashed");
     await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.hasClass(
         target.querySelector(`.o-mail-message[data-message-id="${messageId_2}"]`),
-        "o-mail-message-is-squashed"
+        "o-squashed"
     );
 });
 
@@ -598,23 +598,23 @@ QUnit.test("reply: stop replying button click", async function (assert) {
 
 QUnit.test("error notifications should not be shown in Inbox", async function (assert) {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "res.partner",
         needaction: true,
         needaction_partner_ids: [pyEnv.currentPartnerId],
         res_id: partnerId,
     });
     pyEnv["mail.notification"].create({
-        mail_message_id: messageId, // id of related message
+        mail_message_id: messageId,
         notification_status: "exception",
         notification_type: "email",
-        res_partner_id: pyEnv.currentPartnerId, // must be for current partner
+        res_partner_id: pyEnv.currentPartnerId,
     });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-recod-name a");
-    assert.containsNone(target, ".o-mail-message-notification-icon");
+    assert.containsOnce(target, ".o-mail-msg-header:contains(on Demo User)");
+    assert.containsNone(target, ".o-mail-message-notification");
 });

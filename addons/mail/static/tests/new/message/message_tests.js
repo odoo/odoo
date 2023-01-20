@@ -43,9 +43,9 @@ QUnit.test("Start edition on click edit", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
-    assert.containsOnce(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsOnce(target, ".o-mail-message-editable .o-mail-composer");
     assert.strictEqual(
-        target.querySelector(".o-mail-message-editable-content .o-mail-composer-textarea").value,
+        target.querySelector(".o-mail-message-editable .o-mail-composer-textarea").value,
         "Hello world"
     );
 });
@@ -88,7 +88,7 @@ QUnit.test("Stop edition on click cancel", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-message a:contains('cancel')");
-    assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsNone(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Stop edition on press escape", async (assert) => {
@@ -108,7 +108,7 @@ QUnit.test("Stop edition on press escape", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerHotkey("Escape", false));
-    assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsNone(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Stop edition on click save", async (assert) => {
@@ -128,7 +128,7 @@ QUnit.test("Stop edition on click save", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-message a:contains('save')");
-    assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsNone(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Stop edition on press enter", async (assert) => {
@@ -148,7 +148,7 @@ QUnit.test("Stop edition on press enter", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerHotkey("Enter", false));
-    assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsNone(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Stop edition on click away", async (assert) => {
@@ -168,7 +168,7 @@ QUnit.test("Stop edition on click away", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await afterNextRender(() => triggerEvent(target, ".o-mail-discuss-sidebar", "click"));
-    assert.containsNone(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsNone(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Do not stop edition on click away when clicking on emoji", async (assert) => {
@@ -189,7 +189,7 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
     await click(".o-mail-message-actions i[aria-label='Edit']");
     await click(".o-mail-composer i[aria-label='Emojis']");
     await click(".o-mail-emoji-picker-content .o-emoji");
-    assert.containsOnce(target, ".o-mail-message-editable-content .o-mail-composer");
+    assert.containsOnce(target, ".o-mail-message-editable .o-mail-composer");
 });
 
 QUnit.test("Edit and click save", async (assert) => {
@@ -354,10 +354,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
     await click("i[aria-label='Delete']");
     $('button:contains("Delete")').click();
     await nextTick();
-    assert.strictEqual(
-        target.querySelector(".o-mail-message-in-reply-deleted-message").innerText,
-        "Original message was deleted"
-    );
+    assert.containsOnce(target, ".o-mail-message-in-reply:contains(Original message was deleted)");
 });
 
 QUnit.test("Can open emoji picker after edit mode", async (assert) => {
@@ -653,22 +650,22 @@ QUnit.test("toggle_star message", async function (assert) {
     assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
     assert.containsOnce(target, ".o-mail-message");
     let $message = $(target).find(".o-mail-message");
-    assert.hasClass($message.find(".o-mail-message-action-toggle-star"), "fa-star-o");
-    assert.containsOnce($message, ".o-mail-message-action-toggle-star");
+    assert.containsOnce($message, "i[aria-label='Mark as Todo']");
+    assert.hasClass($message.find("i[aria-label='Mark as Todo']"), "fa-star-o");
 
-    await click(".o-mail-message-action-toggle-star");
+    await click("i[aria-label='Mark as Todo']");
     assert.verifySteps(["rpc:toggle_message_starred"]);
     assert.strictEqual($(target).find('button[data-mailbox="starred"] .badge').text(), "1");
     assert.containsOnce(target, ".o-mail-message");
     $message = $(target).find(".o-mail-message");
-    assert.hasClass($message.find(".o-mail-message-action-toggle-star"), "fa-star");
+    assert.hasClass($message.find("i[aria-label='Mark as Todo']"), "fa-star");
 
-    await click(".o-mail-message-action-toggle-star");
+    await click("i[aria-label='Mark as Todo']");
     assert.verifySteps(["rpc:toggle_message_starred"]);
     assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
     assert.containsOnce(target, ".o-mail-message");
     $message = $(target).find(".o-mail-message");
-    assert.hasClass($message.find(".o-mail-message-action-toggle-star"), "fa-star-o");
+    assert.hasClass($message.find("i[aria-label='Mark as Todo']"), "fa-star-o");
 });
 
 QUnit.test(
@@ -764,14 +761,14 @@ QUnit.test("Notification Sent", async function (assert) {
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification-icon-clickable");
-    assert.containsOnce(target, ".o-mail-message-notification-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-icon"), "fa-envelope-o");
+    assert.containsOnce(target, ".o-mail-message-notification");
+    assert.containsOnce(target, ".o-mail-message-notification i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-envelope-o");
 
-    await click(".o-mail-message-notification-icon-clickable");
+    await click(".o-mail-message-notification");
     assert.containsOnce(target, ".o-mail-message-notification-popover");
-    assert.containsOnce(target, ".o-mail-message-notification-popover-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-popover-icon"), "fa-check");
+    assert.containsOnce(target, ".o-mail-message-notification-popover i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification-popover i"), "fa-check");
     assert.containsOnce(target, ".o-mail-message-notification-popover-partner-name");
     assert.strictEqual(
         target
@@ -815,10 +812,10 @@ QUnit.test("Notification Error", async function (assert) {
         },
     });
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message-notification-icon-clickable");
-    assert.containsOnce(target, ".o-mail-message-notification-icon");
-    assert.hasClass(target.querySelector(".o-mail-message-notification-icon"), "fa-envelope");
-    click(".o-mail-message-notification-icon-clickable").then(() => {});
+    assert.containsOnce(target, ".o-mail-message-notification");
+    assert.containsOnce(target, ".o-mail-message-notification i");
+    assert.hasClass(target.querySelector(".o-mail-message-notification i"), "fa-envelope");
+    click(".o-mail-message-notification").then(() => {});
     await openResendActionDef;
     assert.verifySteps(["do_action"]);
 });
@@ -848,7 +845,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await afterNextRender(() => triggerHotkey("ArrowUp"));
-        assert.containsOnce(target, ".o-mail-message .o-mail-message-editable-content");
+        assert.containsOnce(target, ".o-mail-message .o-mail-message-editable");
         assert.strictEqual(
             $(target).find(".o-mail-message .o-mail-composer-textarea").val(),
             "not empty"
@@ -874,7 +871,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click(".o-mail-message-actions i[aria-label='Edit']");
-        await editInput(target, ".o-mail-message-editable-content .o-mail-composer-textarea", "");
+        await editInput(target, ".o-mail-message-editable .o-mail-composer-textarea", "");
         await afterNextRender(() => triggerHotkey("Enter"));
         assert.containsOnce(
             target,
@@ -901,12 +898,12 @@ QUnit.test(
             views: [[false, "form"]],
         });
         await click(".o-mail-message");
-        assert.hasClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
+        assert.hasClass(target.querySelector(".o-mail-message"), "o-clicked");
         await click(".o-mail-message");
-        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
+        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-clicked");
         document.querySelector(".o-mail-message-author-avatar").click();
         await nextTick();
-        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
+        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-clicked");
     }
 );
 
@@ -930,8 +927,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.hasClass(
-            target.querySelector(`.o-mail-message`),
-            "o-mail-message-highlighted-from-mention"
+            target.querySelector(".o-mail-message"),
+            "o-highlighted-from-mention"
         );
     }
 );
@@ -962,12 +959,12 @@ QUnit.test(
             doAction() {},
         });
         await click(".o-mail-message");
-        assert.hasClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
+        assert.hasClass(target.querySelector(".o-mail-message"), "o-clicked");
         await click(".o-mail-message");
-        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
-        target.querySelector(".o-mail-message-notification-icon-clickable.text-danger").click();
+        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-clicked");
+        target.querySelector(".o-mail-message-notification.text-danger").click();
         await nextTick();
-        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-mail-message-clicked");
+        assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-clicked");
     }
 );
 
@@ -994,8 +991,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.doesNotHaveClass(
-            target.querySelector(`.o-mail-message`),
-            "o-mail-message-highlighted-from-mention"
+            target.querySelector(".o-mail-message"),
+            "o-highlighted-from-mention"
         );
     }
 );
@@ -1086,7 +1083,7 @@ QUnit.test("Toggle star should update starred counter on all tabs", async functi
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss();
-    await tab1.click(".o-mail-message-action-toggle-star");
+    await tab1.click("i[aria-label='Mark as Todo']");
     assert.strictEqual(tab2.target.querySelector(".o-starred-box .badge").textContent, "1");
 });
 

@@ -4,12 +4,12 @@
     <t t-name="mail.MessageView" owl="1">
         <div class="o_MessageView position-relative py-1"
             t-att-class="{
-                'o-mail-message-clicked': messagingAsClickedMessageView,
-                'o-mail-message-highlighted-from-mention': message.isHighlightedFromMention,
-                'o-mail-message-highlighted bg-view shadow-lg': isHighlighted,
+                'o-clicked': messagingAsClickedMessageView,
+                'o-highlighted-from-mention': message.isHighlightedFromMention,
+                'o-highlighted bg-view shadow-lg': isHighlighted,
                 'o-not-discussion': !message.isDiscussionOrNotification,
-                'o-mail-message-is-selected': isSelected,
-                'o-mail-message-is-squashed pt-1': isSquashed,
+                'o-selected': isSelected,
+                'o-squashed pt-1': isSquashed,
                 'mt-1': !isSquashed and messageListViewItemOwner,
                 'px-3': !isInChatWindow,
                 'px-1': isInChatWindow,
@@ -75,7 +75,7 @@
                             </t>
                         </small>
                         <div t-if="messageListViewItemOwner and message.originThread and message.originThread === messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': isInChatWindowAndIsAlignedRight }">
-                            <span t-if="message.failureNotifications.length > 0" class="o-mail-message-notification-icon-clickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
+                            <span t-if="message.failureNotifications.length > 0" class="o-mail-message-notification o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
                                 <i class="o-mail-message-notification-icon" t-att-class="failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="failureNotificationIconLabel" t-out="failureNotificationIconLabel"/>
                             </span>
                             <span t-else="" class="o-mail-message-notification-icon-clickable text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
