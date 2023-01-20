@@ -98,8 +98,12 @@ class IrUiView(models.Model):
         arch_no_whitespace = etree.fromstring(
             etree.tostring(arch, encoding='utf-8'),
             parser=etree.XMLParser(encoding='utf-8', remove_blank_text=True))
-        return etree.tostring(
+        pretty_arch = etree.tostring(
             arch_no_whitespace, encoding='unicode', pretty_print=True)
+        # Remove the DEL control code characters used to trick the pretty
+        # printer into preserving indentation of inline HTML nodes.
+        pretty_arch = pretty_arch.replace(u'\x7f', '')
+        return pretty_arch;
 
     @api.model
     def _are_archs_equal(self, arch1, arch2):

@@ -4,6 +4,8 @@ odoo.define('website.wysiwyg', function (require) {
 var Wysiwyg = require('web_editor.wysiwyg');
 var snippetsEditor = require('website.snippet.editor');
 let socialMediaOptions = require('@website/snippets/s_social_media/options')[Symbol.for("default")];
+const OdooEditorLib = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
+const isBlock = OdooEditorLib.isBlock;
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -113,6 +115,40 @@ const WebsiteWysiwyg = Wysiwyg.extend({
 
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        await this._super.apply(this, arguments);
+        // Elements containing only inline element nodes and empty text nodes
+        // will receive unwanted formatting spaces from the pretty printing of
+        // ir.ui.view. This results in unwanted visible spaces in the DOM.
+        const containers = new Set(
+            [...this.$editable[0].querySelectorAll("*")].map(e => e.parentNode)
+        );
+        for (const element of containers) {
+            const children = [...element.children];
+            // This is a tradeoff as there are some unicode control characters
+            // which won't prevent etree from pretty printing the html anyway.
+            // It seems unlikely to encounter those in actual user content and
+            // the probability of encountering those specifically in the cases
+            // that need to be covered by this hack is even lower still.
+            const hasNonEmptyTextNode = [...element.childNodes].find(
+                node => node.nodeType === Node.TEXT_NODE && node.length > 0
+            );
+            if (
+                children.length > 1 &&
+                !hasNonEmptyTextNode &&
+                children.every(child => !isBlock(child))
+            ) {
+                // Add a DEL control code as last sibling to trick the pretty
+                // printer into thinking there is actual text and therefore
+                // avoid pretty printing that particular element. The DEL
+                // control code will be removed by the server afterwards.
+                element.appendChild(document.createTextNode('\u007F'));
+            }
+        }
     },
 
     //--------------------------------------------------------------------------
