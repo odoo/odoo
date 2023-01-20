@@ -4,6 +4,7 @@ import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
 let target;
 
@@ -417,4 +418,12 @@ QUnit.test("different mail.channel are not grouped", async function (assert) {
     const group_1 = $(".o-mail-notification-item:contains(Channel (2)):first");
     await click(group_1);
     assert.containsOnce(target, ".o-mail-chat-window");
+});
+
+QUnit.test("mobile: active icon is highlighted", async function (assert) {
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-messaging-menu-tab:contains(Chat)");
+    assert.hasClass($(target).find(".o-mail-messaging-menu-tab:contains(Chat)"), "fw-bolder");
 });

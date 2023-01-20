@@ -84,11 +84,11 @@
         </div>
     </div>
     <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
-        <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
-            'text-primary fw-bolder': state.tab === tab.tab,
+        <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-messaging-menu-tab d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
+            'text-primary fw-bolder': state.tab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
-            <span t-attf-class="o-mail-messaging-menu-mobile-tab-icon fs-4 {{ tab.icon }}"/>
+            <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>
             <span class="small" t-esc="tab.label"/>
         </div>
     </div>
