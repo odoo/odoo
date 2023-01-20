@@ -1101,6 +1101,7 @@ class Task(models.Model):
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', string='Assignees', relation='project_task_user_rel', column1='task_id', column2='user_id',
+                                compute='_compute_user_ids', readonly=False, store=True,
                                 context={'active_test': False}, tracking=True)#relation='project_task_user_rel', column1='task_id', column2='user_id',
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
@@ -1614,6 +1615,14 @@ class Task(models.Model):
         for task in self:
             task.stage_display = task.stage_id.name if task.project_id else task.personal_stage_type_id.name
 
+    @api.depends('message_partner_ids')
+    def _compute_user_ids(self):
+        """ This compute method allows to set followers as assignee for todos.
+            This default value will be used when converting todos to tasks.
+        """
+        for todo in self.with_context({'tracking_disable': True}).filtered(lambda task: task.is_todo):
+            todo.write({'user_ids': todo.message_partner_ids.user_ids})
+
     @api.depends('user_ids')
     def _compute_portal_user_names(self):
         """ This compute method allows to see all the names of assigned users to each task contained in `self`.
@@ -2048,7 +2057,6 @@ class Task(models.Model):
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
-
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
 
@@ -2063,6 +2071,12 @@ class Task(models.Model):
         if any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot delete recurring tasks. Please disable the recurrence first.'))
+
+    def _message_auto_subscribe(self, updated_values, followers_existing_policy='skip'):
+        """ Override from mail.thread to avoid autosubscription when converting a todo to a task """
+        if self.env.context.get('convert_todo'):
+            return True
+        return super()._message_auto_subscribe(updated_values, followers_existing_policy)
 
     # ---------------------------------------------------
     # Subtasks
@@ -2535,6 +2549,19 @@ class Task(models.Model):
     def action_continue_recurrence(self):
         self.recurrence_id = False
         self.recurring_task = False
+
+    def action_convert_to_task(self):
+        self.ensure_one()
+        self.write({
+            'is_todo': False,
+            'company_id': self.project_id.company_id
+        })
+        return {
+            'view_mode': 'form',
+            'res_model': 'project.task',
+            'res_id': self.id,
+            'type': 'ir.actions.act_window',
+        }
 
     # ---------------------------------------------------
     # Rating business

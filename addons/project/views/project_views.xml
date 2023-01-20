@@ -1167,7 +1167,7 @@
                             <field name="tag_ids" widget="many2many_tags"
                                    options="{'color_field': 'color', 'no_create_edit': True}"
                                    context="{'project_id': project_id}"
-                                   domain="[('todo_tag', '=', True)]"/>
+                                   domain="[('todo_tag', '=', False)]"/>
                         </group>
                         <group>
                             <field name="active" invisible="1"/>
@@ -1854,6 +1854,69 @@
                 </p>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="project_task_todo_conversion_form">
+            <field name="name">Convert to Task</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <group>
+                            <!--<field name="company_id" invisible="1"/>-->
+                            <field name="project_id" domain="[('company_id', 'in', context.get('allowed_company_ids'))]" required="1"/>
+                            <field name="user_ids"
+                                class="o_task_user_field"
+                                options="{'no_open': True, 'no_quick_create': True}"
+                                widget="many2many_avatar_user"
+                                domain="[('share', '=', False), ('active', '=', True)]"/>
+                            <field name="tag_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color', 'no_create_edit': True}"
+                                   context="{'project_id': project_id}"
+                                   domain="[('todo_tag', '=', False)]"/><!-- TODO: add info about change on tags --><!--replace name by "Suggested Tags" and add the tags that have a similar name that the one alread set on the todo-->
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_convert_to_task" string="Convert to Task" type="object" class="btn-primary"/> 
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="action_convert_todo_to_task" model="ir.actions.server"><!-- How to make it appear only in module note ??-->
+            <field name="name">Convert to Task</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="binding_model_id" ref="note.model_project_task"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[Command.link(ref('project.group_project_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">action = {
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'view_id': env.ref("project.project_task_todo_conversion_form").id,
+                'context': "{'convert_todo': True, 'tracking_disable': True}",
+                'target': 'new',
+                'res_model': 'project.task',
+                'res_id': records.id
+            }</field>
+        </record>
+
+        <!-- <record id="action_convert_todo_to_task" model="ir.actions.act_window"><!-\- How to make it appear only in module note ??-\-> -->
+        <!--     <field name="name">Convert to Task</field> -->
+        <!--     <field name="res_model">project.task</field> -->
+        <!--     <field name="res_id" eval='records.id'/> -->
+        <!--     <field name="context">{'default_name': active_id}</field> -->
+        <!--     <field name="view_mode">form</field> -->
+        <!--     <field name="view_id" ref="project_task_todo_conversion_form"/> -->
+        <!--     <field name="domain">[('is_todo', '=', True)]</field> -->
+        <!--     <field name="binding_model_id" ref="note.model_project_task"/> -->
+        <!--     <field name="binding_view_types">form</field> -->
+        <!--     <field name="target">new</field> -->
+        <!--     <field name="groups_id" eval="[Command.link(ref('project.group_project_user'))]"/> -->
+        <!-- </record> -->
+
+
 
         <!-- Menu item for project -->
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
