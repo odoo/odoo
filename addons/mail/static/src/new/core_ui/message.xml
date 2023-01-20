@@ -68,7 +68,7 @@
                                 (from <a t-att-href="message.url">#<t t-esc="message.originThread?.displayName"/></a>)
                             </t>
                         </small>
-                        <div t-if="message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
+                        <div t-if="message.originThread === props.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
                             <span t-if="message.failureNotifications.length > 0" class="o-mail-message-notification-icon-clickable cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
                                 <i class="o-mail-message-notification-icon" t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
                             </span>

@@ -567,3 +567,54 @@ QUnit.test("inbox messages are never squashed", async function (assert) {
         "o-mail-message-is-squashed"
     );
 });
+
+QUnit.test("reply: stop replying button click", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId,
+        notification_status: "sent",
+        notification_type: "inbox",
+        res_partner_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-message");
+
+    await click("i[aria-label='Reply']");
+    assert.containsOnce(target, ".o-mail-composer");
+    assert.containsOnce(target, "i[title='Stop replying']");
+
+    await click("i[title='Stop replying']");
+    assert.containsNone(target, ".o-mail-composer");
+});
+
+QUnit.test("error notifications should not be shown in Inbox", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "mail.channel",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create({
+        mail_message_id: messageId, // id of related message
+        notification_status: "exception",
+        notification_type: "email",
+        res_partner_id: pyEnv.currentPartnerId, // must be for current partner
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-message");
+    assert.containsOnce(target, ".o-mail-message-recod-name a");
+    assert.containsNone(target, ".o-mail-message-notification-icon");
+});
