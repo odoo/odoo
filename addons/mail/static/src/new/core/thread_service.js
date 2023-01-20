@@ -229,7 +229,7 @@ export class ThreadService {
     }
 
     open(thread, replaceNewMessageChatWindow) {
-        if (this.store.discuss.isActive) {
+        if (this.store.discuss.isActive && !this.store.isSmall) {
             this.setDiscussThread(thread);
         } else {
             const chatWindow = this.chatWindow.insert({
