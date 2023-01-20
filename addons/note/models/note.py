@@ -122,7 +122,7 @@ class Task(models.Model):
     # --------------------------------------- Fields Declaration ----------------------------------
 
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-    company_id = fields.Many2one('res.company') #TODO: to update (see project)
+#    company_id = fields.Many2one('res.company') #TODO: to update (see project)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     description = fields.Html(string='Description')
     sequence = fields.Integer('Sequence', default=10)

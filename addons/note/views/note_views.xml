@@ -175,7 +175,7 @@
                            context="{'default_todo_tag': True}"
                            domain="[('todo_tag', '=', True)]"
                            placeholder="Tags"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <!--<field name="company_id" groups="base.group_multi_company"/>-->
                     <field name="personal_stage_type_id" domain="[('user_id','=',uid), ('todo_stage', '=', True)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>

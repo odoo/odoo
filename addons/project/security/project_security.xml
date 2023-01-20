@@ -50,6 +50,12 @@
     </record>
 
 <data noupdate="1">
+    <record id="ir_rule_note_note_multi_company" model="ir.rule">
+        <field name="name">Task - Multi-Company</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">['|', ('is_todo', '=', True), ('company_id', 'in', company_ids)]</field><!--NOTE for upgrade script: put a default company_id on existing notes, not really important which one-->
+    </record>
+        
     <record id="base.default_user" model="res.users">
         <field name="groups_id" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
