@@ -7,6 +7,7 @@ import { multiTabService } from "@bus/multi_tab_service";
 import { makeMultiTabToLegacyEnv } from "@bus/services/legacy/make_multi_tab_to_legacy_env";
 import { makeBusServiceToLegacyEnv } from "@bus/services/legacy/make_bus_service_to_legacy_env";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
+import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { ActivityMenu } from "@mail/new/activity/activity_menu";
 import { ChatWindowContainer } from "@mail/new/chat/chat_window_container";
@@ -16,9 +17,11 @@ import { messagingService } from "@mail/services/messaging_service";
 import { systrayService } from "@mail/services/systray_service";
 import { makeMessagingToLegacyEnv } from "@mail/utils/make_messaging_to_legacy_env";
 
+import { patch } from "@web/core/utils/patch";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { registry } from "@web/core/registry";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { makeMockXHR } from "@web/../tests/helpers/mock_services";
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { effectService } from "@web/core/effects/effect_service";
 import { soundEffects } from "@mail/new/core/sound_effects_service";
@@ -52,8 +55,45 @@ const SERVICES_PARAMETER_NAMES = new Set([
     "legacyServices",
     "loadingBaseDelayDuration",
     "messagingBus",
+    "mockXHR",
     "services",
 ]);
+
+/**
+ * @returns function that returns an `XMLHttpRequest`-like object whose response
+ * is computed by the given mock server.
+ */
+function getCreateXHR(mockServer, mockXHR) {
+    const mockedXHR = makeMockXHR();
+    return function () {
+        const xhr = mockedXHR();
+        let response = "";
+        let route = "";
+        patch(xhr, "mail", {
+            open(method, dest) {
+                route = dest;
+                return this._super(method, dest);
+            },
+            async send(data) {
+                const _super = this._super;
+                await new Promise(setTimeout);
+                const performXHR = mockXHR ?? mockServer.performRPC.bind(mockServer);
+                response = JSON.stringify(
+                    await performXHR(route, {
+                        body: data,
+                    })
+                );
+                return _super(data);
+            },
+            upload: new EventTarget(),
+            abort() {},
+            get response() {
+                return response;
+            },
+        });
+        return xhr;
+    };
+}
 
 /**
  * Add required components to the main component registry.
@@ -73,10 +113,16 @@ function setupMainComponentRegistry() {
  * @param {Object} [param0.services]
  * @param {number} [param0.loadingBaseDelayDuration=0]
  * @param {EventBus} [param0.messagingBus]
+ * @param {Function} [param0.mockXHR]
  * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
  * to the webClient as a legacy parameter.
  */
-function setupMessagingServiceRegistries({ loadingBaseDelayDuration = 0, messagingBus, services }) {
+async function setupMessagingServiceRegistries({
+    loadingBaseDelayDuration = 0,
+    messagingBus,
+    mockXHR,
+    services,
+}) {
     const serviceRegistry = registry.category("services");
 
     patchWithCleanup(messagingService, {
@@ -126,7 +172,11 @@ function setupMessagingServiceRegistries({ loadingBaseDelayDuration = 0, messagi
         ...services,
     };
     if (!serviceRegistry.contains("file_upload")) {
-        serviceRegistry.add("file_upload", fileUploadService);
+        const pyEnv = await getPyEnv();
+        serviceRegistry.add("file_upload", {
+            ...fileUploadService,
+            createXhr: getCreateXHR(pyEnv.mockServer, mockXHR),
+        });
     }
 
     Object.entries(services).forEach(([serviceName, service]) => {
@@ -179,7 +229,7 @@ async function getWebClientReady(param0) {
             servicesParameters[parameterName] = value;
         }
     }
-    setupMessagingServiceRegistries(servicesParameters);
+    await setupMessagingServiceRegistries(servicesParameters);
 
     const webClientParameters = {};
     for (const [parameterName, value] of param0Entries) {

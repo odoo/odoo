@@ -50,3 +50,24 @@ QUnit.test("no conflicts between file uploads", async function (assert) {
     assert.containsOnce(target, ".o-mail-chatter .o-mail-attachment-image");
     assert.containsOnce(target, ".o-mail-chat-window .o-mail-attachment-image");
 });
+
+QUnit.test("Attachment shows spinner during upload", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "channel_1" });
+    const { openDiscuss } = await start({
+        async mockXHR(route) {
+            if (route === "/mail/attachment/upload") {
+                // never fulfill the attachment upload promise.
+                await new Promise(() => {});
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    const file = await createFile({
+        name: "text2.txt",
+        content: "hello, world",
+        contentType: "text/plain",
+    });
+    await afterNextRender(() => editInput(target, ".o-mail-composer input[type=file]", file));
+    assert.containsOnce(target, ".o-mail-attachment-card .fa-spinner");
+});

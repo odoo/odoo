@@ -9,10 +9,8 @@ import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notificat
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
 import { registry } from "@web/core/registry";
-import { patch } from "@web/core/utils/patch";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { session as sessionInfo } from "@web/session";
-import { makeMockXHR } from "@web/../tests/helpers/mock_services";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
@@ -48,41 +46,6 @@ function _createFakeDataTransfer(files) {
         files,
         items: [],
         types: ["Files"],
-    };
-}
-
-/**
- * @returns function that returns an `XMLHttpRequest`-like object whose response
- * is computed by the given mock server.
- */
-function getCreateXHR(mockServer) {
-    const mockedXHR = makeMockXHR();
-    return function () {
-        const xhr = mockedXHR();
-        let response = "";
-        let route = "";
-        patch(xhr, "mail", {
-            open(method, dest) {
-                route = dest;
-                return this._super(method, dest);
-            },
-            async send(data) {
-                const _super = this._super;
-                await new Promise(setTimeout);
-                response = JSON.stringify(
-                    await mockServer.performRPC(route, {
-                        body: data,
-                    })
-                );
-                return _super(data);
-            },
-            upload: new EventTarget(),
-            abort() {},
-            get response() {
-                return response;
-            },
-        });
-        return xhr;
     };
 }
 
@@ -386,6 +349,7 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @param {Object} [param0.legacyServices]
  * @param {Object} [param0.services]
  * @param {function} [param0.mockRPC]
+ * @param {function} [param0.mockXHR]
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time with
  *   `messaging.browser.setTimeout` are fully controlled by test itself.
  * @param {integer} [param0.loadingBaseDelayDuration=0]
@@ -444,8 +408,6 @@ async function start(param0 = {}) {
     let webClient;
     await afterNextRender(async () => {
         webClient = await getWebClientReady({ ...param0, messagingBus });
-        const { file_upload: fileUpload } = webClient.env.services;
-        fileUpload.createXhr = getCreateXHR(pyEnv.mockServer);
     });
 
     const openView = async (action, options) => {

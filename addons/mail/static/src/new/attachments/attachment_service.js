@@ -22,6 +22,7 @@ export class AttachmentService {
             "name",
             "type",
             "url",
+            "uploading",
             "extension",
             "accessToken",
         ]);

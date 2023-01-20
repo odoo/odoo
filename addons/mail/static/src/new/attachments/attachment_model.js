@@ -13,6 +13,8 @@ export class Attachment {
     originThreadLocalId;
     type;
     url;
+    /** @type {boolean} */
+    uploading;
 
     /** @type {{import("@mail/new/core/thread_model").Thread} */
     get originThread() {
