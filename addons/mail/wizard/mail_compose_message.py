@@ -305,6 +305,8 @@ class MailComposer(models.TransientModel):
             if updated_author_id:
                 composer.author_id = updated_author_id
 
+            print('computed_author', composer, composer.author_id, composer.email_from)
+
     @api.depends('author_id')
     def _compute_author_impersonated(self):
         """ Determine if current user is impersonating another author. """
@@ -333,6 +335,7 @@ class MailComposer(models.TransientModel):
         frequently used as the composer is most invoked from list or form
         views. """
         for composer in self:
+            print('compute_model for', composer, composer.parent_id, self.env.context.get('active_model'))
             if composer.parent_id and composer.composition_mode == 'comment':
                 composer.model = composer.parent_id.model
             elif not composer.model:

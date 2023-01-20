@@ -33,6 +33,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
+        print('default_get begin', result, 'for', fields_list)
         res_ids = self.env.context.get('active_ids')
 
         invoices = self.env['account.move'].browse(res_ids).filtered(lambda move: move.is_invoice(include_receipts=True))
@@ -47,7 +48,16 @@ class AccountInvoiceSend(models.TransientModel):
                 'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment'),
             })
             result['composer_id'] = composer.id
+
+        print('default_get end', result)
         return result
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        print('creating', vals_list)
+        composers = super().create(vals_list)
+        print('created', composers, composers.composer_id)
+        return composers
 
     @api.onchange('invoice_ids')
     def _compute_composition_mode(self):
@@ -81,6 +91,7 @@ class AccountInvoiceSend(models.TransientModel):
 
     @api.onchange('is_email')
     def onchange_is_email(self):
+        print('onchange_is_email on', self, self.composer_id)
         if self.is_email:
             res_ids = self._context.get('active_ids')
             if not self.composer_id:
@@ -137,13 +148,16 @@ class AccountInvoiceSend(models.TransientModel):
         # This should ideally be fixed in mail_compose_message, so when a fix is made there this whole commit should be reverted.
         # basically self.body (which could be manually edited) extracts self.template_id,
         # which is then not translated for each customer.
+        print('sending', self.composition_mode, self.template_id)
         if self.composition_mode == 'mass_mail' and self.template_id:
             active_ids = self.env.context.get('active_ids', self.res_ids)
             active_records = self.env[self.model].browse(active_ids)
             langs = active_records.mapped('partner_id.lang')
             default_lang = get_lang(self.env)
+            print(set(langs))
             for lang in (set(langs) or [default_lang]):
                 active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
+                print(active_ids_lang)
                 self_lang = self.with_context(active_ids=active_ids_lang, lang=lang)
                 self_lang.onchange_template_id()
                 self_lang._send_email()
