@@ -36,7 +36,6 @@ export default class ListDataSource extends OdooViewsDataSource {
     constructor(services, params) {
         super(services, params);
         this.limit = params.limit;
-        this._orm = services.orm;
         this.data = [];
     }
 

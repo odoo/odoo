@@ -3,6 +3,7 @@
 import { throttleForAnimation } from "./utils/timing";
 
 import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { localization } from "@web/core/l10n/localization";
 
 /**
  * @typedef {{
@@ -230,7 +231,21 @@ export function reposition(reference, popper, options) {
  */
 export function usePosition(reference, options) {
     options = { ...DEFAULTS, ...options };
-    const { popper } = options;
+    const { popper, position } = options;
+
+    let [directionKey, variantKey = "middle"] = position.split("-");
+
+    if (localization.direction === "rtl") {
+        if (["bottom", "top"].includes(directionKey)) {
+            if (variantKey !== "middle") {
+                variantKey = variantKey === "start" ? "end" : "start";
+            }
+        } else {
+            directionKey = directionKey === "left" ? "right" : "left";
+        }
+        options.position = [directionKey, variantKey].join("-");
+    }
+
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     const update = () => {

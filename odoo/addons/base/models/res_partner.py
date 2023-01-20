@@ -397,6 +397,10 @@ class Partner(models.Model):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
+        company = self.env.company
+        if company.country_id.vat_label:
+            for node in arch.xpath("//field[@name='vat']"):
+                node.attrib["string"] = company.country_id.vat_label
         return arch, view
 
     @api.constrains('parent_id')

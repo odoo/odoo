@@ -555,7 +555,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     def test_matching_fields_match_partner_category_ids(self):
         test_category = self.env['res.partner.category'].create({'name': 'Consulting Services'})
         test_category2 = self.env['res.partner.category'].create({'name': 'Consulting Services2'})
-
         self.partner_2.category_id = test_category + test_category2
         self.rule_1.match_partner_category_ids |= test_category
         self._check_statement_matching(self.rule_1, {
@@ -850,6 +849,18 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         st_line.narration = "42coincoin"
 
         # Matching is back thanks to "coincoin".
+        self.assertEqual(st_line._retrieve_partner(), self.partner_1)
+
+        # More complex matching to match something from bank sync data.
+        # Note: the indentation is done with multiple \n to mimic the bank sync behavior. Keep them for this test!
+        rule.partner_mapping_line_ids.narration_regex = ".*coincoin.*"
+        st_line.narration = """
+            {
+                "informations": "coincoin turlututu tsoin tsoin",
+            }
+        """
+
+        # Same check with json data into the narration field.
         self.assertEqual(st_line._retrieve_partner(), self.partner_1)
 
     def test_match_multi_currencies(self):

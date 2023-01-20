@@ -273,7 +273,7 @@
                                         <field name="company_id"
                                             groups="base.group_multi_company"
                                             options="{'no_create': True}"/>
-                                        <field name="campaign_id" />
+                                        <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                                         <field name="medium_id"/>
                                         <field name="source_id"/>
                                         <field name="referred"/>
@@ -319,7 +319,7 @@
                                         </div>
                                     </group>
                                     <group string="Marketing">
-                                        <field name="campaign_id" />
+                                        <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
                                         <field name="medium_id" />
                                         <field name="source_id" />
                                         <field name="referred"/>

@@ -39,7 +39,7 @@ export async function createModelWithDataSource(params = {}) {
     const model = new Model(params.spreadsheetData, {
         evalContext: { env },
         //@ts-ignore
-        dataSources: new DataSources(env.services.orm.silent),
+        dataSources: new DataSources(env.services.orm),
     });
     setupDataSourceEvaluation(model);
     await nextTick(); // initial async formulas loading

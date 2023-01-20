@@ -5964,3 +5964,33 @@ class StockMove(TransactionCase):
         move._action_done()
         self.assertEqual(move.move_line_ids.qty_done, 3)
         self.assertEqual(move.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
+
+    def test_serial_tracking(self):
+        """
+        Since updating the move's `lot_ids` field for product tracked by serial numbers will
+        also updates the move's `quantity_done`, this test checks the move's move lines will be
+        correclty updated and consequently its picking can be validated.
+        """
+        sn = self.env['stock.lot'].create({
+            'name': 'test_lot_001',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 1
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        receipt_form = Form(receipt)
+        with receipt_form.move_ids_without_package.edit(0) as move:
+            move.lot_ids.add(sn)
+        receipt = receipt_form.save()
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(len(receipt.move_line_ids), 1)
+        self.assertEqual(receipt.move_line_ids.qty_done, 1)

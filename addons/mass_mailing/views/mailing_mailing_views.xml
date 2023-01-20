@@ -340,6 +340,7 @@
                                         <field name="campaign_id"
                                             string="Campaign"
                                             groups="mass_mailing.group_mass_mailing_campaign"
+                                            options="{'create_name_field': 'title', 'always_reload': True}"
                                             attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
                                         <field name="medium_id"
                                              string="Medium"

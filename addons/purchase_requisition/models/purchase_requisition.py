@@ -153,7 +153,7 @@ class PurchaseRequisition(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
-            raise UserError(_('You can only delete draft requisitions.'))
+            raise UserError(_('You can only delete draft or cancelled requisitions.'))
 
     def unlink(self):
         # Draft requisitions could have some requisition lines.
