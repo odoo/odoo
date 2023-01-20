@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import io
 import textwrap
 from collections import OrderedDict
 from PyPDF2.utils import PdfStreamError
@@ -29,8 +28,8 @@ class IrActionsReport(models.Model):
         for invoice in invoices:
             attachment = invoice.message_main_attachment_id
             if attachment:
-                stream = io.BytesIO(attachment.raw)
-                if attachment.mimetype == 'application/pdf':
+                stream = pdf.to_pdf_stream(attachment)
+                if stream:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name, logo=True)
