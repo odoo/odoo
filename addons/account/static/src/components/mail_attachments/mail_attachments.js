@@ -59,6 +59,11 @@ export class MailAttachments extends Component {
     }
 
     async onWillUnmount(){
+        // Don't unlink anything since the wizard has been saved.
+        if(this.props.record.data.id){
+            return;
+        }
+
         if(!this.props.record.resId){
             this.getValue().forEach((item) => {
                 if(item.garbage){
