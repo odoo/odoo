@@ -17,6 +17,8 @@ export class ThreadService {
 
     constructor(env, services) {
         this.env = env;
+        /** @type {import("@mail/new/attachments/attachment_service")} */
+        this.attachments = services["mail.attachment"];
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
@@ -382,8 +384,14 @@ export class ThreadService {
     }
 
     update(thread, data) {
-        for (const key in data) {
+        const { attachments, ...remainingData } = data;
+        for (const key in remainingData) {
             thread[key] = data[key];
+        }
+        if (attachments) {
+            thread.attachments = attachments.map((attachment) =>
+                this.attachments.insert(attachment)
+            );
         }
         if (data.serverData) {
             const { serverData } = data;
@@ -668,6 +676,7 @@ export class ThreadService {
 
 export const threadService = {
     dependencies: [
+        "mail.attachment",
         "mail.store",
         "orm",
         "rpc",

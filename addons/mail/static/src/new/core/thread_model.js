@@ -26,6 +26,8 @@ export class Thread {
     uuid;
     /** @type {string} */
     model;
+    /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
+    attachments = [];
     /** @type {integer} */
     activeRtcSessionId;
     canLeave = false;

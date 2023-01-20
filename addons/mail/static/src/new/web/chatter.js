@@ -81,7 +81,6 @@ export class Chatter extends Component {
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
-            attachments: [],
             showActivities: true,
             isAttachmentBoxOpened: this.props.isAttachmentBoxOpenedInitially,
             isLoadingAttachments: false,
@@ -148,7 +147,7 @@ export class Chatter extends Component {
     }
 
     get attachments() {
-        return this.attachmentUploader.attachments.concat(this.state.attachments);
+        return this.attachmentUploader.attachments.concat(this.thread?.attachments ?? []);
     }
 
     /**
@@ -189,9 +188,9 @@ export class Chatter extends Component {
                 }
             }
             if ("attachments" in result) {
-                this.state.attachments = result.attachments.map((attachment) =>
-                    this.attachment.insert(attachment)
-                );
+                this.threadService.update(this.thread, {
+                    attachments: result.attachments,
+                });
                 this.state.isLoadingAttachments = false;
             }
             if ("followers" in result) {
@@ -305,7 +304,7 @@ export class Chatter extends Component {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
-        removeFromArrayWithPredicate(this.state.attachments, ({ id }) => attachment.id === id);
+        removeFromArrayWithPredicate(this.thread.attachments, ({ id }) => attachment.id === id);
     }
 
     onUploaded(data) {
