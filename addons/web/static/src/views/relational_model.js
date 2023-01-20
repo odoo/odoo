@@ -861,11 +861,15 @@ export class Record extends DataPoint {
     /**
      * FIXME: memoize this at some point?
      * @param {string} fieldName
+     * @param {Object} modifiers
      * @returns {boolean}
      */
-    isReadonly(fieldName) {
+    isReadonly(fieldName, modifiers) {
         const activeField = this.activeFields[fieldName];
-        const { readonly } = activeField.modifiers || {};
+        if (activeField.relatedPropertyField && this.selected && this.model.multiEdit) {
+            return true;
+        }
+        const { readonly } = modifiers || activeField.modifiers || {};
         return readonly ? evalDomain(readonly, this.evalContext) : false;
     }
 
@@ -1296,10 +1300,15 @@ export class Record extends DataPoint {
                             await staticList.setDataRecords(
                                 (property.value || []).map((val) => ({
                                     id: val[0],
-                                    display_name: val[1],
+                                    display_name: val[1] || this.model.env._t("No Access"),
                                 }))
                             );
                             this.data[fieldPropertyName] = staticList;
+                        } else if (property.type === "many2one") {
+                            this.data[fieldPropertyName] =
+                                property.value.length && property.value[1] === null
+                                    ? [property.value[0], this.model.env._t("No Access")]
+                                    : property.value;
                         } else {
                             this.data[fieldPropertyName] =
                                 property.value === undefined ? false : property.value;
@@ -3663,8 +3672,19 @@ export class RelationalModel extends Model {
                 for (const record of properties[fieldName]) {
                     for (const definition of record.definitions) {
                         const propertyFieldName = `${fieldName}.${definition.name}`;
-                        const widget =
-                            definition.type === "many2many" ? "many2many_tags" : definition.type;
+                        let widget = definition.type;
+                        if (definition.type === "many2many") {
+                            if (["res.users", "res.partner"].includes(definition.comodel)) {
+                                widget = "many2many_tags_avatar";
+                            } else {
+                                widget = "many2many_tags";
+                            }
+                        } else if (
+                            definition.type === "many2one" &&
+                            ["res.users", "res.partner"].includes(definition.comodel)
+                        ) {
+                            widget = "many2one_avatar";
+                        }
                         const propsFromAttrs = ["many2many", "many2one"].includes(definition.type)
                             ? { relation: definition.comodel }
                             : {};

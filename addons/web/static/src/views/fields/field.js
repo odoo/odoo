@@ -55,7 +55,8 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
 
 export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
-    const readonly = evalDomain(modifiers.readonly, record.evalContext);
+    const readonly = record.isReadonly(fieldName, modifiers);
+
     const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
@@ -129,7 +130,7 @@ export class Field extends Component {
         const fieldInfo = this.props.fieldInfo;
 
         const modifiers = fieldInfo.modifiers || {};
-        const readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
+        const readonlyFromModifiers = record.isReadonly(this.props.name, modifiers);
 
         // Decoration props
         const decorationMap = {};

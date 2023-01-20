@@ -67,7 +67,7 @@
                                                 value="field.value"
                                                 name="field.name"
                                             >
-                                                <t t-esc="field.label"/> <t t-if="env.debug" t-esc="' (' + field.name + ')'" />
+                                                <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/><span class="ps-1" t-if="env.debug" t-esc="' (' + field.name + ')'" /></span>
                                             </CheckBox>
                                         </DropdownItem>
                                     </t>

@@ -311,10 +311,11 @@ export class Record extends DataPoint {
     /**
      * FIXME: memoize this at some point?
      * @param {string} fieldName
+     * @param {Object} modifiers
      * @returns {boolean}
      */
-    isReadonly(fieldName) {
-        const { readonly } = this.activeFields[fieldName].modifiers || {};
+    isReadonly(fieldName, modifiers) {
+        const { readonly } = modifiers || this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
 

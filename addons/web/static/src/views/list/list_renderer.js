@@ -808,7 +808,9 @@ export class ListRenderer extends Component {
             digits: column.rawAttrs.digits ? JSON.parse(column.rawAttrs.digits) : field.digits,
             field: record.fields[fieldName],
         };
-        return formatter(record.data[fieldName], formatOptions);
+        return record.data[fieldName] !== undefined
+            ? formatter(record.data[fieldName], formatOptions)
+            : "";
     }
 
     evalModifier(modifier, record) {
