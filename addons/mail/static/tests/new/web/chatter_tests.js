@@ -515,6 +515,27 @@ QUnit.test(
     }
 );
 
+QUnit.test("basic chatter rendering", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter"></div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views } });
+    await openView({
+        res_model: "res.partner",
+        res_id: partnerId,
+        views: [[false, "form"]],
+    });
+    assert.containsOnce(target, ".o-mail-chatter");
+});
+
 QUnit.test("basic chatter rendering without activities", async function (assert) {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ display_name: "second partner" });

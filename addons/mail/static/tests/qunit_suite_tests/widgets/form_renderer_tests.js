@@ -19,35 +19,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("widgets", {}, function () {
         QUnit.module("form_renderer_tests.js");
 
-        QUnit.skipRefactoring("basic chatter rendering", async function (assert) {
-            assert.expect(1);
-
-            const pyEnv = await startServer();
-            const resPartnerId1 = pyEnv["res.partner"].create({ display_name: "second partner" });
-            const views = {
-                "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-            };
-            const { openView } = await start({
-                serverData: { views },
-            });
-            await openView({
-                res_model: "res.partner",
-                res_id: resPartnerId1,
-                views: [[false, "form"]],
-            });
-            assert.strictEqual(
-                document.querySelectorAll(`.o-mail-chatter`).length,
-                1,
-                "there should be a chatter"
-            );
-        });
-
-        QUnit.skipRefactoring("basic chatter rendering without followers", async function (assert) {
+        QUnit.test("basic chatter rendering without followers", async function (assert) {
             assert.expect(6);
 
             const pyEnv = await startServer();
@@ -99,7 +71,7 @@ QUnit.module("mail", {}, function () {
             );
         });
 
-        QUnit.skipRefactoring("basic chatter rendering without messages", async function (assert) {
+        QUnit.test("basic chatter rendering without messages", async function (assert) {
             assert.expect(6);
 
             const pyEnv = await startServer();
