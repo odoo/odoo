@@ -556,27 +556,30 @@ class Lead(models.Model):
             duplicate_lead_ids = self.env['crm.lead']
             email_search = iap_tools.mail_prepare_for_domain_search(lead.email_from, min_email_length=MIN_EMAIL_LENGTH)
 
-            if email_search:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    '|', ('email_normalized', 'ilike', email_search), ('email_from', 'ilike', email_search)
-                ])
-            if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('partner_name', 'ilike', lead.partner_name)
-                ])
-            if lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('contact_name', 'ilike', lead.contact_name)
-                ])
+            # the fact that there are duplicates is more interesting than an exact number,
+            # and we have to take into account that text search can be quite expensive
+            # if matches are found for cheap or likely queries, expensive/less likely ones won't run
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
                     ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
                 ])
-            if lead.phone and len(lead.phone) >= MIN_PHONE_LENGTH:
+            if not duplicate_lead_ids and email_search:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('email_normalized', 'ilike', email_search)
+                ])
+            if not duplicate_lead_ids and lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('partner_name', 'ilike', lead.partner_name)
+                ])
+            if not duplicate_lead_ids and lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
+                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
+                    ('contact_name', 'ilike', lead.contact_name)
+                ])
+            if not duplicate_lead_ids and lead.phone and len(lead.phone) >= MIN_PHONE_LENGTH:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
                     ('phone_mobile_search', 'ilike', lead.phone)
                 ])
-            if lead.mobile and len(lead.mobile) >= MIN_PHONE_LENGTH:
+            if not duplicate_lead_ids and lead.mobile and len(lead.mobile) >= MIN_PHONE_LENGTH:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
                     ('phone_mobile_search', 'ilike', lead.mobile)
                 ])
