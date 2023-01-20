@@ -223,16 +223,6 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
         assert isinstance(cleaned, str)
-        # MAKO compatibility: $, { and } inside quotes are escaped, preventing correct mako execution
-        cleaned = cleaned.replace(u'%24', u'$')
-        cleaned = cleaned.replace(u'%7B', u'{')
-        cleaned = cleaned.replace(u'%7D', u'}')
-        cleaned = cleaned.replace(u'%20', u' ')
-        cleaned = cleaned.replace(u'%5B', u'[')
-        cleaned = cleaned.replace(u'%5D', u']')
-        cleaned = cleaned.replace(u'%7C', u'|')
-        cleaned = cleaned.replace(u'&lt;%', u'<%')
-        cleaned = cleaned.replace(u'%&gt;', u'%>')
         # html considerations so real html content match database value
         cleaned = cleaned.replace(u'\xa0', u'&nbsp;')
     except etree.ParserError as e:
