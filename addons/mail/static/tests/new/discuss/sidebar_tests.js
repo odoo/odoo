@@ -582,3 +582,15 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "chat - command: should have add command when category is unfolded",
+    async function (assert) {
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsOnce(
+            target,
+            ".o-mail-category:contains(Direct messages) i[title='Start a conversation']"
+        );
+    }
+);

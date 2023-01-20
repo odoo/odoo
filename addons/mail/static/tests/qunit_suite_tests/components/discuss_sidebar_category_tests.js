@@ -180,23 +180,6 @@ QUnit.module("mail", {}, function () {
         );
 
         QUnit.skipRefactoring(
-            "chat - command: should have add command when category is unfolded",
-            async function (assert) {
-                assert.expect(1);
-
-                const { openDiscuss } = await start();
-                await openDiscuss();
-                assert.strictEqual(
-                    document.querySelectorAll(
-                        `.o-mail-category-chat .o_DiscussSidebarCategory_header .o-mail-category-add-button`
-                    ).length,
-                    1,
-                    "should have add command when chat category is open"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "chat - command: should not have add command when category is folded",
             async function (assert) {
                 assert.expect(1);
