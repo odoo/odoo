@@ -1849,7 +1849,10 @@ msgid "Count Picking Waiting"
 msgstr "عدد عمليات الانتقاء المنتظرة "
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "ورقة التعداد "
 
@@ -3785,6 +3788,13 @@ msgstr "مشغّل النطاق غير صالح %s "
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Invalid domain right operand %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7403,8 +7413,11 @@ msgstr ""
 "سيتم تغيير الموقع المستهدف لهذه الحركة إلى %s "
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "تعيين "
 
@@ -9693,8 +9706,8 @@ msgstr "لا يمكنك إدخال كميات سالبة."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "بإمكانك فقط حذف الحركات في حالة المسودة. "
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10234,3 +10247,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} أمر توصيل (المرجع {{ object.name or 'غير متاح' "
 "}}) "
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""

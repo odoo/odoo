@@ -6,6 +6,7 @@
 # Thomas Deleval <thd@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Maruan Aguerdouh, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -183,7 +184,7 @@ msgstr "&gt;"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr "Feuille de comptage"
+msgstr "'Feuille de comptage'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -3827,6 +3828,15 @@ msgstr "Opérateur du domaine non valide : %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Opérande droit du domaine non valide : %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+"Configuration de règles non valide, la règle suivante entraîne une boucle "
+"infinie : %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -9863,8 +9873,8 @@ msgstr "Vous ne pouvez pas entrer des quantités négatives."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Vous ne pouvez supprimer que les mouvements en brouillon"
+msgid "You can only delete draft or cancelled moves."
+msgstr "Vous pouvez uniquement supprimer des mouvements brouillon ou annulés."
 
 #. module: stock
 #. odoo-python
@@ -10440,3 +10450,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Bon de livraison (Ref {{ object.name or 'n/a' "
 "}})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Jours de visibilité globale"
