@@ -15,8 +15,10 @@ import {
     patchWithCleanup,
     mount,
     nextTick,
+    makeDeferred,
+    editInput,
 } from "../../helpers/utils";
-import { toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { pagerNext, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -966,6 +968,34 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
+    QUnit.test("should not crash while commiting changes", async (assert) => {
+        serverData.views["partner,false,form"] = `<form><field name="display_name" /></form>`;
+        const webClient = await createWebClient({ serverData });
+        await doAction(
+            webClient,
+            {
+                type: "ir.actions.act_window",
+                id: 1337,
+                res_id: 1,
+                res_model: "partner",
+                views: [[false, "form"]],
+            },
+            { props: { resIds: [1, 2] } }
+        );
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+        await pagerNext(target);
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Second record");
+        await editInput(target, "[name=display_name] input", "new name");
+
+        // without saving we now make a loadState which should commit changes
+        await loadState(webClient, { action: 1337, id: 1, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+
+        // loadState again just to check if changes were commited
+        await loadState(webClient, { action: 1337, id: 2, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "new name");
+    });
+
     QUnit.test("initial action crashes", async (assert) => {
         assert.expect(8);
 
@@ -1010,12 +1040,14 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("concurrent hashchange during action mounting -- 1", async (assert) => {
-        assert.expect(5);
-
+        const hashchangeDef = makeDeferred();
         class MyAction extends Component {
             setup() {
                 owl.onMounted(() => {
                     assert.step("myAction mounted");
+                    browser.addEventListener("hashchange", () => {
+                        hashchangeDef.resolve();
+                    });
                     browser.location.hash = "#action=__test__client__action__&menu_id=1";
                 });
             }
@@ -1027,7 +1059,10 @@ QUnit.module("ActionManager", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         assert.verifySteps(["myAction mounted"]);
+        assert.containsOnce(target, ".not-here");
 
+        // hashchange event isn't trigerred synchronously, so we have to wait for it
+        await hashchangeDef;
         await nextTick();
         assert.containsNone(target, ".not-here");
         assert.containsOnce(target, ".test_client_action");

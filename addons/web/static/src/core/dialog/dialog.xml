@@ -11,14 +11,11 @@
                 <div class="modal-dialog" t-attf-class="modal-{{props.size}}">
                     <div class="modal-content" t-att-class="props.contentClass">
                         <header t-if="props.header" class="modal-header">
-                            <t t-if="isFullscreen">
-                                <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="data.close" />
-                            </t>
-                            <h4 class="modal-title text-break">
-                                <t t-esc="props.title"/>
-                            </h4>
-                            <t t-if="!isFullscreen">
-                                <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="data.close"></button>
+                            <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
+                                <t t-call="web.Dialog.header">
+                                    <t t-set="close" t-value="data.close"/>
+                                    <t t-set="fullscreen" t-value="isFullscreen"/>
+                                </t>
                             </t>
                         </header>
                         <!-- FIXME: WOWL there is a bug on t-portal on owl, in which t-portal don't work on multinode.
@@ -37,5 +34,17 @@
                 </div>
             </div>
         </div>
+    </t>
+
+    <t t-name="web.Dialog.header" owl="1">
+        <t t-if="fullscreen">
+            <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="close" />
+        </t>
+        <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
+            <t t-esc="props.title"/>
+        </h4>
+        <t t-if="!fullscreen">
+            <button type="button" class="btn-close" aria-label="Close" tabindex="-1" t-on-click="close"></button>
+        </t>
     </t>
 </templates>

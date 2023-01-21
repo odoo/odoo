@@ -6,6 +6,7 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Jana Jaakson, 2022
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jana Jaakson, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +29,14 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Ühenda Outlook'i konto"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
 msgid "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-cog\" title=\"Edit Settings\"/>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.fetchmail_server_view_form
@@ -42,6 +45,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Outlook'i token on kehtiv\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -50,6 +56,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Outlook'i token on kehtiv\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
@@ -60,14 +69,14 @@ msgstr ""
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__smtp_authentication
 msgid "Authenticate with"
-msgstr ""
+msgstr "Tuvasta "
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_ir_mail_server__microsoft_outlook_uri
 #: model:ir.model.fields,field_description:microsoft_outlook.field_microsoft_outlook_mixin__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "Autentimise URI"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_res_config_settings
@@ -93,7 +102,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
 msgid "Go back to your mail server"
-msgstr ""
+msgstr "Mine tagasi oma meiliserverisse"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -108,7 +117,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
 msgid "Incoming Mail Server"
-msgstr ""
+msgstr "Saabuvate kirjade server"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -128,7 +137,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_ir_mail_server
 msgid "Mail Server"
-msgstr ""
+msgstr "Kirjade server"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_microsoft_outlook_mixin
@@ -163,7 +172,7 @@ msgstr "Outlook kliendi ID"
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_res_config_settings__microsoft_outlook_client_secret
 msgid "Outlook Client Secret"
-msgstr ""
+msgstr "Outlook Client Secret"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
@@ -212,7 +221,7 @@ msgstr ""
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret"
-msgstr ""
+msgstr "Saladus"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -251,4 +260,4 @@ msgstr ""
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."
-msgstr ""
+msgstr "Tundmatu viga."

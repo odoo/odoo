@@ -3242,6 +3242,13 @@ msgstr "杂项"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#, python-format
+msgid "Missing barcode nomenclature"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
 msgid "Mobile"
@@ -3356,11 +3363,6 @@ msgstr "新会话"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "报纸架"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "下一个活动日历事件"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -6070,6 +6072,15 @@ msgid ""
 msgstr "您的支付明细金额必须四舍五入以验证交易."
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#, python-format
+msgid ""
+"The barcode nomenclature setting is not configured. Make sure to configure "
+"it on your Point of Sale configuration settings"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
@@ -6432,8 +6443,8 @@ msgstr "本门店未设收银机。"
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
-msgid "There is no products linked to your PoS"
-msgstr "没有产品链接到您的POS"
+msgid "There is no product linked to your PoS"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7098,6 +7109,13 @@ msgid ""
 msgstr ""
 "您可以从“产品”菜单中添加一些，或者通过将其标记为“在 PoS 中可用”来链接任何现有产品。\n"
 "                    或者，您可以添加演示数据以进行测试。请注意，这是不可逆转的行为。"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid "You can only have one cash payment method."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

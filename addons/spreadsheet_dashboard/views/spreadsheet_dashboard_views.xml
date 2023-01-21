@@ -6,7 +6,7 @@
         <field name="model">spreadsheet.dashboard</field>
         <field name="arch" type="xml">
             <tree create="false" editable="bottom">
-                <field name="sequence" widget="handle"/>
+                <field name="sequence" widget="handle" groups="base.group_system"/>
                 <field name="name"/>
                 <field name="group_ids" widget="many2many_tags"/>
             </tree>
@@ -18,7 +18,7 @@
         <field name="model">spreadsheet.dashboard.group</field>
         <field name="arch" type="xml">
             <tree string="Dashboards">
-                <field name="sequence" widget="handle"/>
+                <field name="sequence" widget="handle" groups="base.group_system"/>
                 <field name="name"/>
             </tree>
         </field>

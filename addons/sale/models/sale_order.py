@@ -402,7 +402,8 @@ class SaleOrder(models.Model):
     def _compute_user_id(self):
         for order in self:
             if not order.user_id:
-                order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or self.env.user
+                order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or \
+                    (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
 
     @api.depends('partner_id', 'user_id')
     def _compute_team_id(self):
@@ -567,13 +568,13 @@ class SaleOrder(models.Model):
                 order.partner_credit_warning = self.env['account.move']._build_credit_warning_message(
                     order, updated_credit)
 
-    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed')
+    @api.depends('order_line.tax_id', 'order_line.price_unit', 'amount_total', 'amount_untaxed', 'currency_id')
     def _compute_tax_totals(self):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.tax_totals = self.env['account.tax']._prepare_tax_totals(
                 [x._convert_to_tax_base_line_dict() for x in order_lines],
-                order.currency_id,
+                order.currency_id or order.company_id.currency_id,
             )
 
     @api.depends('state')
@@ -1078,7 +1079,7 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id)
+            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)

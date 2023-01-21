@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockQuantPackage(models.Model):
@@ -64,6 +64,25 @@ class StockQuantPackage(models.Model):
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    def _auto_init(self):
+        if not column_exists(self.env.cr, "stock_picking", "weight"):
+            # In order to speed up module installation when dealing with hefty data
+            # We create the column weight manually, but the computation will be skipped
+            # Therefore we do the computation in a query by getting weight sum from stock moves
+            create_column(self.env.cr, "stock_picking", "weight", "numeric")
+            self.env.cr.execute("""
+                WITH computed_weight AS (
+                    SELECT SUM(weight) AS weight_sum, picking_id
+                    FROM stock_move
+                    WHERE picking_id IS NOT NULL
+                    GROUP BY picking_id
+                )
+                UPDATE stock_picking
+                SET weight = weight_sum
+                FROM computed_weight
+                WHERE stock_picking.id = computed_weight.picking_id;
+            """)
+        return super()._auto_init()
 
     @api.depends('move_line_ids', 'move_line_ids.result_package_id')
     def _compute_packages(self):
@@ -85,13 +104,20 @@ class StockPicking(models.Model):
             ['picking_id', 'product_id', 'product_uom_id', 'qty_done'],
             lazy=False, orderby='qty_done asc'
         )
+        products_by_id = {
+            product_res['id']: (product_res['uom_id'][0], product_res['weight'])
+            for product_res in
+            self.env['product.product'].with_context(active_test=False).search_read(
+                [('id', 'in', list(set(grp["product_id"][0] for grp in res_groups)))], ['uom_id', 'weight'])
+        }
         for res_group in res_groups:
-            product_id = self.env['product.product'].browse(res_group['product_id'][0])
+            uom_id, weight = products_by_id[res_group['product_id'][0]]
+            uom = self.env['uom.uom'].browse(uom_id)
             product_uom_id = self.env['uom.uom'].browse(res_group['product_uom_id'][0])
             picking_weights[res_group['picking_id'][0]] += (
                 res_group['__count']
-                * product_uom_id._compute_quantity(res_group['qty_done'], product_id.uom_id)
-                * product_id.weight
+                * product_uom_id._compute_quantity(res_group['qty_done'], uom)
+                * weight
             )
         for picking in self:
             picking.weight_bulk = picking_weights[picking.id]

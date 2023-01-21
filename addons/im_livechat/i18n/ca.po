@@ -14,11 +14,12 @@
 # Martin Trigaux, 2022
 # Harcogourmet, 2022
 # Cristian Cruz, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Farouk Jabiri, 2022
 # marcescu, 2022
 # Quim - eccit <quim@eccit.com>, 2022
+# Ivan Espinola, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2022\n"
+"Last-Translator: Ivan Espinola, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -126,6 +127,10 @@ msgid ""
 "* 'Open automatically' displays the button and automatically opens the conversation pane.\n"
 "* 'Hide' hides the chat button on the pages.\n"
 msgstr ""
+"* «Mostra» mostra el botó de xat a les pàgines.\n"
+"* «Mostra amb notificació» és «Mostra» a més d'un text flotant just al costat del botó.\n"
+"* «Obre automàticament» mostra el botó i obre automàticament la subfinestra de converses.\n"
+"* «Oculta» oculta el botó de xat a les pàgines.\n"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -704,6 +709,9 @@ msgid ""
 "selected action must be 'Open automatically' otherwise this parameter will "
 "not be taken into account."
 msgstr ""
+"Retard (en segons) per a obrir automàticament la finestra de conversa. Nota:"
+" l'acció seleccionada ha de ser «Obre automàticament» en cas contrari no es "
+"tindrà en compte aquest paràmetre."
 
 #. module: im_livechat
 #. odoo-javascript
@@ -811,7 +819,7 @@ msgid ""
 "Given the order to find a matching rule. If 2 rules are matching for the "
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
-"Donada l'ordre per a trobar una regla de coincidència. Si dues regles "
+"Donada l'ordre per a trobar una regla de coincidència. Si 2 regles "
 "coincideixen per a l'URL/país donat, es triarà la que tingui la seqüència "
 "més baixa."
 
@@ -1054,7 +1062,7 @@ msgstr "Xat en directe"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__action
 msgid "Live Chat Button"
-msgstr ""
+msgstr "Botó de xat directe"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_search
@@ -1222,7 +1230,7 @@ msgstr "No s'ha trobat cap historial"
 #: code:addons/im_livechat/static/src/legacy/widgets/public_livechat_window/public_livechat_window.xml:0
 #, python-format
 msgid "No operator available"
-msgstr ""
+msgstr "No hi ha cap operador disponible"
 
 #. module: im_livechat
 #. odoo-javascript
@@ -1288,12 +1296,12 @@ msgstr "S'ha produït un error."
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
 msgid "Open automatically"
-msgstr ""
+msgstr "Obre automàticament"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
 msgid "Open automatically timer"
-msgstr ""
+msgstr "Obre el temporitzador automàticament"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__partner_id
@@ -1637,7 +1645,7 @@ msgstr "Sessió no valorada"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_without_answer
 msgid "Session(s) without answer"
-msgstr "Sessió/es sense resposta"
+msgstr "Sessió sense resposta"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
@@ -1666,7 +1674,7 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button_and_text
 msgid "Show with notification"
-msgstr ""
+msgstr "Mostra amb notificació"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__source_id
@@ -1724,6 +1732,10 @@ msgid ""
 "chat button will be hidden on the specified URL from the visitors located in"
 " these 2 countries. This feature requires GeoIP installed on your server."
 msgstr ""
+"La norma només s'aplicarà a aquests països. Exemple: si seleccioneu "
+"«Bèlgica» i «Estats Units» i si establiu l'acció a «Oculta», el botó de xat "
+"s'ocultarà a l'URL especificat dels visitants situats en aquests 2 països. "
+"Aquesta característica requereix la GeoIP instal·lada al servidor."
 
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_manager

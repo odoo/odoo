@@ -605,8 +605,6 @@ class SaleOrderLine(models.Model):
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
             })
-            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
-                line.tax_id.invalidate_recordset(['invoice_repartition_line_ids'])
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
@@ -1062,6 +1060,9 @@ class SaleOrderLine(models.Model):
             order_date = fields.Datetime.now()
         return order_date + timedelta(days=self.customer_lead or 0.0)
 
+    def compute_uom_qty(self, new_qty, stock_move, rounding=True):
+        return self.product_uom._compute_quantity(new_qty, stock_move.product_uom, rounding)
+
     def _get_invoice_line_sequence(self, new=0, old=0):
         """
         Method intended to be overridden in third-party module if we want to prevent the resequencing
@@ -1091,17 +1092,17 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_id.ids)],
-            'analytic_distribution': self.analytic_distribution,
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }
         analytic_account_id = self.order_id.analytic_account_id.id
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
-            res['analytic_distribution'] = res['analytic_distribution'] or {}
-            if self.analytic_distribution:
-                res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
+            if 'analytic_distribution' in res:
+                res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:
-                res['analytic_distribution'][analytic_account_id] = 100
+                res['analytic_distribution'] = {analytic_account_id: 100}
         if optional_values:
             res.update(optional_values)
         if self.display_type:

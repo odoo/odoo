@@ -13,7 +13,6 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Martin Trigaux, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -21,6 +20,8 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
+# Jana Jaakson, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Maidu Targama <m.targama@gmail.com>, 2022\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -101,7 +102,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s"
-msgstr ""
+msgstr "%(name)s"
 
 #. module: project
 #. odoo-python
@@ -115,35 +116,35 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Milestones"
-msgstr ""
+msgstr "%(name)s eesmärgid"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Rating"
-msgstr ""
+msgstr "%(name)s hinnang"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Tasks Analysis"
-msgstr ""
+msgstr "%(name)s ülesannete analüüs"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Timesheets"
-msgstr ""
+msgstr "%(name)s tööaja arvestusleht"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr ""
+msgstr "%(name)s uuendused"
 
 #. module: project
 #. odoo-python
@@ -158,24 +159,24 @@ msgstr "%s (koopia)"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ %(child_count)s tasks)"
-msgstr ""
+msgstr "(+ %(child_count)s ülesanded)"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "(+ 1 task)"
-msgstr ""
+msgstr "(+ 1 ülesanne)"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(tähtaeg"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "(last project update),"
-msgstr ""
+msgstr "(viimane projekti uuendus),"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
@@ -454,16 +455,19 @@ msgid ""
 "                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
 "                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 msgstr ""
+"<i class=\"fa fa-fw o_button_icon fa-smile-o text-success\" attrs=\"{'invisible': [('rating_avg', '&lt;', 3.66)]}\" title=\"Satisfied\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-meh-o text-warning\" attrs=\"{'invisible': ['|', ('rating_avg', '&lt;', 2.33), ('rating_avg', '&gt;=', 3.66)]}\" title=\"Okay\"/>\n"
+"                            <i class=\"fa fa-fw o_button_icon fa-frown-o text-danger\" attrs=\"{'invisible': [('rating_avg', '&gt;=', 2.33)]}\" title=\"Dissatisfied\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-lightbulb-o\"/>&amp;nbsp;"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Privaatne"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -471,6 +475,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
 "                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2 oe_edit_only\" aria-label=\"Arrow icon\" title=\"Arrow\"/>\n"
+"                                <i class=\"fa fa-long-arrow-right mx-2 oe_read_only\" aria-label=\"Arrow icon\" title=\"Arrow\" attrs=\"{'invisible': [('date_start', '=', False), ('date', '=', False)]}\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -478,18 +484,20 @@ msgid ""
 "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
 "Customer Ratings</b> are disabled on the following project(s) : <br/>"
 msgstr ""
+"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
+"Klientide hinnangud</b> on keelatud järgmistes projektides: <br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
-msgstr ""
+msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "<p><em>Number of tasks: %(tasks_count)s</em></p>"
-msgstr ""
+msgstr "<p><em>Ülesannete arv: %(tasks_count)s</em></p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -506,7 +514,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -514,6 +522,8 @@ msgid ""
 "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
 msgstr ""
+"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
+"title=\"Domain Alias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -527,7 +537,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -548,18 +558,18 @@ msgstr "<span class=\"o_stat_text\">Blokeerimine</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Last Rating</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Viimane hinnang</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Alamülesanded</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">kordumises</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -801,7 +811,7 @@ msgstr "Administraator"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Agile Scrum"
-msgstr ""
+msgstr "Agile Scrum"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_id
@@ -881,6 +891,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Analüütiline konto, millega seotud see projekt, ülesanded ja tööajatabelid.\n"
+"Jälgige oma projekti kulusid ja tulusid, määrates oma seotud dokumentidele (nt müügitellimused, arved, ostutellimused, hankija arved, kulud jne) see analüütiline konto.\n"
+"Seda analüütilist kontot saab vajadusel iga ülesande puhul eraldi muuta.\n"
+"Tööajatabelite kasutamiseks on vaja analüütilist kontot."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -917,7 +931,7 @@ msgstr "Analüüsige projektide edenemist ja töötajate tulemuslikkust."
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Ancestor Task"
-msgstr ""
+msgstr "Vanem ülesanne"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -1805,7 +1819,7 @@ msgstr "Kuupäev"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_on_year__day
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_on_year__day
 msgid "Day of the Year"
-msgstr ""
+msgstr "päeval aastas"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__day
@@ -2158,7 +2172,7 @@ msgstr "Emailid saadetud aadressile"
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Ainult töötajad"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_until
@@ -2714,7 +2728,7 @@ msgstr "Vigane välja kirjeldus %r."
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Vigane operaator: %s"
 
 #. module: project
 #. odoo-python
@@ -5253,7 +5267,7 @@ msgstr "Ülesanne blokeeritud"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task description..."
-msgstr ""
+msgstr "Ülesande kirjeldus..."
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
@@ -6109,13 +6123,6 @@ msgstr "Isikliku etapi saate seada ainult privaatsele ülesandele."
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
-msgstr ""
-
-#. module: project
-#. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
@@ -6150,6 +6157,20 @@ msgid ""
 msgstr ""
 "Te ei saa kustutada ülesandeid sisaldavaid etappe. Kõigepealt peaksite "
 "kustutama etappides sisalduvad ülesanded."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr ""
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr ""
 
 #. module: project
 #. odoo-python
@@ -6386,9 +6407,9 @@ msgstr ""
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "will generate tasks in your"
-msgstr ""
+msgstr "genereerib teie ülesandeid"
 
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "{{ object.project_id.company_id.name }}: Satisfaction Survey"
-msgstr ""
+msgstr "{{ object.project_id.company_id.name }}: Rahulolu-uuring"

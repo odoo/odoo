@@ -7,7 +7,7 @@
 # Thomas Charpentier, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,7 @@ msgstr "# Opportunités en retard"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr "# Pistes non assignées"
+msgstr "# Pistes non attribuées"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -555,7 +555,7 @@ msgid ""
 "team."
 msgstr ""
 "Domaine de filtrage supplémentaire lors de la récupération de pistes non "
-"assignés à attribuer à l'équipe"
+"attribuées à attribuer à l'équipe"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1126,8 +1126,8 @@ msgstr "Créer un plan récurrent"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
 msgstr ""
-"Crée une demande de génération de pistes directement depuis le pipeline des "
-"opportunités"
+"Crée une demande de prospection de pistes directement depuis le pipeline des"
+" opportunités"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -1648,8 +1648,8 @@ msgstr "Activités futures"
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_mine
 msgid "Generate new leads based on their country, industries, size, etc."
 msgstr ""
-"Générez de nouvelles pistes en fonction de leur pays, de leur industrie, de "
-"leur taille, etc."
+"Générez de nouvelles pistes en fonction de leur pays, de leur secteur "
+"d'activité, de leur taille, etc."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2021,7 +2021,7 @@ msgstr "Capacité moyenne de piste"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Enrichment"
-msgstr "Enrichissement en leads"
+msgstr "Enrichissement de pistes"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -2031,7 +2031,7 @@ msgstr "Génération de pistes"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr "Génération de Pistes"
+msgstr "Prospection de pistes"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_properties_definition
@@ -2061,7 +2061,7 @@ msgstr "Date de début de la notation des pistes"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
 msgid "Lead Scoring Starting Date in String"
-msgstr "Date de début du scoring des leads dans la chaîne"
+msgstr "Date de début de la notation des pistes dans la chaîne"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
@@ -2599,7 +2599,7 @@ msgid ""
 msgstr ""
 "Aucune piste attribuée à aucune équipe ou commerciaux. Vérifiez la "
 "configuration de votre équipe commerciale et de vos commerciaux ainsi que "
-"les pistes non-attribuées."
+"les pistes non attribuées."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2620,7 +2620,7 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
-"Aucune piste attribuée à des commerciaux car aucune piste non-attribuée ne "
+"Aucune piste attribuée à des commerciaux car aucune piste non attribuée ne "
 "correspond à leurs domaines."
 
 #. module: crm
@@ -2630,8 +2630,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
-"Aucune nouvelle piste attribuée à l'équipe %(team_name)scar aucune piste "
-"non-attribuée ne correspond à son domaine."
+"Aucune nouvelle piste attribuée à l'équipe %(team_name)scar aucune piste non"
+" attribuée ne correspond à son domaine."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -3061,7 +3061,7 @@ msgstr "Nombre de pistes potentiellement dupliquées"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr "Étiquettes des champs de l'évaluation prédictive des prospects"
+msgstr "Étiquettes des champs de notation prédictive des pistes"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
@@ -3775,7 +3775,7 @@ msgstr "Astuce: Convertissez les emails entrants en opportunités"
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
 msgstr ""
-"Astuce: Saviez-vous qu'Odoo contient un outil de recherche de pistes ?"
+"Astuce: Saviez-vous qu'Odoo contient un outil de prospection de pistes ?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
@@ -3880,17 +3880,17 @@ msgstr "UX: Limiter à la société principale ou pour tous si aucune entreprise
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Unassigned"
-msgstr "Non assigné"
+msgstr "Non attribué"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Lead"
-msgstr "Piste non assigné"
+msgstr "Piste non attribuée"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 msgid "Unassigned Leads"
-msgstr "Pistes non assignés"
+msgstr "Pistes non attribuées"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter

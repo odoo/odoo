@@ -5,15 +5,15 @@
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Sarah Park, 2022
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Sarah Park, 2022\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "(no accounts)"
@@ -54,7 +54,7 @@ msgid "Active"
 msgstr "활성"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "Add a line"
@@ -83,7 +83,7 @@ msgid "Amount"
 msgstr "금액"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
 #: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
@@ -131,13 +131,7 @@ msgid "Analytic Distribution Models"
 msgstr ""
 
 #. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_stored_char
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_stored_char
-msgid "Analytic Distribution Stored Char"
-msgstr ""
-
-#. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
@@ -180,7 +174,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "분석 계획에 대한 적용 가능성"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_plan_action
@@ -191,17 +185,25 @@ msgid "Analytic Plans"
 msgstr ""
 
 #. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_precision
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_precision
+msgid "Analytic Precision"
+msgstr "분석의 정확성"
+
+#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Analytic distribution to apply"
 msgstr ""
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Accounts"
 msgstr ""
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
@@ -422,7 +424,7 @@ msgid "Domain"
 msgstr "도메인"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Editing"
@@ -485,7 +487,7 @@ msgstr ""
 "Odoo에서 판매 주문 및 프로젝트는 분석 회계를 사용하여 구현됩니다. 쉽게 이윤을 분석하기 위해 비용/수익을 추적할 수 있습니다."
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Invalid"
@@ -524,7 +526,7 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Loading..."
@@ -546,7 +548,7 @@ msgid "Main Attachment"
 msgstr "주요 첨부 파일"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__mandatory
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__mandatory
@@ -586,7 +588,7 @@ msgid "Nebula"
 msgstr ""
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
@@ -603,7 +605,7 @@ msgid "No activity yet on this account"
 msgstr "아직 이 계정에 활동이 없습니다"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
@@ -630,11 +632,18 @@ msgid "Number of messages with delivery error"
 msgstr "전송 오류 메시지 수"
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "OK"
 msgstr "확인"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "One or more lines require a 100% analytic distribution."
+msgstr ""
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -642,7 +651,7 @@ msgid "Operating Costs"
 msgstr ""
 
 #. module: analytic
-#. openerp-web
+#. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_plan__default_applicability__optional
@@ -777,6 +786,7 @@ msgid "Subplans"
 msgstr ""
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_line.py:0
 #, python-format
 msgid ""
@@ -826,11 +836,21 @@ msgid "Website communication history"
 msgstr "웹사이트 대화 이력"
 
 #. module: analytic
+#. odoo-python
 #: code:addons/analytic/models/analytic_account.py:0
 #, python-format
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
+msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_distribution_model.py:0
+#, python-format
+msgid ""
+"You defined a distribution with analytic account(s) belonging to a specific "
+"company but a model shared between companies or with a different company"
 msgstr ""
 
 #. module: analytic

@@ -397,6 +397,10 @@ class Partner(models.Model):
         if (not view_id) and (view_type == 'form') and self._context.get('force_email'):
             view_id = self.env.ref('base.view_partner_simple_form').id
         arch, view = super()._get_view(view_id, view_type, **options)
+        company = self.env.company
+        if company.country_id.vat_label:
+            for node in arch.xpath("//field[@name='vat']"):
+                node.attrib["string"] = company.country_id.vat_label
         return arch, view
 
     @api.constrains('parent_id')
@@ -526,7 +530,7 @@ class Partner(models.Model):
         partners that aren't `commercial entities` themselves, and will be
         delegated to the parent `commercial entity`. The list is meant to be
         extended by inheriting classes. """
-        return ['vat', 'company_registry']
+        return ['vat', 'company_registry', 'industry_id']
 
     def _commercial_sync_from_company(self):
         """ Handle sync of commercial fields when a new parent commercial entity is set,

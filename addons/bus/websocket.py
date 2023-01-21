@@ -602,6 +602,8 @@ class Websocket:
         registered for this event type. Every callback is given both the
         environment and the related websocket.
         """
+        if not type(self)._event_callbacks[event_type]:
+            return
         with closing(acquire_cursor(self._session.db)) as cr:
             env = api.Environment(cr, self._session.uid, self._session.context)
             for callback in type(self)._event_callbacks[event_type]:
@@ -646,8 +648,8 @@ class TimeoutManager:
     """
     This class handles the Websocket timeouts. If no response to a
     PING/CLOSE frame is received after `TIMEOUT` seconds or if the
-    connection is opened for more than `KEEP_ALIVE_TIMEOUT` seconds, the
-    connection is considered to have timed out. To determine if the
+    connection is opened for more than `self._keep_alive_timeout` seconds,
+    the connection is considered to have timed out. To determine if the
     connection has timed out, use the `has_timed_out` method.
     """
     TIMEOUT = 15
@@ -660,6 +662,11 @@ class TimeoutManager:
         self._awaited_opcode = None
         # Time in which the connection was opened.
         self._opened_at = time.time()
+        # Custom keep alive timeout for each TimeoutManager to avoid multiple
+        # connections timing out at the same time.
+        self._keep_alive_timeout = (
+            type(self).KEEP_ALIVE_TIMEOUT + random.uniform(0, type(self).KEEP_ALIVE_TIMEOUT / 2)
+        )
         self.timeout_reason = None
         # Start time recorded when we started awaiting an answer to a
         # PING/CLOSE frame.
@@ -689,10 +696,10 @@ class TimeoutManager:
         Determine whether the connection has timed out or not. The
         connection times out when the answer to a CLOSE/PING frame
         is not received within `TIMEOUT` seconds or if the connection
-        is opened for more than `KEEP_ALIVE_TIMEOUT` seconds.
+        is opened for more than `self._keep_alive_timeout` seconds.
         """
         now = time.time()
-        if now - self._opened_at >= type(self).KEEP_ALIVE_TIMEOUT:
+        if now - self._opened_at >= self._keep_alive_timeout:
             self.timeout_reason = TimeoutReason.KEEP_ALIVE
             return True
         if self._awaited_opcode and now - self._waiting_start_time >= type(self).TIMEOUT:

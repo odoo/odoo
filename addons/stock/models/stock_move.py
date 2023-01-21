@@ -569,19 +569,30 @@ Please change the quantity done or the rounding precision of your unit of measur
                 mls = move.move_line_nosuggest_ids
             else:
                 mls = move.move_line_ids
-            mls = mls.filtered(lambda ml: ml.lot_id)
-            for ml in mls:
+            mls_with_lots = mls.filtered(lambda ml: ml.lot_id)
+            mls_without_lots = (mls - mls_with_lots)
+            for ml in mls_with_lots:
                 if ml.qty_done and ml.lot_id not in move.lot_ids:
                     move_lines_commands.append((2, ml.id))
             ls = move.move_line_ids.lot_id
             for lot in move.lot_ids:
                 if lot not in ls:
-                    move_line_vals = self._prepare_move_line_vals(quantity=0)
-                    move_line_vals['lot_id'] = lot.id
-                    move_line_vals['lot_name'] = lot.name
-                    move_line_vals['product_uom_id'] = move.product_id.uom_id.id
-                    move_line_vals['qty_done'] = 1
-                    move_lines_commands.append((0, 0, move_line_vals))
+                    if mls_without_lots[:1]:  # Updates an existing line without serial number.
+                        move_line = mls_without_lots[:1]
+                        move_lines_commands.append(Command.update(move_line.id, {
+                            'lot_name': lot.name,
+                            'lot_id': lot.id,
+                            'product_uom_id': move.product_id.uom_id.id,
+                            'qty_done': 1,
+                        }))
+                        mls_without_lots -= move_line
+                    else:  # No line without serial number, creates a new one.
+                        move_line_vals = self._prepare_move_line_vals(quantity=0)
+                        move_line_vals['lot_id'] = lot.id
+                        move_line_vals['lot_name'] = lot.name
+                        move_line_vals['product_uom_id'] = move.product_id.uom_id.id
+                        move_line_vals['qty_done'] = 1
+                        move_lines_commands.append((0, 0, move_line_vals))
                 else:
                     move_line = move.move_line_ids.filtered(lambda line: line.lot_id.id == lot.id)
                     move_line.qty_done = 1
@@ -888,7 +899,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
-        return ['description_picking']
+        return ['description_picking', 'price_unit']
 
     def _clean_merged(self):
         """Cleanup hook used when merging moves"""
@@ -926,6 +937,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         neg_qty_moves.picking_id = False
         excluded_fields = self._prepare_merge_negative_moves_excluded_distinct_fields()
         neg_key = itemgetter(*[field for field in distinct_fields if field not in excluded_fields])
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
 
         for candidate_moves in candidate_moves_list:
             # First step find move to merge.
@@ -947,21 +959,27 @@ Please change the quantity done or the rounding precision of your unit of measur
         for neg_move in neg_qty_moves:
             # Check all the candidates that matches the same limited key, and adjust their quantities to absorb negative moves
             for pos_move in moves_by_neg_key.get(neg_key(neg_move), []):
-                # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
-                if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
-                    pos_move.product_uom_qty += neg_move.product_uom_qty
-                    pos_move.write({
-                        'move_dest_ids': [Command.link(m.id) for m in neg_move.mapped('move_dest_ids') if m.location_id == pos_move.location_dest_id],
-                        'move_orig_ids': [Command.link(m.id) for m in neg_move.mapped('move_orig_ids') if m.location_dest_id == pos_move.location_id],
-                    })
-                    merged_moves |= pos_move
-                    moves_to_unlink |= neg_move
-                    if float_is_zero(pos_move.product_uom_qty, precision_rounding=pos_move.product_uom.rounding):
-                        moves_to_cancel |= pos_move
-                    break
-                neg_move.product_uom_qty += pos_move.product_uom_qty
-                pos_move.product_uom_qty = 0
-                moves_to_cancel |= pos_move
+                currency_prec = pos_move.product_id.currency_id.decimal_places
+                rounding = min(currency_prec, price_unit_prec)
+                if float_compare(pos_move.price_unit, neg_move.price_unit, precision_rounding=rounding) == 0:
+                    new_total_value = pos_move.product_qty * pos_move.price_unit + neg_move.product_qty * neg_move.price_unit
+                    # If quantity can be fully absorbed by a single move, update its quantity and remove the negative move
+                    if float_compare(pos_move.product_uom_qty, abs(neg_move.product_uom_qty), precision_rounding=pos_move.product_uom.rounding) >= 0:
+                        pos_move.product_uom_qty += neg_move.product_uom_qty
+                        pos_move.write({
+                            'price_unit': float_round(new_total_value / pos_move.product_qty, precision_digits=price_unit_prec) if pos_move.product_qty else 0,
+                            'move_dest_ids': [Command.link(m.id) for m in neg_move.mapped('move_dest_ids') if m.location_id == pos_move.location_dest_id],
+                            'move_orig_ids': [Command.link(m.id) for m in neg_move.mapped('move_orig_ids') if m.location_dest_id == pos_move.location_id],
+                        })
+                        merged_moves |= pos_move
+                        moves_to_unlink |= neg_move
+                        if float_is_zero(pos_move.product_uom_qty, precision_rounding=pos_move.product_uom.rounding):
+                            moves_to_cancel |= pos_move
+                        break
+                    neg_move.product_uom_qty += pos_move.product_uom_qty
+                    neg_move.price_unit = float_round(new_total_value / neg_move.product_qty, precision_digits=price_unit_prec)
+                    pos_move.product_uom_qty = 0
+                    moves_to_cancel |= pos_move
 
         if moves_to_unlink:
             # We are using propagate to False in order to not cancel destination moves merged in moves[0]
@@ -1791,7 +1809,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     @api.ondelete(at_uninstall=False)
     def _unlink_if_draft_or_cancel(self):
         if any(move.state not in ('draft', 'cancel') for move in self):
-            raise UserError(_('You can only delete draft moves.'))
+            raise UserError(_('You can only delete draft or cancelled moves.'))
 
     def unlink(self):
         # With the non plannified picking, draft moves could have some move lines.

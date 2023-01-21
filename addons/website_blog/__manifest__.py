@@ -41,6 +41,9 @@
             'website_blog/static/src/js/tours/website_blog.js',
             'website_blog/static/src/js/systray_items/*.js',
         ],
+        'web.assets_tests': [
+            'website_blog/static/tests/**/*',
+        ],
         'web.assets_frontend': [
             'website_blog/static/src/scss/website_blog.scss',
             'website_blog/static/src/js/contentshare.js',

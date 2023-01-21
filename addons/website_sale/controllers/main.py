@@ -719,6 +719,7 @@ class WebsiteSale(http.Controller):
         # empty promo code is used to reset/remove pricelist (see `sale_get_order()`)
         if promo:
             pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
+            request.session['website_sale_current_pl'] = pricelist_sudo.id
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
@@ -1735,6 +1736,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

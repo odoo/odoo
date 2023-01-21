@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="view_move_form_inherit_l10n_cl" model="ir.ui.view">
         <field name="name">account.move.form.inherit.l10n.cl</field>
         <field name="model">account.move</field>
@@ -9,9 +8,6 @@
             <form>
                 <field name="l10n_latam_internal_type" invisible="1"/>
             </form>
-            <field name="ref" position="attributes">
-                <attribute name="attrs">{'invisible': [('move_type', '=', 'out_invoice'), ('l10n_latam_internal_type', '!=', 'debit_note')], 'required': [('l10n_latam_internal_type', '=', 'debit_note')]}</attribute>
-            </field>
         </field>
     </record>
 

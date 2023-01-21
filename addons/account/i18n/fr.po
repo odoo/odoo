@@ -9,13 +9,13 @@
 # laje_odoo, 2022
 # Malika Berardi, 2022
 # Loïc De Greef, 2022
-# Pierre Verkest <pierreverkest84@gmail.com>, 2022
 # Christophe Klopfert, 2022
 # Martin Trigaux, 2022
 # beau sebastien <sebastien.beau@akretion.com>, 2022
 # HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# sig-odoo Odoo, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -257,8 +257,9 @@ msgid ""
 "- A new field « Total (tax inc.) » to speed up and control the encoding by "
 "automating line creation with the right account &amp; tax."
 msgstr ""
-"- Un nouveau champ \" Total (taxe incluse) \" pour accélérer et contrôler "
-"l'encodage en automatisant la création de lignes avec le bon compte de taxe."
+"- Un nouveau champ \" Total (toutes taxes comprises) \" pour accélérer et "
+"contrôler l'encodage en automatisant la création de lignes avec le bon "
+"compte de taxe."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1027,7 +1028,7 @@ msgid ""
 "Payments/Receipts</span>"
 msgstr ""
 "<span title=\"Outstanding Payments/Receipts\">Paiements/Reçus en "
-"attente</span>"
+"suspens</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -1206,7 +1207,7 @@ msgstr "<strong>Montant dû</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr "<strong>Date de l'Avoir :</strong>"
+msgstr "<strong>Date de la note de crédit :</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1420,8 +1421,8 @@ msgid ""
 "the sum of line subtotals equals the total with taxes."
 msgstr ""
 "Un arrondi par ligne est conseillé si vos prix comprennent les taxes. De "
-"cette façon, la somme des sous-totaux de ligne est égale au total taxes "
-"incluses."
+"cette façon, la somme des sous-totaux de ligne est égale au total toutes "
+"taxes comprises."
 
 #. module: account
 #. odoo-python
@@ -1467,9 +1468,9 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
-"Un utilisateur ne peut pas être à la fois en mode 'Taxe-Incluse' et en mode 'Hors taxe'.\n"
+"Un utilisateur ne peut pas être à la fois en mode B2B et en mode B2C.\n"
 "Vous devez aller dans les Paramètres généraux, et choisir d'afficher le prix des produits\n"
-"soit en mode 'Taxe-Incluse' ou en mode 'Hors taxe'\n"
+"soit en mode 'Toutes taxes comprises' ou en mode 'Hors taxes'\n"
 "(ou changer deux fois le mode si vous êtes déjà dans le mode désiré)."
 
 #. module: account
@@ -1525,7 +1526,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
 msgid "Account Cash Rounding"
-msgstr "Arrondi du compte"
+msgstr "Arrondi des paiements en espèces du compte"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
@@ -1610,7 +1611,7 @@ msgstr "Groupe de journal"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__account_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Account Mapping"
-msgstr "Affectation des comptes"
+msgstr "Correspondance de comptes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reversal
@@ -1790,7 +1791,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
 msgid "Account on Product"
-msgstr "Compte de l'article"
+msgstr "Compte sur produit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
@@ -1984,17 +1985,17 @@ msgstr "Comptes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Accounts Mapping"
-msgstr "Affectation des comptes"
+msgstr "Correspondance de comptes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account_template
 msgid "Accounts Mapping Template of Fiscal Position"
-msgstr "Modèle de mappage des comptes de position fiscale"
+msgstr "Modèle de correspondance de comptes de la position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_account
 msgid "Accounts Mapping of Fiscal Position"
-msgstr "Mappage des comptes de position fiscale"
+msgstr "Correspondance de comptes de la position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
@@ -2096,7 +2097,7 @@ msgstr "Activer pour créer un reçu de vente"
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__active
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
@@ -2178,7 +2179,7 @@ msgstr "Ajouter"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "Ajouter un avoir"
+msgstr "Ajouter une note de crédit"
 
 #. module: account
 #: model:ir.actions.server,name:account.action_new_bank_setting
@@ -2271,7 +2272,7 @@ msgstr "Ajouter des contacts à prévenir"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Add your terms &amp; conditions at the bottom of invoices/orders/quotations"
-msgstr "Ajoutez vos termes et conditions en bas des factures/commandes/devis"
+msgstr "Ajoutez vos conditions générales en bas des factures/commandes/devis"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__partner_ids
@@ -2438,7 +2439,7 @@ msgstr "Activer l'impression et le dépôt de chèques ."
 #. module: account
 #: model:res.groups,name:account.group_cash_rounding
 msgid "Allow the cash rounding management"
-msgstr "Autoriser la gestion d'arrondi d'espèces"
+msgstr "Autoriser la gestion d'arrondi des paiements en espèces"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3143,8 +3144,8 @@ msgid ""
 "Partner bank account number."
 msgstr ""
 "Numéro du compte bancaire sur lequel la facture sera payée. Un compte "
-"bancaire de la Société s'il s'agit d'une facture client ou d'un avoir du "
-"fournisseur, sinon un numéro de compte bancaire du tiers."
+"bancaire de la Société s'il s'agit d'une facture client ou d'une note de "
+"crédit du fournisseur, sinon un numéro de compte bancaire du tiers."
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner_bank
@@ -3734,7 +3735,7 @@ msgstr "Gain de change"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income Account"
-msgstr "Compte de revenu de différence de caisse"
+msgstr "Compte des revenus de différence de caisse"
 
 #. module: account
 #. odoo-python
@@ -3792,21 +3793,21 @@ msgstr "Caisses"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_cash_rounding
 msgid "Cash Rounding"
-msgstr "Arrondi d'espèces"
+msgstr "Arrondi des paiements en espèces"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_cash_rounding_id
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_cash_rounding_id
 msgid "Cash Rounding Method"
-msgstr "Méthode d'arrondi d'espèces"
+msgstr "Méthode d'arrondi des paiements en espèces"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.rounding_list_action
 #: model:ir.ui.menu,name:account.menu_action_rounding_form_view
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Cash Roundings"
-msgstr "Arrondis d'espèces"
+msgstr "Arrondis des paiements en espèces"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -3849,7 +3850,7 @@ msgstr "Catégorie de compte de charge"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_income_categ_id
 msgid "Category of Income Account"
-msgstr "Catégorie de compte de revenu"
+msgstr "Catégorie de compte des revenus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -3974,7 +3975,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Cochez cette case si vous ne souhaitez pas partager la même séquence pour "
-"les factures et les avoirs créés à partir de ce journal."
+"les factures et les notes de crédit créées à partir de ce journal."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__payment_sequence
@@ -4001,7 +4002,7 @@ msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr ""
-"Cochez cette case si le prix que vous utilisez pour l'article et les "
+"Cochez cette case si le prix que vous utilisez pour le produit et les "
 "factures inclut cette taxe."
 
 #. module: account
@@ -4034,7 +4035,7 @@ msgstr "Sous taxes"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "Définissez une taxe de vente par défaut pour vos articles."
+msgstr "Définissez une taxe de vente par défaut pour vos produits."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__refund_method
@@ -4548,7 +4549,7 @@ msgstr "Créer un compte bancaire"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_refund_type
 msgid "Create a credit note"
-msgstr "Créer un avoir"
+msgstr "Créer une note de crédit"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4658,7 +4659,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
 msgid "Create the first cash rounding"
-msgstr "Créer le premier arrondi d'espèces"
+msgstr "Créer le premier arrondi des paiements en espèces"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
@@ -4831,7 +4832,7 @@ msgstr "Mouvement de crédit"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Avoir"
+msgstr "Note de crédit"
 
 #. module: account
 #. odoo-python
@@ -4856,7 +4857,7 @@ msgstr "Note de crédit : Envoi"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Avoirs"
+msgstr "Notes de crédit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__matched_credit_ids
@@ -5030,7 +5031,7 @@ msgstr "Compte bancaire client"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Avoir du client"
+msgstr "Note de crédit client"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_analytic_line__category__invoice
@@ -5322,7 +5323,7 @@ msgstr "Séparateur décimal"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__refund_sequence
 msgid "Dedicated Credit Note Sequence"
-msgstr "Séquence dédiée aux avoirs"
+msgstr "Séquence dédiée aux notes de crédit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_sequence
@@ -5357,7 +5358,7 @@ msgstr "Compte de Charges par Défaut"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Income Account"
-msgstr "Compte de Produits par Défaut"
+msgstr "Compte des revenus par défaut"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5395,12 +5396,12 @@ msgstr "Taxes par défaut"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__use_invoice_terms
 msgid "Default Terms & Conditions"
-msgstr "Termes et Conditions par défaut"
+msgstr "Conditions générales par défaut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms
 msgid "Default Terms and Conditions"
-msgstr "Conditions générales de vente"
+msgstr "Conditions générales par défaut"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
@@ -5428,7 +5429,7 @@ msgstr "Imposte predefinite usate per l'acquisto del prodotto"
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr "Taxes utilisées par défaut lors de la vente de l'article."
+msgstr "Taxes utilisées par défaut lors de la vente du produit."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -5646,7 +5647,7 @@ msgstr "Disc.%"
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
 #: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
 msgid "Discard"
-msgstr "Annuler"
+msgstr "Ignorer"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -5943,7 +5944,7 @@ msgstr "Ébauche de facture"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Ébauche d'avoir"
+msgstr "Note de crédit brouillon"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_show_draft
@@ -5997,7 +5998,7 @@ msgstr "Brouillon de reçu de ventes"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Vendor Credit Note"
-msgstr "Brouillon d'avoir de fournisseur"
+msgstr "Note de crédit fournisseur brouillon"
 
 #. module: account
 #. odoo-python
@@ -6060,7 +6061,7 @@ msgid ""
 "vendor bill/credit note."
 msgstr ""
 "Doublon de référence fournisseur détecté. Vous avez probablement saisi deux "
-"fois la même facture/le même avoir fournisseur."
+"fois la même facture/note de crédit fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
@@ -6403,7 +6404,7 @@ msgstr "Compte de Charge"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr "Compte de charge sur les modèles d'article"
+msgstr "Compte de charge sur les modèles de produit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -6802,7 +6803,7 @@ msgstr "Forcer"
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__force_tax_included
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line_template__force_tax_included
 msgid "Force the tax to be managed as a price included tax."
-msgstr "Forcer la taxe à être gérée comme une taxe incluse dans le prix."
+msgstr "Forcer la taxe à être gérée comme un prix TTC"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__currency_id
@@ -6953,7 +6954,7 @@ msgstr "Remboursement intégral"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
 msgid "Full refund and new draft invoice"
-msgstr "Avoir intégral et nouvelle facture brouillon"
+msgstr "Remboursement intégral et nouvelle facture brouillon"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -7643,12 +7644,12 @@ msgstr "Revenus"
 #: model:ir.model.fields,field_description:account.field_product_product__property_account_income_id
 #: model:ir.model.fields,field_description:account.field_product_template__property_account_income_id
 msgid "Income Account"
-msgstr "Compte de revenus"
+msgstr "Compte des revenus"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_income_id
 msgid "Income Account on Product Template"
-msgstr "Compte de revenu sur les modèles d'articles"
+msgstr "Compte des revenus sur les modèles de produits"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -7745,7 +7746,7 @@ msgstr "Compte d'entrée pour la valorisation d'inventaire"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
-msgstr "Insérez vos termes et conditions ici..."
+msgstr "Insérez vos conditions générales ici..."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8076,8 +8077,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
-"La répartition des factures et des avoirs doit comporter au moins une ligne "
-"de répartition des taxes."
+"La répartition des factures et des notes de crédit doit comporter au moins "
+"une ligne de répartition des taxes."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -8683,8 +8684,8 @@ msgstr "Laisser ouvert"
 msgid ""
 "Keep this field empty to use the default value from the product category."
 msgstr ""
-"Laissez ce champ vide pour utiliser la valeur par défaut de la catégorie "
-"d'article."
+"Laissez ce champ vide pour utiliser la valeur par défaut de la catégorie de "
+"produit."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
@@ -9247,8 +9248,8 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
-"Manuel : Payez ou soyez payé par n'importe quelle méthode en dehors d'Odoo.\n"
-"Fournisseurs de paiement : Chaque fournisseur de paiement a sa propre méthode de paiement. Demandez une transaction sur/vers une carte grâce à un jeton de paiement enregistré par le partenaire lors d'un achat ou d'un abonnement en ligne.\n"
+"Manuel : Payez ou soyez payé par n'importe quel mode en dehors d'Odoo.\n"
+"Fournisseurs de paiement : Chaque fournisseur de paiement a son propre mode de paiement. Demandez une transaction sur/vers une carte grâce à un jeton de paiement enregistré par le partenaire lors d'un achat ou d'un abonnement en ligne.\n"
 "Chèque : Payez vos factures par chèque et imprimez-le depuis Odoo.\n"
 "Dépôt par lot : Collectez plusieurs chèques clients en une seule fois en générant et en soumettant un dépôt par lot à votre banque. Le module account_batch_payment est nécessaire.\n"
 "Virement SEPA : Payez dans la zone SEPA en soumettant un fichier de virement SEPA à votre banque. Le module account_sepa est nécessaire.\n"
@@ -9511,7 +9512,7 @@ msgstr "Monétaire"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "Contrôlez vos marges par articles à partir des factures"
+msgstr "Contrôlez vos marges par produits à partir des factures"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
@@ -9910,7 +9911,7 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Notez que la façon la plus simple de créer un avoir est de le faire directement\n"
+"Notez que la façon la plus simple de créer une note de crédit est de le faire directement\n"
 " à partir de la facture client."
 
 #. module: account
@@ -9919,8 +9920,8 @@ msgid ""
 "Note that the easiest way to create a vendor credit note is to do it "
 "directly from the vendor bill."
 msgstr ""
-"Notez que la façon la plus simple de créer un avoir fournisseur est de le "
-"faire directement à partir de la facture fournisseur."
+"Notez que la façon la plus simple de créer une note de crédit fournisseur "
+"est de le faire directement à partir de la facture fournisseur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__note
@@ -10989,7 +10990,7 @@ msgstr "Conditions de paiement : 30 % d'avance, fin du mois suivant"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Condition de paiement : 30 jours maintenant, solde à 60 jours"
+msgstr "Condition de paiement : 30% maintenant, solde à 60 jours"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_45days
@@ -11068,7 +11069,7 @@ msgstr "Pourcentage du prix"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "Pourcentage du prix taxes incluses"
+msgstr "Pourcentage du prix toutes taxes comprises"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__percentage
@@ -11406,12 +11407,12 @@ msgstr "Imprimer les chèques pour payer vos fournisseurs"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
-msgstr "Article"
+msgstr "Produit"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
 msgid "Product Categories"
-msgstr "Catégories d'articles"
+msgstr "Catégories de produits"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -11420,17 +11421,17 @@ msgstr "Catégories d'articles"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "Catégorie d'article"
+msgstr "Catégorie de produit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
 msgid "Product Quantity"
-msgstr "Quantité d'articles"
+msgstr "Quantité de produits"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "Variante d'article"
+msgstr "Variante de produit"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -11440,7 +11441,7 @@ msgstr "Variante d'article"
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 #: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
 msgid "Products"
-msgstr "Articles"
+msgstr "Produits"
 
 #. module: account
 #. odoo-javascript
@@ -11743,7 +11744,7 @@ msgstr "Devise de remboursement"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Refund Date"
-msgstr "Date de l'avoir"
+msgstr "Date de remboursement"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
@@ -12062,24 +12063,24 @@ msgstr "Extourne de : %s"
 #: model:ir.actions.act_window,name:account.action_view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse"
-msgstr "Inverser"
+msgstr "Extourner"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Reverse Entry"
-msgstr "Écriture de renversement"
+msgstr "Écriture d'extourne"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Reverse Journal Entry"
-msgstr "Extourner pièce comptable"
+msgstr "Extourner écriture comptable"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reverse Moves"
-msgstr "Renverser les pièces"
+msgstr "Extourner les pièces"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__reversed
@@ -12627,7 +12628,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr "Envoyé aux clients avec l'avoir en pièce jointe"
+msgstr "Envoyé aux clients avec la note de crédit en pièce jointe"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
@@ -12832,7 +12833,7 @@ msgstr "Afficher les détails de la remise"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__show_force_tax_included
 msgid "Show Force Tax Included"
-msgstr "Afficher Forcer la taxe incluse"
+msgstr "Afficher Forcer toutes taxes comprises"
 
 #. module: account
 #: model:res.groups,name:account.group_account_user
@@ -12904,7 +12905,7 @@ msgstr "Montrez les sous-totaux des lignes avec incluses (B2C)"
 #. module: account
 #: model:res.groups,comment:account.group_show_line_subtotals_tax_included
 msgid "Show line subtotals with taxes included (B2C)"
-msgstr "Afficher les sous-totaux TTC (B2C)"
+msgstr "Afficher les sous-totaux toutes taxes comprises (B2C)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_line_subtotals_tax_excluded
@@ -13247,7 +13248,7 @@ msgstr "Compte d'attente"
 #. module: account
 #: model:ir.actions.server,name:account.action_move_switch_invoice_to_credit_note
 msgid "Switch into refund/credit note"
-msgstr "Transformer en remboursement / avoir"
+msgstr "Transformer en remboursement/note de crédit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__end_month
@@ -13382,7 +13383,7 @@ msgstr "Taxe due"
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr "Taxes exclues"
+msgstr "Hors taxes"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
@@ -13422,7 +13423,7 @@ msgstr "N° TVA"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
 msgid "Tax Included"
-msgstr "Taxes incluses"
+msgstr "Toutes taxes comprises"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__force_tax_included
@@ -13447,17 +13448,17 @@ msgstr "Message de la Date de Verrouillage de la Taxe"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__tax_ids
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Tax Mapping"
-msgstr "Correspondance des taxes"
+msgstr "Correspondance de taxes"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax_template
 msgid "Tax Mapping Template of Fiscal Position"
-msgstr "Modèle de mappage de taxes de la position fiscale"
+msgstr "Modèle de correspondance de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_tax
 msgid "Tax Mapping of Fiscal Position"
-msgstr "Mappage de taxes de la position fiscale"
+msgstr "Correspondance de taxes de la position fiscale"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__name
@@ -13468,7 +13469,7 @@ msgstr "Nom de la taxe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_payable_account_id
 msgid "Tax Payable Account"
-msgstr "Taxe compte fournisseur"
+msgstr "Compte taxe fournisseur"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_tax_receivable_account_id
@@ -13628,7 +13629,7 @@ msgstr "Le nom de la taxe doit être unique !"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "Taxe sur l'article"
+msgstr "Taxe sur le produit"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_expression_ids
@@ -13691,7 +13692,7 @@ msgstr "Taxes appliquées"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_template_form
 msgid "Taxes Mapping"
-msgstr "Correspondance des taxes"
+msgstr "Correspondance de taxes"
 
 #. module: account
 #. odoo-python
@@ -13702,7 +13703,7 @@ msgid ""
 " item if they share some tag."
 msgstr ""
 "Les taxes exigibles sur paiement et sur facture ne peuvent pas être "
-"mélangées sur le même article de journal s’ils partagent une étiquette."
+"mélangées sur la même écriture comptable s’ils partagent une étiquette."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_taxes_step
@@ -13717,7 +13718,7 @@ msgstr "Taxes utilisées sur les achats"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Taxes used in Sales"
-msgstr "Taxes sur les ventes"
+msgstr "Taxes utilisées sur les ventes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -13805,7 +13806,7 @@ msgstr "Délais"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms
 msgid "Terms & Conditions"
-msgstr "Termes et conditions"
+msgstr "Conditions générales"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__invoice_terms_html
@@ -13823,7 +13824,7 @@ msgstr "Format des conditions générales"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Terms & Conditions: %s"
-msgstr "Termes et conditions : %s"
+msgstr "Conditions générales : %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__narration
@@ -14045,10 +14046,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
-"Le client renonce expressément à ses propres conditions générales de vente, "
-"même si celles-ci ont été établies postérieurement aux présentes conditions "
-"générales de vente. Pour être valable, toute dérogation doit être "
-"expressément convenue au préalable par écrit."
+"Le client renonce expressément à ses propres conditions générales standards,"
+" même si celles-ci ont été établies postérieurement aux présentes conditions"
+" générales de vente standards. Pour être valable, toute dérogation doit être"
+" expressément convenue au préalable par écrit."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
@@ -14112,7 +14113,8 @@ msgstr "Le pays à utiliser pour les rapports de taxes de cette société"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
-msgstr "L'avoir est automatiquement validé et rapproché de la facture."
+msgstr ""
+"La note de crédit est automatiquement validée et rapprochée de la facture."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -14120,14 +14122,16 @@ msgid ""
 "The credit note is auto-validated and reconciled with the invoice.\n"
 "                               The original invoice is duplicated as a new draft."
 msgstr ""
-"L'avoir est automatiquement validé et rapproché de la facture.\n"
+"La note de crédit est automatiquement validée et rapprochée de la facture.\n"
 "La facture originale est dupliquée en tant que nouveau brouillon."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid ""
 "The credit note is created in draft and can be edited before being issued."
-msgstr "L'avoir est créé en brouillon et peut être édité avant d'être émis."
+msgstr ""
+"La note de crédit est créée en brouillon et peut être éditée avant d'être "
+"émise."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__currency_id
@@ -14458,7 +14462,7 @@ msgid ""
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
 "La quantité facultative correspondant à cette ligne, par exemple le nombre "
-"d'articles vendus. La quantité n'est pas obligatoire légalement, mais elle "
+"de produits vendus. La quantité n'est pas obligatoire légalement, mais elle "
 "est très utile dans certains rapports."
 
 #. module: account
@@ -15306,7 +15310,7 @@ msgid ""
 "Those can be used to quickly create a journal items when reconciling\n"
 "                a bank statement or an account."
 msgstr ""
-"Ceux-ci seront utilisés pour créer rapidement un journal d'articles lors de la réconciliation\n"
+"Ceux-ci seront utilisés pour créer rapidement une écriture comptable lors de la réconciliation\n"
 "d'un virmeent banquaire ou d'un compte."
 
 #. module: account
@@ -15689,7 +15693,7 @@ msgstr "Écritures brouillon"
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
 #, python-format
 msgid "Unreconcile"
-msgstr "Dé-réconcilier"
+msgstr "Annuler le lettrage"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_unreconcile_view
@@ -16039,7 +16043,7 @@ msgstr "Factures fournisseurs"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Avoir de fournisseur"
+msgstr "Note de crédit fournisseur"
 
 #. module: account
 #. odoo-python
@@ -16894,7 +16898,7 @@ msgid ""
 "account mapping of a fiscal position."
 msgstr ""
 "Vous ne pouvez pas enlever/désactiver les comptes \"%s\" qui sont définis "
-"dans le mappage de comptes d'une position fiscale."
+"dans la correspondance de comptes d'une position fiscale."
 
 #. module: account
 #. odoo-python
@@ -17003,8 +17007,8 @@ msgid ""
 "credit note or refund."
 msgstr ""
 "Vous ne pouvez pas valider une facture avec un montant total négatif. Vous "
-"devriez plutôt créer un avoir. Utilisez le menu Action pour le transformer "
-"en une note de crédit ou un remboursement."
+"devriez plutôt créer une note de crédit. Utilisez le menu Action pour le "
+"transformer en une note de crédit ou un remboursement."
 
 #. module: account
 #. odoo-python

@@ -53,6 +53,7 @@ export class SaleOrderLineProductField extends Many2OneField {
         return (
             this.props.record.isReadonly(this.props.name)
             || this.props.record.model.root.isReadonly
+            && this.props.record.model.root.activeFields.order_line
             && this.props.record.model.root.isReadonly('order_line')
         )
     }

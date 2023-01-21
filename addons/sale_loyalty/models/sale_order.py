@@ -146,7 +146,7 @@ class SaleOrder(models.Model):
             'points_cost': cost,
             'reward_identifier_code': _generate_random_reward_code(),
             'product_uom': product.uom_id.id,
-            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1,
+            'sequence': max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1,
             'tax_id': [(Command.CLEAR, 0, 0)] + [(Command.LINK, tax.id, False) for tax in taxes]
         }]
 
@@ -225,10 +225,9 @@ class SaleOrder(models.Model):
             if not line.reward_id and line.product_id in reward.all_discount_product_ids:
                 lines_to_discount |= line
             elif line.reward_id.reward_type == 'discount':
-                if line.reward_id == reward:
-                    continue
                 discount_lines[line.reward_identifier_code] |= line
 
+        order_lines -= self.order_line.filtered("reward_id")
         cheapest_line = False
         for lines in discount_lines.values():
             line_reward = lines.reward_id
@@ -252,12 +251,19 @@ class SaleOrder(models.Model):
                 # Fixed prices are per tax
                 discounted_amounts = {line.tax_id: abs(line.price_total) for line in lines}
                 for line in itertools.chain(non_common_lines, common_lines):
-                    discounted_amount = discounted_amounts[line.tax_id]
+                    # For gift card and eWallet programs we have no tax but we can consume the amount completely
+                    if lines.reward_id.program_id.is_payment_program:
+                        discounted_amount = discounted_amounts[lines.tax_id]
+                    else:
+                        discounted_amount = discounted_amounts[line.tax_id]
                     if discounted_amount == 0:
                         continue
                     remaining = remaining_amount_per_line[line]
                     consumed = min(remaining, discounted_amount)
-                    discounted_amounts[line.tax_id] -= consumed
+                    if lines.reward_id.program_id.is_payment_program:
+                        discounted_amounts[lines.tax_id] -= consumed
+                    else:
+                        discounted_amounts[line.tax_id] -= consumed
                     remaining_amount_per_line[line] -= consumed
 
         discountable = 0
@@ -281,7 +287,7 @@ class SaleOrder(models.Model):
         discountable = 0
         discountable_per_tax = defaultdict(int)
         reward_applies_on = reward.discount_applicability
-        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence')) + 1
+        sequence = max(self.order_line.filtered(lambda x: not x.is_reward_line).mapped('sequence'), default=10) + 1
         if reward_applies_on == 'order':
             discountable, discountable_per_tax = self._discountable_order(reward)
         elif reward_applies_on == 'specific':
@@ -310,7 +316,7 @@ class SaleOrder(models.Model):
             converted_discount = self.currency_id._convert(min(max_discount, discountable), reward.currency_id, self.company_id, fields.Date.today())
             point_cost = converted_discount / reward.discount
         # Gift cards and eWallets are considered gift cards and should not have any taxes
-        if reward.program_id.program_type in ('ewallet', 'gift_card'):
+        if reward.program_id.is_payment_program:
             return [{
                 'name': reward.description,
                 'product_id': reward.discount_line_product_id.id,
