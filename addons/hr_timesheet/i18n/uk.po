@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "<b class=\"tip_title\">Порада: Записуйте ваші таб�
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -236,6 +236,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Аналітичний рахунок, до якого прив'язаний цей проект, його завдання та табелі.\n"
+"Відстежуйте витрати та доходи свого проекту, налаштувавши цей аналітичний обліковий запис у пов’язаних документах (наприклад, замовлення на продаж, рахунки-фактури, замовлення на купівлю, рахунки постачальників, витрати тощо).\n"
+"При необхідності цей аналітичний рахунок можна змінювати по кожному завданню окремо.\n"
+"Для використання табелів обліку робочого часу необхідний аналітичний рахунок."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -245,6 +249,8 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
+"Проаналізуйте проекти та завдання, на які витрачають час ваші співробітники.<br>\n"
+"                Оцініть, яка частина підлягає оплаті та які витрати вона представляє."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__ancestor_task_id
@@ -360,6 +366,8 @@ msgstr ""
 msgid ""
 "Define an 'hourly cost' on the employee to track the cost of their time."
 msgstr ""
+"Визначте «погодинну вартість» для працівника, щоб відстежувати вартість його"
+" часу."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__department_id
@@ -394,6 +402,8 @@ msgstr "Завантажити"
 msgid ""
 "Download our web/mobile apps to track your time from anywhere, even offline."
 msgstr ""
+"Завантажте наші веб-/мобільні додатки, щоб відстежувати свій час будь-де, "
+"навіть офлайн."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
@@ -455,6 +465,8 @@ msgstr "Створюйте табелі обліку робочого часу �
 msgid ""
 "Get our web/mobile apps to track your time from anywhere, even offline."
 msgstr ""
+"Завантажте наші веб-/мобільні додатки, щоб відстежувати свій час будь-де, "
+"навіть офлайн."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -576,6 +588,8 @@ msgid ""
 "Keep track of your working hours by project every day and bill your "
 "customers for that time."
 msgstr ""
+"Щодня відстежуйте свій робочий час за проектом і виставляйте рахунки "
+"клієнтам за цей час."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report____last_update
@@ -715,7 +729,7 @@ msgstr "Ще немає даних!"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No timesheets found. Let's create one!"
-msgstr ""
+msgstr "Табелів не знайдено. Створіть його!"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -727,7 +741,7 @@ msgstr "Немає"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr ""
+msgstr "Кількість виділених годин мінус кількість витрачених годин."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
@@ -910,6 +924,8 @@ msgid ""
 "Send a periodical email reminder to timesheets managers<br/>\n"
 "                                    that still have timesheets to validate"
 msgstr ""
+"Надсилайте періодичні листи-нагадування керівникам табелів<br/>\n"
+"                                    у яких є табелі для затвердження"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -917,6 +933,8 @@ msgid ""
 "Send a periodical email reminder to timesheets users<br/>\n"
 "                                    that still have timesheets to encode"
 msgstr ""
+"Надсилайте періодичні листи-нагадування користувачам табелів<br/>\n"
+"                                    яким потрібно записати час в табелі"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.hr_timesheet_config_settings_action
@@ -1020,7 +1038,7 @@ msgstr "Цього місяця"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "This operator %s is not supported in this search method."
-msgstr ""
+msgstr "Цей оператор %s не підтримується у цьому методі пошуку."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1099,6 +1117,7 @@ msgstr "Витрачений час на підзавдання (та їхні �
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
 msgstr ""
+"Час, витрачений на це завдання та його підзадачі (і власні підзадачі)."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -1345,6 +1364,9 @@ msgid ""
 "                    day. Every time spent on a project will become a cost and can be re-invoiced to\n"
 "                    customers if required."
 msgstr ""
+"Ви можете зареєструватися та відстежувати свій\n"
+" робочий час по проекту щодня. Кожен час, витрачений на проект, стане витратою, і за потреби клієнтам може\n"
+" бути виставлений рахунок повторно."
 
 #. module: hr_timesheet
 #. odoo-python

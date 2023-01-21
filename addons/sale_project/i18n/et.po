@@ -11,9 +11,9 @@
 # Martin Trigaux, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -393,6 +393,8 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Müügitellimuse kinnitusel võib see toode luua projekti ja/või ülesande. Nende põhjal saate jälgida müüdavat teenust.\n"
+"          „Müügitellimuse projekt”: kasutab müügitellimuse loodud projekti, kui see on määratletud, või loob valitud malli alusel uue projekti."
 
 #. module: sale_project
 #: code:addons/sale_project/models/project.py:0
@@ -542,6 +544,7 @@ msgstr "Müügiartikkel"
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
 msgstr ""
+"Müügitellimuse üksus, mida värskendatakse pärast eesmärgi saavutamist."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -550,6 +553,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Müügitellimise artikkel, millele lisatakse selle ülesande täitmiseks kulunud aeg, on Teie kliendile arveldamiseks.\n"
+"Projektile valitakse vaikimisi määratud müügitellimuse artikkel. Selle puudumisel kasutatakse viimast ettemakstud müügitellimuse artiklit.\n"
+"Eemaldage müügitellimuse artikkel, et see ülesanne ei oleks arveldatav. Samuti saate muuta või eemaldada iga tööajaarvestuse kirje eraldi."
 
 #. module: sale_project
 #. openerp-web

@@ -6,9 +6,9 @@
 # Eric Geens <ericgeens@yahoo.com>, 2022
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -403,19 +403,19 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"relatie\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"partner.naam\">\n"
-"                Hallo <t t-out=\"partner.name of ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            <t t-if=\"relatie.naam\">\n"
+"                Hallo <t t-out=\"relatie.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hallo,<br/><br/>\n"
 "            </t>\n"
-"            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name of ''\">Planning en budget</strong>\"\n"
+"            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name or ''\">Planning en budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                toegewezen aan <strong t-out=\"object._rating_get_operator().name of ''\">Mitchell-beheerder</strong>.<br/>\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell-beheerder</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -453,10 +453,10 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name of ''\">In uitvoering</b></span>\n"
+"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodiek'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period of ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name of ''\">In uitvoering</b> bevindt.</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period or ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> bevindt.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -615,7 +615,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Relatie\" title=\"Relatie\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -972,10 +972,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Analytische rekening waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en inkomsten van je project door deze analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Deze analytische rekening kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
-"Om gebruik te kunnen maken van urenstaten is een analytische rekening vereist."
+"Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
+"Volg de kosten en inkomsten van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Deze kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -984,9 +984,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"Analytische rekening waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en inkomsten van je taak bij door de analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Standaard is de analytische rekening van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
+"Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
+"Houd de kosten en inkomsten van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1008,7 +1008,7 @@ msgstr ""
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr ""
-"Analyseer de voortgang van je projecten en de prestaties van je medewerkers."
+"Analyseer de voortgang van je projecten en de prestaties van je werknemers."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
@@ -1376,7 +1376,7 @@ msgstr "Kan veld %r niet agregeren."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Controleer of de partner een bedrijf is, anders is het een persoon"
+msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1970,7 +1970,7 @@ msgstr "Standaard abonnement"
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr "Standaardplan voor een nieuwe analytische rekening voor projecten"
+msgstr "Standaardplan voor een nieuwe kostenplaats voor projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2036,7 +2036,7 @@ msgid ""
 "it to a sales order item."
 msgstr ""
 "Lever je diensten automatisch bij het bereiken van een milestone door deze "
-"te koppelen aan een verkooporderitem."
+"te koppelen aan een verkooporderregel."
 
 #. module: project
 #. odoo-javascript
@@ -2420,7 +2420,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -2479,7 +2479,7 @@ msgstr "Krijg klant feedback"
 msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 msgstr ""
-"Geef medewerkers toegang tot je project of taken door ze toe te voegen als "
+"Geef werknemers toegang tot je project of taken door ze toe te voegen als "
 "volgers."
 
 #. module: project
@@ -2865,7 +2865,7 @@ msgstr "Gefactureerd"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_analytic_account_id_changed
 msgid "Is Analytic Account Manually Changed"
-msgstr "Is handmatig gewijzigde analytische rekening"
+msgstr "Is handmatig gewijzigde kostenplaats"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_blocked
@@ -4048,7 +4048,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
-"-partners: alleen geautoriseerde partners\n"
+"-relaties: alleen geautoriseerde relaties\n"
 "-volgers: allen volgers van een bijbehorend document of volgers van gevolgde kanalen\n"
 
 #. module: project
@@ -4175,13 +4175,13 @@ msgstr "Project"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
 msgid "Project Analytic Account"
-msgstr "Analytische rekening project"
+msgstr "Kostenplaats project"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr "Projectmedewerkers"
+msgstr "Projectwerknemers"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -5840,8 +5840,8 @@ msgid ""
 "belongs to a plan."
 msgstr ""
 "Volg de winstgevendheid van je projecten. Elk project, zijn taken en "
-"urenstaten zijn gekoppeld aan een analytische rekening en elke analytische "
-"rekening hoort bij een plan."
+"urenstaten zijn gekoppeld aan een kostenplaats en elke kostenplaats hoort "
+"bij een plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -6217,8 +6217,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Je kunt ook een omschrijving toevoegen om je medewerkers te helpen begrijpen"
-" wat de bedoeling is van de fase."
+"Je kunt ook een omschrijving toevoegen om je werknemers te helpen begrijpen "
+"wat de bedoeling is van de fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__tag_ids
@@ -6246,7 +6246,7 @@ msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
-"Je kunt het bedrijf van een analytische rekening niet wijzigen als deze is "
+"Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is "
 "gerelateerd aan een project."
 
 #. module: project
