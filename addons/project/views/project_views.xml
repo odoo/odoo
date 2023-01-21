@@ -1534,7 +1534,7 @@
                     <field name="recurrence_id" invisible="1" />
                 </tree>
                 <xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="parent_id" optional="hide" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
+                    <field name="parent_id" optional="hide" context="{'search_view_ref' : 'project.view_task_search_form', 'search_default_display_project_id': project_id}" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one"/>
                 </xpath>
             </field>
         </record>
