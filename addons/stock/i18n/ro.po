@@ -3539,6 +3539,13 @@ msgid "Invalid domain right operand %s"
 msgstr "Operand drept de domeniu nevalid %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "Cantitate inventariată"
@@ -9623,3 +9630,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comanda de livrare (Ref {{ object.name or 'n/a'"
 " }})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""

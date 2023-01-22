@@ -1997,7 +1997,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__append
 msgid "Append"
-msgstr ""
+msgstr "Lägg till efter"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_add_features
@@ -2019,12 +2019,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch Filnamn"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
@@ -3665,7 +3665,7 @@ msgstr "Riktning"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "Direktiv"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_disable_unused_snippets_assets_ir_actions_server
@@ -4262,7 +4262,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__mode__extension
 msgid "Extension View"
-msgstr ""
+msgstr "Förlängningsvy"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
@@ -4425,6 +4425,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Fil från vilken visningen kommer.\n"
+"                                                          Användbart för att (hård)återställa trasiga vyer eller för att läsa arch från en fil i dev-xml-läge."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -5303,7 +5305,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
-msgstr ""
+msgstr "Åtgärdens ID om den definieras i en XML-fil"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__xml_id
@@ -5359,6 +5361,8 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
+"Om det här fältet är tomt gäller vyn för alla användare. I annat fall gäller"
+" vyn endast användarna i dessa grupper."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__active
@@ -5368,6 +5372,10 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Om den här vyn ärvs,\n"
+"* om True, utökar vyn alltid sin överordnade vy\n"
+"* om den är falsk, utökar vyn för närvarande inte sin överordnade vy, men kan aktiveras\n"
+"         "
 
 #. module: website
 #. openerp-web
@@ -5495,7 +5503,7 @@ msgstr "Information om"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__inherit_id
 msgid "Inherit"
-msgstr ""
+msgstr "Ärv"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_id
@@ -6162,7 +6170,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 msgid "Legal"
-msgstr ""
+msgstr "Juridisk"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_big_icons_subtitles
@@ -6189,7 +6197,7 @@ msgstr "Låt dina kunder logga in för att se sina dokument"
 #: code:addons/website/static/src/components/configurator/configurator.xml:0
 #, python-format
 msgid "Let's do it"
-msgstr ""
+msgstr "Låt oss sätta igång"
 
 #. module: website
 #. openerp-web
@@ -6639,7 +6647,7 @@ msgstr "Modell"
 #: model:ir.model,name:website.model_ir_model_data
 #: model:ir.model.fields,field_description:website.field_website_page__model_data_id
 msgid "Model Data"
-msgstr ""
+msgstr "Uppgifter om modellen"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__model_name
@@ -6654,7 +6662,7 @@ msgstr "Modeller"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "Ändrad arkitektur"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_module_module
@@ -7235,6 +7243,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Gäller endast om den här vyn ärver från en annan vy (inherit_id är inte False/Null).\n"
+"\n"
+"* if extension (standard), om den här vyn begärs som den närmaste primära vyn\n"
+"(via inherit_id), och sedan söks alla vyer som ärver från den med denna\n"
+"modell tillämpas\n"
+"* om den är primär, så löses den närmaste primära vyn upp helt och hållet (även om den använder en\n"
+"modell än den här), så används denna vyns arvsspecifikationer\n"
+"(<xpath/>) tillämpas, och resultatet används som om det vore den här vyens\n"
+"faktiska arkeologi.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -7656,7 +7673,7 @@ msgstr "Inställningar"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__prepend
 msgid "Prepend"
-msgstr ""
+msgstr "Lägg till i början"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -7707,7 +7724,7 @@ msgstr "Föregående"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
 msgid "Previous View Architecture"
-msgstr ""
+msgstr "Föregående Visa arkitektur"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_pricing
@@ -7890,7 +7907,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating
 msgid "Quality"
-msgstr ""
+msgstr "Kvalitet"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
@@ -7900,7 +7917,7 @@ msgstr "Qweb"
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Qweb fältkontakt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7941,7 +7958,7 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_ir_rule
 msgid "Record Rule"
-msgstr ""
+msgstr "Regel för registrering av uppgifter"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -8065,7 +8082,7 @@ msgstr "Byt sidans namn till:"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__replace
 msgid "Replace"
-msgstr ""
+msgstr "Ersätt"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code
@@ -8102,7 +8119,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "Restore previous version (soft reset)."
-msgstr ""
+msgstr "Återställa tidigare version (mjuk återställning)."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_id
@@ -9533,12 +9550,13 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Detta fält är detsamma som fältet `arch` utan översättningar"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_default_lang_code
 msgid "This field is used to set/get locales for user"
 msgstr ""
+"Det här fältet används för att ställa in/hämta lokala språk för användaren"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch
@@ -9546,11 +9564,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Detta fält ska användas när du får tillgång till view arch. Det kommer att använda översättning.\n"
+"                               Observera att det kommer att läsa `arch_db` eller `arch_fs` om det är i dev-xml-läge."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "I detta fält lagras visningsbågen."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_prev
@@ -9558,6 +9578,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Det här fältet sparar den aktuella `arch_db` innan du skriver på den.\n"
+"                                                                         Användbart för att (mjukt) återställa en trasig vy."
 
 #. module: website
 #. openerp-web
@@ -9764,7 +9786,7 @@ msgstr "Tony Fred, CEO"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 msgid "Tooltip"
-msgstr ""
+msgstr "Tips"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
