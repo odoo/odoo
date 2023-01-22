@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class AccountAnalyticAccount(models.Model):
@@ -78,7 +78,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
             "context": {"create": False},
-            "name": "Customer Invoices",
+            "name": _("Customer Invoices"),
             'view_mode': 'tree,form',
         }
         return result
@@ -96,7 +96,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
             "context": {"create": False},
-            "name": "Vendor Bills",
+            "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
         }
         return result
