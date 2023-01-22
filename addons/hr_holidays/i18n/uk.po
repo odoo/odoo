@@ -3238,7 +3238,7 @@ msgstr "Встановлено менеджером відпусток"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
 msgid "Show Transition Mode"
-msgstr ""
+msgstr "Показати перехідний режим"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -4167,6 +4167,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Ви не можете встановити для одного і того ж працівника дві відпустки, які збігаються в один день.\n"
+"Існуюча відпустка:\n"
+"%s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4176,6 +4179,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Ви не можете встановити дві відпустки, які збігаються в один день для тих самих працівників.\n"
+"Існуюча відпустка:\n"
+"%s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4185,6 +4191,9 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
+"Ви не можете встановити дві відпустки, які збігаються в один день.\n"
+"Існуюча відпустка:\n"
+"%s"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_start_count_check
@@ -4201,7 +4210,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
-msgstr ""
+msgstr "Ви не можете видалити відпустку, призначену кільком співробітникам"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4262,7 +4271,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You must be %s's Manager to approve this leave"
-msgstr ""
+msgstr "Ви повинні бути менеджером %s для затвердження цієї відпустки"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4289,6 +4298,8 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
+"Ви повинні бути керівником чи менеджером відусток, щоби затвердити цю "
+"відпустку"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4321,7 +4332,7 @@ msgstr "Ваш %(leave_type)s запланований на %(date)s відхи�
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr ""
+msgstr "Вашу відпустку скасовано."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4492,7 +4503,7 @@ msgstr "до"
 #: code:addons/hr_holidays/static/src/dashboard/time_off_card.xml:0
 #, python-format
 msgid "valid until"
-msgstr ""
+msgstr "дійсний до"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
