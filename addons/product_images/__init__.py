@@ -9,5 +9,5 @@ from odoo import api, SUPERUSER_ID
 def uninstall_hook(cr, registry):
     env = api.Environment(cr, SUPERUSER_ID, {})
     ICP = env['ir.config_parameter']
-    ICP.set_param('google.custom_search.cx', False)
+    ICP.set_param('google.pse.id', False)
     ICP.set_param('google.custom_search.key', False)
