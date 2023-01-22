@@ -65,6 +65,17 @@ export class CharField extends Component {
     }
 
     parse(value) {
+        if (value && this.props.pattern) {
+            // compatibility JS/Python
+            let pattern = this.props.pattern
+                .replace(/\\w/g, '\\p{L}')
+                .replace(/\\W/g, '\\P{L}')
+                .replace(/\\d/g, '\\p{N}')
+                .replace(/\\D/g, '\\P{N}');
+            if (!(new RegExp(pattern, 'u').test(value))) {
+                throw new Error("regex doesn't match")
+            }
+        }
         if (this.props.shouldTrim) {
             return value.trim();
         }
@@ -86,6 +97,7 @@ CharField.props = {
     shouldTrim: { type: Boolean, optional: true },
     maxLength: { type: Number, optional: true },
     isTranslatable: { type: Boolean, optional: true },
+    pattern: { type: String, optional: true },
 };
 
 CharField.displayName = _lt("Text");
@@ -95,6 +107,7 @@ CharField.extractProps = ({ attrs, field }) => {
     return {
         shouldTrim: field.trim && !archParseBoolean(attrs.password), // passwords shouldn't be trimmed
         maxLength: field.size,
+        pattern: field.pattern,
         isTranslatable: field.translate,
         dynamicPlaceholder: attrs.options.dynamic_placeholder,
         autocomplete: attrs.autocomplete,

@@ -610,6 +610,21 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
         }
         return this._super(value, options);
     },
+
+    isValid: function () {
+        if (this.value && this.field.pattern) {
+            // compatibility JS/Python
+            let pattern = this.field.pattern
+                .replace(/\\w/g, '\\p{L}')
+                .replace(/\\W/g, '\\P{L}')
+                .replace(/\\d/g, '\\p{N}')
+                .replace(/\\D/g, '\\P{N}');
+            if (!(new RegExp(pattern, 'u').test(this.value))) {
+                return false;
+            }
+        }
+        return this._super(...arguments);
+    },
 });
 
 var FieldDateRange = InputField.extend({

@@ -171,6 +171,34 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test('char widget isValid method works with patterns', async function (assert) {
+        serverData.models.partner.fields.foo.pattern = 'azerty';
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch:'<form string="Partners">' +
+                        '<field name="foo"/>' +
+                '</form>',
+        });
+
+        await editInput('.o_field_widget input[type="text"]', 'this is wrong');
+        await clickSave(target);
+        assert.hasClass('.o_field_widget','o_field_invalid',
+            "field should be displayed as invalid");
+
+        // Save should fail, editing to something right this time
+        await editInput('.o_field_widget input[type="text"]', 'this contains azerty');
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input[type='text']").value,
+            'this contains azerty',
+            'the new value should be displayed',
+        );
+    });
+
     QUnit.test(
         "setting a char field to empty string is saved as a false value",
         async function (assert) {

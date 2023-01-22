@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import re
 from odoo import models, fields, api, _
 from odoo.exceptions import ValidationError
 
@@ -31,7 +30,8 @@ class AccountJournal(models.Model):
         string='Next Check Number',
         compute='_compute_check_next_number',
         inverse='_inverse_check_next_number',
-        help="Sequence number of the next printed check.",
+        pattern=r'^[0-9]+$',
+        help="Sequence number of the next printed check. Can only contain numbers",
     )
 
     @api.depends('check_manual_sequencing')
@@ -45,8 +45,6 @@ class AccountJournal(models.Model):
 
     def _inverse_check_next_number(self):
         for journal in self:
-            if journal.check_next_number and not re.match(r'^[0-9]+$', journal.check_next_number):
-                raise ValidationError(_('Next Check Number should only contains numbers.'))
             if int(journal.check_next_number) < journal.check_sequence_id.number_next_actual:
                 raise ValidationError(_(
                     "The last check number was %s. In order to avoid a check being rejected "

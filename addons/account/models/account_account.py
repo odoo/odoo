@@ -37,7 +37,13 @@ class AccountAccount(models.Model):
     name = fields.Char(string="Account Name", required=True, index='trigram', tracking=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency', tracking=True,
         help="Forces all journal items in this account to have a specific currency (i.e. bank journals). If no currency is set, entries can use any currency.")
-    code = fields.Char(size=64, required=True, tracking=True)
+    code = fields.Char(
+        size=64,
+        required=True,
+        tracking=True,
+        pattern=ACCOUNT_CODE_REGEX.pattern,
+        help="The account code can only contain alphanumeric characters and dots."
+    )
     deprecated = fields.Boolean(default=False, tracking=True)
     used = fields.Boolean(compute='_compute_used', search='_search_used')
     account_type = fields.Selection(
@@ -285,14 +291,6 @@ class AccountAccount(models.Model):
                 journal_names=journals.mapped('display_name'),
                 journal_ids=journals.ids
             ))
-
-    @api.constrains('code')
-    def _check_account_code(self):
-        for account in self:
-            if not re.match(ACCOUNT_CODE_REGEX, account.code):
-                raise ValidationError(_(
-                    "The account code can only contain alphanumeric characters and dots."
-                ))
 
     @api.constrains('account_type')
     def _check_account_is_bank_journal_bank_account(self):
