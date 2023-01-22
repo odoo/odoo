@@ -1,0 +1,385 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* data_recycle
+# 
+# Translators:
+# Hongu Cosmin <cosmin513@gmail.com>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2022
+# Cozmin Candea <office@terrabit.ro>, 2022
+# Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Martin Trigaux, 2022
+# Claudia Baisan, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Claudia Baisan, 2023\n"
+"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ro\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid ""
+"' recycling rule.<br/>\n"
+"You can validate those changes"
+msgstr ""
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "**Record Deleted**"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "<span class=\"me-1\">Every</span>"
+msgstr "<span class=\"me-1\">Fiecare</span>"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__active
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__active
+msgid "Active"
+msgstr "Activ"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__archive
+msgid "Archive"
+msgstr "Arhivează"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__automatic
+msgid "Automatic"
+msgstr "Automat"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__company_id
+msgid "Company"
+msgstr "Companie"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config
+msgid "Configuration"
+msgstr "Configurare"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "Configure rules to identify records to clean"
+msgstr "Configurare reguli pentru identificare înregistrări de curățat"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_uid
+msgid "Created by"
+msgstr "Creat de"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__create_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__create_date
+msgid "Created on"
+msgstr "Creat în"
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_root
+msgid "Data Cleaning"
+msgstr "Curățare Date"
+
+#. module: data_recycle
+#: model:ir.actions.server,name:data_recycle.ir_cron_clean_records_ir_actions_server
+#: model:ir.cron,cron_name:data_recycle.ir_cron_clean_records
+#: model:ir.cron,name:data_recycle.ir_cron_clean_records
+msgid "Data Recycle: Clean Records"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__days
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__days
+msgid "Days"
+msgstr "Zile"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_action__unlink
+msgid "Delete"
+msgstr "Șterge"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta
+msgid "Delta"
+msgstr "Delta"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_delta_unit
+msgid "Delta Unit"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Discard"
+msgstr "Abandonează"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Discarded"
+msgstr "Abandonate"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__display_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__display_name
+msgid "Display Name"
+msgstr "Nume afișat"
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_record_notification
+msgid "Field Recycle Records"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__domain
+msgid "Filter"
+msgstr "Filtru"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__id
+msgid "ID"
+msgstr "ID"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__include_archived
+msgid "Include Archived"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model____last_update
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record____last_update
+msgid "Last Modified on"
+msgstr "Ultima modificare la"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__last_notification
+msgid "Last Notification"
+msgstr "Ultimi Notificare"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_uid
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_uid
+msgid "Last Updated by"
+msgstr "Ultima actualizare făcută de"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__write_date
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__write_date
+msgid "Last Updated on"
+msgstr "Ultima actualizare pe"
+
+#. module: data_recycle
+#: model:ir.model.fields,help:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "List of users to notify when there are new records to recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__recycle_mode__manual
+msgid "Manual"
+msgstr "Manual"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_id
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__res_model_name
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_model_name
+msgid "Model Name"
+msgstr "Nume model"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__months
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__months
+msgid "Months"
+msgstr "Luni"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__name
+msgid "Name"
+msgstr "Nume"
+
+#. module: data_recycle
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record
+#: model_terms:ir.actions.act_window,help:data_recycle.action_data_recycle_record_notification
+msgid "No cleaning suggestions"
+msgstr "Fără sugestii de curățare"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency
+msgid "Notify"
+msgstr "Notificare"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_frequency_period
+msgid "Notify Frequency Period"
+msgstr "Notificare Perioadă Frecvență"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__notify_user_ids
+msgid "Notify Users"
+msgstr "Notificare Utilizatori"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__res_id
+msgid "Record ID"
+msgstr "ID Înregistrare"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__name
+msgid "Record Name"
+msgstr "Nume Înregistrare"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Records"
+msgstr "Înregistrări"
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__records_to_recycle_count
+msgid "Records To Recycle"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_action
+msgid "Recycle Action"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_mode
+msgid "Recycle Mode"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_record__recycle_model_id
+msgid "Recycle Model"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__recycle_record_ids
+msgid "Recycle Record"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_recycle_record
+msgid "Recycle Records"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+msgid "Recycle Rule"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_search
+msgid "Recycle Rules"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_model
+msgid "Recycling Model"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model,name:data_recycle.model_data_recycle_record
+msgid "Recycling Record"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.actions.act_window,name:data_recycle.action_data_recycle_config
+msgid "Recyle Records Rules"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.ui.menu,name:data_recycle.menu_data_cleaning_config_rules
+msgid "Rules"
+msgstr "Reguli"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Run Now"
+msgstr ""
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_merge_model_form
+msgid "Select a model to configure recycling actions"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.constraint,message:data_recycle.constraint_data_recycle_model_check_notif_freq
+msgid "The notification frequency should be greater than 0"
+msgstr "Frecvența notificării trebuie să fie mai mare de 0"
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_model.py:0
+#, python-format
+msgid "This model doesn't manage archived records. Only deletion is possible."
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields,field_description:data_recycle.field_data_recycle_model__time_field_id
+msgid "Time Field"
+msgstr ""
+
+#. module: data_recycle
+#: code:addons/data_recycle/models/data_recycle_record.py:0
+#, python-format
+msgid "Undefined Name"
+msgstr ""
+
+#. module: data_recycle
+#. openerp-web
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#, python-format
+msgid "Unselect"
+msgstr "Neselectat"
+
+#. module: data_recycle
+#. openerp-web
+#: code:addons/data_recycle/static/src/views/data_recycle_list_view.xml:0
+#: model_terms:ir.ui.view,arch_db:data_recycle.view_data_recycle_record_list
+#, python-format
+msgid "Validate"
+msgstr "Validează"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "We've identified"
+msgstr ""
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__notify_frequency_period__weeks
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__weeks
+msgid "Weeks"
+msgstr "Săptămâni"
+
+#. module: data_recycle
+#: model:ir.model.fields.selection,name:data_recycle.selection__data_recycle_model__time_field_delta_unit__years
+msgid "Years"
+msgstr "Ani"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "here"
+msgstr "aici"
+
+#. module: data_recycle
+#: model_terms:ir.ui.view,arch_db:data_recycle.notification
+msgid "records to clean with the '"
+msgstr "înregistrări de curățat cu '"

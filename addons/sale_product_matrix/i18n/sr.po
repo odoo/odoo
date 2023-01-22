@@ -1,0 +1,123 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023\n"
+"Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid "Add product mode"
+msgstr ""
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
+msgstr "Izaberite varijante proizvoda"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "Zatvori"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Potvrdi"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Šablon proizvoda matrice"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Ažuriranje matrice"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "Štampaj matricu varijanti"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Porudžbenica"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Linija porudžbenice"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr ""
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO.\n"
+"If not, represents the matrix to open."
+msgstr ""
+
+#. module: sale_product_matrix
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+#, python-format
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""

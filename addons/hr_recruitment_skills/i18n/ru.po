@@ -1,0 +1,127 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_recruitment_skills
+# 
+# Translators:
+# ILMIR <karamov@it-projects.info>, 2022
+# Martin Trigaux, 2022
+# Gennady Marchenko <gennadym@gmail.com>, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Alena Vlasova, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0beta\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-27 15:13+0000\n"
+"PO-Revision-Date: 2022-09-22 05:52+0000\n"
+"Last-Translator: Alena Vlasova, 2022\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_applicant
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__applicant_id
+msgid "Applicant"
+msgstr "Соискатель"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_uid
+msgid "Created by"
+msgstr "Создал"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__create_date
+msgid "Created on"
+msgstr "Дата создания"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__display_name
+msgid "Display Name"
+msgstr "Отображаемое название"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__is_interviewer
+msgid "Is Interviewer"
+msgstr "Интервьюер"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__level_progress
+msgid "Progress"
+msgstr "Прогресс"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,help:hr_recruitment_skills.field_hr_applicant_skill__level_progress
+msgid "Progress from zero knowledge (0%) to fully mastered (100%)."
+msgstr "Прогресс от нулевых знаний (0%) до полного освоения (100%)."
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__skill_ids
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_id
+msgid "Skill"
+msgstr "Навык"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_level_id
+msgid "Skill Level"
+msgstr "Уровень навыка"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant_skill__skill_type_id
+msgid "Skill Type"
+msgstr "Тип навыка"
+
+#. module: hr_recruitment_skills
+#: model:ir.model,name:hr_recruitment_skills.model_hr_applicant_skill
+msgid "Skill level for an applicant"
+msgstr "Уровень навыка для соискателя"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.fields,field_description:hr_recruitment_skills.field_hr_applicant__applicant_skill_ids
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_skill_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search
+#: model_terms:ir.ui.view,arch_db:hr_recruitment_skills.hr_applicant_view_search_bis
+msgid "Skills"
+msgstr "Навыки"
+
+#. module: hr_recruitment_skills
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
+#, python-format
+msgid "The skill %(name)s and skill type %(type)s doesn't match"
+msgstr "Навык%(name)sи тип навыка%(type)sне совпадают"
+
+#. module: hr_recruitment_skills
+#: code:addons/hr_recruitment_skills/models/hr_applicant_skill.py:0
+#, python-format
+msgid "The skill level %(level)s is not valid for skill type: %(type)s"
+msgstr "Уровень навыка %(level)s не соответствует типу навыка: %(type)s"
+
+#. module: hr_recruitment_skills
+#: model:ir.model.constraint,message:hr_recruitment_skills.constraint_hr_applicant_skill__unique_skill
+msgid "Two levels for the same skill is not allowed"
+msgstr "Два значения для одного навыка не допускаются"

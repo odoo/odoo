@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_subcontracting_dropshipping
+# 
+# Translators:
+# Triine Aavik <triine@avalah.ee>, 2022
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Martin Aavastik <martin@avalah.ee>, 2022
+# Jana Jaakson, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Jana Jaakson, 2023\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Aktiveerige valik, et luua uus alltöövõtukoht. Pange tähele, et standardseid"
+" alltöövõtu marsruute kohandatakse nii, et neid võetakse automaatselt "
+"arvesse."
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_res_company
+msgid "Companies"
+msgstr "Ettevõtted"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_res_company__dropship_subcontractor_pick_type_id
+msgid "Dropship Subcontractor Pick Type"
+msgstr "Alltöövõtjatele korje tüüp otsetarne korral"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: code:addons/mrp_subcontracting_dropshipping/models/stock_warehouse.py:0
+#: model:stock.route,name:mrp_subcontracting_dropshipping.route_subcontracting_dropshipping
+#, python-format
+msgid "Dropship Subcontractor on Order"
+msgstr "Otsetarne alltöövõtjatele tellimusel"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
+msgid "Dropship Subcontractors"
+msgstr "Otsetarne alltöövõtjatele"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
+msgid "Dropship subcontractors with components"
+msgstr "Otsetarne allhankijale koos komponentidega"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
+msgid "Is a Subcontracting Location?"
+msgstr "Kas see on alltöövõtu asukoht?"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid ""
+"It appears some components in this RFQ are not meant for subcontracting. "
+"Please create a separate order for these."
+msgstr ""
+"Näib, et mõned selle pakkumise komponendid ei ole mõeldud allhanke "
+"tegemiseks. Looge nende jaoks eraldi tellimus."
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
+msgstr "Miinimumlao reegel"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ostutellimus"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_move
+msgid "Stock Move"
+msgstr "Laoliikumine"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_rule
+msgid "Stock Rule"
+msgstr "Laoreegel"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_pull_id
+msgid "Subcontracting-Dropshipping MTS Rule"
+msgstr "MTS´i alltöövõtu-otsetarne reegel"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_picking
+msgid "Transfer"
+msgstr "Ülekanne"
+
+#. module: mrp_subcontracting_dropshipping
+#: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse
+msgid "Warehouse"
+msgstr "Ladu"

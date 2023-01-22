@@ -1,0 +1,73 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* mrp_subcontracting_purchase
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: mrp_subcontracting_purchase
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.purchase_order_form_mrp_subcontracting_purchase
+msgid "<span class=\"o_stat_text\">Resupply</span>"
+msgstr "<span class=\"o_stat_text\">Reapprovisonnement</span>"
+
+#. module: mrp_subcontracting_purchase
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting_purchase.stock_picking_form_mrp_subcontracting
+msgid "<span class=\"o_stat_text\">Source PO</span>"
+msgstr "<span class=\"o_stat_text\">Origine bon de commande</span>"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_report_mrp_report_bom_structure
+msgid "BOM Overview Report"
+msgstr "Rapport de vue d'ensemble de la nomenclature"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+msgid "Count of Subcontracting Resupply"
+msgstr "Nombres de réapprovisionnement de sous-traitance"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,help:mrp_subcontracting_purchase.field_purchase_order__subcontracting_resupply_picking_count
+msgid "Count of Subcontracting Resupply for component"
+msgstr "Nombres de réapprovisionnement de sous-traitance pour les composantes"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,field_description:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+msgid "Number of subcontracting PO Source"
+msgstr "Nombre de sous-traitances venant d'un bon de commande"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model.fields,help:mrp_subcontracting_purchase.field_stock_picking__subcontracting_source_purchase_count
+msgid "Number of subcontracting Purchase Order Source"
+msgstr "Nombre de sous-traitances venant d'un bon de commande"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Commande fournisseur"
+
+#. module: mrp_subcontracting_purchase
+#: code:addons/mrp_subcontracting_purchase/models/stock_picking.py:0
+#, python-format
+msgid "Source PO of %s"
+msgstr "Origine bon de commande de %s"
+
+#. module: mrp_subcontracting_purchase
+#: model:ir.model,name:mrp_subcontracting_purchase.model_stock_picking
+msgid "Transfer"
+msgstr "Transfert"

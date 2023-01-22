@@ -1,0 +1,500 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_loyalty
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid ""
+"\n"
+"        Technical field used to link multiple reward lines from the same reward together.\n"
+"    "
+msgstr ""
+"\n"
+"        Technisch veld dat wordt gebruikt om meerdere beloningsregels van dezelfde beloning aan elkaar te koppelen.\n"
+"    "
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid " - On product with the following taxes: %(taxes)s"
+msgstr " - Op product met de volgende belastingen: %(taxes)s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "<span class=\"fa fa-clipboard\"/> Copy"
+msgstr "<span class=\"fa fa-clipboard\"/> Kopiëren"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "A better global discount is already applied."
+msgstr "Er wordt al een betere globale korting toegepast."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr ""
+"Een minimum van %(amount)s %(currency)s moet worden gekocht om de beloning "
+"te krijgen"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Apply"
+msgstr "Toepassen"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_reward_wizard_action
+msgid "Available Rewards"
+msgstr "Beschikbare beloningen"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose a product:"
+msgstr "Kies een product:"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Choose your reward:"
+msgstr "Kies je beloning:"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Code:"
+msgstr "Code:"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__coupon_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__coupon_id
+msgid "Coupon"
+msgstr "Kortingsbon"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__coupon_code
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Coupon Code"
+msgstr "Kortingsboncode"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__coupon_point_ids
+msgid "Coupon Point"
+msgstr "Punt kortingsbon"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "Coupon not found while trying to add the following reward: %s"
+msgstr ""
+"Kortingsbon niet gevonden tijdens het toevoegen van de volgende beloning: %s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Coupons & Loyalty"
+msgstr "Kortingsbonnen & Loyaliteit"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_uid
+msgid "Created by"
+msgstr "Gemaakt door"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__create_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__create_date
+msgid "Created on"
+msgstr "Gemaakt op"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "Discard"
+msgstr "Negeren"
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_discount_loyalty_type_config
+msgid "Discount & Loyalty"
+msgstr "Korting & Loyaliteit"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Discount: %(desc)s%(tax_str)s"
+msgstr "Korting: %(desc)s%(tax_str)s"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__display_name
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__display_name
+msgid "Display Name"
+msgstr "Weergavenaam"
+
+#. module: sale_loyalty
+#: model:ir.actions.act_window,name:sale_loyalty.sale_loyalty_coupon_wizard_action
+msgid "Enter Promotion or Coupon Code"
+msgstr "Voer een promotie- of kortingsboncode in"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
+msgid "Expired Date:"
+msgstr "Vervaldatum:"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Free Product - %(product)s"
+msgstr "Gratis product - %(product)s"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift #"
+msgstr "Geschenk #"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid "Gift Card Code"
+msgstr "Cadeauboncode"
+
+#. module: sale_loyalty
+#: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
+msgid "Gift cards & eWallet"
+msgstr "Cadeaubonnen & eWallet"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
+msgid "How much point this reward cost on the loyalty card."
+msgstr "Hoeveel punten deze beloning kost op de klantenkaart."
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "Invalid product to claim."
+msgstr "Ongeldig product om te claimen."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
+#, python-format
+msgid "Invalid sales order."
+msgstr "Ongeldige verkooporder."
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
+msgid "Is a program reward line"
+msgstr "Is een programmabeloningslijn"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard____last_update
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard____last_update
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__write_date
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_card
+msgid "Loyalty Coupon"
+msgstr "Loyaliteitsbon"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_program
+msgid "Loyalty Program"
+msgstr "Loyaliteitsprogramma"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_loyalty_reward
+msgid "Loyalty Reward"
+msgstr "Loyaliteitsbeloning"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__applied_coupon_ids
+msgid "Manually Applied Coupons"
+msgstr "Handmatig toegepaste kortingsbonnen"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__code_enabled_rule_ids
+msgid "Manually Triggered Rules"
+msgstr "Handmatig geactiveerde regels"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
+msgid "Multi Product"
+msgstr "Meerdere producten"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid ""
+"No card found for this loyalty program and no points will be given with this"
+" order."
+msgstr ""
+"Er is geen kaart gevonden voor dit loyaliteitsprogramma en er worden geen "
+"punten gegeven bij deze bestelling."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
+#, python-format
+msgid "No reward selected."
+msgstr "Geen beloning geselecteerd."
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
+msgid "No rewards available for this customer!"
+msgstr "Geen beloningen beschikbaar voor deze klant!"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "One or more rewards on the sale order is invalid. Please check them."
+msgstr ""
+"Één of meer beloningen op de verkooporder zijn ongeldig. Controleer ze "
+"alstublieft."
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__order_id
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__order_id
+msgid "Order"
+msgstr "Order"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__order_count
+msgid "Order Count"
+msgstr "Aantal orders"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_card__order_id
+msgid "Order Reference"
+msgstr "Orderreferentie"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_coupon_points__points
+msgid "Points"
+msgstr "Punten"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
+msgid "Points Cost"
+msgstr "Punten kosten"
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Promotions"
+msgstr "Promoties"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_ids
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_id
+msgid "Reward"
+msgstr "Beloning"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order__reward_amount
+msgid "Reward Amount"
+msgstr "Beloningsbedrag"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__reward_identifier_code
+msgid "Reward Identifier Code"
+msgstr "Identificatiecode beloning"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "Reward Products"
+msgstr "Beloningsproducten"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
+msgid "Sale Loyalty - Apply Coupon Wizard"
+msgstr "Verkooployaliteit - Kortingsbonwizard toepassen"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_loyalty_reward_wizard
+msgid "Sale Loyalty - Reward Selection Wizard"
+msgstr "Verkooployaliteit - Wizard voor het selecteren van beloningen"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
+msgid ""
+"Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
+msgstr ""
+"Kortingsbonpunten voor verkooporders - Houdt bij hoe een verkooporder een "
+"kortingsbon beïnvloedt"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
+msgid "Sales"
+msgstr "Verkoop"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order
+msgid "Sales Order"
+msgstr "Verkooporder"
+
+#. module: sale_loyalty
+#: model:ir.model,name:sale_loyalty.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Verkooporderregel"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
+msgid "Selected Product"
+msgstr "Geselecteerd product"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_reward_id
+msgid "Selected Reward"
+msgstr "Geselecteerde beloning"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon can only be claimed on future orders."
+msgstr ""
+"De kortingsbon kan alleen worden geclaimd bij toekomstige bestellingen."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The coupon does not have enough points for the selected reward."
+msgstr ""
+"De kortingsbon heeft niet genoeg punten voor de geselecteerde beloning."
+
+#. module: sale_loyalty
+#: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
+msgid "The coupon points entry already exists."
+msgstr "De invoer van kortingsbonpunten bestaat al."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "The program is not available for this order."
+msgstr "Het programma is niet beschikbaar voor deze bestelling."
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_loyalty_card__order_id
+msgid "The sales order from which coupon is generated"
+msgstr "De verkooporder waaruit de kortingsbon wordt gegenereerd"
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "There is nothing to discount"
+msgstr "Er is niets om korting te geven"
+
+#. module: sale_loyalty
+#: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
+msgid "These are the products that can be claimed with this rule."
+msgstr "Dit zijn de producten die met deze regel geclaimd kunnen worden."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is expired (%s)."
+msgstr "Deze code is verlopen (%s)."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This code is invalid (%s)."
+msgstr "Deze code is ongeldig (%s)."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon has already been used."
+msgstr "Deze kortingsbon is al gebruikt."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This coupon is expired."
+msgstr "Deze bon is verlopen."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is already applied to this order."
+msgstr "Dit programma is al toegepast op deze bestelling."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program is not available for public users."
+msgstr "Dit programma is niet beschikbaar voor openbare gebruikers."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This program requires a code to be applied."
+msgstr "Voor dit programma moet een code worden toegepast."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "This promo code is already applied."
+msgstr "Deze promotiecode is al toegepast."
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
+msgid "Update current promotional lines and select new rewards if applicable."
+msgstr ""
+"Werk huidige promotieregels bij en selecteer indien van toepassing nieuwe "
+"beloningen."
+
+#. module: sale_loyalty
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "You don't have the required product quantities on your sales order."
+msgstr "Je hebt niet de vereiste producthoeveelheden op je verkooporder."
+
+#. module: sale_loyalty
+#: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
+msgid ""
+"You will find below your gift cards code. An email has been sent with it. "
+"You can use it starting right now."
+msgstr ""
+"Hieronder vind je de code van je cadeaubon. Er is een e-mail mee verzonden. "
+"Je kunt het vanaf nu gebruiken."
