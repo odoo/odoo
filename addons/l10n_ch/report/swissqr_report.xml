@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
+        <record id="paperformat_euro_no_margin" model="report.paperformat">
+            <field name="name">European A4 without borders</field>
+            <field name="default" eval="False" />
+            <field name="format">A4</field>
+            <field name="orientation">Portrait</field>
+            <field name="margin_top">0</field>
+            <field name="margin_bottom">0</field>
+            <field name="margin_left">0</field>
+            <field name="margin_right">0</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+        </record>
 
         <record id="l10n_ch_qr_report" model="ir.actions.report">
             <field name="name">QR-bill</field>
@@ -228,6 +240,6 @@
             <body position="attributes">
                 <attribute name="t-att-data-report-id">report_xml_id</attribute>
             </body>
-        </template> 
+        </template>
     </data>
 </odoo>

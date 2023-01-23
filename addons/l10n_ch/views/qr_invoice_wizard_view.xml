@@ -7,17 +7,15 @@
             <form string="QR printing encountered a problem">
                 <field name='nb_qr_inv' invisible="1"/>
                 <field name="nb_classic_inv" invisible="1"/>
-                <field name="nb_isr_inv" invisible="1"/>
                 <p>
                     <field name="qr_inv_text"/>
-                    <field name="isr_inv_text"/>
                     <field name="classic_inv_text"/>
                 </p>
                 <p>
                     To be able to print all invoices in the QR format, you might need to : <br/>
                     - check the account is a valid QR-IBAN<br/>
                     - or check your company and the partners are located in Switzerland.<br/>
-                    Press Check Invalid Invoices to see a list of the invoices that were printed without an ISR or a QR.
+                    Press Check Invalid Invoices to see a list of the invoices that were printed without a QR.
                 </p>
                 <footer>
                     <button name="print_all_invoices" string="Print All" type="object" class="btn-primary"/>
