@@ -11,7 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 
 const formatters = registry.category("formatters");
 
-patch(Message.prototype, "mail/backend", {
+patch(Message.prototype, "mail/web", {
     setup() {
         this._super(...arguments);
         this.action = useService("action");

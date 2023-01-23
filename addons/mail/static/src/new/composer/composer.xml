@@ -5,7 +5,6 @@
     <t t-set="compact" t-value="props.mode === 'compact'"/>
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
-    <NavigableList class="'o-composer-suggestion-list'" t-props="getNavigableListProps()" />
     <div class="o-mail-composer-container" t-ref="composer">
         <div class="o-mail-composer d-grid flex-shrink-0"
                 t-att-class="{

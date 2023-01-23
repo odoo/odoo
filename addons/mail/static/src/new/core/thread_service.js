@@ -561,14 +561,18 @@ export class ThreadService {
      * @param {string} body
      */
     async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
-        const command = this.message.getCommandFromText(thread.type, body);
+        const command = this.store.user
+            ? this.message.getCommandFromText(thread.type, body)
+            : undefined;
         if (command) {
             await this.executeCommand(thread, command, body);
             return;
         }
         let tmpMsg;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
-        const validMentions = this.message.getMentionsFromText(rawMentions, body);
+        const validMentions = this.store.user
+            ? this.message.getMentionsFromText(rawMentions, body)
+            : undefined;
         const partner_ids = validMentions.partners.map((partner) => partner.id);
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
