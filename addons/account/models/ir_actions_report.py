@@ -2,6 +2,7 @@
 import io
 import textwrap
 from collections import OrderedDict
+from PyPDF2.utils import PdfStreamError
 
 from odoo import models, _
 from odoo.exceptions import UserError
@@ -33,10 +34,10 @@ class IrActionsReport(models.Model):
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name, logo=True)
-                    except ValueError:
-                        raise UserError(_(
-                            "Error when reading the original PDF for: %r.\nPlease make sure the file is valid.",
-                            textwrap.shorten(record.name, width=100)
+                    except (ValueError, PdfStreamError):
+                        record._message_log(body=_(
+                            "There was an error when trying to add the banner to the original PDF.\n"
+                            "Please make sure the source file is valid."
                         ))
                 collected_streams[invoice.id] = {
                     'stream': stream,
