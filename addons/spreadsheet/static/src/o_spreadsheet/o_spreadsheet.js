@@ -132,6 +132,7 @@
     const FILTERS_COLOR = "#188038";
     const BACKGROUND_HEADER_FILTER_COLOR = "#E6F4EA";
     const BACKGROUND_HEADER_SELECTED_FILTER_COLOR = "#CEEAD6";
+    const SEPARATOR_COLOR = "#E0E2E4";
     // Color picker
     const COLOR_PICKER_DEFAULTS = [
         "#000000",
@@ -221,10 +222,11 @@
     const HEADER_HEIGHT = 26;
     const HEADER_WIDTH = 48;
     const TOPBAR_HEIGHT = 63;
+    const TOPBAR_TOOLBAR_HEIGHT = 34;
     const BOTTOMBAR_HEIGHT = 36;
     const DEFAULT_CELL_WIDTH = 96;
     const DEFAULT_CELL_HEIGHT = 23;
-    const SCROLLBAR_WIDTH$1 = 15;
+    const SCROLLBAR_WIDTH = 15;
     const AUTOFILL_EDGE_LENGTH = 8;
     const ICON_EDGE_LENGTH = 18;
     const UNHIDE_ICON_EDGE_LENGTH = 14;
@@ -288,7 +290,8 @@
         ComponentsImportance[ComponentsImportance["Figure"] = 10] = "Figure";
         ComponentsImportance[ComponentsImportance["Dropdown"] = 12] = "Dropdown";
         ComponentsImportance[ComponentsImportance["ScrollBar"] = 15] = "ScrollBar";
-        ComponentsImportance[ComponentsImportance["Composer"] = 20] = "Composer";
+        ComponentsImportance[ComponentsImportance["GridComposer"] = 20] = "GridComposer";
+        ComponentsImportance[ComponentsImportance["TopBarComposer"] = 21] = "TopBarComposer";
         ComponentsImportance[ComponentsImportance["ColorPicker"] = 25] = "ColorPicker";
         ComponentsImportance[ComponentsImportance["IconPicker"] = 25] = "IconPicker";
         ComponentsImportance[ComponentsImportance["Popover"] = 30] = "Popover";
@@ -296,6 +299,7 @@
     })(ComponentsImportance || (ComponentsImportance = {}));
     const DEFAULT_SHEETVIEW_SIZE = 1000;
     const MAXIMAL_FREEZABLE_RATIO = 0.85;
+    const NEWLINE = "\n";
 
     const fontSizes = [
         { pt: 7.5, px: 10 },
@@ -1052,6 +1056,40 @@
         if (!matrix.length)
             return matrix;
         return matrix[0].map((_, i) => matrix.map((row) => row[i]));
+    }
+    /**
+     * Equivalent to "\s" in regexp, minus the new lines characters
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes
+     */
+    const whiteSpaceCharacters = [
+        " ",
+        "\t",
+        "\f",
+        "\v",
+        String.fromCharCode(parseInt("00a0", 16)),
+        String.fromCharCode(parseInt("1680", 16)),
+        String.fromCharCode(parseInt("2000", 16)),
+        String.fromCharCode(parseInt("200a", 16)),
+        String.fromCharCode(parseInt("2028", 16)),
+        String.fromCharCode(parseInt("2029", 16)),
+        String.fromCharCode(parseInt("202f", 16)),
+        String.fromCharCode(parseInt("205f", 16)),
+        String.fromCharCode(parseInt("3000", 16)),
+        String.fromCharCode(parseInt("feff", 16)),
+    ];
+    const whiteSpaceRegexp = new RegExp(whiteSpaceCharacters.join("|"), "g");
+    const newLineRegex = /\r\n|\r|\n/g;
+    /**
+     * Replace all the special spaces in a string (non-breaking, tabs, ...) by normal spaces, and all the
+     * different newlines types by \n.
+     */
+    function replaceSpecialSpaces(text) {
+        if (!text)
+            return "";
+        text = text.replace(whiteSpaceRegexp, " ");
+        text = text.replace(newLineRegex, NEWLINE);
+        return text;
     }
 
     const colors$1 = [
@@ -5597,6 +5635,25 @@
             height: rect.height,
         };
     }
+    /**
+     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
+     */
+    function* iterateChildren(el) {
+        yield el;
+        if (el.hasChildNodes()) {
+            for (let child of el.childNodes) {
+                yield* iterateChildren(child);
+            }
+        }
+    }
+    function getElementScrollTop(el) {
+        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
+    }
+    function setElementScrollTop(el, scroll) {
+        if (!el)
+            return;
+        el.scrollTop = scroll;
+    }
 
     /**
      * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
@@ -6003,7 +6060,7 @@
         openSubMenu(menu, menuIndex) {
             const y = this.subMenuVerticalPosition(menuIndex);
             this.subMenu.position = {
-                x: this.position.x + MENU_WIDTH,
+                x: this.position.x + this.props.depth * MENU_WIDTH,
                 y: y - (this.subMenu.scrollOffset || 0),
             };
             this.subMenu.menuItems = menu.children(this.env);
@@ -14873,21 +14930,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         HYPERLINK: HYPERLINK
     });
 
-    const functions$3 = {
-        database,
-        date,
-        financial,
-        info,
-        lookup,
-        logical,
-        math,
-        misc: misc$1,
-        operators,
-        statistical,
-        text,
-        engineering,
-        web,
-    };
+    const categories = [
+        { name: _lt("Database"), functions: database },
+        { name: _lt("Date"), functions: date },
+        { name: _lt("Financial"), functions: financial },
+        { name: _lt("Info"), functions: info },
+        { name: _lt("Lookup"), functions: lookup },
+        { name: _lt("Logical"), functions: logical },
+        { name: _lt("Math"), functions: math },
+        { name: _lt("Misc"), functions: misc$1 },
+        { name: _lt("Operator"), functions: operators },
+        { name: _lt("Statistical"), functions: statistical },
+        { name: _lt("Text"), functions: text },
+        { name: _lt("Engineering"), functions: engineering },
+        { name: _lt("Web"), functions: web },
+    ];
     const functionNameRegex = /^[A-Z0-9\_\.]+$/;
     //------------------------------------------------------------------------------
     // Function registry
@@ -14935,1831 +14992,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return arg === null || arg === void 0 ? void 0 : arg.value;
     }
     const functionRegistry = new FunctionRegistry();
-    for (let category in functions$3) {
-        const fns = functions$3[category];
+    for (let category of categories) {
+        const fns = category.functions;
         for (let name in fns) {
             const addDescr = fns[name];
-            addDescr.category = category;
+            addDescr.category = addDescr.category || category.name;
             name = name.replace(/_/g, ".");
             functionRegistry.add(name, { isExported: false, ...addDescr });
         }
     }
-
-    /**
-     * Tokenizer
-     *
-     * A tokenizer is a piece of code whose job is to transform a string into a list
-     * of "tokens". For example, "(12+" is converted into:
-     *   [{type: "LEFT_PAREN", value: "("},
-     *    {type: "NUMBER", value: "12"},
-     *    {type: "OPERATOR", value: "+"}]
-     *
-     * As the example shows, a tokenizer does not care about the meaning behind those
-     * tokens. It only cares about the structure.
-     *
-     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
-     * is useful for the composer, which needs to be able to work with incomplete
-     * formulas.
-     */
-    const functions$2 = functionRegistry.content;
-    const POSTFIX_UNARY_OPERATORS = ["%"];
-    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
-    function tokenize(str) {
-        const chars = str.split("");
-        const result = [];
-        while (chars.length) {
-            let token = tokenizeSpace(chars) ||
-                tokenizeMisc(chars) ||
-                tokenizeOperator(chars) ||
-                tokenizeString(chars) ||
-                tokenizeDebugger(chars) ||
-                tokenizeInvalidRange(chars) ||
-                tokenizeNumber(chars) ||
-                tokenizeSymbol(chars);
-            if (!token) {
-                token = { type: "UNKNOWN", value: chars.shift() };
-            }
-            result.push(token);
-        }
-        return result;
-    }
-    function tokenizeDebugger(chars) {
-        if (chars[0] === "?") {
-            chars.shift();
-            return { type: "DEBUGGER", value: "?" };
-        }
-        return null;
-    }
-    const misc = {
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    function tokenizeMisc(chars) {
-        if (chars[0] in misc) {
-            const value = chars.shift();
-            const type = misc[value];
-            return { type, value };
-        }
-        return null;
-    }
-    function startsWith(chars, op) {
-        for (let i = 0; i < op.length; i++) {
-            if (op[i] !== chars[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    function tokenizeOperator(chars) {
-        for (let op of OPERATORS) {
-            if (startsWith(chars, op)) {
-                chars.splice(0, op.length);
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return null;
-    }
-    function tokenizeNumber(chars) {
-        const match = concat(chars).match(formulaNumberRegexp);
-        if (match) {
-            chars.splice(0, match[0].length);
-            return { type: "NUMBER", value: match[0] };
-        }
-        return null;
-    }
-    function tokenizeString(chars) {
-        if (chars[0] === '"') {
-            const startChar = chars.shift();
-            let letters = startChar;
-            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
-                letters += chars.shift();
-            }
-            if (chars[0] === '"') {
-                letters += chars.shift();
-            }
-            return {
-                type: "STRING",
-                value: letters,
-            };
-        }
-        return null;
-    }
-    const separatorRegexp = /\w|\.|!|\$/;
-    /**
-     * A "Symbol" is just basically any word-like element that can appear in a
-     * formula, which is not a string. So:
-     *   A1
-     *   SUM
-     *   CEILING.MATH
-     *   A$1
-     *   Sheet2!A2
-     *   'Sheet 2'!A2
-     *
-     * are examples of symbols
-     */
-    function tokenizeSymbol(chars) {
-        let result = "";
-        // there are two main cases to manage: either something which starts with
-        // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars[0] === "'") {
-            let lastChar = chars.shift();
-            result += lastChar;
-            while (chars[0]) {
-                lastChar = chars.shift();
-                result += lastChar;
-                if (lastChar === "'") {
-                    if (chars[0] && chars[0] === "'") {
-                        lastChar = chars.shift();
-                        result += lastChar;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (lastChar !== "'") {
-                return {
-                    type: "UNKNOWN",
-                    value: result,
-                };
-            }
-        }
-        while (chars[0] && chars[0].match(separatorRegexp)) {
-            result += chars.shift();
-        }
-        if (result.length) {
-            const value = result;
-            const isFunction = value.toUpperCase() in functions$2;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
-            const isReference = value.match(rangeReference);
-            if (isReference) {
-                return { type: "REFERENCE", value };
-            }
-            else {
-                return { type: "SYMBOL", value };
-            }
-        }
-        return null;
-    }
-    const whiteSpaceRegexp = /\s/;
-    function tokenizeSpace(chars) {
-        let length = 0;
-        while (chars[0] && chars[0].match(whiteSpaceRegexp)) {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: " ".repeat(length) };
-        }
-        return null;
-    }
-    function tokenizeInvalidRange(chars) {
-        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
-            chars.splice(0, INCORRECT_RANGE_STRING.length);
-            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
-        }
-        return null;
-    }
-
-    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
-    const UNARY_OPERATORS_PREFIX = ["-", "+"];
-    const UNARY_OPERATORS_POSTFIX = ["%"];
-    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
-    const OP_PRIORITY = {
-        "^": 30,
-        "%": 30,
-        "*": 20,
-        "/": 20,
-        "+": 15,
-        "-": 15,
-        "&": 13,
-        ">": 10,
-        "<>": 10,
-        ">=": 10,
-        "<": 10,
-        "<=": 10,
-        "=": 10,
-    };
-    const FUNCTION_BP = 6;
-    function bindingPower(token) {
-        switch (token.type) {
-            case "NUMBER":
-            case "SYMBOL":
-            case "REFERENCE":
-                return 0;
-            case "COMMA":
-                return 3;
-            case "LEFT_PAREN":
-                return 5;
-            case "RIGHT_PAREN":
-                return 5;
-            case "OPERATOR":
-                return OP_PRIORITY[token.value] || 15;
-        }
-        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
-    }
-    function parsePrefix(current, tokens) {
-        var _a, _b, _c, _d;
-        switch (current.type) {
-            case "DEBUGGER":
-                const next = parseExpression(tokens, 1000);
-                next.debug = true;
-                return next;
-            case "NUMBER":
-                return { type: "NUMBER", value: parseNumber(current.value) };
-            case "STRING":
-                return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                if (tokens.shift().type !== "LEFT_PAREN") {
-                    throw new BadExpressionError(_lt("Wrong function call"));
-                }
-                else {
-                    const args = [];
-                    if (tokens[0] && tokens[0].type !== "RIGHT_PAREN") {
-                        if (tokens[0].type === "COMMA") {
-                            args.push({ type: "UNKNOWN", value: "" });
-                        }
-                        else {
-                            args.push(parseExpression(tokens, FUNCTION_BP));
-                        }
-                        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "COMMA") {
-                            tokens.shift();
-                            const token = tokens[0];
-                            if ((token === null || token === void 0 ? void 0 : token.type) === "RIGHT_PAREN") {
-                                args.push({ type: "UNKNOWN", value: "" });
-                                break;
-                            }
-                            else if ((token === null || token === void 0 ? void 0 : token.type) === "COMMA") {
-                                args.push({ type: "UNKNOWN", value: "" });
-                            }
-                            else {
-                                args.push(parseExpression(tokens, FUNCTION_BP));
-                            }
-                        }
-                    }
-                    const closingToken = tokens.shift();
-                    if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
-                        throw new BadExpressionError(_lt("Wrong function call"));
-                    }
-                    return { type: "FUNCALL", value: current.value, args };
-                }
-            case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
-            case "REFERENCE":
-                if (((_b = tokens[0]) === null || _b === void 0 ? void 0 : _b.value) === ":" && ((_c = tokens[1]) === null || _c === void 0 ? void 0 : _c.type) === "REFERENCE") {
-                    tokens.shift();
-                    const rightReference = tokens.shift();
-                    return {
-                        type: "REFERENCE",
-                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
-                    };
-                }
-                return {
-                    type: "REFERENCE",
-                    value: current.value,
-                };
-            case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
-                }
-                else {
-                    if (current.value) {
-                        if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
-                            throw new UnknownFunctionError(current.value);
-                        }
-                        throw new BadExpressionError(_lt("Invalid formula"));
-                    }
-                    return { type: "STRING", value: current.value };
-                }
-            case "LEFT_PAREN":
-                const result = parseExpression(tokens, 5);
-                if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
-                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
-                }
-                tokens.shift();
-                return result;
-            default:
-                if (current.type === "OPERATOR" && UNARY_OPERATORS_PREFIX.includes(current.value)) {
-                    return {
-                        type: "UNARY_OPERATION",
-                        value: current.value,
-                        operand: parseExpression(tokens, OP_PRIORITY[current.value]),
-                    };
-                }
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-        }
-    }
-    function parseInfix(left, current, tokens) {
-        if (current.type === "OPERATOR") {
-            const bp = bindingPower(current);
-            if (UNARY_OPERATORS_POSTFIX.includes(current.value)) {
-                return {
-                    type: "UNARY_OPERATION",
-                    value: current.value,
-                    operand: left,
-                    postfix: true,
-                };
-            }
-            else {
-                const right = parseExpression(tokens, bp);
-                return {
-                    type: "BIN_OPERATION",
-                    value: current.value,
-                    left,
-                    right,
-                };
-            }
-        }
-        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-    }
-    function parseExpression(tokens, bp) {
-        const token = tokens.shift();
-        if (!token) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        let expr = parsePrefix(token, tokens);
-        while (tokens[0] && bindingPower(tokens[0]) > bp) {
-            expr = parseInfix(expr, tokens.shift(), tokens);
-        }
-        return expr;
-    }
-    /**
-     * Parse an expression (as a string) into an AST.
-     */
-    function parse(str) {
-        return parseTokens(tokenize(str));
-    }
-    function parseTokens(tokens) {
-        tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
-            tokens.splice(0, 1);
-        }
-        const result = parseExpression(tokens, 0);
-        if (tokens.length) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        return result;
-    }
-    /**
-     * Allows to visit all nodes of an AST and apply a mapping function
-     * to nodes of a specific type.
-     * Useful if you want to convert some part of a formula.
-     *
-     * e.g.
-     * ```ts
-     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
-     *
-     * function convertFormulaToExcel(ast: ASTFuncall) {
-     *   // ...
-     *   return modifiedAst
-     * }
-     * ```
-     */
-    function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
-        }
-        switch (ast.type) {
-            case "FUNCALL":
-                return {
-                    ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
-                };
-            case "UNARY_OPERATION":
-                return {
-                    ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
-                };
-            case "BIN_OPERATION":
-                return {
-                    ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
-                };
-            default:
-                return ast;
-        }
-    }
-    /**
-     * Converts an ast formula to the corresponding string
-     */
-    function astToFormula(ast) {
-        switch (ast.type) {
-            case "FUNCALL":
-                const args = ast.args.map((arg) => astToFormula(arg));
-                return `${ast.value}(${args.join(",")})`;
-            case "NUMBER":
-                return ast.value.toString();
-            case "REFERENCE":
-                return ast.value;
-            case "STRING":
-                return `"${ast.value}"`;
-            case "BOOLEAN":
-                return ast.value ? "TRUE" : "FALSE";
-            case "UNARY_OPERATION":
-                return ast.postfix
-                    ? leftOperandToFormula(ast) + ast.value
-                    : ast.value + rightOperandToFormula(ast);
-            case "BIN_OPERATION":
-                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
-            default:
-                return ast.value;
-        }
-    }
-    /**
-     * Convert the left operand of a binary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function leftOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
-        const leftOperator = leftOperation.value;
-        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
-        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
-    }
-    /**
-     * Convert the right operand of a binary or unary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function rightOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
-        const rightPriority = OP_PRIORITY[rightOperation.value];
-        const mainPriority = OP_PRIORITY[mainOperator];
-        let needParenthesis = false;
-        if (rightOperation.type !== "BIN_OPERATION") {
-            needParenthesis = false;
-        }
-        else if (rightPriority < mainPriority) {
-            needParenthesis = true;
-        }
-        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
-            needParenthesis = true;
-        }
-        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        var _a;
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens.push(token);
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens.push(token);
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
-    }
-
-    const functions$1 = functionRegistry.content;
-    const OPERATOR_MAP = {
-        "=": "EQ",
-        "+": "ADD",
-        "-": "MINUS",
-        "*": "MULTIPLY",
-        "/": "DIVIDE",
-        ">=": "GTE",
-        "<>": "NE",
-        ">": "GT",
-        "<=": "LTE",
-        "<": "LT",
-        "^": "POWER",
-        "&": "CONCATENATE",
-    };
-    const UNARY_OPERATOR_MAP = {
-        "-": "UMINUS",
-        "+": "UPLUS",
-        "%": "UNARY.PERCENT",
-    };
-    /**
-     * Takes a list of strings that might be single or multiline
-     * and maps them in a list of single line strings.
-     */
-    function splitCodeLines(codeBlocks) {
-        return codeBlocks
-            .join("\n")
-            .split("\n")
-            .filter((line) => line.trim() !== "");
-    }
-    // this cache contains all compiled function code, grouped by "structure". For
-    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
-    // structural function.
-    // It is only exported for testing purposes
-    const functionCache = {};
-    // -----------------------------------------------------------------------------
-    // COMPILER
-    // -----------------------------------------------------------------------------
-    function compile(formula) {
-        const tokens = rangeTokenize(formula);
-        const { dependencies, constantValues } = formulaArguments(tokens);
-        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
-        if (!functionCache[cacheKey]) {
-            const ast = parseTokens([...tokens]);
-            let nextId = 1;
-            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            if (ast.type === "UNKNOWN") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            const compiledAST = compileAST(ast);
-            const code = splitCodeLines([
-                `// ${cacheKey}`,
-                compiledAST.code,
-                `return ${compiledAST.id};`,
-            ]).join("\n");
-            let baseFunction = new Function("deps", // the dependencies in the current formula
-            "ref", // a function to access a certain dependency at a given index
-            "range", // same as above, but guarantee that the result is in the form of a range
-            "ctx", code);
-            functionCache[cacheKey] = {
-                // @ts-ignore
-                execute: baseFunction,
-            };
-            /**
-             * This function compile the function arguments. It is mostly straightforward,
-             * except that there is a non trivial transformation in one situation:
-             *
-             * If a function argument is asking for a range, and get a cell, we transform
-             * the cell value into a range. This allow the grid model to differentiate
-             * between a cell value and a non cell value.
-             */
-            function compileFunctionArgs(ast) {
-                const functionDefinition = functions$1[ast.value.toUpperCase()];
-                const currentFunctionArguments = ast.args;
-                // check if arguments are supplied in the correct quantities
-                const nbrArg = currentFunctionArguments.length;
-                if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-                }
-                if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-                }
-                const repeatingArg = functionDefinition.nbrArgRepeating;
-                if (repeatingArg > 1) {
-                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
-                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
-                    if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
-                    }
-                }
-                let listArgs = [];
-                for (let i = 0; i < nbrArg; i++) {
-                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
-                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
-                        const currentArg = currentFunctionArguments[i];
-                        const argDefinition = functionDefinition.args[argPosition];
-                        const argTypes = argDefinition.type || [];
-                        // detect when an argument need to be evaluated as a meta argument
-                        const isMeta = argTypes.includes("META");
-                        // detect when an argument need to be evaluated as a lazy argument
-                        const isLazy = argDefinition.lazy;
-                        const hasRange = argTypes.some((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        if (isRangeOnly) {
-                            if (currentArg.type !== "REFERENCE") {
-                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
-                            }
-                        }
-                        const compiledAST = compileAST(currentArg, isLazy, isMeta, hasRange, {
-                            functionName: ast.value.toUpperCase(),
-                            paramIndex: i + 1,
-                        });
-                        listArgs.push(compiledAST);
-                    }
-                }
-                return listArgs;
-            }
-            /**
-             * This function compiles all the information extracted by the parser into an
-             * executable code for the evaluation of the cells content. It uses a cash to
-             * not reevaluate identical code structures.
-             *
-             * The function is sensitive to two parameters “isLazy” and “isMeta”. These
-             * parameters may vary when compiling function arguments:
-             *
-             * - isLazy: In some cases the function arguments does not need to be
-             * evaluated before entering the functions. For example the IF function might
-             * take invalid arguments that do not need to be evaluate and thus should not
-             * create an error. For this we have lazy arguments.
-             *
-             * - isMeta: In some cases the function arguments expects information on the
-             * cell/range other than the associated value(s). For example the COLUMN
-             * function needs to receive as argument the coordinates of a cell rather
-             * than its value. For this we have meta arguments.
-             */
-            function compileAST(ast, isLazy = false, isMeta = false, hasRange = false, referenceVerification = {}) {
-                const codeBlocks = [];
-                let id, fnName, statement;
-                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
-                    if (isMeta) {
-                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
-                    }
-                }
-                if (ast.debug) {
-                    codeBlocks.push("debugger;");
-                }
-                switch (ast.type) {
-                    case "BOOLEAN":
-                        if (!isLazy) {
-                            return { id: `{ value: ${ast.value} }`, code: "" };
-                        }
-                        id = nextId++;
-                        statement = `{ value: ${ast.value} }`;
-                        break;
-                    case "NUMBER":
-                        id = nextId++;
-                        statement = `{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`;
-                        break;
-                    case "STRING":
-                        id = nextId++;
-                        statement = `{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`;
-                        break;
-                    case "REFERENCE":
-                        const referenceIndex = dependencies.indexOf(ast.value);
-                        id = nextId++;
-                        if (hasRange) {
-                            statement = `range(deps[${referenceIndex}])`;
-                        }
-                        else {
-                            statement = `ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`;
-                        }
-                        break;
-                    case "FUNCALL":
-                        id = nextId++;
-                        const args = compileFunctionArgs(ast);
-                        codeBlocks.push(args.map((arg) => arg.code).join("\n"));
-                        fnName = ast.value.toUpperCase();
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${args.map((arg) => arg.id)})`;
-                        break;
-                    case "UNARY_OPERATION": {
-                        id = nextId++;
-                        fnName = UNARY_OPERATOR_MAP[ast.value];
-                        const operand = compileAST(ast.operand, false, false, false, {
-                            functionName: fnName,
-                        });
-                        codeBlocks.push(operand.code);
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${operand.id})`;
-                        break;
-                    }
-                    case "BIN_OPERATION": {
-                        id = nextId++;
-                        fnName = OPERATOR_MAP[ast.value];
-                        const left = compileAST(ast.left, false, false, false, {
-                            functionName: fnName,
-                        });
-                        const right = compileAST(ast.right, false, false, false, {
-                            functionName: fnName,
-                        });
-                        codeBlocks.push(left.code);
-                        codeBlocks.push(right.code);
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${left.id}, ${right.id})`;
-                        break;
-                    }
-                    case "UNKNOWN":
-                        if (!isLazy) {
-                            return { id: "undefined", code: "" };
-                        }
-                        id = nextId++;
-                        statement = `undefined`;
-                        break;
-                }
-                if (isLazy) {
-                    const lazyFunction = `const _${id} = () => {\n` +
-                        `\t${splitCodeLines(codeBlocks).join("\n\t")}\n` +
-                        `\treturn ${statement};\n` +
-                        "}";
-                    return { id: `_${id}`, code: lazyFunction };
-                }
-                else {
-                    codeBlocks.push(`let _${id} = ${statement};`);
-                    return { id: `_${id}`, code: codeBlocks.join("\n") };
-                }
-            }
-        }
-        const compiledFormula = {
-            execute: functionCache[cacheKey].execute,
-            dependencies,
-            constantValues,
-            tokens,
-        };
-        return compiledFormula;
-    }
-    /**
-     * Compute a cache key for the formula.
-     * References, numbers and strings are replaced with placeholders because
-     * the compiled formula does not depend on their actual value.
-     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
-     *
-     * Spaces are also ignored to compute the cache key.
-     *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
-     */
-    function compilationCacheKey(tokens, dependencies, constantValues) {
-        return concat(tokens.map((token) => {
-            switch (token.type) {
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    return `|S${constantValues.strings.indexOf(value)}|`;
-                case "NUMBER":
-                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
-                case "REFERENCE":
-                case "INVALID_REFERENCE":
-                    return `|${dependencies.indexOf(token.value)}|`;
-                case "SPACE":
-                    return "";
-                default:
-                    return token.value;
-            }
-        }));
-    }
-    /**
-     * Return formula arguments which are references, strings and numbers.
-     */
-    function formulaArguments(tokens) {
-        const constantValues = {
-            numbers: [],
-            strings: [],
-        };
-        const dependencies = [];
-        for (const token of tokens) {
-            switch (token.type) {
-                case "INVALID_REFERENCE":
-                case "REFERENCE":
-                    dependencies.push(token.value);
-                    break;
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    if (!constantValues.strings.includes(value)) {
-                        constantValues.strings.push(value);
-                    }
-                    break;
-                case "NUMBER": {
-                    const value = parseNumber(token.value);
-                    if (!constantValues.numbers.includes(value)) {
-                        constantValues.numbers.push(value);
-                    }
-                    break;
-                }
-            }
-        }
-        return {
-            dependencies,
-            constantValues,
-        };
-    }
-
-    /**
-     * Add the following information on tokens:
-     * - length
-     * - start
-     * - end
-     */
-    function enrichTokens(tokens) {
-        let current = 0;
-        return tokens.map((x) => {
-            const len = x.value.toString().length;
-            const token = Object.assign({}, x, {
-                start: current,
-                end: current + len,
-                length: len,
-            });
-            current = token.end;
-            return token;
-        });
-    }
-    /**
-     * add on each token the length, start and end
-     * also matches the opening to its closing parenthesis (using the same number)
-     */
-    function mapParenthesis(tokens) {
-        let maxParen = 1;
-        const stack = [];
-        return tokens.map((token) => {
-            if (token.type === "LEFT_PAREN") {
-                stack.push(maxParen);
-                token.parenIndex = maxParen;
-                maxParen++;
-            }
-            else if (token.type === "RIGHT_PAREN") {
-                token.parenIndex = stack.pop();
-            }
-            return token;
-        });
-    }
-    /**
-     * add on each token its parent function and the index corresponding to
-     * its position as an argument of the function.
-     * In this example "=MIN(42,SUM(MAX(1,2),3))":
-     * - the parent function of the token correspond to number 42 is the MIN function
-     * - the argument position of the token correspond to number 42 is 0
-     * - the parent function of the token correspond to number 3 is the SUM function
-     * - the argument position of the token correspond to number 3 is 1
-     */
-    function mapParentFunction(tokens) {
-        let stack = [];
-        let functionStarted = "";
-        const res = tokens.map((token, i) => {
-            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
-                functionStarted = "";
-            }
-            switch (token.type) {
-                case "FUNCTION":
-                    functionStarted = token.value;
-                    break;
-                case "LEFT_PAREN":
-                    stack.push({ parent: functionStarted, argPosition: 0 });
-                    functionStarted = "";
-                    break;
-                case "RIGHT_PAREN":
-                    stack.pop();
-                    break;
-                case "COMMA":
-                    if (stack.length) {
-                        // increment position on current function
-                        stack[stack.length - 1].argPosition++;
-                    }
-                    break;
-            }
-            if (stack.length) {
-                const functionContext = stack[stack.length - 1];
-                if (functionContext.parent) {
-                    token.functionContext = Object.assign({}, functionContext);
-                }
-            }
-            return token;
-        });
-        return res;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the composer.
-     *
-     * @param formula
-     */
-    function composerTokenize(formula) {
-        const tokens = rangeTokenize(formula);
-        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
-    }
-
-    /**
-     * Change the reference types inside the given token, if the token represent a range or a cell
-     *
-     * Eg. :
-     *   A1 => $A$1 => A$1 => $A1 => A1
-     *   A1:$B$1 => $A$1:B$1 => A$1:$B1 => $A1:B1 => A1:$B$1
-     */
-    function loopThroughReferenceType(token) {
-        if (token.type !== "REFERENCE")
-            return token;
-        const [range, sheet] = token.value.split("!").reverse();
-        const [left, right] = range.split(":");
-        const sheetRef = sheet ? `${sheet}!` : "";
-        const updatedLeft = getTokenNextReferenceType(left);
-        const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
-        return { ...token, value: sheetRef + updatedLeft + updatedRight };
-    }
-    /**
-     * Get a new token with a changed type of reference from the given cell token symbol.
-     * Undefined behavior if given a token other than a cell or if the Xc contains a sheet reference
-     *
-     * A1 => $A$1 => A$1 => $A1 => A1
-     */
-    function getTokenNextReferenceType(xc) {
-        switch (getReferenceType(xc)) {
-            case "none":
-                xc = setXcToReferenceType(xc, "colrow");
-                break;
-            case "colrow":
-                xc = setXcToReferenceType(xc, "row");
-                break;
-            case "row":
-                xc = setXcToReferenceType(xc, "col");
-                break;
-            case "col":
-                xc = setXcToReferenceType(xc, "none");
-                break;
-        }
-        return xc;
-    }
-    /**
-     * Returns the given XC with the given reference type.
-     */
-    function setXcToReferenceType(xc, referenceType) {
-        xc = xc.replace(/\$/g, "");
-        let indexOfNumber;
-        switch (referenceType) {
-            case "col":
-                return "$" + xc;
-            case "row":
-                indexOfNumber = xc.search(/[0-9]/);
-                return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
-            case "colrow":
-                indexOfNumber = xc.search(/[0-9]/);
-                xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
-                return "$" + xc;
-            case "none":
-                return xc;
-        }
-    }
-    /**
-     * Return the type of reference used in the given XC of a cell.
-     * Undefined behavior if the XC have a sheet reference
-     */
-    function getReferenceType(xcCell) {
-        if (isColAndRowFixed(xcCell)) {
-            return "colrow";
-        }
-        else if (isColFixed(xcCell)) {
-            return "col";
-        }
-        else if (isRowFixed(xcCell)) {
-            return "row";
-        }
-        return "none";
-    }
-    function isColFixed(xc) {
-        return xc.startsWith("$");
-    }
-    function isRowFixed(xc) {
-        return xc.includes("$", 1);
-    }
-    function isColAndRowFixed(xc) {
-        return xc.startsWith("$") && xc.length > 1 && xc.slice(1).includes("$");
-    }
-
-    /**
-     * BasePlugin
-     *
-     * Since the spreadsheet internal state is quite complex, it is split into
-     * multiple parts, each managing a specific concern.
-     *
-     * This file introduce the BasePlugin, which is the common class that defines
-     * how each of these model sub parts should interact with each other.
-     * There are two kind of plugins: core plugins handling persistent data
-     * and UI plugins handling transient data.
-     */
-    class BasePlugin {
-        constructor(stateObserver, dispatch) {
-            this.history = Object.assign(Object.create(stateObserver), {
-                update: stateObserver.addChange.bind(stateObserver, this),
-                selectCell: () => { },
-            });
-            this.dispatch = dispatch;
-        }
-        /**
-         * Export for excel should be available for all plugins, even for the UI.
-         * In some case, we need to export evaluated value, which is available from
-         * UI plugin only.
-         */
-        exportForExcel(data) { }
-        // ---------------------------------------------------------------------------
-        // Command handling
-        // ---------------------------------------------------------------------------
-        /**
-         * Before a command is accepted, the model will ask each plugin if the command
-         * is allowed.  If all of then return true, then we can proceed. Otherwise,
-         * the command is cancelled.
-         *
-         * There should not be any side effects in this method.
-         */
-        allowDispatch(command) {
-            return 0 /* CommandResult.Success */;
-        }
-        /**
-         * This method is useful when a plugin need to perform some action before a
-         * command is handled in another plugin. This should only be used if it is not
-         * possible to do the work in the handle method.
-         */
-        beforeHandle(command) { }
-        /**
-         * This is the standard place to handle any command. Most of the plugin
-         * command handling work should take place here.
-         */
-        handle(command) { }
-        /**
-         * Sometimes, it is useful to perform some work after a command (and all its
-         * subcommands) has been completely handled.  For example, when we paste
-         * multiple cells, we only want to reevaluate the cell values once at the end.
-         */
-        finalize() { }
-        /**
-         * Combine multiple validation functions into a single function
-         * returning the list of result of every validation.
-         */
-        batchValidations(...validations) {
-            return (toValidate) => validations.map((validation) => validation.call(this, toValidate)).flat();
-        }
-        /**
-         * Combine multiple validation functions. Every validation is executed one after
-         * the other. As soon as one validation fails, it stops and the cancelled reason
-         * is returned.
-         */
-        chainValidations(...validations) {
-            return (toValidate) => {
-                for (const validation of validations) {
-                    let results = validation.call(this, toValidate);
-                    if (!Array.isArray(results)) {
-                        results = [results];
-                    }
-                    const cancelledReasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
-                    if (cancelledReasons.length) {
-                        return cancelledReasons;
-                    }
-                }
-                return 0 /* CommandResult.Success */;
-            };
-        }
-        checkValidations(command, ...validations) {
-            return this.batchValidations(...validations)(command);
-        }
-    }
-    BasePlugin.getters = [];
-
-    /**
-     * UI plugins handle any transient data required to display a spreadsheet.
-     * They can draw on the grid canvas.
-     */
-    class UIPlugin extends BasePlugin {
-        constructor({ getters, stateObserver, dispatch, uiActions, selection }) {
-            super(stateObserver, dispatch);
-            this.getters = getters;
-            this.ui = uiActions;
-            this.selection = selection;
-        }
-        // ---------------------------------------------------------------------------
-        // Grid rendering
-        // ---------------------------------------------------------------------------
-        drawGrid(ctx, layer) { }
-    }
-    UIPlugin.layers = [];
-
-    const CELL_DELETED_MESSAGE = _lt("The cell you are trying to edit has been deleted.");
-    const SelectionIndicator = "␣";
-    class EditionPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.col = 0;
-            this.row = 0;
-            this.mode = "inactive";
-            this.sheetId = "";
-            this.currentContent = "";
-            this.currentTokens = [];
-            this.selectionStart = 0;
-            this.selectionEnd = 0;
-            this.selectionInitialStart = 0;
-            this.initialContent = "";
-            this.previousRef = "";
-            this.previousRange = undefined;
-            this.colorIndexByRange = {};
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "CHANGE_COMPOSER_CURSOR_SELECTION":
-                    return this.validateSelection(this.currentContent.length, cmd.start, cmd.end);
-                case "SET_CURRENT_CONTENT":
-                    if (cmd.selection) {
-                        return this.validateSelection(cmd.content.length, cmd.selection.start, cmd.selection.end);
-                    }
-                    else {
-                        return 0 /* CommandResult.Success */;
-                    }
-                case "START_EDITION":
-                    if (cmd.selection) {
-                        const content = cmd.text || this.getComposerContent(this.getters.getActivePosition());
-                        return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
-                    }
-                    else {
-                        return 0 /* CommandResult.Success */;
-                    }
-                default:
-                    return 0 /* CommandResult.Success */;
-            }
-        }
-        handleEvent(event) {
-            if (this.mode !== "selecting") {
-                return;
-            }
-            switch (event.mode) {
-                case "newAnchor":
-                    this.insertSelectedRange(event.anchor.zone);
-                    break;
-                default:
-                    this.replaceSelectedRanges(event.anchor.zone);
-                    break;
-            }
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "CHANGE_COMPOSER_CURSOR_SELECTION":
-                    this.selectionStart = cmd.start;
-                    this.selectionEnd = cmd.end;
-                    break;
-                case "STOP_COMPOSER_RANGE_SELECTION":
-                    if (this.isSelectingForComposer()) {
-                        this.mode = "editing";
-                    }
-                    break;
-                case "START_EDITION":
-                    this.startEdition(cmd.text, cmd.selection);
-                    this.updateRangeColor();
-                    break;
-                case "STOP_EDITION":
-                    if (cmd.cancel) {
-                        this.cancelEditionAndActivateSheet();
-                        this.resetContent();
-                    }
-                    else {
-                        this.stopEdition();
-                    }
-                    this.colorIndexByRange = {};
-                    break;
-                case "SET_CURRENT_CONTENT":
-                    this.setContent(cmd.content, cmd.selection, true);
-                    this.updateRangeColor();
-                    break;
-                case "REPLACE_COMPOSER_CURSOR_SELECTION":
-                    this.replaceSelection(cmd.text);
-                    break;
-                case "SELECT_FIGURE":
-                    this.cancelEditionAndActivateSheet();
-                    this.resetContent();
-                    break;
-                case "ADD_COLUMNS_ROWS":
-                    this.onAddElements(cmd);
-                    break;
-                case "REMOVE_COLUMNS_ROWS":
-                    if (cmd.dimension === "COL") {
-                        this.onColumnsRemoved(cmd);
-                    }
-                    else {
-                        this.onRowsRemoved(cmd);
-                    }
-                    break;
-                case "START_CHANGE_HIGHLIGHT":
-                    this.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-                    const range = this.getters.getRangeFromRangeData(cmd.range);
-                    const previousRefToken = this.currentTokens
-                        .filter((token) => token.type === "REFERENCE")
-                        .find((token) => {
-                        let value = token.value;
-                        const [xc, sheet] = value.split("!").reverse();
-                        const sheetName = sheet || this.getters.getSheetName(this.sheetId);
-                        const activeSheetId = this.getters.getActiveSheetId();
-                        if (this.getters.getSheetName(activeSheetId) !== sheetName) {
-                            return false;
-                        }
-                        const refRange = this.getters.getRangeFromSheetXC(activeSheetId, xc);
-                        return isEqual(this.getters.expandZone(activeSheetId, refRange.zone), range.zone);
-                    });
-                    this.previousRef = previousRefToken.value;
-                    this.previousRange = this.getters.getRangeFromSheetXC(this.getters.getActiveSheetId(), this.previousRef);
-                    this.selectionInitialStart = previousRefToken.start;
-                    break;
-                case "CHANGE_HIGHLIGHT":
-                    const cmdRange = this.getters.getRangeFromRangeData(cmd.range);
-                    const newRef = this.getRangeReference(cmdRange, this.previousRange.parts);
-                    this.selectionStart = this.selectionInitialStart;
-                    this.selectionEnd = this.selectionInitialStart + this.previousRef.length;
-                    this.replaceSelection(newRef);
-                    this.previousRef = newRef;
-                    this.selectionStart = this.currentContent.length;
-                    this.selectionEnd = this.currentContent.length;
-                    break;
-                case "ACTIVATE_SHEET":
-                    if (!this.currentContent.startsWith("=")) {
-                        this.cancelEdition();
-                        this.resetContent();
-                    }
-                    if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
-                        const activePosition = this.getters.getActivePosition();
-                        const { col, row } = this.getters.getNextVisibleCellPosition({
-                            sheetId: cmd.sheetIdTo,
-                            col: activePosition.col,
-                            row: activePosition.row,
-                        });
-                        const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
-                        this.selection.resetAnchor(this, { cell: { col, row }, zone });
-                    }
-                    break;
-                case "DELETE_SHEET":
-                case "UNDO":
-                case "REDO":
-                    const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
-                    if (!sheetIdExists && this.mode !== "inactive") {
-                        this.sheetId = this.getters.getActiveSheetId();
-                        this.cancelEditionAndActivateSheet();
-                        this.resetContent();
-                        this.ui.notifyUI({
-                            type: "ERROR",
-                            text: CELL_DELETED_MESSAGE,
-                        });
-                    }
-                    break;
-                case "CYCLE_EDITION_REFERENCES":
-                    this.cycleReferences();
-                    break;
-            }
-        }
-        unsubscribe() {
-            this.mode = "inactive";
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        getEditionMode() {
-            return this.mode;
-        }
-        getCurrentContent() {
-            if (this.mode === "inactive") {
-                return this.getComposerContent(this.getters.getActivePosition());
-            }
-            return this.currentContent;
-        }
-        getEditionSheet() {
-            return this.sheetId;
-        }
-        getComposerSelection() {
-            return {
-                start: this.selectionStart,
-                end: this.selectionEnd,
-            };
-        }
-        isSelectingForComposer() {
-            return this.mode === "selecting";
-        }
-        showSelectionIndicator() {
-            return this.isSelectingForComposer() && this.canStartComposerRangeSelection();
-        }
-        getCurrentTokens() {
-            return this.currentTokens;
-        }
-        /**
-         * Return the (enriched) token just before the cursor.
-         */
-        getTokenAtCursor() {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            if (start === end && end === 0) {
-                return undefined;
-            }
-            else {
-                return this.currentTokens.find((t) => t.start <= start && t.end >= end);
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Misc
-        // ---------------------------------------------------------------------------
-        cycleReferences() {
-            const tokens = this.getTokensInSelection();
-            const refTokens = tokens.filter((token) => token.type === "REFERENCE");
-            if (refTokens.length === 0)
-                return;
-            const updatedReferences = tokens
-                .map(loopThroughReferenceType)
-                .map((token) => token.value)
-                .join("");
-            const content = this.currentContent;
-            const start = tokens[0].start;
-            const end = tokens[tokens.length - 1].end;
-            const newContent = content.slice(0, start) + updatedReferences + content.slice(end);
-            const lengthDiff = newContent.length - content.length;
-            const startOfTokens = refTokens[0].start;
-            const endOfTokens = refTokens[refTokens.length - 1].end + lengthDiff;
-            const selection = { start: startOfTokens, end: endOfTokens };
-            // Put the selection at the end of the token if we cycled on a single token
-            if (refTokens.length === 1 && this.selectionStart === this.selectionEnd) {
-                selection.start = selection.end;
-            }
-            this.dispatch("SET_CURRENT_CONTENT", {
-                content: newContent,
-                selection,
-            });
-        }
-        validateSelection(length, start, end) {
-            return start >= 0 && start <= length && end >= 0 && end <= length
-                ? 0 /* CommandResult.Success */
-                : 45 /* CommandResult.WrongComposerSelection */;
-        }
-        onColumnsRemoved(cmd) {
-            if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
-                this.dispatch("STOP_EDITION", { cancel: true });
-                this.ui.notifyUI({
-                    type: "ERROR",
-                    text: CELL_DELETED_MESSAGE,
-                });
-                return;
-            }
-            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "left", [...cmd.elements]);
-            this.col = left;
-            this.row = top;
-        }
-        onRowsRemoved(cmd) {
-            if (cmd.elements.includes(this.row) && this.mode !== "inactive") {
-                this.dispatch("STOP_EDITION", { cancel: true });
-                this.ui.notifyUI({
-                    type: "ERROR",
-                    text: CELL_DELETED_MESSAGE,
-                });
-                return;
-            }
-            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "top", [...cmd.elements]);
-            this.col = left;
-            this.row = top;
-        }
-        onAddElements(cmd) {
-            const { top, left } = updateSelectionOnInsertion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
-            this.col = left;
-            this.row = top;
-        }
-        /**
-         * Enable the selecting mode
-         */
-        startComposerRangeSelection() {
-            if (this.sheetId === this.getters.getActiveSheetId()) {
-                const zone = positionToZone({ col: this.col, row: this.row });
-                this.selection.resetAnchor(this, { cell: { col: this.col, row: this.row }, zone });
-            }
-            this.mode = "selecting";
-            this.selectionInitialStart = this.selectionStart;
-        }
-        /**
-         * start the edition of a cell
-         * @param str the key that is used to start the edition if it is a "content" key like a letter or number
-         * @param selection
-         * @private
-         */
-        startEdition(str, selection) {
-            var _a;
-            const evaluatedCell = this.getters.getActiveCell();
-            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
-                selection = selection || { start: str.length, end: str.length };
-                str = `${str}%`;
-            }
-            const sheetId = this.getters.getActiveSheetId();
-            const { col, row } = this.getters.getActivePosition();
-            this.col = col;
-            this.sheetId = sheetId;
-            this.row = row;
-            this.initialContent = this.getComposerContent({ sheetId, col, row });
-            this.mode = "editing";
-            this.setContent(str || this.initialContent, selection);
-            this.colorIndexByRange = {};
-            const zone = positionToZone({ col: this.col, row: this.row });
-            this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
-                handleEvent: this.handleEvent.bind(this),
-                release: () => {
-                    this.stopEdition();
-                },
-            });
-        }
-        stopEdition() {
-            if (this.mode !== "inactive") {
-                this.cancelEditionAndActivateSheet();
-                const col = this.col;
-                const row = this.row;
-                let content = this.currentContent;
-                const didChange = this.initialContent !== content;
-                if (!didChange) {
-                    return;
-                }
-                if (content) {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
-                    if (content.startsWith("=")) {
-                        const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
-                        const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
-                        const missing = left - right;
-                        if (missing > 0) {
-                            content += concat(new Array(missing).fill(")"));
-                        }
-                    }
-                    else if (cell.link) {
-                        content = markdownLink(content, cell.link.url);
-                    }
-                    this.dispatch("UPDATE_CELL", {
-                        sheetId: this.sheetId,
-                        col,
-                        row,
-                        content,
-                    });
-                }
-                else {
-                    this.dispatch("UPDATE_CELL", {
-                        sheetId: this.sheetId,
-                        content: "",
-                        col,
-                        row,
-                    });
-                }
-                this.setContent("");
-            }
-        }
-        cancelEditionAndActivateSheet() {
-            if (this.mode === "inactive") {
-                return;
-            }
-            this.cancelEdition();
-            const sheetId = this.getters.getActiveSheetId();
-            if (sheetId !== this.sheetId) {
-                this.dispatch("ACTIVATE_SHEET", {
-                    sheetIdFrom: this.getters.getActiveSheetId(),
-                    sheetIdTo: this.sheetId,
-                });
-            }
-        }
-        getComposerContent(position) {
-            const cell = this.getters.getCell(position);
-            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
-                return cell.content;
-            }
-            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
-            switch (type) {
-                case CellValueType.text:
-                case CellValueType.empty:
-                    return value;
-                case CellValueType.boolean:
-                    return formattedValue;
-                case CellValueType.error:
-                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
-                case CellValueType.number:
-                    if (format && isDateTimeFormat(format)) {
-                        return formattedValue;
-                    }
-                    return this.numberComposerContent(value, format);
-            }
-        }
-        numberComposerContent(value, format) {
-            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
-                return `${value * 100}%`;
-            }
-            return numberToString(value);
-        }
-        cancelEdition() {
-            if (this.mode === "inactive") {
-                return;
-            }
-            this.mode = "inactive";
-            this.selection.release(this);
-        }
-        /**
-         * Reset the current content to the active cell content
-         */
-        resetContent() {
-            this.setContent(this.initialContent || "");
-        }
-        setContent(text, selection, raise) {
-            const isNewCurrentContent = this.currentContent !== text;
-            this.currentContent = text;
-            if (selection) {
-                this.selectionStart = selection.start;
-                this.selectionEnd = selection.end;
-            }
-            else {
-                this.selectionStart = this.selectionEnd = text.length;
-            }
-            if (isNewCurrentContent || this.mode !== "inactive") {
-                this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
-                if (this.currentTokens.length > 100) {
-                    if (raise) {
-                        this.ui.notifyUI({
-                            type: "ERROR",
-                            text: _lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"),
-                        });
-                    }
-                }
-            }
-            if (this.canStartComposerRangeSelection()) {
-                this.startComposerRangeSelection();
-            }
-        }
-        insertSelectedRange(zone) {
-            // infer if range selected or selecting range from cursor position
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const ref = this.getZoneReference(zone);
-            if (this.canStartComposerRangeSelection()) {
-                this.insertText(ref, start);
-                this.selectionInitialStart = start;
-            }
-            else {
-                this.insertText("," + ref, start);
-                this.selectionInitialStart = start + 1;
-            }
-        }
-        /**
-         * Replace the current reference selected by the new one.
-         * */
-        replaceSelectedRanges(zone) {
-            const ref = this.getZoneReference(zone);
-            this.replaceText(ref, this.selectionInitialStart, this.selectionEnd);
-        }
-        getZoneReference(zone, fixedParts = [{ colFixed: false, rowFixed: false }]) {
-            const sheetId = this.getters.getActiveSheetId();
-            let selectedXc = this.getters.zoneToXC(sheetId, zone, fixedParts);
-            if (this.getters.getEditionSheet() !== this.getters.getActiveSheetId()) {
-                const sheetName = getComposerSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
-                selectedXc = `${sheetName}!${selectedXc}`;
-            }
-            return selectedXc;
-        }
-        getRangeReference(range, fixedParts = [{ colFixed: false, rowFixed: false }]) {
-            let _fixedParts = [...fixedParts];
-            if (fixedParts.length === 1 && getZoneArea(range.zone) > 1) {
-                _fixedParts.push({ ...fixedParts[0] });
-            }
-            else if (fixedParts.length === 2 && getZoneArea(range.zone) === 1) {
-                _fixedParts.pop();
-            }
-            const newRange = range.clone({ parts: _fixedParts });
-            return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
-        }
-        /**
-         * Replace the current selection by a new text.
-         * The cursor is then set at the end of the text.
-         */
-        replaceSelection(text) {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            this.replaceText(text, start, end);
-        }
-        replaceText(text, start, end) {
-            this.currentContent =
-                this.currentContent.slice(0, start) +
-                    this.currentContent.slice(end, this.currentContent.length);
-            this.insertText(text, start);
-        }
-        /**
-         * Insert a text at the given position.
-         * The cursor is then set at the end of the text.
-         */
-        insertText(text, start) {
-            const content = this.currentContent.slice(0, start) + text + this.currentContent.slice(start);
-            const end = start + text.length;
-            this.dispatch("SET_CURRENT_CONTENT", {
-                content,
-                selection: { start: end, end },
-            });
-        }
-        updateRangeColor() {
-            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
-                return;
-            }
-            const editionSheetId = this.getters.getEditionSheet();
-            const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
-            const colorsToKeep = {};
-            for (const xc of XCs) {
-                if (this.colorIndexByRange[xc] !== undefined) {
-                    colorsToKeep[xc] = this.colorIndexByRange[xc];
-                }
-            }
-            const usedIndexes = new Set(Object.values(colorsToKeep));
-            let currentIndex = 0;
-            const nextIndex = () => {
-                while (usedIndexes.has(currentIndex))
-                    currentIndex++;
-                usedIndexes.add(currentIndex);
-                return currentIndex;
-            };
-            for (const xc of XCs) {
-                const colorIndex = xc in colorsToKeep ? colorsToKeep[xc] : nextIndex();
-                colorsToKeep[xc] = colorIndex;
-            }
-            this.colorIndexByRange = colorsToKeep;
-        }
-        /**
-         * Highlight all ranges that can be found in the composer content.
-         */
-        getComposerHighlights() {
-            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
-                return [];
-            }
-            const editionSheetId = this.getters.getEditionSheet();
-            const rangeColor = (rangeString) => {
-                const colorIndex = this.colorIndexByRange[rangeString];
-                return colors$1[colorIndex % colors$1.length];
-            };
-            return this.getReferencedRanges().map((range) => {
-                const rangeString = this.getters.getRangeString(range, editionSheetId);
-                return {
-                    zone: range.zone,
-                    color: rangeColor(rangeString),
-                    sheetId: range.sheetId,
-                };
-            });
-        }
-        /**
-         * Return ranges currently referenced in the composer
-         */
-        getReferencedRanges() {
-            const editionSheetId = this.getters.getEditionSheet();
-            return this.currentTokens
-                .filter((token) => token.type === "REFERENCE")
-                .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
-        }
-        /**
-         * Function used to determine when composer selection can start.
-         * Three conditions are necessary:
-         * - the previous token is among ["COMMA", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
-         * - the next token is missing or is among ["COMMA", "RIGHT_PAREN", "OPERATOR"]
-         * - Previous and next tokens can be separated by spaces
-         */
-        canStartComposerRangeSelection() {
-            if (this.currentContent.startsWith("=")) {
-                const tokenAtCursor = this.getTokenAtCursor();
-                if (!tokenAtCursor) {
-                    return false;
-                }
-                const tokenIdex = this.currentTokens.map((token) => token.start).indexOf(tokenAtCursor.start);
-                let count = tokenIdex;
-                let currentToken = tokenAtCursor;
-                // check previous token
-                while (!["COMMA", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
-                    POSTFIX_UNARY_OPERATORS.includes(currentToken.value)) {
-                    if (currentToken.type !== "SPACE" || count < 1) {
-                        return false;
-                    }
-                    count--;
-                    currentToken = this.currentTokens[count];
-                }
-                count = tokenIdex + 1;
-                currentToken = this.currentTokens[count];
-                // check next token
-                while (currentToken && !["COMMA", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
-                    if (currentToken.type !== "SPACE") {
-                        return false;
-                    }
-                    count++;
-                    currentToken = this.currentTokens[count];
-                }
-                return true;
-            }
-            return false;
-        }
-        /**
-         * Return all the tokens between selectionStart and selectionEnd.
-         * Includes token that begin right on selectionStart or end right on selectionEnd.
-         */
-        getTokensInSelection() {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            return this.currentTokens.filter((t) => (t.start <= start && t.end >= start) || (t.start >= start && t.start < end));
-        }
-    }
-    EditionPlugin.getters = [
-        "getEditionMode",
-        "isSelectingForComposer",
-        "showSelectionIndicator",
-        "getCurrentContent",
-        "getEditionSheet",
-        "getComposerSelection",
-        "getCurrentTokens",
-        "getTokenAtCursor",
-        "getComposerHighlights",
-    ];
 
     const arrowMap = {
         ArrowDown: "down",
@@ -16831,12 +15072,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 selection.addRange(range);
             }
             else {
-                if (start < 0 || end > this.el.textContent.length) {
-                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${this.el.textContent.length}`);
+                const textLength = this.getText().length;
+                if (start < 0 || end > textLength) {
+                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${textLength}`);
                     if (start < 0)
                         start = 0;
-                    if (end > this.el.textContent.length)
-                        end = this.el.textContent.length;
+                    if (end > textLength)
+                        end = textLength;
                 }
                 let startNode = this.findChildAtCharacterIndex(start);
                 let endNode = this.findChildAtCharacterIndex(end);
@@ -16849,36 +15091,36 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * finds the dom element that contains the character at `offset`
          */
         findChildAtCharacterIndex(offset) {
-            let it = this.iterateChildren(this.el);
+            let it = iterateChildren(this.el);
             let current, previous;
             let usedCharacters = offset;
+            let isFirstParagraph = true;
             do {
                 current = it.next();
                 if (!current.done && !current.value.hasChildNodes()) {
                     if (current.value.textContent && current.value.textContent.length < usedCharacters) {
                         usedCharacters -= current.value.textContent.length;
                     }
-                    else {
+                    else if (current.value.textContent &&
+                        current.value.textContent.length >= usedCharacters) {
                         it.return(current.value);
                     }
                     previous = current.value;
                 }
-            } while (!current.done);
+                // One new paragraph = one new line character, except for the first paragraph
+                if (!current.done && current.value.nodeName === "P") {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters--;
+                    }
+                }
+            } while (!current.done && usedCharacters);
             if (current.value) {
                 return { node: current.value, offset: usedCharacters };
             }
             return { node: previous, offset: usedCharacters };
-        }
-        /**
-         * Iterate over the dom tree starting at `el` and over all the children depth first.
-         * */
-        *iterateChildren(el) {
-            yield el;
-            if (el.hasChildNodes()) {
-                for (let child of el.childNodes) {
-                    yield* this.iterateChildren(child);
-                }
-            }
         }
         /**
          * Sets (or Replaces all) the text inside the root element in the form of distinctive
@@ -16887,20 +15129,40 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Each span will have its own fontcolor and specific class if provided in the HtmlContent object.
          */
         setText(contents) {
+            this.el.innerHTML = "";
             if (contents.length === 0) {
                 return;
             }
-            for (const content of contents) {
-                const span = document.createElement("span");
-                span.innerText = content.value;
-                if (content.color) {
-                    span.style.color = content.color;
+            for (const line of contents) {
+                const p = document.createElement("p");
+                // Empty line
+                if (line.length === 0 || line.every((content) => !content.value && !content.class)) {
+                    p.appendChild(document.createElement("br"));
+                    this.el.appendChild(p);
+                    continue;
                 }
-                if (content.class) {
-                    span.classList.add(content.class);
+                for (const content of line) {
+                    if (!content.value && !content.class) {
+                        continue;
+                    }
+                    const span = document.createElement("span");
+                    span.innerText = content.value;
+                    span.style.color = content.color || "";
+                    if (content.class) {
+                        span.classList.add(content.class);
+                    }
+                    p.appendChild(span);
                 }
-                this.el.appendChild(span);
+                this.el.appendChild(p);
             }
+        }
+        scrollSelectionIntoView() {
+            var _a;
+            const focusedNode = (_a = document.getSelection()) === null || _a === void 0 ? void 0 : _a.focusNode;
+            if (!focusedNode || !this.el.contains(focusedNode))
+                return;
+            const element = focusedNode instanceof HTMLElement ? focusedNode : focusedNode.parentElement;
+            element === null || element === void 0 ? void 0 : element.scrollIntoView({ block: "nearest" });
         }
         /**
          * remove the current selection of the user
@@ -16929,16 +15191,34 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         findSizeBeforeElement(nodeToFind) {
-            let it = this.iterateChildren(this.el);
             let usedCharacters = 0;
+            let it = iterateChildren(this.el);
             let current = it.next();
+            let isFirstParagraph = true;
             while (!current.done && current.value !== nodeToFind) {
                 if (!current.value.hasChildNodes()) {
                     if (current.value.textContent) {
                         usedCharacters += current.value.textContent.length;
                     }
                 }
+                // One new paragraph = one new line character, except for the first paragraph
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters++;
+                    }
+                }
                 current = it.next();
+            }
+            if (current.value !== nodeToFind) {
+                throw new Error("Cannot find the node in the children of the element");
+            }
+            if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
+                usedCharacters++;
             }
             return usedCharacters;
         }
@@ -16950,6 +15230,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 endElement: selection.focusNode || this.el,
                 endSelectionOffset: selection.focusOffset,
             };
+        }
+        getText() {
+            let text = "";
+            let it = iterateChildren(this.el);
+            let current = it.next();
+            let isFirstParagraph = true;
+            while (!current.done) {
+                if (!current.value.hasChildNodes()) {
+                    text += current.value.textContent;
+                }
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        text += NEWLINE;
+                    }
+                }
+                current = it.next();
+            }
+            return text;
         }
     }
 
@@ -17039,55 +15342,59 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         argToFocus: Number,
     };
 
-    const functions = functionRegistry.content;
+    const functions$2 = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
-    const FunctionColor = "#4a4e4d";
-    const OperatorColor = "#3da4ab";
-    const StringColor = "#00a82d";
-    const SelectionIndicatorColor = "darkgrey";
-    const NumberColor = "#02c39a";
-    const MatchingParenColor = "black";
-    const SelectionIndicatorClass = "selector-flag";
-    const tokenColor = {
-        OPERATOR: OperatorColor,
-        NUMBER: NumberColor,
-        STRING: StringColor,
-        FUNCTION: FunctionColor,
-        DEBUGGER: OperatorColor,
-        LEFT_PAREN: FunctionColor,
-        RIGHT_PAREN: FunctionColor,
-        COMMA: FunctionColor,
+    const selectionIndicatorClass = "selector-flag";
+    const selectionIndicatorColor = "#a9a9a9";
+    const selectionIndicator = "␣";
+    const functionColor = "#4a4e4d";
+    const operatorColor = "#3da4ab";
+    const tokenColors = {
+        OPERATOR: operatorColor,
+        NUMBER: "#02c39a",
+        STRING: "#00a82d",
+        FUNCTION: functionColor,
+        DEBUGGER: operatorColor,
+        LEFT_PAREN: functionColor,
+        RIGHT_PAREN: functionColor,
+        COMMA: functionColor,
+        MATCHING_PAREN: "#000000",
     };
     css /* scss */ `
   .o-composer-container {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    z-index: ${ComponentsImportance.Composer};
-    flex-grow: 1;
-    max-height: inherit;
     .o-composer {
+      overflow-y: auto;
+      overflow-x: hidden;
+      word-break: break-all;
+      padding-right: 2px;
+
+      box-sizing: border-box;
+
       caret-color: black;
       padding-left: 3px;
       padding-right: 3px;
-      word-break: break-all;
-      &:focus {
-        outline: none;
-      }
+      outline: none;
+
       &.unfocusable {
         pointer-events: none;
       }
-      span {
-        white-space: pre;
-        &.${SelectionIndicatorClass}:after {
-          content: "${SelectionIndicator}";
-          color: ${SelectionIndicatorColor};
+
+      p {
+        margin-bottom: 0px;
+
+        span {
+          white-space: pre-wrap;
+          &.${selectionIndicatorClass}:after {
+            content: "${selectionIndicator}";
+            color: ${selectionIndicatorColor};
+          }
         }
       }
     }
+
     .o-composer-assistant {
       position: absolute;
-      margin: 4px;
+      margin: 1px 4px;
       pointer-events: none;
     }
 
@@ -17095,11 +15402,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     .o-formula-assistant-container {
       box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
     }
-  }
-
-  /* Custom css to highlight topbar composer on focus */
-  .o-topbar-toolbar .o-composer-container:focus-within {
-    border: 1px solid ${SELECTION_BORDER_COLOR};
   }
 `;
     class Composer extends owl.Component {
@@ -17146,7 +15448,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 if (cellY > remainingHeight) {
                     // render top
                     assistantStyle += `
-          top: -8px;
+          top: -3px;
           transform: translate(0, -100%);
         `;
                 }
@@ -17163,6 +15465,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const el = this.composerRef.el;
                 this.contentHelper.updateEl(el);
                 this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
             });
             owl.onWillUnmount(() => {
                 var _a, _b;
@@ -17239,6 +15542,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a;
             ev.preventDefault();
             ev.stopPropagation();
+            if (ev.altKey || ev.ctrlKey) {
+                const selection = this.contentHelper.getCurrentSelection();
+                const currentContent = this.env.model.getters.getCurrentContent();
+                const content = currentContent.slice(0, selection.start) + NEWLINE + currentContent.slice(selection.end);
+                this.env.model.dispatch("SET_CURRENT_CONTENT", {
+                    content,
+                    selection: { start: selection.start + 1, end: selection.start + 1 },
+                });
+                this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
+                return;
+            }
             this.isKeyStillDown = false;
             if (this.autoCompleteState.showProvider) {
                 const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
@@ -17267,7 +15582,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ev.stopPropagation();
             }
             const { start, end } = this.contentHelper.getCurrentSelection();
-            if (!this.env.model.getters.isSelectingForComposer()) {
+            if (!this.env.model.getters.isSelectingForComposer() &&
+                !(ev.key === "Enter" && (ev.altKey || ev.ctrlKey))) {
                 this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
                 this.isKeyStillDown = true;
             }
@@ -17280,16 +15596,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            const el = this.composerRef.el;
             this.env.model.dispatch("SET_CURRENT_CONTENT", {
-                content: el.childNodes.length ? el.textContent : "",
+                content: this.contentHelper.getText(),
                 selection: this.contentHelper.getCurrentSelection(),
             });
         }
         onKeyup(ev) {
             this.isKeyStillDown = false;
             if (this.props.focus === "inactive" ||
-                ["Control", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
+                ["Control", "Alt", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
                 return;
             }
             if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
@@ -17359,42 +15674,44 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Private
         // ---------------------------------------------------------------------------
         processContent() {
+            const oldScroll = getElementScrollTop(this.composerRef.el);
             this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
             this.shouldProcessInputEvents = false;
             if (this.props.focus !== "inactive") {
+                this.contentHelper.el.focus();
                 this.contentHelper.selectRange(0, 0); // move the cursor inside the composer at 0 0.
             }
-            const content = this.getContent();
-            if (content.length !== 0) {
+            const content = this.getContentLines();
+            if (content.length !== 0 && content.length[0] !== 0) {
                 this.contentHelper.setText(content);
                 const { start, end } = this.env.model.getters.getComposerSelection();
                 if (this.props.focus !== "inactive") {
                     // Put the cursor back where it was before the rendering
                     this.contentHelper.selectRange(start, end);
                 }
+                setElementScrollTop(this.composerRef.el, oldScroll);
             }
             this.shouldProcessInputEvents = true;
         }
-        getContent() {
-            let content;
-            const value = this.env.model.getters.getCurrentContent();
+        /**
+         * Get the HTML content corresponding to the current composer token, divided by lines.
+         */
+        getContentLines() {
+            let value = this.env.model.getters.getCurrentContent();
             const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
             if (value === "") {
-                content = [];
+                return [];
             }
             else if (isValidFormula && this.props.focus !== "inactive") {
-                content = this.getColoredTokens();
+                return this.splitHtmlContentIntoLines(this.getColoredTokens());
             }
-            else {
-                content = [{ value }];
-            }
-            return content;
+            return this.splitHtmlContentIntoLines([{ value }]);
         }
         getColoredTokens() {
             const tokens = this.env.model.getters.getCurrentTokens();
             const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
             const result = [];
-            const { start, end } = this.env.model.getters.getComposerSelection();
+            const { end, start } = this.env.model.getters.getComposerSelection();
             for (const token of tokens) {
                 switch (token.type) {
                     case "OPERATOR":
@@ -17402,7 +15719,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "FUNCTION":
                     case "COMMA":
                     case "STRING":
-                        result.push({ value: token.value, color: tokenColor[token.type] || "#000" });
+                        result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
                         break;
                     case "REFERENCE":
                         const [xc, sheet] = token.value.split("!").reverse();
@@ -17411,7 +15728,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "SYMBOL":
                         let value = token.value;
                         if (["TRUE", "FALSE"].includes(value.toUpperCase())) {
-                            result.push({ value: token.value, color: NumberColor });
+                            result.push({ value: token.value, color: tokenColors.NUMBER });
                         }
                         else {
                             result.push({ value: token.value, color: "#000" });
@@ -17424,10 +15741,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             ["LEFT_PAREN", "RIGHT_PAREN"].includes(tokenAtCursor.type) &&
                             tokenAtCursor.parenIndex &&
                             tokenAtCursor.parenIndex === token.parenIndex) {
-                            result.push({ value: token.value, color: MatchingParenColor  });
+                            result.push({ value: token.value, color: tokenColors.MATCHING_PAREN  });
                         }
                         else {
-                            result.push({ value: token.value, color: tokenColor[token.type] || "#000" });
+                            result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
                         }
                         break;
                     default:
@@ -17435,10 +15752,50 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                 }
                 if (this.env.model.getters.showSelectionIndicator() && end === start && end === token.end) {
-                    result[result.length - 1].class = SelectionIndicatorClass;
+                    result[result.length - 1].class = selectionIndicatorClass;
                 }
             }
             return result;
+        }
+        /**
+         * Split an array of HTMLContents into lines. Each NEWLINE character encountered will create a new
+         * line. Contents can be split into multiple parts if they contain multiple NEWLINE characters.
+         */
+        splitHtmlContentIntoLines(contents) {
+            const contentSplitInLines = [];
+            let currentLine = [];
+            for (const content of contents) {
+                if (content.value.includes(NEWLINE)) {
+                    const lines = content.value.split(NEWLINE);
+                    const lastLine = lines.pop();
+                    for (const line of lines) {
+                        currentLine.push({ color: content.color, value: line }); // don't copy class, only last line should keep it
+                        contentSplitInLines.push(currentLine);
+                        currentLine = [];
+                    }
+                    currentLine.push({ ...content, value: lastLine });
+                }
+                else {
+                    currentLine.push(content);
+                }
+            }
+            if (currentLine.length) {
+                contentSplitInLines.push(currentLine);
+            }
+            // Remove useless empty contents
+            const filteredLines = [];
+            for (const line of contentSplitInLines) {
+                if (line.every(this.isContentEmpty)) {
+                    filteredLines.push([line[0]]);
+                }
+                else {
+                    filteredLines.push(line.filter((content) => !this.isContentEmpty(content)));
+                }
+            }
+            return filteredLines;
+        }
+        isContentEmpty(content) {
+            return !(content.value || content.class);
         }
         rangeColor(xc, sheetName) {
             if (this.props.focus === "inactive") {
@@ -17481,7 +15838,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         // initialize Formula Assistant
                         const tokenContext = tokenAtCursor.functionContext;
                         const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions[parentFunction];
+                        const description = functions$2[parentFunction];
                         const argPosition = tokenContext.argPosition;
                         this.functionDescriptionState.functionName = parentFunction;
                         this.functionDescriptionState.functionDescription = description;
@@ -17538,15 +15895,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
     };
 
-    const SCROLLBAR_WIDTH = 14;
-    const SCROLLBAR_HIGHT = 15;
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
     css /* scss */ `
   div.o-grid-composer {
-    z-index: ${ComponentsImportance.Composer};
+    z-index: ${ComponentsImportance.GridComposer};
     box-sizing: border-box;
     position: absolute;
     border: ${COMPOSER_BORDER_WIDTH}px solid ${SELECTION_BORDER_COLOR};
+
+    display: flex;
+    align-items: center;
   }
 `;
     /**
@@ -17565,11 +15923,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.rect = this.env.model.getters.getVisibleRect(this.zone);
             owl.onMounted(() => {
                 const el = this.gridComposerRef.el;
-                //TODO Should be more correct to have a props that give the parent's clientHeight and clientWidth
-                const maxHeight = el.parentElement.clientHeight - this.rect.y - SCROLLBAR_HIGHT;
-                el.style.maxHeight = (maxHeight + "px");
-                const maxWidth = el.parentElement.clientWidth - this.rect.x - SCROLLBAR_WIDTH;
-                el.style.maxWidth = (maxWidth + "px");
                 this.composerState.rect = {
                     x: this.rect.x,
                     y: this.rect.y,
@@ -17602,10 +15955,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!isFormula) {
                 textAlign = style.align || cell.defaultAlign;
             }
+            /**
+             * min-size is on the container, not the composer element, because we want to have the same size as the cell by default,
+             * including all the paddings/margins of the composer
+             *
+             * The +-1 are there to include cell borders in the composer sizing/positioning
+             */
             return `
       left: ${left - 1}px;
       top: ${top}px;
-      min-width: ${width + 2}px;
+
+      min-width: ${width + 1}px;
       min-height: ${height + 1}px;
 
       background: ${background};
@@ -17620,10 +15980,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     `;
         }
         get composerStyle() {
+            const maxHeight = this.props.gridDims.height - this.rect.y;
+            const maxWidth = this.props.gridDims.width - this.rect.x;
             return `
-      line-height: ${DEFAULT_CELL_HEIGHT}px;
-      max-height: inherit;
-      overflow: hidden;
+      max-width : ${maxWidth}px;
+      max-height : ${maxHeight}px;
     `;
         }
     }
@@ -17633,6 +15994,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
         onComposerUnmounted: Function,
         onComposerContentFocused: Function,
+        gridDims: Object,
     };
 
     const { Component: Component$1 } = owl__namespace;
@@ -17954,6 +16316,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     const autofillModifiersRegistry = new Registry();
     autofillModifiersRegistry
+        .add("ALPHANUMERIC_INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            rule.current += rule.increment;
+            const content = `${rule.prefix}${rule.current
+            .toString()
+            .padStart(rule.numberPostfixLength || 0, "0")}`;
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: { props: { content } },
+            };
+        },
+    })
         .add("INCREMENT_MODIFIER", {
         apply: (rule, data) => {
             var _a;
@@ -18035,11 +16414,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     });
 
     const autofillRulesRegistry = new Registry();
+    const numberPostfixRegExp = /(\d+)$/;
+    const stringPrefixRegExp = /^(.*\D+)/;
+    const alphaNumericValueRegExp = /^(.*\D+)(\d+)$/;
     /**
-     * Get the consecutive xc that are of type "number" or "date".
+     * Get the consecutive evaluated cells that can pass the filter function (e.g. certain type filter).
      * Return the one which contains the given cell
      */
-    function getGroup(cell, cells) {
+    function getGroup(cell, cells, filter) {
         let group = [];
         let found = false;
         for (let x of cells) {
@@ -18047,8 +16429,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 found = true;
             }
             const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
-            if (cellValue.type === CellValueType.number) {
-                group.push(cellValue.value);
+            if (filter(cellValue)) {
+                group.push(cellValue);
             }
             else {
                 if (found) {
@@ -18072,6 +16454,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return averages.reduce((a, b) => a + b, 0) / averages.length;
     }
+    /**
+     * Get the step for a group
+     */
+    function calculateIncrementBasedOnGroup(group) {
+        let increment = 1;
+        if (group.length >= 2) {
+            increment = getAverageIncrement(group) * group.length;
+        }
+        return increment;
+    }
     autofillRulesRegistry
         .add("simple_value_copy", {
         condition: (cell, cells) => {
@@ -18082,6 +16474,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return { type: "COPY_MODIFIER" };
         },
         sequence: 10,
+    })
+        .add("increment_alphanumeric_value", {
+        condition: (cell) => !cell.isFormula &&
+            evaluateLiteral(cell.content).type === CellValueType.text &&
+            alphaNumericValueRegExp.test(cell.content),
+        generateRule: (cell, cells) => {
+            const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
+            const prefix = cell.content.match(stringPrefixRegExp)[0];
+            const numberPostfixLength = cell.content.length - prefix.length;
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.text &&
+                alphaNumericValueRegExp.test(evaluatedCell.value)) // get consecutive alphanumeric cells, no matter what the prefix is
+                .filter((cell) => prefix === cell.value.toString().match(stringPrefixRegExp)[0])
+                .map((cell) => parseInt(cell.value.toString().match(numberPostfixRegExp)[0]));
+            const increment = calculateIncrementBasedOnGroup(group);
+            return {
+                type: "ALPHANUMERIC_INCREMENT_MODIFIER",
+                prefix,
+                current: numberPostfix,
+                increment,
+                numberPostfixLength,
+            };
+        },
+        sequence: 15,
     })
         .add("copy_text", {
         condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
@@ -18100,14 +16515,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         .add("increment_number", {
         condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
         generateRule: (cell, cells) => {
-            const group = getGroup(cell, cells);
-            let increment = 1;
-            if (group.length == 2) {
-                increment = (group[1] - group[0]) * 2;
-            }
-            else if (group.length > 2) {
-                increment = getAverageIncrement(group) * group.length;
-            }
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.number).map((cell) => Number(cell.value));
+            const increment = calculateIncrementBasedOnGroup(group);
             const evaluation = evaluateLiteral(cell.content);
             return {
                 type: "INCREMENT_MODIFIER",
@@ -19239,15 +17648,65 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         action: CREATE_IMAGE,
         isVisible: (env) => env.imageProvider !== undefined,
     })
+        .addChild("insert_function", ["insert"], {
+        name: _lt("Function"),
+        sequence: 60,
+    })
+        .addChild("insert_function_sum", ["insert", "insert_function"], {
+        name: _lt("SUM"),
+        action: (env) => env.startCellEdition(`=SUM(`),
+        sequence: 0,
+    })
+        .addChild("insert_function_average", ["insert", "insert_function"], {
+        name: _lt("AVERAGE"),
+        action: (env) => env.startCellEdition(`=AVERAGE(`),
+        sequence: 10,
+    })
+        .addChild("insert_function_count", ["insert", "insert_function"], {
+        name: _lt("COUNT"),
+        action: (env) => env.startCellEdition(`=COUNT(`),
+        sequence: 20,
+    })
+        .addChild("insert_function_max", ["insert", "insert_function"], {
+        name: _lt("MAX"),
+        action: (env) => env.startCellEdition(`=MAX(`),
+        sequence: 30,
+    })
+        .addChild("insert_function_min", ["insert", "insert_function"], {
+        name: _lt("MIN"),
+        action: (env) => env.startCellEdition(`=MIN(`),
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("categorie_function_all", ["insert", "insert_function"], {
+        name: _lt("All"),
+        sequence: 50,
+    })
+        .addChild("all_function_list", ["insert", "insert_function", "categorie_function_all"], () => {
+        const fnNames = functionRegistry.getKeys();
+        return createFormulaFunctionMenuItems(fnNames);
+    })
+        .addChild("categories_function_list", ["insert", "insert_function"], () => {
+        const functions = functionRegistry.content;
+        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
+        return categories.sort().map((category, i) => {
+            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+            return {
+                name: category,
+                sequence: 60 + i * 10,
+                children: createFormulaFunctionMenuItems(functionsInCategory),
+            };
+        });
+    })
         .addChild("insert_link", ["insert"], {
         name: _lt("Link"),
         separator: true,
-        sequence: 60,
+        sequence: 70,
         action: INSERT_LINK,
     })
         .addChild("insert_sheet", ["insert"], {
         name: _lt("New sheet"),
-        sequence: 70,
+        sequence: 80,
         action: CREATE_SHEET_ACTION,
         separator: true,
     })
@@ -19525,6 +17984,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             name: fs.pt.toString(),
             sequence: fs.pt,
             action: (env) => setStyle(env, { fontSize: fs.pt }),
+        });
+    }
+    function createFormulaFunctionMenuItems(fnNames) {
+        return fnNames.sort().map((fnName, i) => {
+            return {
+                name: fnName,
+                sequence: i * 10,
+                action: (env) => env.startCellEdition(`=${fnName}(`),
+            };
         });
     }
 
@@ -19902,7 +18370,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       }
     }
     .o-separator {
-      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid #e0e2e4;
+      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid ${SEPARATOR_COLOR};
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
     }
@@ -22167,10 +20635,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             this.gridOverlay = owl.useRef("gridOverlay");
             useCellHovered(this.env, this.gridOverlay, this.props.onCellHovered);
-            owl.useEffect(() => this.props.onGridResized({
-                height: this.gridOverlayEl.clientHeight,
-                width: this.gridOverlayEl.clientWidth,
-            }), () => [this.gridOverlayEl.clientHeight, this.gridOverlayEl.clientWidth]);
+            const resizeObserver = new ResizeObserver(() => {
+                this.props.onGridResized({
+                    height: this.gridOverlayEl.clientHeight,
+                    width: this.gridOverlayEl.clientWidth,
+                });
+            });
+            owl.onMounted(() => {
+                resizeObserver.observe(this.gridOverlayEl);
+            });
             useTouchMove(this.gridOverlay, this.props.onGridMoved, () => {
                 const { offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
                 return offsetScrollbarY > 0;
@@ -23113,8 +21586,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     &.corner {
       right: 0px;
       bottom: 0px;
-      height: ${SCROLLBAR_WIDTH$1}px;
-      width: ${SCROLLBAR_WIDTH$1}px;
+      height: ${SCROLLBAR_WIDTH}px;
+      width: ${SCROLLBAR_WIDTH}px;
       border-top: 1px solid #e2e3e3;
       border-left: 1px solid #e2e3e3;
     }
@@ -23187,7 +21660,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 left: `${this.props.leftOffset + x}px`,
                 bottom: "0px",
-                height: `${SCROLLBAR_WIDTH$1}px`,
+                height: `${SCROLLBAR_WIDTH}px`,
                 right: `0px`,
             };
         }
@@ -23232,7 +21705,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 top: `${this.props.topOffset + y}px`,
                 right: "0px",
-                width: `${SCROLLBAR_WIDTH$1}px`,
+                width: `${SCROLLBAR_WIDTH}px`,
                 bottom: `0px`,
             };
         }
@@ -23431,8 +21904,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return `
       top: ${HEADER_HEIGHT}px;
       left: ${HEADER_WIDTH}px;
-      height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH$1}px);
-      width: calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH$1}px);
+      height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH}px);
+      width: calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH}px);
     `;
         }
         onClosePopover() {
@@ -26925,6 +25398,332 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
 
     /**
+     * Tokenizer
+     *
+     * A tokenizer is a piece of code whose job is to transform a string into a list
+     * of "tokens". For example, "(12+" is converted into:
+     *   [{type: "LEFT_PAREN", value: "("},
+     *    {type: "NUMBER", value: "12"},
+     *    {type: "OPERATOR", value: "+"}]
+     *
+     * As the example shows, a tokenizer does not care about the meaning behind those
+     * tokens. It only cares about the structure.
+     *
+     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
+     * is useful for the composer, which needs to be able to work with incomplete
+     * formulas.
+     */
+    const functions$1 = functionRegistry.content;
+    const POSTFIX_UNARY_OPERATORS = ["%"];
+    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
+    function tokenize(str) {
+        str = replaceSpecialSpaces(str);
+        const chars = str.split("");
+        const result = [];
+        while (chars.length) {
+            let token = tokenizeSpace(chars) ||
+                tokenizeMisc(chars) ||
+                tokenizeOperator(chars) ||
+                tokenizeString(chars) ||
+                tokenizeDebugger(chars) ||
+                tokenizeInvalidRange(chars) ||
+                tokenizeNumber(chars) ||
+                tokenizeSymbol(chars);
+            if (!token) {
+                token = { type: "UNKNOWN", value: chars.shift() };
+            }
+            result.push(token);
+        }
+        return result;
+    }
+    function tokenizeDebugger(chars) {
+        if (chars[0] === "?") {
+            chars.shift();
+            return { type: "DEBUGGER", value: "?" };
+        }
+        return null;
+    }
+    const misc = {
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    function tokenizeMisc(chars) {
+        if (chars[0] in misc) {
+            const value = chars.shift();
+            const type = misc[value];
+            return { type, value };
+        }
+        return null;
+    }
+    function startsWith(chars, op) {
+        for (let i = 0; i < op.length; i++) {
+            if (op[i] !== chars[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    function tokenizeOperator(chars) {
+        for (let op of OPERATORS) {
+            if (startsWith(chars, op)) {
+                chars.splice(0, op.length);
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return null;
+    }
+    function tokenizeNumber(chars) {
+        const match = concat(chars).match(formulaNumberRegexp);
+        if (match) {
+            chars.splice(0, match[0].length);
+            return { type: "NUMBER", value: match[0] };
+        }
+        return null;
+    }
+    function tokenizeString(chars) {
+        if (chars[0] === '"') {
+            const startChar = chars.shift();
+            let letters = startChar;
+            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
+                letters += chars.shift();
+            }
+            if (chars[0] === '"') {
+                letters += chars.shift();
+            }
+            return {
+                type: "STRING",
+                value: letters,
+            };
+        }
+        return null;
+    }
+    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+     * A "Symbol" is just basically any word-like element that can appear in a
+     * formula, which is not a string. So:
+     *   A1
+     *   SUM
+     *   CEILING.MATH
+     *   A$1
+     *   Sheet2!A2
+     *   'Sheet 2'!A2
+     *
+     * are examples of symbols
+     */
+    function tokenizeSymbol(chars) {
+        let result = "";
+        // there are two main cases to manage: either something which starts with
+        // a ', like 'Sheet 2'A2, or a word-like element.
+        if (chars[0] === "'") {
+            let lastChar = chars.shift();
+            result += lastChar;
+            while (chars[0]) {
+                lastChar = chars.shift();
+                result += lastChar;
+                if (lastChar === "'") {
+                    if (chars[0] && chars[0] === "'") {
+                        lastChar = chars.shift();
+                        result += lastChar;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            if (lastChar !== "'") {
+                return {
+                    type: "UNKNOWN",
+                    value: result,
+                };
+            }
+        }
+        while (chars[0] && chars[0].match(separatorRegexp)) {
+            result += chars.shift();
+        }
+        if (result.length) {
+            const value = result;
+            const isFunction = value.toUpperCase() in functions$1;
+            if (isFunction) {
+                return { type: "FUNCTION", value };
+            }
+            const isReference = value.match(rangeReference);
+            if (isReference) {
+                return { type: "REFERENCE", value };
+            }
+            else {
+                return { type: "SYMBOL", value };
+            }
+        }
+        return null;
+    }
+    function tokenizeSpace(chars) {
+        let length = 0;
+        while (chars[0] === NEWLINE) {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: NEWLINE.repeat(length) };
+        }
+        while (chars[0] === " ") {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: " ".repeat(length) };
+        }
+        return null;
+    }
+    function tokenizeInvalidRange(chars) {
+        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
+            chars.splice(0, INCORRECT_RANGE_STRING.length);
+            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
+        }
+        return null;
+    }
+
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
+        },
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.Found]: {},
+    };
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        var _a;
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        const matchedTokens = [];
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens.push(token);
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: concat(matchedTokens.map((token) => token.value)),
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens.push(token);
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula) {
+        const tokens = tokenize(formula);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
+    /**
      * parses a formula (as a string) into the same formula,
      * but with the references to other cells extracted
      *
@@ -27381,6 +26180,94 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             sheets: [createEmptyExcelSheet(INITIAL_SHEET_ID, "Sheet1")],
         };
     }
+
+    /**
+     * BasePlugin
+     *
+     * Since the spreadsheet internal state is quite complex, it is split into
+     * multiple parts, each managing a specific concern.
+     *
+     * This file introduce the BasePlugin, which is the common class that defines
+     * how each of these model sub parts should interact with each other.
+     * There are two kind of plugins: core plugins handling persistent data
+     * and UI plugins handling transient data.
+     */
+    class BasePlugin {
+        constructor(stateObserver, dispatch) {
+            this.history = Object.assign(Object.create(stateObserver), {
+                update: stateObserver.addChange.bind(stateObserver, this),
+                selectCell: () => { },
+            });
+            this.dispatch = dispatch;
+        }
+        /**
+         * Export for excel should be available for all plugins, even for the UI.
+         * In some case, we need to export evaluated value, which is available from
+         * UI plugin only.
+         */
+        exportForExcel(data) { }
+        // ---------------------------------------------------------------------------
+        // Command handling
+        // ---------------------------------------------------------------------------
+        /**
+         * Before a command is accepted, the model will ask each plugin if the command
+         * is allowed.  If all of then return true, then we can proceed. Otherwise,
+         * the command is cancelled.
+         *
+         * There should not be any side effects in this method.
+         */
+        allowDispatch(command) {
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * This method is useful when a plugin need to perform some action before a
+         * command is handled in another plugin. This should only be used if it is not
+         * possible to do the work in the handle method.
+         */
+        beforeHandle(command) { }
+        /**
+         * This is the standard place to handle any command. Most of the plugin
+         * command handling work should take place here.
+         */
+        handle(command) { }
+        /**
+         * Sometimes, it is useful to perform some work after a command (and all its
+         * subcommands) has been completely handled.  For example, when we paste
+         * multiple cells, we only want to reevaluate the cell values once at the end.
+         */
+        finalize() { }
+        /**
+         * Combine multiple validation functions into a single function
+         * returning the list of result of every validation.
+         */
+        batchValidations(...validations) {
+            return (toValidate) => validations.map((validation) => validation.call(this, toValidate)).flat();
+        }
+        /**
+         * Combine multiple validation functions. Every validation is executed one after
+         * the other. As soon as one validation fails, it stops and the cancelled reason
+         * is returned.
+         */
+        chainValidations(...validations) {
+            return (toValidate) => {
+                for (const validation of validations) {
+                    let results = validation.call(this, toValidate);
+                    if (!Array.isArray(results)) {
+                        results = [results];
+                    }
+                    const cancelledReasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
+                    if (cancelledReasons.length) {
+                        return cancelledReasons;
+                    }
+                }
+                return 0 /* CommandResult.Success */;
+            };
+        }
+        checkValidations(command, ...validations) {
+            return this.batchValidations(...validations)(command);
+        }
+    }
+    BasePlugin.getters = [];
 
     /**
      * Core plugins handle spreadsheet data.
@@ -27896,7 +26783,718 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     BordersPlugin.getters = ["getCellBorder"];
 
-    const nbspRegexp = new RegExp(String.fromCharCode(160), "g");
+    class FunctionCodeBuilder {
+        constructor(scope = new Scope()) {
+            this.scope = scope;
+            this.code = "";
+        }
+        append(...lines) {
+            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
+        }
+        return(expression) {
+            return new FunctionCodeImpl(this.scope, this.code, expression);
+        }
+        toString() {
+            return indentCode(this.code);
+        }
+    }
+    class FunctionCodeImpl {
+        constructor(scope, code, returnExpression) {
+            this.scope = scope;
+            this.returnExpression = returnExpression;
+            this.code = indentCode(code);
+        }
+        toString() {
+            return this.code;
+        }
+        wrapInClosure() {
+            const closureName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(`const ${closureName} = () => {`);
+            code.append(this.code);
+            code.append(`return ${this.returnExpression};`);
+            code.append(`}`);
+            return code.return(closureName);
+        }
+        assignResultToVariable() {
+            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
+                return this;
+            }
+            const variableName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(this.code);
+            code.append(`const ${variableName} = ${this.returnExpression};`);
+            return code.return(variableName);
+        }
+    }
+    class Scope {
+        constructor() {
+            this.nextId = 1;
+            this.declaredVariables = new Set();
+        }
+        nextVariableName() {
+            const name = `_${this.nextId++}`;
+            this.declaredVariables.add(name);
+            return name;
+        }
+        isAlreadyDeclared(name) {
+            return this.declaredVariables.has(name);
+        }
+    }
+    /**
+     * Takes a list of strings that might be single or multiline
+     * and maps them in a list of single line strings.
+     */
+    function splitLines(str) {
+        return str
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
+    }
+    function indentCode(code) {
+        let result = "";
+        let indentLevel = 0;
+        const lines = splitLines(code);
+        for (const line of lines) {
+            if (line.startsWith("}")) {
+                indentLevel--;
+            }
+            result += "\t".repeat(indentLevel) + line + "\n";
+            if (line.endsWith("{")) {
+                indentLevel++;
+            }
+        }
+        return result.trim();
+    }
+
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
+    const UNARY_OPERATORS_PREFIX = ["-", "+"];
+    const UNARY_OPERATORS_POSTFIX = ["%"];
+    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
+    const OP_PRIORITY = {
+        "^": 30,
+        "%": 30,
+        "*": 20,
+        "/": 20,
+        "+": 15,
+        "-": 15,
+        "&": 13,
+        ">": 10,
+        "<>": 10,
+        ">=": 10,
+        "<": 10,
+        "<=": 10,
+        "=": 10,
+    };
+    const FUNCTION_BP = 6;
+    function bindingPower(token) {
+        switch (token.type) {
+            case "NUMBER":
+            case "SYMBOL":
+            case "REFERENCE":
+                return 0;
+            case "COMMA":
+                return 3;
+            case "LEFT_PAREN":
+                return 5;
+            case "RIGHT_PAREN":
+                return 5;
+            case "OPERATOR":
+                return OP_PRIORITY[token.value] || 15;
+        }
+        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
+    }
+    function parsePrefix(current, tokens) {
+        var _a, _b, _c, _d;
+        switch (current.type) {
+            case "DEBUGGER":
+                const next = parseExpression(tokens, 1000);
+                next.debug = true;
+                return next;
+            case "NUMBER":
+                return { type: "NUMBER", value: parseNumber(current.value) };
+            case "STRING":
+                return { type: "STRING", value: removeStringQuotes(current.value) };
+            case "FUNCTION":
+                if (tokens.shift().type !== "LEFT_PAREN") {
+                    throw new BadExpressionError(_lt("Wrong function call"));
+                }
+                else {
+                    const args = [];
+                    if (tokens[0] && tokens[0].type !== "RIGHT_PAREN") {
+                        if (tokens[0].type === "COMMA") {
+                            args.push({ type: "UNKNOWN", value: "" });
+                        }
+                        else {
+                            args.push(parseExpression(tokens, FUNCTION_BP));
+                        }
+                        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "COMMA") {
+                            tokens.shift();
+                            const token = tokens[0];
+                            if ((token === null || token === void 0 ? void 0 : token.type) === "RIGHT_PAREN") {
+                                args.push({ type: "UNKNOWN", value: "" });
+                                break;
+                            }
+                            else if ((token === null || token === void 0 ? void 0 : token.type) === "COMMA") {
+                                args.push({ type: "UNKNOWN", value: "" });
+                            }
+                            else {
+                                args.push(parseExpression(tokens, FUNCTION_BP));
+                            }
+                        }
+                    }
+                    const closingToken = tokens.shift();
+                    if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
+                        throw new BadExpressionError(_lt("Wrong function call"));
+                    }
+                    return { type: "FUNCALL", value: current.value, args };
+                }
+            case "INVALID_REFERENCE":
+                throw new InvalidReferenceError();
+            case "REFERENCE":
+                if (((_b = tokens[0]) === null || _b === void 0 ? void 0 : _b.value) === ":" && ((_c = tokens[1]) === null || _c === void 0 ? void 0 : _c.type) === "REFERENCE") {
+                    tokens.shift();
+                    const rightReference = tokens.shift();
+                    return {
+                        type: "REFERENCE",
+                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
+                    };
+                }
+                return {
+                    type: "REFERENCE",
+                    value: current.value,
+                };
+            case "SYMBOL":
+                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
+                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                }
+                else {
+                    if (current.value) {
+                        if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
+                            throw new UnknownFunctionError(current.value);
+                        }
+                        throw new BadExpressionError(_lt("Invalid formula"));
+                    }
+                    return { type: "STRING", value: current.value };
+                }
+            case "LEFT_PAREN":
+                const result = parseExpression(tokens, 5);
+                if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
+                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
+                }
+                tokens.shift();
+                return result;
+            default:
+                if (current.type === "OPERATOR" && UNARY_OPERATORS_PREFIX.includes(current.value)) {
+                    return {
+                        type: "UNARY_OPERATION",
+                        value: current.value,
+                        operand: parseExpression(tokens, OP_PRIORITY[current.value]),
+                    };
+                }
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+        }
+    }
+    function parseInfix(left, current, tokens) {
+        if (current.type === "OPERATOR") {
+            const bp = bindingPower(current);
+            if (UNARY_OPERATORS_POSTFIX.includes(current.value)) {
+                return {
+                    type: "UNARY_OPERATION",
+                    value: current.value,
+                    operand: left,
+                    postfix: true,
+                };
+            }
+            else {
+                const right = parseExpression(tokens, bp);
+                return {
+                    type: "BIN_OPERATION",
+                    value: current.value,
+                    left,
+                    right,
+                };
+            }
+        }
+        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+    }
+    function parseExpression(tokens, bp) {
+        const token = tokens.shift();
+        if (!token) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        let expr = parsePrefix(token, tokens);
+        while (tokens[0] && bindingPower(tokens[0]) > bp) {
+            expr = parseInfix(expr, tokens.shift(), tokens);
+        }
+        return expr;
+    }
+    /**
+     * Parse an expression (as a string) into an AST.
+     */
+    function parse(str) {
+        return parseTokens(tokenize(str));
+    }
+    function parseTokens(tokens) {
+        tokens = tokens.filter((x) => x.type !== "SPACE");
+        if (tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
+            tokens.splice(0, 1);
+        }
+        const result = parseExpression(tokens, 0);
+        if (tokens.length) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        return result;
+    }
+    /**
+     * Allows to visit all nodes of an AST and apply a mapping function
+     * to nodes of a specific type.
+     * Useful if you want to convert some part of a formula.
+     *
+     * e.g.
+     * ```ts
+     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
+     *
+     * function convertFormulaToExcel(ast: ASTFuncall) {
+     *   // ...
+     *   return modifiedAst
+     * }
+     * ```
+     */
+    function convertAstNodes(ast, type, fn) {
+        if (type === ast.type) {
+            ast = fn(ast);
+        }
+        switch (ast.type) {
+            case "FUNCALL":
+                return {
+                    ...ast,
+                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                };
+            case "UNARY_OPERATION":
+                return {
+                    ...ast,
+                    operand: convertAstNodes(ast.operand, type, fn),
+                };
+            case "BIN_OPERATION":
+                return {
+                    ...ast,
+                    right: convertAstNodes(ast.right, type, fn),
+                    left: convertAstNodes(ast.left, type, fn),
+                };
+            default:
+                return ast;
+        }
+    }
+    /**
+     * Converts an ast formula to the corresponding string
+     */
+    function astToFormula(ast) {
+        switch (ast.type) {
+            case "FUNCALL":
+                const args = ast.args.map((arg) => astToFormula(arg));
+                return `${ast.value}(${args.join(",")})`;
+            case "NUMBER":
+                return ast.value.toString();
+            case "REFERENCE":
+                return ast.value;
+            case "STRING":
+                return `"${ast.value}"`;
+            case "BOOLEAN":
+                return ast.value ? "TRUE" : "FALSE";
+            case "UNARY_OPERATION":
+                return ast.postfix
+                    ? leftOperandToFormula(ast) + ast.value
+                    : ast.value + rightOperandToFormula(ast);
+            case "BIN_OPERATION":
+                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
+            default:
+                return ast.value;
+        }
+    }
+    /**
+     * Convert the left operand of a binary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function leftOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
+        const leftOperator = leftOperation.value;
+        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
+        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
+    }
+    /**
+     * Convert the right operand of a binary or unary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function rightOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
+        const rightPriority = OP_PRIORITY[rightOperation.value];
+        const mainPriority = OP_PRIORITY[mainOperator];
+        let needParenthesis = false;
+        if (rightOperation.type !== "BIN_OPERATION") {
+            needParenthesis = false;
+        }
+        else if (rightPriority < mainPriority) {
+            needParenthesis = true;
+        }
+        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
+            needParenthesis = true;
+        }
+        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
+    }
+
+    const functions = functionRegistry.content;
+    const OPERATOR_MAP = {
+        "=": "EQ",
+        "+": "ADD",
+        "-": "MINUS",
+        "*": "MULTIPLY",
+        "/": "DIVIDE",
+        ">=": "GTE",
+        "<>": "NE",
+        ">": "GT",
+        "<=": "LTE",
+        "<": "LT",
+        "^": "POWER",
+        "&": "CONCATENATE",
+    };
+    const UNARY_OPERATOR_MAP = {
+        "-": "UMINUS",
+        "+": "UPLUS",
+        "%": "UNARY.PERCENT",
+    };
+    // this cache contains all compiled function code, grouped by "structure". For
+    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
+    // structural function.
+    // It is only exported for testing purposes
+    const functionCache = {};
+    // -----------------------------------------------------------------------------
+    // COMPILER
+    // -----------------------------------------------------------------------------
+    function compile(formula) {
+        const tokens = rangeTokenize(formula);
+        const { dependencies, constantValues } = formulaArguments(tokens);
+        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
+        if (!functionCache[cacheKey]) {
+            const ast = parseTokens([...tokens]);
+            const scope = new Scope();
+            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            if (ast.type === "UNKNOWN") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            const compiledAST = compileAST(ast);
+            const code = new FunctionCodeBuilder();
+            code.append(`// ${cacheKey}`);
+            code.append(compiledAST);
+            code.append(`return ${compiledAST.returnExpression};`);
+            let baseFunction = new Function("deps", // the dependencies in the current formula
+            "ref", // a function to access a certain dependency at a given index
+            "range", // same as above, but guarantee that the result is in the form of a range
+            "ctx", code.toString());
+            functionCache[cacheKey] = {
+                // @ts-ignore
+                execute: baseFunction,
+            };
+            /**
+             * This function compile the function arguments. It is mostly straightforward,
+             * except that there is a non trivial transformation in one situation:
+             *
+             * If a function argument is asking for a range, and get a cell, we transform
+             * the cell value into a range. This allow the grid model to differentiate
+             * between a cell value and a non cell value.
+             */
+            function compileFunctionArgs(ast) {
+                const functionDefinition = functions[ast.value.toUpperCase()];
+                const currentFunctionArguments = ast.args;
+                // check if arguments are supplied in the correct quantities
+                const nbrArg = currentFunctionArguments.length;
+                if (nbrArg < functionDefinition.minArgRequired) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+                }
+                if (nbrArg > functionDefinition.maxArgPossible) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+                }
+                const repeatingArg = functionDefinition.nbrArgRepeating;
+                if (repeatingArg > 1) {
+                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
+                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
+                    if (nbrRepeatingArg % repeatingArg !== 0) {
+                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
+                    }
+                }
+                let compiledArgs = [];
+                for (let i = 0; i < nbrArg; i++) {
+                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
+                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
+                        const currentArg = currentFunctionArguments[i];
+                        const argDefinition = functionDefinition.args[argPosition];
+                        const argTypes = argDefinition.type || [];
+                        // detect when an argument need to be evaluated as a meta argument
+                        const isMeta = argTypes.includes("META");
+                        // detect when an argument need to be evaluated as a lazy argument
+                        const isLazy = argDefinition.lazy;
+                        const hasRange = argTypes.some((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        if (isRangeOnly) {
+                            if (currentArg.type !== "REFERENCE") {
+                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
+                            }
+                        }
+                        const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                            functionName: ast.value.toUpperCase(),
+                            paramIndex: i + 1,
+                        });
+                        compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
+                    }
+                }
+                return compiledArgs;
+            }
+            /**
+             * This function compiles all the information extracted by the parser into an
+             * executable code for the evaluation of the cells content. It uses a cash to
+             * not reevaluate identical code structures.
+             *
+             * The function is sensitive to parameter “isMeta”. This
+             * parameter may vary when compiling function arguments:
+             * isMeta: In some cases the function arguments expects information on the
+             * cell/range other than the associated value(s). For example the COLUMN
+             * function needs to receive as argument the coordinates of a cell rather
+             * than its value. For this we have meta arguments.
+             */
+            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
+                const code = new FunctionCodeBuilder(scope);
+                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
+                    if (isMeta) {
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
+                    }
+                }
+                if (ast.debug) {
+                    code.append("debugger;");
+                }
+                switch (ast.type) {
+                    case "BOOLEAN":
+                        return code.return(`{ value: ${ast.value} }`);
+                    case "NUMBER":
+                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
+                    case "STRING":
+                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
+                    case "REFERENCE":
+                        const referenceIndex = dependencies.indexOf(ast.value);
+                        if (hasRange) {
+                            return code.return(`range(deps[${referenceIndex}])`);
+                        }
+                        else {
+                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
+                        }
+                    case "FUNCALL":
+                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
+                        code.append(...args);
+                        const fnName = ast.value.toUpperCase();
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
+                    case "UNARY_OPERATION": {
+                        const fnName = UNARY_OPERATOR_MAP[ast.value];
+                        const operand = compileAST(ast.operand, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(operand);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
+                    }
+                    case "BIN_OPERATION": {
+                        const fnName = OPERATOR_MAP[ast.value];
+                        const left = compileAST(ast.left, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        const right = compileAST(ast.right, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(left);
+                        code.append(right);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
+                    }
+                    case "UNKNOWN":
+                        return code.return("undefined");
+                }
+            }
+        }
+        const compiledFormula = {
+            execute: functionCache[cacheKey].execute,
+            dependencies,
+            constantValues,
+            tokens,
+        };
+        return compiledFormula;
+    }
+    /**
+     * Compute a cache key for the formula.
+     * References, numbers and strings are replaced with placeholders because
+     * the compiled formula does not depend on their actual value.
+     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
+     *
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
+     */
+    function compilationCacheKey(tokens, dependencies, constantValues) {
+        return concat(tokens.map((token) => {
+            switch (token.type) {
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    return `|S${constantValues.strings.indexOf(value)}|`;
+                case "NUMBER":
+                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
+                case "REFERENCE":
+                case "INVALID_REFERENCE":
+                    return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
+                default:
+                    return token.value;
+            }
+        }));
+    }
+    /**
+     * Return formula arguments which are references, strings and numbers.
+     */
+    function formulaArguments(tokens) {
+        const constantValues = {
+            numbers: [],
+            strings: [],
+        };
+        const dependencies = [];
+        for (const token of tokens) {
+            switch (token.type) {
+                case "INVALID_REFERENCE":
+                case "REFERENCE":
+                    dependencies.push(token.value);
+                    break;
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    if (!constantValues.strings.includes(value)) {
+                        constantValues.strings.push(value);
+                    }
+                    break;
+                case "NUMBER": {
+                    const value = parseNumber(token.value);
+                    if (!constantValues.numbers.includes(value)) {
+                        constantValues.numbers.push(value);
+                    }
+                    break;
+                }
+            }
+        }
+        return {
+            dependencies,
+            constantValues,
+        };
+    }
+
+    /**
+     * Add the following information on tokens:
+     * - length
+     * - start
+     * - end
+     */
+    function enrichTokens(tokens) {
+        let current = 0;
+        return tokens.map((x) => {
+            const len = x.value.toString().length;
+            const token = Object.assign({}, x, {
+                start: current,
+                end: current + len,
+                length: len,
+            });
+            current = token.end;
+            return token;
+        });
+    }
+    /**
+     * add on each token the length, start and end
+     * also matches the opening to its closing parenthesis (using the same number)
+     */
+    function mapParenthesis(tokens) {
+        let maxParen = 1;
+        const stack = [];
+        return tokens.map((token) => {
+            if (token.type === "LEFT_PAREN") {
+                stack.push(maxParen);
+                token.parenIndex = maxParen;
+                maxParen++;
+            }
+            else if (token.type === "RIGHT_PAREN") {
+                token.parenIndex = stack.pop();
+            }
+            return token;
+        });
+    }
+    /**
+     * add on each token its parent function and the index corresponding to
+     * its position as an argument of the function.
+     * In this example "=MIN(42,SUM(MAX(1,2),3))":
+     * - the parent function of the token correspond to number 42 is the MIN function
+     * - the argument position of the token correspond to number 42 is 0
+     * - the parent function of the token correspond to number 3 is the SUM function
+     * - the argument position of the token correspond to number 3 is 1
+     */
+    function mapParentFunction(tokens) {
+        let stack = [];
+        let functionStarted = "";
+        const res = tokens.map((token, i) => {
+            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
+                functionStarted = "";
+            }
+            switch (token.type) {
+                case "FUNCTION":
+                    functionStarted = token.value;
+                    break;
+                case "LEFT_PAREN":
+                    stack.push({ parent: functionStarted, argPosition: 0 });
+                    functionStarted = "";
+                    break;
+                case "RIGHT_PAREN":
+                    stack.pop();
+                    break;
+                case "COMMA":
+                    if (stack.length) {
+                        // increment position on current function
+                        stack[stack.length - 1].argPosition++;
+                    }
+                    break;
+            }
+            if (stack.length) {
+                const functionContext = stack[stack.length - 1];
+                if (functionContext.parent) {
+                    token.functionContext = Object.assign({}, functionContext);
+                }
+            }
+            return token;
+        });
+        return res;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the composer.
+     *
+     * @param formula
+     */
+    function composerTokenize(formula) {
+        const tokens = rangeTokenize(formula);
+        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
     /**
      * Core Plugin
      *
@@ -28219,13 +27817,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return id;
         }
         updateCell(sheetId, col, row, after) {
-            var _a;
             const before = this.getters.getCell({ sheetId, col, row });
             const hasContent = "content" in after || "formula" in after;
             // Compute the new cell properties
-            const afterContent = hasContent
-                ? ((_a = after.content) === null || _a === void 0 ? void 0 : _a.replace(nbspRegexp, "")) || ""
-                : (before === null || before === void 0 ? void 0 : before.content) || "";
+            const afterContent = hasContent ? replaceSpecialSpaces(after === null || after === void 0 ? void 0 : after.content) : (before === null || before === void 0 ? void 0 : before.content) || "";
             let style;
             if (after.style !== undefined) {
                 style = after.style || undefined;
@@ -28404,6 +27999,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                                     size: { width: fig.width, height: fig.height },
                                     definition: chart.getDefinition(),
                                     sheetId: cmd.sheetIdTo,
+                                    sourceChartId: fig.id,
                                 });
                             }
                         }
@@ -31504,6 +31100,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     ];
 
     /**
+     * UI plugins handle any transient data required to display a spreadsheet.
+     * They can draw on the grid canvas.
+     */
+    class UIPlugin extends BasePlugin {
+        constructor({ getters, stateObserver, dispatch, uiActions, selection }) {
+            super(stateObserver, dispatch);
+            this.getters = getters;
+            this.ui = uiActions;
+            this.selection = selection;
+        }
+        // ---------------------------------------------------------------------------
+        // Grid rendering
+        // ---------------------------------------------------------------------------
+        drawGrid(ctx, layer) { }
+    }
+    UIPlugin.layers = [];
+
+    /**
      * https://tomekdev.com/posts/sorting-colors-in-js
      */
     function sortWithClusters(colorsToSort) {
@@ -33081,6 +32695,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DELETE_SHEET":
                     this.sheetsWithDirtyViewports.delete(cmd.sheetId);
+                    break;
+                case "START_EDITION":
+                    const { col, row } = this.getters.getActivePosition();
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
                     break;
             }
         }
@@ -35212,12 +34830,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             box.isFilterHeader = this.getters.isFilterHeader(position);
             const headerIconWidth = box.isFilterHeader ? FILTER_ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
-            const text = this.getters.getCellText(position, showFormula);
-            const textWidth = this.getters.getTextWidth(position) + MIN_CELL_TEXT_MARGIN;
-            const wrapping = this.getters.getCellStyle(position).wrapping || "overflow";
-            const multiLineText = wrapping === "wrap"
-                ? this.getters.getCellMultiLineText(position, width - 2 * MIN_CELL_TEXT_MARGIN)
-                : [text];
+            const style = this.getters.getCellComputedStyle(position);
+            const wrapping = style.wrapping || "overflow";
+            const maxWidth = wrapping === "wrap" && !showFormula ? width - 2 * MIN_CELL_TEXT_MARGIN : undefined;
+            const multiLineText = this.getters.getCellMultiLineText(position, maxWidth);
+            const textWidth = Math.max(...multiLineText.map((line) => this.getters.getTextWidth(line, style) + MIN_CELL_TEXT_MARGIN));
             const contentWidth = iconBoxWidth + textWidth + headerIconWidth;
             const align = this.computeCellAlignment(position, contentWidth > width);
             box.content = {
@@ -35256,7 +34873,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "left": {
                         const emptyZoneOnTheLeft = positionToZone({ col: nextColIndex, row });
                         const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheLeft));
-                        if (width < contentWidth || fontSizePX > height) {
+                        if (width < contentWidth || fontSizePX > height || multiLineText.length > 1) {
                             box.clipRect = { x, y, width, height };
                         }
                         break;
@@ -35264,7 +34881,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "right": {
                         const emptyZoneOnTheRight = positionToZone({ col: previousColIndex, row });
                         const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheRight));
-                        if (width < contentWidth || fontSizePX > height) {
+                        if (width < contentWidth || fontSizePX > height || multiLineText.length > 1) {
                             box.clipRect = { x, y, width, height };
                         }
                         break;
@@ -35280,7 +34897,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const boxMiddle = box.x + box.width / 2;
                         if (x + width < boxMiddle + halfContentWidth ||
                             x > boxMiddle - halfContentWidth ||
-                            fontSizePX > height) {
+                            fontSizePX > height ||
+                            multiLineText.length > 1) {
                             const clipX = x > boxMiddle - halfContentWidth ? x : boxMiddle - halfContentWidth;
                             const clipWidth = x + width - clipX;
                             box.clipRect = { x: clipX, y, width: clipWidth, height };
@@ -35289,7 +34907,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 }
             }
-            else if (wrapping === "clip" || wrapping === "wrap") {
+            else if (wrapping === "clip" || wrapping === "wrap" || multiLineText.length > 1) {
                 box.clipRect = {
                     x: box.x,
                     y: box.y,
@@ -36593,7 +36211,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Getters
         // ---------------------------------------------------------------------------
         getCellWidth(position) {
-            let contentWidth = this.getTextWidth(position);
+            const text = this.getCellText(position);
+            const style = this.getters.getCellComputedStyle(position);
+            let contentWidth = this.getTextWidth(text, style);
             const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
@@ -36611,9 +36231,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return contentWidth;
         }
-        getTextWidth(position) {
-            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
-            return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(position));
+        getTextWidth(text, style) {
+            return computeTextWidth(this.ctx, text, style);
         }
         getCellText(position, showFormula = false) {
             const cell = this.getters.getCell(position);
@@ -36624,51 +36243,61 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return this.getters.getEvaluatedCell(position).formattedValue;
             }
         }
+        /**
+         * Return the text of a cell, split in multiple lines if needed. The text will be split in multiple
+         * line if it contains NEWLINE characters, or if it's longer than the given width.
+         */
         getCellMultiLineText(position, width) {
             const style = this.getters.getCellStyle(position);
-            const text = this.getters.getCellText(position);
-            const words = text.split(" ");
+            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
             const brokenText = [];
-            let textLine = "";
-            let availableWidth = width;
-            for (let word of words) {
-                const splitWord = this.splitWordToSpecificWidth(this.ctx, word, width, style);
-                const lastPart = splitWord.pop();
-                const lastPartWidth = computeTextWidth(this.ctx, lastPart, style);
-                // At this step: "splitWord" is an array composed of parts of word whose
-                // length is at most equal to "width".
-                // Last part contains the end of the word.
-                // Note that: When word length is less than width, then lastPart is equal
-                // to word and splitWord is empty
-                if (splitWord.length) {
-                    if (textLine !== "") {
-                        brokenText.push(textLine);
-                        textLine = "";
-                        availableWidth = width;
-                    }
-                    splitWord.forEach((wordPart) => {
-                        brokenText.push(wordPart);
-                    });
-                    textLine = lastPart;
-                    availableWidth = width - lastPartWidth;
+            for (const line of text.split("\n")) {
+                const words = line.split(" ");
+                if (!width) {
+                    brokenText.push(line);
+                    continue;
                 }
-                else {
-                    // here "lastPart" is equal to "word" and the "word" size is smaller than "width"
-                    const _word = textLine === "" ? lastPart : " " + lastPart;
-                    const wordWidth = computeTextWidth(this.ctx, _word, style);
-                    if (wordWidth <= availableWidth) {
-                        textLine += _word;
-                        availableWidth -= wordWidth;
-                    }
-                    else {
-                        brokenText.push(textLine);
+                let textLine = "";
+                let availableWidth = width;
+                for (let word of words) {
+                    const splitWord = this.splitWordToSpecificWidth(this.ctx, word, width, style);
+                    const lastPart = splitWord.pop();
+                    const lastPartWidth = computeTextWidth(this.ctx, lastPart, style);
+                    // At this step: "splitWord" is an array composed of parts of word whose
+                    // length is at most equal to "width".
+                    // Last part contains the end of the word.
+                    // Note that: When word length is less than width, then lastPart is equal
+                    // to word and splitWord is empty
+                    if (splitWord.length) {
+                        if (textLine !== "") {
+                            brokenText.push(textLine);
+                            textLine = "";
+                            availableWidth = width;
+                        }
+                        splitWord.forEach((wordPart) => {
+                            brokenText.push(wordPart);
+                        });
                         textLine = lastPart;
                         availableWidth = width - lastPartWidth;
                     }
+                    else {
+                        // here "lastPart" is equal to "word" and the "word" size is smaller than "width"
+                        const _word = textLine === "" ? lastPart : " " + lastPart;
+                        const wordWidth = computeTextWidth(this.ctx, _word, style);
+                        if (wordWidth <= availableWidth) {
+                            textLine += _word;
+                            availableWidth -= wordWidth;
+                        }
+                        else {
+                            brokenText.push(textLine);
+                            textLine = lastPart;
+                            availableWidth = width - lastPartWidth;
+                        }
+                    }
                 }
-            }
-            if (textLine !== "") {
-                brokenText.push(textLine);
+                if (textLine !== "") {
+                    brokenText.push(textLine);
+                }
             }
             return brokenText;
         }
@@ -37327,6 +36956,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 throw new Error(`No chart for the given id: ${copiedFigureId}`);
             }
             this.copiedChart = chart.copyInSheetId(sheetId);
+            this.sourceChartId = copiedFigureId;
         }
         paste(sheetId, figureId, position, size) {
             const copy = this.copiedChart.copyInSheetId(sheetId);
@@ -37335,6 +36965,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 sheetId,
                 position,
                 size,
+                sourceChartId: this.sourceChartId,
                 definition: copy.getDefinition(),
             });
         }
@@ -37647,6 +37278,722 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getClipboardTextContent",
         "isCutOperation",
         "isPaintingFormat",
+    ];
+
+    /**
+     * Change the reference types inside the given token, if the token represent a range or a cell
+     *
+     * Eg. :
+     *   A1 => $A$1 => A$1 => $A1 => A1
+     *   A1:$B$1 => $A$1:B$1 => A$1:$B1 => $A1:B1 => A1:$B$1
+     */
+    function loopThroughReferenceType(token) {
+        if (token.type !== "REFERENCE")
+            return token;
+        const [range, sheet] = token.value.split("!").reverse();
+        const [left, right] = range.split(":");
+        const sheetRef = sheet ? `${sheet}!` : "";
+        const updatedLeft = getTokenNextReferenceType(left);
+        const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
+        return { ...token, value: sheetRef + updatedLeft + updatedRight };
+    }
+    /**
+     * Get a new token with a changed type of reference from the given cell token symbol.
+     * Undefined behavior if given a token other than a cell or if the Xc contains a sheet reference
+     *
+     * A1 => $A$1 => A$1 => $A1 => A1
+     */
+    function getTokenNextReferenceType(xc) {
+        switch (getReferenceType(xc)) {
+            case "none":
+                xc = setXcToReferenceType(xc, "colrow");
+                break;
+            case "colrow":
+                xc = setXcToReferenceType(xc, "row");
+                break;
+            case "row":
+                xc = setXcToReferenceType(xc, "col");
+                break;
+            case "col":
+                xc = setXcToReferenceType(xc, "none");
+                break;
+        }
+        return xc;
+    }
+    /**
+     * Returns the given XC with the given reference type.
+     */
+    function setXcToReferenceType(xc, referenceType) {
+        xc = xc.replace(/\$/g, "");
+        let indexOfNumber;
+        switch (referenceType) {
+            case "col":
+                return "$" + xc;
+            case "row":
+                indexOfNumber = xc.search(/[0-9]/);
+                return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
+            case "colrow":
+                indexOfNumber = xc.search(/[0-9]/);
+                xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
+                return "$" + xc;
+            case "none":
+                return xc;
+        }
+    }
+    /**
+     * Return the type of reference used in the given XC of a cell.
+     * Undefined behavior if the XC have a sheet reference
+     */
+    function getReferenceType(xcCell) {
+        if (isColAndRowFixed(xcCell)) {
+            return "colrow";
+        }
+        else if (isColFixed(xcCell)) {
+            return "col";
+        }
+        else if (isRowFixed(xcCell)) {
+            return "row";
+        }
+        return "none";
+    }
+    function isColFixed(xc) {
+        return xc.startsWith("$");
+    }
+    function isRowFixed(xc) {
+        return xc.includes("$", 1);
+    }
+    function isColAndRowFixed(xc) {
+        return xc.startsWith("$") && xc.length > 1 && xc.slice(1).includes("$");
+    }
+
+    const CELL_DELETED_MESSAGE = _lt("The cell you are trying to edit has been deleted.");
+    class EditionPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.col = 0;
+            this.row = 0;
+            this.mode = "inactive";
+            this.sheetId = "";
+            this.currentContent = "";
+            this.currentTokens = [];
+            this.selectionStart = 0;
+            this.selectionEnd = 0;
+            this.selectionInitialStart = 0;
+            this.initialContent = "";
+            this.previousRef = "";
+            this.previousRange = undefined;
+            this.colorIndexByRange = {};
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "CHANGE_COMPOSER_CURSOR_SELECTION":
+                    return this.validateSelection(this.currentContent.length, cmd.start, cmd.end);
+                case "SET_CURRENT_CONTENT":
+                    if (cmd.selection) {
+                        return this.validateSelection(cmd.content.length, cmd.selection.start, cmd.selection.end);
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                case "START_EDITION":
+                    if (cmd.selection) {
+                        const content = cmd.text || this.getComposerContent(this.getters.getActivePosition());
+                        return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
+        handleEvent(event) {
+            if (this.mode !== "selecting") {
+                return;
+            }
+            switch (event.mode) {
+                case "newAnchor":
+                    this.insertSelectedRange(event.anchor.zone);
+                    break;
+                default:
+                    this.replaceSelectedRanges(event.anchor.zone);
+                    break;
+            }
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "CHANGE_COMPOSER_CURSOR_SELECTION":
+                    this.selectionStart = cmd.start;
+                    this.selectionEnd = cmd.end;
+                    break;
+                case "STOP_COMPOSER_RANGE_SELECTION":
+                    if (this.isSelectingForComposer()) {
+                        this.mode = "editing";
+                    }
+                    break;
+                case "START_EDITION":
+                    if (this.mode !== "inactive" && cmd.text) {
+                        this.setContent(cmd.text, cmd.selection);
+                    }
+                    else {
+                        this.startEdition(cmd.text, cmd.selection);
+                    }
+                    this.updateRangeColor();
+                    break;
+                case "STOP_EDITION":
+                    if (cmd.cancel) {
+                        this.cancelEditionAndActivateSheet();
+                        this.resetContent();
+                    }
+                    else {
+                        this.stopEdition();
+                    }
+                    this.colorIndexByRange = {};
+                    break;
+                case "SET_CURRENT_CONTENT":
+                    this.setContent(cmd.content, cmd.selection, true);
+                    this.updateRangeColor();
+                    break;
+                case "REPLACE_COMPOSER_CURSOR_SELECTION":
+                    this.replaceSelection(cmd.text);
+                    break;
+                case "SELECT_FIGURE":
+                    this.cancelEditionAndActivateSheet();
+                    this.resetContent();
+                    break;
+                case "ADD_COLUMNS_ROWS":
+                    this.onAddElements(cmd);
+                    break;
+                case "REMOVE_COLUMNS_ROWS":
+                    if (cmd.dimension === "COL") {
+                        this.onColumnsRemoved(cmd);
+                    }
+                    else {
+                        this.onRowsRemoved(cmd);
+                    }
+                    break;
+                case "START_CHANGE_HIGHLIGHT":
+                    this.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+                    const range = this.getters.getRangeFromRangeData(cmd.range);
+                    const previousRefToken = this.currentTokens
+                        .filter((token) => token.type === "REFERENCE")
+                        .find((token) => {
+                        let value = token.value;
+                        const [xc, sheet] = value.split("!").reverse();
+                        const sheetName = sheet || this.getters.getSheetName(this.sheetId);
+                        const activeSheetId = this.getters.getActiveSheetId();
+                        if (this.getters.getSheetName(activeSheetId) !== sheetName) {
+                            return false;
+                        }
+                        const refRange = this.getters.getRangeFromSheetXC(activeSheetId, xc);
+                        return isEqual(this.getters.expandZone(activeSheetId, refRange.zone), range.zone);
+                    });
+                    this.previousRef = previousRefToken.value;
+                    this.previousRange = this.getters.getRangeFromSheetXC(this.getters.getActiveSheetId(), this.previousRef);
+                    this.selectionInitialStart = previousRefToken.start;
+                    break;
+                case "CHANGE_HIGHLIGHT":
+                    const cmdRange = this.getters.getRangeFromRangeData(cmd.range);
+                    const newRef = this.getRangeReference(cmdRange, this.previousRange.parts);
+                    this.selectionStart = this.selectionInitialStart;
+                    this.selectionEnd = this.selectionInitialStart + this.previousRef.length;
+                    this.replaceSelection(newRef);
+                    this.previousRef = newRef;
+                    this.selectionStart = this.currentContent.length;
+                    this.selectionEnd = this.currentContent.length;
+                    break;
+                case "ACTIVATE_SHEET":
+                    if (!this.currentContent.startsWith("=")) {
+                        this.cancelEdition();
+                        this.resetContent();
+                    }
+                    if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
+                        const activePosition = this.getters.getActivePosition();
+                        const { col, row } = this.getters.getNextVisibleCellPosition({
+                            sheetId: cmd.sheetIdTo,
+                            col: activePosition.col,
+                            row: activePosition.row,
+                        });
+                        const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
+                        this.selection.resetAnchor(this, { cell: { col, row }, zone });
+                    }
+                    break;
+                case "DELETE_SHEET":
+                case "UNDO":
+                case "REDO":
+                    const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
+                    if (!sheetIdExists && this.mode !== "inactive") {
+                        this.sheetId = this.getters.getActiveSheetId();
+                        this.cancelEditionAndActivateSheet();
+                        this.resetContent();
+                        this.ui.notifyUI({
+                            type: "ERROR",
+                            text: CELL_DELETED_MESSAGE,
+                        });
+                    }
+                    break;
+                case "CYCLE_EDITION_REFERENCES":
+                    this.cycleReferences();
+                    break;
+            }
+        }
+        unsubscribe() {
+            this.mode = "inactive";
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        getEditionMode() {
+            return this.mode;
+        }
+        getCurrentContent() {
+            if (this.mode === "inactive") {
+                return this.getComposerContent(this.getters.getActivePosition());
+            }
+            return this.currentContent;
+        }
+        getEditionSheet() {
+            return this.sheetId;
+        }
+        getComposerSelection() {
+            return {
+                start: this.selectionStart,
+                end: this.selectionEnd,
+            };
+        }
+        isSelectingForComposer() {
+            return this.mode === "selecting";
+        }
+        showSelectionIndicator() {
+            return this.isSelectingForComposer() && this.canStartComposerRangeSelection();
+        }
+        getCurrentTokens() {
+            return this.currentTokens;
+        }
+        /**
+         * Return the (enriched) token just before the cursor.
+         */
+        getTokenAtCursor() {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            if (start === end && end === 0) {
+                return undefined;
+            }
+            else {
+                return this.currentTokens.find((t) => t.start <= start && t.end >= end);
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Misc
+        // ---------------------------------------------------------------------------
+        cycleReferences() {
+            const tokens = this.getTokensInSelection();
+            const refTokens = tokens.filter((token) => token.type === "REFERENCE");
+            if (refTokens.length === 0)
+                return;
+            const updatedReferences = tokens
+                .map(loopThroughReferenceType)
+                .map((token) => token.value)
+                .join("");
+            const content = this.currentContent;
+            const start = tokens[0].start;
+            const end = tokens[tokens.length - 1].end;
+            const newContent = content.slice(0, start) + updatedReferences + content.slice(end);
+            const lengthDiff = newContent.length - content.length;
+            const startOfTokens = refTokens[0].start;
+            const endOfTokens = refTokens[refTokens.length - 1].end + lengthDiff;
+            const selection = { start: startOfTokens, end: endOfTokens };
+            // Put the selection at the end of the token if we cycled on a single token
+            if (refTokens.length === 1 && this.selectionStart === this.selectionEnd) {
+                selection.start = selection.end;
+            }
+            this.dispatch("SET_CURRENT_CONTENT", {
+                content: newContent,
+                selection,
+            });
+        }
+        validateSelection(length, start, end) {
+            return start >= 0 && start <= length && end >= 0 && end <= length
+                ? 0 /* CommandResult.Success */
+                : 45 /* CommandResult.WrongComposerSelection */;
+        }
+        onColumnsRemoved(cmd) {
+            if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
+                this.dispatch("STOP_EDITION", { cancel: true });
+                this.ui.notifyUI({
+                    type: "ERROR",
+                    text: CELL_DELETED_MESSAGE,
+                });
+                return;
+            }
+            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "left", [...cmd.elements]);
+            this.col = left;
+            this.row = top;
+        }
+        onRowsRemoved(cmd) {
+            if (cmd.elements.includes(this.row) && this.mode !== "inactive") {
+                this.dispatch("STOP_EDITION", { cancel: true });
+                this.ui.notifyUI({
+                    type: "ERROR",
+                    text: CELL_DELETED_MESSAGE,
+                });
+                return;
+            }
+            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "top", [...cmd.elements]);
+            this.col = left;
+            this.row = top;
+        }
+        onAddElements(cmd) {
+            const { top, left } = updateSelectionOnInsertion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
+            this.col = left;
+            this.row = top;
+        }
+        /**
+         * Enable the selecting mode
+         */
+        startComposerRangeSelection() {
+            if (this.sheetId === this.getters.getActiveSheetId()) {
+                const zone = positionToZone({ col: this.col, row: this.row });
+                this.selection.resetAnchor(this, { cell: { col: this.col, row: this.row }, zone });
+            }
+            this.mode = "selecting";
+            this.selectionInitialStart = this.selectionStart;
+        }
+        /**
+         * start the edition of a cell
+         * @param str the key that is used to start the edition if it is a "content" key like a letter or number
+         * @param selection
+         * @private
+         */
+        startEdition(str, selection) {
+            var _a;
+            const evaluatedCell = this.getters.getActiveCell();
+            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
+                selection = selection || { start: str.length, end: str.length };
+                str = `${str}%`;
+            }
+            const sheetId = this.getters.getActiveSheetId();
+            const { col, row } = this.getters.getActivePosition();
+            this.col = col;
+            this.sheetId = sheetId;
+            this.row = row;
+            this.initialContent = this.getComposerContent({ sheetId, col, row });
+            this.mode = "editing";
+            this.setContent(str || this.initialContent, selection);
+            this.colorIndexByRange = {};
+            const zone = positionToZone({ col: this.col, row: this.row });
+            this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
+                handleEvent: this.handleEvent.bind(this),
+                release: () => {
+                    this.stopEdition();
+                },
+            });
+        }
+        stopEdition() {
+            if (this.mode !== "inactive") {
+                this.cancelEditionAndActivateSheet();
+                const col = this.col;
+                const row = this.row;
+                let content = this.currentContent;
+                const didChange = this.initialContent !== content;
+                if (!didChange) {
+                    return;
+                }
+                if (content) {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
+                    if (content.startsWith("=")) {
+                        const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
+                        const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
+                        const missing = left - right;
+                        if (missing > 0) {
+                            content += concat(new Array(missing).fill(")"));
+                        }
+                    }
+                    else if (cell.link) {
+                        content = markdownLink(content, cell.link.url);
+                    }
+                    this.dispatch("UPDATE_CELL", {
+                        sheetId: this.sheetId,
+                        col,
+                        row,
+                        content,
+                    });
+                }
+                else {
+                    this.dispatch("UPDATE_CELL", {
+                        sheetId: this.sheetId,
+                        content: "",
+                        col,
+                        row,
+                    });
+                }
+                this.setContent("");
+            }
+        }
+        cancelEditionAndActivateSheet() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.cancelEdition();
+            const sheetId = this.getters.getActiveSheetId();
+            if (sheetId !== this.sheetId) {
+                this.dispatch("ACTIVATE_SHEET", {
+                    sheetIdFrom: this.getters.getActiveSheetId(),
+                    sheetIdTo: this.sheetId,
+                });
+            }
+        }
+        getComposerContent(position) {
+            const cell = this.getters.getCell(position);
+            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
+                return cell.content;
+            }
+            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
+            switch (type) {
+                case CellValueType.text:
+                case CellValueType.empty:
+                    return value;
+                case CellValueType.boolean:
+                    return formattedValue;
+                case CellValueType.error:
+                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
+                case CellValueType.number:
+                    if (format && isDateTimeFormat(format)) {
+                        return formattedValue;
+                    }
+                    return this.numberComposerContent(value, format);
+            }
+        }
+        numberComposerContent(value, format) {
+            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
+                return `${value * 100}%`;
+            }
+            return numberToString(value);
+        }
+        cancelEdition() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.mode = "inactive";
+            this.selection.release(this);
+        }
+        /**
+         * Reset the current content to the active cell content
+         */
+        resetContent() {
+            this.setContent(this.initialContent || "");
+        }
+        setContent(text, selection, raise) {
+            const isNewCurrentContent = this.currentContent !== text;
+            this.currentContent = text;
+            if (selection) {
+                this.selectionStart = selection.start;
+                this.selectionEnd = selection.end;
+            }
+            else {
+                this.selectionStart = this.selectionEnd = text.length;
+            }
+            if (isNewCurrentContent || this.mode !== "inactive") {
+                this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
+                if (this.currentTokens.length > 100) {
+                    if (raise) {
+                        this.ui.notifyUI({
+                            type: "ERROR",
+                            text: _lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"),
+                        });
+                    }
+                }
+            }
+            if (this.canStartComposerRangeSelection()) {
+                this.startComposerRangeSelection();
+            }
+        }
+        insertSelectedRange(zone) {
+            // infer if range selected or selecting range from cursor position
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const ref = this.getZoneReference(zone);
+            if (this.canStartComposerRangeSelection()) {
+                this.insertText(ref, start);
+                this.selectionInitialStart = start;
+            }
+            else {
+                this.insertText("," + ref, start);
+                this.selectionInitialStart = start + 1;
+            }
+        }
+        /**
+         * Replace the current reference selected by the new one.
+         * */
+        replaceSelectedRanges(zone) {
+            const ref = this.getZoneReference(zone);
+            this.replaceText(ref, this.selectionInitialStart, this.selectionEnd);
+        }
+        getZoneReference(zone, fixedParts = [{ colFixed: false, rowFixed: false }]) {
+            const sheetId = this.getters.getActiveSheetId();
+            let selectedXc = this.getters.zoneToXC(sheetId, zone, fixedParts);
+            if (this.getters.getEditionSheet() !== this.getters.getActiveSheetId()) {
+                const sheetName = getComposerSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
+                selectedXc = `${sheetName}!${selectedXc}`;
+            }
+            return selectedXc;
+        }
+        getRangeReference(range, fixedParts = [{ colFixed: false, rowFixed: false }]) {
+            let _fixedParts = [...fixedParts];
+            if (fixedParts.length === 1 && getZoneArea(range.zone) > 1) {
+                _fixedParts.push({ ...fixedParts[0] });
+            }
+            else if (fixedParts.length === 2 && getZoneArea(range.zone) === 1) {
+                _fixedParts.pop();
+            }
+            const newRange = range.clone({ parts: _fixedParts });
+            return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
+        }
+        /**
+         * Replace the current selection by a new text.
+         * The cursor is then set at the end of the text.
+         */
+        replaceSelection(text) {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            this.replaceText(text, start, end);
+        }
+        replaceText(text, start, end) {
+            this.currentContent =
+                this.currentContent.slice(0, start) +
+                    this.currentContent.slice(end, this.currentContent.length);
+            this.insertText(text, start);
+        }
+        /**
+         * Insert a text at the given position.
+         * The cursor is then set at the end of the text.
+         */
+        insertText(text, start) {
+            const content = this.currentContent.slice(0, start) + text + this.currentContent.slice(start);
+            const end = start + text.length;
+            this.dispatch("SET_CURRENT_CONTENT", {
+                content,
+                selection: { start: end, end },
+            });
+        }
+        updateRangeColor() {
+            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
+                return;
+            }
+            const editionSheetId = this.getters.getEditionSheet();
+            const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
+            const colorsToKeep = {};
+            for (const xc of XCs) {
+                if (this.colorIndexByRange[xc] !== undefined) {
+                    colorsToKeep[xc] = this.colorIndexByRange[xc];
+                }
+            }
+            const usedIndexes = new Set(Object.values(colorsToKeep));
+            let currentIndex = 0;
+            const nextIndex = () => {
+                while (usedIndexes.has(currentIndex))
+                    currentIndex++;
+                usedIndexes.add(currentIndex);
+                return currentIndex;
+            };
+            for (const xc of XCs) {
+                const colorIndex = xc in colorsToKeep ? colorsToKeep[xc] : nextIndex();
+                colorsToKeep[xc] = colorIndex;
+            }
+            this.colorIndexByRange = colorsToKeep;
+        }
+        /**
+         * Highlight all ranges that can be found in the composer content.
+         */
+        getComposerHighlights() {
+            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
+                return [];
+            }
+            const editionSheetId = this.getters.getEditionSheet();
+            const rangeColor = (rangeString) => {
+                const colorIndex = this.colorIndexByRange[rangeString];
+                return colors$1[colorIndex % colors$1.length];
+            };
+            return this.getReferencedRanges().map((range) => {
+                const rangeString = this.getters.getRangeString(range, editionSheetId);
+                return {
+                    zone: range.zone,
+                    color: rangeColor(rangeString),
+                    sheetId: range.sheetId,
+                };
+            });
+        }
+        /**
+         * Return ranges currently referenced in the composer
+         */
+        getReferencedRanges() {
+            const editionSheetId = this.getters.getEditionSheet();
+            return this.currentTokens
+                .filter((token) => token.type === "REFERENCE")
+                .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
+        }
+        /**
+         * Function used to determine when composer selection can start.
+         * Three conditions are necessary:
+         * - the previous token is among ["COMMA", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
+         * - the next token is missing or is among ["COMMA", "RIGHT_PAREN", "OPERATOR"]
+         * - Previous and next tokens can be separated by spaces
+         */
+        canStartComposerRangeSelection() {
+            if (this.currentContent.startsWith("=")) {
+                const tokenAtCursor = this.getTokenAtCursor();
+                if (!tokenAtCursor) {
+                    return false;
+                }
+                const tokenIdex = this.currentTokens.map((token) => token.start).indexOf(tokenAtCursor.start);
+                let count = tokenIdex;
+                let currentToken = tokenAtCursor;
+                // check previous token
+                while (!["COMMA", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
+                    POSTFIX_UNARY_OPERATORS.includes(currentToken.value)) {
+                    if (currentToken.type !== "SPACE" || count < 1) {
+                        return false;
+                    }
+                    count--;
+                    currentToken = this.currentTokens[count];
+                }
+                count = tokenIdex + 1;
+                currentToken = this.currentTokens[count];
+                // check next token
+                while (currentToken && !["COMMA", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
+                    if (currentToken.type !== "SPACE") {
+                        return false;
+                    }
+                    count++;
+                    currentToken = this.currentTokens[count];
+                }
+                return true;
+            }
+            return false;
+        }
+        /**
+         * Return all the tokens between selectionStart and selectionEnd.
+         * Includes token that begin right on selectionStart or end right on selectionEnd.
+         */
+        getTokensInSelection() {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            return this.currentTokens.filter((t) => (t.start <= start && t.end >= start) || (t.start >= start && t.start < end));
+        }
+    }
+    EditionPlugin.getters = [
+        "getEditionMode",
+        "isSelectingForComposer",
+        "showSelectionIndicator",
+        "getCurrentContent",
+        "getEditionSheet",
+        "getComposerSelection",
+        "getCurrentTokens",
+        "getTokenAtCursor",
+        "getComposerHighlights",
     ];
 
     const selectionStatisticFunctions = [
@@ -39374,6 +39721,44 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
+    const COMPOSER_MAX_HEIGHT = 100;
+    css /* scss */ `
+  .o-topbar-composer {
+    height: fit-content;
+    margin-top: -1px;
+    border: 1px solid;
+    z-index: ${ComponentsImportance.TopBarComposer};
+  }
+`;
+    class TopBarComposer extends owl.Component {
+        get composerStyle() {
+            const style = {
+                padding: "5px 0px 5px 8px",
+                "max-height": `${COMPOSER_MAX_HEIGHT}px`,
+                "line-height": "24px",
+            };
+            style.height = this.props.focus === "inactive" ? `${TOPBAR_TOOLBAR_HEIGHT}px` : "fit-content";
+            return cssPropertiesToCss(style);
+        }
+        get containerStyle() {
+            if (this.props.focus === "inactive") {
+                return cssPropertiesToCss({
+                    "border-color": SEPARATOR_COLOR,
+                    "border-right": "none",
+                });
+            }
+            return cssPropertiesToCss({
+                "border-color": SELECTION_BORDER_COLOR,
+            });
+        }
+    }
+    TopBarComposer.template = "o-spreadsheet-TopBarComposer";
+    TopBarComposer.components = { Composer };
+    TopBarComposer.props = {
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerContentFocused: Function,
+    };
+
     const FORMATS = [
         { name: "automatic", text: NumberFormatTerms.Automatic },
         { name: "number", text: NumberFormatTerms.Number, description: "1,000.12", value: "#,##0.00" },
@@ -39422,7 +39807,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     user-select: none;
 
     .o-topbar-top {
-      border-bottom: 1px solid #e0e2e4;
+      border-bottom: 1px solid ${SEPARATOR_COLOR};
       display: flex;
       padding: 2px 10px;
       justify-content: space-between;
@@ -39448,10 +39833,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         justify-content: flex-end;
       }
     }
-    /* Toolbar + Cell Content */
+
+    .o-topbar-composer {
+      flex-grow: 1;
+    }
+
+    /* Toolbar */
     .o-topbar-toolbar {
-      border-bottom: 1px solid #e0e2e4;
+      flex-shrink: 0;
       display: flex;
+      height: ${TOPBAR_TOOLBAR_HEIGHT}px;
 
       .o-readonly-toolbar {
         display: flex;
@@ -39459,12 +39850,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         background-color: ${BACKGROUND_HEADER_COLOR};
         padding-left: 18px;
         padding-right: 18px;
-      }
-      .o-composer-container {
-        height: 34px;
-        border: 1px solid #e0e2e4;
-        margin-top: -1px;
-        margin-bottom: -1px;
       }
 
       /* Toolbar */
@@ -39516,7 +39901,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
         .o-divider {
           display: inline-block;
-          border-right: 1px solid #e0e2e4;
+          border-right: 1px solid ${SEPARATOR_COLOR};
           width: 0;
           margin: 0 6px;
         }
@@ -39536,7 +39921,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
           }
 
           .o-text-icon {
-            height: 100%;
             line-height: 30px;
           }
 
@@ -39640,12 +40024,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.fillColor = "#ffffff";
             this.textColor = "#000000";
             this.menus = [];
-            this.composerStyle = `
-    line-height: 34px;
-    padding-left: 8px;
-    height: 34px;
-    background-color: white;
-  `;
         }
         setup() {
             owl.useExternalListener(window, "click", this.onExternalClick);
@@ -39844,7 +40222,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     TopBar.template = "o-spreadsheet-TopBar";
-    TopBar.components = { ColorPicker, Menu, Composer };
+    TopBar.components = { ColorPicker, Menu, TopBarComposer };
     TopBar.props = {
         onClick: Function,
         focusComposer: String,
@@ -39926,7 +40304,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       box-sizing: content-box;
     }
     .o-separator {
-      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid #e0e2e4;
+      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid ${SEPARATOR_COLOR};
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
     }
@@ -39969,8 +40347,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       &.corner {
         right: 0px;
         bottom: 0px;
-        height: ${SCROLLBAR_WIDTH$1}px;
-        width: ${SCROLLBAR_WIDTH$1}px;
+        height: ${SCROLLBAR_WIDTH}px;
+        width: ${SCROLLBAR_WIDTH}px;
         border-top: 1px solid #e2e3e3;
         border-left: 1px solid #e2e3e3;
       }
@@ -40017,6 +40395,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 toggleSidePanel: this.toggleSidePanel.bind(this),
                 _t: Spreadsheet._t,
                 clipboard: this.env.clipboard || instantiateClipboard(),
+                startCellEdition: (content) => this.onGridComposerCellFocused(content),
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
@@ -43907,7 +44286,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         BOTTOMBAR_HEIGHT,
         DEFAULT_CELL_WIDTH,
         DEFAULT_CELL_HEIGHT,
-        SCROLLBAR_WIDTH: SCROLLBAR_WIDTH$1,
+        SCROLLBAR_WIDTH,
     };
     const registries = {
         autofillModifiersRegistry,
@@ -44021,8 +44400,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-01-17T14:55:32.207Z';
-    exports.__info__.hash = '35b1263';
+    exports.__info__.date = '2023-01-23T10:39:52.529Z';
+    exports.__info__.hash = '356d85c';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
