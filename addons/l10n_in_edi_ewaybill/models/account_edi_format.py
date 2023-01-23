@@ -70,7 +70,8 @@ class AccountEdiFormat(models.Model):
         if self.code != "in_ewaybill_1_03":
             return super()._check_move_configuration(move)
         error_message = []
-        if not move.l10n_in_type_id:
+        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
+        if not move.l10n_in_type_id and base == "direct":
             error_message.append(_("- Document Type"))
         if not move.l10n_in_mode:
             error_message.append(_("- Transportation Mode"))
@@ -84,7 +85,6 @@ class AccountEdiFormat(models.Model):
                 error_message.append(_("- Transport document number and date is required when Transportation Mode is Rail,Air or Ship"))
         if error_message:
             error_message.insert(0, _("The following information are missing on the invoice (see eWayBill tab):"))
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
         if base == "irn":
             # already checked by E-invoice (l10n_in_edi) so no need to check
             return error_message
