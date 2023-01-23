@@ -438,6 +438,12 @@ class AccountReportExpression(models.Model):
              " in case the carryover destination requires more complex logic."
     )
 
+    _sql_constraints = [(
+        "domain_engine_subformula_required",
+        "CHECK(engine != 'domain' OR subformula IS NOT NULL)",
+        "Expressions using 'domain' engine should all have a subformula."
+    )]
+
     @api.depends('engine')
     def _compute_auditable(self):
         auditable_engines = self._get_auditable_engines()
