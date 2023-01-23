@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-from odoo import api, models
+from odoo import api, models, fields
 
 
 class SwissSetupBarBankConfigWizard(models.TransientModel):
@@ -14,3 +13,9 @@ class SwissSetupBarBankConfigWizard(models.TransientModel):
         self.res_partner_bank_id.acc_number = self.acc_number
         self.res_partner_bank_id._compute_l10n_ch_qr_iban()
         self.l10n_ch_qr_iban = self.res_partner_bank_id.l10n_ch_qr_iban
+
+    l10n_ch_display_qr_bank_options = fields.Boolean(compute='_compute_l10n_ch_display_qr_bank_options')
+
+    @api.depends('partner_id', 'company_id')
+    def _compute_l10n_ch_display_qr_bank_options(self):
+        self.res_partner_bank_id._compute_l10n_ch_display_qr_bank_options(self)

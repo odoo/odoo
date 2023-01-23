@@ -7,14 +7,8 @@
     'description': """
 Swiss localization
 ==================
-This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), taxes and enables the generation of ISR and QR-bill when you print an invoice or send it by mail.
-
-An ISR will be generated if you specify the information it needs:
-    - The bank account you expect to be paid on must be set, and have a valid postal reference.
-    - Your invoice must have been set assigned a bank account to receive its payment
-      (this can be done manually, but a default value is automatically set if you have defined a bank account).
-    - You must have set the postal references of your bank.
-    - Your invoice must be in EUR or CHF (as ISRs do not accept other currencies)
+This module defines a chart of account for Switzerland (Swiss PME/KMU 2015), taxes and enables the generation of a QR-bill when you print an invoice or send it by mail.
+The QR bill is attached to the invoice and eases its payment.
 
 A QR-bill will be generated if:
     - The partner set on your invoice has a complete address (street, city, postal code and country) in Switzerland
@@ -22,11 +16,8 @@ A QR-bill will be generated if:
     - A correct account number/QR IBAN is set on your bank journal
     - (when using a QR-IBAN): the payment reference of the invoice is a QR-reference
 
-The generation of the ISR and QR-bill is automatic if you meet the previous criteria.
+The generation of the QR-bill is automatic if you meet the previous criteria. The QR-bill will be appended after the invoice when printing or sending by mail. 
 
-Here is how it works:
-    - Printing the invoice will trigger the download of three files: the invoice, its ISR and its QR-bill
-    - Clicking the 'Send by mail' button will attach three files to your draft mail: the invoice, the ISR and the QR-bill.
     """,
     'version': '11.1',
     'category': 'Accounting/Localizations/Account Charts',
@@ -38,14 +29,12 @@ Here is how it works:
     'data': [
         'security/ir.model.access.csv',
         'data/account_tax_report_data.xml',
-        'report/isr_report.xml',
         'report/swissqr_report.xml',
         'views/res_bank_view.xml',
-        'views/account_invoice_view.xml',
         'views/account_invoice.xml',
-        'views/res_config_settings_views.xml',
         'views/setup_wizard_views.xml',
         'views/qr_invoice_wizard_view.xml',
+        'views/account_payment_view.xml',
     ],
     'demo': [
         'demo/account_cash_rounding.xml',

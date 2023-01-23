@@ -35,25 +35,18 @@ class IrActionsReport(models.Model):
         report = self._get_report(report_ref)
         if report.report_name in ('account.report_invoice_with_payments', 'account.report_invoice'):
             invoices = self.env[report.model].browse(res_ids)
-            # Determine which invoices need a QR/ISR.
+            # Determine which invoices need a QR.
             qr_inv_ids = []
-            isr_inv_ids = []
             for invoice in invoices:
                 if invoice.company_id.country_code != 'CH':
                     continue
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
-                elif invoice.l10n_ch_isr_valid:
-                    isr_inv_ids.append(invoice.id)
             # Render the additional reports.
             streams_to_append = {}
             if qr_inv_ids:
                 qr_res = self._render_qweb_pdf_prepare_streams('l10n_ch.l10n_ch_qr_report', data, res_ids=qr_inv_ids)
                 for invoice_id, stream in qr_res.items():
-                    streams_to_append[invoice_id] = stream
-            if isr_inv_ids:
-                isr_res = self._render_qweb_pdf_prepare_streams('l10n_ch.l10n_ch_isr_report', data, res_ids=isr_inv_ids)
-                for invoice_id, stream in isr_res.items():
                     streams_to_append[invoice_id] = stream
             # Add to results
             for invoice_id, additional_stream in streams_to_append.items():

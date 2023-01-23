@@ -8,18 +8,16 @@ class QrInvoiceWizard(models.TransientModel):
     Wizard :
     When multiple invoices are selected to be printed in the QR-Iban format,
     this wizard will appear if one or more invoice(s) could not be QR-printed (wrong format...)
-    The user will then be able to print the invoices (in the format available, priority : QR --> ISR --> normal)
-     or to see a list of the non-QR/ISR invoices.
-    The non-QR/ISR invoices will have a note logged in their chatter, detailing the reason of the failure.
+    The user will then be able to print the invoices that couldn't be printed in the QR format in the normal format, or
+    to see a list of those.
+    The non-QR invoices will have a note logged in their chatter, detailing the reason of the failure.
     '''
     _name = 'l10n_ch.qr_invoice.wizard'
     _description = 'Handles problems occurring while creating multiple QR-invoices at once'
 
     nb_qr_inv = fields.Integer(readonly=True)
-    nb_isr_inv = fields.Integer(readonly=True)
     nb_classic_inv = fields.Integer(readonly=True)
     qr_inv_text = fields.Text(readonly=True)
-    isr_inv_text = fields.Text(readonly=True)
     classic_inv_text = fields.Text(readonly=True)
 
     @api.model
@@ -48,12 +46,9 @@ class QrInvoiceWizard(models.TransientModel):
         dispatched_invoices = invoices._l10n_ch_dispatch_invoices_to_print()
         results.update({
             'nb_qr_inv': len(dispatched_invoices['qr']),
-            'nb_isr_inv': len(dispatched_invoices['isr']),
             'nb_classic_inv': len(dispatched_invoices['classic']),
             'qr_inv_text': determine_invoices_text(nb_inv=len(dispatched_invoices['qr']), inv_format="QR"),
-            'isr_inv_text': determine_invoices_text(nb_inv=len(dispatched_invoices['isr']), inv_format="ISR"),
-            'classic_inv_text': determine_invoices_text(nb_inv=len(dispatched_invoices['classic']),
-                                                        inv_format="classic"),
+            'classic_inv_text': determine_invoices_text(nb_inv=len(dispatched_invoices['classic']), inv_format="classic"),
         })
         return results
 
@@ -66,7 +61,7 @@ class QrInvoiceWizard(models.TransientModel):
 
     def action_view_faulty_invoices(self):
         '''
-        Open a list view of all the invoices that could not be printed in the QR nor the ISR format.
+        Open a list view of all the invoices that could not be printed in the QR format.
         '''
         # Prints the error stopping the invoice from being QR-printed in the invoice's chatter.
         invoices = self.env['account.move'].browse(self._context['active_ids'])
