@@ -634,7 +634,7 @@ async function toInline($editable, cssRules, $iframe) {
 async function flattenBackgroundImages(editable) {
     for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
         if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
-            const canvas = await html2canvas(backgroundImage);
+            const canvas = await html2canvas(backgroundImage, { scale: 1 });
             const image = document.createElement('img');
             image.setAttribute('src', canvas.toDataURL('png'));
             image.setAttribute('width', canvas.getAttribute('width'));
