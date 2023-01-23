@@ -280,6 +280,8 @@ class AccountMove(models.Model):
 
     def isr_print(self):
         """ Triggered by the 'Print ISR' button.
+        This button isn't available anymore and will be removed in 16.2.
+        This function is kept for stable policy.
         """
         self.ensure_one()
         if self.l10n_ch_isr_valid:
