@@ -135,10 +135,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             target.querySelector(".o_searchview input"),
             "searchview input should be focused"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
         const docLinks = [...target.querySelectorAll(".o_setting_box a")];
         assert.strictEqual(docLinks.length, 2);
         assert.strictEqual(
@@ -157,10 +154,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             "Hello there",
             "input value should be updated"
         );
-        assert.containsNone(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "b");
         await execTimeouts();
@@ -182,10 +176,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Title of group Bar"],
             "The title of group Bar is also selected"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "Big");
         await execTimeouts();
@@ -201,10 +192,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Title of group Bar"],
             "The title of group Bar is also selected"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "Manage Us");
         await execTimeouts();
@@ -220,10 +208,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Bar"],
             "Foo is not shown"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "group Bar");
         await execTimeouts();
@@ -234,10 +219,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Bar", "Big BAZ"],
             "When searching a title, all group is shown"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "different");
         await execTimeouts();
@@ -248,10 +230,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Personalize setting"],
             "When searching a title, all group is shown"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "bx");
         await execTimeouts();
@@ -260,10 +239,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             target.querySelector(".o_nocontent_help"),
             "record not found message shown"
         );
-        assert.containsNone(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "Fo");
         await execTimeouts();
@@ -279,10 +255,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ["Foo", "Personalize setting"],
             "only settings in group Foo is shown"
         );
-        assert.containsOnce(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsOnce(target, ".app_settings_block:not(.d-none) .app_settings_header");
 
         await editSearch(target, "Hide");
         await execTimeouts();
@@ -298,10 +271,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             [],
             "Hide settings should not be shown"
         );
-        assert.containsNone(
-            target,
-            ".app_settings_block:not(.d-none) .app_settings_header"
-        );
+        assert.containsNone(target, ".app_settings_block:not(.d-none) .app_settings_header");
     });
 
     QUnit.test("unhighlight section not matching anymore", async function (assert) {
@@ -1545,10 +1515,10 @@ QUnit.module("SettingsFormView", (hooks) => {
         const expectedCompiled = `
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
-                    <Setting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
+                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
                         <FormLabel id="'display_name'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
-                    </Setting>
+                    </SearchableSetting>
                 </SettingsApp>
             </SettingsPage>`;
         assert.areEquivalent(compiled.firstChild.innerHTML, expectedCompiled);
@@ -1591,7 +1561,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             <Field id="'baz'" name="'baz'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['baz']"/>
             <HighlightText originalText="\` and this is the after text\`"/>`;
         assert.areEquivalent(
-            compiled.querySelector("Setting div.text-muted").innerHTML,
+            compiled.querySelector("SearchableSetting div.text-muted").innerHTML,
             expectedCompiled
         );
     });

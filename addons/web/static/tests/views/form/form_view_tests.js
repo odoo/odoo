@@ -13042,4 +13042,75 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
     });
+    QUnit.test("setting : boolean field", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
+                        <field name="bar"/>
+                        <button name="buttonName" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                    </setting>
+                </form>`,
+        });
+
+        assert.containsOnce(target, ".o_setting_left_pane .form-check-input");
+        assert.strictEqual(target.querySelector(".o_form_label").textContent, "Bar");
+        assert.containsOnce(target, ".o_doc_link");
+        assert.hasAttrValue(
+            target.querySelector(".o_doc_link"),
+            "href",
+            "https://www.odoo.com/documentation/1.0/applications/technical/web/settings/this_is_a_test.html"
+        );
+        assert.containsOnce(target, ".btn-link[name='buttonName']");
+    });
+
+    QUnit.test("setting : char field", async function (assert) {
+        patchWithCleanup(session, {
+            display_switch_company_menu: true,
+        });
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <setting help="this is foo" company_dependent="1">
+                        <field name="foo"/>
+                    </setting>
+                </form>`,
+        });
+
+        assert.strictEqual(target.querySelector(".o_setting_left_pane").childElementCount, 0);
+        assert.strictEqual(target.querySelector(".o_form_label").textContent, "Foo");
+        assert.strictEqual(target.querySelector(".text-muted").textContent, "this is foo");
+        assert.containsOnce(target, ".fa-building-o");
+        assert.containsOnce(target, ".o_field_char input");
+    });
+    QUnit.test("setting : without field", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <setting string="Personalize setting" help="this is full personalize setting">
+                        <div>This is a different setting</div>
+                    </setting>
+                </form>`,
+        });
+
+        assert.strictEqual(target.querySelector(".o_setting_left_pane").childElementCount, 0);
+        assert.containsNone(target, ".o_field_char input");
+        assert.strictEqual(
+            target.querySelector(".o_form_label").textContent,
+            "Personalize setting"
+        );
+        assert.strictEqual(
+            target.querySelector(".text-muted").textContent,
+            "this is full personalize setting"
+        );
+    });
 });

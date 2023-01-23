@@ -291,6 +291,41 @@ QUnit.module("Form Compiler", (hooks) => {
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
     });
+
+    QUnit.test("properly compile settings", (assert) => {
+        const arch = /*xml*/ `
+            <form>
+                <setting
+                         help="this is bar"
+                         documentation="/applications/technical/web/settings/this_is_a_test.html"
+                         company_dependent="1">
+                    <field name="bar"/>
+                    <label>label with content</label>
+                </setting>
+            </form>`;
+
+        const expected = /*xml*/ `
+            <Setting title="\`\`"
+                     help="\`this is bar\`"
+                     companyDependent="true"
+                     documentation="\`/applications/technical/web/settings/this_is_a_test.html\`"
+                     record="__comp__.props.record"
+                     fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"
+                     fieldName="\`bar\`"
+                     fieldId="\`bar\`"
+                     string="\`\`"
+                     addLabel="true">
+                <t t-set-slot="fieldSlot">
+                    <Field id="'bar'"
+                        name="'bar'"
+                        record="__comp__.props.record"
+                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"/>
+                </t>
+                <label>label with content</label>
+            </Setting>`;
+
+        assert.areContentEquivalent(compileTemplate(arch), expected);
+    });
 });
 
 QUnit.module("Form Renderer", (hooks) => {

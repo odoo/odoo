@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { append, createElement, getTag } from "@web/core/utils/xml";
+import { append, createElement } from "@web/core/utils/xml";
 import { FormCompiler } from "@web/views/form/form_compiler";
 import { toStringExpression } from "@web/views/utils";
 import { isTextNode } from "@web/views/view_compiler";
@@ -10,8 +10,7 @@ export class SettingsFormCompiler extends FormCompiler {
         super.setup();
         this.compilers.push(
             { selector: "app", fn: this.compileApp },
-            { selector: "block", fn: this.compileBlock },
-            { selector: "setting", fn: this.compileSetting }
+            { selector: "block", fn: this.compileBlock }
         );
     }
 
@@ -88,48 +87,15 @@ export class SettingsFormCompiler extends FormCompiler {
     }
 
     compileSetting(el, params) {
-        const componentName = el.getAttribute("type") === "header" ? "SettingHeader" : "Setting";
-        const setting = createElement(componentName, {
-            title: toStringExpression(el.getAttribute("title") || ""),
-            help: toStringExpression(el.getAttribute("help") || ""),
-            companyDependent: el.getAttribute("company_dependent") === "1" || "false",
-            documentation: toStringExpression(el.getAttribute("documentation") || ""),
-            record: `__comp__.props.record`,
-        });
-        let string = toStringExpression(el.getAttribute("string") || "");
-        let addLabel = true;
+        params.componentName =
+            el.getAttribute("type") === "header" ? "SettingHeader" : "SearchableSetting";
         params.labels = [];
-        Array.from(el.children).forEach((child, index) => {
-            if (getTag(child, true) === "field" && index === 0) {
-                const fieldSlot = createElement("t", { "t-set-slot": "fieldSlot" });
-                const field = this.compileNode(child, params);
-                if (field) {
-                    append(fieldSlot, field);
-                    setting.setAttribute("fieldInfo", field.getAttribute("fieldInfo"));
-
-                    addLabel = child.hasAttribute("nolabel")
-                        ? child.getAttribute("nolabel") !== "1"
-                        : true;
-                    const fieldName = child.getAttribute("name");
-                    string = child.hasAttribute("string")
-                        ? toStringExpression(child.getAttribute("string"))
-                        : string;
-                    setting.setAttribute("fieldName", toStringExpression(fieldName));
-                    setting.setAttribute(
-                        "fieldId",
-                        toStringExpression(child.getAttribute("field_id") || fieldName)
-                    );
-                }
-                append(setting, fieldSlot);
-            } else {
-                append(setting, this.compileNode(child, params));
-            }
-        });
-        setting.setAttribute("string", string);
-        setting.setAttribute("addLabel", addLabel);
-        setting.setAttribute("labels", JSON.stringify(params.labels));
+        const res = super.compileSetting(el, params);
+        if (params.componentName === "SearchableSetting") {
+            res.setAttribute("labels", JSON.stringify(params.labels));
+        }
         delete params.labels;
-        return setting;
+        return res;
     }
 
     compileField(el, params) {
