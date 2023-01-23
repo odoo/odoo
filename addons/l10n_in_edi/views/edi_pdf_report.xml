@@ -1,76 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="external_layout_standard_inherit_l10n_in_edi" inherit_id="web.external_layout_standard">
-        <div name="company_address" position="inside">
-            <span style="font-size: 10px;" t-if="l10n_in_einvoice_json">IRN:<span t-esc="l10n_in_einvoice_json['Irn']"/></span>
-        </div>
-        <div name="company_address" position="after">
-            <div class="col-6 mt-3" t-if="l10n_in_einvoice_json">
-                <div class="text-center">
-                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
-                    ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/>
-                </div>
-            </div>
-        </div>
-    </template>
-
-    <template id="external_layout_boxed_inherit_l10n_in_edi" inherit_id="web.external_layout_boxed">
-        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" position="after">
-            <div class="mt-5" t-if="l10n_in_einvoice_json">
-                <span style="font-size: 10px;">IRN:<span t-esc="l10n_in_einvoice_json['Irn']"/></span>
-            </div>
-        </img>
-        <div class="col-6 text-right mb4" position="before">
-            <div class="col-3" t-if="l10n_in_einvoice_json">
-                <div class="text-center">
-                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
-                    ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/>
-                </div>
-            </div>
-        </div>
-        <div class="col-6 text-right mb4" position="attributes">
-            <attribute name="class">col-3 text-right mb4</attribute>
-        </div>
-    </template>
-
-    <template id="external_layout_bold_inherit_l10n_in_edi" inherit_id="web.external_layout_bold">
-        <img t-if="company.logo" position="after">
-            <strong style="font-size: 10px;" t-if="l10n_in_einvoice_json">IRN:<span t-esc="l10n_in_einvoice_json['Irn']"/></strong>
-        </img>
-        <xpath expr="//div[hasclass('row')]/div[hasclass('col-6')]" position="after">
-            <div class="col-2 text-right" t-if="l10n_in_einvoice_json">
-                <img class="mt-2" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
-                ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/>
-            </div>
-        </xpath>
-        <xpath expr="//div[hasclass('row')]/div[hasclass('col-6')]" position="attributes">
-            <attribute name="class">col-5</attribute>
-        </xpath>
-        <xpath expr="//div[@name='company_address']" position="attributes">
-            <attribute name="class">col-4</attribute>
-        </xpath>
-    </template>
-
-    <template id="external_layout_striped_inherit_l10n_in_edi" inherit_id="web.external_layout_striped">
-        <xpath expr="//div[hasclass('company_address')]" position="after">
-            <div class="text-right" t-if="l10n_in_einvoice_json">
-                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %
-                ('QR', l10n_in_einvoice_json['SignedQRCode'], 150, 150)"/><br/>
-                <span style="font-size: 10px;">IRN:<span t-esc="l10n_in_einvoice_json['Irn']"/></span>
-            </div>
-        </xpath>
-    </template>
-
     <template id="l10n_in_einvoice_report_invoice_document_inherit" inherit_id="account.report_invoice_document">
         <xpath expr="//div[@id='informations']" position="inside">
             <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
             <div class="col-auto col-3 mw-100 mb-2" t-if="l10n_in_einvoice_json" name="ack_no">
-                <strong>Ack. No:</strong>
+                <strong>Acknowledgement:</strong>
                 <p class="m-0" t-out="l10n_in_einvoice_json['AckNo']"/>
+                <p t-out="l10n_in_einvoice_json['AckDt']"/>
             </div>
-            <div class="col-auto col-3 mw-100 mb-2" t-if="l10n_in_einvoice_json" name="ack_date">
-                <strong>Ack. Date:</strong>
-                <p class="m-0" t-out="l10n_in_einvoice_json['AckDt']"/>
+        </xpath>
+        <xpath expr="//div[@id='total']/div[1]" position="attributes">
+            <attribute name="t-attf-style">#{('margin-left: 30px' if report_type != 'html' else '') if l10n_in_einvoice_json else ''}</attribute>
+            <attribute name="t-attf-class">{{('col-6' if report_type != 'html' else 'col-sm-6 col-md-5 ml-auto') if l10n_in_einvoice_json else ''}}
+                {{(('col-6' if report_type != 'html' else 'col-sm-7 col-md-6') + ' ml-auto') if not l10n_in_einvoice_json else ''}}</attribute>
+        </xpath>
+
+        <xpath expr="//div[@id='total']/div[1]" position="before">
+            <t t-set="l10n_in_einvoice_json" t-value="o._get_l10n_in_edi_response_json()"/>
+            <div t-attf-class="#{'col-6' if report_type != 'html' else 'col-sm-7 col-md-6 ml-auto'} row"  t-if="l10n_in_einvoice_json">
+                <div class="col-7">
+                    <strong>IRN:</strong>
+                    <span t-esc="l10n_in_einvoice_json['Irn']"/>
+                </div>
+                <div class="col-3 mt-1">
+                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' %('QR', l10n_in_einvoice_json['SignedQRCode'], 500, 500)" style="max-height: 155px"/>
+                </div>
             </div>
         </xpath>
     </template>
