@@ -2597,7 +2597,9 @@ class BaseModel(metaclass=MetaModel):
             for field in sorted(self._fields.values(), key=lambda f: f.column_order):
                 if not field.store:
                     continue
-                if field.manual and not update_custom_fields:
+                if field.manual and (field.type == 'one2many' or not update_custom_fields):
+                    # for manual one2many we always skip update_db since it only checks the
+                    # comodel which may not be loaded yet
                     continue            # don't update custom fields
                 new = field.update_db(self, columns)
                 if new and field.compute:
