@@ -151,8 +151,6 @@ export class Composer extends Component {
             () => [this.props.composer.forceCursorMove]
         );
         onMounted(() => {
-            this.selection.restore();
-            this.state.autofocus++;
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
         onExternalClick("composer", async (ev) => {
@@ -260,7 +258,6 @@ export class Composer extends Component {
 
     onClickAddAttachment(ev) {
         markEventHandled(ev, "composer.clickOnAddAttachment");
-        this.selection.restore();
         this.state.autofocus++;
     }
 

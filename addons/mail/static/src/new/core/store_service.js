@@ -15,8 +15,18 @@ export class Store {
     }
 
     // base data
-    /** @type {Object.<number, import("@mail/new/core/persona_model").Persona>} */
+
+    /**
+     * This is the current logged partner
+     *
+     * @type {import("@mail/new/core/persona_model").Persona}
+     */
     user = null;
+    /**
+     * This is the current logged guest
+     *
+     * @type {import("@mail/new/core/persona_model").Persona}
+     */
     guest = null;
 
     /** @type {Object.<number, import("@mail/new/core/channel_member_model").ChannelMember>} */
@@ -32,7 +42,12 @@ export class Store {
     /** @type {Object.<number, import("@mail/new/core/follower_model").Follower>} */
     followers = {};
 
-    partnerRoot = {};
+    /**
+     * This is Odoobot
+     *
+     * @type {import("@mail/new/core/persona_model").Persona}
+     */
+    partnerRoot = null;
     /** @type {Object.<number, import("@mail/new/core/persona_model").Persona>} */
     personas = {};
 

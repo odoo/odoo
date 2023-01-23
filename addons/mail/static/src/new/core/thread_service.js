@@ -136,6 +136,13 @@ export class ThreadService {
 
     /**
      * @param {Thread} thread
+     */
+    async markAsFetched(thread) {
+        await this.orm.silent.call("mail.channel", "channel_fetched", [[thread.id]]);
+    }
+
+    /**
+     * @param {Thread} thread
      * @param {{min: Number, max: Number}}
      */
     async fetchMessages(thread, { min, max }) {

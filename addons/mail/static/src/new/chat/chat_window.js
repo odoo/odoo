@@ -38,7 +38,9 @@ export class ChatWindow extends Component {
 
     setup() {
         this.store = useStore();
+        /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
+        /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         this.rtc = useRtc();
         this.messageEdition = useMessageEdition();

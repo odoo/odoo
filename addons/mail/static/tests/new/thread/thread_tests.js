@@ -241,3 +241,48 @@ QUnit.test('mention a channel with "&" in the name', async function (assert) {
         "#General & good"
     );
 });
+
+QUnit.test(
+    "mark channel as fetched when a new message is loaded and as seen when focusing composer [REQUIRE FOCUS]",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            email: "fred@example.com",
+            name: "Fred",
+        });
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "test",
+            uuid: "uuid-uuid",
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+        });
+        const { env } = await start({
+            mockRPC(route, args) {
+                if (args.method === "channel_fetched") {
+                    assert.strictEqual(args.args[0][0], channelId);
+                    assert.strictEqual(args.model, "mail.channel");
+                    assert.step("rpc:channel_fetch");
+                } else if (route === "/mail/channel/set_last_seen_message") {
+                    assert.strictEqual(args.channel_id, channelId);
+                    assert.step("rpc:set_last_seen_message");
+                }
+            },
+        });
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await afterNextRender(async () =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "new message",
+                uuid: "uuid-uuid",
+            })
+        );
+        assert.verifySteps(["rpc:channel_fetch"]);
+
+        document.querySelector(".o-mail-composer-textarea").focus();
+        assert.verifySteps(["rpc:set_last_seen_message"]);
+    }
+);

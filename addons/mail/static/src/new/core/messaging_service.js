@@ -324,12 +324,16 @@ export class Messaging {
                                     res_id: channel.id,
                                     model: channel.model,
                                 });
-                                if (
-                                    !this.presence.isOdooFocused() &&
-                                    channel.type === "chat" &&
-                                    channel.chatPartnerId !== this.store.partnerRoot.id
-                                ) {
-                                    this.notifyOutOfFocusMessage(message, channel);
+                                if (channel.chatPartnerId !== this.store.partnerRoot.id) {
+                                    if (!this.presence.isOdooFocused() && channel.type === "chat") {
+                                        this.notifyOutOfFocusMessage(message, channel);
+                                    }
+
+                                    if (channel.type !== "channel" && !this.store.guest) {
+                                        // disabled on non-channel threads and
+                                        // on `channel` channels for performance reasons
+                                        this.thread.markAsFetched(channel);
+                                    }
                                 }
                                 this.chatWindow.insert({ thread: channel });
                             }

@@ -231,7 +231,8 @@ QUnit.test("chat window: close on ESCAPE", async function (assert) {
         },
     });
     assert.containsOnce(target, ".o-mail-chat-window");
-    click(".o-mail-composer-textarea").catch(() => {});
+
+    target.querySelector(".o-mail-composer-textarea").focus();
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone(target, ".o-mail-chat-window");
     assert.verifySteps(["rpc:channel_fold/closed"]);
