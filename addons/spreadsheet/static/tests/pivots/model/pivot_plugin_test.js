@@ -346,6 +346,50 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
         assert.verifySteps(["partner/fields_get"]);
     });
 
+    QUnit.test("cache read_group request", async function (assert) {
+        const spreadsheetData = {
+            sheets: [
+                {
+                    id: "sheet1",
+                    cells: {
+                        A1: { content: `=ODOO.PIVOT(1, "probability")` },
+                        A2: { content: `=ODOO.PIVOT(2, "probability")` },
+                    },
+                },
+            ],
+            pivots: {
+                1: {
+                    id: 1,
+                    colGroupBys: [],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "max" }],
+                    model: "partner",
+                    rowGroupBys: [],
+                    context: {},
+                },
+                2: {
+                    id: 2,
+                    colGroupBys: [],
+                    domain: [],
+                    measures: [{ field: "probability", operator: "max" }],
+                    model: "partner",
+                    rowGroupBys: [],
+                    context: {},
+                },
+            },
+        };
+        const model = await createModelWithDataSource({
+            spreadsheetData,
+            mockRPC: function (route, { model, method, kwargs }) {
+                if (model === "partner" && method === "read_group") {
+                    assert.step(`${model}/${method}`);
+                }
+            },
+        });
+        await waitForDataSourcesLoaded(model);
+        assert.verifySteps(["partner/read_group"]);
+    });
+
     QUnit.test("don't fetch pivot data if no formula use it", async function (assert) {
         const spreadsheetData = {
             sheets: [

@@ -14,13 +14,14 @@ export class Request {
     /**
      * @param {string} resModel
      * @param {string} method
-     * @param {unknown[]} args
+     * @param {unknown[]} [args]
+     * @param {object} [kwargs]
      */
-    constructor(resModel, method, args) {
+    constructor(resModel, method, args = [], kwargs = {}) {
         this.resModel = resModel;
         this.method = method;
         this.args = args;
-        this.key = `${resModel}/${method}(${JSON.stringify(args)})`;
+        this.key = `${resModel}/${method}(${JSON.stringify(args)})(${JSON.stringify(kwargs)})`;
     }
 }
 
@@ -149,13 +150,14 @@ export class ServerData {
      * Returns the request result if cached or the associated promise
      * @param {string} resModel
      * @param {string} method
-     * @param  {unknown[]} [args]
+     * @param {unknown[]} [args]
+     * @param {object} [kwargs]
      * @returns {Promise<any>}
      */
-    async fetch(resModel, method, args) {
-        const request = new Request(resModel, method, args);
+    async fetch(resModel, method, args = [], kwargs = {}) {
+        const request = new Request(resModel, method, args, kwargs);
         if (!(request.key in this.asyncCache)) {
-            this.asyncCache[request.key] = this.orm.call(resModel, method, args);
+            this.asyncCache[request.key] = this.orm.call(resModel, method, args, kwargs);
         }
         return this.asyncCache[request.key];
     }
