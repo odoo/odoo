@@ -1239,23 +1239,23 @@
 
         <div class="row">
             <div class="col-xl">
-                <div class="wizard">
-                    <div class="progress-wizard">
-                        <a class="no-decoration" t-att-href="step&gt;=10 and '/shop/cart' or '#'">
+                <div class="wizard container">
+                    <div class="progress-wizard row g-0">
+                        <a class="no-decoration col" t-att-href="step&gt;=10 and '/shop/cart' or '#'">
                           <div id="wizard-step10" t-att-class="'progress-wizard-step %s' % (step == 10 and 'active' or step&gt;10 and 'complete' or 'disabled')">
                             <div class="progress-wizard-bar d-none d-md-block"/>
                             <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                             <div class="text-center progress-wizard-steplabel">Review Order</div>
                           </div>
                         </a>
-                        <a class="no-decoration" t-att-href="step&gt;=20 and '/shop/checkout' or '#'">
+                        <a class="no-decoration col" t-att-href="step&gt;=20 and '/shop/checkout' or '#'">
                           <div id="wizard-step20" t-att-class="'progress-wizard-step %s' % (step == 20 and 'active' or step&gt;20 and 'complete' or 'disabled')">
                             <div class="progress-wizard-bar d-none d-md-block"/>
                             <span class="progress-wizard-dot d-none d-md-inline-block"></span>
                             <div class="text-center progress-wizard-steplabel">Address</div>
                           </div>
                         </a>
-                        <a class="no-decoration" t-att-href="step&gt;=40 and '/shop/payment' or '#'">
+                        <a class="no-decoration col" t-att-href="step&gt;=40 and '/shop/payment' or '#'">
                           <div id="wizard-step40" t-att-class="'progress-wizard-step %s' % (step == 40 and 'active' or step&gt;40 and 'complete' or 'disabled')">
                             <div class="progress-wizard-bar d-none d-md-block"/>
                             <span class="progress-wizard-dot d-none d-md-inline-block"></span>
@@ -1338,12 +1338,8 @@
     </template>
 
     <template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False">
-        <!-- Add a "flag element" to trigger style variation -->
-        <xpath expr="//div[hasclass('wizard')]/div" position="before">
-            <span class="o_wizard_has_extra_step d-none"/>
-        </xpath>
-        <xpath expr="//div[@id='wizard-step20']" position="after">
-            <a class="no-decoration" t-att-href="step&gt;=30 and '/shop/extra_info' or '#'">
+        <xpath expr="//div[@id='wizard-step20']/parent::a" position="after">
+            <a class="no-decoration col" t-att-href="step&gt;=30 and '/shop/extra_info' or '#'">
                 <div id="wizard-step30" t-att-class="'progress-wizard-step %s' % (step == 30 and 'active' or step&gt;30 and 'complete' or 'disabled')">
                     <div class="progress-wizard-bar d-none d-md-block"/>
                     <span class="progress-wizard-dot d-none d-md-inline-block"></span>
