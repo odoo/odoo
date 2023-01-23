@@ -242,6 +242,7 @@ class configmanager(object):
                          help='specify the SSL private key used for authentication')
         parser.add_option_group(group)
 
+        # Database Group
         group = optparse.OptionGroup(parser, "Database related options")
         group.add_option("-d", "--database", dest="db_name", my_default=False,
                          help="specify the database name")
@@ -263,6 +264,7 @@ class configmanager(object):
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
+        # i18n Group
         group = optparse.OptionGroup(parser, "Internationalisation options",
             "Use these options to translate Odoo to another language. "
             "See i18n section of the user manual. Option '-d' is mandatory. "
@@ -282,6 +284,7 @@ class configmanager(object):
                          help="specify modules to export. Use in combination with --i18n-export")
         parser.add_option_group(group)
 
+        # Security Group
         security = optparse.OptionGroup(parser, 'Security-related options')
         security.add_option('--no-database-list', action="store_false", dest='list_db', my_default=True,
                             help="Disable the ability to obtain or view the list of databases. "
