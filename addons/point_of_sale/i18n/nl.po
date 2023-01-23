@@ -130,8 +130,8 @@ msgid ""
 "<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-label=\"Shopping "
 "cart\" title=\"Shopping cart\"/>"
 msgstr ""
-"<i class=\"fa fa-fw fa-star\" aria-label=\"Favorieten\" role=\"img\" "
-"title=\"Favorieten\"/>"
+"<i class=\"fa fa-fw fa-shopping-bag\" role=\"img\" aria-"
+"label=\"Winkelmandje\" title=\"Winkelmandje\"/>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -204,7 +204,7 @@ msgstr "<span class=\"o_form_label\">Standaarddagboeken</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Multi Employees per Session</span>"
-msgstr "<span class=\"o_form_label\">Meerdere medewerkers per sessie</span>"
+msgstr "<span class=\"o_form_label\">Meerdere werknemers per sessie</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -941,9 +941,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining partners in the background.\n"
 "In the meantime, you can use the 'Load Customers' button to load partners from database."
 msgstr ""
-"Standaard worden 100 partners geladen.\n"
-"Wanneer de sessie open is, blijven we alle resterende partners op de achtergrond laden.\n"
-"In de tussentijd kun je de knop 'Klanten laden' gebruiken om partners uit de database te laden."
+"Standaard worden 100 relaties geladen.\n"
+"Wanneer de sessie open is, blijven we alle resterende relaties op de achtergrond laden.\n"
+"In de tussentijd kun je de knop 'Klanten laden' gebruiken om relaties uit de database te laden."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_via_proxy
@@ -2104,8 +2104,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"Wilt je betalingsverschillen accepteren en een winst/verlies journaalpost "
-"boeken?"
+"Wilt je betalingsverschillen accepteren en een winst/verliesboeking maken?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2391,7 +2390,7 @@ msgstr "Volgers"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
@@ -4064,7 +4063,7 @@ msgstr "Hoofdcategorie"
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__partner_load_background
@@ -4437,7 +4436,7 @@ msgstr "Je dient de factuur via de backend af te drukken"
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please provide a partner for the sale."
-msgstr "Kies een partner voor deze verkoop."
+msgstr "Kies een relatie voor deze verkoop."
 
 #. module: point_of_sale
 #. odoo-javascript

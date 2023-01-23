@@ -3642,6 +3642,13 @@ msgid "Invalid domain right operand %s"
 msgstr "잘못된 도메인 오른쪽 피연산자 %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "재고 수량"
@@ -9238,7 +9245,7 @@ msgstr ""
 msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
-msgstr "선별을 하지 않으면 초기 수요를 변결할 수 있습니다. 선별이 완료되면 완료 수량을 변경할 수 있습니다."
+msgstr "선별이 종료되지 않은 경우에는 기초 수요를 변경할 수 있습니다. 선별이 완료되면 완료 수량을 변경할 수 있습니다."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -9416,14 +9423,14 @@ msgstr "선별이 완료되면 품목 이동을 삭제할 수 없습니다. 완�
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "You can not enter negative quantities."
-msgstr "음수를 입력할 수 없습니다."
+msgstr "수량은 음수값을 입력할 수 없습니다."
 
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "임시 이동만 삭제할 수 있습니다."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9848,7 +9855,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr "출발공간"
+msgstr "출발지"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -9933,4 +9940,11 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""
