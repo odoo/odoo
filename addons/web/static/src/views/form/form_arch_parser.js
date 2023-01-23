@@ -49,7 +49,18 @@ export class FormArchParser extends XMLParser {
         });
         // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
         for (const fieldNode of Object.values(fieldNodes)) {
-            activeFields[fieldNode.name] = fieldNode;
+            const fieldName = fieldNode.name;
+            if (activeFields[fieldName]) {
+                const { alwaysInvisible } = fieldNode;
+                activeFields[fieldName] = {
+                    ...fieldNode,
+                    // a field can only be considered to be always invisible
+                    // if all its nodes are always invisible
+                    alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                };
+            } else {
+                activeFields[fieldName] = fieldNode;
+            }
             // const { onChange, modifiers } = fieldNode;
             // let readonly = modifiers.readonly || [];
             // let required = modifiers.required || [];
