@@ -47,7 +47,7 @@ QUnit.test("simple chatter on a record", async (assert) => {
     ]);
 });
 
-QUnit.test("displayname is used when sending a message", async (assert) => {
+QUnit.skipRefactoring("displayname is used when sending a message", async (assert) => {
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);

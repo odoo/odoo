@@ -26,7 +26,7 @@ export class Thread {
     uuid;
     /** @type {string} */
     model;
-    /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
+    /** @type {import("@mail/new/attachments/attachment_model").Attachment[]} */
     attachments = [];
     /** @type {integer} */
     activeRtcSessionId;
@@ -51,6 +51,8 @@ export class Thread {
     isAdmin = false;
     isUnread = false;
     loadMore = true;
+    /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
+    mainAttachment;
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
@@ -110,6 +112,16 @@ export class Thread {
 
     get areAllMembersLoaded() {
         return this.memberCount === this.channelMembers.length;
+    }
+
+    get attachmentsInWebClientView() {
+        const attachments = this.attachments.filter(
+            (attachment) => (attachment.isPdf || attachment.isImage) && !attachment.uploading
+        );
+        attachments.sort((a1, a2) => {
+            return a2.id - a1.id;
+        });
+        return attachments;
     }
 
     get displayName() {

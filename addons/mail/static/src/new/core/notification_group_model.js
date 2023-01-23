@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 
-let nextId = 0;
+let nextId = 1;
 export class NotificationGroup {
     /** @type {import("@mail/new/core/notification_model").Notification[]} */
     notifications = [];

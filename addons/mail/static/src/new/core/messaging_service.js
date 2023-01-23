@@ -4,7 +4,7 @@ import { markup, reactive } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 import { cleanTerm, htmlToTextContentInline } from "@mail/new/utils/format";
-import { removeFromArray } from "@mail/new/utils/arrays";
+import { removeFromArray, removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { LinkPreview } from "./link_preview_model";
 import { CannedResponse } from "./canned_response_model";
 import { browser } from "@web/core/browser/browser";
@@ -678,10 +678,22 @@ export class Messaging {
         });
     }
 
+    /**
+     * @param {import("@mail/new/attachments/attachment_model").Attachment} attachment
+     */
     async unlinkAttachment(attachment) {
-        return this.rpc("/mail/attachment/delete", {
-            attachment_id: attachment.id,
-        });
+        // TODO also unlink from message when applicable
+        if (attachment.originThread) {
+            removeFromArrayWithPredicate(
+                attachment.originThread.attachments,
+                ({ id }) => id === attachment.id
+            );
+        }
+        if (attachment.id > 0) {
+            await this.rpc("/mail/attachment/delete", {
+                attachment_id: attachment.id,
+            });
+        }
     }
 
     insertCannedResponse(data) {

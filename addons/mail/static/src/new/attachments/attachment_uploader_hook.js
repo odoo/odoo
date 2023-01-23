@@ -13,16 +13,20 @@ function dataUrlToBlob(data, type) {
     return new Blob([uiArr], { type });
 }
 
+let nextId = -1;
+
 export function useAttachmentUploader(pThread, message, isPending = false) {
     const component = useComponent();
     const { bus, upload } = useService("file_upload");
     const notification = useService("notification");
+    /** @type {import("@mail/new/core/messaging_service").Messaging} */
     const messaging = useService("mail.messaging");
+    /** @type {import("@mail/new/core/store_service").Store} */
     const store = useService("mail.store");
     const threadService = useService("mail.thread");
     const attachmentService = useService("mail.attachment");
-    let abortByUploadId = {};
-    let deferredByUploadId = {};
+    const abortByAttachmentId = new Map();
+    const deferredByAttachmentId = new Map();
     const uploadingAttachmentIds = new Set();
     const state = useState({
         attachments: [],
@@ -32,13 +36,13 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
         },
         async uploadFile(file) {
             const thread = pThread ?? message.originThread;
-            const tmpId = store.nextId++;
+            const tmpId = nextId--;
             uploadingAttachmentIds.add(tmpId);
-            const { id } = await upload("/mail/attachment/upload", [file], {
+            await upload("/mail/attachment/upload", [file], {
                 buildFormData(formData) {
                     formData.append("thread_id", thread.id);
                     formData.append("thread_model", thread.model);
-                    formData.append("is_pending", Boolean(isPending));
+                    formData.append("is_pending", isPending);
                     formData.append("temporary_id", tmpId);
                 },
             }).catch((e) => {
@@ -47,13 +51,13 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
                 }
             });
             const uploadDoneDeferred = new Deferred();
-            deferredByUploadId[id] = uploadDoneDeferred;
+            deferredByAttachmentId.set(tmpId, uploadDoneDeferred);
             return uploadDoneDeferred;
         },
         async unlink(attachment) {
-            const abort = abortByUploadId[attachment.id];
-            delete abortByUploadId[attachment.id];
-            delete deferredByUploadId[attachment.id];
+            const abort = abortByAttachmentId.get(attachment.id);
+            abortByAttachmentId.delete(attachment.id);
+            deferredByAttachmentId.delete(attachment.id);
             if (abort) {
                 abort();
                 return;
@@ -68,8 +72,8 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
             this.reset();
         },
         reset() {
-            abortByUploadId = {};
-            deferredByUploadId = {};
+            abortByAttachmentId.clear();
+            deferredByAttachmentId.clear();
             uploadingAttachmentIds.clear();
             // prevent queuing of a render that will never be resolved.
             if (status(component) !== "destroyed") {
@@ -78,19 +82,20 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
         },
     });
     useBus(bus, "FILE_UPLOAD_ADDED", ({ detail: { upload } }) => {
-        if (!uploadingAttachmentIds.has(parseInt(upload.data.get("temporary_id"), 10))) {
+        const tmpId = parseInt(upload.data.get("temporary_id"));
+        if (!uploadingAttachmentIds.has(tmpId)) {
             return;
         }
-        const threadId = upload.data.get("thread_id");
+        const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
         const originThread = threadService.insert({ model: threadModel, id: threadId });
-        abortByUploadId[upload.id] = upload.xhr.abort.bind(upload.xhr);
+        abortByAttachmentId.set(tmpId, upload.xhr.abort.bind(upload.xhr));
         const attachment = attachmentService.insert({
             filename: upload.title,
-            id: upload.id,
+            id: tmpId,
             mimetype: upload.type,
             name: upload.title,
-            originThread,
+            originThread: isPending ? undefined : originThread,
             extension: upload.title.split(".").pop(),
             uploading: true,
         });
@@ -102,32 +107,40 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
             return;
         }
         uploadingAttachmentIds.delete(tmpId);
-        delete abortByUploadId[upload.id];
+        abortByAttachmentId.delete(tmpId);
         const response = JSON.parse(upload.xhr.response);
         if (response.error) {
             notification.add(response.error, { type: "danger" });
             return;
         }
-        const threadId = upload.data.get("thread_id");
+        const threadId = parseInt(upload.data.get("thread_id"));
         const threadModel = upload.data.get("thread_model");
         const originThread = store.threads[createLocalId(threadModel, threadId)];
         const attachment = attachmentService.insert({
             ...response,
             extension: upload.title.split(".").pop(),
-            originThread,
+            originThread: isPending ? undefined : originThread,
         });
-        const index = state.attachments.findIndex(({ id }) => id === upload.id);
+        const index = state.attachments.findIndex(({ id }) => id === tmpId);
         if (index >= 0) {
+            state.unlink(state.attachments[index]);
             state.attachments[index] = attachment;
         } else {
             state.attachments.push(attachment);
         }
-        deferredByUploadId[upload.id].resolve(attachment);
-        delete deferredByUploadId[upload.id];
+        const def = deferredByAttachmentId.get(tmpId);
+        if (def) {
+            def.resolve(attachment);
+            deferredByAttachmentId.delete(tmpId);
+        }
     });
     useBus(bus, "FILE_UPLOAD_ERROR", ({ detail: { upload } }) => {
-        delete abortByUploadId[upload.id];
-        delete deferredByUploadId[upload.id];
+        const tmpId = parseInt(upload.data.get("temporary_id"));
+        if (!uploadingAttachmentIds.has(tmpId)) {
+            return;
+        }
+        abortByAttachmentId.delete(tmpId);
+        deferredByAttachmentId.delete(tmpId);
         uploadingAttachmentIds.delete(parseInt(upload.data.get("temporary_id")));
     });
 

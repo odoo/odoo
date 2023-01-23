@@ -21,7 +21,6 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { isDragSourceExternalFile } from "@mail/new/utils/misc";
-import { removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { useAttachmentUploader } from "@mail/new/attachments/attachment_uploader_hook";
 import { useHover, useScrollPosition } from "@mail/new/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
@@ -45,19 +44,34 @@ export class Chatter extends Component {
     };
     static defaultProps = {
         compactHeight: false,
-        hasActivity: true,
-        resId: false,
+        hasActivities: true,
+        hasExternalBorder: true,
         hasFollowers: true,
+        hasMessageList: true,
+        hasMessageListScrollAdjust: false,
+        hasParentReloadOnAttachmentsChanged: false,
+        hasParentReloadOnFollowersUpdate: false,
+        hasParentReloadOnMessagePosted: false,
+        isAttachmentBoxVisibleInitially: false,
+        isInFormSheetBg: true,
+        threadId: false,
     };
     static props = [
         "close?",
         "compactHeight?",
-        "hasActivity?",
-        "hasFollowers?",
-        "resId?",
-        "resModel",
         "displayName?",
-        "isAttachmentBoxOpenedInitially?",
+        "hasActivities?",
+        "hasExternalBorder?",
+        "hasFollowers?",
+        "hasMessageList?",
+        "hasMessageListScrollAdjust?",
+        "hasParentReloadOnAttachmentsChanged?",
+        "hasParentReloadOnFollowersUpdate?",
+        "hasParentReloadOnMessagePosted?",
+        "isAttachmentBoxVisibleInitially?",
+        "isInFormSheetBg?",
+        "threadId?",
+        "threadModel",
         "webRecord?",
     ];
     static template = "mail.chatter";
@@ -71,9 +85,11 @@ export class Chatter extends Component {
         this.action = useService("action");
         this.messaging = useMessaging();
         this.activity = useState(useService("mail.activity"));
+        /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
         this.attachment = useService("mail.attachment");
         /** @type {import("@mail/new/web/chatter_service").ChatterService} */
         this.chatter = useState(useService("mail.chatter"));
+        /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         /** @type {import('@mail/new/core/persona_service').PersonaService} */
         this.personaService = useService("mail.persona");
@@ -82,12 +98,12 @@ export class Chatter extends Component {
         this.rpc = useService("rpc");
         this.state = useState({
             showActivities: true,
-            isAttachmentBoxOpened: this.props.isAttachmentBoxOpenedInitially,
+            isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isLoadingAttachments: false,
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
-            this.chatter.getThread(this.props.resModel, this.props.resId)
+            this.chatter.getThread(this.props.threadModel, this.props.threadId)
         );
         this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
         this.rootRef = useRef("root");
@@ -107,13 +123,13 @@ export class Chatter extends Component {
         onMounted(this.scrollPosition.restore);
         onPatched(this.scrollPosition.restore);
         onWillStart(() =>
-            this.load(this.props.resId, ["followers", "attachments", "suggestedRecipients"])
+            this.load(this.props.threadId, ["followers", "attachments", "suggestedRecipients"])
         );
         onWillUpdateProps((nextProps) => {
-            if (nextProps.resId !== this.props.resId) {
+            if (nextProps.threadId !== this.props.threadId) {
                 this.state.isLoadingAttachments = false;
-                this.load(nextProps.resId, ["followers", "attachments", "suggestedRecipients"]);
-                if (nextProps.resId === false) {
+                this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
+                if (nextProps.threadId === false) {
                     this.thread.composer.type = false;
                 }
             }
@@ -126,7 +142,8 @@ export class Chatter extends Component {
     get activities() {
         return Object.values(this.store.activities).filter((activity) => {
             return (
-                activity.res_model === this.props.resModel && activity.res_id === this.props.resId
+                activity.res_model === this.props.threadModel &&
+                activity.res_id === this.props.threadId
             );
         });
     }
@@ -143,34 +160,34 @@ export class Chatter extends Component {
      * @returns {boolean}
      */
     get isDisabled() {
-        return !this.props.resId || !this.thread.hasReadAccess;
+        return !this.props.threadId || !this.thread.hasReadAccess;
     }
 
     get attachments() {
-        return this.attachmentUploader.attachments.concat(this.thread?.attachments ?? []);
+        return this.thread?.attachments ?? [];
     }
 
     /**
-     * @param {number} resId
+     * @param {number} threadId
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
     load(
-        resId = this.props.resId,
+        threadId = this.props.threadId,
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
-        const { resModel } = this.props;
-        const thread = this.chatter.getThread(resModel, resId);
+        const { threadModel } = this.props;
+        const thread = this.chatter.getThread(threadModel, threadId);
         this.thread = thread;
         this.scrollPosition.model = this.thread.scrollPosition;
-        if (!resId) {
+        if (!threadId) {
             // todo: reset activities/attachments/followers
             return;
         }
         this.state.isLoadingAttachments = requestList.includes("attachments");
-        if (this.props.hasActivity && !requestList.includes("activities")) {
+        if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.chatter.fetchData(resId, resModel, requestList).then((result) => {
+        this.chatter.fetchData(threadId, threadModel, requestList).then((result) => {
             this.thread.hasReadAccess = result.hasReadAccess;
             this.thread.hasWriteAccess = result.hasWriteAccess;
             if ("activities" in result) {
@@ -192,6 +209,15 @@ export class Chatter extends Component {
                     attachments: result.attachments,
                 });
                 this.state.isLoadingAttachments = false;
+            }
+            if ("mainAttachment" in result) {
+                this.thread.mainAttachment = result.mainAttachment.id
+                    ? this.attachment.insert(result.mainAttachment)
+                    : undefined;
+            }
+            // TODO move this somewhere else to make sure it works in all flows (eg. attachment upload)
+            if (!this.thread.mainAttachment && this.thread.attachmentsInWebClientView.length > 0) {
+                this.threadService.setMainAttachmentFromIndex(this.thread, 0);
             }
             if ("followers" in result) {
                 for (const followerData of result.followers) {
@@ -217,8 +243,8 @@ export class Chatter extends Component {
             name: _t("Invite Follower"),
             target: "new",
             context: {
-                default_res_model: this.props.resModel,
-                default_res_id: this.props.resId,
+                default_res_model: this.props.threadModel,
+                default_res_id: this.props.threadId,
             },
         };
         this.env.services.action.doAction(action, {
@@ -244,7 +270,7 @@ export class Chatter extends Component {
     }
 
     async onClickFollow() {
-        await this.orm.call(this.props.resModel, "message_subscribe", [[this.props.resId]], {
+        await this.orm.call(this.props.threadModel, "message_subscribe", [[this.props.threadId]], {
             partner_ids: [this.store.self.id],
         });
         this.onFollowerChanged();
@@ -268,13 +294,22 @@ export class Chatter extends Component {
     onFollowerChanged() {
         // TODO condition to reload parent view (message_follower_ids / hasParentReloadOnFollowersUpdate)
         this.reloadParentView();
-        this.load(this.props.resId, ["followers", "suggestedRecipients"]);
+        this.load(this.props.threadId, ["followers", "suggestedRecipients"]);
+    }
+
+    onPostCallback() {
+        if (this.props.hasParentReloadOnMessagePosted) {
+            this.props.reloadParentView();
+        }
+        this.toggleComposer();
+        // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
+        this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
     }
 
     async reloadParentView() {
         if (this.props.webRecord) {
             await this.props.webRecord.model.root.load(
-                { resId: this.props.resId },
+                { resId: this.props.threadId },
                 { keepChanges: true }
             );
             this.props.webRecord.model.notify();
@@ -294,8 +329,8 @@ export class Chatter extends Component {
     }
 
     async scheduleActivity() {
-        await this.activity.schedule(this.props.resModel, this.props.resId);
-        this.load(this.props.resId, ["activities"]);
+        await this.activity.schedule(this.props.threadModel, this.props.threadId);
+        this.load(this.props.threadId, ["activities"]);
     }
 
     get unfollowText() {
@@ -304,7 +339,6 @@ export class Chatter extends Component {
 
     async unlinkAttachment(attachment) {
         await this.attachmentUploader.unlink(attachment);
-        removeFromArrayWithPredicate(this.thread.attachments, ({ id }) => attachment.id === id);
     }
 
     onUploaded(data) {

@@ -37,16 +37,15 @@ function compileChatter(node, params) {
                 break;
         }
     }
-    const chatterContainerXml = createElement("ChatterContainer");
+    const chatterContainerXml = createElement("Chatter");
     setAttributes(chatterContainerXml, {
-        chatter: params.chatter,
-        hasActivities: hasActivities,
-        hasFollowers: hasFollowers,
-        hasMessageList: hasMessageList,
-        hasParentReloadOnAttachmentsChanged: hasParentReloadOnAttachmentsChanged,
-        hasParentReloadOnFollowersUpdate: hasParentReloadOnFollowersUpdate,
-        hasParentReloadOnMessagePosted: hasParentReloadOnMessagePosted,
-        isAttachmentBoxVisibleInitially: isAttachmentBoxVisibleInitially,
+        hasActivities,
+        hasFollowers,
+        hasMessageList,
+        hasParentReloadOnAttachmentsChanged,
+        hasParentReloadOnFollowersUpdate,
+        hasParentReloadOnMessagePosted,
+        isAttachmentBoxVisibleInitially,
         threadId: params.threadId,
         threadModel: params.threadModel,
         webRecord: params.webRecord,
@@ -60,9 +59,7 @@ function compileChatter(node, params) {
 function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerHookXml = createElement("div");
     webClientViewAttachmentViewContainerHookXml.classList.add("o_attachment_preview");
-    const webClientViewAttachmentViewContainerXml = createElement(
-        "WebClientViewAttachmentViewContainer"
-    );
+    const webClientViewAttachmentViewContainerXml = createElement("AttachmentView");
     setAttributes(webClientViewAttachmentViewContainerXml, {
         threadId: params.threadId,
         threadModel: params.threadModel,
@@ -89,7 +86,7 @@ export class MailFormCompiler extends ViewCompiler {
                 "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
-            const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
+            const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
             setAttributes(chatterContainerXml, {
                 hasExternalBorder: "false",
                 hasMessageListScrollAdjust: "true",
@@ -121,7 +118,6 @@ export class MailFormCompiler extends ViewCompiler {
 
     compileChatter(node) {
         return compileChatter(node, {
-            chatter: "chatter",
             threadId: "__comp__.model.root.resId or undefined",
             threadModel: "__comp__.model.root.resModel",
             webRecord: "__comp__.model.root",
@@ -140,7 +136,6 @@ registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
     fn: (node) =>
         compileChatter(node, {
-            chatter: "__comp__.props.chatter",
             threadId: "__comp__.props.record.resId or undefined",
             threadModel: "__comp__.props.record.resModel",
             webRecord: "__comp__.props.record",
@@ -164,7 +159,7 @@ patch(FormCompiler.prototype, "mail", {
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        const chatterContainerXml = chatterContainerHookXml.querySelector("ChatterContainer");
+        const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
         setAttributes(chatterContainerXml, {
             hasExternalBorder: "true",
             hasMessageListScrollAdjust: "false",
@@ -173,6 +168,10 @@ patch(FormCompiler.prototype, "mail", {
         if (chatterContainerHookXml.parentNode.classList.contains("o_form_sheet")) {
             return res; // if chatter is inside sheet, keep it there
         }
+        // after sheet bg (standard position, below form)
+        setAttributes(chatterContainerHookXml, {
+            "t-if": `!__comp__.props.hasAttachmentViewer and __comp__.uiService.size < ${SIZES.XXL}`,
+        });
         const formSheetBgXml = res.querySelector(".o_form_sheet_bg");
         const parentXml = formSheetBgXml && formSheetBgXml.parentNode;
         if (!parentXml) {
@@ -186,17 +185,12 @@ patch(FormCompiler.prototype, "mail", {
                 "t-if": `__comp__.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
-                "ChatterContainer"
-            );
+            const sheetBgChatterContainerXml =
+                sheetBgChatterContainerHookXml.querySelector("Chatter");
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
             });
         }
-        // after sheet bg (standard position, below form)
-        setAttributes(chatterContainerHookXml, {
-            "t-if": `!__comp__.props.hasAttachmentViewer and __comp__.uiService.size < ${SIZES.XXL}`,
-        });
         append(parentXml, chatterContainerHookXml);
         return res;
     },

@@ -20,20 +20,6 @@
     font-family: emojifont;
 }
 
-@mixin o-viewer-black-btn {
-    background-color: rgba(black, 0.4);
-    color: rgba(map-get($theme-colors, 'light'), 0.7);
-
-    &:hover {
-        background-color: rgba(black, 0.6);
-        color: white;
-    }
-
-    &.disabled {
-        color: map-get($grays, '600');
-        background: none;
-    }
-}
 .o_modal_fullscreen {
     z-index: $o-mail-thread-window-zindex + 1;
 

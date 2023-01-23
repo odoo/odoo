@@ -14,8 +14,6 @@ export class Store {
         return this.guest ?? this.user;
     }
 
-    nextId = 1;
-
     // base data
     /** @type {Object.<number, import("@mail/new/core/persona_model").Persona>} */
     user = null;
@@ -88,6 +86,8 @@ export class Store {
     /** @type {Object.<number, import("@mail/new/activity/activity_model").Activity>} */
     activities = {};
     activityCounter = 0;
+    /** @type {Object.<number, import("@mail/new/attachments/attachment_model").Attachment>} */
+    attachments = {};
 
     /** @type {import("@mail/new/chat/chat_window_model").ChatWindow[]} */
     chatWindows = [];

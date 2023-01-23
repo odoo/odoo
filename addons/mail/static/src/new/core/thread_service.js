@@ -4,7 +4,7 @@ import { markup } from "@odoo/owl";
 import { ChannelMember } from "../core/channel_member_model";
 import { Thread } from "../core/thread_model";
 import { _t } from "@web/core/l10n/translation";
-import { removeFromArray } from "@mail/new/utils/arrays";
+import { removeFromArray, replaceArrayWithCompare } from "@mail/new/utils/arrays";
 import { assignDefined, createLocalId } from "../utils/misc";
 import { Composer } from "../composer/composer_model";
 import { prettifyMessageContent } from "../utils/format";
@@ -388,14 +388,21 @@ export class ThreadService {
         delete this.store.threads[thread.localId];
     }
 
+    /**
+     * @param {import("@mail/new/core/thread_model").Thread} thread
+     * @param {Object} data
+     */
     update(thread, data) {
         const { attachments, ...remainingData } = data;
         for (const key in remainingData) {
             thread[key] = data[key];
         }
         if (attachments) {
-            thread.attachments = attachments.map((attachment) =>
-                this.attachments.insert(attachment)
+            // smart process to avoid triggering reactives when there is no change between the 2 arrays
+            replaceArrayWithCompare(
+                thread.attachments,
+                attachments.map((attachment) => this.attachments.insert(attachment)),
+                (a1, a2) => a1.id === a2.id
             );
         }
         if (data.serverData) {
@@ -676,6 +683,17 @@ export class ThreadService {
                 return this.localMessageUnreadCounter(channel) > 0 ? acc + 1 : acc;
             }
         }, 0);
+    }
+
+    /**
+     * @param {import("@mail/new/core/thread_model").Thread} thread
+     * @param {number} index
+     */
+    async setMainAttachmentFromIndex(thread, index) {
+        thread.mainAttachment = thread.attachmentsInWebClientView[index];
+        await this.orm.call("ir.attachment", "register_as_main_attachment", [
+            thread.mainAttachment.id,
+        ]);
     }
 }
 

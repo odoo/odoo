@@ -701,7 +701,7 @@ QUnit.test(
         await start();
         await insertText(".o-mail-composer-textarea", "WOLOLO");
         await afterNextRender(() =>
-            triggerEvent(target.querySelector(".o-mail-composer-textarea"), "keydown", {
+            triggerEvent(target, ".o-mail-composer-textarea", "keydown", {
                 key: "Enter",
             })
         );

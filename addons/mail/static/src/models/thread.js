@@ -959,17 +959,6 @@ Model({
             });
         },
         /**
-         * @param {Attachment} attachment
-         */
-        async setMainAttachment(attachment) {
-            this.update({ mainAttachment: attachment });
-            await this.messaging.rpc({
-                model: "ir.attachment",
-                method: "register_as_main_attachment",
-                args: [[this.mainAttachment.id]],
-            });
-        },
-        /**
          * Unfollow current partner from this thread.
          */
         async unfollow() {
@@ -1558,13 +1547,12 @@ Model({
          */
         lastNeedactionMessageAsOriginThread: one("Message", {
             compute() {
-                const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
-                    (m1, m2) => (m1.id < m2.id ? -1 : 1)
-                );
-                const {
-                    length: l,
-                    [l - 1]: lastNeedactionMessageAsOriginThread,
-                } = orderedNeedactionMessagesAsOriginThread;
+                const orderedNeedactionMessagesAsOriginThread =
+                    this.needactionMessagesAsOriginThread.sort((m1, m2) =>
+                        m1.id < m2.id ? -1 : 1
+                    );
+                const { length: l, [l - 1]: lastNeedactionMessageAsOriginThread } =
+                    orderedNeedactionMessagesAsOriginThread;
                 if (lastNeedactionMessageAsOriginThread) {
                     return lastNeedactionMessageAsOriginThread;
                 }

@@ -6,6 +6,7 @@ import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
 import { parseEmail } from "@mail/js/utils";
 
+let nextId = 1;
 export class ChatterService {
     constructor(env, services) {
         this.env = env;
@@ -31,7 +32,7 @@ export class ChatterService {
             const [partner_id, emailInfo, lang, reason] = data;
             const [name, email] = emailInfo && parseEmail(emailInfo);
             recipients.push({
-                id: this.store.nextId++,
+                id: nextId++,
                 name,
                 email,
                 lang,
