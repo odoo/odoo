@@ -476,6 +476,11 @@ class Meeting(models.Model):
 
         return events.with_context(is_calendar_event_new=False)
 
+    def _compute_field_value(self, field):
+        if field.compute_sudo:
+            return super(Meeting, self.with_context(prefetch_fields=False))._compute_field_value(field)
+        return super()._compute_field_value(field)
+
     def _read(self, fields):
         if self.env.is_system():
             super()._read(fields)
