@@ -4,8 +4,8 @@
         <!-- Compras e IVA por Cobrar -->
         <record id="impuestos_plantilla_iva_por_cobrar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
-            <field name="name">IVA por Cobrar</field>
-            <field name="description">IVA por Cobrar</field>
+            <field name="name">Unpaid VAT</field>
+            <field name="description">Unpaid VAT</field>
             <field name="amount" eval="12"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -31,8 +31,8 @@
         <!-- Ventas e IVA por Pagar -->
         <record id="impuestos_plantilla_iva_por_pagar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
-            <field name="name">IVA por Pagar</field>
-            <field name="description">IVA por Pagar</field>
+            <field name="name">VAT Payable</field>
+            <field name="description">VAT Payable</field>
             <field name="amount" eval="12"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
