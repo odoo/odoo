@@ -117,7 +117,6 @@ import collections.abc
 import logging
 import reprlib
 import traceback
-import warnings
 from datetime import date, datetime, time
 
 from psycopg2.sql import Composable, SQL
@@ -203,7 +202,7 @@ def normalize_domain(domain):
             token = tuple(token)
         else:
             expected += op_arity.get(token, 0) - 1
-        result.append(token)
+        result.append(normalize_leaf(token))
     assert expected == 0, 'This domain is syntactically not correct: %s' % (domain)
     return result
 
@@ -346,15 +345,20 @@ def normalize_leaf(element):
     if not is_leaf(element):
         return element
     left, operator, right = element
-    original = operator
     operator = operator.lower()
     if operator == '<>':
         operator = '!='
-    if isinstance(right, bool) and operator in ('in', 'not in'):
-        _logger.warning("The domain term '%s' should use the '=' or '!=' operator." % ((left, original, right),))
-        operator = '=' if operator == 'in' else '!='
-    if isinstance(right, (list, tuple)) and operator in ('=', '!='):
-        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator." % ((left, original, right),))
+    if isinstance(right, bool):
+        if operator in ('child_of', 'parent_of'):
+            # given this nonsensical domain, it is generally cheaper to
+            # interpret False as [], so that "X child_of False" will match nothing
+            _logger.warning("Unexpected domain term %s, interpreted as False", element)
+            right = []
+        elif operator in ('in', 'not in'):
+            _logger.warning("The domain term '%s' should use the '=' or '!=' operator.", element)
+            operator = '=' if operator == 'in' else '!='
+    elif isinstance(right, (list, tuple)) and operator in ('=', '!='):
+        _logger.warning("The domain term '%s' should use the 'in' or 'not in' operator.", element)
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right
 
@@ -497,7 +501,7 @@ class expression(object):
         :var obj comodel: relational model of field (field.comodel)
             (res_partner.bank_ids -> res.partner.bank)
         """
-        def to_ids(value, comodel, leaf):
+        def to_ids(value, comodel):
             """ Normalize a single id or name, or a list of those, into a list of ids
 
             :param comodel:
@@ -517,12 +521,6 @@ class expression(object):
             elif value and isinstance(value, (tuple, list)) and all(isinstance(item, str) for item in value):
                 names = value
             elif isinstance(value, int):
-                if not value:
-                    # given this nonsensical domain, it is generally cheaper to
-                    # interpret False as [], so that "X child_of False" will
-                    # match nothing
-                    _logger.warning("Unexpected domain [%s], interpreted as False", leaf)
-                    return []
                 return [value]
             if names:
                 return list({
@@ -595,7 +593,6 @@ class expression(object):
 
         def push(leaf, model, alias, internal=False):
             """ Push a leaf to be processed right after. """
-            leaf = normalize_leaf(leaf)
             check_leaf(leaf, internal)
             stack.append((leaf, model, alias))
 
@@ -671,7 +668,7 @@ class expression(object):
                 push(leaf, parent_model, parent_alias)
 
             elif left == 'id' and operator in HIERARCHY_FUNCS:
-                ids2 = to_ids(right, model, leaf)
+                ids2 = to_ids(right, model)
                 dom = HIERARCHY_FUNCS[operator](left, ids2, model)
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
@@ -741,7 +738,7 @@ class expression(object):
 
             # Applying recursivity on field(one2many)
             elif field.type == 'one2many' and operator in HIERARCHY_FUNCS:
-                ids2 = to_ids(right, comodel, leaf)
+                ids2 = to_ids(right, comodel)
                 if field.comodel_name != model._name:
                     dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                 else:
@@ -814,7 +811,7 @@ class expression(object):
 
                 if operator in HIERARCHY_FUNCS:
                     # determine ids2 in comodel
-                    ids2 = to_ids(right, comodel, leaf)
+                    ids2 = to_ids(right, comodel)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
                     ids2 = comodel._search(domain, order='id')
 
@@ -875,7 +872,7 @@ class expression(object):
 
             elif field.type == 'many2one':
                 if operator in HIERARCHY_FUNCS:
-                    ids2 = to_ids(right, comodel, leaf)
+                    ids2 = to_ids(right, comodel)
                     if field.comodel_name != model._name:
                         dom = HIERARCHY_FUNCS[operator](left, ids2, comodel, prefix=field.comodel_name)
                     else:

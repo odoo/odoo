@@ -295,7 +295,8 @@ class TestExpression(SavepointCaseWithUserDemo):
         # res_9 = Partner.search([('name', 'in', one.name)]) # TODO
 
     def test_15_m2o(self):
-        Partner = self.env['res.partner']
+        # Force active_test=False to avoid any issue from the `res.parnter`` override of _search
+        Partner = self.env['res.partner'].with_context(active_test=False)
 
         # testing equality with name
         partners = self._search(Partner, [('parent_id', '=', 'Pepper Street')])
@@ -403,6 +404,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(res_7, without_parent)
         res_8 = self._search(Partner, [('parent_id', 'in', [])])
         self.assertFalse(res_8)
+        with self.assertLogs('odoo.osv.expression', level='WARNING'):
+            res_8b = self._search(Partner, [('parent_id', 'in', False)])  # => ('parent_id', '=', False)
+        self.assertEqual(res_8b, without_parent)
         res_9 = self._search(Partner, [('parent_id', 'in', [False])])
         self.assertEqual(res_9, without_parent)
         res_9b = self._search(Partner, [('parent_id', 'ilike', '')]) # get those with a parent
@@ -418,6 +422,9 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(res_2, res_12)
         res_13 = self._search(Partner, ['!', ('parent_id', 'in', [])])
         self.assertEqual(res_3, res_13)
+        with self.assertLogs('odoo.osv.expression', level='WARNING'):
+            res_13b = self._search(Partner, ['!', ('parent_id', 'in', False)])  # => ('parent_id', '!=', False)
+        self.assertEqual(res_2, res_13b)
         res_14 = self._search(Partner, ['!', ('parent_id', 'in', [False])])
         self.assertEqual(res_4, res_14)
 
