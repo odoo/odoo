@@ -2,14 +2,17 @@
 
 import { CalendarController } from "@web/views/calendar/calendar_controller";
 import { useService } from "@web/core/utils/hooks";
+import { onWillStart } from "@odoo/owl";
 
 export class AttendeeCalendarController extends CalendarController {
-    async setup() {
+    setup() {
         super.setup();
         this.actionService = useService("action");
         this.user = useService("user");
         this.orm = useService("orm");
-        this.isSystemUser = await this.user.hasGroup('base.group_system');
+        onWillStart(async () => {
+            this.isSystemUser = await this.user.hasGroup('base.group_system');
+        });
     }
 
     onClickAddButton() {
