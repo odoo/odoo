@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import io
+
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
+from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 
 class AccountMoveSend(models.Model):
@@ -280,6 +283,9 @@ class AccountMoveSend(models.Model):
                 'res_model': invoice._name,
                 'res_id': invoice.id,
             },
+            'pdf_attachment_options': {
+                'need_postprocess_pdf': False,
+            },
         }
 
     def _prepare_invoice_documents_failed(self, invoice, prepared_data, from_cron=False):
@@ -291,8 +297,28 @@ class AccountMoveSend(models.Model):
         else:
             raise UserError(prepared_data['error'])
 
+    def _postprocess_invoice_pdf(self, invoice, pdf_writer, prepared_data):
+        self.ensure_one()
+
     def _generate_invoice_documents(self, invoice, prepared_data):
         self.ensure_one()
+
+        if prepared_data['pdf_attachment_options'].get('need_postprocess_pdf'):
+            # Read pdf content.
+            reader_buffer = io.BytesIO(prepared_data['pdf_attachment_values']['raw'])
+            reader = OdooPdfFileReader(reader_buffer, strict=False)
+
+            # Post-process.
+            writer = OdooPdfFileWriter()
+            writer.cloneReaderDocumentRoot(reader)
+            self._postprocess_invoice_pdf(invoice, writer, prepared_data)
+
+            # Replace the current content.
+            writer_buffer = io.BytesIO()
+            writer.write(writer_buffer)
+            prepared_data['pdf_attachment_values']['raw'] = writer_buffer.getvalue()
+            reader_buffer.close()
+            writer_buffer.close()
 
         invoice.pdf_report_id = self.env['ir.attachment'].create(prepared_data['pdf_attachment_values'])
 

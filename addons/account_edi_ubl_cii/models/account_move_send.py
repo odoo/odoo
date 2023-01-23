@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import base64
-import io
 import logging
 
 from lxml import etree
@@ -8,7 +7,6 @@ from xml.sax.saxutils import escape, quoteattr
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.tools import cleanup_xml_node
-from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
 
 _logger = logging.getLogger(__name__)
 
@@ -53,37 +51,31 @@ class AccountMoveSend(models.Model):
             # TODO: field on company?
             wizard.ubl_cii_xml = True
 
-    def _get_invoice_ubl_cii_builder(self, invoice):
-        self.ensure_one()
-
-        # Prepare the xml.
-        if self.enable_ubl_cii_xml:
-            builder, options = invoice._get_ubl_cii_builder()
-        else:
-            builder, options = self.env['account.edi.xml.cii'], {'embed_to_pdf': True}
-            options['skip_errors'] = True
-        return builder, options
-
     def _prepare_invoice_documents(self, invoice):
         # EXTENDS 'account'
         ubl_cii_xml = self.enable_ubl_cii_xml and self.ubl_cii_xml
 
         if ubl_cii_xml:
-            builder, options = self._get_invoice_ubl_cii_builder(invoice)
-            xml_content, errors = builder._export_invoice(invoice)
-            filename = builder._export_invoice_filename(invoice)
+            builder, options = invoice._get_ubl_cii_builder()
+        else:
+            # Default XML acting as the default EDI for ODOO hidden from the users.
+            builder, options = self.env['account.edi.xml.cii'], {'embed_to_pdf': True}
+            options['skip_errors'] = True
 
-            # Failed.
-            if errors and not options.get('skip_errors'):
-                return {
-                    'error': "".join([
-                        _("Errors occur while creating the EDI document (format: %s):", builder._description),
-                        "\n",
-                        "<p><li>",
-                        "</li><li>".join(errors),
-                        "</li></p>",
-                    ]),
-                }
+        xml_content, errors = builder._export_invoice(invoice)
+        filename = builder._export_invoice_filename(invoice)
+
+        # Failed.
+        if errors and not options.get('skip_errors'):
+            return {
+                'error': "".join([
+                    _("Errors occur while creating the EDI document (format: %s):", builder._description),
+                    "\n",
+                    "<p><li>",
+                    "</li><li>".join(errors),
+                    "</li></p>",
+                ]),
+            }
 
         # The xml is generated and checked first before the super call to avoid a not necessary PDF creation by
         # wkhtmltopdf.
@@ -97,25 +89,28 @@ class AccountMoveSend(models.Model):
                 'res_model': invoice._name,
                 'res_id': invoice.id,
             }
+            results['ubl_cii_xml_options'] = {
+                'builder': builder,
+                'options': options,
+            }
+            results['pdf_attachment_options']['need_postprocess_pdf'] = True
 
         return results
 
-    def _postprocess_invoice_pdf(self, invoice, options, prepared_data):
+    def _postprocess_invoice_pdf(self, invoice, pdf_writer, prepared_data):
+        # EXTENDS 'account'
+        ubl_cii_xml = prepared_data.get('ubl_cii_xml_attachment_values')
+        if not ubl_cii_xml:
+            return super()._postprocess_invoice_pdf(invoice, pdf_writer, prepared_data)
+
         xml_attachment_values = prepared_data['ubl_cii_xml_attachment_values']
-
-        # Read pdf content.
-        reader_buffer = io.BytesIO(prepared_data['pdf_attachment_values']['raw'])
-        reader = OdooPdfFileReader(reader_buffer, strict=False)
-
-        # Post-process and embed the additional files.
-        writer = OdooPdfFileWriter()
-        writer.cloneReaderDocumentRoot(reader)
-        writer.addAttachment(xml_attachment_values['name'], xml_attachment_values['raw'], subtype='text/xml')
+        pdf_writer.addAttachment(xml_attachment_values['name'], xml_attachment_values['raw'], subtype='text/xml')
 
         # PDF-A.
-        if options.get('facturx_pdfa') and not writer.is_pdfa:
+        options = prepared_data['ubl_cii_xml_options']['options']
+        if options.get('facturx_pdfa') and not pdf_writer.is_pdfa:
             try:
-                writer.convert_to_pdfa()
+                pdf_writer.convert_to_pdfa()
             except Exception as e:
                 _logger.exception("Error while converting to PDF/A: %s", e)
 
@@ -127,16 +122,11 @@ class AccountMoveSend(models.Model):
                     'date': fields.Date.context_today(self),
                 },
             )
-            writer.add_file_metadata(content.encode())
+            pdf_writer.add_file_metadata(content.encode())
 
-        # Replace the current content.
-        writer_buffer = io.BytesIO()
-        writer.write(writer_buffer)
-        prepared_data['pdf_attachment_values']['raw'] = writer_buffer.getvalue()
-        reader_buffer.close()
-        writer_buffer.close()
+    def _postprocess_invoice_ubl_cii_xml(self, invoice, prepared_data):
+        options = prepared_data['ubl_cii_xml_options']['options']
 
-    def _postprocess_invoice_ubl_cii_xml(self, invoice, options, prepared_data):
         if not options.get('ubl_inject_pdf'):
             return
 
@@ -169,23 +159,18 @@ class AccountMoveSend(models.Model):
 
     def _generate_invoice_documents(self, invoice, prepared_data):
         # EXTENDS 'account'
-        ubl_cii_xml = prepared_data.get('ubl_cii_xml_attachment_values')
 
         # Clear the previous xml.
         if invoice.ubl_cii_xml_id:
             invoice.ubl_cii_xml_id.unlink()
 
-        if ubl_cii_xml:
-            builder, options = self._get_invoice_ubl_cii_builder(invoice)
-
-            # Create XML not embedded to the PDF.
-            self._postprocess_invoice_pdf(invoice, options, prepared_data)
-            self._postprocess_invoice_ubl_cii_xml(invoice, options, prepared_data)
+        self._postprocess_invoice_ubl_cii_xml(invoice, prepared_data)
 
         super()._generate_invoice_documents(invoice, prepared_data)
 
         # Create XML not embedded to the PDF.
-        if ubl_cii_xml and not options.get('embed_to_pdf'):
+        options = prepared_data['ubl_cii_xml_options']['options']
+        if not options.get('embed_to_pdf'):
             invoice.ubl_cii_xml_id = self.env['ir.attachment'].create(prepared_data['ubl_cii_xml_attachment_values'])
 
             self.mail_attachments_widget = (self.mail_attachments_widget or []) + [{
