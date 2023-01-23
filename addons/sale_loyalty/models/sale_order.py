@@ -309,6 +309,7 @@ class SaleOrder(models.Model):
                     'points_cost': 0,
                     'reward_identifier_code': _generate_random_reward_code(),
                     'sequence': sequence,
+                    'tax_id': [(Command.CLEAR, 0, 0)]
                 }]
             raise UserError(_('There is nothing to discount'))
         max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
@@ -341,6 +342,7 @@ class SaleOrder(models.Model):
                 'points_cost': point_cost,
                 'reward_identifier_code': reward_code,
                 'sequence': sequence,
+                'tax_id': [(Command.CLEAR, 0, 0)],
             }]
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         mapped_taxes = {tax: self.fiscal_position_id.map_tax(tax) for tax in discountable_per_tax}
