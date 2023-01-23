@@ -59,7 +59,6 @@ class DataRecycleRecord(models.Model):
         records_done = self.env['data_recycle.record']
         record_ids_to_archive = defaultdict(list)
         record_ids_to_unlink = defaultdict(list)
-        original_records = {rec.id: rec for rec in self._original_records()}
         original_records = {'%s_%s' % (r._name, r.id): r for r in self._original_records()}
         for record in self:
             original_record = original_records.get('%s_%s' % (record.res_model_name, record.res_id))
