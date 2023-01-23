@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class SaleOrderLine(models.Model):
@@ -40,7 +40,7 @@ class SaleOrderLine(models.Model):
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
-            for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
+            for _count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
                 values = {
                     'sale_order_line_id': so_line.id,
                     'sale_order_id': so_line.order_id.id
