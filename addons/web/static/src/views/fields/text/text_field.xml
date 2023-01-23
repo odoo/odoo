@@ -6,15 +6,17 @@
             <span t-esc="props.value or ''" />
         </t>
         <t t-else="">
-            <textarea
-                class="o_input"
-                t-att-class="{'o_field_translate': props.isTranslatable}"
-                t-att-id="props.id"
-                t-att-placeholder="props.placeholder"
-                t-att-rows="rowCount"
-                t-on-input="onInput"
-                t-ref="textarea"
-            />
+            <div t-ref="div">
+                <textarea
+                    class="o_input"
+                    t-att-class="{'o_field_translate': props.isTranslatable}"
+                    t-att-id="props.id"
+                    t-att-placeholder="props.placeholder"
+                    t-att-rows="rowCount"
+                    t-on-input="onInput"
+                    t-ref="textarea"
+                />
+            </div>
             <t t-if="props.isTranslatable">
                 <TranslationButton
                     fieldName="props.name"
