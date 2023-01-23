@@ -349,12 +349,12 @@ class AccountMoveLine(models.Model):
         related='company_id.tax_calculation_rounding_method',
         string='Tax calculation rounding method', readonly=True)
     # === Invoice sync fields === #
-    term_key = fields.Binary(compute='_compute_term_key')
-    tax_key = fields.Binary(compute='_compute_tax_key')
-    compute_all_tax = fields.Binary(compute='_compute_all_tax')
+    term_key = fields.Binary(compute='_compute_term_key', exportable=False)
+    tax_key = fields.Binary(compute='_compute_tax_key', exportable=False)
+    compute_all_tax = fields.Binary(compute='_compute_all_tax', exportable=False)
     compute_all_tax_dirty = fields.Boolean(compute='_compute_all_tax')
-    epd_key = fields.Binary(compute='_compute_epd_key')
-    epd_needed = fields.Binary(compute='_compute_epd_needed')
+    epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
+    epd_needed = fields.Binary(compute='_compute_epd_needed', exportable=False)
     epd_dirty = fields.Boolean(compute='_compute_epd_needed')
 
     # === Analytic fields === #
@@ -1257,6 +1257,13 @@ class AccountMoveLine(models.Model):
     # -------------------------------------------------------------------------
     # CRUD/ORM
     # -------------------------------------------------------------------------
+    def check_field_access_rights(self, operation, field_names):
+        result = super().check_field_access_rights(operation, field_names)
+        if not fields:
+            weirdos = ['term_key', 'tax_key', 'compute_all_tax', 'epd_key', 'epd_needed']
+            result = [fname for fname in result if fname not in weirdos]
+        return result
+
     def invalidate_model(self, fnames=None, flush=True):
         # Invalidate cache of related moves
         if fnames is None or 'move_id' in fnames:
