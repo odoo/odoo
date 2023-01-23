@@ -556,79 +556,39 @@
                             <group>
                                 <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_subtask_project,project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
                                     <div>
-                                        <div class="o_setting_box" id="subtask_settings" groups="project.group_subtask_project">
-                                            <div class="o_setting_left_pane">
-                                                <field name="allow_subtasks"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="allow_subtasks"/>
-                                                <div class="text-muted">
-                                                    Split your tasks to organize your work into sub-milestones
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="o_setting_box mt-4" id="recurring_tasks_setting" groups="project.group_project_recurring_tasks">
-                                            <div class="o_setting_left_pane">
-                                                <field name="allow_recurring_tasks"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="allow_recurring_tasks"/>
-                                                <div class="text-muted">
-                                                    Auto-generate tasks for regular activities
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="o_setting_box mt-4" id="task_dependencies_setting" groups="project.group_project_task_dependencies">
-                                            <div class="o_setting_left_pane">
-                                                <field name="allow_task_dependencies"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="allow_task_dependencies"/>
-                                                <div class="text-muted">
-                                                    Determine the order in which to perform tasks
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="o_setting_box mt-4" id="project_milestone_setting" groups="project.group_project_milestone">
-                                            <div class="o_setting_left_pane">
-                                                <field name="allow_milestones"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="allow_milestones"/>
-                                                <div class="text-muted">
-                                                    Track major progress points that must be reached to achieve success
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <setting id="subtask_settings" help="Split your tasks to organize your work into sub-milestones" groups="project.group_subtask_project">
+                                            <field name="allow_subtasks"/>
+                                        </setting>
+                                        <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities" groups="project.group_project_recurring_tasks">
+                                            <field name="allow_recurring_tasks"/>
+                                        </setting>
+                                        <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
+                                            <field name="allow_task_dependencies"/>
+                                        </setting>
+                                        <setting id="project_milestone_setting" help="Track major progress points that must be reached to achieve success" groups="project.group_project_milestone">
+                                            <field name="allow_milestones"/>
+                                        </setting>
                                     </div>
                                 </group>
                                 <group name="group_time_managment" string="Time Management" invisible="1" col="1" class="row mt16 o_settings_container"/>
                                 <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
                                     <div>
                                         <field name="allow_rating" invisible="1"/>
-                                        <div class="o_setting_box" name="analytic_div" groups="project.group_project_rating">
-                                            <div class="o_setting_left_pane">
-                                                <field name="rating_active"/>
-                                            </div>
-                                            <div class="o_setting_right_pane">
-                                                <label for="rating_active" />
-                                                <div class="text-muted">
-                                                    Get customer feedback
+                                        <setting name="analytic_div" help="Get customer feedback" groups="project.group_project_rating">
+                                            <field name="rating_active"/>
+                                            <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
+                                                <field name="rating_status" widget="radio" />
+                                                <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
+                                                    <label for="rating_status_period"/>
+                                                    <field name="rating_status_period"/>
                                                 </div>
-                                                <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
-                                                    <field name="rating_status" widget="radio" />
-                                                    <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
-                                                        <label for="rating_status_period"/>
-                                                        <field name="rating_status_period"/>
-                                                    </div>
-                                                    <div class="content-group">
-                                                        <div class="mt8">
-                                                            <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
-                                                        </div>
+                                                <div class="content-group">
+                                                    <div class="mt8">
+                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </setting>
                                     </div>
                                 </group>
                             </group>

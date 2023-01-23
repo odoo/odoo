@@ -56,17 +56,9 @@
             <xpath expr="//group[@name='group_time_managment']" position="after">
                  <group name="group_sales_invoicing" string="Sales &amp; Invoicing" col="1" class="row mt16 o_settings_container col-lg-6">
                     <div>
-                        <div class="o_setting_box" id="allow_billable_container">
-                            <div class="o_setting_left_pane">
-                                <field name="allow_billable"/>
-                            </div>
-                            <div class="o_setting_right_pane">
-                                <label for="allow_billable"/>
-                                <div class="text-muted" id="allow_billable_setting">
-                                    Invoice your time and material to customers
-                                </div>
-                            </div>
-                        </div>
+                        <setting help="Invoice your time and material to customers" id="allow_billable_container">
+                            <field name="allow_billable"/>
+                        </setting>
                     </div>
                 </group>
             </xpath>
