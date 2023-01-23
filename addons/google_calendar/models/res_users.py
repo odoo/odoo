@@ -8,6 +8,7 @@ from odoo import api, fields, models, Command
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService, InvalidSyncToken
 from odoo.addons.google_calendar.models.google_sync import google_calendar_token
 from odoo.loglevels import exception_to_unicode
+from odoo.tools.misc import str2bool
 
 _logger = logging.getLogger(__name__)
 
@@ -69,6 +70,10 @@ class User(models.Model):
         synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
+        ICP = self.env['ir.config_parameter'].sudo()
+        import_only = str2bool(ICP.get_param('google_calendar.sync.import_only', default="False"))
+        if import_only:
+            return bool(events | synced_events) or bool(recurrences | synced_recurrences)
         # Odoo -> Google
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
