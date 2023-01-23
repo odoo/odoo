@@ -803,11 +803,10 @@ class TestLeaveRequests(TestHrHolidaysCommon):
 
             allocation_2021.active = False
 
-            # If the allocation is archived, the leaves taken are still counted on this allocation
-            # but the max leaves and remaining leaves are not counted anymore
+            # If the allocation is archived, the leaves taken are not counted on any allocation
             self._check_holidays_count(
                 self.holidays_type_2.get_employees_days([self.employee_emp_id], date=date(2021, 12, 1))[self.employee_emp_id][self.holidays_type_2.id],
-                ml=0, lt=5, rl=0, vrl=0, vlt=5,
+                ml=0, lt=0, rl=0, vrl=0, vlt=0,
             )
 
             # The holidays count in 2022 is not affected by the archived allocation in 2021

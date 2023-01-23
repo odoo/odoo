@@ -221,7 +221,7 @@ class HolidaysType(models.Model):
             ('holiday_status_id', 'in', self.ids)
         ])
 
-        allocations = self.env['hr.leave.allocation'].with_context(active_test=False).search([
+        allocations = self.env['hr.leave.allocation'].search([
             ('employee_id', 'in', employee_ids),
             ('state', 'in', ['validate']),
             ('holiday_status_id', 'in', self.ids),
@@ -348,8 +348,6 @@ class HolidaysType(models.Model):
                     if future_allocation_interval[0].date() > search_date:
                         continue
                     for allocation in future_allocation_interval[2]:
-                        if not allocation.active:
-                            continue
                         days_consumed = allocations_days_consumed[employee_id][holiday_status_id][allocation]
                         if future_allocation_interval[1] != fields.datetime.combine(date, time.max) + timedelta(days=5*365):
                             # Compute the remaining number of days/hours in the allocation only if it has an end date
