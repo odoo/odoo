@@ -25,11 +25,17 @@ export class Widget extends Component {
     }
 
     get classNames() {
-        return {
+        const classNames = {
             o_widget: true,
             [`o_widget_${this.props.name}`]: true,
             [this.props.className]: Boolean(this.props.className),
         };
+        if (this.Widget.additionalClasses) {
+            for (const cls of this.Widget.additionalClasses) {
+                classNames[cls] = true;
+            }
+        }
+        return classNames;
     }
     get widgetProps() {
         const { node: rawNode } = this.props;

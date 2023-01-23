@@ -5,9 +5,8 @@ import { HighlightText } from "../highlight_text/highlight_text";
 import { session } from "@web/session";
 import { FormLabelHighlightText } from "../highlight_text/form_label_highlight_text";
 import { Component, useState } from "@odoo/owl";
+import { DocumentationLink } from "@web/views/widgets/documentation_link/documentation_link";
 
-
-const LINK_REGEX = new RegExp("^https?://");
 export class Setting extends Component {
     setup() {
         this.state = useState({
@@ -57,16 +56,6 @@ export class Setting extends Component {
         return label || "";
     }
 
-    get url() {
-        if (LINK_REGEX.test(this.props.documentation)) {
-            return this.props.documentation;
-        } else {
-            const serverVersion = session.server_version.includes("alpha")
-                ? "master"
-                : session.server_version;
-            return "https://www.odoo.com/documentation/" + serverVersion + this.props.documentation;
-        }
-    }
     visible() {
         if (!this.state.search.value) {
             return true;
@@ -84,6 +73,7 @@ export class Setting extends Component {
 Setting.components = {
     FormLabelHighlightText,
     HighlightText,
+    DocumentationLink,
 };
 Setting.template = "web.Setting";
 Setting.props = {
