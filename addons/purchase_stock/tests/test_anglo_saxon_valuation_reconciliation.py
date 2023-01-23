@@ -321,3 +321,20 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
             {'debit': 0.0,     'credit': 50.0,      'amount_currency': -100.0,   'account_id': cash_basis_transfer_account.id},
             {'debit': 50.0,      'credit': 0.0,     'amount_currency': 100.0,  'account_id': tax_account_1.id},
         ])
+        
+    def test_anglo_saxon_journal_items(self):
+        
+        self.env.company.anglo_saxon_accounting = True
+        self.test_product_order.categ_id.property_cost_method = 'average'
+        self.test_product_order.categ_id.property_valuation = 'real_time'
+        self.test_product_order.standard_price = 1.01
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2023-01-31',
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [
+                (0, 0, {'product_id': self.test_product_order.id, 'quantity': 10.50, 'price_unit': 1.01})
+            ]
+        })
+        invoice.action_post()
