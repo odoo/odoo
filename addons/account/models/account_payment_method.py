@@ -109,8 +109,7 @@ class AccountPaymentMethodLine(models.Model):
         ondelete='restrict',
         domain="[('deprecated', '=', False), "
                 "('company_id', '=', company_id), "
-                "('account_type', 'not in', ('asset_receivable', 'liability_payable')), "
-                "'|', ('account_type', '=', 'asset_current'), ('id', '=', parent.default_account_id)]"
+                "'|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', parent.default_account_id)]"
     )
     journal_id = fields.Many2one(comodel_name='account.journal', ondelete="cascade")
 
