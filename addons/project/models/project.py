@@ -703,10 +703,10 @@ class Project(models.Model):
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
         new_order, item_index, desc = [], -1, False
         for index, order_item in enumerate((order or self._order).split(',')):
-            order_item = order_item.strip().lower()
-            if order_item.startswith('is_favorite'):
+            order_item_list = order_item.strip().lower().split(' ')
+            if order_item_list[0] == 'is_favorite':
                 item_index = index
-                desc = order_item.endswith('desc')
+                desc = order_item_list[-1] == 'desc'
             else:
                 new_order.append(order_item)
         query = super()._search(args, offset, limit, ', '.join(new_order), count, access_rights_uid)
