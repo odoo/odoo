@@ -983,13 +983,18 @@ class SaleOrderLine(models.Model):
         protected_fields = self._get_protected_fields()
         if 'done' in self.mapped('state') and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
-            fields = self.env['ir.model.fields'].search([
+
+            if 'name' in protected_fields_modified and all(self.mapped('is_downpayment')):
+                protected_fields_modified.remove('name')
+
+            fields = self.env['ir.model.fields'].sudo().search([
                 ('name', 'in', protected_fields_modified), ('model', '=', self._name)
             ])
-            raise UserError(
-                _('It is forbidden to modify the following fields in a locked order:\n%s')
-                % '\n'.join(fields.mapped('field_description'))
-            )
+            if fields:
+                raise UserError(
+                    _('It is forbidden to modify the following fields in a locked order:\n%s')
+                    % '\n'.join(fields.mapped('field_description'))
+                )
 
         result = super().write(values)
 

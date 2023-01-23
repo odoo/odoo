@@ -297,6 +297,20 @@ class SaleOrder(models.Model):
         # Discountable should never surpass the order's current total amount
         discountable = min(self.amount_total, discountable)
         if not discountable:
+            if not reward.program_id.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
+                return [{
+                    'name': _("TEMPORARY DISCOUNT LINE"),
+                    'product_id': reward.discount_line_product_id.id,
+                    'price_unit': 0,
+                    'product_uom_qty': 0,
+                    'product_uom': reward.discount_line_product_id.uom_id.id,
+                    'reward_id': reward.id,
+                    'coupon_id': coupon.id,
+                    'points_cost': 0,
+                    'reward_identifier_code': _generate_random_reward_code(),
+                    'sequence': sequence,
+                    'tax_id': [(Command.CLEAR, 0, 0)]
+                }]
             raise UserError(_('There is nothing to discount'))
         max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
         if reward.discount_mode == 'per_point':
@@ -328,6 +342,7 @@ class SaleOrder(models.Model):
                 'points_cost': point_cost,
                 'reward_identifier_code': reward_code,
                 'sequence': sequence,
+                'tax_id': [(Command.CLEAR, 0, 0)],
             }]
         discount_factor = min(1, (max_discount / discountable)) if discountable else 1
         mapped_taxes = {tax: self.fiscal_position_id.map_tax(tax) for tax in discountable_per_tax}
@@ -570,6 +585,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         all_coupons = forced_coupons or (self.coupon_point_ids.coupon_id | self.order_line.coupon_id | self.applied_coupon_ids)
+        has_payment_reward = any(line.reward_id.program_id.is_payment_program for line in self.order_line)
         total_is_zero = float_is_zero(self.amount_total, precision_digits=2)
         result = defaultdict(lambda: self.env['loyalty.reward'])
         global_discount_reward = self._get_applied_global_discount()
@@ -578,7 +594,9 @@ class SaleOrder(models.Model):
             for reward in coupon.program_id.reward_ids:
                 if reward.is_global_discount and global_discount_reward and global_discount_reward.discount >= reward.discount:
                     continue
-                if reward.reward_type == 'discount' and total_is_zero:
+                # Discounts are not allowed if the total is zero unless there is a payment reward, in which case we allow discounts.
+                # If the total is 0 again without the payment reward it will be removed.
+                if reward.reward_type == 'discount' and total_is_zero and (not has_payment_reward or reward.program_id.is_payment_program):
                     continue
                 if points >= reward.required_points:
                     result[coupon] |= reward
@@ -721,9 +739,9 @@ class SaleOrder(models.Model):
                 continue
             seen_rewards.add(line.reward_identifier_code)
             if line.reward_id.program_id.is_payment_program:
-                line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
-            else:
                 payment_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
+            else:
+                line_rewards.append((line.reward_id, line.coupon_id, line.reward_identifier_code, line.product_id))
 
         for reward_key in itertools.chain(line_rewards, payment_rewards):
             coupon = reward_key[1]

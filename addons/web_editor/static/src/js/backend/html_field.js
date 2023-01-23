@@ -363,7 +363,9 @@ export class HtmlField extends Component {
                 }
                 this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
-            await this.updateValue();
+            if (owl.status(this) !== 'destroyed') {
+                await this.updateValue();
+            }
         }
     }
     _isDirty() {
