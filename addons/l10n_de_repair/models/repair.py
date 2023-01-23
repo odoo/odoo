@@ -22,6 +22,6 @@ class RepairOrder(models.Model):
     def _compute_l10n_de_document_title(self):
         for record in self:
             if record.state == 'draft':
-                record.l10n_de_document_title = _("Repair Order")
-            else:
                 record.l10n_de_document_title = _("Repair Quotation")
+            else:
+                record.l10n_de_document_title = _("Repair Order")
