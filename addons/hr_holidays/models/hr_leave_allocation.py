@@ -428,6 +428,7 @@ class HolidaysAllocation(models.Model):
             days_added_per_level = defaultdict(lambda: 0)
             while allocation.nextcall <= today:
                 (current_level, current_level_idx) = allocation._get_current_accrual_plan_level_id(allocation.nextcall)
+                current_level_maximum_leave = current_level.maximum_leave if current_level.added_value_type == "days" else current_level.maximum_leave / (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
                 nextcall = current_level._get_next_date(allocation.nextcall)
                 # Since _get_previous_date returns the given date if it corresponds to a call date
                 # this will always return lastcall except possibly on the first call
@@ -442,14 +443,14 @@ class HolidaysAllocation(models.Model):
                         nextcall = min(nextcall, current_level_last_date)
                 days_added_per_level[current_level] += allocation._process_accrual_plan_level(
                     current_level, period_start, allocation.lastcall, period_end, allocation.nextcall)
-                if current_level.maximum_leave > 0 and sum(days_added_per_level.values()) > current_level.maximum_leave:
-                    days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level.maximum_leave
+                if current_level_maximum_leave > 0 and sum(days_added_per_level.values()) > current_level_maximum_leave:
+                    days_added_per_level[current_level] -= sum(days_added_per_level.values()) - current_level_maximum_leave
                 allocation.lastcall = allocation.nextcall
                 allocation.nextcall = nextcall
             if days_added_per_level:
                 number_of_days_to_add = allocation.number_of_days + sum(days_added_per_level.values())
                 # Let's assume the limit of the last level is the correct one
-                allocation.number_of_days = min(number_of_days_to_add, current_level.maximum_leave + allocation.leaves_taken) if current_level.maximum_leave > 0 else number_of_days_to_add
+                allocation.number_of_days = min(number_of_days_to_add, current_level_maximum_leave + allocation.leaves_taken) if current_level_maximum_leave > 0 else number_of_days_to_add
 
     @api.model
     def _update_accrual(self):
