@@ -895,6 +895,13 @@ class TestExpression(SavepointCaseWithUserDemo):
         domain = ['|', ('id', '=', id2), ('id', '=', id1)]
         self.assertEqual(countries.filtered_domain(domain)._ids, expected._ids)
 
+    def test_falsy_domain_no_query(self):
+        """ Test that falsy domain doesn't generate queries to avoid useless round trip. """
+        with self.assertQueryCount(0):
+            self.env['res.partner.category'].search([('id', 'in', [])])
+            self.env['res.partner.category'].search([('id', 'parent_of', [])])
+            self.env['res.partner.category'].search([('id', 'child_of', [])])
+
 
 class TestExpression2(TransactionCase):
 

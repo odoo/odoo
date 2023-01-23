@@ -222,7 +222,7 @@ def is_false(model, domain):
             stack.append(+1)
         elif token == FALSE_LEAF:
             stack.append(-1)
-        elif token[1] == 'in' and not (isinstance(token[2], Query) or token[2]):
+        elif token[1] in ('in', 'child_of', 'parent_of') and not (isinstance(token[2], Query) or token[2]):
             stack.append(-1)
         elif token[1] == 'not in' and not (isinstance(token[2], Query) or token[2]):
             stack.append(+1)
