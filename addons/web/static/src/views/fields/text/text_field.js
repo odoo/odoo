@@ -1,21 +1,22 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useSpellCheck } from "@web/core/utils/hooks";
+import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
 import { useInputField } from "../input_field_hook";
+import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
-import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
-import { parseInteger } from "../parsers";
 
-import { Component, useEffect, onMounted, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
     setup() {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
+        this.divRef = useRef("div");
         this.textareaRef = useRef("textarea");
         useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
         useSpellCheck({ refName: "textarea" });
@@ -96,6 +97,7 @@ export class TextField extends Component {
         textarea.style.height = "auto";
         const height = Math.max(this.minimumHeight, textarea.scrollHeight + heightOffset);
         Object.assign(textarea.style, previousStyle, { height: `${height}px` });
+        this.divRef.el.style.height = `${height}px`;
     }
 
     onInput() {
