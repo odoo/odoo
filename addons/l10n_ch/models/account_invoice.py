@@ -292,6 +292,64 @@ class AccountMove(models.Model):
         """
         return float_split_str(self.amount_residual, 2)
 
+<<<<<<< HEAD
+||||||| parent of b7ef2417ae7 (temp)
+    def isr_print(self):
+        """ Triggered by the 'Print ISR' button.
+        """
+        self.ensure_one()
+        if self.l10n_ch_isr_valid:
+            self.l10n_ch_isr_sent = True
+            return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
+        else:
+            raise ValidationError(_("""You cannot generate an ISR yet.\n
+                                   For this, you need to :\n
+                                   - set a valid postal account number (or an IBAN referencing one) for your company\n
+                                   - define its bank\n
+                                   - associate this bank with a postal reference for the currency used in this invoice\n
+                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def print_ch_qr_bill(self):
+        """ Triggered by the 'Print QR-bill' button.
+        """
+        self.ensure_one()
+
+        if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
+            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
+
+        self.l10n_ch_isr_sent = True
+        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
+
+=======
+    def isr_print(self):
+        """ Triggered by the 'Print ISR' button.
+        This button isn't available anymore and will be removed in 16.2.
+        This function is kept for stable policy.
+        """
+        self.ensure_one()
+        if self.l10n_ch_isr_valid:
+            self.l10n_ch_isr_sent = True
+            return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
+        else:
+            raise ValidationError(_("""You cannot generate an ISR yet.\n
+                                   For this, you need to :\n
+                                   - set a valid postal account number (or an IBAN referencing one) for your company\n
+                                   - define its bank\n
+                                   - associate this bank with a postal reference for the currency used in this invoice\n
+                                   - fill the 'bank account' field of the invoice with the postal to be used to receive the related payment. A default account will be automatically set for all invoices created after you defined a postal account for your company."""))
+
+    def print_ch_qr_bill(self):
+        """ Triggered by the 'Print QR-bill' button.
+        """
+        self.ensure_one()
+
+        if not self.partner_bank_id._eligible_for_qr_code('ch_qr', self.partner_id, self.currency_id):
+            raise UserError(_("Cannot generate the QR-bill. Please check you have configured the address of your company and debtor. If you are using a QR-IBAN, also check the invoice's payment reference is a QR reference."))
+
+        self.l10n_ch_isr_sent = True
+        return self.env.ref('l10n_ch.l10n_ch_qr_report').report_action(self)
+
+>>>>>>> b7ef2417ae7 (temp)
     def action_invoice_sent(self):
         # OVERRIDE
         rslt = super(AccountMove, self).action_invoice_sent()
