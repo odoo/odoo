@@ -176,10 +176,12 @@
                         <t t-else="">
 <!--                            <div> <span>**** Promo Discount ****</span> </div>-->
                             <t t-set="total_vat" t-value="total_vat + line.tax"/>
-                            <t t-if="line.is_program_reward">
-                                <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus + Math.abs(line.price_with_tax)"/>
+                            <t t-if="line.is_program_reward and receipt.pos_refunded_id">
+                                1
+                                <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus - line.price_with_tax"/>
                             </t>
                             <t t-else="">
+                                2
                                 <t t-set="total_discount_global_minus" t-value="total_discount_global_minus + Math.abs(line.price_with_tax)"/>
                             </t>
 
@@ -211,15 +213,15 @@
                 <t t-set="total_amt2" t-value="total_product_e + total_product_v + m_t_d"/>
 
                 <div class="open_discount" style="margin-top: 8%;font-size: 75%;">
-                    <t t-if="open_amt_total > 0">
-                        <t t-set="total_discount_percentage2" t-value="(open_amt_total/total_amt2)*100"/>
-                        <div>
-                            <span class="pos-receipt-left-align"><b>Discount</b> (<t t-esc="Math.round(total_discount_percentage2)"/>%)</span>
-                            <span class="pos-receipt-right-align">
-                                <t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/>
-                            </span>
-                        </div>
-                    </t>
+<!--                    <t t-if="open_amt_total > 0">-->
+<!--                        <t t-set="total_discount_percentage2" t-value="(open_amt_total/total_amt2)*100"/>-->
+<!--                        <div>-->
+<!--                            <span class="pos-receipt-left-align"><b>Discount</b> (<t t-esc="Math.round(total_discount_percentage2)"/>%)</span>-->
+<!--                            <span class="pos-receipt-right-align">-->
+<!--                                <t t-esc="env.pos.format_currency_no_symbol(open_amt_total)"/>-->
+<!--                            </span>-->
+<!--                        </div>-->
+<!--                    </t>-->
                     <t t-if="total_discount_percentage > 0">
                         <div>
                             <span class="pos-receipt-left-align"><b>Total Discount</b></span>
