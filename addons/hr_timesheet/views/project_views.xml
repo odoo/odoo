@@ -63,17 +63,9 @@
             <field name="priority">24</field>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('o_settings_container')]" position="inside">
-                    <div class="col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="allow_timesheets"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="allow_timesheets" string="Timesheets"/>
-                            <div class="text-muted">
-                                Log time on tasks
-                            </div>
-                        </div>
-                    </div>
+                    <setting string="Timesheets" help="Log time on tasks">
+                        <field name="allow_timesheets"/>
+                    </setting>
                 </xpath>
             </field>
         </record>
@@ -91,17 +83,9 @@
                     <attribute name="invisible">0</attribute>
                 </xpath>
                 <xpath expr="//group[@name='group_time_managment']" position="inside">
-                    <div class="o_setting_box" id="timesheet_settings" colspan="2">
-                        <div class="o_setting_left_pane">
-                            <field name="allow_timesheets"/>
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="allow_timesheets" string="Timesheets"/>
-                            <div class="text-muted">
-                                Log time on tasks
-                            </div>
-                        </div>
-                    </div>
+                    <setting id="timesheet_settings" string="Timesheets" help="Log time on tasks">
+                        <field name="allow_timesheets"/>
+                    </setting>
                 </xpath>
             </field>
         </record>
