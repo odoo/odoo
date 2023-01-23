@@ -23,6 +23,7 @@ export class ThreadService {
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.rpc = services.rpc;
+        /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
         this.chatWindow = services["mail.chat_window"];
         this.notification = services.notification;
         this.router = services.router;
@@ -230,6 +231,10 @@ export class ThreadService {
         });
     }
 
+    /**
+     * @param {Thread} thread
+     * @param {boolean} replaceNewMessageChatWindow
+     */
     open(thread, replaceNewMessageChatWindow) {
         if (this.store.discuss.isActive && !this.store.isSmall) {
             this.setDiscussThread(thread);

@@ -6,6 +6,7 @@ import {
     click,
     insertText,
     afterNextRender,
+    nextAnimationFrame,
 } from "@mail/../tests/helpers/test_utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
@@ -1208,3 +1209,100 @@ QUnit.test(
         assert.strictEqual($(target).find(".o-mail-message-body").text(), "Hello");
     }
 );
+
+QUnit.test("data-oe-id & data-oe-model link redirection on click", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.message"].create({
+        body: `<p><a href="#" data-oe-id="250" data-oe-model="some.model">some.model_250</a></p>`,
+        model: "res.partner",
+        res_id: partnerId,
+    });
+    const { env, openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    patchWithCleanup(env.services.action, {
+        doAction(action) {
+            assert.strictEqual(action.type, "ir.actions.act_window");
+            assert.strictEqual(action.res_model, "some.model");
+            assert.strictEqual(action.res_id, 250);
+            assert.step("do-action:openFormView_some.model_250");
+        },
+    });
+    assert.containsOnce(target, ".o-mail-message-body");
+    assert.containsOnce(target.querySelector(".o-mail-message-body"), "a");
+
+    click(".o-mail-message-body a").catch(() => {});
+    assert.verifySteps(["do-action:openFormView_some.model_250"]);
+});
+
+QUnit.test(
+    "Chat with partner should be opened after clicking on their mention",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({
+            name: "Test Partner",
+            email: "testpartner@odoo.com",
+        });
+        pyEnv["res.users"].create({ partner_id: partnerId });
+        const { openFormView } = await start();
+        await openFormView("res.partner", partnerId);
+        await click("button:contains(Send message)");
+        await insertText(".o-mail-composer-textarea", "@");
+        await insertText(".o-mail-composer-textarea", "T");
+        await insertText(".o-mail-composer-textarea", "e");
+        await click(".o-composer-suggestion:contains(Test Partner)");
+        await click(".o-mail-composer-send-button");
+        await click(".o_mail_redirect");
+        assert.containsOnce(target, ".o-mail-chat-window-content");
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Test Partner)");
+    }
+);
+
+QUnit.test(
+    "open chat with author on avatar click should be disabled when currently chatting with the author",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "test" });
+        pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+        });
+        pyEnv["mail.message"].create({
+            author_id: partnerId,
+            body: "not empty",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(target, ".o-mail-message-author-avatar");
+        assert.doesNotHaveClass(
+            target.querySelector(".o-mail-message-author-avatar"),
+            "o_redirect"
+        );
+
+        click(".o-mail-message-author-avatar").catch(() => {});
+        await nextAnimationFrame();
+        assert.containsNone(target, ".o-mail-chat-window");
+    }
+);
+
+QUnit.test("Channel should be opened after clicking on its mention", async function (assert) {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    pyEnv["mail.channel"].create({ name: "my-channel" });
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerId);
+    await click("button:contains(Send message)");
+    await insertText(".o-mail-composer-textarea", "#");
+    await click(".o-composer-suggestion:contains(my-channel)");
+    await click(".o-mail-composer-send-button");
+    await click(".o_channel_redirect");
+    assert.containsOnce(target, ".o-mail-chat-window-content");
+    assert.containsOnce(target, ".o-mail-chat-window-header:contains(my-channel)");
+});

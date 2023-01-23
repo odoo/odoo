@@ -10,7 +10,7 @@ export const CHAT_WINDOW_INBETWEEN_WIDTH = 5;
 export const CHAT_WINDOW_WIDTH = 340;
 export const CHAT_WINDOW_HIDDEN_WIDTH = 55;
 
-class ChatWindowService {
+export class ChatWindowService {
     constructor(env, services) {
         this.env = env;
         /** @type {import("@mail/new/core/store_service").Store} */

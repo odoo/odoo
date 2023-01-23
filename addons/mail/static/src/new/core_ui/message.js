@@ -79,7 +79,9 @@ export class Message extends Component {
         this.root = useRef("root");
         this.messaging = useMessaging();
         this.store = useStore();
+        /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/new/core/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
         this.user = useService("user");
         useChildSubEnv({
@@ -289,11 +291,31 @@ export class Message extends Component {
      * @param {MouseEvent} ev
      */
     onClick(ev) {
+        const model = ev.target.dataset.oeModel;
+        const id = Number(ev.target.dataset.oeId);
+        if (ev.target.closest(".o_channel_redirect")) {
+            ev.preventDefault();
+            const thread = this.threadService.insert({ model, id });
+            this.threadService.open(thread);
+            return;
+        }
         if (ev.target.closest(".o_mail_redirect")) {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
             if (this.user.partnerId !== partnerId) {
                 this.threadService.openChat({ partnerId });
+            }
+            return;
+        }
+        if (ev.target.tagName === "A") {
+            if (model && id) {
+                ev.preventDefault();
+                this.env.services.action.doAction({
+                    type: "ir.actions.act_window",
+                    res_model: model,
+                    views: [[false, "form"]],
+                    res_id: id,
+                });
             }
             return;
         }
