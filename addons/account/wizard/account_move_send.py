@@ -267,32 +267,40 @@ class AccountMoveSend(models.Model):
     def _need_pdf_report(self, move):
         return not move.pdf_report_id and move.state == 'posted'
 
-    def _prepare_pdf_report(self, move):
+    def _prepare_invoice_documents(self, invoice):
         self.ensure_one()
-        content, _report_format = self.env['ir.actions.report']\
-            ._render('account.account_invoices_without_payment', move.ids)
-        filename = f"{move.name.replace('/', '_')}.pdf"
+
+        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+        filename = f"{invoice.name.replace('/', '_')}.pdf"
         return {
-            'content': content,
-            'filename': filename,
-            'pdf': True,
+            'pdf_attachment_values': {
+                'raw': content,
+                'name': filename,
+                'mimetype': 'application/pdf',
+                'res_model': invoice._name,
+                'res_id': invoice.id,
+            },
         }
 
-    def _prepare_pdf_report_failed(self, move, prepared_data):
+    def _prepare_invoice_documents_failed(self, invoice, prepared_data, from_cron=False):
+        self.ensure_one()
+        if from_cron:
+            invoice\
+                .with_context(no_new_invoice=True)\
+                .message_post(body=prepared_data['error'])
+        else:
+            raise UserError(prepared_data['error'])
+
+    def _generate_invoice_documents(self, invoice, prepared_data):
         self.ensure_one()
 
-    @api.model
-    def _generate_pdf_report(self, move, prepared_data):
-        """ Generate the PDF report for the moves passed as parameter.
+        invoice.pdf_report_id = self.env['ir.attachment'].create(prepared_data['pdf_attachment_values'])
 
-        :param move: A journal entry.
-        """
-        return self.env['ir.attachment'].create({
-            'name': prepared_data['filename'],
-            'raw': prepared_data['content'],
-            'res_model': move._name,
-            'res_id': move.id,
-        })
+        self.mail_attachments_widget = (self.mail_attachments_widget or []) + [{
+            'id': invoice.pdf_report_id.id,
+            'name': invoice.pdf_report_id.name,
+            'mimetype': invoice.pdf_report_id.mimetype,
+        }]
 
     @api.model
     def _send_mail(self, mail_template, lang, move, **kwargs):
@@ -342,11 +350,11 @@ class AccountMoveSend(models.Model):
 
             # Ensure the invoice report is generated.
             if self._need_pdf_report(move):
-                prepared_data = self._prepare_pdf_report(move)
-                if prepared_data['pdf']:
-                    move.pdf_report_id = self._generate_pdf_report(move, prepared_data)
+                prepared_data = self._prepare_invoice_documents(move)
+                if prepared_data.get('error'):
+                    self._prepare_invoice_documents_failed(move, prepared_data, from_cron=from_cron)
                 else:
-                    self._prepare_pdf_report_failed(move, prepared_data)
+                    self._generate_invoice_documents(move, prepared_data)
 
             # Send mail.
             if send_mail:
@@ -381,14 +389,16 @@ class AccountMoveSend(models.Model):
 
             self.mode = 'done'
 
-        elif from_cron:
+        elif from_cron and self.mode == 'invoice_multi':
             for move in self.move_ids:
 
                 # Ensure the invoice report is generated.
                 if self._need_pdf_report(move):
-                    prepared_data = self._prepare_pdf_report(move)
-                    if prepared_data['pdf']:
-                        move.pdf_report_id = self._generate_pdf_report(move, prepared_data)
+                    prepared_data = self._prepare_invoice_documents(move)
+                    if prepared_data.get('error'):
+                        self._prepare_invoice_documents_failed(move, prepared_data, from_cron=from_cron)
+                    else:
+                        self._generate_invoice_documents(move, prepared_data)
 
                 # Send mail.
                 if send_mail:
