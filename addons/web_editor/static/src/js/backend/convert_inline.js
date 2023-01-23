@@ -609,6 +609,9 @@ async function toInline($editable, cssRules, $iframe) {
     enforceImagesResponsivity(editable);
     await flattenBackgroundImages(editable);
 
+    // Remove contenteditable attributes
+    [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
+
     // Hide replaced cells on Outlook
     for (const toHide of editable.querySelectorAll('.mso-hide')) {
         const style = toHide.getAttribute('style') || '';
