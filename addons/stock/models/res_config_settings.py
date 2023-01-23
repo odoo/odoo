@@ -59,6 +59,7 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_group_stock_production_lot(self):
         if not self.group_stock_production_lot:
             self.group_lot_on_delivery_slip = False
+            self.module_product_expiry = False
 
     @api.onchange('group_stock_adv_location')
     def onchange_adv_location(self):
