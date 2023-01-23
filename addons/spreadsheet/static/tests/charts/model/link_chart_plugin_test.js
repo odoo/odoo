@@ -11,6 +11,7 @@ import { ormService } from "@web/core/orm_service";
 import { viewService } from "@web/views/view_service";
 
 const { Model } = spreadsheet;
+const { toZone } = spreadsheet.helpers;
 
 const chartId = "uuid1";
 
@@ -171,6 +172,53 @@ QUnit.module(
                 id: chartId,
             });
             assert.equal(model.getters.getChartOdooMenu(chartId), undefined);
+        });
+
+        QUnit.test("link is copied when chart is copied", async function (assert) {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { custom: { env } });
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            model.dispatch("SELECT_FIGURE", { id: chartId });
+            model.dispatch("COPY");
+            model.dispatch("PASTE", { target: [toZone("A1")] });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartIds = model.getters.getChartIds(sheetId);
+            assert.equal(model.getters.getChartOdooMenu(chartIds[1]).id, 1);
+        });
+
+        QUnit.test("link is kept when chart is cut", async function (assert) {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { custom: { env } });
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            model.dispatch("SELECT_FIGURE", { id: chartId });
+            model.dispatch("CUT");
+            model.dispatch("PASTE", { target: [toZone("A1")] });
+            const sheetId = model.getters.getActiveSheetId();
+            const chartIds = model.getters.getChartIds(sheetId);
+            assert.equal(model.getters.getChartOdooMenu(chartIds[0]).id, 1);
+        });
+
+        QUnit.test("link is copied when sheet is duplicated", async function (assert) {
+            const env = await makeTestEnv({ serverData: this.serverData });
+            const model = new Model({}, { custom: { env } });
+            const sheetId = model.getters.getActiveSheetId();
+            const secondSheetId = "secondSheetId";
+            createBasicChart(model, chartId);
+            model.dispatch("LINK_ODOO_MENU_TO_CHART", {
+                chartId,
+                odooMenuId: 1,
+            });
+            model.dispatch("DUPLICATE_SHEET", { sheetId, sheetIdTo: secondSheetId });
+            const chartIds = model.getters.getChartIds(secondSheetId);
+            assert.equal(model.getters.getChartOdooMenu(chartIds[0]).id, 1);
         });
     }
 );

@@ -16,6 +16,14 @@ export default class ChartOdooMenuPlugin extends spreadsheet.CorePlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
+            case "CREATE_CHART":
+                if(cmd.sourceChartId){
+                    const menuId = this.odooMenuReference[cmd.sourceChartId];
+                    if(menuId){
+                        this.history.update("odooMenuReference", cmd.id, menuId);
+                    }
+                }
+                break;
             case "LINK_ODOO_MENU_TO_CHART":
                 this.history.update("odooMenuReference", cmd.chartId, cmd.odooMenuId);
                 break;
