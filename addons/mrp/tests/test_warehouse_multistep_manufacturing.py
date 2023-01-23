@@ -549,6 +549,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertFalse(sam_move.move_dest_ids)
 
         subproduction = self.env['mrp.production'].browse(production.id+1)
+        subproduction.invalidate_cache()
         sfp_pickings = subproduction.picking_ids.sorted('id')
 
         # SFP Production: 2 pickings, 1 group
