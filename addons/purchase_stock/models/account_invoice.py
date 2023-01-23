@@ -45,15 +45,16 @@ class AccountMove(models.Model):
                 debit_expense_account = line._get_price_diff_account()
                 if not debit_expense_account:
                     continue
+                    
+                # Retrieve stock valuation moves.
+                valuation_stock_moves = self.env['stock.move'].search([
+                    ('purchase_line_id', '=', line.purchase_line_id.id),
+                    ('state', '=', 'done'),
+                    ('product_qty', '!=', 0.0),
+                    ('product_id', '=', line.product_id.id),  # kits must be handled manually
+                ])
+                
                 if line.product_id.cost_method != 'standard' and line.purchase_line_id:
-
-                    # Retrieve stock valuation moves.
-                    valuation_stock_moves = self.env['stock.move'].search([
-                        ('purchase_line_id', '=', line.purchase_line_id.id),
-                        ('state', '=', 'done'),
-                        ('product_qty', '!=', 0.0),
-                        ('product_id', '=', line.product_id.id),    # kits must be handled manually
-                    ])
 
                     if move.move_type == 'in_refund':
                         valuation_stock_moves = valuation_stock_moves.filtered(lambda stock_move: stock_move._is_out())
