@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
-import { Setting } from "@web/webclient/settings_form_view/settings/setting";
+import { Setting } from "@web/views/form/setting/setting";
 
 import { Component } from "@odoo/owl";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";

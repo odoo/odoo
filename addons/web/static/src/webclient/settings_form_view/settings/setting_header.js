@@ -1,15 +1,8 @@
 /** @odoo-module **/
 
-import { useChildSubEnv } from "@odoo/owl";
-import { Setting } from "./setting";
+import { Setting } from "@web/views/form/setting/setting";
 
 export class SettingHeader extends Setting {
-    setup() {
-        super.setup();
-        // Don't search on a header setting
-        useChildSubEnv({ searchState: { value: "" } });
-    }
-
     get labelString() {
         return this.props.string || this.props.record.fields[this.props.name].string;
     }
