@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Notebook } from "@web/core/notebook/notebook";
+import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
 import { browser } from "@web/core/browser/browser";
 import { useService } from "@web/core/utils/hooks";
@@ -101,6 +102,7 @@ FormRenderer.components = {
     ViewButton,
     Widget,
     Notebook,
+    Setting,
     OuterGroup,
     InnerGroup,
     StatusBarButtons,
