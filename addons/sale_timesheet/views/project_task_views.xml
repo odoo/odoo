@@ -35,19 +35,11 @@
         <field name="model">project.project</field>
         <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[hasclass('o_setting_box')]" position="before">
-                <div class="col-lg-6 o_setting_box">
-                    <div class="o_setting_left_pane">
-                        <field name="company_id" invisible="1"/>
-                        <field name="allow_billable"/>
-                    </div>
-                    <div class="o_setting_right_pane">
-                        <label for="allow_billable"/>
-                        <div class="text-muted" id="allow_billable_setting">
-                            Invoice your time and material to customers
-                        </div>
-                    </div>
-                </div>
+            <xpath expr="//setting" position="before">
+                <field name="company_id" invisible="1"/>
+                <setting help="Invoice your time and material to customers">
+                    <field name="allow_billable"/>
+                </setting>
             </xpath>
         </field>
     </record>

@@ -5,7 +5,7 @@
         <field name="model">pos.config</field>
         <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='other_devices']//div[hasclass('o_setting_right_pane')]" position="inside">
+            <xpath expr="//setting[@id='other_devices']" position="inside">
                 <div class="content-group" attrs="{'invisible' : [('other_devices', '=', False)]}">
                     <field name="epson_printer_ip" placeholder="Epson Receipt Printer IP Address" />
                     <div class="row" attrs="{'invisible': [('epson_printer_ip', 'in', [False, ''])]}">
