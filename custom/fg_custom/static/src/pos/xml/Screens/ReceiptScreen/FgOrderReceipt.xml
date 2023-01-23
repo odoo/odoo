@@ -138,6 +138,7 @@
                 <div class="order_line_total" style="font-size: 75%;">
                     <t t-set="total_qty" t-value="0"/>
                     <t t-set="total_amt" t-value="0"/>
+                    <t t-set="total_amt_refund" t-value="0"/>
                     <t t-set="total_product_v" t-value="0"/>
                     <t t-set="total_product_e" t-value="0"/>
                     <t t-set="total_product_z" t-value="0"/>
@@ -151,6 +152,10 @@
                         <t t-if="line.discount > 0">
                             <t t-set="t_per_lines" t-value="line.price_with_tax_before_discount - line.price_with_tax"/>
                             <t t-set="total_discount_percentage" t-value="total_discount_percentage + t_per_lines"/>
+                        </t>
+                        <t t-if="line.price_display &lt; 0 and !line.is_program_reward and receipt.pos_refunded_id">
+                            <t t-set="total_qty" t-value="total_qty + Math.abs(line.quantity)"/>
+                            <t t-set="total_amt_refund" t-value="total_amt_refund + line.price_with_tax"/>
                         </t>
                         <t t-if="line.price_display >= 0 and !line.is_program_reward">
 <!--                        <t t-if="!line.is_program_reward and line.product_name !='Discount'">-->
@@ -176,11 +181,25 @@
                         <t t-else="">
 <!--                            <div> <span>**** Promo Discount ****</span> </div>-->
                             <t t-set="total_vat" t-value="total_vat + line.tax"/>
-                            <t t-if="line.is_program_reward and receipt.pos_refunded_id">
-                                <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus - line.price_with_tax"/>
+
+
+                            <t t-if="line.is_program_reward">
+                                <t t-if="receipt.pos_refunded_id">
+                                     <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus - line.price_with_tax"/>
+                                 </t>
+                                 <t t-else="">
+                                    <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus + Math.abs(line.price_with_tax)"/>
+                                 </t>
+
                             </t>
                             <t t-else="">
-                                <t t-set="total_discount_global_minus" t-value="total_discount_global_minus + Math.abs(line.price_with_tax)"/>
+                                 <t t-if="receipt.pos_refunded_id">
+                                     <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus - line.price_with_tax"/>
+                                 </t>
+                                 <t t-else="">
+                                     <t t-set="total_discount_global_minus" t-value="total_discount_global_minus + Math.abs(line.price_with_tax)"/>
+                                 </t>
+
                             </t>
 
                             <t t-set="is_non_zero_vat" t-value="''"/>
@@ -202,7 +221,16 @@
                         </t>
                     </t>
                     <span style="margin-left: 1%;" class="pos-receipt-left-align"><b><t t-esc="Math.round(total_qty)"/> Item(s)</b></span>
-                    <span class="pos-receipt-right-align"><b><t t-esc="env.pos.format_currency_no_symbol(total_amt)"/></b></span>
+                    <span class="pos-receipt-right-align">
+                        <b>
+                            <t t-if="receipt.pos_refunded_id">
+                                <t t-esc="env.pos.format_currency_no_symbol(total_amt_refund)"/>
+                            </t>
+                            <t t-else="">
+                                <t t-esc="env.pos.format_currency_no_symbol(total_amt)"/>
+                            </t>
+                        </b>
+                    </span>
                 </div>
 
                 <!--<t t-set="open_amt_total" t-value="total_discount_percentage + total_discount_global_minus"/>-->
@@ -283,7 +311,7 @@
                     </div>
                 </div>
 
-                <div t-if="m_t_d > 0" class="total_discount" style="margin-top: 8%;font-size: 75%;">
+                <div t-if="m_t_d > 0 and !receipt.pos_refunded_id" class="total_discount" style="margin-top: 8%;font-size: 75%;">
                     <span class="pos-receipt-left-align"><b>*TOTAL SAVINGS</b></span>
                     <span class="pos-receipt-right-align"><t t-esc="env.pos.format_currency_no_symbol(m_t_d)"/></span>
                 </div>
