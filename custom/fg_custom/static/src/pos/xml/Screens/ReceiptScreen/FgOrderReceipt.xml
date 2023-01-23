@@ -177,11 +177,9 @@
 <!--                            <div> <span>**** Promo Discount ****</span> </div>-->
                             <t t-set="total_vat" t-value="total_vat + line.tax"/>
                             <t t-if="line.is_program_reward and receipt.pos_refunded_id">
-                                1
                                 <t t-set="total_discount_coupon_minus" t-value="total_discount_coupon_minus - line.price_with_tax"/>
                             </t>
                             <t t-else="">
-                                2
                                 <t t-set="total_discount_global_minus" t-value="total_discount_global_minus + Math.abs(line.price_with_tax)"/>
                             </t>
 
