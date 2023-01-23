@@ -731,6 +731,13 @@ class WebsiteSale(http.Controller):
                 order_sudo._cart_update_pricelist(update_pricelist=True)
         return request.redirect(redirect)
 
+    def _cart_values(self, **post):
+        """
+        This method is a hook to pass additional values when rendering the 'website_sale.cart' template (e.g. add
+        a flag to trigger a style variation)
+        """
+        return {}
+
     @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
     def cart(self, access_token=None, revive='', **post):
         """
@@ -775,6 +782,7 @@ class WebsiteSale(http.Controller):
             # force no-cache so IE11 doesn't cache this XHR
             return request.render("website_sale.cart_popover", values, headers={'Cache-Control': 'no-cache'})
 
+        values.update(self._cart_values(**post))
         return request.render("website_sale.cart", values)
 
     @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True)
@@ -1380,6 +1388,13 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
     # Extra step
     # ------------------------------------------------------
+    def _extra_info_values(self, **post):
+        """
+        This method is a hook to pass additional values when rendering the 'website_sale.extra_info' template (e.g. add
+        a flag to trigger a style variation)
+        """
+        return {}
+
     @http.route(['/shop/extra_info'], type='http', auth="public", website=True, sitemap=False)
     def extra_info(self, **post):
         # Check that this option is activated
@@ -1400,6 +1415,7 @@ class WebsiteSale(http.Controller):
             'partner': order.partner_id.id,
             'order': order,
         }
+        values.update(self._extra_info_values(**post))
         return request.render("website_sale.extra_info", values)
 
     # ------------------------------------------------------
