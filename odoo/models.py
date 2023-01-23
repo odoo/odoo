@@ -2866,6 +2866,8 @@ class BaseModel(metaclass=MetaModel):
         def valid(fname):
             """ determine whether user has access to field ``fname`` """
             field = self._fields.get(fname)
+            if not field.exportable:
+                return None
             if field and field.groups:
                 return self.user_has_groups(field.groups)
             else:
@@ -2874,7 +2876,7 @@ class BaseModel(metaclass=MetaModel):
         if not fields:
             fields = [name for name in self._fields if valid(name)]
         else:
-            invalid_fields = {name for name in fields if not valid(name)}
+            invalid_fields = {name for name in fields if valid(name) is False}
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                              operation, self._uid, self._name, ', '.join(invalid_fields))

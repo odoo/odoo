@@ -347,12 +347,12 @@ class AccountMoveLine(models.Model):
     )
 
     # === Invoice sync fields === #
-    term_key = fields.Binary(compute='_compute_term_key')
-    tax_key = fields.Binary(compute='_compute_tax_key')
-    compute_all_tax = fields.Binary(compute='_compute_all_tax')
+    term_key = fields.Binary(compute='_compute_term_key', exportable=False)
+    tax_key = fields.Binary(compute='_compute_tax_key', exportable=False)
+    compute_all_tax = fields.Binary(compute='_compute_all_tax', exportable=False)
     compute_all_tax_dirty = fields.Boolean(compute='_compute_all_tax')
-    epd_key = fields.Binary(compute='_compute_epd_key')
-    epd_needed = fields.Binary(compute='_compute_epd_needed')
+    epd_key = fields.Binary(compute='_compute_epd_key', exportable=False)
+    epd_needed = fields.Binary(compute='_compute_epd_needed', exportable=False)
     epd_dirty = fields.Boolean(compute='_compute_epd_needed')
 
     # === Analytic fields === #
