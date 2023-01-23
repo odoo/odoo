@@ -336,12 +336,10 @@
                     </xpath>
 
                     <xpath expr="//div[hasclass('o_kanban_manage_reports')]/div[@name='o_team_kanban_report_separator']" position="after">
-                        <div name="activity_report">
-                            <div t-if="record.use_opportunities.raw_value">
-                                <a name="%(crm.crm_activity_report_action_team)d" type="action" style="color: #444B5A;">
-                                    Activities
-                                </a>
-                            </div>
+                        <div t-if="record.use_opportunities.raw_value">
+                            <a name="%(crm.crm_activity_report_action_team)d" type="action">
+                                Activities
+                            </a>
                         </div>
                     </xpath>
                 </data>
