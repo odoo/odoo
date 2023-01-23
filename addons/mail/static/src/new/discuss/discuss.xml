@@ -5,7 +5,7 @@
     <div class="d-flex h-100 flex-grow-1" t-att-class="{ 'o-mail-device-is-small flex-column align-items-center bg-view': store.isSmall }">
         <Sidebar t-if="!props.public and !store.isSmall"/>
         <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="o-mail-discuss-mobile-top-bar w-100 border-bottom" t-call="mail.discuss_mobile_top_bar"/>
-        <div t-if="thread" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
+        <div t-if="thread and !(store.isSmall and store.discuss.activeTab === 'mailbox' and thread.type !== 'mailbox')" class="o-mail-discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-att-class="{'o-mail-with-composer': thread.type !== 'mailbox'}" t-ref="content">
             <div class="px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
                 <ThreadIcon className="'o-mail-discuss-thread-icon me-2 align-self-center'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
@@ -67,14 +67,6 @@
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
-        <t t-if="store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab)">
-            <button t-if="store.discuss.activeTab === 'chat'" class="w-100 p-2 btn btn-secondary border-bottom bg-light">
-                Start a conversation
-            </button>
-            <button t-if="store.discuss.activeTab === 'channel'" class="w-100 p-2 btn btn-secondary border-bottom bg-light">
-                New Channel
-            </button>
-        </t>
         <MessagingMenu t-if="store.isSmall" inDiscuss="true"/>
     </div>
 </t>

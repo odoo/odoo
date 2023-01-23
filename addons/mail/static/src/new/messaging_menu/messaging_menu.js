@@ -5,13 +5,14 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useMessaging, useStore } from "../core/messaging_hook";
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 import { NotificationItem } from "./notification_item";
+import { ChannelSelector } from "../discuss/channel_selector";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { createLocalId } from "../utils/misc";
 
 export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, PartnerImStatus };
+    static components = { Dropdown, NotificationItem, PartnerImStatus, ChannelSelector };
     static props = ["inDiscuss?"];
     static template = "mail.messaging_menu";
 
@@ -23,7 +24,8 @@ export class MessagingMenu extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.state = useState({
-            tab: this.props.inDiscuss ? "mailbox" : "all", // can be 'mailbox', 'all', 'channels' or 'chats'
+            tab: this.props.inDiscuss ? this.store.discuss.activeTab : "all", // can be 'mailbox', 'all', 'channels' or 'chats'
+            addingChannel: false,
         });
     }
 
@@ -43,7 +45,7 @@ export class MessagingMenu extends Component {
         return (
             this.displayedPreviews.length > 0 ||
             (this.store.notificationGroups.length > 0 && this.state.tab === "all") ||
-            this.notification.permission === "prompt"
+            (this.notification.permission === "prompt" && this.state.tab === "all")
         );
     }
 
