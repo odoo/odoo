@@ -30,5 +30,6 @@ Also implements the removal strategy First Expiry First Out (FEFO) widely used, 
              'data/product_expiry_data.xml',
              'data/mail_activity_type_data.xml',
             ],
+    'post_init_hook': '_enable_tracking_numbers',
     'license': 'LGPL-3',
 }
