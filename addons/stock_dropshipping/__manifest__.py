@@ -24,6 +24,7 @@ internal transfer document is needed.
     'data': [
         'data/stock_data.xml',
         'views/sale_order_views.xml',
+        'views/stock_picking_views.xml',
         'views/purchase_order_views.xml'
     ],
     'installable': True,

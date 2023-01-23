@@ -42,6 +42,9 @@ class StockPicking(models.Model):
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
 
+    code = fields.Selection(
+        selection_add=[('dropship', 'Dropship')], ondelete={'dropship': 'cascade'})
+
     @api.depends('default_location_src_id', 'default_location_dest_id')
     def _compute_warehouse_id(self):
         super()._compute_warehouse_id()
