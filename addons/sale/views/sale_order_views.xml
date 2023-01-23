@@ -280,6 +280,7 @@
                                 confirm="This will update all unit prices based on the currently set pricelist."
                                 attrs="{'invisible': ['|', ('show_update_pricelist', '=', False), ('state', 'in', ['sale', 'done', 'cancel'])]}"/>
                         </div>
+                        <field name="country_code" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="pricelist_id" invisible="1"/>
