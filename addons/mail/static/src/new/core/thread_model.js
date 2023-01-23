@@ -56,6 +56,8 @@ export class Thread {
     message_unread_counter = 0;
     /** @type {number[]} */
     messages = [];
+    /** @type {string} */
+    name;
     /** @type {number} */
     serverLastSeenMsgBySelf;
     /** @type {'opened' | 'folded' | 'closed'} */
