@@ -129,6 +129,32 @@ class TestSaleToInvoice(TestSaleCommon):
         self.assertEqual(len(invoice.invoice_line_ids.filtered(lambda l: l.display_type == 'line_section' and l.name == "Down Payments")), 1, 'A single section for downpayments should be present')
         self.assertEqual(invoice.amount_total, self.sale_order.amount_total - sum(downpayment_line.mapped('price_unit')), 'Downpayment should be applied')
 
+    def test_downpayment_validation(self):
+        """ Test invoice for downpayment and check it can be validated
+        """
+        # Lock the sale orders when confirmed
+        self.env.user.groups_id += self.env.ref('sale.group_auto_done_setting')
+
+        # Confirm the SO
+        self.sale_order.action_confirm()
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.sale_order)
+        # Let's do an invoice for a deposit of 10%
+        downpayment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'percentage',
+            'amount': 10,
+            'deposit_account_id': self.company_data['default_account_revenue'].id
+        })
+        downpayment.create_invoices()
+        self._check_order_search(self.sale_order, [('invoice_ids', '=', False)], self.env['sale.order'])
+
+        # Update delivered quantity of SO lines
+        self.sol_serv_deliver.write({'qty_delivered': 4.0})
+        self.sol_prod_deliver.write({'qty_delivered': 2.0})
+
+        # Validate invoice
+        self.sale_order.invoice_ids.action_post()
+
+
     def test_downpayment_percentage_tax_icl(self):
         """ Test invoice with a percentage downpayment and an included tax
             Check the total amount of invoice is correct and equal to a respective sale order's total amount
