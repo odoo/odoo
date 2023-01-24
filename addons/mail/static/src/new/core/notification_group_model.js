@@ -39,7 +39,7 @@ export class NotificationGroup {
         return this._store.messages[this.lastMessageId];
     }
 
-    get dateTime() {
-        return this.lastMessage?.dateTime;
+    get datetime() {
+        return this.lastMessage?.datetime;
     }
 }

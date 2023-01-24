@@ -7,52 +7,6 @@ QUnit.module("mail", {}, function () {
         QUnit.module("notification_list_tests.js");
 
         QUnit.skipRefactoring(
-            "marked as read thread notifications are ordered by last message date",
-            async function (assert) {
-                assert.expect(3);
-
-                const pyEnv = await startServer();
-                const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
-                    { name: "Channel 2019" },
-                    { name: "Channel 2020" },
-                ]);
-                pyEnv["mail.message"].create([
-                    {
-                        date: "2019-01-01 00:00:00",
-                        model: "mail.channel",
-                        res_id: mailChannelId1,
-                    },
-                    {
-                        date: "2020-01-01 00:00:00",
-                        model: "mail.channel",
-                        res_id: mailChannelId2,
-                    },
-                ]);
-                const { click } = await start();
-                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-                assert.containsN(
-                    document.body,
-                    ".o_ChannelPreviewView",
-                    2,
-                    "there should be two thread previews"
-                );
-                const channelPreviewViewElList = document.querySelectorAll(".o_ChannelPreviewView");
-                assert.strictEqual(
-                    channelPreviewViewElList[0].querySelector(":scope .o_ChannelPreviewView_name")
-                        .textContent,
-                    "Channel 2020",
-                    "First channel in the list should be the channel of 2020 (more recent last message)"
-                );
-                assert.strictEqual(
-                    channelPreviewViewElList[1].querySelector(":scope .o_ChannelPreviewView_name")
-                        .textContent,
-                    "Channel 2019",
-                    "Second channel in the list should be the channel of 2019 (least recent last message)"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "thread notifications are re-ordered on receiving a new message",
             async function (assert) {
                 assert.expect(4);

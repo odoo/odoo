@@ -253,3 +253,31 @@ QUnit.test("non-failure notifications are ignored", async function (assert) {
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsNone(target, ".o-mail-notification-item");
 });
+
+QUnit.test(
+    "marked as read thread notifications are ordered by last message date",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+            { name: "Channel 2019" },
+            { name: "Channel 2020" },
+        ]);
+        pyEnv["mail.message"].create([
+            {
+                date: "2019-01-01 00:00:00",
+                model: "mail.channel",
+                res_id: channelId_1,
+            },
+            {
+                date: "2020-01-01 00:00:00",
+                model: "mail.channel",
+                res_id: channelId_2,
+            },
+        ]);
+        await start();
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+        assert.containsN(target, ".o-mail-notification-item-name", 2);
+        assert.strictEqual($(".o-mail-notification-item-name")[0].textContent, "Channel 2020");
+        assert.strictEqual($(".o-mail-notification-item-name")[1].textContent, "Channel 2019");
+    }
+);

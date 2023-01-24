@@ -33,8 +33,8 @@
                         <PartnerImStatus t-if="message.author" partner="message.author" className="partnerImStatusClassName"/>
                     </div>
                     <t t-elif="!message.isTransient">
-                        <small t-if="isActive" class="o-mail-message-date text-muted opacity-50 ms-2" t-att-title="message.dateTimeStr">
-                            <t t-esc="message.dateTimeSimpleStr"/>
+                        <small t-if="isActive" class="o-mail-message-date text-muted opacity-50 ms-2" t-att-title="message.datetimeStr">
+                            <t t-esc="message.datetimeSimple"/>
                         </small>
                         <div t-att-class="{ 'position-absolute bottom-0 mb-1': !env.inChatter }">
                             <MessageSeenIndicator
@@ -49,9 +49,9 @@
                         <span t-if="message.author and shouldDisplayAuthorName" class="o-mail-own-name" t-att-class="{ 'cursor-pointer o_redirect': hasOpenChatFeature }" t-on-click="openChatAvatar">
                             <strong class="me-1 text-truncate" t-esc="message.author.name"/>
                         </span>
-                        <small t-if="!message.isTransient" class="o-mail-message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.dateTimeStr">
+                        <small t-if="!message.isTransient" class="o-mail-message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                             <t t-if="shouldDisplayAuthorName">-</t>
-                            <RelativeTime datetime="message.dateTime" />
+                            <RelativeTime datetime="message.datetime" />
                         </small>
                         <MessageSeenIndicator
                             t-if="props.message.isSelfAuthored and !props.squashed and props.thread"

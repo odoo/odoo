@@ -9,7 +9,7 @@ export class NotificationItem extends Component {
     static props = [
         "body?",
         "count?",
-        "dateTime?",
+        "datetime?",
         "displayName",
         "hasMarkAsReadButton?",
         "iconSrc",

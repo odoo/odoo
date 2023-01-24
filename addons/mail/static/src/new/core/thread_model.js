@@ -196,14 +196,14 @@ export class Thread {
     }
 
     get mostRecentMsgId() {
-        if (this.messages.length === 0) {
+        if (this.messageIds.length === 0) {
             return undefined;
         }
         return Math.max(...this.messageIds);
     }
 
     get mostRecentNonTransientMessage() {
-        if (this.messages.length === 0) {
+        if (this.messageIds.length === 0) {
             return undefined;
         }
         const oldestNonTransientMessage = [...this.messages]
@@ -226,7 +226,7 @@ export class Thread {
     }
 
     get isEmpty() {
-        return this.messages.length === 0;
+        return this.messageIds.length === 0;
     }
 
     get offlineMembers() {
@@ -240,7 +240,7 @@ export class Thread {
     }
 
     get oldestNonTransientMessage() {
-        if (this.messages.length === 0) {
+        if (this.messageIds.length === 0) {
             return undefined;
         }
         const oldestNonTransientMessage = this.messages.find((message) =>

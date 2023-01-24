@@ -132,6 +132,6 @@ export class Thread extends Component {
         if (msg.parentMessage) {
             return false;
         }
-        return msg.dateTime.ts - prevMsg.dateTime.ts < 60 * 1000;
+        return msg.datetime.ts - prevMsg.datetime.ts < 60 * 1000;
     }
 }

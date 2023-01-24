@@ -79,23 +79,23 @@ export class Message {
     }
 
     get dateDay() {
-        let dateDay = this.dateTime.toLocaleString(DateTime.DATE_FULL);
+        let dateDay = this.datetime.toLocaleString(DateTime.DATE_FULL);
         if (dateDay === DateTime.now().toLocaleString(DateTime.DATE_FULL)) {
             dateDay = _t("Today");
         }
         return dateDay;
     }
 
-    get dateTime() {
+    get datetime() {
         return toRaw(this.date ? deserializeDateTime(this.date) : this.now);
     }
 
-    get dateTimeSimpleStr() {
-        return this.dateTime.toLocaleString(DateTime.TIME_SIMPLE);
+    get datetimeSimpleStr() {
+        return this.datetime.toLocaleString(DateTime.TIME_SIMPLE);
     }
 
-    get dateTimeStr() {
-        return this.dateTime.toLocaleString(DateTime.DATETIME_SHORT);
+    get datetimeShort() {
+        return this.datetime.toLocaleString(DateTime.DATETIME_SHORT);
     }
 
     get isSelfMentioned() {

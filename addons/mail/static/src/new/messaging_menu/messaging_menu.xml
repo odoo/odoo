@@ -59,7 +59,7 @@
             <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
                 <NotificationItem
                     body="preview.mostRecentMsg?.inlineBody"
-                    dateTime="preview.mostRecentMsg?.dateTime"
+                    datetime="preview.mostRecentMsg?.datetime"
                     displayName="preview.displayName"
                     iconSrc="preview.imgUrl"
                     hasMarkAsReadButton="preview.isUnread"
@@ -84,7 +84,7 @@
                     t-foreach="failures" t-as="failure" t-key="failure.id"
                     body="failure.body"
                     count="failure.notifications.length"
-                    dateTime="failure.dateTime"
+                    datetime="failure.datetime"
                     displayName="failure.modelName"
                     iconSrc="failure.iconSrc"
                     isLast="failure_last"

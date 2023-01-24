@@ -12,8 +12,8 @@
                 <span class="o-mail-notification-item-name fw-bold text-truncate" t-esc="props.displayName"/>
                 <span class="o-mail-notification-item-counter mx-1 fw-bold" t-if="props.count > 1"> (<t t-esc="props.count"/>)</span>
                 <span class="flex-grow-1"/>
-                <small t-if="props.dateTime" class="o-mail-notification-item-date text-muted opacity-50 ms-2">
-                    <RelativeTime datetime="props.dateTime" />
+                <small t-if="props.datetime" class="o-mail-notification-item-date text-muted opacity-50 ms-2">
+                    <RelativeTime datetime="props.datetime" />
                 </small>
 
             </div>

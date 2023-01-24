@@ -69,7 +69,17 @@ export class MessagingMenu extends Component {
         /** @type {import("@mail/new/core/thread_model").Thread[]} **/
         const threads = Object.values(this.store.threads);
         const previews = threads.filter((thread) => thread.is_pinned);
-
+        previews.sort((a, b) => {
+            if (!a.mostRecentNonTransientMessage?.datetime) {
+                return -1;
+            }
+            if (!b.mostRecentNonTransientMessage?.datetime) {
+                return 1;
+            }
+            return (
+                b.mostRecentNonTransientMessage.datetime - a.mostRecentNonTransientMessage.datetime
+            );
+        });
         const tab = this.store.discuss.activeTab;
         if (tab === "all") {
             return previews;

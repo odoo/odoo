@@ -450,7 +450,7 @@ export class MessageService {
         thread.messageIds.sort((msgId1, msgId2) => {
             const msg1 = this.store.messages[msgId1];
             const msg2 = this.store.messages[msgId2];
-            const indicator = new Date(msg1.dateTime) - new Date(msg2.dateTime);
+            const indicator = msg1.datetime - msg2.datetime;
             if (indicator) {
                 return indicator;
             } else {
