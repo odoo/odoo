@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="stock.ForecastedDetails" owl="1">
-        <table class="o_report_replenishment table table-bordered">
+        <table class="o_report_replenishment table table-bordered bg-view">
             <thead>
                 <tr class="bg-light">
                     <td>Replenishment</td>
@@ -73,7 +73,7 @@
                 </tr>
             </tbody>
             <thead>
-                <tr class="o_forecasted_row">
+                <tr class="o_forecasted_row bg-200">
                     <td colspan="2">Forecasted Inventory</td>
                     <td t-out="_formatFloat(this.props.docs.virtual_available)" class="text-end"/>
                 </tr>
@@ -89,7 +89,7 @@
                 </tr>
             </tbody>
             <thead>
-                <tr class="o_forecasted_row">
+                <tr class="o_forecasted_row bg-200">
                     <td colspan="2">Forecasted with Pending</td>
                     <td t-out="_formatFloat(futureVirtualAvailable)" class="text-end"/>
                 </tr>
