@@ -986,7 +986,14 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('user_value_widget_request', {
             name: 'grid_mode',
             allowParentOption: true,
-            onSuccess: () => hasGridLayoutOption = true,
+            onSuccess: (widget) => {
+                // The grid option is considered as present only if the
+                // container element having it is the same as the container of
+                // the column we are dragging.
+                if (widget.$target[0] === rowEl.parentElement) {
+                    hasGridLayoutOption = true;
+                }
+            },
         });
         const allowGridMode = hasGridLayoutOption || rowEl.classList.contains('o_grid_mode');
 
@@ -1045,7 +1052,7 @@ var SnippetEditor = Widget.extend({
             this.trigger_up('deactivate_snippet', {$snippet: self.$target});
         }
 
-        const isPopup = this.$target[0].closest('div.s_popup');
+        const openModalEl = this.$target[0].closest('.modal');
 
         this.dropped = false;
         this._dropSiblings = {
@@ -1089,35 +1096,48 @@ var SnippetEditor = Widget.extend({
         // definitions in master but we should find a better to define those and
         // such cases.
         if (this.$target[0].classList.contains('s_website_form_field')) {
-            $selectorSiblings = $selectorSiblings.filter(
-                (i, el) => closestFormEl === el.closest('form')
-            );
+            const filterFunc = (i, el) => el.closest('form') === closestFormEl;
+            if ($selectorSiblings) {
+                $selectorSiblings = $selectorSiblings.filter(filterFunc);
+            }
+            if ($selectorChildren) {
+                $selectorChildren = $selectorChildren.filter(filterFunc);
+            }
+        }
+
+        // Remove the siblings/children outside the open popup.
+        if (openModalEl) {
+            const filterFunc = (i, el) => el.closest('.modal') === openModalEl;
+            if ($selectorSiblings) {
+                $selectorSiblings = $selectorSiblings.filter(filterFunc);
+            }
+            if ($selectorChildren) {
+                $selectorChildren = $selectorChildren.filter(filterFunc);
+            }
         }
 
         const canBeSanitizedUnless = this._canBeSanitizedUnless(this.$target[0]);
 
-        // Remove the siblings that belong to a snippet in grid mode
-        // and put the identified grid mode snippets in their own "selector".
+        // Remove the siblings/children that would add a dropzone as direct
+        // child of a grid area and make a dedicated set out of the identified
+        // grid areas.
         const selectorGrids = new Set();
-        if (rowEl.classList.contains('row')) {
-            if ($selectorSiblings) {
-                // Looping backwards because elements are removed, so the
-                // indexes are not lost.
-                for (let i = $selectorSiblings.length - 1; i >= 0; i--) {
-                    if (isPopup && !$selectorSiblings[i].closest('div.s_popup')) {
-                        // Removing the siblings that are outside the popup if
-                        // the grid item is in a popup.
-                        $selectorSiblings.splice(i, 1);
-                    } else {
-                        const gridSnippet = $selectorSiblings[i].closest('div.o_grid_mode');
-                        if (gridSnippet) {
-                            $selectorSiblings.splice(i, 1);
-                            selectorGrids.add(gridSnippet);
-                        }
-                    }
+        const filterOutSelectorGrids = ($selectorItems, getDropzoneParent) => {
+            if (!$selectorItems) {
+                return;
+            }
+            // Looping backwards because elements are removed, so the
+            // indexes are not lost.
+            for (let i = $selectorItems.length - 1; i >= 0; i--) {
+                const el = getDropzoneParent($selectorItems[i]);
+                if (el.classList.contains('o_grid_mode')) {
+                    $selectorItems.splice(i, 1);
+                    selectorGrids.add(el);
                 }
             }
-        }
+        };
+        filterOutSelectorGrids($selectorSiblings, el => el.parentElement);
+        filterOutSelectorGrids($selectorChildren, el => el);
 
         this.trigger_up('activate_snippet', {$snippet: this.$target.parent()});
         this.trigger_up('activate_insertion_zones', {
