@@ -144,7 +144,7 @@ class AccountInvoiceSend(models.TransientModel):
             active_records = self.env[self.model].browse(active_ids)
             langs = active_records.mapped('partner_id.lang')
             default_lang = get_lang(self.env)
-            for lang in (set(langs) or [default_lang]):
+            for lang in sorted((set(langs)) or [default_lang]):
                 active_ids_lang = active_records.filtered(lambda r: r.partner_id.lang == lang).ids
                 self_lang = self.with_context(
                     composer_force_res_ids=active_ids_lang,
