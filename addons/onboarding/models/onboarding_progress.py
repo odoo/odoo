@@ -22,9 +22,10 @@ class OnboardingProgress(models.Model):
     company_id = fields.Many2one('res.company')
     onboarding_id = fields.Many2one(
         'onboarding.onboarding', 'Related onboarding tracked', required=True, ondelete='cascade')
-    progress_step_ids = fields.One2many('onboarding.progress.step', 'progress_id', 'Progress Steps Trackers')
+    progress_step_ids = fields.Many2many('onboarding.progress.step', string='Progress Steps Trackers')
 
     def init(self):
+        """Make sure there aren't multiple records for the same onboarding and company."""
         # not in _sql_constraint because COALESCE is not supported for PostgreSQL constraint
         self.env.cr.execute("""
             CREATE UNIQUE INDEX IF NOT EXISTS onboarding_progress_onboarding_company_uniq
@@ -33,15 +34,19 @@ class OnboardingProgress(models.Model):
 
     @api.depends('onboarding_id.step_ids', 'progress_step_ids', 'progress_step_ids.step_state')
     def _compute_onboarding_state(self):
-        progress_steps_data = self.env['onboarding.progress.step']._read_group(
-            [('progress_id', 'in', self.ids), ('step_state', 'in', ['just_done', 'done'])],
-            ['progress_id'], ['__count']
-        )
-        result = {progress.id: count for progress, count in progress_steps_data}
         for progress in self:
             progress.onboarding_state = (
-                'not_done' if result.get(progress.id, 0) != len(progress.onboarding_id.step_ids)
-                else 'done')
+                'not_done' if (
+                    len(progress.progress_step_ids.filtered(lambda p: p.step_state in {'just_done', 'done'}))
+                    != len(progress.onboarding_id.step_ids)
+                )
+                else 'done'
+            )
+
+    def _recompute_progress_step_ids(self):
+        """Update progress steps when a step (with existing progress) is added to an onboarding."""
+        for progress in self:
+            progress.progress_step_ids = progress.onboarding_id.step_ids.current_progress_step_id
 
     def action_close(self):
         self.is_onboarding_closed = True
@@ -51,9 +56,11 @@ class OnboardingProgress(models.Model):
             progress.is_onboarding_closed = not progress.is_onboarding_closed
 
     def _get_and_update_onboarding_state(self):
-        """Used to fetch the progress of an onboarding for rendering its panel and is expected to
-        be called by the onboarding controller. It also has the responsibility of updating the
-        'just_done' states into 'done' so that the 'just_done' states are only rendered once.
+        """Fetch the progress of an onboarding for rendering its panel.
+
+        This method is expected to only be called by the onboarding controller.
+        It also has the responsibility of updating the 'just_done' state into
+        'done' so that the 'just_done' states are only rendered once.
         """
         self.ensure_one()
         onboarding_states_values = {}
