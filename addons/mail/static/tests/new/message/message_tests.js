@@ -188,7 +188,7 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-message-actions i[aria-label='Edit']");
-    await click(".o-mail-composer i[aria-label='Emojis']");
+    await click(".o-mail-composer button[aria-label='Emojis']");
     await click(".o-mail-emoji-picker-content .o-emoji");
     assert.containsOnce(target, ".o-mail-message-editable .o-mail-composer");
 });

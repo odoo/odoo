@@ -272,7 +272,7 @@ QUnit.test(
             ],
         });
         await start();
-        await click("i[aria-label='Emojis']");
+        await click("button[aria-label='Emojis']");
         await afterNextRender(() => triggerHotkey("Escape"));
         assert.containsNone(target, ".o-mail-emoji-picker");
         assert.containsOnce(target, ".o-mail-chat-window");

@@ -72,7 +72,7 @@ QUnit.test("reply: discard on click away", async function (assert) {
     await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
     assert.containsOnce(target, ".o-mail-composer");
 
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     assert.containsOnce(target, ".o-mail-emoji-picker");
 
     await click(".o-mail-emoji-picker-content .o-emoji");
@@ -110,7 +110,7 @@ QUnit.test("reply: discard on pressing escape", async function (assert) {
     assert.containsOnce(target, ".o-mail-composer");
 
     // Escape on emoji picker does not stop replying
-    await click(".o-mail-composer i[aria-label='Emojis']");
+    await click(".o-mail-composer button[aria-label='Emojis']");
     assert.containsOnce(target, ".o-mail-emoji-picker");
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone(target, ".o-mail-emoji-picker");

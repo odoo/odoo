@@ -96,7 +96,7 @@ QUnit.test("add an emoji", async function (assert) {
     const channelId = pyEnv["mail.channel"].create({ name: "swamp-safari" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click(".o-emoji[data-codepoints='😤']");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "😤");
 });
@@ -108,7 +108,7 @@ QUnit.test(
         const channelId = pyEnv["mail.channel"].create({ name: "" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click("i[aria-label='Emojis']");
+        await click("button[aria-label='Emojis']");
         await afterNextRender(() => triggerHotkey("Escape"));
         assert.equal(target.querySelector(".o-mail-composer-textarea"), document.activeElement);
     }
@@ -122,7 +122,7 @@ QUnit.test("add an emoji after some text", async function (assert) {
     await insertText(".o-mail-composer-textarea", "Blabla");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "Blabla");
 
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click(".o-emoji[data-codepoints='🤑']");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "Blabla🤑");
 });
@@ -138,7 +138,7 @@ QUnit.test("add emoji replaces (keyboard) text selection", async function (asser
 
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click('.o-emoji[data-codepoints="🤠"]');
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "🤠");
 });
@@ -151,7 +151,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async function (a
     const textarea = document.querySelector(".o-mail-composer-textarea");
     await insertText(".o-mail-composer-textarea", "Blabla");
     textarea.setSelectionRange(2, 2);
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click('.o-emoji[data-codepoints="🤠"]');
     const expectedPos = 2 + "🤠".length;
     assert.strictEqual(textarea.selectionStart, expectedPos);
@@ -171,7 +171,7 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     textarea.setSelectionRange(0, textarea.value.length);
     document.querySelector(".o-mail-discuss-content").click();
     await nextTick();
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click('.o-emoji[data-codepoints="🤠"]');
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "Blabla🤠");
 });
@@ -205,9 +205,9 @@ QUnit.test(
         const channelId = pyEnv["mail.channel"].create({ name: "roblox-skateboarding" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click("i[aria-label='Emojis']");
+        await click("button[aria-label='Emojis']");
         await click(".o-emoji[data-codepoints='👺']");
-        await click("i[aria-label='Emojis']");
+        await click("button[aria-label='Emojis']");
         assert.containsOnce(target, ".o-mail-emoji-picker");
     }
 );
@@ -337,7 +337,7 @@ QUnit.test("add an emoji after a command", async function (assert) {
         "text content of composer should have previous content + used command + additional whitespace afterwards"
     );
 
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click('.o-emoji[data-codepoints="😊"]');
     assert.strictEqual(
         document.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
@@ -367,7 +367,7 @@ QUnit.test("add an emoji after a canned response", async function (assert) {
         "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
     );
 
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click(".o-emoji[data-codepoints='😊']");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
@@ -401,7 +401,7 @@ QUnit.test("add an emoji after a partner mention", async function (assert) {
         "@TestPartner "
     );
 
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click(".o-emoji[data-codepoints='😊']");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
@@ -455,7 +455,7 @@ QUnit.test("add an emoji after a channel mention", async function (assert) {
     );
 
     // select emoji
-    await click("i[aria-label='Emojis']");
+    await click("button[aria-label='Emojis']");
     await click(".o-emoji[data-codepoints='😊']");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
