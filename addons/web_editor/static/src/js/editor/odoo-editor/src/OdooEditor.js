@@ -74,6 +74,10 @@ import {
     cleanZWS,
     isZWS,
     getDeepestPosition,
+    deduceURL,
+    joinURL,
+    splitURL,
+    defaultProtocols,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -244,6 +248,10 @@ export class OdooEditor extends EventTarget {
                 allowCommandVideo: true,
                 renderingClasses: [],
                 allowInlineAtRoot: false,
+                getUpdateLinkOptions: () => ({
+                    shouldUnlinkInvalidURL: true,
+                    supportedProtocols: defaultProtocols,
+                }),
             },
             options,
         );
@@ -1720,6 +1728,7 @@ export class OdooEditor extends EventTarget {
     }
 
     setContenteditableLink(link) {
+        if (!link.isConnected) return;
         const editableChildren = link.querySelectorAll('[contenteditable=true]');
         this._stopContenteditable();
 
@@ -3110,6 +3119,14 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
+     * Revert current history step and apply command.
+     */
+    _replaceUserInput(command) {
+        this.historyRollback();
+        this._applyCommand(command);
+    }
+
+    /**
      * If backspace/delete input, rollback the operation and handle the
      * operation ourself. Needed for mobile, used for desktop for consistency.
      *
@@ -3144,20 +3161,16 @@ export class OdooEditor extends EventTarget {
             ev.data === null &&
             this._lastBeforeInputType === 'insertParagraph';
         if (this.keyboardType === KEYBOARD_TYPES.PHYSICAL || !wasCollapsed) {
+            this.historyPauseSteps();
             if (ev.inputType === 'deleteContentBackward') {
                 this._compositionStep();
-                this.historyRollback();
-                ev.preventDefault();
-                this._applyCommand('oDeleteBackward');
+                this._replaceUserInput('oDeleteBackward')
             } else if (ev.inputType === 'deleteContentForward' || isChromeDeleteforward) {
                 this._compositionStep();
-                this.historyRollback();
-                ev.preventDefault();
-                this._applyCommand('oDeleteForward');
+                this._replaceUserInput('oDeleteForward');
             } else if (ev.inputType === 'insertParagraph' || isChromeInsertParagraph) {
                 this._compositionStep();
                 this.historyRollback();
-                ev.preventDefault();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     const brs = this._applyCommand('oShiftEnter');
                     const anchor = brs[0].parentElement;
@@ -3165,11 +3178,9 @@ export class OdooEditor extends EventTarget {
                         if (brs.includes(anchor.firstChild)) {
                             brs.forEach(br => anchor.before(br));
                             setSelection(...rightPos(brs[brs.length - 1]));
-                            this.historyStep();
                         } else if (brs.includes(anchor.lastChild)) {
                             brs.forEach(br => anchor.after(br));
                             setSelection(...rightPos(brs[0]));
-                            this.historyStep();
                         }
                     }
                 }
@@ -3185,7 +3196,6 @@ export class OdooEditor extends EventTarget {
                 // we cannot trust the browser to keep the selection inside empty tags.
                 const latestSelectionInsideEmptyTag = this._isLatestComputedSelectionInsideEmptyInlineTag();
                 if (wasTextSelected || isUnitTests || latestSelectionInsideEmptyTag) {
-                    ev.preventDefault();
                     if (!isUnitTests) {
                         // First we need to undo the character inserted by the browser.
                         // Since the unit test Event is not trusted by the browser, we don't
@@ -3298,15 +3308,13 @@ export class OdooEditor extends EventTarget {
                         }
                     }
                 }
-                this.historyStep();
             } else if (ev.inputType === 'insertLineBreak') {
                 this._compositionStep();
-                this.historyRollback();
-                ev.preventDefault();
-                this._applyCommand('oShiftEnter');
-            } else {
-                this.historyStep();
+                this._replaceUserInput('oShiftEnter');
             }
+            this._updateLink();
+            this.historyUnpauseSteps();
+            this.historyStep();
         } else if (ev.inputType === 'insertCompositionText') {
             this._fromCompositionText = true;
         }
@@ -3411,7 +3419,11 @@ export class OdooEditor extends EventTarget {
                     // deleteBackward input event with a collapsed selection in
                     // front of a contentEditable="false" (eg: font awesome).
                     ev.preventDefault();
-                    this._applyCommand('oDeleteBackward');
+                    this.historyPauseSteps();
+                    this._applyCommand('oDeleteBackward')
+                    this._updateLink();
+                    this.historyUnpauseSteps();
+                    this.historyStep();
                 }
             } else if (selection.isCollapsed && selection.anchorNode) {
                 const anchor = (selection.anchorNode.nodeType !== Node.TEXT_NODE && selection.anchorOffset) ?
@@ -4237,6 +4249,7 @@ export class OdooEditor extends EventTarget {
         // Hence, use the cloned range to reselect it.
         selection.removeAllRanges();
         selection.addRange(cloneRange);
+        link.classList.add('oe_auto_update_link');
     }
 
     /**
@@ -4268,6 +4281,7 @@ export class OdooEditor extends EventTarget {
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
+        this.historyPauseSteps();
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
@@ -4296,7 +4310,6 @@ export class OdooEditor extends EventTarget {
             if(!text.match(/\${.*}/gi)) {
                 splitAroundUrl = text.split(URL_REGEX);
             }
-            this.historyPauseSteps("_onPaste");
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                     ? splitAroundUrl[i]
@@ -4424,6 +4437,7 @@ export class OdooEditor extends EventTarget {
                     } else {
                         const link = document.createElement('A');
                         link.setAttribute('href', url);
+                        link.classList.add('oe_auto_update_link');
                         for (const attribute in linkAttributes) {
                             link.setAttribute(attribute, linkAttributes[attribute]);
                         }
@@ -4449,7 +4463,8 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
-            this.historyUnpauseSteps("_onPaste");
+            this._updateLink();
+            this.historyUnpauseSteps();
             this.historyStep();
         }
     }
@@ -4511,7 +4526,11 @@ export class OdooEditor extends EventTarget {
             });
         } else if (htmlTransferItem) {
             htmlTransferItem.getAsString(pastedText => {
-                this.execCommand('insert', this._prepareClipboardData(pastedText));
+                this.historyPauseSteps();
+                this._applyCommand('insert', this._prepareClipboardData(pastedText));
+                this._updateLink();
+                this.historyUnpauseSteps();
+                this.historyStep();
             });
         }
         this.historyStep();
@@ -4675,5 +4694,38 @@ export class OdooEditor extends EventTarget {
                 plugin[method](...args);
             }
         }
+    }
+    /**
+     * Update link's href.
+     * If label is a valid URL, href gets updated and link gets tagged as
+     * auto-updatable.
+     * If label of an auto-updatable link is an invalid URL, it gets unlinked
+     * or has its href attribute removed, depending on `shouldUnlinkInvalidURL`
+     * option.
+     */
+    _updateLink() {
+        const link = closestElement(this.document.getSelection()?.anchorNode, 'a') ||
+            closestElement(this.document.getSelection()?.focusNode, 'a');
+        if (!link) return;
+        const { supportedProtocols, shouldUnlinkInvalidURL } = this.options.getUpdateLinkOptions();
+        const linkLabel = link.innerText.replace(/\u200b/g, '').trim();
+        const currentProtocol = splitURL(link.href)[0];
+        const [protocol, url] = deduceURL(linkLabel, supportedProtocols, currentProtocol);
+        if (url) {
+            link.href = joinURL(protocol, url);
+            this.dispatchEvent(new Event('linkHrefChange'));
+            link.classList.add('oe_auto_update_link');
+        } else if (link.classList.contains('oe_auto_update_link')) {
+            if (shouldUnlinkInvalidURL) {
+                this._applyRawCommand('unlink');
+                this.dispatchEvent(new Event('linkRemoved'));
+            } else {
+                const restoreCursor = preserveCursor(this.document);
+                link.removeAttribute('href');
+                this.dispatchEvent(new Event('linkHrefChange'));
+                restoreCursor();
+            }
+        }
+        this.dispatchEvent(new Event('linkLabelChange'));
     }
 }

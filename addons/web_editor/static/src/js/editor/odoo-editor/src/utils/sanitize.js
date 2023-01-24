@@ -15,7 +15,6 @@ import {
     isUnbreakable,
     isEditorTab,
     isZWS,
-    getUrlsInfosInString,
     isVoidElement,
 } from './utils.js';
 
@@ -147,7 +146,6 @@ class Sanitize {
 
             const selection = this.root.ownerDocument.getSelection();
             const anchor = selection && selection.anchorNode;
-            const anchorEl = anchor && closestElement(anchor);
             // Remove zero-width spaces added by `fillEmpty` when there is
             // content and the selection is not next to it.
             if (
@@ -242,15 +240,6 @@ class Sanitize {
 
             if (node.firstChild) {
                 this._parse(node.firstChild);
-            }
-
-            // Update link URL if label is a new valid link.
-            if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.innerText;
-                const urlInfo = getUrlsInfosInString(linkLabel);
-                if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
-                    node.setAttribute('href', urlInfo[0].url);
-                }
             }
             node = node.nextSibling;
         }

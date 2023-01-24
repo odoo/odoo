@@ -255,6 +255,12 @@ const Link = Widget.extend({
             this.$link[0].removeAttribute('target');
         }
         this._updateLinkContent(this.$link, data);
+        if (this._contentMatchesUrl()) {
+            this.$link.addClass('oe_auto_update_link');
+        } else {
+            this.$link.removeClass('oe_auto_update_link');
+        }
+
     },
     /**
      * Focuses the url input.
@@ -288,6 +294,24 @@ const Link = Widget.extend({
      * @private
      */
     _adaptPreview: function () {},
+    /**
+     * Whether the link's text content matches its URL.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    _contentMatchesUrl: function () {
+        const link = this.$link?.[0];
+        if (!link || !this.data.url.protocol) {
+            return false;
+        }
+        // Remove eventual ZWS and leading/trailing spaces.
+        let linkContent = link.innerText.replace(/\u200b/g, '').trim();
+        // Remove eventual leading protocol.
+        linkContent = splitURL(linkContent)[1];
+        const url = this.data.url.location.trim();
+        return linkContent === url;
+    },
     /**
      * Abstract method: return true if the URL should be stripped of its domain.
      *

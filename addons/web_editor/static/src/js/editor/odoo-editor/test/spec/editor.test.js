@@ -3921,7 +3921,7 @@ X[]
                     triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
                     triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
                 },
-                contentAfter: '<p>a http://test.com b <a href="http://test.com">http://test.com</a>&nbsp;[] c http://test.com d</p>',
+                contentAfter: '<p>a http://test.com b <a href="http://test.com" class="oe_auto_update_link">http://test.com</a>&nbsp;[] c http://test.com d</p>',
             });
         });
         it('should not transform url after two space', async () => {

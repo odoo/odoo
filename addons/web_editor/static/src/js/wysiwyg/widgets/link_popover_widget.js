@@ -120,6 +120,23 @@ const LinkPopoverWidget = Widget.extend({
                 this._loadAsyncLinkPreview();
             }
         });
+        this._onLinkHrefChange = () => {
+            if (popoverShown) {
+                this._loadAsyncLinkPreview();
+            }
+        };
+        this.options.wysiwyg.odooEditor.addEventListener('linkHrefChange', this._onLinkHrefChange);
+        this._onLinkRemoved = () => {
+            popoverShown = false;
+            this.$target.popover('hide');
+        };
+        this.options.wysiwyg.odooEditor.addEventListener('linkRemoved', this._onLinkRemoved);
+        this._onLinkLabelChange = () => {
+            if (popoverShown) {
+                this.$target.popover('update');
+            }
+        };
+        this.options.wysiwyg.odooEditor.addEventListener('linkLabelChange', this._onLinkLabelChange);
         const onClickDocument = (e) => {
             if (popoverShown) {
                 const hierarchy = [e.target, ...ancestors(e.target)];
@@ -152,6 +169,10 @@ const LinkPopoverWidget = Widget.extend({
         this.$target.off('.link_popover');
         $(document).off('.link_popover');
         $(this.options.wysiwyg.odooEditor.document).off('.link_popover');
+        this.options.wysiwyg.odooEditor.removeEventListener
+        this.options.wysiwyg.odooEditor.removeEventListener('linkHrefChange', this._onLinkHrefChange);
+        this.options.wysiwyg.odooEditor.removeEventListener('linkRemoved', this._onLinkRemoved);
+        this.options.wysiwyg.odooEditor.removeEventListener('linkLabelChange',this._onLinkLabelChange);
         this.$target.popover('dispose');
         return this._super(...arguments);
     },
@@ -274,7 +295,11 @@ const LinkPopoverWidget = Widget.extend({
      */
     _onRemoveLinkClick(ev) {
         ev.preventDefault();
-        this.options.wysiwyg.removeLink();
+        const removeLink = () => {
+            this.options.wysiwyg.removeLink();
+            this.$target.off('hidden.bs.popover.link_popover', removeLink);
+        }
+        this.$target.on('hidden.bs.popover.link_popover', removeLink);
         ev.stopImmediatePropagation();
     },
 });

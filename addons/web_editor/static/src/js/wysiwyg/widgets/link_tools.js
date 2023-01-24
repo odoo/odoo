@@ -11,6 +11,7 @@ const {
     getNumericAndUnit,
     isColorGradient,
 } = require('web_editor.utils');
+const {splitURL} = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 
 /**
  * Allows to customize link content and style.
@@ -80,9 +81,14 @@ const LinkTools = Link.extend({
             this._setSelectOption($(customOption), true);
             this._updateOptionsUI();
         }
+        // Bind event handler for link update.
+        this._onLinkHrefChange = this._onLinkHrefChange.bind(this);
+        this.options.wysiwyg.odooEditor.addEventListener('linkHrefChange', this._onLinkHrefChange);
         return ret;
     },
     destroy: function () {
+        // Unbind event handler.
+        this.options.wysiwyg.odooEditor.removeEventListener('linkHrefChange', this._onLinkHrefChange);
         if (!this.el) {
             return this._super(...arguments);
         }
@@ -487,6 +493,17 @@ const LinkTools = Link.extend({
         // Without this, no update if input is same as original text.
         this._updateLinkContent(this.$link, data, {force: true});
         this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+    },
+    /**
+     * Updates `data.url` and the URL input field value to reflect the new href.
+     * The `linkHrefChange` event is emitted by OdooEditor upon a label change
+     * that matches a valid URL, which updates the link's href.
+     */
+    _onLinkHrefChange() {
+        const [protocol, location] = splitURL(this.$link.attr('href'));
+        this.data.url = { protocol, location };
+        this.$('input[name="url"]').val(location);
+        this._onURLInput();
     },
 });
 
