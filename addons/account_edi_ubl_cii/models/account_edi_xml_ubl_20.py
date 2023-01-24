@@ -455,7 +455,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # IMPORT
     # -------------------------------------------------------------------------
 
-    def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
+    def _import_fill_invoice_form(self, invoice, tree, qty_factor):
         logs = []
 
         if qty_factor == -1:
@@ -465,7 +465,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         partner = self._import_retrieve_info_from_map(
             tree,
-            self._import_retrieve_partner_map(self.env.company, journal.type),
+            self._import_retrieve_partner_map(self.env.company, invoice.journal_id.type),
         )
         if partner:
             invoice.partner_id = partner
@@ -536,7 +536,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== invoice_line_ids: AllowanceCharge (document level) ====
 
-        logs += self._import_fill_invoice_allowance_charge(tree, invoice, journal, qty_factor)
+        logs += self._import_fill_invoice_allowance_charge(tree, invoice, qty_factor)
 
         # ==== Down Payment (prepaid amount) ====
 
@@ -548,18 +548,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         invoice_line_tag = 'InvoiceLine' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else 'CreditNoteLine'
         for i, invl_el in enumerate(tree.findall('./{*}' + invoice_line_tag)):
             invoice_line = invoice.invoice_line_ids.create({'move_id': invoice.id})
-            invl_logs = self._import_fill_invoice_line_form(journal, invl_el, invoice, invoice_line, qty_factor)
+            invl_logs = self._import_fill_invoice_line_form(invl_el, invoice_line, qty_factor)
             logs += invl_logs
 
         return logs
 
-    def _import_fill_invoice_line_form(self, journal, tree, invoice, invoice_line, qty_factor):
+    def _import_fill_invoice_line_form(self, tree, invoice_line, qty_factor):
         logs = []
 
         # Product
         product = self._import_retrieve_info_from_map(
             tree,
-            self._import_retrieve_product_map(journal),
+            self._import_retrieve_product_map(invoice_line.move_id.journal_id),
         )
         if product is not None:
             invoice_line.product_id = product
@@ -579,7 +579,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'gross_price_unit': './{*}Price/{*}AllowanceCharge/{*}BaseAmount',
             'rebate': './{*}Price/{*}AllowanceCharge/{*}Amount',
             'net_price_unit': './{*}Price/{*}PriceAmount',
-            'billed_qty':  './{*}InvoicedQuantity' if invoice.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
+            'billed_qty':  './{*}InvoicedQuantity' if invoice_line.move_id.move_type in ('in_invoice', 'out_invoice') or qty_factor == -1 else './{*}CreditedQuantity',
             'allowance_charge': './/{*}AllowanceCharge',
             'allowance_charge_indicator': './{*}ChargeIndicator',  # below allowance_charge node
             'allowance_charge_amount': './{*}Amount',  # below allowance_charge node
@@ -594,13 +594,13 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         if not tax_nodes:
             for elem in tree.findall('.//{*}TaxTotal'):
                 tax_nodes += elem.findall('.//{*}TaxSubtotal/{*}Percent')
-        return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line, inv_line_vals, logs)
+        return self._import_fill_invoice_line_taxes(tax_nodes, invoice_line, inv_line_vals, logs)
 
     # -------------------------------------------------------------------------
     # IMPORT : helpers
     # -------------------------------------------------------------------------
 
-    def _get_import_document_amount_sign(self, filename, tree):
+    def _get_import_document_amount_sign(self, tree):
         """
         In UBL, an invoice has tag 'Invoice' and a credit note has tag 'CreditNote'. However, a credit note can be
         expressed as an invoice with negative amounts. For this case, we need a factor to take the opposite

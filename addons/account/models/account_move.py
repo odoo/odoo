@@ -6,6 +6,7 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 from hashlib import sha256
 from json import dumps
+import logging
 import re
 from textwrap import shorten
 from unittest.mock import patch
@@ -28,6 +29,8 @@ from odoo.tools import (
     is_html_empty,
     sql
 )
+
+_logger = logging.getLogger(__name__)
 
 
 #forbidden fields
@@ -2728,6 +2731,79 @@ class AccountMove(models.Model):
         return values
 
     # -------------------------------------------------------------------------
+    # EDI
+    # -------------------------------------------------------------------------
+
+    @contextmanager
+    def _get_edi_creation(self):
+        """Get an environment to import documents from other sources.
+
+        Allow to edit the current move or create a new one.
+        This will prevent computing the dynamic lines at each invoice line added and only
+        compute everything at the end.
+        """
+        container = {'records': self}
+        with self._check_balanced(container),\
+             self._disable_discount_precision(),\
+             self._sync_dynamic_lines(container):
+            move = self or self.create({})
+            yield move
+            container['records'] = move
+
+    @contextmanager
+    def _disable_discount_precision(self):
+        """Disable the user defined precision for discounts.
+
+        This is useful for importing documents coming from other softwares and providers.
+        The reasonning is that if the document that we are importing has a discount, it
+        shouldn't be rounded to the local settings.
+        """
+        original_precision_get = DecimalPrecision.precision_get
+        def precision_get(self, application):
+            if application == 'Discount':
+                return 100
+            return original_precision_get(self, application)
+        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
+            yield
+
+    def _get_edi_xml_decoder(self, file_data, new=False):
+        self.ensure_one()
+        return None
+
+    def _get_edi_pdf_decoder(self, file_data, new=False):
+        self.ensure_one()
+        return None
+
+    def _get_edi_binary_decoder(self, file_data, new=False):
+        self.ensure_one()
+        return None
+
+    def _import_edi_invoice(self, file_data, new=False):
+        self.ensure_one()
+        if file_data['type'] == 'xml':
+            decoder = self._get_edi_xml_decoder(file_data, new=new)
+        elif file_data['type'] == 'pdf':
+            decoder = self._get_edi_pdf_decoder(file_data, new=new)
+        else:
+            decoder = self._get_edi_binary_decoder(file_data, new=new)
+
+        if not decoder:
+            return
+
+        try:
+            with self._disable_discount_precision(), self._get_edi_creation() as invoice:
+                return decoder(invoice, file_data, new=new)
+
+        except RedirectWarning as rw:
+            raise rw
+        except Exception as e:
+            _logger.exception(
+                "Error importing attachment '%s' as invoice: %s",
+                file_data['filename'],
+                str(e),
+            )
+
+    # -------------------------------------------------------------------------
     # BUSINESS METHODS
     # -------------------------------------------------------------------------
 
@@ -3770,38 +3846,6 @@ class AccountMove(models.Model):
 
         return rslt
 
-    @contextmanager
-    def _get_edi_creation(self):
-        """Get an environment to import documents from other sources.
-
-        Allow to edit the current move or create a new one.
-        This will prevent computing the dynamic lines at each invoice line added and only
-        compute everything at the end.
-        """
-        container = {'records': self}
-        with self._check_balanced(container),\
-             self._disable_discount_precision(),\
-             self._sync_dynamic_lines(container):
-            move = self or self.create({})
-            yield move
-            container['records'] = move
-
-    @contextmanager
-    def _disable_discount_precision(self):
-        """Disable the user defined precision for discounts.
-
-        This is useful for importing documents coming from other softwares and providers.
-        The reasonning is that if the document that we are importing has a discount, it
-        shouldn't be rounded to the local settings.
-        """
-        original_precision_get = DecimalPrecision.precision_get
-        def precision_get(self, application):
-            if application == 'Discount':
-                return 100
-            return original_precision_get(self, application)
-        with patch('odoo.addons.base.models.decimal_precision.DecimalPrecision.precision_get', new=precision_get):
-            yield
-
     # -------------------------------------------------------------------------
     # TOOLING
     # -------------------------------------------------------------------------
@@ -3932,15 +3976,13 @@ class AccountMove(models.Model):
                               author_id=odoobot.id)
             return res
 
-        decoders = self.env['account.move']._get_update_invoice_from_attachment_decoders(self)
-        with self._disable_discount_precision():
-            for decoder in sorted(decoders, key=lambda d: d[0]):
-                # start with message_main_attachment_id, that way if OCR is installed, only that one will be parsed.
-                # this is based on the fact that the ocr will be the last decoder.
-                for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
-                    invoice = decoder[1](attachment, self)
-                    if invoice:
-                        return res
+        for attachment in attachments.sorted(lambda x: x != self.message_main_attachment_id):
+            for file_data in attachment._decode_edi_attachment():
+                if self._import_edi_invoice(file_data, self):
+                    break
+
+                if file_data.get('pdf_reader'):
+                    file_data['pdf_reader'].stream.close()
 
         return res
 
@@ -4045,21 +4087,6 @@ class AccountMove(models.Model):
         the default one. For example please review the l10n_ar module """
         self.ensure_one()
         return 'account.report_invoice_document'
-
-    def _get_create_document_from_attachment_decoders(self):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
-
-        :returns:   A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
-
-    def _get_update_invoice_from_attachment_decoders(self, invoice):
-        """ Returns a list of method that are able to create an invoice from an attachment and a priority.
-
-        :param invoice: The invoice on which to update the data.
-        :returns:       A list of tuples (priority, method) where method takes an attachment as parameter.
-        """
-        return []
 
     def _is_downpayment(self):
         ''' Return true if the invoice is a downpayment.

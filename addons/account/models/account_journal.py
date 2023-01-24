@@ -701,24 +701,40 @@ class AccountJournal(models.Model):
             self = self.env['account.journal'].search([
                 ('company_id', '=', self.env.company.id), ('type', '=', journal_type)
             ], limit=1)
+
         attachments = self.env['ir.attachment'].browse(attachment_ids)
         if not attachments:
             raise UserError(_("No attachment was provided"))
+        if not self:
+            raise UserError(_("No journal found"))
+
+        if self.type == 'sale':
+            move_type = 'out_invoice'
+        else:
+            move_type = 'in_invoice'
 
         invoices = self.env['account.move']
-        with invoices._disable_discount_precision():
-            for attachment in attachments:
-                decoders = self.env['account.move']._get_create_document_from_attachment_decoders()
-                invoice = False
-                for decoder in sorted(decoders, key=lambda d: d[0]):
-                    invoice = decoder[1](attachment, journal=self)
-                    if invoice:
-                        break
-                if not invoice:
-                    invoice = self.env['account.move'].create({})
-                invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
-                attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
-                invoices += invoice
+        for attachment in attachments:
+            invoice = self.env['account.move'].create({
+                'journal_id': self.id,
+                'move_type': move_type,
+            })
+            invoices |= invoice
+            invoice \
+                .with_context(
+                    account_predictive_bills_disable_prediction=True,
+                    no_new_invoice=True,
+                ) \
+                .message_post(attachment_ids=attachment.ids)
+            attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
+
+            for file_data in attachment._decode_edi_attachment():
+                if invoice._import_edi_invoice(file_data, self, new=True):
+                    break
+
+                if file_data.get('pdf_reader'):
+                    file_data['pdf_reader'].stream.close()
+
         return invoices
 
     def create_document_from_attachment(self, attachment_ids=None):

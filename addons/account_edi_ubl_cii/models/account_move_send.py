@@ -54,7 +54,6 @@ class AccountMoveSend(models.Model):
     def _prepare_invoice_documents(self, invoice):
         # EXTENDS 'account'
         ubl_cii_xml = self.enable_ubl_cii_xml and self.ubl_cii_xml
-
         if ubl_cii_xml:
             builder, options = invoice._get_ubl_cii_builder()
         else:
@@ -80,21 +79,18 @@ class AccountMoveSend(models.Model):
         # The xml is generated and checked first before the super call to avoid a not necessary PDF creation by
         # wkhtmltopdf.
         results = super()._prepare_invoice_documents(invoice)
-
-        if ubl_cii_xml:
-            results['ubl_cii_xml_attachment_values'] = {
-                'name': filename,
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-                'res_model': invoice._name,
-                'res_id': invoice.id,
-            }
-            results['ubl_cii_xml_options'] = {
-                'builder': builder,
-                'options': options,
-            }
-            results['pdf_attachment_options']['need_postprocess_pdf'] = True
-
+        results['ubl_cii_xml_attachment_values'] = {
+            'name': filename,
+            'raw': xml_content,
+            'mimetype': 'application/xml',
+            'res_model': invoice._name,
+            'res_id': invoice.id,
+        }
+        results['ubl_cii_xml_options'] = {
+            'builder': builder,
+            'options': options,
+        }
+        results['pdf_attachment_options']['need_postprocess_pdf'] = True
         return results
 
     def _postprocess_invoice_pdf(self, invoice, pdf_writer, prepared_data):
