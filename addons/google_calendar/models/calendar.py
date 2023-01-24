@@ -4,6 +4,7 @@
 import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 
@@ -250,6 +251,8 @@ class Meeting(models.Model):
                 'useDefault': False,
             }
         }
+        if not self.google_id:
+            values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
         if not self.active:
