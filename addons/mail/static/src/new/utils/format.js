@@ -129,7 +129,7 @@ function addLink(node, transformChildren) {
  * @param {string} content
  * @returns {string}
  */
-function escapeAndCompactTextContent(content) {
+export function escapeAndCompactTextContent(content) {
     //Removing unwanted extra spaces from message
     let value = escape(content).trim();
     value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");

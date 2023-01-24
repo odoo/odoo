@@ -10,7 +10,6 @@ from odoo import Command
 @tagged('-at_install', 'post_install', 'mail_composer')
 class TestMailFullComposer(HttpCase):
 
-    @skip('skipRefactoring')
     def test_full_composer_tour(self):
         self.env['mail.template'].create({
             'name': 'Test template',

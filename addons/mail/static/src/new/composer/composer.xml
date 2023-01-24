@@ -50,7 +50,7 @@
                             'border-top p-1' : extended,
                         }"
                     >
-                        <div class="d-flex align-items-center" >
+                        <div class="d-flex flex-grow-1 align-items-center" >
                             <button class="btn btn-light border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
                             <FileUploader multiUpload="true" onUploaded="(data) => attachmentUploader.uploadData(data)">
                                 <t t-set-slot="toggler">
@@ -58,6 +58,7 @@
                                 </t>
                             </FileUploader>
                         </div>
+                        <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                 </div>
 

@@ -18,6 +18,7 @@ import { useMessaging, useStore } from "../core/messaging_hook";
 import { useEmojiPicker } from "../emoji_picker/emoji_picker";
 
 import { sprintf } from "@web/core/utils/strings";
+import { escapeAndCompactTextContent } from "../utils/format.js";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { Typing } from "./typing";
 import { useDebounced } from "@web/core/utils/timing";
@@ -259,6 +260,33 @@ export class Composer extends Component {
     onClickAddAttachment(ev) {
         markEventHandled(ev, "composer.clickOnAddAttachment");
         this.state.autofocus++;
+    }
+
+    async onClickFullComposer(ev) {
+        const attachmentIds = this.attachmentUploader.attachments.map(
+            (attachment) => attachment.id
+        );
+        const context = {
+            default_attachment_ids: attachmentIds,
+            default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
+            default_model: this.props.composer.thread.model,
+            default_partner_ids: this.props.composer.thread.suggestedRecipients.map(
+                (partner) => partner.id
+            ),
+            default_res_ids: [this.props.composer.thread.id],
+            default_subtype_xmlid:
+                this.props.composer.type === "note" ? "mail.mt_note" : "mail.mt_comment",
+            mail_post_autofollow: this.props.composer.thread.hasWriteAccess,
+        };
+        const action = {
+            type: "ir.actions.act_window",
+            res_model: "mail.compose.message",
+            view_mode: "form",
+            views: [[false, "form"]],
+            target: "new",
+            context: context,
+        };
+        await this.env.services.action.doAction(action);
     }
 
     onClickAddEmoji(ev) {
