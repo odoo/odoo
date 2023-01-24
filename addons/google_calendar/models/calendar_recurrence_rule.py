@@ -37,7 +37,7 @@ class RecurrenceRule(models.Model):
                     'active': False,
                     'need_sync': True,
                 }]
-                event._google_delete(google_service, event.google_id)
+                event.with_user(event._get_event_user())._google_delete(google_service, event.google_id)
                 event.google_id = False
         self.env['calendar.event'].create(vals)
 
@@ -218,3 +218,10 @@ class RecurrenceRule(models.Model):
             },
         }
         return values
+
+    def _get_event_user(self):
+        self.ensure_one()
+        event = self._get_first_event()
+        if event:
+            return event._get_event_user()
+        return self.env.user
