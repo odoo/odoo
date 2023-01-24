@@ -81,15 +81,17 @@ options.registry.StepsConnector = options.Class.extend({
     _reloadConnectors() {
         const possibleTypes = this._requestUserValueWidgets('connector_type')[0].getMethodsParams().optionsPossibleValues.selectClass;
         const type = possibleTypes.find(possibleType => possibleType && this.$target[0].classList.contains(possibleType)) || '';
-        const steps = this.$target[0].querySelectorAll('.s_process_step');
+        // As the connectors are only visible in desktop, we can ignore the
+        // steps that are only visible in mobile.
+        const stepsEls = this.$target[0].querySelectorAll('.s_process_step:not(.o_snippet_desktop_invisible)');
 
-        for (let i = 0; i < steps.length - 1; i++) {
-            const connectorEl = steps[i].querySelector('.s_process_step_connector');
-            const stepMainElementRect = this._getStepMainElementRect(steps[i]);
-            const nextStepMainElementRect = this._getStepMainElementRect(steps[i + 1]);
-            const stepSize = this._getStepColSize(steps[i]);
-            const nextStepSize = this._getStepColSize(steps[i + 1]);
-            const nextStepPadding = this._getStepColPadding(steps[i + 1]);
+        for (let i = 0; i < stepsEls.length - 1; i++) {
+            const connectorEl = stepsEls[i].querySelector('.s_process_step_connector');
+            const stepMainElementRect = this._getStepMainElementRect(stepsEls[i]);
+            const nextStepMainElementRect = this._getStepMainElementRect(stepsEls[i + 1]);
+            const stepSize = this._getStepColSize(stepsEls[i]);
+            const nextStepSize = this._getStepColSize(stepsEls[i + 1]);
+            const nextStepPadding = this._getStepColPadding(stepsEls[i + 1]);
 
             connectorEl.style.left = `calc(50% + ${stepMainElementRect.width / 2}px)`;
             connectorEl.style.height = `${stepMainElementRect.height}px`;
