@@ -10,18 +10,21 @@ class OnboardingProgressStep(models.Model):
     _description = 'Onboarding Progress Step Tracker'
     _rec_name = 'step_id'
 
-    progress_id = fields.Many2one(
-        'onboarding.progress', 'Related Onboarding Progress Tracker', required=True, ondelete='cascade')
+    progress_ids = fields.Many2many('onboarding.progress', string='Related Onboarding Progress Tracker')
     step_state = fields.Selection(
         ONBOARDING_PROGRESS_STATES, string='Onboarding Step Progress', default='not_done')
-    onboarding_id = fields.Many2one(related='progress_id.onboarding_id', string='Onboarding')
     step_id = fields.Many2one(
         'onboarding.onboarding.step', string='Onboarding Step', required=True, ondelete='cascade')
 
-    _sql_constraints = [
-        ('progress_step_uniq', 'unique (progress_id, step_id)',
-         'There cannot be multiple records of the same onboarding step completion for the same Progress record.'),
-    ]
+    company_id = fields.Many2one('res.company', ondelete='cascade')
+
+    def init(self):
+        """Make sure there aren't multiple records for the same onboarding step and company."""
+        # not in _sql_constraint because COALESCE is not supported for PostgreSQL constraint
+        self.env.cr.execute("""
+            CREATE UNIQUE INDEX IF NOT EXISTS onboarding_progress_step_company_uniq
+            ON onboarding_progress_step (step_id, COALESCE(company_id, 0))
+        """)
 
     def action_consolidate_just_done(self):
         was_just_done = self.filtered(lambda progress: progress.step_state == 'just_done')
