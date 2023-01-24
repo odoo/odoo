@@ -158,6 +158,7 @@ class PosOrder(models.Model):
             'table_id',
             'to_invoice',
             'multiprint_resume',
+            'access_token',
         ]
 
     @api.model
