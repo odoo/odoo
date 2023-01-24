@@ -414,7 +414,8 @@ class Websocket:
         """
         frame = self._get_next_frame()
         if frame.opcode in CTRL_OP:
-            return self._handle_control_frame(frame)
+            self._handle_control_frame(frame)
+            return
         if self.state is not ConnectionState.OPEN:
             # After receiving a control frame indicating the connection
             # should be closed, a peer discards any further data
