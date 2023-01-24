@@ -46,7 +46,7 @@ export class MessageService {
     async delete(message) {
         if (message.isStarred) {
             this.store.discuss.starred.counter--;
-            removeFromArray(this.store.discuss.starred.messages, message.id);
+            removeFromArray(this.store.discuss.starred.messageIds, message.id);
         }
         message.body = "";
         message.attachments = [];
@@ -137,7 +137,7 @@ export class MessageService {
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.store.discuss.starred.counter = 0;
-        this.store.discuss.starred.messages = [];
+        this.store.discuss.starred.messageIds = [];
         await this.orm.call("mail.message", "unstar_all");
     }
 
@@ -162,11 +162,11 @@ export class MessageService {
         if (isStarred) {
             this.store.discuss.starred.counter++;
             if (this.store.discuss.starred.messages.length > 0) {
-                this.store.discuss.starred.messages.push(message.id);
+                this.store.discuss.starred.messageIds.push(message.id);
             }
         } else {
             this.store.discuss.starred.counter--;
-            removeFromArray(this.store.discuss.starred.messages, message.id);
+            removeFromArray(this.store.discuss.starred.messageIds, message.id);
         }
     }
 
@@ -257,26 +257,26 @@ export class MessageService {
         }
         this._updateReactions(message, data.messageReactionGroups);
         this.store.messages[message.id] = message;
-        if (message.originThread && !message.originThread.messages.includes(message.id)) {
-            message.originThread.messages.push(message.id);
+        if (message.originThread && !message.originThread.messages.includes(message)) {
+            message.originThread.messageIds.push(message.id);
             this.sortMessages(message.originThread);
         }
-        if (message.isNeedaction && !this.store.discuss.inbox.messages.includes(message.id)) {
+        if (message.isNeedaction && !this.store.discuss.inbox.messages.includes(message)) {
             if (!fromFetch) {
                 this.store.discuss.inbox.counter++;
                 if (message.originThread) {
                     message.originThread.message_needaction_counter++;
                 }
             }
-            this.store.discuss.inbox.messages.push(message.id);
+            this.store.discuss.inbox.messageIds.push(message.id);
             this.sortMessages(this.store.discuss.inbox);
         }
-        if (message.isStarred && !this.store.discuss.starred.messages.includes(message.id)) {
-            this.store.discuss.starred.messages.push(message.id);
+        if (message.isStarred && !this.store.discuss.starred.messages.includes(message)) {
+            this.store.discuss.starred.messageIds.push(message.id);
             this.sortMessages(this.store.discuss.starred);
         }
-        if (message.isHistory && !this.store.discuss.history.messages.includes(message.id)) {
-            this.store.discuss.history.messages.push(message.id);
+        if (message.isHistory && !this.store.discuss.history.messages.includes(message)) {
+            this.store.discuss.history.messageIds.push(message.id);
             this.sortMessages(this.store.discuss.history);
         }
     }
@@ -447,14 +447,14 @@ export class MessageService {
      * @param {import("@mail/new/core/thread_model").Thread} thread
      */
     sortMessages(thread) {
-        thread.messages.sort((msgId1, msgId2) => {
-            const indicator =
-                new Date(this.store.messages[msgId1].dateTime) -
-                new Date(this.store.messages[msgId2].dateTime);
+        thread.messageIds.sort((msgId1, msgId2) => {
+            const msg1 = this.store.messages[msgId1];
+            const msg2 = this.store.messages[msgId2];
+            const indicator = new Date(msg1.dateTime) - new Date(msg2.dateTime);
             if (indicator) {
                 return indicator;
             } else {
-                return msgId1 - msgId2;
+                return msg1.id - msg2.id;
             }
         });
     }

@@ -635,7 +635,7 @@ export class ThreadService {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
         if (thread.type !== "chatter") {
-            removeFromArray(thread.messages, tmpMsg.id);
+            removeFromArray(thread.messageIds, tmpMsg.id);
             delete this.store.messages[tmpMsg.id];
         }
         return message;
@@ -649,13 +649,13 @@ export class ThreadService {
         let countFromId = thread.serverLastSeenMsgBySelf ? thread.serverLastSeenMsgBySelf : 0;
         this.message.sortMessages(thread);
         const lastSeenMessageId = this.lastSeenBySelfMessageId(thread);
-        const firstMessageId = thread.messages[0];
-        if (firstMessageId && lastSeenMessageId && lastSeenMessageId >= firstMessageId) {
+        const firstMessage = thread.messages[0];
+        if (firstMessage && lastSeenMessageId && lastSeenMessageId >= firstMessage.id) {
             baseCounter = 0;
             countFromId = lastSeenMessageId;
         }
-        return thread.messages.reduce((total, messageId) => {
-            if (messageId <= countFromId) {
+        return thread.messages.reduce((total, message) => {
+            if (message.id <= countFromId) {
                 return total;
             }
             return total + 1;
@@ -666,13 +666,12 @@ export class ThreadService {
      * @param {Thread} thread
      */
     lastSeenBySelfMessageId(thread) {
-        const firstMessageId = thread.messages[0];
-        if (firstMessageId && thread.serverLastSeenMsgBySelf < firstMessageId) {
+        const firstMessage = thread.messages[0];
+        if (firstMessage && thread.serverLastSeenMsgBySelf < firstMessage.id) {
             return thread.serverLastSeenMsgBySelf;
         }
         let lastSeenMessageId = thread.serverLastSeenMsgBySelf;
-        for (const messageId of thread.messages) {
-            const message = this.store.messages[messageId];
+        for (const message of thread.messages) {
             if (message.id <= thread.serverLastSeenMsgBySelf) {
                 continue;
             }

@@ -57,7 +57,7 @@ export class Thread {
     message_needaction_counter = 0;
     message_unread_counter = 0;
     /** @type {number[]} */
-    messages = [];
+    messageIds = [];
     /** @type {string} */
     name;
     /** @type {number} */
@@ -91,6 +91,10 @@ export class Thread {
             this._store.discuss.chats.threads.push(this.localId);
         }
         store.threads[this.localId] = this;
+    }
+
+    get messages() {
+        return this.messageIds.map((id) => this._store.messages[id]);
     }
 
     get accessRestrictedToGroupText() {
@@ -170,8 +174,7 @@ export class Thread {
     }
 
     get lastEditableMessageOfSelf() {
-        const messages = this.messages.map((id) => this._store.messages[id]);
-        const editableMessagesBySelf = messages.filter(
+        const editableMessagesBySelf = this.messages.filter(
             (message) => message.isSelfAuthored && message.editable
         );
         if (editableMessagesBySelf.length > 0) {
@@ -196,17 +199,17 @@ export class Thread {
         if (this.messages.length === 0) {
             return undefined;
         }
-        return Math.max(...this.messages);
+        return Math.max(...this.messageIds);
     }
 
     get mostRecentNonTransientMessage() {
         if (this.messages.length === 0) {
             return undefined;
         }
-        const oldestNonTransientMessageId = [...this.messages]
+        const oldestNonTransientMessage = [...this.messages]
             .reverse()
-            .find((messageId) => Number.isInteger(messageId));
-        return this._store.messages[oldestNonTransientMessageId];
+            .find((message) => Number.isInteger(message.id));
+        return oldestNonTransientMessage;
     }
 
     get hasSelfAsMember() {
@@ -240,15 +243,14 @@ export class Thread {
         if (this.messages.length === 0) {
             return undefined;
         }
-        const oldestNonTransientMessageId = this.messages.find((messageId) =>
-            Number.isInteger(messageId)
+        const oldestNonTransientMessage = this.messages.find((message) =>
+            Number.isInteger(message.id)
         );
-        return this._store.messages[oldestNonTransientMessageId];
+        return oldestNonTransientMessage;
     }
 
     get nonTransientMessages() {
-        const messages = this.messages.map((id) => this._store.messages[id]);
-        return messages.filter((message) => !message.isTransient);
+        return this.messages.filter((message) => !message.isTransient);
     }
 
     get lastSelfMessageSeenByEveryone() {

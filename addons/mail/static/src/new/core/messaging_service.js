@@ -477,9 +477,9 @@ export class Messaging {
                             (p) => p === this.store.user.id
                         );
                         removeFromArray(message.needaction_partner_ids, partnerIndex);
-                        removeFromArray(this.store.discuss.inbox.messages, messageId);
+                        removeFromArray(this.store.discuss.inbox.messageIds, messageId);
                         if (this.store.discuss.history.messages.length > 0) {
-                            this.store.discuss.history.messages.push(messageId);
+                            this.store.discuss.history.messageIds.push(messageId);
                         }
                     }
                     this.store.discuss.inbox.counter = needaction_inbox_counter;

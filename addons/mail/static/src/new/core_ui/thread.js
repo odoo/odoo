@@ -40,6 +40,7 @@ export class Thread extends Component {
     static template = "mail.thread";
 
     setup() {
+        window.aku = this;
         this.messaging = useMessaging();
         this.store = useStore();
         this.state = useState({ isReplyingTo: false });

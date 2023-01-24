@@ -8,8 +8,7 @@
                 <t t-set="currentDay" t-value="0"/>
                 <t t-set="prevMsg" t-value="0"/>
                 <t t-if="props.thread.loadMore and props.order === 'asc' and !props.thread.isTransient" t-call="mail.thread.load_more"/>
-                <t t-foreach="props.order === 'asc' ? props.thread.messages : [...props.thread.messages].reverse()" t-as="messageId" t-key="messageId">
-                    <t t-set="msg" t-value="store.messages[messageId]"/>
+                <t t-foreach="props.order === 'asc' ? props.thread.messages : [...props.thread.messages].reverse()" t-as="msg" t-key="msg.id">
                     <t t-if="!msg.isEmpty and msg.dateDay !== currentDay">
                         <div class="o-mail-thread-date d-flex align-items-center fw-bolder pt-4">
                             <hr class="flex-grow-1 border-top"/>
@@ -33,7 +32,7 @@
                             messageEdition="props.messageEdition"
                         />
                     </t>
-                    <Transition visible="props.thread.serverLastSeenMsgBySelf === msg.id and !messageId_last" name="'o-fade'" t-slot-scope="transition">
+                    <Transition visible="props.thread.serverLastSeenMsgBySelf === msg.id and !msg_last" name="'o-fade'" t-slot-scope="transition">
                         <div class="o-mail-thread-new-message d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
                             <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
                         </div>
