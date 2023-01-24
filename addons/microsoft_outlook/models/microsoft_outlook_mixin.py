@@ -109,6 +109,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         """
         response = self._fetch_outlook_token('refresh_token', refresh_token=refresh_token)
         return (
+            response['refresh_token'],
             response['access_token'],
             int(time.time()) + response['expires_in'],
         )
@@ -162,6 +163,7 @@ class MicrosoftOutlookMixin(models.AbstractModel):
             if not self.microsoft_outlook_refresh_token:
                 raise UserError(_('Please login your Outlook mail server before using it.'))
             (
+                self.microsoft_outlook_refresh_token,
                 self.microsoft_outlook_access_token,
                 self.microsoft_outlook_access_token_expiration,
             ) = self._fetch_outlook_access_token(self.microsoft_outlook_refresh_token)
