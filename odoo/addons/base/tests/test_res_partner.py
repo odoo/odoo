@@ -65,6 +65,29 @@ class TestPartner(TransactionCase):
         with self.assertRaises(UserError, msg="You should not be able to update the company_id of the partner company if the linked user of a child partner is not an allowed to be assigned to that company"), self.cr.savepoint():
             test_partner_company.write({'company_id': company_2.id})
 
+    def test_commercial_field_sync(self):
+        """Check if commercial fields are synced properly: testing with VAT field"""
+        Partner = self.env['res.partner']
+        company_1 = Partner.create({'name': 'company 1', 'is_company': True, 'vat': 'BE0123456789'})
+        company_2 = Partner.create({'name': 'company 2', 'is_company': True, 'vat': 'BE9876543210'})
+
+        partner = Partner.create({'name': 'someone', 'is_company': False, 'parent_id': company_1.id})
+        Partner.flush()
+        self.assertEqual(partner.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # create a delivery address for the partner
+        delivery = Partner.create({'name': 'somewhere', 'type': 'delivery', 'parent_id': partner.id})
+        self.assertEqual(delivery.commercial_partner_id.id, company_1.id, "Commercial partner should be recomputed")
+        self.assertEqual(delivery.vat, company_1.vat, "VAT should be inherited from the company 1")
+
+        # move the partner to another company
+        partner.write({'parent_id': company_2.id})
+        partner.flush()
+        self.assertEqual(partner.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed")
+        self.assertEqual(partner.vat, company_2.vat, "VAT should be inherited from the company 2")
+        self.assertEqual(delivery.commercial_partner_id.id, company_2.id, "Commercial partner should be recomputed on delivery")
+        self.assertEqual(delivery.vat, company_2.vat, "VAT should be inherited from the company 2 to delivery")
+
     def test_lang_computation_code(self):
         """ Check computation of lang: coming from installed languages, forced
         default value and propagation from parent."""
