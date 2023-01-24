@@ -2735,6 +2735,31 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_field_x2many_list_row_add");
     });
 
+    QUnit.test(
+        "one2many list: cannot open record in editable list and form in readonly mode",
+        async function (assert) {
+            serverData.models.partner.records[0].p = [2];
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form edit="0">
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.containsOnce(target, ".o_data_cell[name='display_name']");
+            await click(target, ".o_data_cell[name='display_name']");
+            assert.containsNone(target, ".modal-dialog");
+        }
+    );
+
     QUnit.test("one2many list: conditional create/delete actions", async function (assert) {
         serverData.models.partner.records[0].p = [2, 4];
         await makeView({
@@ -9036,7 +9061,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "test_button") {
                     assert.step("test_button");
-                    assert.strictEqual(args.kwargs.context.parent_name, 'first record');
+                    assert.strictEqual(args.kwargs.context.parent_name, "first record");
                     return true;
                 }
             },
@@ -12492,13 +12517,21 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
         assert.containsOnce(target, ".o_dialog .o_form_view");
 
-        // Click on "Save & New" with an invalid form 
+        // Click on "Save & New" with an invalid form
         await click(target, ".o_dialog .o_form_button_save_new");
         assert.containsOnce(target, ".o_dialog .o_form_view");
 
         // Check that no buttons are disabled
-        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_save_new"), "disabled", undefined);
-        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_cancel"), "disabled", undefined);
+        assert.hasAttrValue(
+            target.querySelector(".o_dialog .o_form_button_save_new"),
+            "disabled",
+            undefined
+        );
+        assert.hasAttrValue(
+            target.querySelector(".o_dialog .o_form_button_cancel"),
+            "disabled",
+            undefined
+        );
     });
 
     QUnit.test("field in list but not in fetched form", async function (assert) {

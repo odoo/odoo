@@ -670,7 +670,7 @@ QUnit.module("Views", (hooks) => {
                 arch: `
                 <form edit="0">
                     <field name="partner_ids">
-                        <tree editable="top">
+                        <tree>
                             <field name="display_name"/>
                             <field name="timmy" widget="many2many_tags" options="{'color_field': 'color'}"/>
                         </tree>
