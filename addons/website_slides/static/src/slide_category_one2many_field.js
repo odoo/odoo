@@ -4,7 +4,12 @@ import { registry } from "@web/core/registry";
 import { SlideCategoryListRenderer } from "./slide_category_list_renderer";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 
-class SlideCategoryOneToManyField extends X2ManyField {}
+class SlideCategoryOneToManyField extends X2ManyField {
+    setup() {
+        super.setup();
+        this.canOpenRecord = true;
+    }
+}
 SlideCategoryOneToManyField.components = {
     ...X2ManyField.components,
     ListRenderer: SlideCategoryListRenderer,
