@@ -71,26 +71,20 @@ class MailTemplatePreview(models.TransientModel):
         """ Preview the mail template (body, subject, ...) depending of the language and
         the record reference, more precisely the record id for the defined model of the mail template.
         If no record id is selectable/set, the inline_template placeholders won't be replace in the display information. """
-        copy_depends_values = {'lang': self.lang}
         mail_template = self.mail_template_id.with_context(lang=self.lang)
-        try:
-            if not self.resource_ref.id:
-                self._set_mail_attributes()
-            else:
-                copy_depends_values['resource_ref'] = '%s,%s' % (self.resource_ref._name, self.resource_ref.id)
+        if not self.resource_ref or not self.resource_ref.id:
+            self._set_mail_attributes()
+        else:
+            try:
                 mail_values = mail_template.with_context(template_preview_lang=self.lang)._generate_template(
                     [self.resource_ref.id],
                     self._MAIL_TEMPLATE_FIELDS
                 )[self.resource_ref.id]
                 self._set_mail_attributes(values=mail_values)
-            self.error_msg = False
-        except (ValueError, UserError) as user_error:
-            self._set_mail_attributes()
-            self.error_msg = user_error.args[0]
-        finally:
-            # Avoid to be change by a cache invalidation (in generate_mail), e.g. Quotation / Order report
-            for key, value in copy_depends_values.items():
-                self[key] = value
+                self.error_msg = False
+            except (ValueError, UserError) as user_error:
+                self._set_mail_attributes()
+                self.error_msg = user_error.args[0]
 
     def _set_mail_attributes(self, values=None):
         for field in self._MAIL_TEMPLATE_FIELDS:
