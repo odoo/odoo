@@ -91,6 +91,9 @@ export class X2ManyField extends Component {
                 },
             });
         };
+        this.canOpenRecord =
+            this.viewMode === "list" ? !(archInfo.editable || this.props.editable) : true;
+
         const selectCreate = useSelectCreate({
             resModel: this.props.value.resModel,
             activeActions: this.activeActions,
@@ -237,7 +240,9 @@ export class X2ManyField extends Component {
     }
 
     async openRecord(record) {
-        return this._openRecord({ record, mode: this.props.readonly ? "readonly" : "edit" });
+        if (this.canOpenRecord) {
+            return this._openRecord({ record, mode: this.props.readonly ? "readonly" : "edit" });
+        }
     }
 }
 X2ManyField.components = { Pager, KanbanRenderer, ListRenderer, ViewButton };

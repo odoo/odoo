@@ -86,6 +86,7 @@ class QuestionPageOneToManyField extends X2ManyField {
             }
             openRecord(params);
         };
+        this.canOpenRecord = true;
     }
 
     /**
