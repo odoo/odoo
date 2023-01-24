@@ -5,9 +5,7 @@
         </xpath>
         <xpath expr="//t[@t-foreach='invoices']/tr/td[last()]" position="before">
             <td class="text-center">
-                <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
-                <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider_code in ('none', 'custom'))"/>
-                <a t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
+                <a t-if="invoice._has_to_be_paid()"
                     t-att-href="invoice.get_portal_url(anchor='portal_pay')" title="Pay Now" aria-label="Pay now" class="btn btn-sm btn-primary" role="button">
                     <i class="fa fa-arrow-circle-right"/><span class='d-none d-md-inline'> Pay Now</span>
                 </a>
@@ -16,23 +14,40 @@
         <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <td class="tx_status text-center">
-                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
-                    <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                <t t-if="last_tx">
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
+                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
+                        <span class="badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')">
+                        <span class="badge rounded-pill text-bg-warning"><span class="d-none d-md-inline"> Pending</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Reversed</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'cancel'">
+                        <span class="badge rounded-pill text-bg-danger"><i class="fa fa-fw fa-remove"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                    </t>
                 </t>
-                <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
-                    <span class="badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
-                </t>
-                <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')">
-                  <span class="badge rounded-pill text-bg-warning"><span class="d-none d-md-inline"> Pending</span></span>
-                </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
-                    <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
-                </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
-                    <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Reversed</span></span>
-                </t>
-                <t t-if="invoice.state == 'cancel'">
-                    <span class="badge rounded-pill text-bg-danger"><i class="fa fa-fw fa-remove"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                <t t-else="">
+                    <!-- c/p of account -->
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
+                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
+                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"></i><span class="d-none d-md-inline"> Reversed</span></span>
+                    </t>
+                    <t t-if="invoice.state == 'cancel'">
+                        <span class="badge rounded-pill text-bg-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                    </t>
                 </t>
             </td>
         </xpath>
@@ -70,8 +85,7 @@
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider_code in ('none', 'custom'))"/>
             <div class="d-grid">
-                <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids or invoice.amount_paid &lt; invoice.amount_total)"
-
+                <a href="#" t-if="invoice._has_to_be_paid()"
                     class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
@@ -90,7 +104,7 @@
                 </t>
             </div>
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
-            <div t-if="(invoice.amount_residual or not tx_ids) and invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total" id="portal_pay">
+            <div t-if="invoice._has_to_be_paid()" id="portal_pay">
                 <t t-call="account_payment.portal_invoice_payment"/>
             </div>
         </xpath>

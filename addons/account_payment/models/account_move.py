@@ -41,7 +41,12 @@ class AccountMove(models.Model):
     def _has_to_be_paid(self):
         self.ensure_one()
         transactions = self.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))
-        return bool(
+        enabled_feature = str2bool(
+            self.env['ir.config_parameter'].sudo().get_param(
+                'account_payment.enable_portal_payment'
+            )
+        )
+        return enabled_feature and bool(
             (
                 self.amount_residual
                 # FIXME someplace we check amount_residual and some other amount_paid < amount_total
