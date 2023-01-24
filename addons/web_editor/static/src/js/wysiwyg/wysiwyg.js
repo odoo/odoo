@@ -383,7 +383,7 @@ const Wysiwyg = Widget.extend({
                     })();
                 }
                 $target.focus();
-                if ($target.closest('#wrapwrap').length) {
+                if ($target.closest('#wrapwrap').length && this.snippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
