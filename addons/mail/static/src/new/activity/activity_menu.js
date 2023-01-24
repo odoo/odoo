@@ -3,7 +3,9 @@
 import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
 
 import { Component } from "@odoo/owl";
+
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 export class ActivityMenu extends Component {
@@ -68,3 +70,7 @@ export class ActivityMenu extends Component {
         );
     }
 }
+
+registry
+    .category("systray")
+    .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });

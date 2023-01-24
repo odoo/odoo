@@ -103,7 +103,9 @@ function setupMainComponentRegistry() {
     mainComponentRegistry.add("mail.ChatWindowContainer", {
         Component: ChatWindowContainer,
     });
-    registry.category("actions").add("mail.action_discuss", DiscussClientAction);
+    if (!registry.category("actions").contains("mail.action_discuss")) {
+        registry.category("actions").add("mail.action_discuss", DiscussClientAction);
+    }
 }
 
 /**

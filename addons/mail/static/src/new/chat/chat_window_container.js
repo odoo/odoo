@@ -1,16 +1,19 @@
 /* @odoo-module */
 
-import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
-import { browser } from "@web/core/browser/browser";
-import { useService } from "@web/core/utils/hooks";
+import { ChatWindow } from "./chat_window";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "../chat/chat_window_service";
 import { useMessaging, useStore } from "../core/messaging_hook";
-import { ChatWindow } from "./chat_window";
+
+import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { registry } from "@web/core/registry";
+import { useService } from "@web/core/utils/hooks";
 
 export class ChatWindowContainer extends Component {
     static components = { ChatWindow, Dropdown };
@@ -61,3 +64,7 @@ export class ChatWindowContainer extends Component {
         return unreadCounter;
     }
 }
+
+registry
+    .category("main_components")
+    .add("mail.ChatWindowContainer", { Component: ChatWindowContainer });

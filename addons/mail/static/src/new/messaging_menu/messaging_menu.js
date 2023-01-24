@@ -1,15 +1,19 @@
 /* @odoo-module */
 
-import { Component, useState } from "@odoo/owl";
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { useMessaging, useStore } from "../core/messaging_hook";
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
+
+import { useMessaging, useStore } from "../core/messaging_hook";
 import { NotificationItem } from "./notification_item";
 import { ChannelSelector } from "../discuss/channel_selector";
+import { createLocalId } from "../utils/misc";
+
+import { Component, useState } from "@odoo/owl";
+
+import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { createLocalId } from "../utils/misc";
 
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, PartnerImStatus, ChannelSelector };
@@ -233,3 +237,7 @@ export class MessagingMenu extends Component {
         return value;
     }
 }
+
+registry
+    .category("systray")
+    .add("mail.messaging_menu", { Component: MessagingMenu }, { sequence: 25 });
