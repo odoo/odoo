@@ -119,7 +119,6 @@ class Department(models.Model):
             res.update({
                 'name': self.name,
                 'res_model': 'hr.employee.public',
-                'view_type': 'kanban',
                 'view_mode': 'kanban',
                 'views': [(False, 'kanban'), (False, 'form')],
                 'context': {'searchpanel_default_department_id': self.id},

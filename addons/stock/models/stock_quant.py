@@ -976,7 +976,6 @@ class StockQuant(models.Model):
         ctx.pop('group_by', None)
         action = {
             'name': _('Locations'),
-            'view_type': 'tree',
             'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',

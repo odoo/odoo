@@ -2769,8 +2769,6 @@ class Model(models.AbstractModel):
         return {
             'type': 'ir.actions.act_window',
             'res_model': self._name,
-            'view_type': 'form',
-            'view_mode': 'form',
             'views': [(view_id, 'form')],
             'target': 'current',
             'res_id': self.id,
