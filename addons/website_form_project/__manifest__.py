@@ -16,8 +16,8 @@ Generate tasks in Project app from a form published on your website. This module
     'installable': True,
     'auto_install': True,
     'assets': {
-        'website.assets_editor': [
-            'website_form_project/static/src/**/*',
+        'website.assets_wysiwyg': [
+            'website_form_project/static/src/js/website_form_project_editor.js',
         ],
     },
     'license': 'LGPL-3',
