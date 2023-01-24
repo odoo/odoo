@@ -31,18 +31,12 @@ class SurveyInvite(models.TransientModel):
 class SurveyUserInput(models.Model):
     _inherit = "survey.user_input"
 
-    applicant_id = fields.One2many('hr.applicant', 'response_id', string='Applicant')
+    applicant_ids = fields.One2many('hr.applicant', 'response_id', string='Applicant')
 
     def _mark_done(self):
         odoobot = self.env.ref('base.partner_root')
         for user_input in self:
-            if user_input.applicant_id:
-                body = _('The applicant "%s" has finished the survey.', user_input.applicant_id.partner_name)
-                user_input.applicant_id.message_post(body=body, author_id=odoobot.id)
+            if user_input.applicant_ids:
+                body = _('The applicant "%s" has finished the survey.', user_input.applicant_ids[:1].partner_name)
+                user_input.applicant_ids.message_post(body=body, author_id=odoobot.id)
         return super()._mark_done()
-
-    @api.model_create_multi
-    def create(self, values_list):
-        if 'default_applicant_id' in self.env.context:
-            self = self.with_context(default_applicant_id=False)
-        return super().create(values_list)
