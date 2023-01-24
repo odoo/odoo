@@ -424,7 +424,7 @@ export class OdooEditor extends EventTarget {
             },
             beforeCommand: () => {
                 if (this._isPowerboxOpenOnInput) {
-                    this._historyRevertUntil(this._powerboxBeforeStepIndex);
+                    this.historyRevertUntil(this._powerboxBeforeStepIndex);
                     this.historyStep(true);
                     this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
                     setTimeout(() => {
@@ -2665,7 +2665,7 @@ export class OdooEditor extends EventTarget {
         }
         return -1;
     }
-    _historyRevertUntil (toStepIndex) {
+    historyRevertUntil (toStepIndex) {
         const lastStep = this._currentStep;
         this.historyRevert(lastStep);
         let stepIndex = this._historySteps.length - 1;
@@ -4307,7 +4307,7 @@ export class OdooEditor extends EventTarget {
                     ];
 
                     const execCommandAtStepIndex = (index, callback) => {
-                        this._historyRevertUntil(index);
+                        this.historyRevertUntil(index);
                         this.historyStep(true);
                         this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
 
