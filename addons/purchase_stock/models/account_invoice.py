@@ -45,7 +45,9 @@ class AccountMove(models.Model):
                 debit_expense_account = line._get_price_diff_account()
                 if not debit_expense_account:
                     continue
-                if line.product_id.cost_method != 'standard' and line.purchase_line_id:
+                if line.product_id.cost_method != 'standard' and not line.purchase_line_id:
+                    continue
+                if line.product_id.cost_method != 'standard':
 
                     # Retrieve stock valuation moves.
                     valuation_stock_moves = self.env['stock.move'].search([
