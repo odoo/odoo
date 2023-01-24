@@ -68,7 +68,7 @@ class MailTemplate(models.Model):
         'ir.actions.report', relation='mail_template_ir_actions_report_rel',
         column1='mail_template_id',
         column2='ir_actions_report_id',
-        string='Reports to print and attach',
+        string='Dynamic Reports',
         domain="[('model', '=', model)]")
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
