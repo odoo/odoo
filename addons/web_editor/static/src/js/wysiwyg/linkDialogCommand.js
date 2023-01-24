@@ -2,7 +2,6 @@
 
 import { registry } from '@web/core/registry'
 import { HotkeyCommandItem } from '@web/core/commands/default_providers'
-import Wysiwyg from 'web_editor.wysiwyg'
 
 // The only way to know if an editor is under focus when the command palette
 // open is to look if there in a selection within a wysiwyg editor in the page.
@@ -11,12 +10,14 @@ import Wysiwyg from 'web_editor.wysiwyg'
 // label to use.
 let sessionActionLabel = [];
 
+export const activeWysiwygs = new Set();
+
 const commandProviderRegistry = registry.category("command_provider");
 commandProviderRegistry.add("link dialog", {
     async provide(env, { sessionId }) {
         let [lastSessionId, action, label] = sessionActionLabel;
         if (lastSessionId !== sessionId) {
-            const wysiwyg = [...Wysiwyg.activeWysiwygs].find((wysiwyg) => {
+            const wysiwyg = [...activeWysiwygs].find((wysiwyg) => {
                 return wysiwyg.isSelectionInEditable();
             });
             const selection = wysiwyg && wysiwyg.odooEditor && wysiwyg.odooEditor.document.getSelection();
