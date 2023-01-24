@@ -42,10 +42,43 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
-        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
+        res = super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
+        # Non Active Result of auto crate recurring base event if there is same event from gcal.
+        # list_recurrence_id = []
+        list_domain = []
+        for cal in res:
+            if not cal.recurrence_id:
+                continue
+            if not cal.recurrence_id.base_event_id:
+                continue
+            if cal.recurrence_id.base_event_id.name == cal.name and cal.recurrence_id.base_event_id.start == cal.start and cal.recurrence_id.base_event_id.stop == cal.stop:
+                # list_recurrence_id.append(cal.recurrence_id.id)
+                cal.recurrence_id.base_event_id.active = False
+        # if len(list_recurrence_id) > 0:
+        #     cal_event_rec_objs = self.env['calendar.event'].sudo().search([('recurrence_id','in',list_recurrence_id)])
+        #     if cal_event_rec_objs:
+        #         cal_event_rec_objs.active = False
+        for cal_ev in res:
+            list_domain.insert(0, '|')
+            list_domain.append('&')
+            list_domain.append('&')
+            list_domain.append('&')
+            # if cal.recurrence_id:
+            #     list_domain.append('&')
+            #     list_domain.append(('recurrence_id', '=', cal.recurrence_id.id))
+            list_domain.append(('id', '!=', cal_ev.id))
+            list_domain.append(('name', '=', cal_ev.name))
+            list_domain.append(('start', '=', cal_ev.start.strftime('%Y-%m-%d %H:%M:%S')))
+            list_domain.append(('stop', '=', cal_ev.stop.strftime('%Y-%m-%d %H:%M:%S')))
+        if len(list_domain) > 0:
+            list_domain.pop(0)
+            cal_event_objs = self.env['calendar.event'].sudo().search(list_domain)
+            if cal_event_objs:
+                cal_event_objs.active = False
+        return res
 
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')
