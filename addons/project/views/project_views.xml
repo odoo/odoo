@@ -65,7 +65,7 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                 </field>
                 <field name="description" position="after">
-                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
+                    <filter string="My Tasks" name="my_tasks" domain="[('user_ids', '=', uid)]"/>
                 </field>
                 <filter name="stage" position="after">
                     <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
@@ -1115,8 +1115,8 @@
                     <field name="parent_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <header>
-                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', 'in', uid), ('user_ids', '!=', False)]&quot;}" data-hotkey="q"/>
-                        <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', 'in', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight" attrs="{'invisible' : &quot;['|', ('user_ids', '=', uid), ('user_ids', '!=', False)]&quot;}" data-hotkey="q"/>
+                        <button name="action_assign_to_me" string="Assign to Me" type="object" attrs="{'invisible': &quot;['|', ('user_ids', '=', uid), ('user_ids', '=', [])]&quot;}" data-hotkey="q"/>
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '=', False), ('stage_id', '=', False)]}"/>
                         <field name="personal_stage_type_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" attrs="{'invisible': [('project_id', '!=', False)]}" domain="[('user_id', '=', uid)]" string="Personal Stage"/>
                     </header>

@@ -547,7 +547,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         u1b = Users.create({'login': 'dbo2', 'partner_id': p1}).id
         u2 = Users.create({'login': 'rpo', 'partner_id': p2}).id
 
-        res = self._search(Partner, [('user_ids', 'in', u1a)])
+        res = self._search(Partner, [('user_ids', '=', u1a)])
         self.assertEqual([p1], res.ids, "o2m IN accept single int on right side")
         res = self._search(Partner, [('user_ids', '=', 'Dédé Boitaclou')])
         self.assertEqual([p1], res.ids, "o2m NOT IN matches none on the right side")
