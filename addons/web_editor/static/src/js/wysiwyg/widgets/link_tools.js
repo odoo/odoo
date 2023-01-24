@@ -95,7 +95,7 @@ const LinkTools = Link.extend({
         this._removeHintClasses();
     },
     shouldUnlink: function () {
-        return !this.$link.attr('href') && !this.colorCombinationClass
+        return !this.data.url.location && !this.colorCombinationClass;
     },
     applyLinkToDom() {
         this._observer.disconnect();
@@ -467,9 +467,9 @@ const LinkTools = Link.extend({
      */
     __onURLInput() {
         this._super(...arguments);
-        this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this.options.wysiwyg.odooEditor.historyPauseSteps();
         this._adaptPreview();
-        this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps();
     },
     /**
      * Updates the DOM content of the link with the input value.

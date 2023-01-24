@@ -3,6 +3,7 @@ odoo.define('website.editor.link', function (require) {
 
 var weWidgets = require('wysiwyg.widgets');
 var wUtils = require('website.utils');
+const { joinURL } = require('@web_editor/js/editor/odoo-editor/src/OdooEditor');
 
 weWidgets.LinkTools.include({
     custom_events: _.extend({}, weWidgets.LinkTools.prototype.custom_events || {}, {
@@ -46,16 +47,16 @@ weWidgets.LinkTools.include({
      * @private
      */
     _adaptPageAnchor: function () {
-        const urlInputValue = this.$('input[name="url"]').val();
+        const linkHref = joinURL(this.data.url.protocol, this.data.url.location);
         const $pageAnchor = this.$('.o_link_dialog_page_anchor');
-        const isFromWebsite = urlInputValue[0] === '/';
+        const isFromWebsite = linkHref[0] === '/';
         const $selectMenu = this.$('we-selection-items[name="link_anchor"]');
 
-        if ($selectMenu.data("anchor-for") !== urlInputValue) { // avoid useless query
+        if ($selectMenu.data("anchor-for") !== linkHref) { // avoid useless query
             $pageAnchor.toggleClass('d-none', !isFromWebsite);
             $selectMenu.empty();
             const always = () => $pageAnchor.find('we-toggler').text('\u00A0');
-            wUtils.loadAnchors(urlInputValue, this.$editable[0].ownerDocument.body).then(anchors => {
+            wUtils.loadAnchors(linkHref, this.$editable[0].ownerDocument.body).then(anchors => {
                 for (const anchor of anchors) {
                     const $option = $('<we-button class="dropdown-item">');
                     $option.text(anchor);
@@ -65,7 +66,7 @@ weWidgets.LinkTools.include({
                 always();
             }).guardedCatch(always);
         }
-        $selectMenu.data("anchor-for", urlInputValue);
+        $selectMenu.data("anchor-for", linkHref);
     },
 
     //--------------------------------------------------------------------------
@@ -76,7 +77,7 @@ weWidgets.LinkTools.include({
      * @private
      */
     _onAutocompleteClose: function () {
-        this._onURLInput();
+        this.__onURLInput();
     },
     /**
      * @override
