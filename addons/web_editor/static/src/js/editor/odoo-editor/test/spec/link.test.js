@@ -1,4 +1,4 @@
-import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
+import { URL_REGEX, URL_REGEX_STRICT } from '../../src/OdooEditor.js';
 import {
     BasicEditor,
     click,
@@ -20,13 +20,13 @@ const unlink = async function (editor) {
 const testUrlRegex = (url) => {
     it(`should be a link: ${url}`, () => {
         window.chai.assert.exists(url.match(URL_REGEX));
-        window.chai.assert.exists(url.match(URL_REGEX_WITH_INFOS));
+        window.chai.assert.exists(url.match(URL_REGEX_STRICT));
     });
 }
 const testNotUrlRegex = (url) => {
     it(`should NOT be a link: ${url}`, () => {
         window.chai.assert.notExists(url.match(URL_REGEX));
-        window.chai.assert.notExists(url.match(URL_REGEX_WITH_INFOS));
+        window.chai.assert.notExists(url.match(URL_REGEX_STRICT));
     });
 }
 

@@ -47,13 +47,12 @@ const tldWhitelist = [
     'ug', 'uk', 'um', 'us', 'uy', 'uz', 'va', 'vc', 've', 'vg', 'vi', 'vn',
     'vu', 'wf', 'ws', 'ye', 'yt', 'yu', 'za', 'zm', 'zr', 'zw', 'co\\.uk'];
 
-const urlRegexBase = `|(?:[-a-zA-Z0-9@:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
+const urlRegexBase = `|(?:[-a-zA-Z0-9:%._\\+~#=]{1,64}\\.))[-a-zA-Z0-9:%._\\+~#=]{2,256}\\.[a-zA-Z][a-zA-Z0-9]{1,62}|(?:[-a-zA-Z0-9:%._\\+~#=]{2,256}\\.(?:${tldWhitelist.join('|')})))\\b(?:(?!\\.)[^\\s]*`;
 const httpRegex = `(?:https?:\\/\\/)`;
 const httpCapturedRegex= `(https?:\\/\\/)`;
 
 export const URL_REGEX = new RegExp(`((?:(?:${httpRegex}${urlRegexBase}))`, 'gi');
 export const URL_REGEX_STRICT = new RegExp(`^(?:(?:${httpCapturedRegex}${urlRegexBase})$`, 'i');
-export const URL_REGEX_WITH_INFOS = new RegExp(`((?:(?:${httpCapturedRegex}${urlRegexBase}))`, 'gi');
 export const YOUTUBE_URL_GET_VIDEO_ID =
     /^(?:(?:https?:)?\/\/)?(?:(?:www|m)\.)?(?:youtube\.com|youtu\.be)(?:\/(?:[\w-]+\?v=|embed\/|v\/)?)([^\s?&#]+)(?:\S+)?$/i;
 
@@ -1473,26 +1472,6 @@ export function makeContentsInline(node) {
     }
 }
 
-/**
- * Returns an array of url infos for url matched in the given string.
- *
- * @param {String} string
- * @returns {Array}
- */
-export function getUrlsInfosInString(string) {
-    let infos = [],
-        match;
-    while ((match = URL_REGEX_WITH_INFOS.exec(string))) {
-        infos.push({
-            url: match[2] ? match[0] : 'https://' + match[0],
-            label: match[0],
-            index: match.index,
-            length: match[0].length,
-        });
-    }
-    return infos;
-}
-
 // optimize: use the parent Oid to speed up detection
 export function getOuid(node, optimize = false) {
     while (node && !isUnbreakable(node)) {
@@ -2698,4 +2677,24 @@ export function cleanZWS(node) {
     [node, ...descendants(node)]
         .filter(node => node.nodeType === Node.TEXT_NODE)
         .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
+}
+
+/**
+ * Get [Node, offset] for previous text character within same textNode or
+ * adjacent sibling textNode.
+ *
+ * @param {Node} node
+ * @param {number} offset
+ * @returns {[Node|null, number|null]}
+ */
+export function getPreviousChar(node, offset) {
+    --offset;
+    while (offset < 0) {
+        node = node.previousSibling;
+        if (!node || node.nodeType !== Node.TEXT_NODE) {
+            return [null, null]
+        }
+        offset = node.textContent.length - 1;
+    }
+    return [node, offset];
 }

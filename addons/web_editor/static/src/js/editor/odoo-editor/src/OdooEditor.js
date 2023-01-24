@@ -47,9 +47,8 @@ import {
     isUnremovable,
     fillEmpty,
     isEmptyBlock,
-    getUrlsInfosInString,
     URL_REGEX,
-    URL_REGEX_WITH_INFOS,
+    URL_REGEX_STRICT,
     isSelectionFormat,
     YOUTUBE_URL_GET_VIDEO_ID,
     unwrapContents,
@@ -78,6 +77,7 @@ import {
     joinURL,
     splitURL,
     defaultProtocols,
+    getPreviousChar,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3220,26 +3220,32 @@ export class OdooEditor extends EventTarget {
                     selection &&
                     selection.anchorNode &&
                     !closestElement(selection.anchorNode).closest('a') &&
-                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                    !this.powerbox.isOpen
+                    selection.anchorNode.nodeType === Node.TEXT_NODE
                 ) {
-                    const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
-                    const textNodeSplitted = textSliced.split(/\s/);
-
-                    // Remove added space
-                    textNodeSplitted.pop();
-                    const potentialUrl = textNodeSplitted.pop();
-                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
-
-                    if (lastWordMatch) {
-                        const matches = getUrlsInfosInString(textSliced);
-                        const match = matches[matches.length - 1];
-                        this._createLinkWithUrlInTextNode(
-                            selection.anchorNode,
-                            match.url,
-                            match.index,
-                            match.length,
-                        );
+                    // End word boundary is the char before the inserted space.
+                    const end = getPreviousChar(selection.anchorNode, selection.anchorOffset);
+                    // Find start word boundary.
+                    let [startNode, startOffset] = end;
+                    let [prevCharNode, prevCharOffset] = getPreviousChar(startNode, startOffset);
+                    while (prevCharNode && !/\s/.test(prevCharNode.textContent[prevCharOffset])) {
+                        [startNode, startOffset] = [prevCharNode, prevCharOffset];
+                        [prevCharNode, prevCharOffset] = getPreviousChar(startNode, startOffset);
+                    }
+                    const range = new Range();
+                    range.setStart(startNode, startOffset);
+                    range.setEnd(...end);
+                    const potentialUrl = range.cloneContents().textContent;
+                    const match = URL_REGEX_STRICT.exec(potentialUrl);
+                    if (match) {
+                        const url = match[1] ? potentialUrl : 'http://' + potentialUrl;
+                        const cloneRange = selection.getRangeAt(0).cloneRange();
+                        const link = this._createLink(range.extractContents().textContent, url);
+                        range.insertNode(link)
+                        // Inserting an element into a range clears the selection in Safari
+                        // Hence, use the cloned range to reselect it.
+                        selection.removeAllRanges();
+                        selection.addRange(cloneRange);
+                        link.classList.add('oe_auto_update_link');
                     }
                     selection.collapseToEnd();
                 }
@@ -4224,32 +4230,18 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
-     * Create a Link in the node text based on the given data
-     *
-     * @param {Node} textNode
-     * @param {String} url
-     * @param {int} index
-     * @param {int} length
+     * @param {String} label 
+     * @param {String} url 
+     * @returns {HTMLElement}
      */
-    _createLinkWithUrlInTextNode(textNode, url, index, length) {
-        const selection = this.document.getSelection();
-        const cloneRange = selection.getRangeAt(0).cloneRange();
-
+    _createLink(label, url) {
         const link = this.document.createElement('a');
         link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
             link.setAttribute(param, `${value}`);
         }
-        const range = this.document.createRange();
-        range.setStart(textNode, index);
-        range.setEnd(textNode, index + length);
-        link.appendChild(range.extractContents());
-        range.insertNode(link);
-        // Inserting an element into a range clears the selection in Safari
-        // Hence, use the cloned range to reselect it.
-        selection.removeAllRanges();
-        selection.addRange(cloneRange);
-        link.classList.add('oe_auto_update_link');
+        link.innerText = label;
+        return link;
     }
 
     /**
@@ -4313,7 +4305,7 @@ export class OdooEditor extends EventTarget {
             for (let i = 0; i < splitAroundUrl.length; i++) {
                 const url = /^https?:\/\//gi.test(splitAroundUrl[i])
                     ? splitAroundUrl[i]
-                    : 'https://' + splitAroundUrl[i];
+                    : 'http://' + splitAroundUrl[i];
                 const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
                 const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());

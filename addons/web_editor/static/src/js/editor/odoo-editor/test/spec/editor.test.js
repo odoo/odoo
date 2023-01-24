@@ -3924,6 +3924,27 @@ X[]
                 contentAfter: '<p>a http://test.com b <a href="http://test.com" class="oe_auto_update_link">http://test.com</a>&nbsp;[] c http://test.com d</p>',
             });
         });
+        it('should transform url after space', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>odoo[]</p>',
+                stepFunction: async (editor) => {
+                    editor.testMode = false;
+                    const selection = document.getSelection();
+                    const p = editor.editable.querySelector('p');
+                    // Simulating url contained by separate adjacent text nodes.
+                    p.append('.');
+                    p.append('com');
+                    const textNode = p.childNodes[2];
+                    triggerEvent(editor.editable, 'keydown', {key: ' ', code: 'Space'});
+                    textNode.textContent = "com\u00a0";
+                    selection.extend(textNode, 4);
+                    selection.collapseToEnd();
+                    triggerEvent(editor.editable, 'input', {data: ' ', inputType: 'insertText' });
+                    triggerEvent(editor.editable, 'keyup', {key: ' ', code: 'Space'});
+                },
+                contentAfter: '<p><a href="http://odoo.com" class="oe_auto_update_link">odoo.com</a>&nbsp;[]</p>',
+            });
+        });
         it('should not transform url after two space', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>a http://test.com b http://test.com [] c http://test.com d</p>',
