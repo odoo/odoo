@@ -76,11 +76,6 @@ export class Chatter extends Component {
     ];
     static template = "mail.chatter";
 
-    /** @type {import("@mail/new/core/messaging_service").Messaging} */
-    messaging;
-    /** @type {import("@mail/new/core/thread_model").Thread} */
-    thread;
-
     setup() {
         this.action = useService("action");
         this.messaging = useMessaging();
@@ -97,9 +92,11 @@ export class Chatter extends Component {
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
-            showActivities: true,
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
             isLoadingAttachments: false,
+            /** @type {import("@mail/new/core/thread_model").Thread} */
+            showActivities: true,
+            thread: undefined,
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
@@ -111,7 +108,7 @@ export class Chatter extends Component {
             inChatter: true,
         });
         useDropzone(this.rootRef, (ev) => {
-            if (this.thread.composer.type) {
+            if (this.state.thread.composer.type) {
                 return;
             }
             if (isDragSourceExternalFile(ev.dataTransfer)) {
@@ -130,7 +127,7 @@ export class Chatter extends Component {
                 this.state.isLoadingAttachments = false;
                 this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
                 if (nextProps.threadId === false) {
-                    this.thread.composer.type = false;
+                    this.state.thread.composer.type = false;
                 }
             }
         });
@@ -160,11 +157,11 @@ export class Chatter extends Component {
      * @returns {boolean}
      */
     get isDisabled() {
-        return !this.props.threadId || !this.thread.hasReadAccess;
+        return !this.props.threadId || !this.state.thread.hasReadAccess;
     }
 
     get attachments() {
-        return this.thread?.attachments ?? [];
+        return this.state.thread?.attachments ?? [];
     }
 
     /**
@@ -176,9 +173,8 @@ export class Chatter extends Component {
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
         const { threadModel } = this.props;
-        const thread = this.chatter.getThread(threadModel, threadId);
-        this.thread = thread;
-        this.scrollPosition.model = this.thread.scrollPosition;
+        this.state.thread = this.chatter.getThread(threadModel, threadId);
+        this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
             // todo: reset activities/attachments/followers
             return;
@@ -188,8 +184,8 @@ export class Chatter extends Component {
             requestList.push("activities");
         }
         this.chatter.fetchData(threadId, threadModel, requestList).then((result) => {
-            this.thread.hasReadAccess = result.hasReadAccess;
-            this.thread.hasWriteAccess = result.hasWriteAccess;
+            this.state.thread.hasReadAccess = result.hasReadAccess;
+            this.state.thread.hasWriteAccess = result.hasWriteAccess;
             if ("activities" in result) {
                 const existingIds = new Set();
                 for (const activity of result.activities) {
@@ -205,30 +201,36 @@ export class Chatter extends Component {
                 }
             }
             if ("attachments" in result) {
-                this.threadService.update(this.thread, {
+                this.threadService.update(this.state.thread, {
                     attachments: result.attachments,
                 });
                 this.state.isLoadingAttachments = false;
             }
             if ("mainAttachment" in result) {
-                this.thread.mainAttachment = result.mainAttachment.id
+                this.state.thread.mainAttachment = result.mainAttachment.id
                     ? this.attachment.insert(result.mainAttachment)
                     : undefined;
             }
             // TODO move this somewhere else to make sure it works in all flows (eg. attachment upload)
-            if (!this.thread.mainAttachment && this.thread.attachmentsInWebClientView.length > 0) {
-                this.threadService.setMainAttachmentFromIndex(this.thread, 0);
+            if (
+                !this.state.thread.mainAttachment &&
+                this.state.thread.attachmentsInWebClientView.length > 0
+            ) {
+                this.threadService.setMainAttachmentFromIndex(this.state.thread, 0);
             }
             if ("followers" in result) {
                 for (const followerData of result.followers) {
                     this.chatter.insertFollower({
-                        followedThread: this.thread,
+                        followedThread: this.state.thread,
                         ...followerData,
                     });
                 }
             }
             if ("suggestedRecipients" in result) {
-                this.chatter.insertSuggestedRecipients(this.thread, result.suggestedRecipients);
+                this.chatter.insertSuggestedRecipients(
+                    this.state.thread,
+                    result.suggestedRecipients
+                );
             }
         });
     }
@@ -287,7 +289,7 @@ export class Chatter extends Component {
     }
 
     async onClickUnfollow() {
-        await this.chatter.removeFollower(this.thread.followerOfSelf);
+        await this.chatter.removeFollower(this.state.thread.followerOfSelf);
         this.onFollowerChanged();
     }
 
@@ -317,10 +319,10 @@ export class Chatter extends Component {
     }
 
     toggleComposer(mode = false) {
-        if (this.thread.composer.type === mode) {
-            this.thread.composer.type = false;
+        if (this.state.thread.composer.type === mode) {
+            this.state.thread.composer.type = false;
         } else {
-            this.thread.composer.type = mode;
+            this.state.thread.composer.type = mode;
         }
     }
 
