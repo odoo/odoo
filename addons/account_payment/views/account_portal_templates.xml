@@ -11,45 +11,23 @@
                 </a>
             </td>
         </xpath>
-        <xpath expr="//t[@t-foreach='invoices']/tr/td[hasclass('tx_status')]" position="replace">
+        <xpath expr="//t[@name='invoice_status_posted']/span[1]" position="before">
             <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
-            <td class="tx_status text-center">
-                <t t-if="last_tx">
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and (last_tx.state not in ['pending', 'authorized', 'done', 'cancel'] or (last_tx.state == 'pending' and last_tx.provider_code in ('none', 'custom')))">
-                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and last_tx.state == 'authorized'">
-                        <span class="badge rounded-pill text-bg-primary"><i class="fa fa-fw fa-check"/><span class="d-none d-md-inline"> Authorized</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')">
-                        <span class="badge rounded-pill text-bg-warning"><span class="d-none d-md-inline"> Pending</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment') or last_tx.state == 'done'">
-                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
-                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Reversed</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'cancel'">
-                        <span class="badge rounded-pill text-bg-danger"><i class="fa fa-fw fa-remove"></i><span class="d-none d-md-inline"> Cancelled</span></span>
-                    </t>
-                </t>
-                <t t-else="">
-                    <!-- c/p of account -->
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
-                        <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
-                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
-                        <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"></i><span class="d-none d-md-inline"> Reversed</span></span>
-                    </t>
-                    <t t-if="invoice.state == 'cancel'">
-                        <span class="badge rounded-pill text-bg-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
-                    </t>
-                </t>
-            </td>
+        </xpath>
+        <xpath expr="//span[@name='invoice_status_waiting_for_payment']" position="before">
+            <span t-elif="last_tx.state == 'authorized'"
+                    class="badge rounded-pill text-bg-primary">
+                <i class="fa fa-fw fa-check"/>
+                <span class="d-none d-md-inline"> Authorized</span>
+            </span>
+            <span t-elif="last_tx.state == 'pending' and last_tx.provider_code not in ('none', 'custom')"
+                    class="badge rounded-pill text-bg-warning">
+                <span class="d-none d-md-inline"> Pending</span>
+            </span>
+            <span t-elif="last_tx.state == 'done'" class="badge rounded-pill text-bg-success">
+                <i class="fa fa-fw fa-check"></i>
+                <span class="d-none d-md-inline"> Paid</span>
+            </span>
         </xpath>
     </template>
 
@@ -82,18 +60,20 @@
 
     <template id="portal_invoice_page_inherit_payment" name="Payment on My Invoices" inherit_id="account.portal_invoice_page">
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
-            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
-            <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.provider_code in ('none', 'custom'))"/>
+            <t t-set="pending_txs" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized') and tx.provider_code not in ('none', 'custom'))"/>
             <div class="d-grid">
-                <a href="#" t-if="invoice._has_to_be_paid()"
-                    class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#pay_with">
-                    <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
-                </a>
-                <div t-if="tx_ids and not pending_manual_txs and not invoice.amount_residual and invoice.payment_state not in ('paid', 'in_payment')" class="alert alert-info py-1 mb-2" >
-                    <i class="fa fa-fw fa-check-circle"/> Pending
-                </div>
                 <div t-if="invoice.payment_state in ('paid', 'in_payment')" class="alert alert-success py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Paid
+                </div>
+                <a t-elif="invoice._has_to_be_paid()"
+                   href="#"
+                   class="btn btn-primary mb-2"
+                   data-bs-toggle="modal"
+                   data-bs-target="#pay_with">
+                    <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
+                </a>
+                <div t-elif="pending_txs" class="alert alert-info py-1 mb-2" >
+                    <i class="fa fa-fw fa-check-circle"/> Pending
                 </div>
             </div>
         </xpath>
@@ -103,7 +83,6 @@
                     <t t-set="tx" t-value="invoice.get_portal_last_transaction()"/>
                 </t>
             </div>
-            <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('authorized', 'done'))"/>
             <div t-if="invoice._has_to_be_paid()" id="portal_pay">
                 <t t-call="account_payment.portal_invoice_payment"/>
             </div>
@@ -116,17 +95,17 @@
             <t t-if="error == 'pay_invoice_invalid_doc'">
                 There was an error processing your payment: invalid invoice.
             </t>
-            <t t-if="error == 'pay_invoice_invalid_token'">
+            <t t-elif="error == 'pay_invoice_invalid_token'">
                 There was en error processing your payment: invalid credit card ID.
             </t>
-            <t t-if="error == 'pay_invoice_tx_fail'">
+            <t t-elif="error == 'pay_invoice_tx_fail'">
                 There was an error processing your payment: transaction failed.<br />
                 <t t-set="tx_id" t-value="invoice.get_portal_last_transaction()"/>
                 <t t-if="tx_id and tx_id.state_message">
                     <t t-out="tx_id.state_message"/>
                 </t>
             </t>
-            <t t-if="error == 'pay_invoice_tx_token'">
+            <t t-elif="error == 'pay_invoice_tx_token'">
                 There was an error processing your payment: issue with credit card ID validation.
             </t>
         </xpath>

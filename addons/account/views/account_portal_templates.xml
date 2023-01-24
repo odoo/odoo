@@ -53,18 +53,28 @@
                         </td>
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
-                        <td class="tx_status text-center">
-                            <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
-                                <span class="badge rounded-pill text-bg-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
+                        <td class="text-center" name="invoice_status">
+                            <t t-if="invoice.state == 'posted'" name="invoice_status_posted">
+                                <span t-if="invoice.payment_state in ('paid', 'in_payment')"
+                                      class="badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"/>
+                                    <span class="d-none d-md-inline"> Paid</span>
+                                </span>
+                                <span t-elif="invoice.payment_state == 'reversed'"
+                                      class="badge rounded-pill text-bg-success">
+                                    <i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"/>
+                                    <span class="d-none d-md-inline"> Reversed</span>
+                                </span>
+                                <span t-else="" class="badge rounded-pill text-bg-info" name="invoice_status_waiting_for_payment">
+                                    <i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"/>
+                                    <span class="d-none d-md-inline"> Waiting for Payment</span>
+                                </span>
                             </t>
-                            <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
-                                <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
-                            </t>
-                            <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
-                                <span class="badge rounded-pill text-bg-success"><i class="fa fa-fw fa-check" aria-label="Reversed" title="Reversed" role="img"></i><span class="d-none d-md-inline"> Reversed</span></span>
-                            </t>
-                            <t t-if="invoice.state == 'cancel'">
-                                <span class="badge rounded-pill text-bg-warning"><i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"></i><span class="d-none d-md-inline"> Cancelled</span></span>
+                            <t t-elif="invoice.state == 'cancel'">
+                                <span class="badge rounded-pill text-bg-warning">
+                                    <i class="fa fa-fw fa-remove" aria-label="Cancelled" title="Cancelled" role="img"/>
+                                    <span class="d-none d-md-inline"> Cancelled</span>
+                                </span>
                             </t>
                         </td>
                         <td class="text-end"><span t-out="-invoice.amount_residual if invoice.move_type == 'out_refund' else invoice.amount_residual" t-options='{"widget": "monetary", "display_currency": invoice.currency_id}'/></td>
