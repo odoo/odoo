@@ -9,6 +9,10 @@ async function loadWysiwyg(additionnalAssets=[]) {
     const xmlids = ['web_editor.assets_wysiwyg', ...additionnalAssets];
     for (const xmlid of xmlids) {
         const assets = await getBundle(xmlid);
+        // TEMPORARY HACK => disable error logging until we find a way to solve
+        // properly the dependency errors that comes from this bundle
+        // TODO @TODO @DONOTFORGET remove this comment and the next line
+        odoo.log = () => {};
         await loadBundle(assets);
     }
 }
