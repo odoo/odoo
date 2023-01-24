@@ -1999,7 +1999,7 @@ export class OdooEditor extends EventTarget {
                 this._beforeCommandbarStepIndex = this._historySteps.length - 1;
             },
             preValidate: () => {
-                this._historyRevertUntil(this._beforeCommandbarStepIndex);
+                this.historyRevertUntil(this._beforeCommandbarStepIndex);
                 this.historyStep(true);
                 this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
                 setTimeout(() => {
@@ -2014,7 +2014,7 @@ export class OdooEditor extends EventTarget {
         });
     }
 
-    _historyRevertUntil (toStepIndex) {
+    historyRevertUntil (toStepIndex) {
         const lastStep = this._currentStep;
         this.historyRevert(lastStep);
         let stepIndex = this._historySteps.length - 1;
@@ -3258,7 +3258,7 @@ export class OdooEditor extends EventTarget {
                     ];
 
                     const execCommandAtStepIndex = (index, callback) => {
-                        this._historyRevertUntil(index);
+                        this.historyRevertUntil(index);
                         this.historyStep(true);
                         this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
 
