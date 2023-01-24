@@ -261,7 +261,7 @@
                         <div class="o_td_label" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}">
                             <label for="date_order" string="Order Date"/>
                         </div>
-                        <field name="date_order" attrs="{'required': [('state', 'in', ['sale', 'done'])], 'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
+                        <field name="date_order" attrs="{'invisible': [('state', 'in', ['draft', 'sent'])]}" nolabel="1"/>
                         <field name="show_update_pricelist" invisible="1"/>
                         <label for="pricelist_id" groups="product.group_product_pricelist"/>
                         <div groups="product.group_product_pricelist" class="o_row">
