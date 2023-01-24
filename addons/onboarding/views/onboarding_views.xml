@@ -36,7 +36,9 @@
                     </group>
                     <notebook>
                         <page name="Onboarding steps">
-                            <field name="step_ids"/>
+                            <group string="Steps">
+                                <field name="step_ids" nolabel="1" colspan="2"/>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>
@@ -51,8 +53,9 @@
             <tree string="Onboarding Steps">
                 <field name="sequence" widget="handle"/>
                 <field name="title"/>
-                <field name="onboarding_id" optional="hide"/>
+                <field name="onboarding_ids" optional="hide"/>
                 <field name="current_step_state"/>
+                <field name="is_per_company" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -65,10 +68,16 @@
                 <sheet>
                     <group>
                         <field name="title"/>
-                        <field name="onboarding_id"/>
+                        <field name="current_step_state"/>
                         <field name="panel_step_open_action_name"/>
+                        <field name="is_per_company"/>
                     </group>
                     <notebook>
+                        <page name="Onboardings using this step">
+                            <group string="Onboardings">
+                                <field name="onboarding_ids" nolabel="1" colspan="2"/>
+                            </group>
+                        </page>
                         <page name="Step rendering">
                             <group>
                                 <field name="description"/>
