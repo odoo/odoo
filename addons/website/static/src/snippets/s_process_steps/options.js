@@ -81,7 +81,10 @@ options.registry.StepsConnector = options.Class.extend({
     _reloadConnectors() {
         const possibleTypes = this._requestUserValueWidgets('connector_type')[0].getMethodsParams().optionsPossibleValues.selectClass;
         const type = possibleTypes.find(possibleType => possibleType && this.$target[0].classList.contains(possibleType)) || '';
-        const steps = this.$target[0].querySelectorAll('.s_process_step');
+        // As the connectors are only visible in desktop, we can ignore the
+        // steps that are only visible in mobile.
+        // TODO master: rename the variable to stepsEls.
+        const steps = this.$target[0].querySelectorAll('.s_process_step:not(.o_snippet_desktop_invisible)');
 
         for (let i = 0; i < steps.length - 1; i++) {
             const connectorEl = steps[i].querySelector('.s_process_step_connector');
