@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="web.FormView" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o_form_view_container')]" position="after">
+            <t t-if="hasSideChatter() and !hasAttachmentViewer()">
+                <div class='o-mail-chatter-aside'>
+                    <Chatter t-props="getChatterProps(model.root)"/>
+                </div>
+            </t>
+            <t t-if="hasAttachmentViewer()">
+                <div class="o_attachment_preview">
+                    <AttachmentView threadId="model.root.resId" threadModel="model.root.resModel"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

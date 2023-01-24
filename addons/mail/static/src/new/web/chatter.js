@@ -33,6 +33,7 @@ import { SuggestedRecipientsList } from "../composer/suggested_recipient_list";
  * @extends {Component<Props, Env>}
  */
 export class Chatter extends Component {
+    static template = "mail.chatter";
     static components = {
         AttachmentList,
         Dropdown,
@@ -41,20 +42,6 @@ export class Chatter extends Component {
         Activity,
         FileUploader,
         SuggestedRecipientsList,
-    };
-    static defaultProps = {
-        compactHeight: false,
-        hasActivities: true,
-        hasExternalBorder: true,
-        hasFollowers: true,
-        hasMessageList: true,
-        hasMessageListScrollAdjust: false,
-        hasParentReloadOnAttachmentsChanged: false,
-        hasParentReloadOnFollowersUpdate: false,
-        hasParentReloadOnMessagePosted: false,
-        isAttachmentBoxVisibleInitially: false,
-        isInFormSheetBg: true,
-        threadId: false,
     };
     static props = [
         "close?",
@@ -74,7 +61,20 @@ export class Chatter extends Component {
         "threadModel",
         "webRecord?",
     ];
-    static template = "mail.chatter";
+    static defaultProps = {
+        compactHeight: false,
+        hasActivities: true,
+        hasExternalBorder: true,
+        hasFollowers: true,
+        hasMessageList: true,
+        hasMessageListScrollAdjust: false,
+        hasParentReloadOnAttachmentsChanged: false,
+        hasParentReloadOnFollowersUpdate: false,
+        hasParentReloadOnMessagePosted: false,
+        isAttachmentBoxVisibleInitially: false,
+        isInFormSheetBg: true,
+        threadId: false,
+    };
 
     setup() {
         this.action = useService("action");
