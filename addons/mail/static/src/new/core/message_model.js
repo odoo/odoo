@@ -154,8 +154,8 @@ export class Message {
     }
 
     get isSubjectDefault() {
-        const threadName = this.originThread.name?.trim().toLowerCase();
-        const defaultSubject = this.defaultSubject?.toLowerCase();
+        const threadName = this.originThread?.name?.trim().toLowerCase();
+        const defaultSubject = this.defaultSubject ? this.defaultSubject.toLowerCase() : "";
         const candidates = new Set([defaultSubject, threadName]);
         return candidates.has(this.subject?.toLowerCase());
     }
