@@ -3523,11 +3523,8 @@ class AccountMove(models.Model):
         report_action = {
             'name': _('Send Invoice'),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
-            'view_mode': 'form',
             'res_model': 'account.invoice.send',
             'views': [(compose_form.id, 'form')],
-            'view_id': compose_form.id,
             'target': 'new',
             'context': ctx,
         }

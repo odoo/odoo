@@ -17,7 +17,6 @@ class AccountMove(models.Model):
         return {
             'name': self.expense_sheet_id.name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'views': [(False, 'form')],
             'res_model': 'hr.expense.sheet',

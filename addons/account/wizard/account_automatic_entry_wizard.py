@@ -411,7 +411,6 @@ class AutomaticEntryWizard(models.TransientModel):
         return {
             'name': _("Transfer"),
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.move',
             'res_id': new_move.id,

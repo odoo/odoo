@@ -517,7 +517,6 @@ class PosConfig(models.Model):
             return {
                 'name': _("There is no product linked to your PoS"),
                 'type': 'ir.actions.act_window',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'res_model': 'pos.session.check_product_wizard',
                 'target': 'new',
