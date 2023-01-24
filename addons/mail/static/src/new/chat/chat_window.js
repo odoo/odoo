@@ -8,6 +8,7 @@ import { useRtc } from "../rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/new/utils/hooks";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { localization } from "@web/core/l10n/localization";
 import { CallSettings } from "../rtc/call_settings";
 import { ChannelMemberList } from "../discuss/channel_member_list";
 import { ChatWindowIcon } from "./chat_window_icon";
@@ -60,6 +61,14 @@ export class ChatWindow extends Component {
 
     get thread() {
         return this.props.chatWindow.thread;
+    }
+
+    get style() {
+        const textDirection = localization.direction;
+        const offsetFrom = textDirection === "rtl" ? "left" : "right";
+        const visibleOffset = this.store.isSmall ? 0 : this.props.right;
+        const oppositeFrom = offsetFrom === "right" ? "left" : "right";
+        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto`;
     }
 
     onKeydown(ev) {

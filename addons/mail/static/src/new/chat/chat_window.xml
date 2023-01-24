@@ -4,7 +4,7 @@
 <t t-name="mail.chat_window" owl="1">
     <t t-set="chatWindow" t-value="props.chatWindow"/>
     <div class="o-mail-chat-window"
-        t-attf-style="right:{{store.isSmall? 0 : props.right}}px;"
+        t-att-style="style"
         t-att-class="{
                 'w-100 h-100': store.isSmall,
                 'o-folded': props.chatWindow.folded,
