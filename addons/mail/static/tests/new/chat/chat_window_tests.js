@@ -747,3 +747,40 @@ QUnit.test(
         assert.hasClass(document.querySelector(".o-mail-chat-window"), "o-folded");
     }
 );
+
+QUnit.test(
+    "should not have chat window hidden menu in mobile (transition from 3 chat windows in desktop to mobile)",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create([
+            { name: "Channel-1" },
+            { name: "Channel-2" },
+            { name: "Channel-3" },
+        ]);
+        patchUiSize({ width: 900 });
+        assert.ok(
+            CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH <
+                900,
+            "should have enough space to open 2 chat windows simultaneously"
+        );
+        assert.ok(
+            CHAT_WINDOW_END_GAP_WIDTH * 2 +
+                CHAT_WINDOW_WIDTH * 3 +
+                CHAT_WINDOW_INBETWEEN_WIDTH * 2 >
+                900,
+            "should not have enough space to open 3 chat windows simultaneously"
+        );
+        const { env, openDiscuss } = await start();
+        await openDiscuss();
+        // open, from systray menu, chat windows of channels with id 1, 2, 3
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-notification-item-name:contains(Channel-1)");
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-notification-item-name:contains(Channel-2)");
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-notification-item-name:contains(Channel-3)");
+        // simulate resize to go into mobile
+        await afterNextRender(() => (env.services["mail.store"].isSmall = true));
+        assert.containsNone(document.body, ".o-mail-chat-window-hidden-menu");
+    }
+);

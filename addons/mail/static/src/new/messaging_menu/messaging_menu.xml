@@ -96,7 +96,7 @@
     </div>
     <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
         <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-messaging-menu-tab d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
-            'text-primary fw-bolder': state.tab === tab.id,
+            'text-primary fw-bolder o-active': state.tab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
             <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>

@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
+import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
+
 import {
     afterNextRender,
     click,
@@ -1421,5 +1423,30 @@ QUnit.test(
         await afterNextRender(() => triggerHotkey("Enter"));
         assert.containsOnce(tab1.target, ".o-mail-category-item:contains(Jerry Golay)");
         assert.containsOnce(tab2.target, ".o-mail-category-item:contains(Jerry Golay)");
+    }
+);
+
+QUnit.test("select another mailbox", async function (assert) {
+    patchUiSize({ height: 360, width: 640 });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-discuss");
+    assert.strictEqual($(target).find(".o-mail-discuss-thread-name").val(), "Inbox");
+    assert.containsOnce(target, "button:contains(Starred)");
+
+    await click("button:contains(Starred)");
+    assert.strictEqual($(target).find(".o-mail-discuss-thread-name").val(), "Starred");
+});
+
+QUnit.test(
+    'auto-select "Inbox nav bar" when discuss had inbox as active thread',
+    async function (assert) {
+        patchUiSize({ height: 360, width: 640 });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.strictEqual($(target).find(".o-mail-discuss-thread-name").val(), "Inbox");
+        assert.containsOnce(target, ".o-mail-messaging-menu-navbar:contains(Mailboxes) .o-active");
+        assert.containsOnce(target, "button:contains(Inbox).o-active");
+        assert.containsOnce(target, "h4:contains(Congratulations, your inbox is empty)");
     }
 );

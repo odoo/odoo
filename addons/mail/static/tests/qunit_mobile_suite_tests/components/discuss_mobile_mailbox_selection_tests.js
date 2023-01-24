@@ -8,57 +8,6 @@ QUnit.module("mail", {}, function () {
         QUnit.module("discuss_mobile_mailbox_selection", {}, function () {
             QUnit.module("discuss_mobile_mailbox_selection_tests.js");
 
-            QUnit.skipRefactoring("select another mailbox", async function (assert) {
-                assert.expect(7);
-
-                patchUiSize({ height: 360, width: 640 });
-                const { click, messaging, openDiscuss } = await start();
-                await openDiscuss();
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-discuss-content",
-                    "should display discuss initially"
-                );
-                assert.hasClass(
-                    document.querySelector(".o-mail-discuss-content"),
-                    "o-isDeviceSmall",
-                    "discuss should be opened in mobile mode"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-discuss-content .o-mail-thread",
-                    "discuss should display a thread initially"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o-mail-discuss-content .o-mail-thread").dataset
-                        .threadId,
-                    messaging.inbox.thread.id,
-                    "inbox mailbox should be opened initially"
-                );
-                assert.containsOnce(
-                    document.body,
-                    `.o_DiscussMobileMailboxSelectionItemView[
-            data-mailbox-local-id="${messaging.starred.localId}"
-        ]`,
-                    "should have a button to open starred mailbox"
-                );
-
-                await click(`.o_DiscussMobileMailboxSelectionItemView[
-        data-mailbox-local-id="${messaging.starred.localId}"]
-    `);
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-discuss-content .o-mail-thread",
-                    "discuss should still have a thread after clicking on starred mailbox"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o-mail-discuss-content .o-mail-thread").dataset
-                        .threadId,
-                    messaging.starred.thread.id,
-                    "starred mailbox should be opened after clicking on it"
-                );
-            });
-
             QUnit.skipRefactoring(
                 'auto-select "Inbox" when discuss had channel as active thread',
                 async function (assert) {
