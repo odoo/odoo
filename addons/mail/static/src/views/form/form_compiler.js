@@ -121,7 +121,7 @@ export class MailFormCompiler extends ViewCompiler {
 
     compileChatter(node) {
         return compileChatter(node, {
-            chatter: "chatter",
+            chatter: "__comp__.chatter",
             threadId: "__comp__.model.root.resId or undefined",
             threadModel: "__comp__.model.root.resModel",
             webRecord: "__comp__.model.root",
@@ -186,9 +186,8 @@ patch(FormCompiler.prototype, "mail", {
                 "t-if": `__comp__.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
-                "ChatterContainer"
-            );
+            const sheetBgChatterContainerXml =
+                sheetBgChatterContainerHookXml.querySelector("ChatterContainer");
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
             });
