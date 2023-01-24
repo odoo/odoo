@@ -1,6 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 from odoo.tools.misc import clean_context
 
 
@@ -40,3 +40,9 @@ class SurveyUserInput(models.Model):
                 body = _('The applicant "%s" has finished the survey.', user_input.applicant_id.partner_name)
                 user_input.applicant_id.message_post(body=body, author_id=odoobot.id)
         return super()._mark_done()
+
+    @api.model_create_multi
+    def create(self, values_list):
+        if 'default_applicant_id' in self.env.context:
+            self = self.with_context(default_applicant_id=False)
+        return super().create(values_list)
