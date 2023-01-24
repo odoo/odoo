@@ -3215,6 +3215,9 @@ export class OdooEditor extends EventTarget {
      * @param {int} length
      */
     _createLinkWithUrlInTextNode(textNode, url, index, length) {
+        const selection = this.document.getSelection();
+        const cloneRange = selection.getRangeAt(0).cloneRange();
+
         const link = this.document.createElement('a');
         link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
@@ -3225,6 +3228,10 @@ export class OdooEditor extends EventTarget {
         range.setEnd(textNode, index + length);
         link.appendChild(range.extractContents());
         range.insertNode(link);
+        // Inserting an element into a range clears the selection in Safari
+        // Hence, use the cloned range to reselect it.
+        selection.removeAllRanges();
+        selection.addRange(cloneRange);
     }
 
     /**
