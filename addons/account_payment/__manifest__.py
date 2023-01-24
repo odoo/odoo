@@ -8,6 +8,8 @@
     'depends': ['account', 'payment'],
     'auto_install': ['account'],
     'data': [
+        'data/ir_config_parameter.xml',
+
         'security/ir.model.access.csv',
         'security/ir_rules.xml',
 
@@ -23,6 +25,7 @@
         'wizards/account_payment_register_views.xml',
         'wizards/payment_link_wizard_views.xml',
         'wizards/payment_refund_wizard_views.xml',
+        'wizards/res_config_settings_views.xml',
     ],
     'assets': {
         'web.assets_frontend': [
