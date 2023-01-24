@@ -595,7 +595,7 @@ class AccountMoveLine(models.Model):
                 previous_two_accounts = line.move_id.line_ids.filtered(
                     lambda l: l.account_id and l.display_type == line.display_type
                 )[-2:].account_id
-                if len(previous_two_accounts) == 1:
+                if len(previous_two_accounts) == 1 and len(line.move_id.line_ids) > 2:
                     line.account_id = previous_two_accounts
                 else:
                     line.account_id = line.move_id.journal_id.default_account_id
