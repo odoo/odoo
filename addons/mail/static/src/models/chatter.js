@@ -61,7 +61,7 @@ registerModel({
             // So that it changes to composer of new thread
             this.update({
                 createNewRecordComposerData: composerData,
-                createNewRecordDeferred: makeDeferred(),
+                createNewRecordDeferred: composerData ? makeDeferred() : null,
             });
             await this.createNewRecordDeferred;
             return saved;
