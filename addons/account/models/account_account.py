@@ -737,7 +737,6 @@ class AccountAccount(models.Model):
         return {
             'name': self.display_name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'account.account',
             'res_id': self.id,
@@ -757,8 +756,6 @@ class AccountAccount(models.Model):
             'type': 'ir.actions.act_window',
             'name': _('Taxes'),
             'res_model': 'account.tax',
-            'view_type': 'list',
-            'view_mode': 'list',
             'views': [[False, 'list'], [False, 'form']],
             'domain': [('id', 'in', related_taxes_ids)],
         }

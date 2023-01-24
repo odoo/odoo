@@ -1129,7 +1129,6 @@ class HrExpenseSheet(models.Model):
         return {
             'name': self.account_move_id.name,
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
             'views': [[False, "form"]],
             'res_model': 'account.move',

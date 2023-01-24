@@ -352,7 +352,6 @@ class AccountMove(models.Model):
                 'name': (_("Some invoices could not be printed in the QR format")),
                 'type': 'ir.actions.act_window',
                 'res_model': 'l10n_ch.qr_invoice.wizard',
-                'view_type': 'form',
                 'view_mode': 'form',
                 'target': 'new',
                 'context': {'active_ids': self.ids},
