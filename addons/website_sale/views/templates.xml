@@ -1529,6 +1529,10 @@
                                     <t t-set="back_button_link" t-value="'/shop/cart'"/>
                                 </t>
                             </div>
+                            <div t-if="not (acquirers or tokens)" class="alert alert-warning">
+                                <strong>No suitable payment option could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website administrator.
+                            </div>
 
                             <div t-if="not acquirers" class="mt-2">
                                 <a role="button" class="btn-link"
