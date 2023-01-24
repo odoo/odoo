@@ -122,13 +122,13 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
             originThread: isPending ? undefined : originThread,
         });
         const index = state.attachments.findIndex(({ id }) => id === tmpId);
+        const def = deferredByAttachmentId.get(tmpId);
         if (index >= 0) {
             state.unlink(state.attachments[index]);
             state.attachments[index] = attachment;
         } else {
             state.attachments.push(attachment);
         }
-        const def = deferredByAttachmentId.get(tmpId);
         if (def) {
             def.resolve(attachment);
             deferredByAttachmentId.delete(tmpId);
