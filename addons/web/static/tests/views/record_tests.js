@@ -7,7 +7,9 @@ import { click, getFixture, mount } from "../helpers/utils";
 import { setupViewRegistries } from "../views/helpers";
 
 import { Component, xml, useState } from "@odoo/owl";
-import { editInput } from "@web/../tests/helpers/utils";
+import { editInput, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 let serverData;
 let target;
@@ -168,7 +170,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" initialValues="values" t-slot-scope="data">
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -212,7 +214,7 @@ QUnit.module("Record Component", (hooks) => {
         }
         Parent.components = { Record, Field };
         Parent.template = xml`
-            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" initialValues="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
                 <Field name="'foo'" record="data.record"/>
             </Record>
         `;
@@ -229,5 +231,171 @@ QUnit.module("Record Component", (hooks) => {
         await editInput(target, "[name='foo'] input", "753");
         assert.verifySteps(["record changed"]);
         assert.strictEqual(target.querySelector("[name='foo'] input").value, "753");
+    });
+
+    QUnit.test("handles many2one fields", async function (assert) {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+
+        serverData.models = {
+            bar: {
+                records: [
+                    { id: 1, display_name: "bar1" },
+                    { id: 3, display_name: "abc" },
+                ],
+            },
+        };
+
+        class Parent extends Component {
+            setup() {
+                this.fields = {
+                    foo: {
+                        name: "foo",
+                        type: "many2one",
+                        relation: "bar",
+                    },
+                };
+                this.values = {
+                    foo: [1, undefined],
+                };
+            }
+
+            onRecordChanged(record, changes) {
+                assert.step("record changed");
+                assert.deepEqual(changes, { foo: 3 });
+                assert.deepEqual(record.data, { foo: [3, "abc"] });
+            }
+        }
+        Parent.components = { Record, Many2OneField };
+        Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo" update="(value) => data.record.update({ foo: value })"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route, args) {
+                    assert.step(route);
+                },
+            }),
+        });
+        assert.verifySteps(["/web/dataset/call_kw/bar/name_get"]);
+        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
+        await editInput(target, ".o_field_many2one_selection input", "abc");
+        assert.verifySteps(["/web/dataset/call_kw/bar/name_search"]);
+        await click(target.querySelectorAll(".o-autocomplete--dropdown-item a")[0]);
+        assert.verifySteps(["record changed"]);
+        assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "abc");
+    });
+
+    QUnit.test(
+        "supports passing dynamic values -- full control to the user of Record",
+        async (assert) => {
+            class Parent extends Component {
+                setup() {
+                    this.fields = {
+                        foo: {
+                            name: "foo",
+                            type: "char",
+                        },
+                        bar: {
+                            name: "bar",
+                            type: "boolean",
+                        },
+                    };
+                    this.values = owl.useState({
+                        foo: "abc",
+                        bar: true,
+                    });
+                }
+
+                onRecordChanged(record, changes) {
+                    assert.step("record changed");
+                    assert.strictEqual(record.model.constructor.name, "RelationalModel");
+                    assert.deepEqual(changes, { foo: "753" });
+                    this.values.foo = "357";
+                }
+            }
+            Parent.components = { Record, Field };
+            Parent.template = xml`
+            <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="{ foo: values.foo }" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+            await mount(Parent, target, {
+                env: await makeTestEnv({
+                    serverData,
+                    mockRPC(route) {
+                        assert.step(route);
+                    },
+                }),
+            });
+            assert.strictEqual(target.querySelector("[name='foo'] input").value, "abc");
+            await editInput(target, "[name='foo'] input", "753");
+            assert.verifySteps(["record changed"]);
+            await nextTick();
+            assert.strictEqual(target.querySelector("[name='foo'] input").value, "357");
+        }
+    );
+
+    QUnit.test("can switch records", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.fields = {
+                    foo: {
+                        name: "foo",
+                        type: "char",
+                    },
+                    bar: {
+                        name: "bar",
+                        type: "boolean",
+                    },
+                };
+                this.state = useState({ currentId: 1, num: 0 });
+            }
+
+            next() {
+                this.state.currentId = 5;
+                this.state.num++;
+            }
+        }
+        Parent.components = { Record, Field };
+        Parent.template = xml`
+            <a id="increment" t-on-click="() => state.num++" t-esc="state.num" />
+            <a id="next" t-on-click="next">NEXT</a>
+            <Record resId="state.currentId" resModel="'partner'" fieldNames="['foo']" fields="fields" t-slot-scope="data">
+                <Field name="'foo'" record="data.record"/>
+            </Record>
+        `;
+
+        await mount(Parent, target, {
+            env: await makeTestEnv({
+                serverData,
+                mockRPC(route, args) {
+                    assert.step(`${args.method} : ${JSON.stringify(args.args)}`);
+                },
+            }),
+        });
+
+        assert.verifySteps([`read : [[1],["foo"]]`]);
+        const increment = target.querySelector("#increment");
+        const field = target.querySelector("div[name='foo']");
+        assert.strictEqual(increment.textContent, "0");
+        assert.strictEqual(field.textContent, "yop");
+
+        await click(increment);
+        // No reload when a render from upstream comes
+        assert.verifySteps([]);
+        assert.strictEqual(increment.textContent, "1");
+        assert.strictEqual(field.textContent, "yop");
+
+        await click(target.querySelector("#next"));
+        assert.verifySteps([`read : [[5],["foo"]]`]);
+        assert.strictEqual(increment.textContent, "2");
+        assert.strictEqual(field.textContent, "blop");
     });
 });

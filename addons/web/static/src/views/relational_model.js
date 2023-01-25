@@ -273,7 +273,11 @@ class DataPoint {
 
         this.model = model;
         this.resModel = params.resModel;
-        this.fields = params.fields;
+        this.fields = {
+            id: { name: "id", type: "integer", readonly: true },
+            display_name: { name: "display_name", type: "char" },
+            ...params.fields,
+        };
         this.setActiveFields(params.activeFields);
 
         this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
@@ -1105,7 +1109,6 @@ export class Record extends DataPoint {
         const activeField = this.activeFields[fieldName];
         const { fieldsToFetch, relatedFields = {}, views = {}, viewMode } = activeField;
         const fields = {
-            id: { name: "id", type: "integer", readonly: true },
             ...relatedFields,
             ...fieldsToFetch,
         };
@@ -3512,7 +3515,6 @@ export class RelationalModel extends Model {
             this.rootParams.expand = params.expand;
             this.rootParams.groupsLimit = params.groupsLimit;
         }
-        this.initialValues = params.initialValues;
 
         // this.db = Object.create(null);
         this.root = null;
@@ -3555,7 +3557,7 @@ export class RelationalModel extends Model {
             : this.initialRootState;
 
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
-        await this.keepLast.add(newRoot.load({ values: this.initialValues }));
+        await this.keepLast.add(newRoot.load({ values: params.values }));
         this.root = newRoot;
         this.rootParams = rootParams;
         this.notify();

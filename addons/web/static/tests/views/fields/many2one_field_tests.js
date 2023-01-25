@@ -1606,7 +1606,7 @@ QUnit.module("Fields", (hooks) => {
         }
         Comp.components = { Record, Field };
         Comp.template = owl.xml`
-            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" initialValues="values" mode="'edit'" t-slot-scope="scope">
+            <Record resModel="'coucou'" fields="fields" fieldNames="['partner_id']" values="values" mode="'edit'" t-slot-scope="scope">
                 <Field name="'partner_id'" record="scope.record" canOpen="false" />
             </Record>
         `;
@@ -3251,10 +3251,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name=trululu] input");
         await selectDropdownItem(target, "trululu", "Create and edit...");
 
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo] input").value,
-            "yz"
-        );
+        assert.strictEqual(target.querySelector(".o_field_widget[name=foo] input").value, "yz");
 
         await clickDiscard(target.querySelector(".modal"));
     });
