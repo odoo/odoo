@@ -7,6 +7,7 @@ import {
     insertText,
     isScrolledTo,
     isScrolledToBottom,
+    nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -353,5 +354,41 @@ QUnit.test(
             })
         );
         assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+    }
+);
+
+QUnit.test(
+    "should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+        const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({ uuid: "channel-uuid" });
+        for (let i = 0; i <= 10; i++) {
+            pyEnv["mail.message"].create({
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            });
+        }
+        const { env } = await start();
+        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+        await click(".o-mail-notification-item");
+        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+
+        $(".o-mail-thread").scrollTop(0);
+        await nextAnimationFrame();
+        assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
+
+        // simulate receiving a message
+        // simulate receiving a message
+        await afterNextRender(() =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "hello",
+                uuid: "channel-uuid",
+            })
+        );
+        assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
     }
 );

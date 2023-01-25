@@ -1,11 +1,6 @@
 /** @odoo-module **/
 
-import {
-    afterNextRender,
-    isScrolledToBottom,
-    start,
-    startServer,
-} from "@mail/../tests/helpers/test_utils";
+import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("mail", (hooks) => {
     QUnit.module("components", {}, function () {
@@ -334,92 +329,6 @@ QUnit.module("mail", (hooks) => {
                 "partner name shown in notification popover should be the one concerned by the notification"
             );
         });
-
-        QUnit.skipRefactoring(
-            "should not scroll on receiving new message if the list is initially scrolled anywhere else than bottom (asc order)",
-            async function (assert) {
-                assert.expect(3);
-
-                const pyEnv = await startServer();
-                // Needed partner & user to allow simulation of message reception
-                const resPartnerId1 = pyEnv["res.partner"].create({
-                    name: "Foreigner partner",
-                });
-                const resUsersId1 = pyEnv["res.users"].create({
-                    name: "Foreigner user",
-                    partner_id: resPartnerId1,
-                });
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                for (let i = 0; i <= 10; i++) {
-                    pyEnv["mail.message"].create({
-                        body: "not empty",
-                        model: "mail.channel",
-                        res_id: mailChannelId1,
-                    });
-                }
-                const { afterEvent, click, messaging } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                });
-
-                const thread = messaging.models["Thread"].findFromIdentifyingData({
-                    model: "mail.channel",
-                    id: mailChannelId1,
-                });
-                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-                await afterEvent({
-                    eventName: "o-component-message-list-scrolled",
-                    async func() {
-                        await click(`.o_NotificationListView_preview`);
-                    },
-                    message: "should wait until channel scrolled initially",
-                    predicate: (data) => thread === data.threadViewer.thread,
-                });
-                const initialMessageList = document.querySelector(".o-mail-thread");
-                assert.ok(
-                    isScrolledToBottom(initialMessageList),
-                    "should have scrolled to bottom of channel 1 initially"
-                );
-
-                await afterEvent({
-                    eventName: "o-component-message-list-scrolled",
-                    func: () => (initialMessageList.scrollTop = 0),
-                    message: "should wait until channel 1 processed manual scroll",
-                    predicate: (data) => thread === data.threadViewer.thread,
-                });
-                assert.strictEqual(
-                    initialMessageList.scrollTop,
-                    0,
-                    "should have scrolled to the top of channel 1 manually"
-                );
-
-                // simulate receiving a message
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: () =>
-                        messaging.rpc({
-                            route: "/mail/chat_post",
-                            params: {
-                                context: {
-                                    mockedUserId: resUsersId1,
-                                },
-                                message_content: "hello",
-                                uuid: thread.uuid,
-                            },
-                        }),
-                    message: "should wait until channel processed new message hint",
-                    predicate: (data) =>
-                        thread === data.threadViewer.thread &&
-                        data.hint.type === "message-received",
-                });
-                assert.strictEqual(
-                    document.querySelector(".o-mail-thread").scrollTop,
-                    0,
-                    "should not scroll on receiving new message because the list is initially scrolled anywhere else than bottom"
-                );
-            }
-        );
 
         QUnit.skipRefactoring(
             "delete all attachments of message without content should no longer display the message",
