@@ -1766,8 +1766,8 @@ class Task(models.Model):
         return tasks
 
     def write(self, vals):
-        if len(self) == 1:
-            handle_history_divergence(self, 'description', vals)
+        # if len(self) == 1:
+        #     handle_history_divergence(self, 'description', vals)
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
