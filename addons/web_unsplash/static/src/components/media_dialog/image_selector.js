@@ -107,6 +107,24 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
         return this._super() || this.state.isFetchingUnsplash;
     },
 
+    get combinedRecords() {
+        /**
+         * Creates an array with alternating elements from two arrays.
+         *
+         * @param {Array} a
+         * @param {Array} b
+         * @returns {Array} alternating elements from a and b, starting with
+         *     an element of a
+         */
+        function alternate(a, b) {
+            return [
+                a.map((v, i) => i < b.length ? [v, b[i]] : v),
+                b.slice(a.length),
+            ].flat(2);
+        }
+        return alternate(this.state.unsplashRecords, this.state.libraryMedia);
+    },
+
     // It seems that setters are mandatory when patching a component that
     // extends another component.
     set canLoadMore(_) {},
