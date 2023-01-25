@@ -401,3 +401,16 @@ QUnit.test("show empty placeholder when thread contains no message", async funct
     assert.containsOnce(target, '[data-empty-thread=""]');
     assert.containsNone(target, ".o-mail-message");
 });
+
+QUnit.test(
+    "show empty placeholder when thread contains only empty messages",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({ model: "mail.channel", res_id: channelId });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(target, '[data-empty-thread=""]');
+        assert.containsNone(target, ".o-mail-message");
+    }
+);

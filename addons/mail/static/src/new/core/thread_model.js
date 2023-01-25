@@ -226,7 +226,7 @@ export class Thread {
     }
 
     get isEmpty() {
-        return this.messageIds.length === 0;
+        return !this.messages.some((message) => !message.isEmpty);
     }
 
     get offlineMembers() {
