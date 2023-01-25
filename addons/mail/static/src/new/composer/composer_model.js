@@ -19,6 +19,7 @@ export class Composer {
     type;
     /** @type {import("@mail/new/core/store_service").Store} */
     _store;
+    isFocused = false;
 
     constructor(store, data) {
         const { message, thread } = data;

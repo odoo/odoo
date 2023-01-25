@@ -12,68 +12,6 @@ QUnit.module("mail", (hooks) => {
         QUnit.module("thread_view_tests.js");
 
         QUnit.skipRefactoring(
-            "mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]",
-            async function (assert) {
-                assert.expect(3);
-
-                const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
-                const resUsersId1 = pyEnv["res.users"].create({
-                    partner_id: resPartnerId1,
-                });
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                const { afterEvent, messaging, openDiscuss } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                    mockRPC(route, args) {
-                        if (args.method === "channel_fetched" && args.args[0] === mailChannelId1) {
-                            throw new Error(
-                                "'channel_fetched' RPC must not be called for created channel as message is directly seen"
-                            );
-                        } else if (route === "/mail/channel/set_last_seen_message") {
-                            assert.strictEqual(
-                                args.channel_id,
-                                mailChannelId1,
-                                "set_last_seen_message is called on the right channel id"
-                            );
-                            assert.step("rpc:set_last_seen_message");
-                        }
-                    },
-                });
-                await openDiscuss();
-                document.querySelector(".o-mail-composer-textarea").focus();
-                // simulate receiving a message
-                await afterEvent({
-                    eventName: "o-thread-last-seen-by-current-partner-message-id-changed",
-                    func: () =>
-                        messaging.rpc({
-                            route: "/mail/chat_post",
-                            params: {
-                                context: {
-                                    mockedUserId: resUsersId1,
-                                },
-                                message_content: "<p>fdsfsd</p>",
-                                uuid: messaging.models["Thread"].findFromIdentifyingData({
-                                    model: "mail.channel",
-                                    id: mailChannelId1,
-                                }).uuid,
-                            },
-                        }),
-                    message:
-                        "should wait until last seen by current partner message id changed after receiving a message while thread is focused",
-                    predicate: ({ thread }) => {
-                        return thread.id === mailChannelId1 && thread.model === "mail.channel";
-                    },
-                });
-                assert.verifySteps(
-                    ["rpc:set_last_seen_message"],
-                    "Channel should have been mark as seen directly"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "[technical] new messages separator on posting message",
             async function (assert) {
                 // technical as we need to remove focus from text input to avoid `set_last_seen_message` call

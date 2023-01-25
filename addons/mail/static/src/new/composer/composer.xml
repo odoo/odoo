@@ -38,8 +38,9 @@
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
-                            t-on-input="typing"
-                            t-on-focusin="() => this.props.composer.thread and this.threadService.markAsRead(this.props.composer.thread)"
+                            t-on-input="onInput"
+                            t-on-focusin="onFocusin"
+                            t-on-focusout="() => this.props.composer.isFocused = false"
                             t-on-paste="onPaste"
                             t-model="props.composer.textInputContent"
                             t-att-placeholder="placeholder"/>

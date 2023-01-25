@@ -336,6 +336,15 @@ export class Messaging {
                                     }
                                 }
                                 this.chatWindow.insert({ thread: channel });
+                                if (
+                                    channel.composer.isFocused &&
+                                    channel.mostRecentNonTransientMessage &&
+                                    !this.store.guest &&
+                                    channel.mostRecentNonTransientMessage === channel.mostRecentMsg
+                                ) {
+                                    channel.isUnread = true;
+                                    this.thread.markAsRead(channel);
+                                }
                             }
                         );
                     }

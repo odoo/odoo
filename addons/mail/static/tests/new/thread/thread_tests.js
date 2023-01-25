@@ -10,6 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { makeDeferred } from "@mail/utils/deferred";
 
 import { getFixture } from "@web/../tests/helpers/utils";
 
@@ -283,6 +284,43 @@ QUnit.test(
         assert.verifySteps(["rpc:channel_fetch"]);
 
         document.querySelector(".o-mail-composer-textarea").focus();
+        assert.verifySteps(["rpc:set_last_seen_message"]);
+    }
+);
+
+QUnit.test(
+    "mark channel as fetched and seen when a new message is loaded if composer is focused [REQUIRE FOCUS]",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({});
+        const userId = pyEnv["res.users"].create({ partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "test",
+            uuid: "uuid-uuid",
+        });
+        const deferred = makeDeferred();
+        const { env, openDiscuss } = await start({
+            async mockRPC(route, args) {
+                if (args.method === "channel_fetched" && args.args[0] === channelId) {
+                    throw new Error(
+                        "'channel_fetched' RPC must not be called for created channel as message is directly seen"
+                    );
+                } else if (route === "/mail/channel/set_last_seen_message") {
+                    assert.strictEqual(args.channel_id, channelId);
+                    assert.step("rpc:set_last_seen_message");
+                    await deferred;
+                }
+            },
+        });
+        await openDiscuss(channelId);
+        document.querySelector(".o-mail-composer-textarea").focus();
+        // simulate receiving a message
+        await env.services.rpc("/mail/chat_post", {
+            context: { mockedUserId: userId },
+            message_content: "<p>Some new message</p>",
+            uuid: "uuid-uuid",
+        });
+        await afterNextRender(() => deferred.resolve());
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );

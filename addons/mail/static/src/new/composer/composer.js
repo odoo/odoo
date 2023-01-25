@@ -165,7 +165,7 @@ export class Composer extends Component {
         onWillDestroy(() => this.attachmentUploader.unlinkAll());
     }
 
-    typing(ev) {
+    onInput(ev) {
         if (!this.typingNotified && !ev.target.value.startsWith("/")) {
             this.notifyIsTyping();
             this.typingNotified = true;
@@ -402,5 +402,12 @@ export class Composer extends Component {
         this.props.composer.textInputContent = firstPart + str + secondPart;
         this.selection.moveCursor((firstPart + str).length);
         this.state.autofocus++;
+    }
+
+    onFocusin() {
+        this.props.composer.isFocused = true;
+        if (this.props.composer.thread) {
+            this.threadService.markAsRead(this.props.composer.thread);
+        }
     }
 }
