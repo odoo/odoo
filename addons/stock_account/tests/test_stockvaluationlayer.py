@@ -1012,7 +1012,7 @@ class TestStockValuationChangeValuation(TestStockValuationCommon):
         self.assertEqual(len(self.product1.stock_valuation_layer_ids), 3)
 
 @tagged('post_install', '-at_install')
-class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
+class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -1093,38 +1093,6 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
             'property_stock_journal': cls.company_data['default_journal_misc'].id,
         })
 
-    def _make_in_move(self, product, quantity, unit_cost=None, create_picking=False, loc_dest=None, pick_type=None):
-        """ Helper to create and validate a receipt move.
-        """
-        unit_cost = unit_cost or product.standard_price
-        loc_dest = loc_dest or self.stock_location
-        pick_type = pick_type or self.picking_type_in
-        in_move = self.env['stock.move'].create({
-            'name': 'in %s units @ %s per unit' % (str(quantity), str(unit_cost)),
-            'product_id': product.id,
-            'location_id': self.supplier_location.id,
-            'location_dest_id': loc_dest.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': quantity,
-            'price_unit': unit_cost,
-            'picking_type_id': pick_type.id,
-        })
-
-        if create_picking:
-            picking = self.env['stock.picking'].create({
-                'picking_type_id': in_move.picking_type_id.id,
-                'location_id': in_move.location_id.id,
-                'location_dest_id': in_move.location_dest_id.id,
-            })
-            in_move.write({'picking_id': picking.id})
-
-        in_move._action_confirm()
-        in_move._action_assign()
-        in_move.move_line_ids.qty_done = quantity
-        in_move._action_done()
-
-        return in_move.with_context(svl=True)
-
     def test_avco_and_credit_note(self):
         """
         When reversing an invoice that contains some anglo-saxo AML, the new anglo-saxo AML should have the same value
@@ -1164,3 +1132,29 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon):
         self.assertEqual(len(anglo_lines), 2)
         self.assertEqual(abs(anglo_lines[0].balance), 10)
         self.assertEqual(abs(anglo_lines[1].balance), 10)
+
+    def test_return_delivery_storno(self):
+        """ When using STORNO accounting, reverse accounting moves should have negative values for credit/debit.
+        """
+        self.env.company.account_storno = True
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        self._make_in_move(self.product1, 10, unit_cost=10)
+        out_move = self._make_out_move(self.product1, 10, create_picking=True)
+        return_move = self._make_return(out_move, 10)
+
+        valuation_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
+        stock_out_line = out_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertEqual(valuation_line.credit, 100)
+        self.assertEqual(valuation_line.debit, 0)
+        self.assertEqual(stock_out_line.credit, 0)
+        self.assertEqual(stock_out_line.debit, 100)
+
+        valuation_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_valuation_account)
+        stock_out_line = return_move.account_move_ids.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+
+        self.assertEqual(valuation_line.credit, -100)
+        self.assertEqual(valuation_line.debit, 0)
+        self.assertEqual(stock_out_line.credit, 0)
+        self.assertEqual(stock_out_line.debit, -100)
