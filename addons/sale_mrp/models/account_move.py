@@ -13,7 +13,7 @@ class AccountMoveLine(models.Model):
         if so_line:
             bom = self.env['mrp.bom']._bom_find(products=so_line.product_id, company_id=so_line.company_id.id, bom_type='phantom')[so_line.product_id]
             if bom:
-                is_line_reversing = bool(self.move_id.reversed_entry_id)
+                is_line_reversing = self.move_id.move_type == 'out_refund'
                 qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
                 posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
                 qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
