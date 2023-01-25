@@ -203,7 +203,7 @@ class ProductProduct(models.Model):
         fifo_vals = self._run_fifo(abs(quantity), company)
         vals['remaining_qty'] = fifo_vals.get('remaining_qty')
         # In case of AVCO, fix rounding issue of standard price when needed.
-        if self.cost_method == 'average':
+        if self.product_tmpl_id.cost_method == 'average':
             rounding_error = currency.round(self.standard_price * self.quantity_svl - self.value_svl)
             if rounding_error:
                 # If it is bigger than the (smallest number of the currency * quantity) / 2,
@@ -215,7 +215,7 @@ class ProductProduct(models.Model):
                         float_repr(rounding_error, precision_digits=currency.decimal_places),
                         currency.symbol
                     )
-        if self.cost_method == 'fifo':
+        if self.product_tmpl_id.cost_method == 'fifo':
             vals.update(fifo_vals)
         return vals
 
@@ -474,7 +474,7 @@ class ProductProduct(models.Model):
 
         # If some negative stock were fixed, we need to recompute the standard price.
         product = self.with_company(company.id)
-        if product.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
+        if product.product_tmpl_id.cost_method == 'average' and not float_is_zero(product.quantity_svl, precision_rounding=self.uom_id.rounding):
             product.sudo().with_context(disable_auto_svl=True).write({'standard_price': product.value_svl / product.quantity_svl})
 
         self.env['stock.valuation.layer'].browse(x[0].id for x in as_svls)._validate_accounting_entries()
