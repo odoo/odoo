@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from unittest import skip
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase, TransactionCase
 from odoo.addons.base.tests.common import HttpCaseWithUserPortal
 
 @tagged('post_install', '-at_install')
-@skip("skipRefactoring: Tour shop_cart_recovery failed at step check the mail is sent, grab the recovery link, and logout (trigger: .o_MessageView_content a:containsExact(Resume order))")
 class TestWebsiteSaleCartRecovery(HttpCaseWithUserPortal):
 
     def test_01_shop_cart_recovery_tour(self):
