@@ -4,8 +4,8 @@
         <!-- Compras e ISV por Cobrar -->
         <record id="impuestos_plantilla_isv_por_cobrar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
-            <field name="name">ISV por Cobrar</field>
-            <field name="description">ISV por Cobrar</field>
+            <field name="name">ISV receivable</field>
+            <field name="description">ISV receivable</field>
             <field name="amount" eval="15"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">purchase</field>
@@ -31,8 +31,8 @@
         <!-- Ventas e ISV por Pagar -->
         <record id="impuestos_plantilla_isv_por_pagar" model="account.tax.template">
             <field name="chart_template_id" ref="cuentas_plantilla"/>
-            <field name="name">ISV por Pagar</field>
-            <field name="description">ISV por Pagar</field>
+            <field name="name">ISV Payable</field>
+            <field name="description">ISV Payable</field>
             <field name="amount" eval="15"/>
             <field name="amount_type">percent</field>
             <field name="type_tax_use">sale</field>
