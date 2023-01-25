@@ -713,5 +713,22 @@ Model({
                 return this.env._t("Read More");
             },
         }),
+        /**
+         * Scheduled for sending
+         */
+        scheduledFromNow: attr({
+            compute() {
+                if (!this.message) {
+                    return clear();
+                }
+                if (!this.message.scheduledMomentDate) {
+                    return clear();
+                }
+                if (!this.clockWatcher.clock.date) {
+                    return clear();
+                }
+                return this.message.scheduledMomentDate.fromNow();
+            },
+        }),
     },
 });
