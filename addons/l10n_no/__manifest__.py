@@ -11,7 +11,7 @@
 Updated for Odoo 9 by Bringsvor Consulting AS <www.bringsvor.com>
 """,
     "depends" : [
-        "account",
+        "l10n_multilang",
         "base_iban",
         "base_vat",
     ],
