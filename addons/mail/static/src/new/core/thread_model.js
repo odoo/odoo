@@ -111,7 +111,7 @@ export class Thread {
     }
 
     set activeRtcSession(session) {
-        this.activeRtcSessionId = session.id;
+        this.activeRtcSessionId = session?.id;
     }
 
     get areAllMembersLoaded() {
