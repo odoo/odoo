@@ -198,6 +198,7 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
             len(path) > 1
             and path.startswith('/')
             and '/static/' not in path
+            and path != '/web'
             and not path.startswith('/web/')
     )):
         new_url, _ = request.env['ir.http'].url_rewrite(path)
@@ -225,7 +226,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
     path = url[0]
 
     # Consider /static/ and /web/ files as non-multilang
-    if '/static/' in path or path.startswith('/web/'):
+    if '/static/' in path or path == '/web' or path.startswith('/web/'):
         return False
 
     query_string = url[1] if len(url) > 1 else None
