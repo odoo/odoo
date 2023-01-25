@@ -11,6 +11,20 @@
     </div>
 </t>
 
+<t t-name="web_editor.ExternalImage" owl="1">
+    <t t-if="record.mediaType == 'libraryMedia'">
+        <AutoResizeImage author="record.author"
+            src="record.thumbnail_url"
+            authorLink="record.author_link"
+            title="record.tooltip"
+            altDescription="record.tooltip"
+            minRowHeight="MIN_ROW_HEIGHT"
+            selected="this.selectedMediaIds.includes(record.id)"
+            onImageClick="() => this.onClickMedia(record)"
+            onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+    </t>
+</t>
+
 <t t-name="web_editor.ImagesListTemplate" owl="1">
     <div class="o_we_existing_attachments o_we_images d-flex flex-wrap my-0">
         <t t-if="!hasContent and !isFetching">
@@ -42,16 +56,8 @@
                 </t>
             </t>
             <t id="o_we_media_library_images" t-if="['all', 'media-library'].includes(state.searchService)">
-                <t t-foreach="state.libraryMedia" t-as="media" t-key="media.id">
-                    <AutoResizeImage author="media.author"
-                        src="media.thumbnail_url"
-                        authorLink="media.author_link"
-                        title="media.tooltip"
-                        altDescription="media.tooltip"
-                        minRowHeight="MIN_ROW_HEIGHT"
-                        selected="this.selectedMediaIds.includes(media.id)"
-                        onImageClick="() => this.onClickMedia(media)"
-                        onLoaded="(imgEl) => this.onImageLoaded(imgEl, media)"/>
+                <t t-foreach="state.libraryMedia" t-as="record" t-key="record.id">
+                    <t t-call="web_editor.ExternalImage"/>
                 </t>
             </t>
             <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
