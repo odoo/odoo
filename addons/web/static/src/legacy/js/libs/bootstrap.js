@@ -131,3 +131,20 @@ ScrollSpy.prototype._process = function () {
         this._activate(this._targets[0]);
     }
 };
+
+/**
+ * With bootstrap 5, navigation elements must be in the DOM and be visible.
+ * Since in the website editor, the user can hide the table of content block in
+ * many different ways, it happens that the navigation element is no longer
+ * found by bootstrap. We don't want to dispose scrollspy everywhere the block
+ * could be hidden. So this patch imitates the behavior of bootstrap 4.X by not
+ * causing an error if the navigation element is not found.
+ */
+const bootstrapSpyActivateFunction = ScrollSpy.prototype._activate;
+ScrollSpy.prototype._activate = function (target) {
+    const element = document.querySelector(`[href="${target}"]`);
+    if (!element || $(element).is(':hidden')) {
+        return;
+    }
+    bootstrapSpyActivateFunction.apply(this, arguments);
+};
