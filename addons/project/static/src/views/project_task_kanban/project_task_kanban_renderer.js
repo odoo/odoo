@@ -3,6 +3,8 @@
 import { useService } from '@web/core/utils/hooks';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { Record } from '@web/views/record';
+import { registry } from '@web/core/registry';
 
 const { onWillStart } = owl;
 
@@ -89,3 +91,40 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         });
     }
 }
+
+class ProutRecord extends owl.Component {
+
+    setup() {
+        this.state = owl.useState({folded: true});
+    }
+
+    get fieldsInfo() {
+        return {
+            child_ids: {
+                type: "one2many",
+                relation: "project.task",
+                fieldsToFetch: {
+                    display_name: { type: "char" },
+                }
+            }
+        }
+    }
+
+    get values() {
+        return {
+            child_ids: this.props.record.data.child_ids.currentIds,
+        }
+    }
+}
+ProutRecord.components = { Record };
+ProutRecord.template = owl.xml`
+<a class="btn-primary" t-on-click="() => state.folded = !state.folded" >Prout</a>
+<Record t-if="!state.folded" resModel="'project.task'" fields="fieldsInfo" activeFields="fieldsInfo" values="values" t-slot-scope="data">
+    <t t-foreach="data.record.data.child_ids.records" t-as="subTask" t-key="subTask.resId">
+        <p t-esc="subTask.data.display_name" />
+    </t>
+</Record>
+`
+ProutRecord.fieldDependencies = { child_ids: { type: "one2many"}}
+
+registry.category("view_widgets").add("project_asana", ProutRecord);
