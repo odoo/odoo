@@ -1955,10 +1955,14 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
 
         // Add tooltips on we-title elements whose text overflows
-        this.$el.tooltip({
+        new Tooltip(this.el, {
             selector: 'we-title',
             placement: 'bottom',
             delay: 100,
+            // Ensure the tooltips have a good position when in iframe.
+            container: this.el,
+            // Prevent horizontal scroll when tooltip is displayed.
+            boundary: this.el.ownerDocument.body,
             title: function () {
                 const el = this;
                 if (el.tagName !== 'WE-TITLE') {
@@ -2837,6 +2841,10 @@ var SnippetsMenu = Widget.extend({
             trigger: 'manual',
             placement: 'bottom',
             title: _t("Drag and drop the building block."),
+            // Ensure the tooltips have a good position when in iframe.
+            container: this.el,
+            // Prevent horizontal scroll when tooltip is displayed.
+            boundary: this.el.ownerDocument.body,
         });
 
         // Hide scroll if no snippets defined
@@ -3450,6 +3458,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onClick(ev) {
+        // Clicking in the page should be ignored on save
+        if (this.willDestroyEditors) {
+            return;
+        }
+
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
         if (!srcElement || this.lastElement === srcElement) {
             return;

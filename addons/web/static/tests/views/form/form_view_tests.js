@@ -12596,6 +12596,28 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange", "create", "read"]);
     });
 
+    QUnit.test("save a form view with a duplicated invisible required field", async function (assert) {
+        serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="text"/>
+                        <field name="text" invisible="1"/>
+                    </group>
+                </form>`,
+        });
+
+        await clickSave(target);
+
+        assert.containsOnce(target, ".o_form_label.o_field_invalid");
+        assert.containsOnce(target, ".o_field_char.o_field_invalid");
+    });
+
     QUnit.test(
         "save a form view with an invisible required field in a x2many",
         async function (assert) {
