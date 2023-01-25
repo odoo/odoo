@@ -1615,7 +1615,7 @@ class AccountMove(models.Model):
     @api.depends('currency_id')
     def _compute_display_inactive_currency_warning(self):
         for move in self.with_context(active_test=False):
-            move.display_inactive_currency_warning = not move.currency_id.active
+            move.display_inactive_currency_warning = move.currency_id and not move.currency_id.active
 
     def _compute_payments_widget_to_reconcile_info(self):
         for move in self:
