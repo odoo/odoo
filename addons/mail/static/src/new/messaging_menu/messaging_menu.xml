@@ -64,7 +64,7 @@
                     datetime="preview.mostRecentMsg?.datetime"
                     displayName="preview.displayName"
                     iconSrc="preview.imgUrl"
-                    hasMarkAsReadButton="preview.isUnread"
+                    hasMarkAsReadButton="threadService.isUnread(preview)"
                     isLast="preview_last and failures.length === 0"
                     onClick="(isMarkAsRead) => isMarkAsRead ? threadService.markAsRead(preview) : this.openDiscussion(preview)"
                 >

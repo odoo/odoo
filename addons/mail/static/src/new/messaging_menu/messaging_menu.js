@@ -236,7 +236,7 @@ export class MessagingMenu extends Component {
         let value =
             this.store.discuss.inbox.counter +
             Object.values(this.store.threads).filter(
-                (thread) => thread.is_pinned && thread.isUnread
+                (thread) => thread.is_pinned && this.threadService.isUnread(thread)
             ).length +
             Object.values(this.store.notificationGroups).reduce(
                 (acc, ng) => acc + parseInt(Object.values(ng.notifications).length),

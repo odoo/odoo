@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
@@ -435,4 +435,24 @@ QUnit.test("open chat window from preview", async function (assert) {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-notification-item");
     assert.containsOnce(target, ".o-mail-chat-window");
+});
+
+QUnit.test("Counter is updated when receiving new message", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({ name: "Albert" });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(() =>
+        env.services.rpc("/mail/message/post", {
+            thread_id: channelId,
+            thread_model: "mail.channel",
+            post_data: {
+                body: "Hello world",
+                message_type: "comment",
+            },
+            context: { partnerId },
+        })
+    );
+    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter.badge").text(), "1");
 });

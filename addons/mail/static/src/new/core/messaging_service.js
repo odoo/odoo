@@ -342,7 +342,6 @@ export class Messaging {
                                     !this.store.guest &&
                                     channel.mostRecentNonTransientMessage === channel.mostRecentMsg
                                 ) {
-                                    channel.isUnread = true;
                                     this.thread.markAsRead(channel);
                                 }
                             }
@@ -534,7 +533,6 @@ export class Messaging {
                     if (!channel) {
                         return;
                     }
-                    channel.isUnread = true;
                     const seenInfo = channel.seenInfos.find(
                         (seenInfo) => seenInfo.partner.id === partner_id
                     );

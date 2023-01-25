@@ -45,17 +45,7 @@ export class ThreadService {
      * @returns {Thread}
      */
     createChannelThread(serverData) {
-        const {
-            id,
-            name,
-            last_message_id,
-            seen_message_id,
-            description,
-            channel,
-            uuid,
-            authorizedGroupFullName,
-        } = serverData;
-        const isUnread = last_message_id !== seen_message_id;
+        const { id, name, description, channel, uuid, authorizedGroupFullName } = serverData;
         const type = channel.channel_type;
         const channelType = serverData.channel.channel_type;
         const isAdmin =
@@ -65,7 +55,6 @@ export class ThreadService {
             model: "mail.channel",
             name,
             type,
-            isUnread,
             description,
             serverData: serverData,
             isAdmin,
@@ -122,7 +111,7 @@ export class ThreadService {
     async markAsRead(thread) {
         const mostRecentNonTransientMessage = thread.mostRecentNonTransientMessage;
         if (
-            thread.isUnread &&
+            this.isUnread(thread) &&
             ["chat", "channel"].includes(thread.type) &&
             mostRecentNonTransientMessage
         ) {
@@ -130,11 +119,8 @@ export class ThreadService {
                 channel_id: thread.id,
                 last_message_id: mostRecentNonTransientMessage.id,
             });
+            this.update(thread, { serverLastSeenMsgBySelf: mostRecentNonTransientMessage.id });
         }
-        this.update(thread, {
-            isUnread: false,
-            serverLastSeenMsgBySelf: mostRecentNonTransientMessage?.id,
-        });
     }
 
     /**
@@ -206,7 +192,6 @@ export class ThreadService {
             this.markAsRead(thread);
         }
         Object.assign(thread, {
-            isUnread: false,
             loadMore:
                 min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
                     ? true
@@ -644,6 +629,13 @@ export class ThreadService {
             delete this.store.messages[tmpMsg.id];
         }
         return message;
+    }
+
+    /**
+     * @param {Thread} thread
+     */
+    isUnread(thread) {
+        return this.localMessageUnreadCounter(thread) > 0;
     }
 
     /**

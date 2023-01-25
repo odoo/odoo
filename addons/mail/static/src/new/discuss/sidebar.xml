@@ -89,7 +89,7 @@
         t-att-class="{
             'bg-100': threadLocalId !== store.discuss.threadLocalId,
             'o-active bg-200': threadLocalId === store.discuss.threadLocalId,
-            'o-unread': thread.isUnread,
+            'o-unread': threadService.isUnread(thread),
         }"
         t-att-data-channel-id="thread.id"
         t-on-click="(ev) => this.openThread(ev, thread)"
@@ -98,7 +98,7 @@
             <img class="w-100 h-100 rounded-circle" t-att-src="thread.imgUrl" alt="Thread Image"/>
             <ChatWindowIcon t-if="thread.type === 'chat'" thread="thread" size="'small'" className="'o-mail-discuss-sidebar-threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
         </div>
-        <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.isUnread }">
+        <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': threadService.isUnread(thread) }">
             <t t-esc="thread.displayName"/>
         </span>
         <div class="flex-grow-1"/>

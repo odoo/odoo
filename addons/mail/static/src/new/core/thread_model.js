@@ -49,7 +49,6 @@ export class Thread {
     /** @type {import("@mail/new/core/follower_model").Follower[]} */
     followers = [];
     isAdmin = false;
-    isUnread = false;
     loadMore = true;
     /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
     mainAttachment;
