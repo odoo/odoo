@@ -37,7 +37,11 @@ export class StatusBarField extends Component {
                         ],
                     };
                 },
-                { category: "smart_action", hotkey: "alt+shift+x" }
+                {
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                    isAvailable: () => !this.props.readonly && !this.props.isDisabled,
+                }
             );
         }
     }
@@ -45,7 +49,9 @@ export class StatusBarField extends Component {
     get currentName() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one": {
-                const item = this.options.find((item) => this.props.value && item.id === this.props.value[0]);
+                const item = this.options.find(
+                    (item) => this.props.value && item.id === this.props.value[0]
+                );
                 return item ? item.display_name : "";
             }
             case "selection": {

@@ -153,9 +153,9 @@ export class FormController extends Component {
         // enable the archive feature in Actions menu only if the active field is in the view
         this.archiveEnabled =
             "active" in activeFields
-                ? !activeFields.active.readonly
+                ? !this.props.fields.active.readonly
                 : "x_active" in activeFields
-                ? !activeFields.x_active.readonly
+                ? !this.props.fields.x_active.readonly
                 : false;
 
         // select footers that are not in subviews and move them to another arch
@@ -187,15 +187,7 @@ export class FormController extends Component {
 
         useSetupView({
             rootRef,
-            beforeLeave: () => {
-                if (this.model.root.isDirty) {
-                    return this.model.root.save({
-                        noReload: true,
-                        stayInEdition: true,
-                        useSaveErrorDialog: true,
-                    });
-                }
-            },
+            beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
                 // TODO: export the whole model?
@@ -273,6 +265,16 @@ export class FormController extends Component {
         }
         if (canProceed) {
             return this.model.load({ resId: resIds[offset] });
+        }
+    }
+
+    async beforeLeave() {
+        if (this.model.root.isDirty) {
+            return this.model.root.save({
+                noReload: true,
+                stayInEdition: true,
+                useSaveErrorDialog: true,
+            });
         }
     }
 
@@ -433,6 +435,7 @@ export class FormController extends Component {
             this.fieldsToTranslate[record.resId] = this.fieldsToTranslate.false;
             delete this.fieldsToTranslate.false;
         }
+        return saved;
     }
 
     async discard() {

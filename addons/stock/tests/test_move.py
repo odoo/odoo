@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -5932,15 +5933,38 @@ class StockMove(TransactionCase):
         self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
 
     def test_move_line_compute_locations(self):
+        stock_location = self.env['stock.location'].create({
+            'name': 'test-stock',
+            'usage': 'internal',
+        })
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        })
         move = self.env['stock.move'].create({
             'name': 'foo',
             'product_id': self.product.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.move_line_ids.location_id, self.stock_location)
-        self.assertEqual(move.move_line_ids.location_dest_id, self.customer_location)
+        self.assertEqual(move.move_line_ids.location_id, stock_location)
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf_location)
+
+        # directly created mls should default to picking's src/dest locations
+        internal_transfer = self.env.ref('stock.picking_type_internal')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': internal_transfer.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
+            'move_line_nosuggest_ids': [Command.create({
+                'product_id': self.product.id,
+                'qty_done': 1.0
+            })]
+        })
+        self.assertEqual(picking.move_line_ids.location_id.id, stock_location.id)
+        self.assertEqual(picking.move_line_ids.location_dest_id.id, shelf_location.id)
 
     def test_receive_more_and_in_child_location(self):
         """
@@ -5964,3 +5988,33 @@ class StockMove(TransactionCase):
         move._action_done()
         self.assertEqual(move.move_line_ids.qty_done, 3)
         self.assertEqual(move.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
+
+    def test_serial_tracking(self):
+        """
+        Since updating the move's `lot_ids` field for product tracked by serial numbers will
+        also updates the move's `quantity_done`, this test checks the move's move lines will be
+        correclty updated and consequently its picking can be validated.
+        """
+        sn = self.env['stock.lot'].create({
+            'name': 'test_lot_001',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 1
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        receipt_form = Form(receipt)
+        with receipt_form.move_ids_without_package.edit(0) as move:
+            move.lot_ids.add(sn)
+        receipt = receipt_form.save()
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(len(receipt.move_line_ids), 1)
+        self.assertEqual(receipt.move_line_ids.qty_done, 1)

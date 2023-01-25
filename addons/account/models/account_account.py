@@ -305,6 +305,7 @@ class AccountAccount(models.Model):
               FROM account_journal journal
               JOIN account_account account ON journal.default_account_id = account.id
              WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+               AND account.id IN %s
              LIMIT 1;
         ''', [tuple(self.ids)])
 
@@ -595,7 +596,7 @@ class AccountAccount(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         code, name = self._split_code_name(self.name)
-        if code:
+        if code and not self.code:
             self.name = name
             self.code = code
 

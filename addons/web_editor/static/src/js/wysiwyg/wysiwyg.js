@@ -381,7 +381,7 @@ const Wysiwyg = Widget.extend({
                     })();
                 }
                 $target.focus();
-                if ($target.closest('#wrapwrap, .iframe-editor-wrapper').length) {
+                if ($target.closest('#wrapwrap').length) {
                     this.toggleLinkTools({
                         forceOpen: true,
                         link: $target[0],
@@ -448,8 +448,6 @@ const Wysiwyg = Widget.extend({
             this.call('bus_service', 'deleteChannel', this._collaborationChannelName);
         }
 
-        // const syncHistory = async (fromClientId) => {
-        // }
         // Check wether clientA is before clientB.
         const isClientFirst = (clientA, clientB) => {
             if (clientA.startTime === clientB.startTime) {
@@ -844,7 +842,8 @@ const Wysiwyg = Widget.extend({
      * @returns {Boolean}
      */
     isDirty: function () {
-        return this._initialValue !== (this.getValue() || this.$editable.val());
+        const isDocumentDirty = this.$editable[0].ownerDocument.defaultView.$(".o_dirty").length;
+        return this._initialValue !== (this.getValue() || this.$editable.val()) && isDocumentDirty;
     },
     /**
      * Get the value of the editable element.
@@ -1337,6 +1336,11 @@ const Wysiwyg = Widget.extend({
         const model = $editable.data('oe-model');
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
+
+        // The html_field value should not be updated while the mediaDialog is
+        // in use because if its value change, restoreSelection may fail since
+        // it has a reference to HTMLElements which are not in the DOM anymore.
+        this._shouldDelayBlur = true;
 
         this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             resModel: model,
@@ -2419,8 +2423,9 @@ const Wysiwyg = Widget.extend({
         if (!e.target.classList.contains('o_editable_date_field_linked')) {
             this.$editable.find('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         }
-        if (e.target.closest('.oe-toolbar')) {
-            this._onToolbar = true;
+        const closestDialog = e.target.closest('.o_dialog, .o_web_editor_dialog');
+        if (e.target.closest('.oe-toolbar') || (closestDialog && closestDialog.querySelector('.o_select_media_dialog, .o_link_dialog'))) {
+            this._shouldDelayBlur = true;
         } else {
             if (this._pendingBlur && !e.target.closest('.o_wysiwyg_wrapper')) {
                 // todo: to remove when removing the legacy field_html
@@ -2428,11 +2433,11 @@ const Wysiwyg = Widget.extend({
                 this.options.onWysiwygBlur && this.options.onWysiwygBlur();
                 this._pendingBlur = false;
             }
-            this._onToolbar = false;
+            this._shouldDelayBlur = false;
         }
     },
     _onBlur: function () {
-        if (this._onToolbar) {
+        if (this._shouldDelayBlur) {
             this._pendingBlur = true;
         } else {
             // todo: to remove when removing the legacy field_html

@@ -63,7 +63,7 @@ QUnit.module("spreadsheet > Global filters chart", {}, () => {
         );
         model.updateMode("dashboard");
         let computedDomain = model.getters.getChartDataSource(chartId).getComputedDomain();
-        assert.equal(computedDomain.length, 0);
+        assert.deepEqual(computedDomain, []);
         await setGlobalFilterValue(model, {
             id: "42",
             value: { yearOffset: -1 },

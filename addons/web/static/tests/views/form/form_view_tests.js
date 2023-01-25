@@ -4021,6 +4021,30 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_cp_action_menus span:contains(Unarchive)");
     });
 
+    QUnit.test("archive action not shown with readonly active field", async function (assert) {
+        // add active field on partner model in readonly mode to do not have Archive option
+        serverData.models.partner.fields.active = {
+            string: "Active",
+            type: "char",
+            default: true,
+            readonly: true,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="active"/><field name="foo"/></form>`,
+            actionMenus: {},
+        });
+        await click(target, ".o_cp_action_menus .dropdown-toggle");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_menu_item")].map((el) => el.textContent),
+            ["Duplicate", "Delete"],
+            "Should not contain an Archive action",
+        );
+    });
+
     QUnit.test("can duplicate a record", async function (assert) {
         await makeView({
             type: "form",
@@ -11764,6 +11788,35 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([], "should not save because we do not change anything");
     });
+
+    QUnit.test(
+        "Auto save: save on closing tab/browser (not dirty but trailing spaces)",
+        async function (assert) {
+            serverData.models.partner.fields.foo.trim = true;
+            serverData.models.partner.records[0].foo = "name with trailing spaces   ";
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `<form><field name="foo"/></form>`,
+                resId: 1,
+                mockRPC(route, { args, method, model }) {
+                    if (method === "write" && model === "partner") {
+                        throw new Error("no write should be done");
+                    }
+                },
+            });
+
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name=foo] input").value,
+                "name with trailing spaces   "
+            );
+
+            window.dispatchEvent(new Event("beforeunload"));
+            await nextTick();
+        }
+    );
 
     QUnit.test(
         "Auto save: save on closing tab/browser (not dirty) with text field",

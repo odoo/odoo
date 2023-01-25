@@ -488,9 +488,7 @@ QUnit.test('chatter updating', async function (assert) {
     );
 });
 
-QUnit.test('chatter should become enabled when creation done', async function (assert) {
-    assert.expect(10);
-
+QUnit.test('post message on draft record', async function (assert) {
     const views = {
         'res.partner,false,form':
             `<form string="Partners">
@@ -502,60 +500,20 @@ QUnit.test('chatter should become enabled when creation done', async function (a
                 </div>
             </form>`,
     };
-    const { click, openView } = await start({
+    const { click, insertText, openView } = await start({
         serverData: { views },
     });
     await openView({
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Chatter',
-        "there should be a chatter"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonSendMessage',
-        "there should be a send message button"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonLogNote',
-        "there should be a log note button"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonLogNote',
-        "there should be an attachments button"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-        "send message button should be disabled"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-        "log note button should be disabled"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-        "attachments button should be disabled"
-    );
-
-    document.querySelectorAll('.o_field_char')[0].focus();
-    document.execCommand('insertText', false, "hello");
-    await click('.o_form_button_save');
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-        "send message button should now be enabled"
-    );
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-        "log note button should now be enabled"
-    );
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-        "attachments button should now be enabled"
+    await click('.o_ChatterTopbar_buttonSendMessage');
+    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await click('.o_Composer_buttonSend');
+    assert.containsOnce(document.body, ".o_Message");
+    assert.strictEqual(
+        document.querySelector(".o_Message_prettyBody").textContent,
+        "Test",
     );
 });
 

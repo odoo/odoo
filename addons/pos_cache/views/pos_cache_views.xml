@@ -8,7 +8,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('o_kanban_card_manage_settings')]" position="inside">
                     <field name='oldest_cache_time' invisible="1" />
-                    <div role="menuitem" class="col-12" style="border-start: none;" attrs="{'invisible': [('oldest_cache_time', '=', False)]}">
+                    <div role="menuitem" class="col-12" style="border-left: none;" attrs="{'invisible': [('oldest_cache_time', '=', False)]}">
                         <a name='delete_cache' type="object" >Invalidate cache</a>
                     </div>
                 </xpath>

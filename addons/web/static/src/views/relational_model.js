@@ -1348,6 +1348,7 @@ export class Record extends DataPoint {
             delete this.virtualId;
             this.data.id = this.resId;
             this.resIds.push(this.resId);
+            this._changes = {};
             this.invalidateCache();
         } else if (keys.length > 0) {
             try {
@@ -1358,14 +1359,10 @@ export class Record extends DataPoint {
                 }
                 throw e;
             }
+            this._changes = {};
             this.invalidateCache();
         }
 
-        // Switch to the parent active fields
-        if (this.parentActiveFields) {
-            this.setActiveFields(this.parentActiveFields);
-            this.parentActiveFields = false;
-        }
         this.isInQuickCreation = false;
         if (shouldReload) {
             await this.model.reloadRecords(this);
@@ -1948,7 +1945,7 @@ export class DynamicRecordList extends DynamicList {
     async fetchCount() {
         const keepLast = this.model.keepLast;
         this.count = await keepLast.add(this.model.orm.searchCount(this.resModel, this.domain));
-        this.countLimit = this.count;
+        this.countLimit = Number.MAX_SAFE_INTEGER;
         this.hasLimitedCount = false;
         this.model.notify();
     }
@@ -2033,12 +2030,14 @@ export class DynamicRecordList extends DynamicList {
             limit: this.limit,
             offset: this.offset,
             order: orderByToString(this.orderBy),
-            count_limit: this.countLimit + 1,
             context: {
                 bin_size: true,
                 ...this.context,
             },
         };
+        if (this.countLimit !== Number.MAX_SAFE_INTEGER) {
+            kwargs.count_limit = this.countLimit + 1;
+        }
         const { records: rawRecords, length } =
             this.data ||
             (await this.model.orm.webSearchRead(
@@ -2474,9 +2473,15 @@ export class DynamicGroupList extends DynamicList {
                     }
                 }
             }
-            const previousGroup = this.groups.find(
-                (g) => !g.deleted && g.value === groupParams.value
-            );
+            const groupValue = groupParams.__rawValue;
+            const previousGroup = this.groups.find((g) => {
+                if (g.deleted) {
+                    return false;
+                }
+                return Array.isArray(g.__rawValue) && Array.isArray(groupValue)
+                    ? g.__rawValue[0] === groupValue[0]
+                    : g.__rawValue === groupValue;
+            });
             const state = previousGroup ? previousGroup.exportState() : {};
             return [groupParams, state];
         });

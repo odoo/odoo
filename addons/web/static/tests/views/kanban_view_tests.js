@@ -8853,6 +8853,7 @@ QUnit.module("Views", (hooks) => {
             "read_progress_bar",
             "web_search_read",
             "web_search_read",
+            "web_search_read",
             // activate filter
             "web_read_group", // recomputes aggregates
             "web_search_read",
@@ -8861,7 +8862,6 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
             // deactivate active filter
             "web_read_group", // recomputes aggregates
-            "web_search_read",
         ]);
     });
 
@@ -10467,6 +10467,122 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record", 2);
     });
 
+    QUnit.test("filter groups are kept when leaving and coming back", async (assert) => {
+        serverData.models.partner.records[1].state = "abc";
+        serverData.views = {
+            "partner,false,kanban": `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="id" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            "partner,false,search": "<search/>",
+            "partner,false,form": `
+                <form>
+                    <field name="state" widget="radio"/>
+                </form>`,
+        };
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, {
+            name: "Partners",
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "form"],
+            ],
+            context: {
+                group_by: ["bar"],
+            },
+        });
+
+        // Filter on state "abc" => matches 2 records
+        await click(getProgressBars(1)[0]);
+
+        assert.deepEqual(getCardTexts(0), ["4"]);
+        assert.deepEqual(getCardTexts(1), ["1", "2"]);
+
+        // open a record
+        await click(target.querySelectorAll(".o_kanban_record")[1]);
+        assert.containsOnce(target, ".o_form_view");
+
+        // go back to kanban view
+        await click(target.querySelector(".breadcrumb-item a"));
+
+        assert.deepEqual(getCardTexts(0), ["4"]);
+        assert.deepEqual(getCardTexts(1), ["1", "2"]);
+
+        // open a record
+        await click(target.querySelectorAll(".o_kanban_record")[1]);
+        assert.containsOnce(target, ".o_form_view");
+
+        // select another state
+        await click(target.querySelectorAll("input.o_radio_input")[1]);
+        // go back to kanban view
+        await click(target.querySelector(".breadcrumb-item a"));
+
+        assert.deepEqual(getCardTexts(0), ["4"]);
+        assert.deepEqual(getCardTexts(1), ["2"]);
+    });
+
+    QUnit.test(
+        "folded groups are kept when leaving and coming back (grouped by date)",
+        async (assert) => {
+            serverData.models.partner.fields.date.default = "2022-10-10";
+            serverData.models.partner.records[0].date = "2022-05-10";
+            serverData.views = {
+                "partner,false,kanban": `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="int_field"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                "partner,false,search": "<search/>",
+                "partner,false,form": "<form/>",
+            };
+            const webClient = await createWebClient({ serverData });
+            await doAction(webClient, {
+                name: "Partners",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "kanban"],
+                    [false, "form"],
+                ],
+                context: {
+                    group_by: ["date"],
+                },
+            });
+
+            assert.containsOnce(target, ".o_kanban_view");
+            assert.containsN(target, ".o_kanban_group", 2);
+            assert.containsNone(target, ".o_column_folded");
+            assert.containsN(target, ".o_kanban_record", 4);
+
+            // fold the second column
+            const clickColumnAction = await toggleColumnActions(1);
+            await clickColumnAction("Fold");
+            assert.containsOnce(target, ".o_column_folded");
+            assert.containsOnce(target, ".o_kanban_record");
+
+            // open a record and go back
+            await click(target.querySelector(".o_kanban_record"));
+            assert.containsOnce(target, ".o_form_view");
+            await click(target.querySelector(".breadcrumb-item a"));
+            assert.containsOnce(target, ".o_column_folded");
+            assert.containsOnce(target, ".o_kanban_record");
+        }
+    );
+
     QUnit.test("loaded records are kept when leaving and coming back", async (assert) => {
         serverData.views = {
             "partner,false,kanban": `
@@ -11148,6 +11264,62 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
         assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+    });
+
+    QUnit.test("load more button shouldn't be visible when unfiltering column", async (assert) => {
+        serverData.models.partner.records.push({ id: 5, state: "abc", bar: true });
+
+        let def;
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                    <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <field name="id" />
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["bar"],
+            mockRPC: async (route, args) => {
+                const { method } = args;
+                if (method === "web_search_read") {
+                    await def;
+                }
+            },
+        });
+
+        // Initial state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 4 records
+        assert.deepEqual(getCounters(), ["1", "4"]);
+
+        // Filter on state "abc" => matches 2 records
+        await click(getProgressBars(1)[0]);
+
+        // Filtered state: 2 columns, the "No" column contains 1 record, The "Yes" column contains 2 records
+        assert.deepEqual(getCounters(), ["1", "2"]);
+
+        def = makeDeferred();
+        // UnFiltered the "Yes" column
+        await click(getProgressBars(1)[0]);
+        assert.containsNone(
+            target,
+            ".o_kanban_load_more",
+            "The load more button should not be visible"
+        );
+        def.resolve();
+        await nextTick();
+        //Return to initial state
+        assert.deepEqual(getCounters(), ["1", "4"]);
+        assert.containsNone(
+            target,
+            ".o_kanban_load_more",
+            "The load more button should not be visible"
+        );
     });
 
     QUnit.test("click on the progressBar of a new column", async (assert) => {

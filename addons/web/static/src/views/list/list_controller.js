@@ -2,6 +2,7 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
+import { evaluateExpr } from "@web/core/py_js/py";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -59,6 +60,7 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         const fields = this.props.fields;
         const { rootState } = this.props.state || {};
+        const { rawExpand } = this.archInfo;
         this.model = useModel(this.props.Model, {
             resModel: this.props.resModel,
             fields,
@@ -69,7 +71,7 @@ export class ListController extends Component {
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
             defaultOrder: this.archInfo.defaultOrder,
-            expand: this.archInfo.expand,
+            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,
             multiEdit: this.multiEdit,
             rootState,
@@ -330,7 +332,11 @@ export class ListController extends Component {
     }
 
     async downloadExport(fields, import_compat, format) {
-        const resIds = await this.getSelectedResIds();
+        let ids = false;
+        if (!this.isDomainSelected) {
+            const resIds = await this.getSelectedResIds();
+            ids = resIds.length > 0 && resIds;
+        }
         const exportedFields = fields.map((field) => ({
             name: field.name || field.id,
             label: field.label || field.string,
@@ -348,7 +354,7 @@ export class ListController extends Component {
                     domain: this.model.root.domain,
                     fields: exportedFields,
                     groupby: this.model.root.groupBy,
-                    ids: resIds.length > 0 && resIds,
+                    ids,
                     model: this.model.root.resModel,
                 }),
             },
@@ -370,9 +376,7 @@ export class ListController extends Component {
      * @private
      */
     async onExportData() {
-        const resIds = await this.getSelectedResIds();
         const dialogProps = {
-            resIds,
             context: this.props.context,
             defaultExportList: this.defaultExportList,
             download: this.downloadExport.bind(this),

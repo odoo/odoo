@@ -559,8 +559,8 @@ export function setupQUnit() {
         if (originalError instanceof Error) {
             originalError.errorEvent = ev;
             await completeUncaughtError(uncaughtError, originalError);
+            originalError.stacktrace = uncaughtError.traceback;
         }
-        originalError.stacktrace = uncaughtError.traceback;
         onError(originalError);
     });
 
@@ -577,8 +577,8 @@ export function setupQUnit() {
         if (originalError instanceof Error) {
             originalError.errorEvent = ev;
             await completeUncaughtError(uncaughtError, originalError);
+            originalError.stack = uncaughtError.traceback;
         }
-        originalError.stack = uncaughtError.traceback;
         onUnhandledRejection(originalError);
     });
 }
