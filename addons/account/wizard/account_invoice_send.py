@@ -15,7 +15,6 @@ class AccountInvoiceSend(models.TransientModel):
     is_email = fields.Boolean('Email', default=lambda self: self.env.company.invoice_is_email)
     invoice_without_email = fields.Text(compute='_compute_invoice_without_email', string='invoice(s) that will not be sent')
     is_print = fields.Boolean('Print', default=lambda self: self.env.company.invoice_is_print)
-    printed = fields.Boolean('Is Printed', default=False)
     invoice_ids = fields.Many2many('account.move', 'account_move_account_invoice_send_rel', string='Invoices')
     composer_id = fields.Many2one('mail.compose.message', string='Composer', required=True, ondelete='cascade')
     template_id = fields.Many2one(
