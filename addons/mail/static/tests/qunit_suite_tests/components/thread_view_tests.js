@@ -685,43 +685,6 @@ QUnit.module("mail", (hooks) => {
         );
 
         QUnit.skipRefactoring(
-            "show empty placeholder when thread contains no message",
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                const { afterEvent, openDiscuss } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                });
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: openDiscuss,
-                    message: "should wait until thread becomes loaded with messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            threadViewer.thread.model === "mail.channel" &&
-                            threadViewer.thread.id === mailChannelId1
-                        );
-                    },
-                });
-                assert.containsOnce(
-                    document.body,
-                    '[data-empty-thread=""]',
-                    "message list empty placeholder should be shown as thread does not contain any messages"
-                );
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-message",
-                    "no message should be shown as thread does not contain any"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "show empty placeholder when thread contains only empty messages",
             async function (assert) {
                 assert.expect(2);

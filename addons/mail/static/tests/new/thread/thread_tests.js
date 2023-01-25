@@ -392,3 +392,12 @@ QUnit.test(
         assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
     }
 );
+
+QUnit.test("show empty placeholder when thread contains no message", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, '[data-empty-thread=""]');
+    assert.containsNone(target, ".o-mail-message");
+});
