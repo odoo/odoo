@@ -158,6 +158,27 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                 partner_ids=partner_manager.ids,
             )
 
+    def _get_custom_tax(template):
+        env.cr.execute(
+            f"""
+            SELECT tax.id
+            FROM account_tax tax
+            JOIN account_tax_template template
+            ON template.name = tax.name
+            WHERE template.id = {template.id}
+            """
+        )
+        return env.cr.fetchone()
+
+    def _rename_custom_tax(tax_id):
+        env.cr.execute(
+            f"""
+            UPDATE account_tax
+                SET name = name || ' CUSTOM'
+                WHERE id = {tax_id}
+            """
+        )
+
     env = api.Environment(cr, SUPERUSER_ID, {})
     chart_template_id = env['ir.model.data'].xmlid_to_res_id(chart_template_xmlid)
     companies = env['res.company'].search(['|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', 'child_of', chart_template_id)])
@@ -167,8 +188,12 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         template_to_tax = _get_template_to_real_xmlid_mapping(company, 'account.tax')
         templates = env['account.tax.template'].with_context(active_test=False).search([("chart_template_id", "=", chart_template_id)])
         for template in templates:
+            print("Template: ", template)
             tax = env["account.tax"].browse(template_to_tax.get(template.id))
-            if not tax or not _is_tax_and_template_same(template, tax):
+            custom_tax = env["account.tax"].browse(_get_custom_tax(template))
+            if custom_tax and not tax:
+                _rename_custom_tax(custom_tax.id)
+            elif not tax or not _is_tax_and_template_same(template, tax):
                 _create_tax_from_template(company, template, old_tax=tax)
                 if tax:
                     outdated_taxes.append(tax)
@@ -176,6 +201,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                     new_taxes_template.append(template)
             else:
                 _update_tax_from_template(template, tax)
+        print("Comapny: {0}, tempa: {1}, new; {2}".format(company,chart_template_id, new_taxes_template))
         _update_fiscal_positions_from_templates(company, chart_template_id, new_taxes_template)
     if outdated_taxes:
         _notify_accountant_managers(outdated_taxes)
