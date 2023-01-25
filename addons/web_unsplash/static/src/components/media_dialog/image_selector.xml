@@ -34,20 +34,28 @@
     </div>
 </t>
 
+<t t-inherit="web_editor.ExternalImage" t-inherit-mode="extension">
+    <xpath expr="//t[@t-if]" position="after">
+        <t t-elif="record.mediaType == 'unsplashRecord'">
+            <AutoResizeImage src="record.url"
+                author="record.user.name"
+                authorLink="record.user.links.html"
+                name="record.user.name"
+                title="record.user.name"
+                altDescription="record.alt_description"
+                selected="this.selectedRecordIds.includes(record.id)"
+                onImageClick="() => this.onClickRecord(record)"
+                minRowHeight="MIN_ROW_HEIGHT"
+                onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+        </t>
+    </xpath>
+</t>
+
 <t t-name="web_unsplash.ImagesListTemplate" t-inherit="web_editor.ImagesListTemplate" t-inherit-mode="extension">
-    <xpath expr="//t[@id='o_we_media_library_images']" position="after">
-        <t t-if="['all', 'unsplash'].includes(state.searchService)">
-            <t t-foreach="state.unsplashRecords" t-as="record" t-key="record.id">
-                <AutoResizeImage src="record.url"
-                    author="record.user.name"
-                    authorLink="record.user.links.html"
-                    name="record.user.name"
-                    title="record.user.name"
-                    altDescription="record.alt_description"
-                    selected="this.selectedRecordIds.includes(record.id)"
-                    onImageClick="() => this.onClickRecord(record)"
-                    minRowHeight="MIN_ROW_HEIGHT"
-                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
+    <xpath expr="//t[@id='o_we_media_library_images']" position="replace">
+        <t id='o_we_media_library_images' t-if="['all', 'unsplash', 'media-library'].includes(state.searchService)">
+            <t t-foreach="combinedRecords" t-as="record" t-key="record.id">
+                <t t-call="web_editor.ExternalImage"/>
             </t>
         </t>
     </xpath>
