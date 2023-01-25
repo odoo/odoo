@@ -102,8 +102,8 @@
                           string="EDI Documents"
                           groups="base.group_no_one"
                           attrs="{'invisible': [('edi_document_ids', '=', [])]}">
-                        <field name="edi_document_ids" options="{'no_open': '1'}">
-                            <tree create="false" delete="false" edit="false" decoration-danger="error">
+                        <field name="edi_document_ids">
+                            <tree create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>

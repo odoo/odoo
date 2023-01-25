@@ -16,7 +16,7 @@ class IrActionsReport(models.Model):
 
     def _add_pdf_into_invoice_xml(self, invoice, stream_data):
         format_codes = ['ubl_bis3', 'ubl_de', 'nlcius_1', 'efff_1']
-        edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).attachment_id
+        edi_attachments = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id.code in format_codes).sudo().attachment_id
         for edi_attachment in edi_attachments:
             old_xml = base64.b64decode(edi_attachment.with_context(bin_size=False).datas, validate=True)
             tree = etree.fromstring(old_xml)
@@ -45,7 +45,7 @@ class IrActionsReport(models.Model):
                 anchor_index = tree.index(anchor_elements[0])
                 tree.insert(anchor_index, etree.fromstring(to_inject))
                 new_xml = etree.tostring(cleanup_xml_node(tree))
-                edi_attachment.write({
+                edi_attachment.sudo().write({
                     'res_model': 'account.move',
                     'res_id': invoice.id,
                     'datas': base64.b64encode(new_xml),
