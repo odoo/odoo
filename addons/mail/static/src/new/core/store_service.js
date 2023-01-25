@@ -65,7 +65,7 @@ export class Store {
 
     // discuss app
     discuss = {
-        activeTab: "mailbox",
+        activeTab: "all", // can be 'mailbox', 'all', 'channel' or 'chat'
         isActive: false,
         threadLocalId: null,
         channels: {
@@ -119,7 +119,16 @@ export const storeService = {
 
     start(env, { ui }) {
         const res = reactive(new Store(env));
-        ui.bus.addEventListener("resize", () => (res.isSmall = ui.isSmall));
+        res.discuss.activeTab = res.isSmall ? "mailbox" : "all";
+        ui.bus.addEventListener("resize", () => {
+            const wasSmall = res.isSmall;
+            res.isSmall = ui.isSmall;
+            if (res.isSmall && !wasSmall) {
+                res.discuss.activeTab = "mailbox";
+            } else if (!res.isSmall && wasSmall) {
+                res.discuss.activeTab = "all";
+            }
+        });
         return res;
     },
 };

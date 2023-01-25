@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.messaging_menu" owl="1">
-    <Dropdown t-if="!props.inDiscuss" beforeOpen.bind="() => messaging.fetchPreviews()" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+    <Dropdown t-if="!env.inDiscussApp" beforeOpen.bind="() => messaging.fetchPreviews()" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
-            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages"></i>
+            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = store.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
             <span class="o-mail-messaging-menu-counter badge"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">
@@ -18,20 +18,20 @@
     <t t-set="failures" t-value="store.notificationGroups"/>
     <div class="o-mail-messaging-menu flex-grow-1" t-att-class="{ 'w-100 mh-100': store.isSmall }">
         <div t-att-class="{'flex-row-reverse text-uppercase': store.isSmall,
-        'o-mail-messaging-menu-topbar border-bottom d-flex flex-shrink-0 p-2': !props.inDiscuss,
+        'o-mail-messaging-menu-topbar border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
         }">
             <t t-if="!store.isSmall">
-                <button class="btn btn-link" t-att-class="state.tab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'all'">All</button>
-                <button class="btn btn-link" t-att-class="state.tab === 'chats' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'chats'">Chats</button>
-                <button class="btn btn-link" t-att-class="state.tab === 'channels' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => this.state.tab = 'channels'">Channels</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
             <div class="flex-grow-1"></div>
-            <t t-if="!store.discuss.isActive or store.isSmall and state.tab !== 'mailbox'">
-                <button t-if="!props.inDiscuss or (props.inDiscuss and store.discuss.activeTab === 'chat')" t-att-class="props.inDiscuss ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link o-mail-messaging-menu-new-message'" class="" t-on-click.stop="onClickNewMessage">
-                    <t t-if="props.inDiscuss">Start a conversation</t>
+            <t t-if="!store.discuss.isActive or store.isSmall and store.discuss.activeTab !== 'mailbox'">
+                <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat')" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link o-mail-messaging-menu-new-message'" class="" t-on-click.stop="onClickNewMessage">
+                    <t t-if="env.inDiscussApp">Start a conversation</t>
                     <t t-else="">New Message</t>
                 </button>
-                <div t-if="props.inDiscuss and store.discuss.activeTab === 'channel'" class="bg-light">
+                <div t-if="env.inDiscussApp and store.discuss.activeTab === 'channel'" class="bg-light">
                     <div t-if="state.addingChannel" class="p-4 border-bottom">
                         <ChannelSelector category="store.discuss.channels" autofocus="true"/>
                     </div>
@@ -41,7 +41,7 @@
                 </div>
             </t>
         </div>
-        <div t-if="state.tab !== 'mailbox'" class="d-flex flex-column overflow-auto flex-grow-1">
+        <div t-if="!env.inDiscussApp or ['chat', 'channel'].includes(store.discuss.activeTab)" class="d-flex flex-column overflow-auto flex-grow-1">
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
@@ -79,7 +79,7 @@
                     </t>
                 </NotificationItem>
             </t>
-            <t t-if="state.tab === 'all'">
+            <t t-if="store.discuss.activeTab === 'all'">
                 <NotificationItem
                     t-foreach="failures" t-as="failure" t-key="failure.id"
                     body="failure.body"
@@ -96,7 +96,7 @@
     </div>
     <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
         <div t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-messaging-menu-tab d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
-            'text-primary fw-bolder o-active': state.tab === tab.id,
+            'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
             <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>

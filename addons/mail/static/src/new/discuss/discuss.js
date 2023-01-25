@@ -70,9 +70,7 @@ export class Discuss extends Component {
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.prevInboxCounter = this.store.discuss.inbox.counter;
-        useChildSubEnv({
-            inDiscuss: true,
-        });
+        useChildSubEnv({ inDiscussApp: true });
         useEffect(
             () => {
                 if (

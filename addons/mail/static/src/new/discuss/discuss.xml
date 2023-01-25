@@ -67,7 +67,7 @@
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
             <h4 class="text-muted"><b><i>No conversation selected.</i></b></h4>
         </div>
-        <MessagingMenu t-if="store.isSmall" inDiscuss="true"/>
+        <MessagingMenu t-if="store.isSmall"/>
     </div>
 </t>
 

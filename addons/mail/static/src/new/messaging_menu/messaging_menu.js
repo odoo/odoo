@@ -17,7 +17,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 export class MessagingMenu extends Component {
     static components = { Dropdown, NotificationItem, PartnerImStatus, ChannelSelector };
-    static props = ["inDiscuss?"];
+    static props = [];
     static template = "mail.messaging_menu";
 
     setup() {
@@ -28,7 +28,6 @@ export class MessagingMenu extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.state = useState({
-            tab: this.props.inDiscuss ? this.store.discuss.activeTab : "all", // can be 'mailbox', 'all', 'channels' or 'chats'
             addingChannel: false,
         });
     }
@@ -48,8 +47,8 @@ export class MessagingMenu extends Component {
     get hasPreviews() {
         return (
             this.displayedPreviews.length > 0 ||
-            (this.store.notificationGroups.length > 0 && this.state.tab === "all") ||
-            (this.notification.permission === "prompt" && this.state.tab === "all")
+            (this.store.notificationGroups.length > 0 && this.store.discuss.activeTab === "all") ||
+            (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
     }
 
@@ -61,7 +60,8 @@ export class MessagingMenu extends Component {
             partner: this.store.partnerRoot,
             isLast:
                 this.displayedPreviews.length === 0 && this.store.notificationGroups.length === 0,
-            isShown: this.state.tab === "all" && this.notification.permission === "prompt",
+            isShown:
+                this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
     }
 
@@ -70,7 +70,7 @@ export class MessagingMenu extends Component {
         const threads = Object.values(this.store.threads);
         const previews = threads.filter((thread) => thread.is_pinned);
 
-        const tab = this.state.tab;
+        const tab = this.store.discuss.activeTab;
         if (tab === "all") {
             return previews;
         }
@@ -82,7 +82,7 @@ export class MessagingMenu extends Component {
      * @type {{ id: string, icon: string, label: string }[]}
      */
     get tabs() {
-        if (this.props.inDiscuss) {
+        if (this.env.inDiscussApp) {
             return [
                 {
                     icon: "fa fa-inbox",
@@ -198,26 +198,21 @@ export class MessagingMenu extends Component {
     }
 
     onClickNavTab(tabId) {
-        if (this.props.inDiscuss) {
-            if (this.store.discuss.activeTab === tabId) {
-                return;
-            }
-            this.store.discuss.activeTab = tabId;
-            this.state.tab = tabId;
-            if (
-                this.store.discuss.activeTab === "mailbox" &&
-                (!this.store.discuss.threadLocalId ||
-                    this.store.threads[this.store.discuss.threadLocalId].type !== "mailbox")
-            ) {
-                this.threadService.setDiscussThread(
-                    Object.values(this.store.threads).find((thread) => thread.id === "inbox")
-                );
-            }
-            if (this.store.discuss.activeTab !== "mailbox") {
-                this.store.discuss.threadLocalId = null;
-            }
-        } else {
-            this.state.tab = tabId;
+        if (this.store.discuss.activeTab === tabId) {
+            return;
+        }
+        this.store.discuss.activeTab = tabId;
+        if (
+            this.store.discuss.activeTab === "mailbox" &&
+            (!this.store.discuss.threadLocalId ||
+                this.store.threads[this.store.discuss.threadLocalId].type !== "mailbox")
+        ) {
+            this.threadService.setDiscussThread(
+                Object.values(this.store.threads).find((thread) => thread.id === "inbox")
+            );
+        }
+        if (this.store.discuss.activeTab !== "mailbox") {
+            this.store.discuss.threadLocalId = null;
         }
     }
 

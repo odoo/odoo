@@ -106,14 +106,14 @@
                         </t>
                         <div t-if="props.hasActions and !message.isTransient" class="o-mail-message-actions bg-view"
                             t-att-class="{
-                                'position-absolute top-0': !env.inDiscuss,
+                                'position-absolute top-0': !env.inDiscussApp,
                                 'start-0 ms-3': isAlignedRight,
                                 'end-0 me-3': env.inChatWindow and !isAlignedRight or env.inChatter,
                                 'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification),
                                 'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification),
-                                'mt-2': env.inDiscuss and (message.isDiscussion or message.isNotification),
+                                'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification),
                                 'mt-n3': env.inChatWindow,
-                                'ms-2': env.inDiscuss,
+                                'ms-2': env.inDiscussApp,
                                 'invisible': !isActive,
                             }"
                         >
