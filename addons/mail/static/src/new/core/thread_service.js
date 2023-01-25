@@ -710,12 +710,14 @@ export class ThreadService {
      * @param {import("@mail/new/composer/composer_model").Composer} composer
      */
     clearComposer(composer) {
-        composer.textInputContent = "";
-        composer.selection = {
-            start: 0,
-            end: 0,
-            direction: "none",
-        };
+        Object.assign(composer, {
+            textInputContent: "",
+            selection: {
+                start: 0,
+                end: 0,
+                direction: "none",
+            },
+        });
     }
 }
 
