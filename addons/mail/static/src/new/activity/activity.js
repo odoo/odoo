@@ -17,11 +17,12 @@ import { _t } from "@web/core/l10n/translation";
  * @typedef {Object} Props
  * @property {import("./activity_model").Activity} data
  * @property {function} [onUpdate]
+ * @property {function} reloadParentView
  * @extends {Component<Props, Env>}
  */
 export class Activity extends Component {
     static components = { ActivityMailTemplate, FileUploader };
-    static props = ["data", "onUpdate?"];
+    static props = ["data", "onUpdate?", "reloadParentView"];
     static defaultProps = { onUpdate: () => {} };
     static template = "mail.activity";
 
@@ -29,6 +30,8 @@ export class Activity extends Component {
     closePopover;
 
     setup() {
+        /** @type {import("@mail/new/activity/activity_service").ActivityService} */
+        this.activityService = useService("mail.activity");
         this.messaging = useService("mail.messaging");
         this.chatter = useState(useService("mail.chatter"));
         this.state = useState({
@@ -87,6 +90,7 @@ export class Activity extends Component {
     }
 
     async unlink() {
+        this.activityService.delete(this.props.data);
         await this.env.services.orm.unlink("mail.activity", [this.props.data.id]);
         this.props.onUpdate();
     }

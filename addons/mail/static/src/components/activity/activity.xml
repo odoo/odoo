@@ -88,16 +88,16 @@
                     </t>
                 </div>
                 <div t-if="activity.canWrite" name="tools" class="d-flex">
-                    <button class="o_ActivityView_toolButton o_ActivityView_markDoneButton btn btn-link btn-primary pt-0 ps-0" t-att-title="markDoneText" t-ref="markDoneButton" t-on-click="onClickMarkDoneButton">
+                    <button class="o_ActivityView_markDoneButton btn btn-link btn-primary pt-0 ps-0" t-att-title="markDoneText" t-ref="markDoneButton" t-on-click="onClickMarkDoneButton">
                         <i class="fa fa-check"/> Mark Done
                     </button>
-                    <button t-if="fileUploader" class="o_ActivityView_toolButton o_ActivityView_uploadButton btn btn-link btn-primary pt-0 ps-0" t-on-click="onClickUploadDocument">
+                    <button t-if="fileUploader" class="o_ActivityView_uploadButton btn btn-link btn-primary pt-0 ps-0" t-on-click="onClickUploadDocument">
                         <i class="fa fa-upload"/> Upload Document
                     </button>
-                    <button class="o_ActivityView_toolButton o_ActivityView_editButton btn btn-link btn-primary pt-0" t-on-click="onClickEdit">
+                    <button class="o_ActivityView_editButton btn btn-link btn-primary pt-0" t-on-click="onClickEdit">
                         <i class="fa fa-pencil"/> Edit
                     </button>
-                    <button class="o_ActivityView_toolButton o_ActivityView_cancelButton btn btn-link btn-primary pt-0" t-on-click="onClickCancel" >
+                    <button class="o_ActivityView_cancelButton btn btn-link btn-primary pt-0" t-on-click="onClickCancel" >
                         <i class="fa fa-times"/> Cancel
                     </button>
                 </div>

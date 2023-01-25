@@ -54,7 +54,10 @@ export class ActivityService {
      * @returns {import("./activity_model").Activity}
      */
     insert(data) {
-        const activity = this.store.activities[data.id] ?? new Activity(this.store, data);
+        const activity = this.store.activities[data.id] ?? new Activity(this.store, data.id);
+        if (data.request_partner_id) {
+            data.request_partner_id = data.request_partner_id[0];
+        }
         assignDefined(activity, data);
         return activity;
     }

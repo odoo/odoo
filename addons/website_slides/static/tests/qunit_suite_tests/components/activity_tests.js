@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
-import { start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-QUnit.skipRefactoring("grant course access", async function (assert) {
-    assert.expect(8);
-
+QUnit.test("grant course access", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const slideChannelId1 = pyEnv["slide.channel"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
+    const channelId = pyEnv["slide.channel"].create({});
     pyEnv["mail.activity"].create({
         can_write: true,
-        res_id: slideChannelId1,
-        request_partner_id: resPartnerId1,
+        res_id: channelId,
+        request_partner_id: partnerId,
         res_model: "slide.channel",
     });
     const { openView } = await start({
@@ -19,8 +17,8 @@ QUnit.skipRefactoring("grant course access", async function (assert) {
             if (args.method === "action_grant_access") {
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], slideChannelId1);
-                assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
+                assert.strictEqual(args.args[0][0], channelId);
+                assert.strictEqual(args.kwargs.partner_id, partnerId);
                 assert.step("access_grant");
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
@@ -28,32 +26,25 @@ QUnit.skipRefactoring("grant course access", async function (assert) {
         },
     });
     await openView({
-        res_id: slideChannelId1,
+        res_id: channelId,
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
+    assert.containsOnce(document.body, ".o-mail-activity");
+    assert.containsOnce(document.body, "button:contains(Grant Access)");
 
-    assert.containsOnce(document.body, ".o-mail-activity", "should have activity component");
-    assert.containsOnce(
-        document.body,
-        ".o_ActivityView_grantAccessButton",
-        "should have grant access button"
-    );
-
-    document.querySelector(".o_ActivityView_grantAccessButton").click();
-    assert.verifySteps(["access_grant"], "Grant button should trigger the right rpc call");
+    await click("button:contains(Grant Access)");
+    assert.verifySteps(["access_grant"]);
 });
 
-QUnit.skipRefactoring("refuse course access", async function (assert) {
-    assert.expect(8);
-
+QUnit.test("refuse course access", async function (assert) {
     const pyEnv = await startServer();
-    const resPartnerId1 = pyEnv["res.partner"].create({});
-    const slideChannelId1 = pyEnv["slide.channel"].create({});
+    const partnerId = pyEnv["res.partner"].create({});
+    const channelId = pyEnv["slide.channel"].create({});
     pyEnv["mail.activity"].create({
         can_write: true,
-        res_id: slideChannelId1,
-        request_partner_id: resPartnerId1,
+        res_id: channelId,
+        request_partner_id: partnerId,
         res_model: "slide.channel",
     });
     const { openView } = await start({
@@ -61,8 +52,8 @@ QUnit.skipRefactoring("refuse course access", async function (assert) {
             if (args.method === "action_refuse_access") {
                 assert.strictEqual(args.args.length, 1);
                 assert.strictEqual(args.args[0].length, 1);
-                assert.strictEqual(args.args[0][0], slideChannelId1);
-                assert.strictEqual(args.kwargs.partner_id, resPartnerId1);
+                assert.strictEqual(args.args[0][0], channelId);
+                assert.strictEqual(args.kwargs.partner_id, partnerId);
                 assert.step("access_refuse");
                 // random value returned in order for the mock server to know that this route is implemented.
                 return true;
@@ -70,18 +61,13 @@ QUnit.skipRefactoring("refuse course access", async function (assert) {
         },
     });
     await openView({
-        res_id: slideChannelId1,
+        res_id: channelId,
         res_model: "slide.channel",
         views: [[false, "form"]],
     });
+    assert.containsOnce(document.body, ".o-mail-activity");
+    assert.containsOnce(document.body, "button:contains(Refuse Access)");
 
-    assert.containsOnce(document.body, ".o-mail-activity", "should have activity component");
-    assert.containsOnce(
-        document.body,
-        ".o_ActivityView_refuseAccessButton",
-        "should have refuse access button"
-    );
-
-    document.querySelector(".o_ActivityView_refuseAccessButton").click();
-    assert.verifySteps(["access_refuse"], "refuse button should trigger the right rpc call");
+    await click("button:contains(Refuse Access)");
+    assert.verifySteps(["access_refuse"]);
 });

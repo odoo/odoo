@@ -90,15 +90,15 @@ export class Activity {
 
     /**
      * @param {import("@mail/new/core/store_service").Store} store
-     * @param {Data} data
+     * @param {number} id
      * @returns {Activity}
      */
-    constructor(store, data) {
+    constructor(store, id) {
         Object.assign(this, {
-            id: data.id,
+            id,
             _store: store,
         });
-        store.activities[data.id] = this;
-        return store.activities[data.id];
+        store.activities[id] = this;
+        return store.activities[id];
     }
 }
