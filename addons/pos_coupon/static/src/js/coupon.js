@@ -362,14 +362,23 @@ odoo.define('pos_coupon.pos', function (require) {
                  */
                 this.bookedCouponCodes = {};
             }
-            if (!this.activePromoProgramIds) {
-                /**
-                 * This field contains the ids of automatically/manually activated
-                 * promo programs.
-                 * @type {number[]} array of program ids.
-                 */
-                this.activePromoProgramIds = this._getAutomaticPromoProgramIds();
-            }
+            /**
+             * This field contains the ids of automatically/manually activated
+             * promo programs.
+             *
+             * Since these are "automatic" promotion programs, they should be always active,
+             * so we are always ensuring the Ids aplicable for this PoSOrder record.
+             *
+             * @type {number[]} array of program ids.
+             */
+            this.activePromoProgramIds = this._getAutomaticPromoProgramIds().reduce(
+                (activePromoProgramsIds, programId) => {
+                    if (activePromoProgramsIds.indexOf(programId) === -1)
+                        activePromoProgramsIds.push(programId)
+                    return activePromoProgramsIds;
+                },
+                this.activePromoProgramIds ?? [],
+            );
         },
         resetPrograms: function () {
             let deactivatedCount = 0;
