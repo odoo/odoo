@@ -1060,10 +1060,16 @@ class MailComposer(models.TransientModel):
         Note that 'active_ids' context key is supported at this point as mailing
         on big ID list would create issues if stored in database.
 
+        Another context key 'composer_force_res_ids' is temporarily supported
+        to ease support of accounting wizard, while waiting to implement a
+        proper solution to language management.
+
         :return: a list of IDs (empty list in case of falsy strings)"""
         self.ensure_one()
         return self._parse_res_ids(
-            self.res_ids or self.env.context.get('active_ids')
+            self.env.context.get('composer_force_res_ids') or
+            self.res_ids or
+            self.env.context.get('active_ids')
         ) or []
 
     @api.model
