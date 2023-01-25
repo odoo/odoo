@@ -4,7 +4,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
 from odoo.tests.common import tagged, Form
-
+from odoo import fields
 
 class TestAccountMoveStockCommon(AccountTestInvoicingCommon):
     @classmethod
@@ -117,3 +117,29 @@ class TestAccountMove(TestAccountMoveStockCommon):
         self.assertEqual(len(invoice.mapped("line_ids")), 4)
         self.assertEqual(len(invoice.mapped("line_ids").filtered(lambda l: l.display_type == 'cogs')), 2)
         self.assertEqual(len(invoice.mapped("line_ids.currency_id")), 2)
+
+    def test_storno_accounting(self):
+        """Storno accounting uses negative numbers on debit/credit to cancel other moves.
+        This test checks that we do the same for the anglosaxon lines when storno is enabled.
+        """
+        self.env.company.account_storno = True
+        self.env.company.anglo_saxon_accounting = True
+
+        move = self.env['account.move'].create({
+            'move_type': 'out_refund',
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_line_ids': [
+                (0, None, {'product_id': self.product_A.id}),
+            ]
+        })
+        move.action_post()
+
+        stock_output_line = move.line_ids.filtered(lambda l: l.account_id == self.stock_output_account)
+        self.assertEqual(stock_output_line.debit, 0)
+        self.assertEqual(stock_output_line.credit, -10)
+
+        expense_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
+        self.assertEqual(expense_line.debit, -10)
+        self.assertEqual(expense_line.credit, 0)
