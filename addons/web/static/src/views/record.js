@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
-import { useModel } from "@web/views/model";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { RelationalModel } from "@web/views/relational_model";
 import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
 
@@ -9,21 +8,44 @@ const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
 class _Record extends Component {
     setup() {
-        this.model = useModel(RelationalModel, {
-            resId: this.props.info.resId,
-            resModel: this.props.info.resModel,
+        const resModel = this.props.info.resModel;
+        const modelParams = {
+            resModel,
             fields: this.props.fields,
             viewMode: "form",
             rootType: "record",
             activeFields: this.getActiveFields(),
-            mode: this.props.info.mode === "edit" ? "edit" : undefined,
-            initialValues: this.props.info.initialValues,
-        });
-        onWillUpdateProps(async (nextProps) => {
-            await this.model.load({
-                resId: nextProps.info.resId,
-                mode: nextProps.info.mode,
-            });
+        };
+        const modelServices = Object.fromEntries(
+            RelationalModel.services.map((servName) => {
+                return [servName, useService(servName)];
+            })
+        );
+        if (resModel) {
+            modelServices.orm = useService("orm");
+        }
+
+        this.model = new RelationalModel(this.env, modelParams, modelServices);
+        useBus(this.model, "update", () => this.render(true));
+
+        let loadKey;
+        const load = (props) => {
+            const loadParams = {
+                resId: props.info.resId,
+                mode: props.info.mode,
+                values: props.values,
+            };
+            const nextLoadKey = JSON.stringify(loadParams);
+            if (loadKey === nextLoadKey) {
+                return;
+            }
+            loadKey = nextLoadKey;
+            return this.model.load(loadParams);
+        };
+        onWillStart(() => load(this.props));
+        onWillUpdateProps((nextProps) => {
+            // don't wait because the keeplast may make willUpdateProps hang forever
+            load(nextProps);
         });
 
         if (this.props.info.onRecordChanged) {
@@ -54,7 +76,7 @@ class _Record extends Component {
     }
 }
 _Record.template = xml`<t t-slot="default" record="model.root"/>`;
-_Record.props = ["slots", "info", "fields"];
+_Record.props = ["slots", "info", "fields", "values?"];
 
 export class Record extends Component {
     setup() {
@@ -73,16 +95,16 @@ export class Record extends Component {
         }
     }
 }
-Record.template = xml`<_Record fields="fields" slots="props.slots" info="props" />`;
+Record.template = xml`<_Record fields="fields" slots="props.slots" values="props.values" info="props" />`;
 Record.components = { _Record };
 Record.props = [
     "slots",
-    "resModel",
+    "resModel?",
     "fieldNames?",
     "activeFields?",
     "fields?",
     "resId?",
     "mode?",
-    "initialValues?",
+    "values?",
     "onRecordChanged?",
 ];
