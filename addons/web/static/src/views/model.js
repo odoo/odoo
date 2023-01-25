@@ -117,9 +117,19 @@ export function useModel(ModelClass, params, options = {}) {
     let sampleORM = globalState.sampleORM;
     const user = useService("user");
     let started = false;
+
+    const getLoadParams = (props) => {
+        return { modelReloadKey: props.modelReloadKey, ...getSearchParams(props) };
+    };
+    let loadKey;
     async function load(props) {
-        const searchParams = getSearchParams(props);
-        await model.load(searchParams);
+        const loadParams = getLoadParams(props);
+        const nextLoadKey = JSON.stringify(loadParams);
+        if (loadKey === nextLoadKey) {
+            return;
+        }
+        loadKey = nextLoadKey;
+        await model.load(loadParams);
         if (!options.ignoreUseSampleModel) {
             if (useSampleModel && !model.hasData()) {
                 sampleORM =
@@ -128,7 +138,7 @@ export function useModel(ModelClass, params, options = {}) {
                 sampleORM.setGroups(model.getGroups());
                 // Load data with sampleORM then restore real ORM.
                 model.orm = sampleORM;
-                await model.load(searchParams);
+                await model.load(loadParams);
                 model.orm = orm;
             } else {
                 useSampleModel = false;
