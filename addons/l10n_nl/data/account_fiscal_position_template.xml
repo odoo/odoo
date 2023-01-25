@@ -17,18 +17,19 @@
         </record>
         <record id="fiscal_position_template_eu_private" model="account.fiscal.position.template">
             <field name="sequence">2</field>
-            <field name="name">Eu private</field>
+            <field name="name">Eu private B2C</field>
             <field name="chart_template_id" ref="l10nnl_chart_template" />
             <field name="auto_apply" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
         </record>
         <record id="fiscal_position_template_eu" model="account.fiscal.position.template">
             <field name="sequence">3</field>
-            <field name="name">Eu intra</field>
+            <field name="name">Eu intra B2B</field>
             <field name="chart_template_id" ref="l10nnl_chart_template" />
             <field name="auto_apply" eval="True"/>
             <field name="vat_required" eval="True"/>
             <field name="country_group_id" ref="base.europe"/>
+            <field name="note">Intracommunautaire levering, artikel 138, lid 1, Richtlijn 2006/112</field>
         </record>
         <record id="fiscal_position_template_non_eu" model="account.fiscal.position.template">
             <field name="sequence">4</field>
@@ -52,11 +53,6 @@
             <field name="tax_src_id" ref="btw_verk_0"/>
             <field name="tax_dest_id" ref="btw_X2"/>
         </record>
-        <record id="position_tax_eu_no_taxes_report_3" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_eu_no_taxes_report"/>
-            <field name="tax_src_id" ref="btw_6"/>
-            <field name="tax_dest_id" ref="btw_X2"/>
-        </record>
         <record id="position_tax_eu_no_taxes_report_4" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_eu_no_taxes_report"/>
             <field name="tax_src_id" ref="btw_9"/>
@@ -75,11 +71,6 @@
         <record id="position_tax_eu_no_taxes_report_7" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fiscal_position_template_eu_no_taxes_report"/>
             <field name="tax_src_id" ref="btw_0_d"/>
-            <field name="tax_dest_id" ref="btw_X2"/>
-        </record>
-        <record id="position_tax_eu_no_taxes_report_8" model="account.fiscal.position.tax.template">
-            <field name="position_id" ref="fiscal_position_template_eu_no_taxes_report"/>
-            <field name="tax_src_id" ref="btw_6_d"/>
             <field name="tax_dest_id" ref="btw_X2"/>
         </record>
         <record id="position_tax_eu_no_taxes_report_9" model="account.fiscal.position.tax.template">
