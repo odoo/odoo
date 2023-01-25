@@ -567,7 +567,11 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
         if 'attachments_info' in expected:
             attachments = sent_mail['attachments']
             for attachment_info in expected['attachments_info']:
-                attachment = next(attach for attach in attachments if attach[0] == attachment_info['name'])
+                attachment = next((attach for attach in attachments if attach[0] == attachment_info['name']), False)
+                self.assertTrue(
+                    bool(attachment),
+                    f'Attachment {attachment_info["name"]} not found in attachments',
+                )
                 if attachment_info.get('raw'):
                     self.assertEqual(attachment[1], attachment_info['raw'])
                 if attachment_info.get('type'):
@@ -907,9 +911,10 @@ class MailCase(MockEmail):
                 if not self.mail_unlink_sent:
                     self.assertMailMail(
                         partners, mail_status,
-                        author=message.author_id if message.author_id else message.email_from,
+                        author=message_info.get('fields_values', {}).get('author_id') or message.author_id or message.email_from,
                         mail_message=message,
                         email_values=email_values,
+                        fields_values=message_info.get('fields_values'),
                     )
                 else:
                     for recipient in partners:
