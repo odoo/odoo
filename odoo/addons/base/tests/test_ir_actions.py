@@ -458,7 +458,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
     def test_80_permission(self):
         self.action.write({
             'state': 'code',
-            'code': """record.write({'date': datetime.date.today()})""",
+            'code': """record.write({'name': str(datetime.date.today())})""",
         })
 
         user_demo = self.env.ref("base.user_demo")
@@ -469,7 +469,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self.test_partner.with_user(user_demo.id).check_access_rule("write")
 
         self_demo.with_context(self.context).run()
-        self.assertEqual(self.test_partner.date, date.today())
+        self.assertEqual(self.test_partner.name, str(date.today()))
 
     def test_90_webhook(self):
         self.action.write({

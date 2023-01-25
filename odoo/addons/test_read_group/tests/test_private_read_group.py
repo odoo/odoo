@@ -447,6 +447,14 @@ class TestPrivateReadGroup(common.TransactionCase):
             (fields.Date.to_date('2022-01-01'), 6),
         ])
 
+        # order param not in the aggregate
+        result = Model._read_group([], ['date:year'], [], order="__count, date:year")
+        self.assertEqual(result, [
+            (fields.Date.to_date('2023-01-01'),),
+            (False,),
+            (fields.Date.to_date('2022-01-01'),),
+        ])
+
     def test_groupby_datetime(self):
         Model = self.env['test_read_group.fill_temporal']
         records = Model.create([

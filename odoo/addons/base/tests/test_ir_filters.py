@@ -277,25 +277,6 @@ class TestGlobalDefaults(FiltersCase):
         ])
 
 
-class TestReadGroup(TransactionCase):
-    """Test function read_group with groupby on a many2one field to a model
-    (in test, "user_id" to "res.users") which is ordered by an inherited not stored field (in
-    test, "name" inherited from "res.partners").
-    """
-    def test_read_group_1(self):
-        Users = self.env['res.users']
-        self.assertEqual(Users._order, "name, login", "Model res.users must be ordered by name, login")
-        self.assertFalse(Users._fields['name'].store, "Field name is not stored in res.users")
-
-        Filters = self.env['ir.filters']
-        filter_a = Filters.create(dict(name="Filter_A", model_id="ir.filters"))
-        filter_b = Filters.create(dict(name="Filter_B", model_id="ir.filters"))
-        filter_b.write(dict(user_id=False))
-
-        res = Filters.read_group([], ['name', 'user_id'], ['user_id'])
-        self.assertTrue(any(val['user_id'] == False for val in res), "At least one group must contain val['user_id'] == False.")
-
-
 @tagged('post_install', '-at_install', 'migration')
 class TestAllFilters(TransactionCase):
     def check_filter(self, name, model, domain, fields, groupby, order, context):
