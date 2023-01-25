@@ -45,6 +45,10 @@ export class Persona extends Record {
     id;
     /** @type {boolean | undefined} */
     is_company;
+    /** @type {string} */
+    landlineNumber;
+    /** @type {string} */
+    mobileNumber;
     /** @type {'partner' | 'guest'} */
     type;
     /** @type {string} */
@@ -60,6 +64,13 @@ export class Persona extends Record {
     /** @type {ImStatus} */
     im_status;
     isAdmin = false;
+
+    /**
+     * @returns {boolean}
+     */
+    get hasPhoneNumber() {
+        return Boolean(this.mobileNumber || this.landlineNumber);
+    }
 
     get nameOrDisplayName() {
         return this.name || this.displayName;
