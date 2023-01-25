@@ -438,7 +438,7 @@
         <record id="es" model="res.country">
             <field name="name">Spain</field>
             <field name="code">es</field>
-            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" name="address_format" />
+            <field eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s (%(state_name)s)\n%(country_name)s'" name="address_format"/>
             <field name="currency_id" ref="EUR" />
             <field eval="34" name="phone_code" />
             <field name="vat_label">VAT</field>
