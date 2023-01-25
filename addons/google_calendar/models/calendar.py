@@ -42,11 +42,10 @@ class Meeting(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         notify_context = self.env.context.get('dont_notify', False)
-        res = super(Meeting, self.with_context(dont_notify=notify_context)).create([
+        return super(Meeting, self.with_context(dont_notify=notify_context)).create([
             dict(vals, need_sync=False) if vals.get('recurrence_id') or vals.get('recurrency') else vals
             for vals in vals_list
         ])
-        return res
 
     def write(self, values):
         recurrence_update_setting = values.get('recurrence_update')
