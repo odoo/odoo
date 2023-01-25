@@ -118,7 +118,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     get _getNumberBufferConfig() {
-        const res = this._super();
+        const res = this._super(...arguments);
         res["useWithBarcode"] = true;
         return res;
     },

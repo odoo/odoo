@@ -11,7 +11,7 @@ const { useState } = owl;
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     close() {
         if (!this.env.pos.config.iface_floorplan) {
-            this._super();
+            this._super(...arguments);
         } else {
             const order = this.env.pos.get_order();
             if (order) {
@@ -23,10 +23,10 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     _getScreenToStatusMap() {
-        return Object.assign(this._super(), {
+        return Object.assign(this._super(...arguments), {
             PaymentScreen: this.env.pos.config.set_tip_after_payment
                 ? "OPEN"
-                : this._super().PaymentScreen,
+                : this._super(...arguments).PaymentScreen,
             TipScreen: "TIPPING",
         });
     },
@@ -36,9 +36,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     //@override
     _getSearchFields() {
         if (!this.env.pos.config.iface_floorplan) {
-            return this._super();
+            return this._super(...arguments);
         }
-        return Object.assign({}, this._super(), {
+        return Object.assign({}, this._super(...arguments), {
             TABLE: {
                 repr: this.getTable.bind(this),
                 displayName: this.env._t("Table"),
@@ -59,13 +59,13 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     shouldShowNewOrderButton() {
         return this.env.pos.config.iface_floorplan
             ? Boolean(this.env.pos.table)
-            : this._super();
+            : this._super(...arguments);
     },
     _getOrderList() {
         if (this.env.pos.table) {
             return this.env.pos.getTableOrders(this.env.pos.table.id);
         }
-        return this._super();
+        return this._super(...arguments);
     },
     async settleTips() {
         // set tip in each order
@@ -150,7 +150,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         });
     },
     _getOrderStates() {
-        const result = this._super();
+        const result = this._super(...arguments);
         if (this.env.pos.config.set_tip_after_payment) {
             result.delete("PAYMENT");
             result.set("OPEN", { text: this.env._t("Open"), indented: true });
@@ -166,7 +166,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
                     : Object.values(this.env.pos.tables_by_id)[0]
             );
         }
-        this._super();
+        this._super(...arguments);
     },
     isDefaultOrderEmpty(order) {
         if (this.env.pos.config.iface_floorplan) {

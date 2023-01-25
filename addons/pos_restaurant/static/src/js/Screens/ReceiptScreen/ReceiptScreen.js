@@ -23,7 +23,7 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
     //@override
     _addNewOrder() {
         if (!this.env.pos.config.iface_floorplan) {
-            this._super();
+            this._super(...arguments);
         }
     },
     //@override
@@ -32,7 +32,7 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {
-            return this._super();
+            return this._super(...arguments);
         }
     },
 });

@@ -17,7 +17,7 @@ patch(LoginScreen.prototype, "pos_hr.LoginScreen methods", {
         useBarcodeReader({ cashier: this.barcodeCashierAction }, true);
     },
     async selectCashier() {
-        if (await this._super()) {
+        if (await this._super(...arguments)) {
             this.back();
         }
     },
