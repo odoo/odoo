@@ -264,4 +264,28 @@ WysiwygTranslate.include({
     },
 });
 
+options.registry.Parallax.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        // Hides parallax options for snippets that are inside a "Newsletter"
+        // popup because the parallax effect is not working in this case. This
+        // is due to the scrollbar which is on the "modal-body" element and not
+        // on the "modal" element.
+        // TODO in master: Make sure that the scrollbar is in the same place as
+        // for the "s_popup" snippet for the "Newsletter" popup and make the
+        // parallax effect work.
+        if (this.$target[0].closest('.o_newsletter_popup')) {
+            return false;
+        }
+        return this._super.apply(this, arguments);
+    },
+});
+
 });
