@@ -48,13 +48,13 @@ patch(PosGlobalState.prototype, "pos_hr.PosGlobalState", {
         if (this.config.module_pos_hr) {
             return this.cashier;
         }
-        return this._super();
+        return this._super(...arguments);
     },
     get_cashier_user_id() {
         if (this.config.module_pos_hr) {
             return this.cashier.user_id ? this.cashier.user_id : null;
         }
-        return this._super();
+        return this._super(...arguments);
     },
 });
 

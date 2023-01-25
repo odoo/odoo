@@ -65,7 +65,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     },
     //@override
     add_new_order() {
-        const order = this._super();
+        const order = this._super(...arguments);
         this.ordersToUpdateSet.add(order);
         return order;
     },
@@ -86,7 +86,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     //@override
     async load_orders() {
         this.loadingOrderState = true;
-        await this._super();
+        await this._super(...arguments);
         this.loadingOrderState = false;
     },
     _loadRestaurantPrinter(printers) {
