@@ -69,9 +69,9 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
             const proms = [];
             this.attachments.forEach((attachment) => proms.push(this.unlink(attachment)));
             await Promise.all(proms);
-            this.reset();
+            this.clear();
         },
-        reset() {
+        clear() {
             abortByAttachmentId.clear();
             deferredByAttachmentId.clear();
             uploadingAttachmentIds.clear();

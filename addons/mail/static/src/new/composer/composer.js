@@ -286,7 +286,20 @@ export class Composer extends Component {
             target: "new",
             context: context,
         };
-        await this.env.services.action.doAction(action);
+        const options = {
+            onClose: () => {
+                this.clear();
+                if (this.props.composer.thread) {
+                    this.threadService.fetchNewMessages(this.props.composer.thread);
+                }
+            },
+        };
+        await this.env.services.action.doAction(action, options);
+    }
+
+    clear() {
+        this.attachmentUploader.clear();
+        this.threadService.clearComposer(this.props.composer);
     }
 
     onClickAddEmoji(ev) {
@@ -315,7 +328,7 @@ export class Composer extends Component {
                 this.props.onPostCallback();
             }
             this.state.active = true;
-            this.attachmentUploader.reset();
+            this.attachmentUploader.clear();
             this.props.composer.textInputContent = "";
             el.focus();
         }
