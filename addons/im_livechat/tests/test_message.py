@@ -73,6 +73,7 @@ class TestImLivechatMessage(TransactionCase):
             'recipients': [],
             'record_name': "test1 Ernest Employee",
             'res_id': channel_livechat_1.id,
+            'scheduledDatetime': False,
             'sms_ids': [],
             'starred_partner_ids': [],
             'subject': False,
