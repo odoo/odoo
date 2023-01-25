@@ -299,7 +299,14 @@ function get_file(options) {
             var nodes = doc.body.children.length === 0 ? doc.body.childNodes : doc.body.children;
             try { // Case of a serialized Odoo Exception: It is Json Parsable
                 var node = nodes[1] || nodes[0];
-                err = JSON.parse(node.textContent);
+                if (mimetype == 'application/json') {
+                    // Ignore the HTML parsing if the entire response is JSON, otherwise the contents can be
+                    // misinterpreted if they contain HTML tags.
+                    err = JSON.parse(contents);
+                }
+                else {
+                    err = JSON.parse(node.textContent);
+                }
             } catch (e) { // Arbitrary uncaught python side exception
                 err = {
                     message: nodes.length > 1 ? nodes[1].textContent : '',
