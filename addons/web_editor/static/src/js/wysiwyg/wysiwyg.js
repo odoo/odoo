@@ -1987,7 +1987,7 @@ const Wysiwyg = Widget.extend({
         // autohideToolbar is true by default (false by default if navbar present).
         finalOptions.autohideToolbar = typeof finalOptions.autohideToolbar === 'boolean'
             ? finalOptions.autohideToolbar
-            : !options.snippets;
+            : !finalOptions.snippets;
 
         return finalOptions;
     },
@@ -2509,8 +2509,10 @@ const Wysiwyg = Widget.extend({
         this._collaborationStopBus && this._collaborationStopBus();
     },
     resetEditor: function (value, options) {
-        this.options = this._getEditorOptions(options);
-        const {collaborationChannel} = options;
+        if (options) {
+            this.options = this._getEditorOptions(options);
+        }
+        const {collaborationChannel} = this.options;
         this._stopPeerToPeer();
         // If there is no collaborationResId, the record has been deleted.
         if (!collaborationChannel || !collaborationChannel.collaborationResId) {
