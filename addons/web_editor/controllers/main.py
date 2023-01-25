@@ -32,7 +32,7 @@ def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
     server_history_matches = re.search(diverging_history_regex, record[html_field_name])
     # Do not check old documents without data-last-history-steps.
     if server_history_matches:
-        server_last_history_id = server_history_matches[1]
+        server_last_history_id = server_history_matches[1].split(',')[-1]
         if server_last_history_id not in incoming_history_ids:
             logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
             raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
