@@ -33,3 +33,8 @@
 #    or implied, of ClearCorp S.A..
 #    
 ##############################################################################
+from odoo import api, SUPERUSER_ID
+
+def load_translations(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    env.ref('l10n_cr.account_chart_template_0').process_coa_translations()
