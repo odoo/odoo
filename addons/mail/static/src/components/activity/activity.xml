@@ -87,7 +87,7 @@
                         />
                     </t>
                 </div>
-                <div t-if="activity.canWrite" name="tools" class="o_ActivityView_tools d-flex">
+                <div t-if="activity.canWrite" name="tools" class="d-flex">
                     <button class="o_ActivityView_toolButton o_ActivityView_markDoneButton btn btn-link btn-primary pt-0 ps-0" t-att-title="markDoneText" t-ref="markDoneButton" t-on-click="onClickMarkDoneButton">
                         <i class="fa fa-check"/> Mark Done
                     </button>
