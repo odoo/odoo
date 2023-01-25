@@ -213,7 +213,7 @@
     </t>
 
     <t t-name="ImportView.data_matching">
-        <div class="oe_import_with_file d-none">
+        <div class="oe_import_with_file bg-view d-none">
             <div class="oe_import_noheaders">
                 <p class="alert alert-info">If the file contains
                     the column names, Odoo can try auto-detecting the
@@ -236,7 +236,7 @@
         <div class="oe_import_box d-none bg-white overflow-auto">
             <input accept=".csv, .xls, .xlsx, .xlsm, .ods" t-attf-id="file_#{_id}"
                   name="file" class="oe_import_file" type="file" style="display:none;"/>
-            <div class="oe_import_with_file">
+            <div class="oe_import_with_file bg-view">
                 <h4>Imported file</h4>
                 <div class="mb-2 d-flex align-items-center">
                     <i class="fa fa-file white me-2"></i>
