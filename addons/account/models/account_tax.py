@@ -759,7 +759,7 @@ class AccountTax(models.Model):
             'taxes': taxes_vals,
             'total_excluded': sign * total_excluded,
             'total_included': sign * currency.round(total_included),
-            'total_void': sign * currency.round(total_void),
+            'total_void': sign * total_void,
         }
 
     @api.model
