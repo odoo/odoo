@@ -100,3 +100,4 @@ class ComplexModel(models.Model):
     currency_id = fields.Many2one('res.currency')
     d = fields.Date()
     dt = fields.Datetime()
+    parent_id = fields.Many2one(model('complex'))

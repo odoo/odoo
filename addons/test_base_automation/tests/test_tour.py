@@ -114,11 +114,11 @@ class BaseAutomationTestUi(HttpCase):
 
     def test_kanban_automation_view_time_trigger(self):
         self._neutralize_preexisting_automations()
-        model = self.env.ref("base.model_res_partner")
+        model = self.env['ir.model']._get("base.automation.lead.test")
 
         date_field = self.env['ir.model.fields'].search([
             ('model_id', '=', model.id),
-            ('name', '=', 'date'),
+            ('name', '=', 'date_automation_last'),
         ])
 
         self.env["base.automation"].create({

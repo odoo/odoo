@@ -326,7 +326,7 @@ registry.category("web_tour.tours").add("test_kanban_automation_view_time_trigge
                 );
                 assertEqual(
                     document.querySelector(".o_kanban_record .o_tag").innerText,
-                    "Date (Contact)"
+                    "Last Automation (Automated Rule Test)"
                 );
             },
         },

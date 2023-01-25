@@ -103,3 +103,9 @@ class Task(models.Model):
         'user_id',
         string="Collaborators",
     )
+
+
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    date = fields.Date()

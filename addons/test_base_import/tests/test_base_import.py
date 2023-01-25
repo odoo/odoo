@@ -454,15 +454,15 @@ class test_convert_import_data(TransactionCase):
 
     def test_date_fields(self):
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'res.partner',
-            'file': u'name,date,create_date\n'
-                    u'"foo","2013年07月18日","2016-10-12 06:06"\n'.encode('utf-8'),
+            'res_model': 'base_import.complex',
+            'file': 'c,d,create_date\n'
+                    '"foo","2013年07月18日","2016-10-12 06:06"\n',
             'file_type': 'text/csv'
 
         })
 
         results = import_wizard.execute_import(
-            ['name', 'date', 'create_date'],
+            ['c', 'd', 'create_date'],
             [],
             {
                 'date_format': '%Y年%m月%d日',
@@ -481,9 +481,9 @@ class test_convert_import_data(TransactionCase):
         parsed during the import call.
         """
         import_wizard = self.env['base_import.import'].create({
-            'res_model': 'res.partner',
-            'file': u'name,parent_id/id,parent_id/date,parent_id/partner_latitude\n'
-                    u'"foo","__export__.res_partner_1","2017年10月12日","5,69"\n'.encode('utf-8'),
+            'res_model': 'base_import.complex',
+            'file': 'name,parent_id/id,parent_id/date,parent_id/partner_latitude\n'
+                    '"foo","__export__.res_partner_1","2017年10月12日","5,69"\n',
             'file_type': 'text/csv'
 
         })
@@ -496,7 +496,7 @@ class test_convert_import_data(TransactionCase):
             'has_headers': True
         }
         data, import_fields = import_wizard._convert_import_data(
-            ['name', 'parent_id/.id', 'parent_id/date', 'parent_id/partner_latitude'],
+            ['name', 'parent_id/.id', 'parent_id/d', 'parent_id/f'],
             options
         )
         result = import_wizard._parse_import_data(data, import_fields, options)
