@@ -324,3 +324,34 @@ QUnit.test(
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
 );
+
+QUnit.test(
+    "should scroll to bottom on receiving new message if the list is initially scrolled to bottom (asc order)",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+        const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({ uuid: "channel-uuid" });
+        for (let i = 0; i <= 10; i++) {
+            pyEnv["mail.message"].create({
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            });
+        }
+        const { env } = await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-notification-item");
+        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+
+        // simulate receiving a message
+        await afterNextRender(() =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "hello",
+                uuid: "channel-uuid",
+            })
+        );
+        assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
+    }
+);
