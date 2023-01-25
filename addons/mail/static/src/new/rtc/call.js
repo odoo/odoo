@@ -6,10 +6,11 @@ import { useService } from "@web/core/utils/hooks";
 import { useMessaging } from "../core/messaging_hook";
 import { useRtc } from "@mail/new/rtc/rtc_hook";
 import { CallMain } from "@mail/new/rtc/call_main";
+import { CallParticipantCard } from "@mail/new/rtc/call_participant_card";
 import { _t } from "@web/core/l10n/translation";
 
 export class Call extends Component {
-    static components = { CallMain };
+    static components = { CallMain, CallParticipantCard };
     static props = ["thread", "compact?"];
     static template = "mail.call";
 
@@ -19,6 +20,7 @@ export class Call extends Component {
         this.rtc = useRtc();
         this.state = useState({
             isFullscreen: false,
+            sidebar: false,
         });
         this.onFullScreenChange = this.onFullScreenChange.bind(this);
         onMounted(() => {
@@ -36,10 +38,6 @@ export class Call extends Component {
         if (this.rtc.state.channel !== this.props.thread || this.props.thread.videoCount === 0) {
             return true;
         }
-        return false;
-    }
-
-    get hasSidebar() {
         return false;
     }
 
@@ -83,5 +81,15 @@ export class Call extends Component {
         this.state.isFullscreen = Boolean(
             document.webkitFullscreenElement || document.fullscreenElement
         );
+    }
+
+    get visibleSessions() {
+        // TODO filter them based on settings "video only" when settings is done
+        /* skip session if
+            settings.showOnlyVideo &&
+            thread.videoCount > 0 &&
+            !channelMember.isStreaming (should be = rtcSession.videoStream)
+        */
+        return [...Object.values(this.props.thread.rtcSessions)];
     }
 }

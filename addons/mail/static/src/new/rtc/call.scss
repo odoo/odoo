@@ -12,3 +12,32 @@
         min-height: #{"max(20%, 130px)"};
     }
 }
+
+.o-mail-call-sidebar {
+    width: 120px;
+    min-width: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+        width: 0.3vw;
+    }
+}
+
+.o-mail-call-sidebar-participant-card {
+    aspect-ratio: 16/9;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o-mail-call-sidebar {
+
+    &::-webkit-scrollbar {
+        background: map-get($grays, '900');
+    }
+    &::-webkit-scrollbar-thumb {
+        background: map-get($grays, '700');
+    }
+}
