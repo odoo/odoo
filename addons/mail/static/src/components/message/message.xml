@@ -30,7 +30,7 @@
             <div class="position-relative d-flex flex-shrink-0" t-att-class="{ 'flex-row-reverse': isInChatWindowAndIsAlignedRight }">
                 <div class="o_MessageView_sidebar d-flex flex-shrink-0" t-att-class="{ 'o-message-squashed align-items-start': isSquashed, 'justify-content-center': isInChatWindow }">
                     <div t-if="!isSquashed" class="o_MessageView_authorAvatarContainer o_MessageView_sidebarItem position-relative">
-                        <img class="o_MessageView_authorAvatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-class="{ 'cursor-pointer': hasAuthorOpenChat, o_redirect: hasAuthorOpenChat }" t-att-src="message.avatarUrl" t-att-role="hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="hasAuthorOpenChat ? '0' : ''" t-on-click="onClickAuthorAvatar" t-att-title="authorTitleText" t-att-alt="authorTitleText"/>
+                        <img class="o_MessageView_authorAvatar w-100 h-100 rounded-circle o_object_fit_cover" t-att-class="{ 'cursor-pointer': hasAuthorClickable, o_redirect: hasAuthorClickable }" t-att-src="message.avatarUrl" t-att-role="hasAuthorClickable ? 'button' : ''" t-att-tabindex="hasAuthorClickable ? '0' : ''" t-on-click="onClickAuthorAvatar" t-att-title="authorTitleText" t-att-alt="authorTitleText"/>
                         <PersonaImStatusIconView t-if="personaImStatusIconView"
                             className="'o_MessageView_personaImStatusIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center text-white'"
                             classNameObj="{
@@ -52,7 +52,7 @@
                 <div class="o_MessageView_core flex-grow-1">
                     <div t-if="!isSquashed" class="o_MessageView_header d-flex flex-wrap align-items-baseline" t-att-class="{ 'justify-content-end': isInChatWindowAndIsAlignedRight }">
                         <t t-if="message.author">
-                            <strong t-if="isShowingAuthorName" class="o_MessageView_authorName o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': hasAuthorOpenChat }" t-att-role="hasAuthorOpenChat ? 'button' : ''" t-att-tabindex="hasAuthorOpenChat ? '0' : ''" t-on-click="onClickAuthorName" t-att-title="authorTitleText">
+                            <strong t-if="isShowingAuthorName" class="o_MessageView_authorName o_redirect me-1 text-truncate" t-att-class="{ 'cursor-pointer': hasAuthorClickable }" t-att-role="hasAuthorClickable ? 'button' : ''" t-att-tabindex="hasAuthorClickable ? '0' : ''" t-on-click="onClickAuthorName" t-att-title="authorTitleText">
                                 <t t-if="message.originThread" t-esc="message.originThread.getMemberName(message.author.persona)"/>
                                 <t t-else="" t-esc="message.author.nameOrDisplayName"/>
                             </strong>

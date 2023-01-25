@@ -79,7 +79,11 @@ Model({
          */
         onClickAuthorAvatar(ev) {
             markEventHandled(ev, "Message.ClickAuthorAvatar");
+            if (!this.message.author || !this.hasAuthorClickable) {
+                return;
+            }
             if (!this.hasAuthorOpenChat) {
+                this.message.author.openProfile();
                 return;
             }
             this.message.author.openChat();
@@ -89,7 +93,11 @@ Model({
          */
         onClickAuthorName(ev) {
             markEventHandled(ev, "Message.ClickAuthorName");
-            if (!this.message.author) {
+            if (!this.message.author || !this.hasAuthorClickable) {
+                return;
+            }
+            if (!this.hasAuthorOpenChat) {
+                this.message.author.openProfile();
                 return;
             }
             this.message.author.openChat();
@@ -342,7 +350,11 @@ Model({
         }),
         authorTitleText: attr({
             compute() {
-                return this.hasAuthorOpenChat ? this.env._t("Open chat") : "";
+                return this.hasAuthorOpenChat
+                    ? this.env._t("Open chat")
+                    : this.hasAuthorClickable
+                    ? this.env._t("Open profile")
+                    : "";
             },
         }),
         clockWatcher: one("ClockWatcher", {
@@ -445,6 +457,11 @@ Model({
                     return false;
                 }
                 return true;
+            },
+        }),
+        hasAuthorClickable: attr({
+            compute() {
+                return this.hasAuthorOpenChat;
             },
         }),
         /**
