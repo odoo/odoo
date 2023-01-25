@@ -531,6 +531,9 @@ export class Messaging {
                 case "mail.channel.member/fetched": {
                     const { channel_id, last_message_id, partner_id } = notif.payload;
                     const channel = this.store.threads[createLocalId("mail.channel", channel_id)];
+                    if (!channel) {
+                        return;
+                    }
                     channel.isUnread = true;
                     const seenInfo = channel.seenInfos.find(
                         (seenInfo) => seenInfo.partner.id === partner_id
@@ -544,6 +547,9 @@ export class Messaging {
                     const isTyping = notif.payload.isTyping;
                     const channel =
                         this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
+                    if (!channel) {
+                        return;
+                    }
                     const member = this.thread.insertChannelMember({
                         id: notif.payload.id,
                         persona: this.persona.insert({
