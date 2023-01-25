@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.1';
+export const WORKER_VERSION = '1.0.2';
 
 /**
  * This class regroups the logic necessary in order for the
@@ -332,7 +332,7 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
-        this.connectRetryDelay = this.connectRetryDelay * 1.5 + 500 * Math.random();
+        this.connectRetryDelay = this.connectRetryDelay * 1.5 + 1000 * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
