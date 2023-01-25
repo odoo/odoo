@@ -15,6 +15,6 @@ patch(ClosePosPopup.prototype, "l10n_fr_pos_cert.ClosePosPopup", {
         return isOutdated;
     },
     canCancel() {
-        return this._super() && !this.sessionIsOutdated();
+        return this._super(...arguments) && !this.sessionIsOutdated();
     },
 });

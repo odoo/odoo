@@ -18,7 +18,7 @@ patch(TicketButton.prototype, "pos_restaurant.TicketButton", {
                 this.showScreen("TicketScreen");
             }
         } else {
-            this._super();
+            this._super(...arguments);
         }
     },
     /**
@@ -32,7 +32,7 @@ patch(TicketButton.prototype, "pos_restaurant.TicketButton", {
         if (this.env.pos.config.iface_floorplan && this.env.pos.table) {
             return this.env.pos.getTableOrders(this.env.pos.table.id).length;
         } else {
-            return this._super();
+            return this._super(...arguments);
         }
     },
 });

@@ -12,7 +12,7 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
      * @override
      */
     async start() {
-        await this._super();
+        await this._super(...arguments);
         if (this.env.pos.config.iface_floorplan) {
             this._setActivityListeners();
         }
@@ -36,7 +36,7 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {
-            return this._super();
+            return this._super(...arguments);
         }
     },
     _setActivityListeners() {
@@ -96,6 +96,6 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
                 window.removeEventListener(event, IDLE_TIMER_SETTER);
             }
         }
-        await this._super();
+        await this._super(...arguments);
     },
 });

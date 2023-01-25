@@ -7,7 +7,7 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
     get addedClasses() {
         return Object.assign(
             { "program-reward": this.props.line.is_reward_line },
-            this._super()
+            this._super(...arguments)
         );
     },
     _isGiftCardOrEWalletReward() {

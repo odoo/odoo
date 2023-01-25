@@ -8,7 +8,7 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
      * @override
      */
     get addedClasses() {
-        const res = this._super();
+        const res = this._super(...arguments);
         Object.assign(res, {
             dirty: this.props.line.mp_dirty,
             skip: this.props.line.mp_skip,
@@ -34,6 +34,6 @@ patch(Orderline.prototype, "pos_restaurant.Orderline", {
         } else {
             this.mp_dbclk_time = new Date().getTime();
         }
-        this._super();
+        this._super(...arguments);
     },
 });
