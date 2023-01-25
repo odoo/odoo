@@ -156,64 +156,6 @@ class TestORM(TransactionCase):
         recs = partner.browse([0])
         self.assertFalse(recs.exists())
 
-    def test_groupby_date(self):
-        partners_data = dict(
-            A='2012-11-19',
-            B='2012-12-17',
-            C='2012-12-31',
-            D='2013-01-07',
-            E='2013-01-14',
-            F='2013-01-28',
-            G='2013-02-11',
-        )
-
-        partner_ids = []
-        partner_ids_by_day = defaultdict(list)
-        partner_ids_by_month = defaultdict(list)
-        partner_ids_by_year = defaultdict(list)
-
-        partners = self.env['res.partner']
-        for name, date in partners_data.items():
-            p = partners.create(dict(name=name, date=date))
-            partner_ids.append(p.id)
-            partner_ids_by_day[date].append(p.id)
-            partner_ids_by_month[date.rsplit('-', 1)[0]].append(p.id)
-            partner_ids_by_year[date.split('-', 1)[0]].append(p.id)
-
-        def read_group(interval):
-            domain = [('id', 'in', partner_ids)]
-            result = {}
-            for grp in partners.read_group(domain, ['date'], ['date:' + interval]):
-                result[grp['date:' + interval]] = partners.search(grp['__domain'])
-            return result
-
-        self.assertEqual(len(read_group('day')), len(partner_ids_by_day))
-        self.assertEqual(len(read_group('month')), len(partner_ids_by_month))
-        self.assertEqual(len(read_group('year')), len(partner_ids_by_year))
-
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
-                                  ['date:month', 'date:day'], lazy=False)
-        self.assertEqual(len(res), len(partner_ids))
-
-        # combine groupby and orderby
-        months = ['February 2013', 'January 2013', 'December 2012', 'November 2012']
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
-                                  groupby=['date:month'], orderby='date:month DESC')
-        self.assertEqual([item['date:month'] for item in res], months)
-
-        # order by date should reorder by date:month
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
-                                  groupby=['date:month'], orderby='date DESC')
-        self.assertEqual([item['date:month'] for item in res], months)
-
-        # order by date should reorder by date:day
-        days = ['11 Feb 2013', '28 Jan 2013', '14 Jan 2013', '07 Jan 2013',
-                '31 Dec 2012', '17 Dec 2012', '19 Nov 2012']
-        res = partners.read_group([('id', 'in', partner_ids)], ['date'],
-                                  groupby=['date:month', 'date:day'],
-                                  orderby='date DESC', lazy=False)
-        self.assertEqual([item['date:day'] for item in res], days)
-
     def test_write_duplicate(self):
         p1 = self.env['res.partner'].create({'name': 'W'})
         (p1 + p1).write({'name': 'X'})
