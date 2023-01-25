@@ -16,10 +16,8 @@
     }
 
     @include media-breakpoint-down(md) {
-        padding-right: 0;
-        width: 100%;
-
         > div.o_cp_bottom {
+            justify-content: space-between;
             min-height: auto;
         }
 
@@ -64,10 +62,6 @@
                     }
                 }
             }
-        }
-
-        .o_cp_bottom_left, .o_cp_bottom_right {
-            flex: 1 1 auto;
         }
 
         .o_cp_switch_buttons {
@@ -192,8 +186,6 @@
     .o_cp_bottom_right {
         display: flex;
         flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
 
         @include media-breakpoint-up(md) {
             column-gap: $o-horizontal-padding;
@@ -211,7 +203,7 @@
             padding-left: 5px;
             text-align: center;
             user-select: none;
-            .o_pager_limit_fetch, .o_pager_value {
+            .o_pager_limit_fetch:not(.disabled), .o_pager_value {
                 cursor: pointer;
             }
         }

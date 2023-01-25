@@ -24,10 +24,6 @@
     }
 }
 
-[aria-hidden="true"], [aria-hidden="1"] {
-    display: none!important;
-}
-
 .dropdown-toggle {
     white-space: nowrap;
 
@@ -136,11 +132,21 @@
 span.o_force_ltr {
     display: inline;
 }
-.o_force_ltr, .o_field_phone {
+.o_force_ltr {
     unicode-bidi: embed; // ensure element has level of embedding for direction
     /*rtl:ignore*/
     direction: ltr;
 }
+
+/* rtl:raw:
+[type="tel"],
+[type="url"],
+[type="email"],
+[type="number"],
+.o_force_ltr {
+  text-align: end !important;
+}
+*/
 
 // To fill the available space while keeping aspect ratio (crop).
 // Assuming the important part of the image is its center.

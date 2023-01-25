@@ -425,12 +425,15 @@ export const editorCommands = {
     },
     unlink: editor => {
         const sel = editor.document.getSelection();
-        // we need to remove the contentEditable isolation of links
-        // before we apply the unlink, otherwise the command is not performed
-        // because the content editable root is the link
         const closestEl = closestElement(sel.focusNode, 'a');
-        if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
-            editor._activateContenteditable();
+        if (closestEl) {
+            // Remove the class otherwise Firefox transforms the link in a span.
+            closestEl.removeAttribute('class');
+            // Remove the contentEditable isolation of links before unlinking,
+            // otherwise the command fails since the link is the editable root.
+            if (closestEl.getAttribute('contenteditable') === 'true') {
+                editor._activateContenteditable();
+            }
         }
         if (sel.isCollapsed) {
             const cr = preserveCursor(editor.document);
@@ -539,8 +542,14 @@ export const editorCommands = {
                 } else {
                     font = [];
                 }
-            } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
-                // Node is a visible text node: wrap it in a <font>.
+            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || (node.nodeType === Node.ELEMENT_NODE &&
+                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                        isVisibleStr(node.textContent) &&
+                        !node.classList.contains('btn') &&
+                        !node.querySelector('font'))) {
+                // Node is a visible text or inline node without font nor a button:
+                // wrap it in a <font>.
                 const previous = node.previousSibling;
                 const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
                 if (

@@ -1886,8 +1886,13 @@ class AccountMove(models.Model):
         # Skip posted moves.
         for invoice in (x for x in container['records'] if x.state != 'posted'):
 
-            # Unlink tax lines if all tax tags have been removed.
+            # Unlink tax lines if all taxes have been removed.
             if not invoice.line_ids.tax_ids:
+                # if there isn't any tax but there remains a tax_line_id, it means we are currently in the process of
+                # removing the taxes from the entry. Thus, we want the automatic balancing to happen in order  to have
+                # a smooth process for tax deletion
+                if not invoice.line_ids.filtered('tax_line_id'):
+                    continue
                 invoice.line_ids.filtered('tax_line_id').unlink()
 
             # Set the balancing line's balance and amount_currency to zero,
@@ -2539,7 +2544,7 @@ class AccountMove(models.Model):
         for that partner as the default one, otherwise the default of the journal.
         """
         self.ensure_one()
-        if not self.quick_edit_total_amount:
+        if not self.quick_edit_mode or not self.quick_edit_total_amount:
             return False
         count, account_id, tax_ids = self._get_frequent_account_and_taxes(
             self.company_id.id,
@@ -2773,6 +2778,8 @@ class AccountMove(models.Model):
 
         product_lines = self.line_ids.filtered(lambda x: x.display_type == 'product')
         base_lines = [x._convert_to_tax_base_line_dict() for x in product_lines]
+        for base_line in base_lines:
+            base_line['taxes'] = base_line['taxes'].filtered(lambda t: t.amount_type != 'fixed')
 
         if self.is_inbound(include_receipts=True):
             cash_discount_account = self.company_id.account_journal_early_pay_discount_loss_account_id
@@ -3760,7 +3767,7 @@ class AccountMove(models.Model):
         else:
             # Else we find one that's eligible and assign it to the invoice
             for candidate_method, _candidate_name in self.env['res.partner.bank'].get_available_qr_methods_in_sequence():
-                if self.partner_bank_id._eligible_for_qr_code(candidate_method, self.partner_id, self.currency_id):
+                if self.partner_bank_id._eligible_for_qr_code(candidate_method, self.partner_id, self.currency_id, raises_error=False):
                     qr_code_method = candidate_method
                     break
 

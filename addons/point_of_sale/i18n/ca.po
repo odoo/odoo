@@ -20,7 +20,7 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Harcogourmet, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # oscaryuu, 2022
 # CristianCruzParra, 2022
 # Martin Trigaux, 2022
@@ -28,6 +28,7 @@
 # Farouk Jabiri, 2022
 # Quim - eccit <quim@eccit.com>, 2022
 # RGB Consulting <odoo@rgbconsulting.com>, 2022
+# Ivan Espinola, 2023
 # 
 msgid ""
 msgstr ""
@@ -35,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2022\n"
+"Last-Translator: Ivan Espinola, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +79,7 @@ msgstr "Pagament TPV %s de %s a %s"
 #: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
 #, python-format
 msgid "%s customer(s) found for \"%s\"."
-msgstr "%s client(s) trobat(s) per \"%s\"."
+msgstr "%s client(s) trobats per \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -95,7 +96,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
-msgstr "%s producte(s) trobat(s) per \"%s\"."
+msgstr "%s producte(s) trobats per \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -170,7 +171,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "<i class=\"fa fa-pencil\"/> Edit"
-msgstr "<i class=\"fa fa-pencil\"/> Editar"
+msgstr "<i class=\"fa fa-pencil\"/> Modificar"
 
 #. module: point_of_sale
 #. odoo-python
@@ -229,7 +230,7 @@ msgstr "<span class=\"o_form_label\">Diaris predeterminats</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Multi Employees per Session</span>"
-msgstr "<span class=\"oformlabel\">Multiempleats per sessió</span>"
+msgstr "<span class=\"o_form_label\">Multiempleats per sessió</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -535,7 +536,7 @@ msgstr "Afegeix una nota d'obertura..."
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
 msgid "Add demo data"
-msgstr "Afegeix dades de demostració"
+msgstr "Afegeix dades de prova"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -709,7 +710,7 @@ msgstr "Un identificador intern del punt de venda."
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
 #, python-format
 msgid "An unknown error prevents us from getting closing information."
-msgstr ""
+msgstr "Un error desconegut ens impedeix obtenir informació de tancament."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -717,7 +718,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
 #, python-format
 msgid "An unknown error prevents us from loading product information."
-msgstr ""
+msgstr "Un error desconegut ens impedeix carregar informació del producte."
 
 #. module: point_of_sale
 #. odoo-python
@@ -1035,6 +1036,8 @@ msgstr "Cancel·lat"
 #, python-format
 msgid "Cannot access product information screen if offline."
 msgstr ""
+"No es pot accedir a la pantalla d'informació del producte si està "
+"desconnectat."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1572,7 +1575,7 @@ msgstr "Continua venent"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_check_product_wizard
 msgid "Continue without Demo data"
-msgstr "Continua sense dades Demo"
+msgstr "Continua sense dades de prova"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__currency_rate
@@ -1765,7 +1768,7 @@ msgstr "Nota del client"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
 msgid "Customer Portal URL"
-msgstr "URL del portal dels clients"
+msgstr "L'URL del portal dels clients"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2188,7 +2191,7 @@ msgstr "Descarregar registre d'error"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Edit"
-msgstr "Edita"
+msgstr "Modificar"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2678,9 +2681,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
-"Si s'entreguen tots els productes alhora, l'entrega serà programada en base "
-"a l'entrega del termini més gran d'un dels productes. En cas contrari, es "
-"basarà en el més curt. "
+"Si s'entreguen tots els productes alhora, la comanda d'entrega serà "
+"programada en base a l'entrega del termini més gran d'un dels productes. En "
+"cas contrari, es basarà en el més curt. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
@@ -3354,7 +3357,7 @@ msgstr "Diversos"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Missing barcode nomenclature"
-msgstr ""
+msgstr "Falta la nomenclatura del codi de barres"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3687,7 +3690,7 @@ msgstr "Ordres fora de línia"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
 #, python-format
 msgid "OfflineErrorPopup"
-msgstr ""
+msgstr "OfflineErrorPopup"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4370,7 +4373,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
 #, python-format
 msgid "Please check your internet connection and try again."
-msgstr ""
+msgstr "Comproveu la connexió a Internet i torneu-ho a provar."
 
 #. module: point_of_sale
 #. odoo-python
@@ -6250,6 +6253,8 @@ msgid ""
 "The barcode nomenclature setting is not configured. Make sure to configure "
 "it on your Point of Sale configuration settings"
 msgstr ""
+"El paràmetre nomenclatura del codi de barres no està configurat. Assegureu-"
+"vos de configurar-lo a la configuració del Punt de venda"
 
 #. module: point_of_sale
 #. odoo-python
@@ -6669,7 +6674,7 @@ msgstr "No hi ha cap registre de caixa en aquesta sessió."
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "There is no product linked to your PoS"
-msgstr ""
+msgstr "No hi ha cap producte enllaçat al vostre PoS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7381,7 +7386,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "Només pots tenir un mètode de pagament en efectiu."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7392,6 +7397,10 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"No podeu: crear una comanda pos des de la interfície del dorsal, o "
+"desestablir la llista de preus, o crear una comanda pos.order en una prova "
+"de Python amb l'eina Form, o modificar la vista de formulari a l'estudi si "
+"no existeix cap comanda PoS"
 
 #. module: point_of_sale
 #. odoo-python

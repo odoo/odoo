@@ -1759,7 +1759,7 @@
      * @returns the raw type of the object
      */
     function rawType(obj) {
-        return objectToString.call(obj).slice(8, -1);
+        return objectToString.call(toRaw(obj)).slice(8, -1);
     }
     /**
      * Checks whether a given value can be made into a reactive object.
@@ -2309,7 +2309,8 @@
                 }
             }
             this.component = new C(props, env, this);
-            this.renderFn = app.getTemplate(C.template).bind(this.component, this.component, this);
+            const ctx = Object.assign(Object.create(this.component), { this: this.component });
+            this.renderFn = app.getTemplate(C.template).bind(this.component, ctx, this);
             this.component.setup();
             currentNode = null;
         }
@@ -2500,6 +2501,7 @@
         }
         _patch() {
             let hasChildren = false;
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             for (let _k in this.children) {
                 hasChildren = true;
                 break;
@@ -2894,8 +2896,8 @@
         }
         return slotBDom || text("");
     }
-    function capture(ctx, component) {
-        const result = ObjectCreate(component);
+    function capture(ctx) {
+        const result = ObjectCreate(ctx);
         for (let k in ctx) {
             result[k] = ctx[k];
         }
@@ -2950,7 +2952,7 @@
     class LazyValue {
         constructor(fn, ctx, component, node, key) {
             this.fn = fn;
-            this.ctx = capture(ctx, component);
+            this.ctx = capture(ctx);
             this.component = component;
             this.node = node;
             this.key = key;
@@ -3110,7 +3112,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -3232,7 +3234,7 @@
     //------------------------------------------------------------------------------
     // Misc types, constants and helpers
     //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,eval,void,Math,RegExp,Array,Object,Date".split(",");
     const WORD_REPLACEMENT = Object.assign(Object.create(null), {
         and: "&&",
         or: "||",
@@ -3710,7 +3712,7 @@
                 for (let block of this.blocks) {
                     if (block.dom) {
                         let xmlString = block.asXmlString();
-                        xmlString = xmlString.replace(/`/g, "\\`");
+                        xmlString = xmlString.replace(/\\/g, "\\\\").replace(/`/g, "\\`");
                         if (block.dynamicTagName) {
                             xmlString = xmlString.replace(/^<\w+/, `<\${tag || '${block.dom.nodeName}'}`);
                             xmlString = xmlString.replace(/\w+>$/, `\${tag || '${block.dom.nodeName}'}>`);
@@ -3817,16 +3819,16 @@
             const mapping = new Map();
             return tokens
                 .map((tok) => {
-                    if (tok.varName && !tok.isLocal) {
-                        if (!mapping.has(tok.varName)) {
-                            const varId = generateId("v");
-                            mapping.set(tok.varName, varId);
-                            this.define(varId, tok.value);
-                        }
-                        tok.value = mapping.get(tok.varName);
+                if (tok.varName && !tok.isLocal) {
+                    if (!mapping.has(tok.varName)) {
+                        const varId = generateId("v");
+                        mapping.set(tok.varName, varId);
+                        this.define(varId, tok.value);
                     }
-                    return tok.value;
-                })
+                    tok.value = mapping.get(tok.varName);
+                }
+                return tok.value;
+            })
                 .join("");
         }
         /**
@@ -3927,11 +3929,11 @@
                 .split(".")
                 .slice(1)
                 .map((m) => {
-                    if (!MODS.has(m)) {
-                        throw new OwlError(`Unknown event modifier: '${m}'`);
-                    }
-                    return `"${m}"`;
-                });
+                if (!MODS.has(m)) {
+                    throw new OwlError(`Unknown event modifier: '${m}'`);
+                }
+                return `"${m}"`;
+            });
             let modifiersCode = "";
             if (modifiers.length) {
                 modifiersCode = `${modifiers.join(",")}, `;
@@ -4016,7 +4018,15 @@
                 const fullExpression = `${bExprId}[${exprId}]`;
                 let idx;
                 if (specialInitTargetAttr) {
-                    idx = block.insertData(`${fullExpression} === '${attrs[targetAttr]}'`, "attr");
+                    let targetExpr = targetAttr in attrs && `'${attrs[targetAttr]}'`;
+                    if (!targetExpr && ast.attrs) {
+                        // look at the dynamic attribute counterpart
+                        const dynamicTgExpr = ast.attrs[`t-att-${targetAttr}`];
+                        if (dynamicTgExpr) {
+                            targetExpr = compileExpr(dynamicTgExpr);
+                        }
+                    }
+                    idx = block.insertData(`${fullExpression} === ${targetExpr}`, "attr");
                     attrs[`block-attribute-${idx}`] = specialInitTargetAttr;
                 }
                 else if (hasDynamicChildren) {
@@ -4508,7 +4518,7 @@
                 if (this.target.loopLevel || !this.hasSafeContext) {
                     ctxStr = generateId("ctx");
                     this.helpers.add("capture");
-                    this.define(ctxStr, `capture(ctx, this)`);
+                    this.define(ctxStr, `capture(ctx)`);
                 }
                 let slotStr = [];
                 for (let slotName in ast.slots) {
@@ -4667,7 +4677,7 @@
             if (this.target.loopLevel || !this.hasSafeContext) {
                 ctxStr = generateId("ctx");
                 this.helpers.add("capture");
-                this.define(ctxStr, `capture(ctx, this)`);
+                this.define(ctxStr, `capture(ctx)`);
             }
             let id = generateId("comp");
             this.staticDefs.push({
@@ -5412,7 +5422,7 @@
                         if (line[columnIndex]) {
                             msg +=
                                 `\nThe error might be located at xml line ${lineNumber} column ${columnIndex}\n` +
-                                `${line}\n${"-".repeat(columnIndex - 1)}^`;
+                                    `${line}\n${"-".repeat(columnIndex - 1)}^`;
                         }
                     }
                 }
@@ -5554,12 +5564,16 @@
 This is not suitable for production use.
 See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration for more information.`;
     };
+    window.__OWL_DEVTOOLS__ || (window.__OWL_DEVTOOLS__ = {
+        apps: new Set(),
+    });
     class App extends TemplateSet {
         constructor(Root, config = {}) {
             super(config);
             this.scheduler = new Scheduler();
             this.root = null;
             this.Root = Root;
+            window.__OWL_DEVTOOLS__.apps.add(this);
             if (config.test) {
                 this.dev = true;
             }
@@ -5616,6 +5630,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
                 this.scheduler.flush();
                 this.root.destroy();
             }
+            window.__OWL_DEVTOOLS__.apps.delete(this);
         }
         createComponent(name, isStatic, hasSlotsProp, hasDynamicPropList, hasNoProp) {
             const isDynamic = !isStatic;
@@ -5856,9 +5871,9 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '2.0.2';
-    __info__.date = '2022-11-29T14:11:21.188Z';
-    __info__.hash = 'ef8baa2';
+    __info__.version = '2.0.4';
+    __info__.date = '2023-01-23T11:21:36.696Z';
+    __info__.hash = 'c30678f';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgid ""
 "%s"
 msgstr ""
 "\n"
-"De medewerkers die geen toewijzingsdagen hebben zijn:\n"
+"De werknemers die geen toewijzingsdagen hebben zijn:\n"
 "%s"
 
 #. module: hr_holidays
@@ -670,7 +670,7 @@ msgstr "<span class=\"text-muted\">Van</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
 msgid "<span class=\"text-muted\">To</span>"
-msgstr "<span class=\"text-muted\">Tot</span>"
+msgstr "<span class=\"text-muted\">T/m</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
@@ -1833,7 +1833,7 @@ msgstr "Werknemer"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__active_employee
 msgid "Employee Active"
-msgstr "Medewerker actief"
+msgstr "Werknemer actief"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__employee_requests
@@ -1968,7 +1968,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_partner_ids
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
@@ -3336,8 +3336,8 @@ msgid ""
 "        - No validation needed: The employee's request is automatically approved.\n"
 "        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer."
 msgstr ""
-"Selecteer het benodigde goedkeuringsniveau in het geval van een verzoek van een medewerker\n"
-"        - Geen validatie nodig: de aanvraag van de medewerker wordt automatisch goedgekeurd.\n"
+"Selecteer het benodigde goedkeuringsniveau in het geval van een verzoek van een werknemer\n"
+"        - Geen validatie nodig: de aanvraag van de werknemer wordt automatisch goedgekeurd.\n"
 "        - Goedgekeurd door Time Off Officer: Het verzoek van de werknemer moet handmatig worden goedgekeurd door de Time Off Officer."
 
 #. module: hr_holidays
@@ -4411,7 +4411,7 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
-"Je kunt niet twee vrije dagen die elkaar overlappen op dezelfde dag voor dezelfde medewerkers vastleggen.\n"
+"Je kunt niet twee vrije dagen die elkaar overlappen op dezelfde dag voor dezelfde werknemers vastleggen.\n"
 "Bestaande vrije tijd:\n"
 "%s"
 
@@ -4457,7 +4457,7 @@ msgstr "Je kunt een vrije tijd niet handmatig archiveren/dearchiveren."
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
 msgstr ""
-"Je kunt een aan meerdere medewerkers toegewezen vrije tijd niet verwijderen"
+"Je kunt een aan meerdere werknemers toegewezen vrije tijd niet verwijderen"
 
 #. module: hr_holidays
 #. odoo-python

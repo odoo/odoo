@@ -1792,7 +1792,10 @@ msgid "Count Picking Waiting"
 msgstr "Số giao nhận đang chờ"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Đếm trang"
 
@@ -3704,6 +3707,13 @@ msgstr "Toán tử tên miền không hợp lệ %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Toán hạng tên miền không hợp lệ %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7307,8 +7317,11 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Cài"
 
@@ -9599,8 +9612,8 @@ msgstr "Bạn không thể nhập số lượng âm."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Bạn chỉ có thể xóa dịch chuyển nháp."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10149,4 +10162,11 @@ msgstr "{{ (object.name or '').replace('/','_') }}"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

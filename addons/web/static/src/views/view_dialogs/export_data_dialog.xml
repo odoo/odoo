@@ -13,7 +13,7 @@
 
     <t t-name="web.ExportDataItem" owl="1">
         <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
-            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
+            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
             <div t-attf-class="o_tree_column d-flex justify-content-between align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
                 <span t-if="props.isDebug and props.field.id" class="overflow-hidden" t-esc="`${props.field.string} (${props.field.id})`" />
                 <span t-else="" class="overflow-hidden" t-esc="props.field.string" />
@@ -50,7 +50,7 @@
                                         expandedContent.bind="expandedContent"
                                         isFieldExpanded.bind="isFieldExpanded"
                                         exportList="state.exportList"
-                                        isFieldExpandable="isFieldExpandable"
+                                        isFieldExpandable.bind="isFieldExpandable"
                                         isDebug="isDebug"
                                         onClick.bind="onToggleExpandField"
                                         onAdd.bind="onAddItemExportList"
@@ -67,7 +67,7 @@
                         <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
                             <div class="radio form-check-inline ps-5">
                                 <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
-                                <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
+                                <label class="form-check-label ms-1" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
                             </div>
                         </t>
                     </div>

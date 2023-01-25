@@ -27,13 +27,13 @@
 }
 
 .o-dashboard-action {
-    background-color: white;
     align-self: start;
-    border: 1px solid;
-    border-color: #e5e5e5 #dbdbdb #d2d2d2;
 
     > .o_view_controller {
         padding: 0 12px 12px 12px;
+        .o_graph_renderer canvas {
+            height: 300px;
+        }
     }
 
     .o_column_quick_create {

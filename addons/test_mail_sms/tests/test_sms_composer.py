@@ -120,6 +120,21 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
 
         self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
+    def test_composer_default_recipient(self):
+        self.test_record.write({
+            'phone_nbr': '0123456789',
+        })
+        with self.with_user('employee'):
+            composer = self.env['sms.composer'].with_context(
+                    default_res_model='mail.test.sms', default_res_id=self.test_record.id,
+                ).create({
+                    'body': self._test_body,
+                    'number_field_name': 'phone_nbr',
+                })
+
+        self.assertFalse(composer.recipient_single_valid)
+        self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
+
     def test_composer_internals(self):
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
@@ -204,6 +219,23 @@ class TestSMSComposerComment(TestSMSCommon, TestSMSRecipients):
         # use sms.api directly, does not create sms.sms
         self.assertNoSMS()
         self.assertSMSIapSent(self.random_numbers_san, self._test_body)
+
+    def test_composer_sending_with_no_number_field(self):
+        test_record = self.env['mail.test.sms.partner'].create({'name': 'Test'})
+        sms_composer = self.env['sms.composer'].create({
+            'body': self._test_body,
+            'composition_mode': 'comment',
+            'mass_force_send': False,
+            'mass_keep_log': True,
+            'number_field_name': False,
+            'numbers': False,
+            'recipient_single_number_itf': self.random_numbers_san[0],
+            'res_id': test_record.id,
+            'res_model': 'mail.test.sms.partner'
+        })
+        with self.mockSMSGateway():
+            sms_composer._action_send_sms()
+        self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
 
 
 class TestSMSComposerBatch(TestSMSCommon):

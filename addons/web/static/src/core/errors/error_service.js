@@ -44,7 +44,7 @@ export const errorService = {
     start(env) {
         function handleError(uncaughtError, retry = true) {
             let originalError = uncaughtError;
-            while (originalError && "cause" in originalError) {
+            while (originalError instanceof Error && "cause" in originalError) {
                 originalError = originalError.cause;
             }
             const services = env.services;

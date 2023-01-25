@@ -68,7 +68,8 @@ import {
     hasTableSelection,
     pxToFloat,
     parseHTML,
-    splitTextNode
+    splitTextNode,
+    isVoidElement
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -600,9 +601,9 @@ export class OdooEditor extends EventTarget {
         this.addDomListener(this.editable, 'paste', this._onPaste);
         this.addDomListener(this.editable, 'dragstart', this._onDragStart);
         this.addDomListener(this.editable, 'drop', this._onDrop);
+        this.addDomListener(this.editable, 'copy', this._onClipboardCopy);
+        this.addDomListener(this.editable, 'cut', this._onClipboardCut);
 
-        this.addDomListener(this.document, 'copy', this._onClipboardCopy);
-        this.addDomListener(this.document, 'cut', this._onClipboardCut);
         this.addDomListener(this.document, 'selectionchange', this._onSelectionChange);
         this.addDomListener(this.document, 'selectionchange', this._handleCommandHint);
         this.addDomListener(this.document, 'keydown', this._onDocumentKeydown);
@@ -2160,7 +2161,8 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
-        for (const node of this.options.getContentEditableAreas(this)) {
+        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isVoidElement(node));
+        for (const node of editableAreas) {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);
             }
@@ -3183,7 +3185,7 @@ export class OdooEditor extends EventTarget {
                 }
                 if (ev.data === '`' && !closestElement(selection.anchorNode, 'code')) {
                     // We just inserted a backtick, check if there was another
-                    // one before.
+                    // one in the text.
                     const range = getDeepRange(this.editable);
                     let textNode = range.startContainer;
                     let offset = range.startOffset;
@@ -3197,22 +3199,35 @@ export class OdooEditor extends EventTarget {
                     }
                     sibling = textNode.nextSibling;
                     while (sibling && sibling.nodeType === Node.TEXT_NODE) {
-                        sibling.textContent =+ textNode.textContent;
-                        textNode.remove();
-                        textNode = sibling;
+                        textNode.textContent += sibling.textContent;
+                        sibling.remove();
                         sibling = textNode.nextSibling;
                     }
                     setSelection(textNode, offset);
-                    const textHasOpeningTick = /`.*`/.test(textNode.textContent);
-                    if (textHasOpeningTick) {
+                    const textHasTwoTicks = /`.*`/.test(textNode.textContent);
+                    if (textHasTwoTicks) {
                         this.historyStep();
-                        if (offset !== textNode.textContent.length) {
-                            splitTextNode(textNode, offset);
-                            textNode = textNode.previousSibling;
+                        const insertedBacktickIndex = offset - 1;
+                        const textBeforeInsertedBacktick = textNode.textContent.substring(0, insertedBacktickIndex - 1);
+                        let startOffset, endOffset;
+                        const isClosingForward = textBeforeInsertedBacktick.includes('`');
+                        if (isClosingForward) {
+                            // There is a backtick before the new backtick.
+                            startOffset = textBeforeInsertedBacktick.lastIndexOf('`');
+                            endOffset = insertedBacktickIndex;
+                        } else {
+                            // There is a backtick after the new backtick.
+                            const textAfterInsertedBacktick = textNode.textContent.substring(offset);
+                            startOffset = insertedBacktickIndex;
+                            endOffset = offset + textAfterInsertedBacktick.indexOf('`');
                         }
-                        const openingTickOffset = textNode.textContent.substring(0, textNode.textContent.length - 1).lastIndexOf('`');
-                        if (openingTickOffset) {
-                            splitTextNode(textNode, openingTickOffset);
+                        // Split around the backticks if needed so text starts
+                        // and ends with a backtick.
+                        if (endOffset && endOffset < textNode.textContent.length) {
+                            splitTextNode(textNode, endOffset + 1, DIRECTIONS.LEFT);
+                        }
+                        if (startOffset) {
+                            splitTextNode(textNode, startOffset);
                         }
                         // Remove ticks.
                         textNode.textContent = textNode.textContent.substring(1, textNode.textContent.length - 1);
@@ -3224,9 +3239,13 @@ export class OdooEditor extends EventTarget {
                         if (!codeElement.previousSibling || codeElement.previousSibling.nodeType !== Node.TEXT_NODE) {
                             codeElement.before(document.createTextNode('\u200B'));
                         }
-                        // Move selection out of code element.
-                        codeElement.after(document.createTextNode('\u200B'));
-                        setSelection(codeElement.nextSibling, 1);
+                        if (isClosingForward) {
+                            // Move selection out of code element.
+                            codeElement.after(document.createTextNode('\u200B'));
+                            setSelection(codeElement.nextSibling, 1);
+                        } else {
+                            setSelection(codeElement.firstChild, 0);
+                        }
                     }
                 }
                 this.historyStep();
@@ -3252,69 +3271,68 @@ export class OdooEditor extends EventTarget {
         this.deleteRange();
     }
     _onClipboardCopy(clipboardEvent) {
-        if (this.isSelectionInEditable()) {
-            clipboardEvent.preventDefault();
-            const selection = this.document.getSelection();
-            const range = selection.getRangeAt(0);
-            let rangeContent = range.cloneContents();
-
-            // Repair the copied range.
-            if (rangeContent.firstChild.nodeName === 'LI') {
-                const list = range.commonAncestorContainer.cloneNode();
-                list.replaceChildren(...rangeContent.childNodes);
-                rangeContent = list;
-            }
-            if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
-                // We enter this case only if selection is within single table.
-                const table = closestElement(range.commonAncestorContainer, 'table');
-                const tableClone = table.cloneNode(true);
-                // A table is considered fully selected if it is nested inside a
-                // cell that is itself selected, or if all its own cells are
-                // selected.
-                const isTableFullySelected =
-                    table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
-                    [...table.querySelectorAll('td')]
-                        .filter(td => closestElement(td, 'table') === table)
-                        .every(td => td.classList.contains('o_selected_td'));
-                if (!isTableFullySelected(table)) {
-                    for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
-                        if (closestElement(td, 'table') === tableClone) { // ignore nested
-                            td.remove();
-                        }
-                    }
-                    for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
-                        if (closestElement(tr, 'table') === tableClone) { // ignore nested
-                            tr.remove();
-                        }
+        if (!this.isSelectionInEditable()) {
+            return;
+        }
+        clipboardEvent.preventDefault();
+        const selection = this.document.getSelection();
+        const range = selection.getRangeAt(0);
+        let rangeContent = range.cloneContents();
+        if (!rangeContent.hasChildNodes()) {
+            return;
+        }
+        // Repair the copied range.
+        if (rangeContent.firstChild.nodeName === 'LI') {
+            const list = range.commonAncestorContainer.cloneNode();
+            list.replaceChildren(...rangeContent.childNodes);
+            rangeContent = list;
+        }
+        if (rangeContent.firstChild.nodeName === 'TR' || rangeContent.firstChild.nodeName === 'TD') {
+            // We enter this case only if selection is within single table.
+            const table = closestElement(range.commonAncestorContainer, 'table');
+            const tableClone = table.cloneNode(true);
+            // A table is considered fully selected if it is nested inside a
+            // cell that is itself selected, or if all its own cells are
+            // selected.
+            const isTableFullySelected =
+                table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                [...table.querySelectorAll('td')]
+                    .filter(td => closestElement(td, 'table') === table)
+                    .every(td => td.classList.contains('o_selected_td'));
+            if (!isTableFullySelected(table)) {
+                for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
+                    if (closestElement(td, 'table') === tableClone) { // ignore nested
+                        td.remove();
                     }
                 }
-                // If it is fully selected, clone the whole table rather than
-                // just its rows.
-                rangeContent = tableClone;
+                for (const tr of tableClone.querySelectorAll('tr:not(:has(td))')) {
+                    if (closestElement(tr, 'table') === tableClone) { // ignore nested
+                        tr.remove();
+                    }
+                }
             }
-            if (rangeContent.firstChild.nodeName === 'TABLE') {
-                // Make sure the full leading table is copied.
-                rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
-                rangeContent.firstChild.remove();
-            }
-            if (rangeContent.lastChild.nodeName === 'TABLE') {
-                // Make sure the full trailing table is copied.
-                rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
-                rangeContent.lastChild.remove();
-            }
-
-            const dataHtmlElement = document.createElement('data');
-            dataHtmlElement.append(rangeContent);
-            const odooHtml = dataHtmlElement.innerHTML;
-            const odooText = dataHtmlElement.innerText;
-            if (!clipboardEvent.clipboardData.getData('text/plain')) {
-                clipboardEvent.clipboardData.setData('text/plain', odooText);
-            }
-            if (!clipboardEvent.clipboardData.getData('text/html')) {
-                clipboardEvent.clipboardData.setData('text/html', odooHtml);
-            }
-            clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
+            // If it is fully selected, clone the whole table rather than
+            // just its rows.
+            rangeContent = tableClone;
         }
+        if (rangeContent.firstChild.nodeName === 'TABLE') {
+            // Make sure the full leading table is copied.
+            rangeContent.firstChild.after(closestElement(range.startContainer, 'table').cloneNode(true));
+            rangeContent.firstChild.remove();
+        }
+        if (rangeContent.lastChild.nodeName === 'TABLE') {
+            // Make sure the full trailing table is copied.
+            rangeContent.lastChild.before(closestElement(range.endContainer, 'table').cloneNode(true));
+            rangeContent.lastChild.remove();
+        }
+
+        const dataHtmlElement = document.createElement('data');
+        dataHtmlElement.append(rangeContent);
+        const odooHtml = dataHtmlElement.innerHTML;
+        const odooText = selection.toString();
+        clipboardEvent.clipboardData.setData('text/plain', odooText);
+        clipboardEvent.clipboardData.setData('text/html', odooHtml);
+        clipboardEvent.clipboardData.setData('text/odoo-editor', odooHtml);
     }
     /**
      * @private
@@ -3468,6 +3486,17 @@ export class OdooEditor extends EventTarget {
             return;
         }
 
+        let appliedCustomSelection = false;
+        if (selection.rangeCount && selection.getRangeAt(0)) {
+            appliedCustomSelection = this._handleSelectionInTable();
+            if (this.options.onCollaborativeSelectionChange) {
+                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
+            }
+        }
+        if (!appliedCustomSelection) {
+            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
+        }
+
         if (
             !this.editable.contains(selection.anchorNode) &&
             !this.editable.contains(selection.focusNode)
@@ -3498,16 +3527,6 @@ export class OdooEditor extends EventTarget {
 
         if (this._currentMouseState === 'mouseup') {
             this._fixFontAwesomeSelection();
-        }
-        let appliedCustomSelection = false;
-        if (selection.rangeCount && selection.getRangeAt(0)) {
-            appliedCustomSelection = this._handleSelectionInTable();
-            if (this.options.onCollaborativeSelectionChange) {
-                this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
-            }
-        }
-        if (!appliedCustomSelection) {
-            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
         }
     }
 
@@ -4134,20 +4153,7 @@ export class OdooEditor extends EventTarget {
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
-
-            // DOMPurify.sanitize remove an attribute that contains a ">" for
-            // security reasons. Make an exception for `data-behavior-props`.
-            // Encoding it hides the character ">".
-            for (const el of fragment.querySelectorAll('[data-behavior-props]')) {
-                el.setAttribute('data-behavior-props', encodeURIComponent(el.getAttribute('data-behavior-props')));
-            }
-
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
-
-            for (const el of fragment.querySelectorAll('[data-behavior-props]')) {
-                el.setAttribute('data-behavior-props', decodeURIComponent(el.getAttribute('data-behavior-props')));
-            }
-
             if (fragment.hasChildNodes()) {
                 this.execCommand('insert', fragment);
             }

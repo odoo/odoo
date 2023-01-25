@@ -628,7 +628,7 @@ class AccountReconcileModel(models.Model):
             or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
             or (self.match_partner and not partner)
             or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
-            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
         ):
             return False
 
@@ -810,7 +810,13 @@ class AccountReconcileModel(models.Model):
 
         for partner_mapping in self.partner_mapping_line_ids:
             match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
-            match_narration = re.match(partner_mapping.narration_regex, tools.html2plaintext(st_line.narration or '').rstrip()) if partner_mapping.narration_regex else True
+            match_narration = True
+            if partner_mapping.narration_regex:
+                match_narration = re.match(
+                    partner_mapping.narration_regex,
+                    tools.html2plaintext(st_line.narration or '').rstrip(),
+                    flags=re.DOTALL, # Ignore '/n' set by online sync.
+                )
 
             if match_payment_ref and match_narration:
                 return partner_mapping.partner_id

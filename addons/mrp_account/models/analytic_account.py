@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class AccountAnalyticAccount(models.Model):
@@ -36,7 +36,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "mrp.production",
             "domain": [['id', 'in', self.production_ids.ids]],
-            "name": "Manufacturing Orders",
+            "name": _("Manufacturing Orders"),
             'view_mode': 'tree,form',
             "context": {'default_analytic_account_id': self.id},
         }
@@ -51,7 +51,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "mrp.bom",
             "domain": [['id', 'in', self.bom_ids.ids]],
-            "name": "Bills of Materials",
+            "name": _("Bills of Materials"),
             'view_mode': 'tree,form',
             "context": {'default_analytic_account_id': self.id},
         }
@@ -67,7 +67,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "mrp.workorder",
             "domain": [['id', 'in', (self.workcenter_ids.order_ids | self.production_ids.workorder_ids).ids]],
             "context": {"create": False},
-            "name": "Work Orders",
+            "name": _("Work Orders"),
             'view_mode': 'tree',
         }
         return result

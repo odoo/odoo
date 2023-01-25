@@ -3766,6 +3766,13 @@ msgid "Invalid domain right operand %s"
 msgstr "Invalid domain right operand %s"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
 msgid "Inventoried Quantity"
 msgstr "Inventeeritud kogus"
@@ -4389,7 +4396,7 @@ msgstr "Asukoht: Kui saabub asukohta"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 #, python-format
 msgid "Locations"
-msgstr "Asukohad"
+msgstr "Lao asukohad"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -4761,7 +4768,7 @@ msgstr "Siirded"
 #: model:ir.actions.act_window,name:stock.stock_move_line_action
 #: model:ir.ui.menu,name:stock.stock_move_line_menu
 msgid "Moves History"
-msgstr "Laosiirded"
+msgstr "Siirete ajalugu"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__group_id
@@ -7499,7 +7506,7 @@ msgstr "Lühinimi lao tuvastamiseks"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_allocation
 msgid "Show Allocation"
-msgstr ""
+msgstr "Näita jaotust"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_check_availability
@@ -9662,8 +9669,8 @@ msgstr "Negatiivseid koguseid ei saa sisestada."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Sa saad kustutada ainult mustand staatuses siirdeid."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10205,4 +10212,11 @@ msgstr "{{ (object.name or '').asenda('/','_') }}"
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
 msgstr ""

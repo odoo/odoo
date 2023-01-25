@@ -11,7 +11,6 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Martin Trigaux, 2022
 # Marek Pontus, 2022
-# Leaanika Randmets, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -20,6 +19,7 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
+# Leaanika Randmets, 2023
 # Anna, 2023
 # 
 msgid ""
@@ -464,6 +464,8 @@ msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
 "                                    If you believe that it is an error, please contact the website administrator."
 msgstr ""
+"<strong>Sobivat makseviisi ei leitud.</strong><br/>\n"
+"                                    Kui arvate, et tegemist on veaga, võtke ühendust veebilehe administraatoriga."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -672,6 +674,7 @@ msgid ""
 "Add a reference price per UoM on products (i.e $/kg), in addition to the "
 "sale price"
 msgstr ""
+"Lisa toodetele lisaks müügihinnale ka võrdlushind UoM kohta (st €/kg)."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1687,7 +1690,7 @@ msgstr "Easypost"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
-msgstr ""
+msgstr "E-pood: ostukorvi taastamine"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -1698,7 +1701,7 @@ msgstr "Muuda"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "Edit in Website Builder"
-msgstr ""
+msgstr "Muuda veebilehe redaktoris"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1744,7 +1747,7 @@ msgstr "Error ! You cannot create recursive categories."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Extra Images"
-msgstr ""
+msgstr "Lisapildid"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info_option
@@ -1766,7 +1769,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Extra Step Option"
-msgstr ""
+msgstr "Lisaastme valik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
@@ -1884,7 +1887,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Hours."
-msgstr ""
+msgstr "tundi."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -2226,7 +2229,7 @@ msgstr "Mondial Relay"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_delivery_mondialrelay
 msgid "Mondial Relay Connector"
-msgstr ""
+msgstr "Mondial Relay ühendus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippets_options_web_editor
@@ -2290,26 +2293,26 @@ msgstr "Uus toode"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "Uus!"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Newest Arrivals"
-msgstr ""
+msgstr "Just saabunud"
 
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
-msgstr ""
+msgstr "Uued tooted"
 
 #. module: website_sale
 #. odoo-javascript
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #, python-format
 msgid "Next (Right-Arrow)"
-msgstr ""
+msgstr "Järgmine (paremnool)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -2404,7 +2407,7 @@ msgstr ""
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "ratastel"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2416,7 +2419,7 @@ msgstr "Kui te olete vajutanud <b>Salvesta</b>, on teie toode uuendatud."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "One product might have different attributes (size, color, ...)"
-msgstr ""
+msgstr "Ühel tootel võib olla palju erinevaid atribuute (suurus, värv, ...)"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_report_sales
@@ -2552,7 +2555,7 @@ msgstr "Telllimused/Päev"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Läbimüüdud"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -2646,7 +2649,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Portrait (4/5)"
-msgstr ""
+msgstr "Portree (4/5)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2663,7 +2666,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_image_viewer.xml:0
 #, python-format
 msgid "Previous (Left-Arrow)"
-msgstr ""
+msgstr "Eelmine (vasak nool)"
 
 #. module: website_sale
 #. odoo-python
@@ -2701,25 +2704,25 @@ msgstr "Hind"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - High to Low"
-msgstr ""
+msgstr "Hind - kallimast odavamaks"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - Low to High"
-msgstr ""
+msgstr "Hind - kallimast odavamaks"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Price Filter"
-msgstr ""
+msgstr "Hinna filter"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_price
 msgid "Price Per Unit"
-msgstr ""
+msgstr "Hind ühiku kohta"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -2742,7 +2745,7 @@ msgstr "Hinnakirjad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Prices displayed on your eCommerce"
-msgstr ""
+msgstr "Hindu kuvatakse teie e-poes"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2758,7 +2761,7 @@ msgstr "Lisage tellimus tööse, kui makse on kätte saadud."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Prod. Desc."
-msgstr ""
+msgstr "Toote kirjeldus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2779,7 +2782,7 @@ msgstr "Toode"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr ""
+msgstr "Toote tarvikud"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
@@ -2789,7 +2792,7 @@ msgstr "Toote atribuudid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
 msgid "Product Carousel"
-msgstr ""
+msgstr "Tootekarussell"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2822,7 +2825,7 @@ msgstr "Toote nimi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Product Page"
-msgstr ""
+msgstr "Tooteleht"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
@@ -2832,7 +2835,7 @@ msgstr "Toote lehe lisaväljad"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_grid_columns
 msgid "Product Page Grid Columns"
-msgstr ""
+msgstr "Tootelehe veergude ruudustik"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__product_page_image_layout
@@ -2852,7 +2855,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_product_pages_list
 msgid "Product Pages"
-msgstr ""
+msgstr "Tootelehed"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_tree_view
@@ -2862,12 +2865,12 @@ msgstr "Toote avalikud kategooriad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Reference Price"
-msgstr ""
+msgstr "Toote võrdlushind"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_tag
 msgid "Product Tag"
-msgstr ""
+msgstr "Tootesilt"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_public_tags_action
@@ -2916,14 +2919,14 @@ msgstr "Toote vaadete ajalugu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Product names"
-msgstr ""
+msgstr "Toodete nimed"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Product not found"
-msgstr ""
+msgstr "Toodet ei leitud"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
@@ -2947,12 +2950,12 @@ msgstr "Tooted"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products List"
-msgstr ""
+msgstr "Toodete nimekiri"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Products Page"
-msgstr ""
+msgstr "Toodete leht"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
@@ -2967,7 +2970,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 msgid "Products Ribbon"
-msgstr ""
+msgstr "Toodete rida"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2977,7 +2980,7 @@ msgstr "Toote vaated"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Promo Code"
-msgstr ""
+msgstr "Sooduskood"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3104,19 +3107,19 @@ msgstr "Telli uuesti"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_enabled_portal_reorder_button
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_portal_reorder_button
 msgid "Re-order From Portal"
-msgstr ""
+msgstr "Telli uuesti"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
-msgstr ""
+msgstr "Viimati müüdud tooted"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
-msgstr ""
+msgstr "Viimati vaadatud tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3178,7 +3181,7 @@ msgstr "Avalikustage ainult see veebileht"
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "Resume Order"
-msgstr ""
+msgstr "Jätka tellimust"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -3231,7 +3234,7 @@ msgstr "Müük"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Analysis"
-msgstr ""
+msgstr "Müügianalüüs"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3247,7 +3250,7 @@ msgstr "Müük"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_pivot_website
 msgid "Sales Analysis"
-msgstr "Müükide analüüs"
+msgstr "Müügianalüüs"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_sale_report
@@ -3342,7 +3345,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Select Quantity"
-msgstr ""
+msgstr "Vali kogus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -3357,7 +3360,7 @@ msgstr "Valitav"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Send After"
-msgstr ""
+msgstr "Saada pärast"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
@@ -3455,7 +3458,7 @@ msgstr "Pood - Kassa"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Checkout Process"
-msgstr ""
+msgstr "Pood - Kassa"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3465,12 +3468,12 @@ msgstr "Pood - Kinnitatud"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Products"
-msgstr ""
+msgstr "Pood - Tooted"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "Shop - Select Payment Provider"
-msgstr ""
+msgstr "Pood - Vali makseteenuse pakkuja"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
@@ -3490,7 +3493,7 @@ msgstr "Näidate tühja korvi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show b2b Fields"
-msgstr ""
+msgstr "Näita B2B välju"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3505,14 +3508,14 @@ msgstr "Logi sisse"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sign in/up at checkout"
-msgstr ""
+msgstr "Sisse logimine/Registreerimine kassas"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
-msgstr ""
+msgstr "Istu mugavalt"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3552,7 +3555,7 @@ msgstr "Müüdud"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
-msgstr ""
+msgstr "Välja müüdud"
 
 #. module: website_sale
 #. odoo-python
@@ -3577,7 +3580,7 @@ msgstr "Allikad"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid "Specify unit"
-msgstr ""
+msgstr "Täpsusta ühik"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3602,7 +3605,7 @@ msgstr "Staatus"
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__stay
 msgid "Stay on Product Page"
-msgstr ""
+msgstr "Jää tootelehele"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3637,7 +3640,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Suggested Accessories"
-msgstr ""
+msgstr "Soovitatud lisavalikud"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -3647,7 +3650,7 @@ msgstr "Soovitatud lisavalikud:"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Suggested accessories in the eCommerce cart"
-msgstr ""
+msgstr "Soovitatud lisavalikud ostukorvis"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3667,7 +3670,7 @@ msgstr "Sildid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tax Indication"
-msgstr ""
+msgstr "Maksu näitajad"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -3682,7 +3685,7 @@ msgstr "Tekst"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
 msgid "Text to show instead of price"
-msgstr ""
+msgstr "Kuvatav tekst hinna asemel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3886,7 +3889,7 @@ msgstr "Ülemine"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Top Bar"
-msgstr ""
+msgstr "Ülemine rida"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3999,7 +4002,7 @@ msgstr "Variatsioonid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Vertical (2/3)"
-msgstr ""
+msgstr "Vertikaalne (2/3)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
@@ -4016,12 +4019,12 @@ msgstr "Vaata korvi ("
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
-msgstr ""
+msgstr "Vaata toodet"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_view_detail
 msgid "View product"
-msgstr ""
+msgstr "Vaata toodet"
 
 #. module: website_sale
 #. odoo-javascript
@@ -4313,7 +4316,7 @@ msgstr "Postiindeks"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 msgid "border-primary"
-msgstr ""
+msgstr "border-primary"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -4328,12 +4331,12 @@ msgstr "sisesta kood"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_add
 msgid "e.g. Cheese Burger"
-msgstr ""
+msgstr "nt. Juustuburger"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "e.g. lamp,bin"
-msgstr ""
+msgstr "nt. lamp, prügikast"
 
 #. module: website_sale
 #. odoo-python
@@ -4354,7 +4357,7 @@ msgstr "E-kaubanduse kategooriad"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "E-poe filtri nähtavus"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -4364,7 +4367,7 @@ msgstr "E-kaubanduse müügid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "eCommerce Shop"
-msgstr ""
+msgstr "E-pood"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_cron_send_availability_email_ir_actions_server

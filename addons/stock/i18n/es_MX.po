@@ -1880,7 +1880,10 @@ msgid "Count Picking Waiting"
 msgstr "Número de recolecciones en espera"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.report,name:stock.action_report_inventory
+#, python-format
 msgid "Count Sheet"
 msgstr "Hoja de conteos"
 
@@ -3845,6 +3848,13 @@ msgstr "Dominio inválido para el operador %s"
 #, python-format
 msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operando derecho %s"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"Invalid rule's configuration, the following rule causes an endless loop: %s"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -7509,8 +7519,11 @@ msgstr ""
 "Se cambiará la ubicación de origen para este movimiento a %s"
 
 #. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/views/list/inventory_report_list_controller.js:0
 #: model:ir.actions.server,name:stock.action_view_set_quants_tree
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+#, python-format
 msgid "Set"
 msgstr "Establecer"
 
@@ -9870,8 +9883,8 @@ msgstr "No puede ingresar cantidades negativas."
 #. odoo-python
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
-msgid "You can only delete draft moves."
-msgstr "Solo puede eliminar movimientos en estado de borrador."
+msgid "You can only delete draft or cancelled moves."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10440,3 +10453,10 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Orden de entrega (Ref {{ object.name or 'n/a' "
 "}})"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""

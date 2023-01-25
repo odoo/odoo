@@ -46,3 +46,4 @@ class BaseLanguageImport(models.TransientModel):
                   ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
                 (self.filename, tools.ustr(e))
             )
+        return True

@@ -1,20 +1,21 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
 import { useInputField } from "../input_field_hook";
+import { parseInteger } from "../parsers";
 import { standardFieldProps } from "../standard_field_props";
 import { TranslationButton } from "../translation_button";
-import { useDynamicPlaceholder } from "../dynamicplaceholder_hook";
-import { parseInteger } from '../parsers';
 
-import { Component, useEffect, onMounted, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
     setup() {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
+        this.divRef = useRef("div");
         this.textareaRef = useRef("textarea");
         useInputField({ getValue: () => this.props.value || "", refName: "textarea" });
 
@@ -30,34 +31,33 @@ export class TextField extends Component {
         if (ev.key === this.dynamicPlaceholder.TRIGGER_KEY && ev.target === this.textareaRef.el) {
             const baseModel = this.props.record.data.mailing_model_real;
             if (baseModel) {
-                await this.dynamicPlaceholder.open(
-                    this.textareaRef.el,
-                    baseModel,
-                    {
-                        validateCallback: this.onDynamicPlaceholderValidate.bind(this),
-                        closeCallback: this.onDynamicPlaceholderClose.bind(this)
-                    }
-                );
+                await this.dynamicPlaceholder.open(this.textareaRef.el, baseModel, {
+                    validateCallback: this.onDynamicPlaceholderValidate.bind(this),
+                    closeCallback: this.onDynamicPlaceholderClose.bind(this),
+                });
             }
         }
     }
     onMounted() {
         if (this.props.dynamicPlaceholder) {
             this.keydownListenerCallback = this.onKeydownListener.bind(this);
-            document.addEventListener('keydown', this.keydownListenerCallback);
+            document.addEventListener("keydown", this.keydownListenerCallback);
         }
     }
     onWillUnmount() {
         if (this.props.dynamicPlaceholder) {
-            document.removeEventListener('keydown', this.keydownListenerCallback);
+            document.removeEventListener("keydown", this.keydownListenerCallback);
         }
     }
     onDynamicPlaceholderValidate(chain, defaultValue) {
         if (chain) {
             const triggerKeyReplaceRegex = new RegExp(`${this.dynamicPlaceholder.TRIGGER_KEY}$`);
-            let dynamicPlaceholder = "{{object." + chain.join('.');
-            dynamicPlaceholder += defaultValue && defaultValue !== '' ? ` or '''${defaultValue}'''}}` : '}}';
-            this.props.update(this.textareaRef.el.value.replace(triggerKeyReplaceRegex, '') + dynamicPlaceholder);
+            let dynamicPlaceholder = "{{object." + chain.join(".");
+            dynamicPlaceholder +=
+                defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
+            this.props.update(
+                this.textareaRef.el.value.replace(triggerKeyReplaceRegex, "") + dynamicPlaceholder
+            );
         }
     }
     onDynamicPlaceholderClose() {
@@ -95,6 +95,7 @@ export class TextField extends Component {
         textarea.style.height = "auto";
         const height = Math.max(this.minimumHeight, textarea.scrollHeight + heightOffset);
         Object.assign(textarea.style, previousStyle, { height: `${height}px` });
+        this.divRef.el.style.height = `${height}px`;
     }
 
     onInput() {
@@ -114,7 +115,7 @@ TextField.props = {
     ...standardFieldProps,
     isTranslatable: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
-    dynamicPlaceholder: { type: Boolean, optional: true},
+    dynamicPlaceholder: { type: Boolean, optional: true },
     rowCount: { type: Number, optional: true },
 };
 

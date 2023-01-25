@@ -146,9 +146,12 @@ class AccountFrFec(models.TransientModel):
 
         rows_to_write = [header]
         # INITIAL BALANCE
-        unaffected_earnings_xml_ref = 'equity_unaffected'
+        unaffected_earnings_account = self.env['account.account'].search([
+            ('account_type', '=', 'equity_unaffected'),
+            ('company_id', '=', company.id)
+        ], limit=1)
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
-        if unaffected_earnings_xml_ref:
+        if unaffected_earnings_account:
             #compute the benefit/loss of last year to add in the initial balance of the current year earnings account
             unaffected_earnings_results = self._do_query_unaffected_earnings()
             unaffected_earnings_line = False
@@ -234,7 +237,8 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('account_type', '=', 'equity_unaffected')], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([('account_type', '=', 'equity_unaffected'),
+                                                                              ('company_id', '=', company.id)], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name

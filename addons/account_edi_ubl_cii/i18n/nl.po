@@ -6,7 +6,7 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,7 +91,7 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency ?"
 msgstr ""
-"Kan valuta niet ophalen: %s. Heeft je de optie voor meerdere valuta's "
+"Kan valuta niet ophalen: %s. Heb je de optie voor meerdere valuta's "
 "ingeschakeld en de valuta geactiveerd?"
 
 #. module: account_edi_ubl_cii
@@ -108,7 +108,7 @@ msgstr "Kon de %s niet ophalen."
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr "Kan de BTW: %s %% voor regel '%s' niet ophalen."
+msgstr "Kan de btw: %s %% voor regel '%s' niet ophalen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -151,19 +151,19 @@ msgstr "EN 16931"
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr "Elke factuurregel heeft één en slechts één BTW."
+msgstr "Elke factuurregel heeft één en slechts één btw."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr "Elke factuurregel moet ten minste één BTW bevatten."
+msgstr "Elke factuurregel moet ten minste één btw bevatten."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_mail_template
 msgid "Email Templates"
-msgstr "E-mail-sjablonen"
+msgstr "E-mailsjablonen"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -245,28 +245,28 @@ msgstr "Odoo"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, low"
-msgstr "Afzet BTW, verlaagd tarief, laag"
+msgstr "Output btw, verlaagd tarief, laag"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, middle"
-msgstr "Afzet BTW, verlaagd tarief, midden"
+msgstr "Output btw, verlaagd tarief, midden"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, raw fish"
-msgstr "Afzet BTW, verlaagd tarief, rauwe vis"
+msgstr "Output btw, verlaagd tarief, rauwe vis"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, regular rate"
-msgstr "Afzet BTW, normaal tarief"
+msgstr "Output btw, normaal tarief"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -286,7 +286,7 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
-"Het BTW-nummer van de leverancier lijkt niet geldig. Het moet de vorm "
+"Het btw-nummer van de leverancier lijkt niet geldig. Het moet de vorm "
 "hebben: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
@@ -338,7 +338,7 @@ msgid ""
 "been reverted."
 msgstr ""
 "De factuur is omgezet in een creditfactuur en de hoeveelheden zijn "
-"teruggestort."
+"teruggekeerd."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -402,8 +402,8 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
 msgstr ""
-"Je moet ten minste één BTW per factuurregel opnemen. [BR-CO-04]-Elke "
-"factuurregel (BG-25) wordt gecategoriseerd met een BTW-categoriecode voor "
+"Je moet ten minste één btw per factuurregel opnemen. [BR-CO-04]-Elke "
+"factuurregel (BG-25) wordt gecategoriseerd met een btw-categoriecode voor "
 "gefactureerd artikel (BT-151)."
 
 #. module: account_edi_ubl_cii
@@ -422,7 +422,7 @@ msgstr "factur-x.xml"
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_line_facturx_export_22
 msgid "false"
-msgstr "onwaar"
+msgstr "false"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
