@@ -730,60 +730,6 @@ QUnit.module("mail", (hooks) => {
         );
 
         QUnit.skipRefactoring(
-            "[technical] message list with a full page of empty messages should show load more if there are other messages",
-            async function (assert) {
-                // Technical assumptions :
-                // - /mail/channel/messages fetching exactly 30 messages,
-                // - empty messages not being displayed
-                // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                for (let i = 0; i <= 30; i++) {
-                    pyEnv["mail.message"].create({
-                        body: "not empty",
-                        model: "mail.channel",
-                        res_id: mailChannelId1,
-                    });
-                }
-                for (let i = 0; i <= 30; i++) {
-                    pyEnv["mail.message"].create({
-                        model: "mail.channel",
-                        res_id: mailChannelId1,
-                    });
-                }
-                const { afterEvent, openDiscuss } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                });
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: openDiscuss,
-                    message: "should wait until thread becomes loaded with messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            threadViewer.thread.model === "mail.channel" &&
-                            threadViewer.thread.id === mailChannelId1
-                        );
-                    },
-                });
-                assert.containsNone(
-                    document.body,
-                    ".o-mail-message",
-                    "No message should be shown as all 30 first messages are empty"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_MessageListView_loadMore",
-                    "Load more button should be shown as there are more messages to show"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]",
             async function (assert) {
                 // The goal of removing the focus is to ensure the thread is not marked as seen automatically.

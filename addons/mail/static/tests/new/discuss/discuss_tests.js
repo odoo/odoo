@@ -134,7 +134,6 @@ QUnit.test("can create a new channel", async (assert) => {
         "/mail/channel/members",
         "/mail/channel/messages",
         "/mail/channel/set_last_seen_message",
-        "/mail/channel/messages",
     ]);
 });
 

@@ -414,3 +414,30 @@ QUnit.test(
         assert.containsNone(target, ".o-mail-message");
     }
 );
+
+QUnit.test(
+    "message list with a full page of empty messages should load more messages until there are some non-empty",
+    async function (assert) {
+        // Technical assumptions :
+        // - /mail/channel/messages fetching exactly 30 messages,
+        // - empty messages not being displayed
+        // - auto-load more being triggered on scroll, not automatically when the 30 first messages are empty
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        for (let i = 0; i < 50; i++) {
+            pyEnv["mail.message"].create({
+                body: "not empty",
+                model: "mail.channel",
+                res_id: channelId,
+            });
+        }
+        for (let i = 0; i < 50; i++) {
+            pyEnv["mail.message"].create({ model: "mail.channel", res_id: channelId });
+        }
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        // initial load: +30 empty ; (auto) load more: +20 empty +10 non-empty
+        assert.containsN(target, ".o-mail-message", 10);
+        assert.containsOnce(target, "button:contains(Load More)"); // still 40 non-empty
+    }
+);

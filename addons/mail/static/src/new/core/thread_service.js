@@ -207,6 +207,8 @@ export class ThreadService {
             loadMore:
                 min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
                     ? true
+                    : min === undefined && fetchedMsgs.length !== FETCH_MSG_LIMIT
+                    ? false
                     : thread.loadMore,
         });
     }
