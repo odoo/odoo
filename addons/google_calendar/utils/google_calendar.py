@@ -9,6 +9,7 @@ import logging
 from odoo import fields
 from odoo.addons.google_calendar.utils.google_event import GoogleEvent
 from odoo.addons.google_account.models.google_service import TIMEOUT
+from datetime import datetime
 
 
 _logger = logging.getLogger(__name__)
@@ -48,6 +49,9 @@ class GoogleCalendarService():
             params['timeMin'] = lower_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
             params['timeMax'] = upper_bound.isoformat() + 'Z'  # Z = UTC (RFC3339)
         try:
+            ## add params SingleEvent for get All Recurring Events ##
+            params['singleEvents'] = True
+            ## --------------------------------------------------- ##
             status, data, time = self.google_service._do_request(url, params, headers, method='GET', timeout=timeout)
             tmp_dict_data = data.copy()
             tmp_dict_data['items'] = []

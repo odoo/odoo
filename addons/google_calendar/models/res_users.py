@@ -66,7 +66,9 @@ class User(models.Model):
         send_updates = not full_sync
         events.clear_type_ambiguity(self.env)
         recurrences = events.filter(lambda e: e.is_recurrence())
-        synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
+        ## Disable Recurrence from Google to Odoo ##
+        # synced_recurrences = self.env['calendar.recurrence']._sync_google2odoo(recurrences)
+        synced_recurrences = self.env['calendar.recurrence']
         synced_events = self.env['calendar.event']._sync_google2odoo(events - recurrences, default_reminders=default_reminders)
 
         # Odoo -> Google
