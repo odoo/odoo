@@ -1,14 +1,13 @@
 odoo.define('sale.tour_sale_signature', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 // This tour relies on data created on the Python test.
-tour.register('sale_signature', {
+registry.category("web_tour.tours").add('sale_signature', {
     test: true,
     url: '/my/quotes',
-},
-[
+    steps: [
     {
         content: "open the test SO",
         trigger: 'a:containsExact("test SO")',
@@ -47,5 +46,5 @@ tour.register('sale_signature', {
         trigger: 'nav',
         run: function() {},
     }
-]);
+]});
 });

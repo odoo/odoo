@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
-tour.register(
+registry.category("web_tour.tours").add(
     "mail/static/tests/tours/discuss_public_tour.js",
     {
         test: true,
-    },
-    [
+        steps: [
         {
             trigger: ".o_DiscussPublicView",
             extraTrigger: ".o_ThreadView",
@@ -38,4 +37,4 @@ tour.register(
             trigger: ".o_mail_channel_public_modules_loaded",
         },
     ]
-);
+});

@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import { getPriceListChecksSteps } from 'website_event_booth_sale.tour.WebsiteEventBoothSaleTourMethods';
 
-tour.register('event_booth_sale_pricelists_different_currencies', {
+registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_currencies', {
     test: true,
     url: '/event',
-}, [
+    steps: [
     // Init: registering the booth
     {
         content: 'Open "Test Event Booths" event',
@@ -75,4 +75,4 @@ tour.register('event_booth_sale_pricelists_different_currencies', {
         priceCart: "990.00",
         priceBeforeDiscount: "1,000.00",
     }),
-]);
+]});

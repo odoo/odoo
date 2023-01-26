@@ -1,14 +1,13 @@
 odoo.define('test_website_modules.tour.configurator_flow', function (require) {
 'use strict';
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const wTourUtils = require('website.tour_utils');
 
-tour.register('configurator_flow', {
+registry.category("web_tour.tours").add('configurator_flow', {
     test: true,
     url: '/web#action=website.action_website_configuration',
-},
-[
+    steps: [
     {
         content: "click on create new website",
         trigger: 'button[name="action_website_create_new"]',
@@ -101,5 +100,5 @@ tour.register('configurator_flow', {
             }
         },
     },
-]);
+]});
 });

@@ -1,12 +1,13 @@
 odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     "use strict";
 
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('mass_mailing_editor_tour', {
+    registry.category("web_tour.tours").add('mass_mailing_editor_tour', {
         url: '/web',
         test: true,
-    }, [tour.stepUtils.showAppsMenuItem(), {
+        steps: [stepUtils.showAppsMenuItem(), {
         trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
     }, {
         trigger: 'button.o_list_button_add',
@@ -47,9 +48,9 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
     }, {
         trigger: '.o_form_view', // blur previous input
     },
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
     {
         trigger: 'iframe .o_editable',
         run: () => {},
-    }]);
+    }]});
 });

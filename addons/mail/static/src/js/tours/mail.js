@@ -2,15 +2,14 @@
 
 import { _t } from "web.core";
 import { Markup } from "web.utils";
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
-tour.register(
+registry.category("web_tour.tours").add(
     "mail_tour",
     {
         url: "/web#action=mail.action_discuss",
         sequence: 80,
-    },
-    [
+        steps: [
         {
             trigger: ".o_DiscussSidebarView_categoryChannel .o_DiscussSidebarCategory_commandAdd",
             content: Markup(
@@ -86,4 +85,4 @@ tour.register(
             position: "bottom",
         },
     ]
-);
+});

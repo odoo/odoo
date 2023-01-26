@@ -2,13 +2,15 @@
 
 import { _t } from 'web.core';
 import { Markup } from 'web.utils';
-import tour from 'web_tour.tour';
 
-tour.register('crm_tour', {
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
+
+registry.category("web_tour.tours").add('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
     sequence: 10,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: Markup(_t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.')),
     position: 'bottom',
@@ -87,4 +89,4 @@ tour.register('crm_tour', {
     run: function (actions) {
         actions.auto(".breadcrumb-item:not(.active):last");
     }
-}]);
+}]});

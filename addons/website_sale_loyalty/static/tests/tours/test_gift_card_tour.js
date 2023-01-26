@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import tourUtils from 'website_sale.tour_utils';
 
-tour.register('shop_sale_gift_card', {
+registry.category("web_tour.tours").add('shop_sale_gift_card', {
     test: true,
-    url: '/shop?search=Small%20Drawer'
-},
-    [
+    url: '/shop?search=Small%20Drawer',
+    steps: [
         // Add a small drawer to the order (50$)
         {
             content: 'select Small Drawer',
@@ -85,4 +84,4 @@ tour.register('shop_sale_gift_card', {
             run: function () {}, // it's a check
         },
     ],
-);
+});

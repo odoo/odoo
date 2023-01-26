@@ -6,7 +6,7 @@ import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreen
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { PartnerListScreen } from "@point_of_sale/../tests/tours/helpers/PartnerListScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 //#region EWalletProgramTour1
 
@@ -31,7 +31,7 @@ ProductScreen.exec.addOrderline("Top-up eWallet", "1", "10");
 PosLoyalty.check.orderTotalIs("10.00");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
-Tour.register("EWalletProgramTour1", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("EWalletProgramTour1", { test: true, url: "/pos/web", steps: getSteps() });
 
 //#endregion
 
@@ -100,6 +100,6 @@ PosLoyalty.do.clickEWalletButton(getEWalletText("Refund"));
 PosLoyalty.check.orderTotalIs("0.00");
 PosLoyalty.exec.finalizeOrder("Cash", "0");
 
-Tour.register("EWalletProgramTour2", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("EWalletProgramTour2", { test: true, url: "/pos/web", steps: getSteps() });
 
 //#endregion

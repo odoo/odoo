@@ -8,7 +8,7 @@ import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScr
 import { SplitBillScreen } from "@pos_restaurant/../tests/tours/helpers/SplitBillScreenTourMethods";
 import { BillScreen } from "@pos_restaurant/../tests/tours/helpers/BillScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // signal to start generating steps
 // when finished, steps can be taken from getSteps
@@ -57,4 +57,4 @@ NumberPopup.check.inputShownIs("5");
 NumberPopup.do.clickConfirm();
 ProductScreen.check.guestNumberIs("5");
 
-Tour.register("ControlButtonsTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("ControlButtonsTour", { test: true, url: "/pos/ui", steps: getSteps() });

@@ -3,7 +3,7 @@
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // signal to start generating steps
 // when finished, steps can be taken from getSteps
@@ -129,4 +129,4 @@ TextAreaPopup.do.inputText("Test customer note");
 TextAreaPopup.do.clickConfirm();
 ProductScreen.check.orderlineHasCustomerNote("Desk Organizer", "1", "Test customer note");
 
-Tour.register("ProductScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("ProductScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

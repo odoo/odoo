@@ -6,13 +6,15 @@ var config = require('web.config');
 var local_storage = require('web.local_storage');
 var mixins = require('web.mixins');
 var utils = require('web_tour.utils');
-var TourStepUtils = require('web_tour.TourStepUtils');
 var RunningTourActionHelper = require('web_tour.RunningTourActionHelper');
 var ServicesMixin = require('web.ServicesMixin');
 var session = require('web.session');
 var Tip = require('web_tour.Tip');
 const {Markup} = require('web.utils');
 const { config: transitionConfig } = require("@web/core/transition");
+const { registry } = require("@web/core/registry");
+
+const tourRegistry = registry.category("web_tour.tours");
 
 var _t = core._t;
 const { markup } = require("@odoo/owl");
@@ -28,7 +30,7 @@ var do_before_unload = utils.do_before_unload;
 var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
-    init: function(parent, consumed_tours, disabled = false) {
+    init: function(parent, consumed_tours, disabled = false, toursFromRegistry = true) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
 
@@ -50,6 +52,16 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
+
+        if (toursFromRegistry) {
+            const register = (name, params) => {
+                this.register(name, params, params.steps);
+            };
+            for (let [name, params] of tourRegistry.getEntries()) {
+                register(name, params);
+            }
+            tourRegistry.addEventListener("UPDATE", ev => register(ev.detail.key, ev.detail.value));
+        }
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
     },
     /**
@@ -455,7 +467,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
             let message = this.tours[tour_name].rainbowManMessage;
             if (message) {
-                message = typeof message === 'function' ? message() : message;
+                message = typeof message === 'function' ? message(this) : message;
             } else {
                 message = markup(_t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>'));
             }
@@ -571,6 +583,5 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             }
         }
     },
-    stepUtils: new TourStepUtils(this)
 });
 });

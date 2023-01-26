@@ -4,7 +4,7 @@ import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 const getEWalletText = (suffix) => "eWallet" + (suffix !== "" ? ` ${suffix}` : "");
 
@@ -67,4 +67,4 @@ SelectionPopup.do.clickItem("ewallet_1");
 PosLoyalty.check.orderTotalIs("0.00");
 PosLoyalty.exec.finalizeOrder("Cash", "0");
 
-Tour.register("MultipleGiftWalletProgramsTour", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("MultipleGiftWalletProgramsTour", { test: true, url: "/pos/web", steps: getSteps() });

@@ -9,7 +9,7 @@ import { TipScreen } from "@pos_restaurant/../tests/tours/helpers/TipScreenTourM
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -122,4 +122,4 @@ PaymentScreen.do.clickPaymentMethod("Cash");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
 
-Tour.register("PosResTipScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("PosResTipScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

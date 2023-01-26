@@ -24,15 +24,16 @@ odoo.define('purchase.tour', function(require) {
 "use strict";
 
 var core = require('web.core');
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
 var _t = core._t;
 var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');
 
-tour.register('purchase_tour' , {
+registry.category("web_tour.tours").add('purchase_tour' , {
     url: "/web",
     sequence: 40,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
     content: _t("Let's try the Purchase app to manage the flow from purchase to reception and invoice control."),
     position: 'right',
@@ -96,7 +97,7 @@ tour.register('purchase_tour' , {
     position: "right",
     run: 'text 12.0'
 },
-...tour.stepUtils.statusbarButtonsSteps('Send by Email', _t("Send the request for quotation to your vendor."), ".o_statusbar_buttons button[name='action_rfq_send']"),
+...stepUtils.statusbarButtonsSteps('Send by Email', _t("Send the request for quotation to your vendor."), ".o_statusbar_buttons button[name='action_rfq_send']"),
 {
     trigger: ".modal-content",
     auto: true,
@@ -124,8 +125,8 @@ tour.register('purchase_tour' , {
     auto: true,
     trigger: ".o_purchase_order",
     run: 'click',
-}, ...tour.stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm your purchase.")),
+}, ...stepUtils.statusbarButtonsSteps('Confirm Order', _t("Confirm your purchase.")),
 ...new PurchaseAdditionalTourSteps()._get_purchase_stock_steps(),
-]);
+]});
 
 });

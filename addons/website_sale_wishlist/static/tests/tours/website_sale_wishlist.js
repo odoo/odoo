@@ -2,13 +2,12 @@ odoo.define('website_sale_wishlist.tour', function (require) {
 'use strict';
 
 var rpc = require('web.rpc');
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
-tour.register('shop_wishlist', {
+registry.category("web_tour.tours").add('shop_wishlist', {
     test: true,
     url: '/shop?search=Customizable Desk',
-},
-    [
+    steps: [
         {
             content: "click on add to wishlist",
             trigger: '.o_add_wishlist',
@@ -402,6 +401,6 @@ tour.register('shop_wishlist', {
             run: function () {},
         },
     ]
-);
+});
 
 });

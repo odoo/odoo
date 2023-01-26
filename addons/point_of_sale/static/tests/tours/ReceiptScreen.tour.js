@@ -5,7 +5,7 @@ import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScre
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -64,4 +64,4 @@ PaymentScreen.do.clickPaymentMethod("Bank");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.customerNoteIsThere("Test customer note");
 
-Tour.register("ReceiptScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("ReceiptScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

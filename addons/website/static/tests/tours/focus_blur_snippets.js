@@ -2,7 +2,7 @@ odoo.define('website.tour.focus_blur_snippets', function (require) {
 'use strict';
 
 const { loadJS } = require('@web/core/assets');
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 const blockIDToData = {
     parent: {
@@ -50,10 +50,10 @@ function clickAndCheck(blockID, expected) {
 
 window.focusBlurSnippetsResult = [];
 
-tour.register('focus_blur_snippets', {
+registry.category("web_tour.tours").add('focus_blur_snippets', {
     test: true,
     url: '/?enable_editor=1',
-}, [
+    steps: [
     {
         content: 'First load our custom JS options',
         trigger: '#oe_snippets.o_loaded',
@@ -78,5 +78,5 @@ tour.register('focus_blur_snippets', {
     ...clickAndCheck('child1', ['blur parent', 'focus parent', 'focus child1']),
     ...clickAndCheck('child2', ['blur parent', 'blur child1', 'focus parent', 'focus child2']),
     ...clickAndCheck('parent', ['blur parent', 'blur child2', 'focus parent']),
-]);
+]});
 });

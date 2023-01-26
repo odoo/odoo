@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
 const subcontractingPortalSteps = [{
     trigger: 'table > tbody > tr a:has(span:contains(WH/IN/00))',
@@ -15,7 +15,7 @@ const subcontractingPortalSteps = [{
     run: 'click',
 }];
 
-tour.register('subcontracting_portal_tour', {
+registry.category("web_tour.tours").add('subcontracting_portal_tour', {
     test: true,
     url: '/my/productions',
-}, subcontractingPortalSteps);
+    steps: subcontractingPortalSteps });

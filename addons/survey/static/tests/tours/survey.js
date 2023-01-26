@@ -1,12 +1,12 @@
 odoo.define('survey.tour_test_survey', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('test_survey', {
+registry.category("web_tour.tours").add('test_survey', {
     test: true,
     url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
-}, [
+    steps: [
     // Page-1
     {
         content: 'Click on Start',
@@ -65,6 +65,6 @@ tour.register('test_survey', {
         content: 'Thank you',
         trigger: 'h1:contains("Thank you!")',
     }
-]);
+]});
 
 });

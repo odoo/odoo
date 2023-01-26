@@ -1,13 +1,12 @@
 /** @odoo-module alias=website_sale_loyalty_giftcard.test **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import wsTourUtils from "website_sale.tour_utils";
 
-tour.register('shop_sale_loyalty_delivery', {
+registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         test: true,
         url: '/shop?search=Accoustic',
-    },
-    [
+        steps: [
         {
             content: "select Small Cabinet",
             trigger: '.oe_product a:contains("Acoustic Bloc Screens")',
@@ -58,4 +57,4 @@ tour.register('shop_sale_loyalty_delivery', {
             run: () => {} // this is a check
         },
     ]
-);
+});

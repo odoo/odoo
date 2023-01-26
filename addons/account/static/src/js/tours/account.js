@@ -3,15 +3,16 @@ odoo.define('account.tour', function(require) {
 
 var core = require('web.core');
 const {Markup} = require('web.utils');
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
 var _t = core._t;
 
-tour.register('account_tour', {
+registry.category("web_tour.tours").add('account_tour', {
     url: "/web",
     sequence: 60,
-}, [
-    ...tour.stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
+    steps: [
+    ...stepUtils.goToAppSteps('account.menu_finance', _t('Send invoices to your customers in no time with the <b>Invoicing app</b>.')),
     {
         trigger: "a.o_onboarding_step_action[data-method=action_open_base_onboarding_company]",
         content: _t("Start by checking your company's data."),
@@ -90,7 +91,7 @@ tour.register('account_tour', {
         position: "bottom",
         run: 'text 100',
     },
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
     {
         trigger: "button[name=action_post]",
         extra_trigger: "button.o_form_button_create",
@@ -136,6 +137,6 @@ tour.register('account_tour', {
         content: _t("The next step is payment registration."),
         run() {},
     }
-]);
+]});
 
 });

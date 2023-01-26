@@ -5,7 +5,7 @@ import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScre
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { TicketScreen} from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -67,7 +67,7 @@ PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
 PaymentScreen.check.validateButtonIsHighlighted(true);
 
-Tour.register("PaymentScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("PaymentScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -81,7 +81,7 @@ PaymentScreen.do.pressNumpad("1 0 0 0");
 PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
 
-Tour.register("PaymentScreenTour2", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("PaymentScreenTour2", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -107,7 +107,7 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
-Tour.register('PaymentScreenRoundingUp', { test: true, url: '/pos/ui' }, getSteps());
+registry.category("web_tour.tours").add('PaymentScreenRoundingUp', { test: true, url: '/pos/ui', steps: getSteps() });
 
 startSteps();
 
@@ -133,4 +133,4 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
-Tour.register('PaymentScreenRoundingDown', { test: true, url: '/pos/ui' }, getSteps());
+registry.category("web_tour.tours").add('PaymentScreenRoundingDown', { test: true, url: '/pos/ui', steps: getSteps() });

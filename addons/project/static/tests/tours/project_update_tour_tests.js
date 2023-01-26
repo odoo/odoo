@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 function openProjectUpdateAndReturnToTasks(view, viewClass) {
     const legacyViewClass = viewClass.replace("o_", "o_legacy_");
@@ -26,11 +27,10 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
     ];
 }
 
-tour.register('project_update_tour', {
+registry.category("web_tour.tours").add('project_update_tour', {
     test: true,
     url: '/web',
-},
-[tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     trigger: '.o-kanban-button-new',
@@ -177,4 +177,4 @@ tour.register('project_update_tour', {
     trigger: '.o_switch_view.o_activity',
     content: 'Open Activity View of Tasks',
 }, ...openProjectUpdateAndReturnToTasks("Activity", "o_activity_view"),
-]);
+]});

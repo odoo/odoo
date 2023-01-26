@@ -1,12 +1,12 @@
 odoo.define("website.tour.website_navbar_menu", function (require) {
 "use strict";
 
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
-tour.register("website_navbar_menu", {
+registry.category("web_tour.tours").add("website_navbar_menu", {
     test: true,
     url: "/",
-}, [
+    steps: [
     {
         content: "Ensure menus are in DOM",
         trigger: '#top_menu .nav-item a:contains("Test Tour Menu")',
@@ -16,5 +16,5 @@ tour.register("website_navbar_menu", {
         trigger: 'body:not(:has(.o_menu_loading))',
         run: function () {}, // it's a check
     }
-]);
+]});
 });

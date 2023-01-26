@@ -1,12 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('stock_notification_wishlist', {
+registry.category("web_tour.tours").add('stock_notification_wishlist', {
         test: true,
         url: '/shop/wishlist',
-    },
-    [
+    steps: [
         {
             content: "Click on 'Be notified when back in stock'",
             trigger: '#wishlist_stock_notification_message',
@@ -25,4 +24,4 @@ tour.register('stock_notification_wishlist', {
             trigger: '#stock_notification_success_message',
         },
     ],
-);
+});
