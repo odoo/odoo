@@ -1492,7 +1492,7 @@ const Wysiwyg = Widget.extend({
             }
         };
         if (!this.options.snippets) {
-            $toolbar.find('#justify, #table, #media-insert').remove();
+            $toolbar.find('#justify, #media-insert').remove();
         }
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
@@ -1869,7 +1869,6 @@ const Wysiwyg = Widget.extend({
             '#justifyFull',
             '#list',
             '#colorInputButtonGroup',
-            '#table',
             '#create-link',
             '#media-insert', // "Insert media" should be replaced with "Replace media".
         ].join(',')).toggleClass('d-none', isInMedia);
