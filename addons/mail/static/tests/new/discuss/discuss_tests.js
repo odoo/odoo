@@ -835,20 +835,20 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
     assert.hasClass($(target).find("button:contains(History)"), "o-active");
-    assert.containsOnce(target, '.o-mail-thread [data-empty-thread=""]');
+    assert.containsOnce(target, ".o-mail-thread:contains(No history messages)");
 
     await click("button:contains(Inbox)");
     assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
-    assert.containsNone(target, '.o-mail-thread [data-empty-thread=""]');
+    assert.containsNone(target, ".o-mail-thread:contains(Congratulations, your inbox is empty)");
     assert.containsN(target, ".o-mail-thread .o-mail-message", 2);
 
     await click('button[data-action="mark-all-read"]');
     assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
-    assert.containsOnce(target, '.o-mail-thread [data-empty-thread=""]');
+    assert.containsOnce(target, ".o-mail-thread:contains(Congratulations, your inbox is empty)");
 
     await click("button:contains(History)");
     assert.hasClass($(target).find("button:contains(History)"), "o-active");
-    assert.containsNone(target, '.o-mail-thread [data-empty-thread=""]');
+    assert.containsNone(target, ".o-mail-thread:contains(No history messages)");
     assert.containsN(target, ".o-mail-thread .o-mail-message", 2);
 });
 
@@ -883,7 +883,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_history");
         assert.hasClass($(target).find("button:contains(History)"), "o-active");
-        assert.containsOnce(target, '[data-empty-thread=""]');
+        assert.containsOnce(target, ".o-mail-thread:contains(No history messages)");
 
         await click("button:contains(Inbox)");
         assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
@@ -942,7 +942,10 @@ QUnit.test("post a simple message", async function (assert) {
         },
     });
     await openDiscuss(channelId);
-    assert.containsOnce(target, '[data-empty-thread=""]');
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(There are no messages in this conversation.)"
+    );
     assert.containsNone(target, ".o-mail-message");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "");
 

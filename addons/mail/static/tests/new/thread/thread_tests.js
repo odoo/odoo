@@ -398,7 +398,10 @@ QUnit.test("show empty placeholder when thread contains no message", async funct
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, '[data-empty-thread=""]');
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(There are no messages in this conversation.)"
+    );
     assert.containsNone(target, ".o-mail-message");
 });
 
@@ -410,7 +413,10 @@ QUnit.test(
         pyEnv["mail.message"].create({ model: "mail.channel", res_id: channelId });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, '[data-empty-thread=""]');
+        assert.containsOnce(
+            target,
+            ".o-mail-thread:contains(There are no messages in this conversation.)"
+        );
         assert.containsNone(target, ".o-mail-message");
     }
 );

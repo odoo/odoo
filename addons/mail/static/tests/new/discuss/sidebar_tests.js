@@ -183,7 +183,7 @@ QUnit.test("sidebar: inbox with counter", async function (assert) {
 
 QUnit.test("default thread rendering", async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(target, "button:contains(Inbox)");
@@ -191,37 +191,30 @@ QUnit.test("default thread rendering", async function (assert) {
     assert.containsOnce(target, "button:contains(History)");
     assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${channelId}"]`);
     assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
-    assert.containsOnce(target, '[data-empty-thread=""]');
-    assert.strictEqual(
-        $(target).find('[data-empty-thread=""]').text().trim(),
-        "Congratulations, your inbox is empty  New messages appear here."
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(Congratulations, your inbox is empty  New messages appear here.)"
     );
 
     await click("button:contains(Starred)");
     assert.hasClass($(target).find("button:contains(Starred)"), "o-active");
-    assert.containsOnce(target, '.o-mail-discuss-content [data-empty-thread=""]');
-    assert.strictEqual(
-        $(target).find('[data-empty-thread=""]').text().trim(),
-        "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox."
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(No starred messages  You can mark any message as 'starred', and it shows up in this mailbox.)"
     );
 
     await click("button:contains(History)");
     assert.hasClass($(target).find("button:contains(History)"), "o-active");
-    assert.containsOnce(target, '[data-empty-thread=""]');
-    assert.strictEqual(
-        $(target).find('[data-empty-thread=""]').text().trim(),
-        "No history messages  Messages marked as read will appear in the history."
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(No history messages  Messages marked as read will appear in the history.)"
     );
 
-    await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
-    assert.hasClass(
-        $(target).find(`.o-mail-category-item[data-channel-id="${channelId}"]`),
-        "o-active"
-    );
-    assert.containsOnce(target, '[data-empty-thread=""]');
-    assert.strictEqual(
-        $(target).find('[data-empty-thread=""]').text().trim(),
-        "There are no messages in this conversation."
+    await click(".o-mail-category-item:contains(General)");
+    assert.hasClass($(target).find(".o-mail-category-item:contains(General)"), "o-active");
+    assert.containsOnce(
+        target,
+        ".o-mail-thread:contains(There are no messages in this conversation.)"
     );
 });
 
