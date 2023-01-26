@@ -11,7 +11,7 @@ import { debounce } from '@bus/workers/websocket_worker_utils';
 /**
  * Type of action that can be sent from the client to the worker.
  *
- * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' } WorkerAction
+ * @typedef {'add_channel' | 'delete_channel' | 'force_update_channels' | 'initialize_connection' | 'send' | 'leave' | 'stop' | 'start' } WorkerAction
  */
 
 export const WEBSOCKET_CLOSE_CODES = Object.freeze({
@@ -34,7 +34,8 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.1';
+export const WORKER_VERSION = '1.0.2';
+const INITIAL_RECONNECT_DELAY = 1000;
 
 /**
  * This class regroups the logic necessary in order for the
@@ -49,7 +50,7 @@ export class WebsocketWorker {
         this.currentUID = null;
         this.isWaitingForNewUID = true;
         this.channelsByClient = new Map();
-        this.connectRetryDelay = 1000;
+        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.debugModeByClient = new Map();
         this.isDebug = false;
@@ -122,6 +123,8 @@ export class WebsocketWorker {
                 return this._sendToServer(data);
             case 'start':
                 return this._start();
+            case 'stop':
+                return this._stop();
             case 'leave':
                 return this._unregisterClient(client);
             case 'add_channel':
@@ -322,7 +325,7 @@ export class WebsocketWorker {
         this.messageWaitQueue.forEach(msg => this.websocket.send(msg));
         this.messageWaitQueue = [];
         this.broadcast(this.isReconnecting ? 'reconnect' : 'connect');
-        this.connectRetryDelay = 0;
+        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
     }
@@ -332,7 +335,7 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
-        this.connectRetryDelay = this.connectRetryDelay * 1.5 + 500 * Math.random();
+        this.connectRetryDelay = this.connectRetryDelay * 1.5 + 1000 * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
@@ -364,6 +367,18 @@ export class WebsocketWorker {
         this.websocket.addEventListener('error', this._onWebsocketError.bind(this));
         this.websocket.addEventListener('message', this._onWebsocketMessage.bind(this));
         this.websocket.addEventListener('close', this._onWebsocketClose.bind(this));
+    }
+
+    /**
+     * Stop the worker.
+     */
+    _stop() {
+        clearTimeout(this.connectTimeout);
+        this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
+        this.isReconnecting = false;
+        if (this.websocket) {
+            this.websocket.close();
+        }
     }
 
     /**
