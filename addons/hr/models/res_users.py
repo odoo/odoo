@@ -266,7 +266,9 @@ class User(models.Model):
                     employee_values.pop('image_1920')
                 with_image.write(employee_values)
             else:
-                self.env['hr.employee'].sudo().search(employee_domain).write(employee_values)
+                employees = self.env['hr.employee'].sudo().search(employee_domain)
+                if employees:
+                    employees.write(employee_values)
         return result
 
     @api.model
