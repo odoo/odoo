@@ -1,8 +1,14 @@
 /** @odoo-module **/
 
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/helpers/test_utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
@@ -31,11 +37,11 @@ QUnit.test("messaging menu should have topbar buttons", async function (assert) 
     assert.containsN(target, ".o-mail-messaging-menu-topbar button", 4);
     assert.containsOnce(target, "button:contains(All)");
     assert.containsOnce(target, "button:contains(Chat)");
-    assert.containsOnce(target, "button:contains(Channels)");
+    assert.containsOnce(target, "button:contains(Channel)");
     assert.containsOnce(target, "button:contains(New Message)");
     assert.hasClass($(target).find("button:contains(All)"), "fw-bolder");
     assert.doesNotHaveClass($(target).find("button:contains(Chat)"), "fw-bolder");
-    assert.doesNotHaveClass($(target).find("button:contains(Channels)"), "fw-bolder");
+    assert.doesNotHaveClass($(target).find("button:contains(Channel)"), "fw-bolder");
 });
 
 QUnit.test("counter is taking into account failure notification", async function (assert) {
@@ -437,6 +443,92 @@ QUnit.test("open chat window from preview", async function (assert) {
     assert.containsOnce(target, ".o-mail-chat-window");
 });
 
+QUnit.test(
+    '"Start a conversation" in mobile shows channel selector (+ click away)',
+    async function (assert) {
+        patchUiSize({ height: 360, width: 640 });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        await click("button:contains(Chat)");
+        assert.containsOnce(target, "button:contains(Start a conversation)");
+        assert.containsNone(target, "input[placeholder='Start a conversation']");
+
+        await click("button:contains(Start a conversation)");
+        assert.containsNone(target, "button:contains(Start a conversation)");
+        assert.containsOnce(target, "input[placeholder='Start a conversation']");
+
+        await click(".o-mail-messaging-menu");
+        assert.containsOnce(target, "button:contains(Start a conversation)");
+        assert.containsNone(target, "input[placeholder='Start a conversation']");
+    }
+);
+QUnit.test(
+    '"New Channel" in mobile shows channel selector (+ click away)',
+    async function (assert) {
+        patchUiSize({ height: 360, width: 640 });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        await click("button:contains(Channel)");
+        assert.containsOnce(target, "button:contains(New Channel)");
+        assert.containsNone(target, "input[placeholder='Add or join a channel']");
+
+        await click("button:contains(New Channel)");
+        assert.containsNone(target, "button:contains(New Channel)");
+        assert.containsOnce(target, "input[placeholder='Add or join a channel']");
+
+        await click(".o-mail-messaging-menu");
+        assert.containsOnce(target, "button:contains(New Channel)");
+        assert.containsNone(target, "input[placeholder='Add or join a channel']");
+    }
+);
+
+QUnit.test('"Start a conversation" item selection opens chat', async (assert) => {
+    patchUiSize({ height: 360, width: 640 });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Chat)");
+    await click("button:contains(Start a conversation)");
+    await insertText("input[placeholder='Start a conversation']", "Gandalf");
+    await click(".o-mail-channel-selector-suggestion");
+    await afterNextRender(() => triggerHotkey("Enter"));
+    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='Gandalf']");
+});
+
+QUnit.test('"New channel" item selection opens channel (existing)', async (assert) => {
+    patchUiSize({ height: 360, width: 640 });
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "Gryffindors" });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Channel)");
+    await click("button:contains(New Channel)");
+    await insertText("input[placeholder='Add or join a channel']", "Gryff");
+    await click(".o-mail-channel-selector-suggestion");
+    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='Gryffindors']");
+});
+
+QUnit.test('"New channel" item selection opens channel (new)', async (assert) => {
+    patchUiSize({ height: 360, width: 640 });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Channel)");
+    await click("button:contains(New Channel)");
+    await insertText("input[placeholder='Add or join a channel']", "slytherins");
+    await click(".o-mail-channel-selector-suggestion");
+    assert.containsOnce(target, ".o-mail-chat-window-header-name[title='slytherins']");
+});
+
+QUnit.test("'New Message' button should open a chat window in mobile", async function (assert) {
+    patchUiSize({ height: 360, width: 640 });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click("button:contains(New Message)");
+    assert.containsOnce(target, ".o-mail-chat-window");
+});
+
 QUnit.test("Counter is updated when receiving new message", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "General" });
@@ -454,5 +546,5 @@ QUnit.test("Counter is updated when receiving new message", async function (asse
             context: { partnerId },
         })
     );
-    assert.strictEqual($(target).find(".o-mail-messaging-menu-counter.badge").text(), "1");
+    assert.containsOnce(target, ".o-mail-messaging-menu-counter.badge:contains(1)");
 });

@@ -6,7 +6,7 @@ import { useMessaging, useStore } from "../core/messaging_hook";
 import { NotificationItem } from "./notification_item";
 import { ChannelSelector } from "../discuss/channel_selector";
 import { createLocalId } from "../utils/misc";
-
+import { onExternalClick } from "@mail/new/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
@@ -30,6 +30,9 @@ export class MessagingMenu extends Component {
         this.state = useState({
             addingChat: false,
             addingChannel: false,
+        });
+        onExternalClick("selector", () => {
+            Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
     }
 
@@ -138,7 +141,7 @@ export class MessagingMenu extends Component {
     }
 
     onClickNewMessage() {
-        if (this.store.isSmall) {
+        if (this.store.isSmall && this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
             this.chatWindowService.openNewMessage();
@@ -213,7 +216,6 @@ export class MessagingMenu extends Component {
     }
 
     onClickNavTab(tabId) {
-        Object.assign(this, { addingChat: false, addingChannel: false });
         if (this.store.discuss.activeTab === tabId) {
             return;
         }
