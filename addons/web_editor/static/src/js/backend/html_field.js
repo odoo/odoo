@@ -614,6 +614,37 @@ HtmlField.displayName = _lt("Html");
 HtmlField.supportedTypes = ["html"];
 
 HtmlField.extractProps = ({ attrs, field }) => {
+    const wysiwygOptions = {
+        placeholder: attrs.placeholder,
+        noAttachment: attrs.options['no-attachment'],
+        inIframe: Boolean(attrs.options.cssEdit),
+        iframeCssAssets: attrs.options.cssEdit,
+        iframeHtmlClass: attrs.iframeHtmlClass,
+        snippets: attrs.options.snippets,
+        mediaModalParams: {
+            noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,
+            useMediaLibrary: true,
+        },
+        linkForceNewWindow: true,
+        tabsize: 0,
+        height: attrs.options.height,
+        minHeight: attrs.options.minHeight,
+        maxHeight: attrs.options.maxHeight,
+        resizable: 'resizable' in attrs.options ? attrs.options.resizable : false,
+        editorPlugins: [QWebPlugin],
+    };
+    if ('allowCommandImage' in attrs.options) {
+        // Set the option only if it is explicitly set in the view so a default
+        // can be set elsewhere otherwise.
+        wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
+    }
+    if (field.sanitize && field.sanitize_tags) {
+        wysiwygOptions.allowCommandVideo = false; // Sanitized fields remove videos.
+    } else if ('allowCommandVideo' in attrs.options) {
+        // Set the option only if it is explicitly set in the view so a default
+        // can be set elsewhere otherwise.
+        wysiwygOptions.allowCommandVideo = Boolean(attrs.options.allowCommandVideo);
+    }
     return {
         isTranslatable: field.translate,
         fieldName: field.name,
@@ -627,27 +658,7 @@ HtmlField.extractProps = ({ attrs, field }) => {
         isInlineStyle: attrs.options['style-inline'],
         wrapper: attrs.options.wrapper,
 
-        wysiwygOptions: {
-            placeholder: attrs.placeholder,
-            noAttachment: attrs.options['no-attachment'],
-            inIframe: Boolean(attrs.options.cssEdit),
-            iframeCssAssets: attrs.options.cssEdit,
-            iframeHtmlClass: attrs.iframeHtmlClass,
-            snippets: attrs.options.snippets,
-            allowCommandImage: Boolean(attrs.options.allowCommandImage),
-            allowCommandVideo: Boolean(attrs.options.allowCommandVideo) && (!field.sanitize || !field.sanitize_tags),
-            mediaModalParams: {
-                noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,
-                useMediaLibrary: true,
-            },
-            linkForceNewWindow: true,
-            tabsize: 0,
-            height: attrs.options.height,
-            minHeight: attrs.options.minHeight,
-            maxHeight: attrs.options.maxHeight,
-            resizable: 'resizable' in attrs.options ? attrs.options.resizable : false,
-            editorPlugins: [QWebPlugin],
-        },
+        wysiwygOptions,
     };
 };
 
