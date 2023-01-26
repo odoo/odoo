@@ -1,14 +1,13 @@
 odoo.define('website_sale_delivery.tour', function (require) {
 'use strict';
 
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
-tour.register('check_free_delivery', {
+registry.category("web_tour.tours").add('check_free_delivery', {
         test: true,
         url: '/shop?search=office chair black',
-},
-    [
+        steps: [
         // Part 1: Check free delivery
         {
             content: "select office chair black",
@@ -49,5 +48,5 @@ tour.register('check_free_delivery', {
             trigger: '#oe_structure_website_sale_confirmation_1',
             run: function () {}, // it's a check
         }
-    ]);
+    ]});
 });

@@ -6,7 +6,7 @@ import { TextInputPopup } from "@point_of_sale/../tests/tours/helpers/TextInputP
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // signal to start generating steps
 // when finished, steps can be taken from getSteps
@@ -113,4 +113,4 @@ FloorScreen.check.hasTable("T3");
 FloorScreen.do.clickTable("T3");
 Chrome.check.backToFloorTextIs("Second Floor", "T3");
 
-Tour.register("FloorScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("FloorScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

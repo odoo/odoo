@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { stepUtils } from "@web_tour/js/tour_step_utils";
+import { registry } from "@web/core/registry";
 
 /**
  * As 'hr' changes the flow a bit and displays the user preferences form in a full view instead of
  * a modal, we adapt the steps of the original tour accordingly.
  */
-tour.tours['mail/static/tests/tours/user_modify_own_profile_tour.js'].steps = [{
+registry.category("web_tour.tours").get('mail/static/tests/tours/user_modify_own_profile_tour.js').steps = [{
     content: 'Open user account menu',
     trigger: '.o_user_menu button',
 }, {
@@ -16,4 +17,4 @@ tour.tours['mail/static/tests/tours/user_modify_own_profile_tour.js'].steps = [{
     content: "Update the email address",
     trigger: 'div[name="email"] input',
     run: 'text updatedemail@example.com',
-}, ...tour.stepUtils.saveForm()];
+}, ...stepUtils.saveForm()];

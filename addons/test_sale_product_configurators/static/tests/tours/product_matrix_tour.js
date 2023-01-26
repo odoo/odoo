@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 let EXPECTED = [
     "Matrix", "PAV11", "PAV12 + $ 50.00",
@@ -17,10 +18,10 @@ for (let no of ['PAV41', 'PAV42']) {
     }
 }
 
-tour.register('sale_matrix_tour', {
+registry.category("web_tour.tours").add('sale_matrix_tour', {
     url: '/web',
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
@@ -135,5 +136,5 @@ tour.register('sale_matrix_tour', {
     }
 }, {
     trigger: 'button:contains("Confirm")',  // apply the matrix
-}, ...tour.stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
-]);
+}, ...stepUtils.saveForm('.o_field_cell.o_data_cell.o_list_number:contains("8.20")'),
+]});

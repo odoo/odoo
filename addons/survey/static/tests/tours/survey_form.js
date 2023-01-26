@@ -1,12 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('survey_tour_test_survey_form_triggers', {
+registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers', {
     test: true,
     url: '/web',
-}, [
-    tour.stepUtils.showAppsMenuItem(),
+    steps: [
+    stepUtils.showAppsMenuItem(),
     {
         content: 'Go to Survey',
         trigger: '.o_app[data-menu-xmlid="survey.menu_surveys"]',
@@ -86,7 +87,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
         run: 'click',
     },
     ...changeTab("answers"),
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
     // Q2 and Q3 should have fa-fork icons. Assumes that the Trigger widget's column is 2 places after the title's.
     {
         content: "Check that Question 2 has 'normal' trigger icon",
@@ -139,7 +140,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
         trigger: 'ul.ui-autocomplete a:contains("Answer B")',
         run: 'click',
     },
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
      {
         content: "Check that Question 3 has its 'normal' trigger icon back",
         trigger: "tr:contains('Question 3') button i.fa-code-fork",
@@ -173,7 +174,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
         trigger: '.modal-content ul.ui-autocomplete a:contains("Answer B")',
         run: "click",
     },
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
     // Deleting trigger answers or whole question gracefully remove the trigger automatically
     {
         content: "Open Question 2 again",
@@ -183,7 +184,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
         content: "Delete Answer B",
         trigger: "div[name=suggested_answer_ids] tr:contains('Answer B') button[name=delete]",
     },
-    ...tour.stepUtils.saveForm(),
+    ...stepUtils.saveForm(),
     {
         content: "Check that Question 3 no longer has a trigger icon",
         trigger: "div[name=question_and_page_ids] tr:contains('Question 3') div.o_widget_survey_question_trigger:not(:has(button))",
@@ -208,7 +209,7 @@ tour.register('survey_tour_test_survey_form_triggers', {
         trigger: ".o-kanban-button-new",
         run: () => {}, // it's a check
     }
-]);
+]});
 
 function addTwoAnswers() {
     return [

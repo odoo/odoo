@@ -1,14 +1,14 @@
 odoo.define("website_mass_mailing.tour.newsletter_popup_edition", function (require) {
 "use strict";
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const wTourUtils = require('website.tour_utils');
 const newsletterPopupUseTour = require('website_mass_mailing.tour.newsletter_popup_use');
 
-tour.register('newsletter_popup_edition', {
+registry.category("web_tour.tours").add('newsletter_popup_edition', {
     test: true,
     url: '/?enable_editor=1',
-}, [
+    steps: [
     wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',
         name: 'Newsletter Popup',
@@ -26,13 +26,13 @@ tour.register('newsletter_popup_edition', {
         extra_trigger: 'iframe body:not(.editor_enable)',
         run: newsletterPopupUseTour.ensurePopupNotVisible,
     }
-]);
+]});
 });
 
 odoo.define("website_mass_mailing.tour.newsletter_popup_use", function (require) {
 "use strict";
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 function ensurePopupNotVisible() {
     const $modal = this.$anchor.find('.o_newsletter_popup .modal');
@@ -49,10 +49,10 @@ function ensurePopupNotVisible() {
     }
 }
 
-tour.register('newsletter_popup_use', {
+registry.category("web_tour.tours").add('newsletter_popup_use', {
     test: true,
     url: '/',
-}, [
+    steps: [
     {
         content: "Check the modal is not yet opened and force it opened",
         trigger: 'body:has(.o_newsletter_popup)',
@@ -73,7 +73,7 @@ tour.register('newsletter_popup_use', {
         trigger: 'body:has(.o_newsletter_popup)',
         run: ensurePopupNotVisible,
     }
-]);
+]});
 
 return {
     ensurePopupNotVisible: ensurePopupNotVisible,

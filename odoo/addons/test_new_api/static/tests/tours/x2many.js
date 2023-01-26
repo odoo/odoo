@@ -1,13 +1,14 @@
 odoo.define('web.test.x2many', function (require) {
     'use strict';
 
-    var tour = require("web_tour.tour");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
+    const { registry } = require("@web/core/registry");
     var inc;
 
-    tour.register('widget_x2many', {
+    registry.category("web_tour.tours").add('widget_x2many', {
         url: '/web?debug=tests#action=test_new_api.action_discussions',
         test: true,
-    }, [
+        steps: [
     /////////////////////////////////////////////////////////////////////////////////////////////
     // Discussions
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +70,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "save selected participants",
         trigger: '.o_select_button',
         extra_trigger: 'tr:has(td:containsExact(Mitchell Admin)) .o_list_record_selector input[type="checkbox"]:propChecked',
-    }, ...tour.stepUtils.saveForm({
+    }, ...stepUtils.saveForm({
         content: "save discussion",
         extra_trigger: '.o_field_widget[name=participants] .o_data_cell:containsExact(Mitchell Admin)',
     }), { // add message a
@@ -296,7 +297,7 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_content:has(.o_field_widget[name=messages] .o_data_row:eq(3))',
         extra_trigger: 'body:not(:has(.o_field_widget[name=messages] .o_data_row:eq(4)))',
         run: function () {}, // it's a check
-    }, ...tour.stepUtils.discardForm({ // cancel
+    }, ...stepUtils.discardForm({ // cancel
         content: "cancel change",
         extra_trigger: '.o_field_widget[name=messages]:has(tr td:containsExact(ddd))',
     }),
@@ -375,7 +376,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "test one2many onchange after delete",
         trigger: '.o_content:not(:has(.o_field_widget[name="message_concat"] textarea:propValueContains(Mitchell Admin:d)))',
         run: function () {},
-    }, ...tour.stepUtils.saveForm({ // save
+    }, ...stepUtils.saveForm({ // save
         content: "save discussion",
         extra_trigger: 'body:not(:has(tr:has(td:containsExact(d))))',
     }), { // check saved data
@@ -395,7 +396,7 @@ odoo.define('web.test.x2many', function (require) {
         content: "change text value",
         trigger: '.o_field_widget[name="body"] textarea',
         run: 'text eee'
-    }, ...tour.stepUtils.saveForm({ // save
+    }, ...stepUtils.saveForm({ // save
         content: "save discussion",
         extra_trigger: '.o_field_widget[name="body"] textarea:propValueContains(eee)',
     }), { // check saved data
@@ -457,6 +458,6 @@ odoo.define('web.test.x2many', function (require) {
         extra_trigger: '.o_field_widget[name=important_messages] .o_data_row .o_list_number:containsExact(22)',
         run: function () {}, // it's a check
     },
-    ...tour.stepUtils.discardForm(),
-    ]);
+    ...stepUtils.discardForm(),
+    ]});
 });

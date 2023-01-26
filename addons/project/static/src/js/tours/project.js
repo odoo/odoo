@@ -3,13 +3,14 @@ odoo.define('project.tour', function(require) {
 
 const {_t} = require('web.core');
 const {Markup} = require('web.utils');
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-tour.register('project_tour', {
+registry.category("web_tour.tours").add('project_tour', {
     sequence: 110,
     url: "/web",
     rainbowManMessage: _t("Congratulations, you are now a master of project management."),
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
     content: Markup(_t('Want a better way to <b>manage your projects</b>? <i>It starts here.</i>')),
     position: 'right',
@@ -134,6 +135,6 @@ tour.register('project_tour', {
     trigger: '.o_kanban_renderer',
     // last step to confirm we've come back before considering the tour successful
     auto: true
-}]);
+}]});
 
 });

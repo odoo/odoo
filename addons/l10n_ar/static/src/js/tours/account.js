@@ -1,8 +1,9 @@
 odoo.define('l10n_ar.account_tour', function(require) {
 "use strict";
 
-    let tour = require('web_tour.tour');
-    let account_tour = tour.tours.account_tour;
+    require("account.tour");
+    const { registry } = require("@web/core/registry");
+    let account_tour = registry.category("web_tour.tours").get("account_tour");
     // Remove the step suggesting to change the name as it is done another way (document number)
     account_tour.steps = _.filter(account_tour.steps, step => step.trigger != "input[name=name]");
 

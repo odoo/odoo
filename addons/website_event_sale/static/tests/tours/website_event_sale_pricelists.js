@@ -1,13 +1,13 @@
 odoo.define('website_event_sale.tour.event_sale_pricelists_different_currencies', function (require) {
     'use strict';
 
-    const tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
     const { getPriceListChecksSteps } = require('website_event_sale.tour.WebsiteEventSaleTourMethods');
 
-    tour.register('event_sale_pricelists_different_currencies', {
+    registry.category("web_tour.tours").add('event_sale_pricelists_different_currencies', {
         test: true,
         url: '/event',
-    },[
+        steps: [
         // Register for tickets
         {
             content: "Open the Pycon event",
@@ -53,5 +53,5 @@ odoo.define('website_event_sale.tour.event_sale_pricelists_different_currencies'
             price: "900.00",
             priceBeforeDiscount: "1,000.00",
         }),
-    ]);
+    ]});
 });

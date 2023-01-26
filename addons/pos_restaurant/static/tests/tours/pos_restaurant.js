@@ -7,7 +7,7 @@ import { FloorScreen } from "@pos_restaurant/../tests/tours/helpers/FloorScreenT
 import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -63,7 +63,7 @@ Chrome.do.backToFloor();
 
 // There should be 1 synced draft order.
 FloorScreen.check.orderCountSyncedInTableIs("T5", "1");
-Tour.register("pos_restaurant_sync", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("pos_restaurant_sync", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -103,4 +103,4 @@ ProductScreen.check.totalAmountIs("2.20");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("T4", "1");
 
-Tour.register("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("pos_restaurant_sync_second_login", { test: true, url: "/pos/ui", steps: getSteps() });

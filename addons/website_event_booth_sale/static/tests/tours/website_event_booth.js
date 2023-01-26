@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('website_event_booth_tour', {
+registry.category("web_tour.tours").add('website_event_booth_tour', {
     test: true,
     url: '/event',
-}, [
+    steps: [
 {
     content: 'Open "Test Event Booths" event',
     trigger: 'h5.card-title span:contains("Test Event Booths")',
@@ -51,4 +51,4 @@ tour.register('website_event_booth_tour', {
     trigger: 'tr#order_total .oe_currency_value:containsExact(220.00)',
     run: function () {},
 },
-]);
+]});

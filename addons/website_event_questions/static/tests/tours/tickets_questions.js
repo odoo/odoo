@@ -1,11 +1,11 @@
 odoo.define('website_event_questions.tour_test_tickets_questions', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
-tour.register('test_tickets_questions', {
+const { registry } = require("@web/core/registry");
+registry.category("web_tour.tours").add('test_tickets_questions', {
     test: true,
-    url: '/event'
-}, [{
+    url: '/event',
+    steps: [{
     content: "Click on the Design Fair event",
     trigger: 'article:contains("Design Fair New York")',
 }, {
@@ -51,6 +51,6 @@ tour.register('test_tickets_questions', {
     content: 'Wait for confirmation',
     trigger: '.o_wereg_confirmed, .oe_cart',
     auto: true
-}]);
+}]});
 
 });

@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('sale_product_configurator_optional_products_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_optional_products_tour', {
     url: '/web',
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
@@ -58,5 +59,5 @@ tour.register('sale_product_configurator_optional_products_tour', {
     trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(1) td.o_data_cell:contains("1.0")',
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});

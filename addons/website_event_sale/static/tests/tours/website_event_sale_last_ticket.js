@@ -1,12 +1,12 @@
 odoo.define('website_event_sale.tour.last_ticket', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('event_buy_last_ticket', {
+registry.category("web_tour.tours").add('event_buy_last_ticket', {
     test: true,
     url: '/event',
-},[{
+    steps: [{
         content: "Open the Last ticket test event page",
         trigger: '.o_wevent_events_list a:contains("Last ticket test")',
     },
@@ -88,5 +88,5 @@ tour.register('event_buy_last_ticket', {
         trigger: 'h1:contains("Contact us")',
         run: function () {}, // it's a check
     },
-]);
+]});
 });

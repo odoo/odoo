@@ -2,18 +2,17 @@ odoo.define('website_sale.tour_shop_cart_recovery', function (require) {
 'use strict';
 
 var localStorage = require('web.local_storage');
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 require('web.dom_ready');
 
 var orderIdKey = 'website_sale.tour_shop_cart_recovery.orderId';
 var recoveryLinkKey = 'website_sale.tour_shop_cart_recovery.recoveryLink';
 
-tour.register('shop_cart_recovery', {
+registry.category("web_tour.tours").add('shop_cart_recovery', {
     test: true,
     url: '/shop?search=Acoustic Bloc Screens',
-},
-[
+    steps: [
     {
         content: "select Acoustic Bloc Screens",
         trigger: '.oe_product_cart a:containsExact("Acoustic Bloc Screens")',
@@ -83,5 +82,5 @@ tour.register('shop_cart_recovery', {
         trigger: 'td.td-product_name:contains("Acoustic Bloc Screens")',
         run: function () {},
     },
-]);
+]});
 });

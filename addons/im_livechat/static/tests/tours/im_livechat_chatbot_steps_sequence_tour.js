@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
+const commonSteps = [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="im_livechat.menu_livechat_root"]',
 }, {
     trigger: 'button[data-menu-xmlid="im_livechat.livechat_config"]',
@@ -42,25 +43,25 @@ const commonSteps = [tour.stepUtils.showAppsMenuItem(), {
 /**
  * Simply create a few steps in order to check the sequences.
  */
- tour.register('im_livechat_chatbot_steps_sequence_tour', {
+registry.category("web_tour.tours").add('im_livechat_chatbot_steps_sequence_tour', {
     test: true,
     url: '/web',
-}, [
+    steps: [
     ...commonSteps, {
     trigger: 'button:contains("Save & Close")'
 }, {
     trigger: 'body.o_web_client:not(.modal-open)',
     run() {},
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});
 
 /**
  * Same as above, with an extra drag&drop at the end.
  */
-tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
+registry.category("web_tour.tours").add('im_livechat_chatbot_steps_sequence_with_move_tour', {
     test: true,
     url: '/web',
-}, [
+    steps: [
     ...commonSteps, {
     trigger: 'button:contains("Save & New")'
 }, {
@@ -119,5 +120,5 @@ tour.register('im_livechat_chatbot_steps_sequence_with_move_tour', {
     trigger: 'tr:contains("Step 6")',
     in_modal: false,
     run: () => {}
-}, ...tour.stepUtils.discardForm(),
-]);
+}, ...stepUtils.discardForm(),
+]});

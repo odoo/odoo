@@ -1,14 +1,14 @@
 odoo.define('debug_menu_set_defaults.tour', function (require) {
     "use strict";
 
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('debug_menu_set_defaults', {
+    registry.category("web_tour.tours").add('debug_menu_set_defaults', {
         test: true,
         url: '/web?debug=1',
-    },
-        [
-            ...tour.stepUtils.goToAppSteps('contacts.menu_contacts', "Open the contacts menu"),
+        steps: [
+            ...stepUtils.goToAppSteps('contacts.menu_contacts', "Open the contacts menu"),
             {
                 content: "Create a new contact",
                 trigger: '.o-kanban-button-new',
@@ -69,6 +69,6 @@ odoo.define('debug_menu_set_defaults.tour', function (require) {
                 run() {},
             },
         ]
-    );
+    });
 
 });

@@ -2,14 +2,15 @@ odoo.define('account.dashboard.setup.tour', function (require) {
     "use strict";
 
     var core = require('web.core');
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
     var _t = core._t;
 
-    tour.register('account_render_report', {
+    registry.category("web_tour.tours").add('account_render_report', {
         test: true,
         url: '/web',
-    }, [tour.stepUtils.showAppsMenuItem(),
+    steps: [stepUtils.showAppsMenuItem(),
     {
         id: 'account_menu_click',
         trigger: '.o_app[data-menu-xmlid="account.menu_finance"]',
@@ -38,5 +39,5 @@ odoo.define('account.dashboard.setup.tour', function (require) {
             }
         },
     }
-        ]);
+        ]});
 });

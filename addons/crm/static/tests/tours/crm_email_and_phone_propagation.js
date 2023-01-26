@@ -1,13 +1,14 @@
 odoo.define('crm.crm_email_and_phone_propagation', function (require) {
     'use strict';
 
-    const tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('crm_email_and_phone_propagation_edit_save', {
+    registry.category("web_tour.tours").add('crm_email_and_phone_propagation_edit_save', {
         test: true,
         url: '/web',
-    }, [
-        tour.stepUtils.showAppsMenuItem(),
+        steps: [
+        stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
             content: 'open crm app',
@@ -21,13 +22,13 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
             content: 'Save the lead',
             run: 'click',
         },
-    ]);
+    ]});
 
-    tour.register('crm_email_and_phone_propagation_remove_email_and_phone', {
+    registry.category("web_tour.tours").add('crm_email_and_phone_propagation_remove_email_and_phone', {
         test: true,
         url: '/web',
-    }, [
-        tour.stepUtils.showAppsMenuItem(),
+        steps: [
+        stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
             content: 'open crm app',
@@ -52,5 +53,5 @@ odoo.define('crm.crm_email_and_phone_propagation', function (require) {
         },{
             trigger: '.o_kanban_renderer',
         }
-    ]);
+    ]});
 });

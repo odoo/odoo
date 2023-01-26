@@ -3,7 +3,7 @@
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { ProductConfigurator } from "@point_of_sale/../tests/tours/helpers/ProductConfiguratorTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // signal to start generating steps
 // when finished, steps can be taken from getSteps
@@ -74,4 +74,4 @@ ProductScreen.check.selectedOrderlineHas(
     "10.0"
 );
 
-Tour.register("ProductConfiguratorTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("ProductConfiguratorTour", { test: true, url: "/pos/ui", steps: getSteps() });

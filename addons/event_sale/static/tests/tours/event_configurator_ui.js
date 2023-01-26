@@ -1,12 +1,13 @@
 odoo.define('event.event_configurator_tour', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-tour.register('event_configurator_tour', {
+registry.category("web_tour.tours").add('event_configurator_tour', {
     url: "/web",
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
     edition: 'community'
 }, {
@@ -71,7 +72,7 @@ tour.register('event_configurator_tour', {
 }, {
     trigger: "td[name='name'][data-tooltip*='Standard']",
     run: function () {} // check
-}, ...tour.stepUtils.saveForm()
-]);
+}, ...stepUtils.saveForm()
+]});
 
 });

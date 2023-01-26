@@ -5,7 +5,7 @@ import { FloorScreen } from "@pos_restaurant/../tests/tours/helpers/FloorScreenT
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { Chrome } from "@pos_restaurant/../tests/tours/helpers/ChromeTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -58,4 +58,4 @@ FloorScreen.check.orderCountSyncedInTableIs("T5", "0");
 FloorScreen.do.clickTable("T5");
 ProductScreen.check.orderIsEmpty();
 
-Tour.register("PosResTicketScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("PosResTicketScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

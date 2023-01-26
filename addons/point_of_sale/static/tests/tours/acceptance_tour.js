@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 function add_product_to_order(product_name) {
     return [
@@ -241,4 +241,4 @@ steps = steps.concat([
     },
 ]);
 
-Tour.register("pos_basic_order", { test: true, url: "/pos/ui" }, steps);
+registry.category("web_tour.tours").add("pos_basic_order", { test: true, url: "/pos/ui", steps });

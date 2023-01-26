@@ -1,12 +1,13 @@
 odoo.define('hr_expense.tests.tours', function (require) {
     "use strict";
 
-    var tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('hr_expense_test_tour', {
+    registry.category("web_tour.tours").add('hr_expense_test_tour', {
         test: true,
         url: "/web",
-    }, [tour.stepUtils.showAppsMenuItem(),
+        steps: [stepUtils.showAppsMenuItem(),
         {
             content: "Go to Expense",
             trigger: '.o_app[data-menu-xmlid="hr_expense.menu_hr_expense_root"]',
@@ -75,5 +76,5 @@ odoo.define('hr_expense.tests.tours', function (require) {
                 }
             }
         },
-    ]);
+    ]});
 });

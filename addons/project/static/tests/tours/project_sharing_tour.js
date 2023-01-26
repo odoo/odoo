@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
+const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project App.'), {
     trigger: '.o_kanban_record:contains("Project Sharing") .o_dropdown_kanban .dropdown-toggle',
     content: 'Open the project dropdown.'
 }, {
@@ -102,14 +103,14 @@ const projectSharingSteps = [...tour.stepUtils.goToAppSteps("project.menu_main_p
     content: 'Go to the list view',
 }];
 
-tour.register('project_sharing_tour', {
+registry.category("web_tour.tours").add('project_sharing_tour', {
     test: true,
     url: '/web',
-}, projectSharingSteps);
+    steps: projectSharingSteps });
 
 // The begining of the project sharing feature
 const projectSharingStepIndex = projectSharingSteps.findIndex(s => s.id && s.id === 'project_sharing_feature');
-tour.register('portal_project_sharing_tour', {
+registry.category("web_tour.tours").add('portal_project_sharing_tour', {
     test: true,
     url: '/my/projects',
-}, projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length));
+    steps: projectSharingSteps.slice(projectSharingStepIndex, projectSharingSteps.length) });

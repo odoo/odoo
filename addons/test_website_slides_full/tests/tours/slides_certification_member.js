@@ -1,7 +1,7 @@
 odoo.define('test_website_slides_full.tour.slide.certification.member', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
 /**
@@ -142,10 +142,10 @@ var profileSteps = [{
     run: function () {}
 }];
 
-tour.register('certification_member', {
+registry.category("web_tour.tours").add('certification_member', {
     url: '/slides',
-    test: true
-}, [].concat(
+    test: true,
+    steps: [].concat(
         initTourSteps,
         buyCertificationSteps,
         failCertificationSteps,
@@ -159,6 +159,6 @@ tour.register('certification_member', {
         certificationCompletionSteps,
         profileSteps
     )
-);
+});
 
 });

@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
 /**
  * Verify that a user can modify their own profile information.
  */
-tour.register('mail/static/tests/tours/user_modify_own_profile_tour.js', {
+registry.category("web_tour.tours").add('mail/static/tests/tours/user_modify_own_profile_tour.js', {
     test: true,
-}, [{
+    steps: [{
     content: 'Open user account menu',
     trigger: '.o_user_menu button',
 }, {
@@ -23,4 +23,4 @@ tour.register('mail/static/tests/tours/user_modify_own_profile_tour.js', {
 }, {
     content: "Wait until the modal is closed",
     trigger: 'body:not(.modal-open)',
-}]);
+}]});

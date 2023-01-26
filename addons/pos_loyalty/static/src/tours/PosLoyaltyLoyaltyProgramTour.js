@@ -3,7 +3,7 @@
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -65,7 +65,7 @@ PosLoyalty.check.isRewardButtonHighlighted(true);
 PosLoyalty.check.orderTotalIs("12.80");
 PosLoyalty.exec.finalizeOrder("Cash", "20");
 
-Tour.register("PosLoyaltyLoyaltyProgram1", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram1", { test: true, url: "/pos/web", steps: getSteps() });
 
 startSteps();
 
@@ -139,4 +139,4 @@ PosLoyalty.check.customerIs("Customer");
 PosLoyalty.check.orderTotalIs("3.20");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
-Tour.register("PosLoyaltyLoyaltyProgram2", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", { test: true, url: "/pos/web", steps: getSteps() });

@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('sale_product_configurator_pricelist_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_pricelist_tour', {
     url: '/web',
     test: true,
-},
-[
-tour.stepUtils.showAppsMenuItem(),
+    steps: [
+stepUtils.showAppsMenuItem(),
 {
     content: "navigate to the sale app",
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
@@ -77,5 +77,5 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "verify SO final price included",
     trigger: 'span[name="amount_total"]:contains("1,437.00")',
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});
