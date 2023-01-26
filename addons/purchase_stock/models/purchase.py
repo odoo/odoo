@@ -369,7 +369,7 @@ class PurchaseOrderLine(models.Model):
             # the PO. Therefore, we can skip them since they will be handled later on.
             for move in line.move_ids.filtered(lambda m: m.product_id == line.product_id):
                 if move.state == 'done':
-                    if move.location_dest_id.usage == "supplier":
+                    if move._is_purchase_return():
                         if move.to_refund:
                             total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                     elif move.origin_returned_move_id._is_dropshipped() and not move._is_dropshipped_returned():
