@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 class User(models.Model):
@@ -62,17 +62,18 @@ class User(models.Model):
         # This method compares the current leave managers
         # and remove the access rights to those who don't
         # need them anymore
-        approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
-        if not self or not approver_group:
+        approver_group = 'hr_holidays.group_hr_holidays_responsible'
+        if not any(u.has_group(approver_group) for u in self):
             return
+
         res = self.env['hr.employee'].read_group(
             [('leave_manager_id', 'in', self.ids)],
             ['leave_manager_id'],
             ['leave_manager_id'])
         responsibles_to_remove_ids = set(self.ids) - {x['leave_manager_id'][0] for x in res}
         if responsibles_to_remove_ids:
-            approver_group.write({
-                'users': [(3, manager_id) for manager_id in responsibles_to_remove_ids]
+            self.browse(responsibles_to_remove_ids).write({
+                'groups_id': [Command.unlink(self.env.ref(approver_group).id)],
             })
 
     @api.model_create_multi
