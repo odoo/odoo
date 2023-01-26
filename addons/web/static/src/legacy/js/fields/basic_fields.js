@@ -3070,6 +3070,8 @@ var FieldPercentPie = AbstractField.extend({
         this.$leftMask = this.$('.o_mask').first();
         this.$rightMask = this.$('.o_mask').last();
         this.$pieValue = this.$('.o_pie_value');
+        this.edit_max_value = !!this.nodeOptions.edit_max_value;
+        this.max_value = this.recordData[this.nodeOptions.max_value] || 100;
         return this._super();
     },
 
@@ -3098,7 +3100,7 @@ var FieldPercentPie = AbstractField.extend({
      * @private
      */
     _render: function () {
-        var value = this.value || 0;
+        var value = (this.value / this.max_value) * 100 || 0;
         var degValue = 360*value/100;
 
         this.$rightMask.toggleClass('o_full', degValue >= 180);
