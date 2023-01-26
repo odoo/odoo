@@ -101,7 +101,7 @@ export class CallMain extends Component {
             return;
         }
         const { width, height } = this.grid.el.getBoundingClientRect();
-        const aspectRatio = 16 / 9;
+        const aspectRatio = this.props.minimized ? 1 : 16 / 9;
         const tileCount = this.grid.el.children.length;
         let optimal = {
             area: 0,
