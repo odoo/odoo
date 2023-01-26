@@ -1021,9 +1021,33 @@ const Wysiwyg = Widget.extend({
     closestElement(...args) {
         return closestElement(...args);
     },
+<<<<<<< HEAD
     async cleanForSave() {
         this.odooEditor && this.odooEditor.cleanForSave();
 
+||||||| parent of 638261af9f9 (temp)
+    isSelectionInEditable: function () {
+        return this.odooEditor.isSelectionInEditable();
+    },
+    cleanForSave: async function () {
+        this.odooEditor.clean();
+        this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
+        const historyIds = this.odooEditor.historyGetBranchIds().join(',');
+        if (this.ptp) {
+            this.odooEditor.editable.children[0].setAttribute('data-last-history-steps', historyIds);
+        }
+=======
+    isSelectionInEditable: function () {
+        return this.odooEditor.isSelectionInEditable();
+    },
+    cleanForSave: async function () {
+        this.odooEditor.clean();
+        this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
+        const historyIds = this.odooEditor.historyGetBranchIds().join(',');
+        if (this.options.collaborative) {
+            this.odooEditor.editable.children[0].setAttribute('data-last-history-steps', historyIds);
+        }
+>>>>>>> 638261af9f9 (temp)
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
         }
