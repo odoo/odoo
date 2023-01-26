@@ -1619,7 +1619,6 @@
                     <field name="project_id"/>
                     <templates>
                         <div class="justify-content-between" t-name="activity-box">
-                            <field name="user_ids" widget="many2many_avatar_user" class="col-6"/>
                             <div class="text-end col-6">
                                 <span t-att-title="record.name.value">
                                     <field name="name" display="full" class="text-truncate"/>
@@ -1629,6 +1628,7 @@
                                     <span t-else="" class="fst-italic text-muted"><i class="fa fa-lock"></i> Private</span>
                                 </span>
                             </div>
+                            <field name="user_ids" widget="many2many_avatar_user"/>
                         </div>
                     </templates>
                 </activity>

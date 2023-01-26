@@ -12,7 +12,7 @@ export class ActivityCompiler extends ViewCompiler {
         let compiled;
         if (!el.hasAttribute("widget")) {
             // fields without a specified widget are rendered as simple spans in activity records
-            compiled = createElement("div", { "t-out": `record["${el.getAttribute("name")}"].value` });
+            compiled = createElement("div", { "class": "d-inline-block", "t-out": `record["${el.getAttribute("name")}"].value` });
             if (el.getAttribute("muted")) {
                 compiled.classList.add("text-muted");
             }
