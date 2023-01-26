@@ -78,8 +78,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
              */
             async handleAutoPrint() {
                 if (this._shouldAutoPrint()) {
+                    const currentOrder = this.currentOrder;
                     await this.printReceipt();
-                    if (this.currentOrder._printed && this._shouldCloseImmediately()) {
+                    if (this.currentOrder && this.currentOrder === currentOrder && currentOrder._printed && this._shouldCloseImmediately()) {
                         this.whenClosing();
                     }
                 }
@@ -93,9 +94,10 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 }
             }
             async printReceipt() {
+                const currentOrder = this.currentOrder;
                 const isPrinted = await this._printReceipt();
                 if (isPrinted) {
-                    this.currentOrder._printed = true;
+                    currentOrder._printed = true;
                 }
             }
             _shouldAutoPrint() {
