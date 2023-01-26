@@ -25,6 +25,7 @@ export const busService = {
 
     async start(env, { multi_tab: multiTab }) {
         const bus = new EventBus();
+        let isActive = false;
         let workerURL = `${legacySession.prefix}/bus/websocket_worker_bundle?v=${WORKER_VERSION}`;
         if (legacySession.prefix !== window.origin) {
             // Bus service is loaded from a different origin than the bundle
@@ -121,6 +122,12 @@ export const busService = {
                 send('leave');
             }
         });
+        browser.addEventListener('online', () => {
+            if (isActive) {
+                send('start');
+            }
+        });
+        browser.addEventListener('offline', () => send('stop'));
         await connectionInitializedDeferred;
 
         return {
@@ -128,14 +135,21 @@ export const busService = {
             addChannel: channel => {
                 send('add_channel', channel);
                 send('start');
+                isActive = true;
             },
             deleteChannel: channel => send('delete_channel', channel),
             forceUpdateChannels: () => send('force_update_channels'),
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
             send: (eventName, data) => send('send', { event_name: eventName, data }),
-            start: () => send('start'),
-            stop: () => send('leave'),
+            start: () => {
+                send('start');
+                isActive = true;
+            },
+            stop: () => {
+                send('leave');
+                isActive = false;
+            },
         };
     },
 };
