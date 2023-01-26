@@ -25,3 +25,8 @@ Florian Kantelberg florian.kantelberg@initos.com https://github.com/fkantelberg
 Mathias Francke mathias.francke@initos.com https://github.com/mathiasfrancke
 Nico Winkelstraeter nico.winkelstraeter@initos.com https://github.com/nwinkelstraeter
 Ruben Ortlam ruben.ortlam@initos.com https://github.com/ortlam
+Ali Hashaam ali.hashaam@initos.com https://github.com/alihashaam
+Andreas Zöllner andreas.zoellner@initos.com https://github.com/azoellner
+Dhara Solanki dhara.solanki@initos.com https://github.com/dsolanki-initos
+Karin Broeking karin.broeking@initos.com https://github.com/broeking
+Malin Kienke malin.kienke@initos.com https://github.com/mkienke
