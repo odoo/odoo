@@ -24,10 +24,6 @@ export const busService = {
     async: true,
 
     async start(env, { multi_tab: multiTab, "bus.parameters": params }) {
-        if (session.dbuuid && multiTab.getSharedValue('dbuuid') !== session.dbuuid) {
-            multiTab.setSharedValue('dbuuid', session.dbuuid);
-            multiTab.removeSharedValue('last_notification_id');
-        }
         const bus = new EventBus();
         let workerURL = `${params.serverURL}/bus/websocket_worker_bundle?v=${WORKER_VERSION}`;
         if (params.serverURL !== window.origin) {
