@@ -22,7 +22,7 @@ After installing this module, you'll have access to :
 Set the payment reference type from the Sales Journal.
     """,
     "depends": [
-        'account',
+        'l10n_multilang',
         'base_iban',
         'base_vat',
     ],
