@@ -1263,3 +1263,29 @@ class TestSyncGoogle2Odoo(TestSyncGoogle):
         self.assertEqual(len(events), 2)
         self.assertFalse(events.mapped('attendee_ids'))
         self.assertGoogleAPINotCalled()
+
+    @patch_api
+    def test_owner_only_new_google_event(self):
+        values = {
+            'id': 'oj44nep1ldf8a3ll02uip0c9aa',
+            'description': 'Small mini desc',
+            'organizer': {'email': 'odoocalendarref@gmail.com', 'self': True},
+            'summary': 'Pricing new update',
+            'visibility': 'public',
+            'attendees': [],
+            'reminders': {'useDefault': True},
+            'start': {
+                'dateTime': '2020-01-13T16:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+            'end': {
+                'dateTime': '2020-01-13T19:55:00+01:00',
+                'timeZone': 'Europe/Brussels'
+            },
+        }
+        self.env['calendar.event']._sync_google2odoo(GoogleEvent([values]))
+        event = self.env['calendar.event'].search([('google_id', '=', values.get('id'))])
+        self.assertEqual(1, len(event.attendee_ids))
+        self.assertEqual(event.partner_ids[0], event.attendee_ids[0].partner_id)
+        self.assertEqual('accepted', event.attendee_ids[0].state)
+        self.assertGoogleAPINotCalled()
