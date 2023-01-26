@@ -114,6 +114,20 @@
                 </filter>
             </field>
         </record>
+        
+        <!-- Search view for tasks not related to a single project -->
+        <record id="view_task_search_form_mixed_projects" model="ir.ui.view">
+            <field name="name">project.task.search.form</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_search_form"></field>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <filter name="unassigned" position="after">
+                    <filter string="Private" name="private" domain="[('project_id', '=', False)]"/>
+                </filter>
+            </field>
+        </record>
+
 
         <record id="view_project_task_pivot" model="ir.ui.view">
             <field name="name">project.task.pivot</field>
@@ -1726,7 +1740,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form,calendar,pivot,graph,activity</field>
             <field name="context">{'all_task': 0, 'default_user_ids': [(4, uid)]}</field>
-            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="search_view_id" ref="view_task_search_form_mixed_projects"/>
             <field name="domain">[('user_ids', 'in', uid)]</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -1774,7 +1788,7 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity</field>
             <field name="context">{'default_user_ids': [(4, uid)]}</field>
-            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="search_view_id" ref="view_task_search_form_mixed_projects"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No tasks found. Let's create one!

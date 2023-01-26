@@ -123,6 +123,10 @@ class Task(models.Model):
             return self.env['project.task.type'].search([('id', '=', default_id[0])])
         return self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1)
 
+    @api.model
+    def _default_company_id(self):
+        return self.env.company
+
 
 
     # --------------------------------------- Fields Declaration ----------------------------------
@@ -147,7 +151,6 @@ class Task(models.Model):
                                   help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
 
 
-
     # ----------------------------------- Compute and search methods ------------------------------
 
     @api.depends_context('uid')
@@ -164,6 +167,9 @@ class Task(models.Model):
 
     def _inverse_personal_stage_type_id(self):
         for task in self.filtered(lambda task: task.personal_stage_type_id):
+            if (not task.personal_stage_type_id.user_id or task.personal_stage_type_id.user_id.id != self.env.uid) and self.env.uid != 1:
+                # Do not assign personal stage if the user of the stage doesn't match the current user
+                continue
             task.personal_stage_type_ids = task.personal_stage_type_id + task.personal_stage_type_ids.filtered(lambda stage: stage.user_id != self.env.user)
 
     @api.model
@@ -177,14 +183,15 @@ class Task(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
+            # Add current user to the assignees for to-do's/private tasks
+            if self.env.user.id != 1: # Do not add OdooBot as assignee
+                self._add_default_task_assignees_in_list(vals)
             # user_ids change: update date_assign
             if vals.get('user_ids'):
                 vals['date_assign'] = fields.Datetime.now()
-                self._update_default_task_assignees(vals)
-        tasks =  super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        tasks = super(Task, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
         self._task_message_auto_subscribe_notify({task: task.user_ids - self.env.user for task in tasks})
         return tasks
-
 
     def write(self, vals):
         if len(self) == 1:
@@ -222,7 +229,7 @@ class Task(models.Model):
     def _read_group_personal_stage_type_ids(self, stages, domain, order):
         return stages.search(['|', ('id', 'in', stages.ids), ('user_id', '=', self.env.user.id)])
 
-    def _update_default_task_assignees(self, create_vals):
+    def _add_default_task_assignees_in_list(self, create_vals):
         """ Add the current user to the list of assignees when the task is created.
             Having an isolated method allows to override this behavior in Project.
         """

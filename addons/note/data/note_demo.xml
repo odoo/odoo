@@ -188,5 +188,23 @@
       <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
     </record>
 
+    <record id="note_13" model="project.task">
+      <field name="name">Bug to fix</field>
+      <field name="description"><![CDATA[
+     <p>The following bugs have been identified after a call with two customers. It should be fix as soon as possible.
+     A task should be created in the project Research & Development to do so.<br/></p>
+     <ul class="o_checklist">
+     <li id="checklist-id-1"><p>Contact email not visible on the website</p></li>
+     <li id="checklist-id-2"><p>Customer do not have access to their invoices on the portal</p></li>
+     <li id="checklist-id-3"><p>The logo displayed on the website is to small</p></li>
+     <li id="checklist-id-4"><p>An error message appears when the user deletes an item from its basket</p></li>
+     <li id="checklist-id-5"><p>Notification emails are not sent anymore</p></li>
+     </ul>]]>
+      </field>
+      <field name="personal_stage_type_id" ref="personal_stage_admin_02"/>
+      <field name="color">5</field>
+      <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+    </record>
+
   </data>
 </odoo>

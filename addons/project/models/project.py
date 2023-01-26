@@ -1028,7 +1028,7 @@ class Task(models.Model):
     def _default_company_id(self):
         if self._context.get('default_project_id'):
             return self.env['project.project'].browse(self._context['default_project_id']).company_id
-        return self.env.company
+        return super()._default_company_id()
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):
@@ -1950,9 +1950,15 @@ class Task(models.Model):
             childs.unlink_task_and_subtasks_recursively()
         self.unlink()
 
-    def _update_default_task_assignees(self, create_vals):
-        """ Override from note to not set a default assignee if the task belong to a project."""
-        if not create_vals['display_project_id']:
+    def _add_default_task_assignees_in_list(self, create_vals):
+        """
+            Override from note to not set a default assignee if the task belong to a project or
+            if the user is a portal user.
+        """
+        is_portal_user = self.env.user.has_group('base.group_portal')
+        if not is_portal_user and \
+           ('display_project_id' not in create_vals or \
+           'display_project_id' in create_vals and not create_vals['display_project_id']):
             user_ids = self._fields['user_ids'].convert_to_cache(create_vals.get('user_ids', []), self)
             if self.env.user.id not in user_ids:
                 create_vals['user_ids'] = [Command.set(list(user_ids) + [self.env.user.id])]
