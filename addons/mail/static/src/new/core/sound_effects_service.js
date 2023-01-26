@@ -57,8 +57,10 @@ class SoundEffects {
     stop(soundEffectName) {
         const soundEffect = this.soundEffects[soundEffectName];
         if (soundEffect) {
-            soundEffect.audio.pause();
-            soundEffect.audio.currentTime = 0;
+            if (soundEffect.audio) {
+                soundEffect.audio.pause();
+                soundEffect.audio.currentTime = 0;
+            }
         } else {
             for (const soundEffect of Object.values(this.soundEffects)) {
                 if (soundEffect.audio) {
