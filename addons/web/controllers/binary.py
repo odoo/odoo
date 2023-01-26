@@ -59,13 +59,15 @@ class Binary(http.Controller):
             ))
         raise http.request.not_found()
 
-    @http.route(['/web/content',
+    @http.route([
+        '/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
         '/web/content/<int:id>',
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
-        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
+        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>',
+    ], type='http', auth='public', readonly=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        filename=None, filename_field='name', mimetype=None, unique=False,
@@ -84,11 +86,13 @@ class Binary(http.Controller):
         res.headers['Content-Security-Policy'] = "default-src 'none'"
         return res
 
-    @http.route(['/web/assets/debug/<string:filename>',
+    @http.route([
+        '/web/assets/debug/<string:filename>',
         '/web/assets/debug/<path:extra>/<string:filename>',
         '/web/assets/<int:id>/<string:filename>',
         '/web/assets/<int:id>-<string:unique>/<string:filename>',
-        '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>'], type='http', auth="public")
+        '/web/assets/<int:id>-<string:unique>/<path:extra>/<string:filename>',
+    ], type='http', auth="public", readonly=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_assets(self, id=None, filename=None, unique=False, extra=None, nocache=False):
         if not id:
@@ -117,7 +121,8 @@ class Binary(http.Controller):
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route(['/web/image',
+    @http.route([
+        '/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
         '/web/image/<string:xmlid>/<int:width>x<int:height>',
@@ -133,7 +138,8 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>',
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
-        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>',
+    ], type='http', auth='public', readonly=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                       filename_field='name', filename=None, mimetype=None, unique=False,
@@ -210,7 +216,7 @@ class Binary(http.Controller):
         '/web/binary/company_logo',
         '/logo',
         '/logo.png',
-    ], type='http', auth="none", cors="*")
+    ], type='http', auth='none', cors='*')
     def company_logo(self, dbname=None, **kw):
         imgname = 'logo'
         imgext = '.png'
@@ -261,7 +267,10 @@ class Binary(http.Controller):
 
         return response
 
-    @http.route(['/web/sign/get_fonts', '/web/sign/get_fonts/<string:fontname>'], type='json', auth='public')
+    @http.route([
+        '/web/sign/get_fonts',
+        '/web/sign/get_fonts/<string:fontname>',
+    ], type='json', auth='none')
     def get_fonts(self, fontname=None):
         """This route will return a list of base64 encoded fonts.
 
