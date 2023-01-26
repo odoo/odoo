@@ -53,11 +53,6 @@ class TestNestedTaskUpdate(TransactionCase):
         child = self.env['project.task'].with_context(default_parent_id=parent.id).create({'name': 'child'})
         self.assertEqual(child.partner_id, self.user.partner_id)
 
-    def test_creating_subtask_email_from_on_parent_goes_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'email_from': 'a@c.be'})
-        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
-        self.assertEqual(child.email_from, 'a@c.be')
-
     def test_creating_subtask_sale_line_id_on_parent_goes_on_child_if_same_partner_in_values(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'sale_line_id': self.order_line.id, 'project_id': self.project.id})
         child = self.env['project.task'].create({'name': 'child', 'partner_id': self.partner.id, 'parent_id': parent.id})
@@ -110,15 +105,6 @@ class TestNestedTaskUpdate(TransactionCase):
         parent.write({'partner_id': False})
         self.assertNotEqual(child.partner_id, self.user.partner_id)
 
-    def test_write_email_from_on_parent_write_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent'})
-        child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id})
-        self.assertFalse(child.email_from)
-        parent.write({'email_from': 'a@c.be'})
-        self.assertEqual(child.email_from, parent.email_from)
-        parent.write({'email_from': ''})
-        self.assertEqual(child.email_from, 'a@c.be')
-
     def test_write_sale_line_id_on_parent_write_on_child_if_same_partner(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'project_id': self.project.id})
         child = self.env['project.task'].create({'name': 'child', 'parent_id': parent.id, 'partner_id': self.partner.id})
@@ -165,13 +151,6 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertFalse(child.partner_id)
         child.write({'parent_id': parent.id})
         self.assertEqual(child.partner_id, self.user.partner_id)
-
-    def test_linking_email_from_on_parent_write_on_child(self):
-        parent = self.env['project.task'].create({'name': 'parent', 'email_from': 'a@c.be'})
-        child = self.env['project.task'].create({'name': 'child', 'email_from': False})
-        self.assertFalse(child.email_from)
-        child.write({'parent_id': parent.id})
-        self.assertEqual(child.email_from, 'a@c.be')
 
     def test_linking_sale_line_id_on_parent_write_on_child_if_same_partner(self):
         parent = self.env['project.task'].create({'name': 'parent', 'partner_id': self.partner.id, 'sale_line_id': self.order_line.id, 'project_id': self.project.id})

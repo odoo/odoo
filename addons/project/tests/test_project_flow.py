@@ -124,6 +124,27 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         self.assertEqual(task.project_id, self.project_goats, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_auto_create_partner(self):
+        email = 'unknown@test.com'
+        new_partner = self.env['res.partner'].search([('email', '=', email)])
+        self.assertFalse(new_partner)
+
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+pigs@mydomain.com, valid.lelitre@agrolait.com',
+                cc='valid.other@gmail.com',
+                email_from=email,
+                subject='subject',
+                msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+                target_model='project.task'
+            )
+
+        self.assertEqual(len(task), 1)
+        new_partner = self.env['res.partner'].search([('email', '=', email)])
+        self.assertTrue(new_partner)
+        self.assertEqual(task.partner_id, new_partner)
+        self.assertEqual(task.message_ids.author_id, new_partner)
+
     def test_subtask_process(self):
         """
         Check subtask mecanism and change it from project.
