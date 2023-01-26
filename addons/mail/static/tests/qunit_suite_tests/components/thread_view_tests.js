@@ -6,52 +6,6 @@ QUnit.module("mail", (hooks) => {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_view_tests.js");
 
-        QUnit.skipRefactoring("new messages separator on posting message", async function (assert) {
-            assert.expect(4);
-
-            const pyEnv = await startServer();
-            const mailChannelId1 = pyEnv["mail.channel"].create({
-                channel_member_ids: [
-                    [
-                        0,
-                        0,
-                        {
-                            message_unread_counter: 0,
-                            partner_id: pyEnv.currentPartnerId,
-                        },
-                    ],
-                ],
-                channel_type: "channel",
-                name: "General",
-            });
-            const { click, insertText, openDiscuss } = await start({
-                discuss: {
-                    context: { active_id: mailChannelId1 },
-                },
-            });
-            await openDiscuss();
-
-            assert.containsNone(document.body, ".o-mail-message", "should have no messages");
-            assert.containsNone(
-                document.body,
-                ".o_MessageListView_separatorNewMessages",
-                "should not display 'new messages' separator"
-            );
-
-            await insertText(".o-mail-composer-textarea", "hey !");
-            await click(".o-mail-composer-send-button");
-            assert.containsOnce(
-                document.body,
-                ".o-mail-message",
-                "should have the message current partner just posted"
-            );
-            assert.containsNone(
-                document.body,
-                ".o_MessageListView_separatorNewMessages",
-                "still no separator shown when current partner posted a message"
-            );
-        });
-
         QUnit.skipRefactoring("basic rendering of canceled notification", async function (assert) {
             assert.expect(8);
 
