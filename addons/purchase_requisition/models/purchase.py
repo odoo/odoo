@@ -246,6 +246,7 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
+<<<<<<< HEAD
     def _compute_price_unit_and_date_planned_and_name(self):
         po_lines_without_requisition = self.env['purchase.order.line']
         for pol in self:
@@ -270,7 +271,17 @@ class PurchaseOrderLine(models.Model):
                     pol.name = name
                     break
         super(PurchaseOrderLine, po_lines_without_requisition)._compute_price_unit_and_date_planned_and_name()
+||||||| parent of 5322bf83372 (temp)
+    def _compute_account_analytic_id(self):
+        for rec in self:
+            if not rec.order_id.requisition_id:
+                super(PurchaseOrderLine, self)._compute_account_analytic_id()
+=======
+    def _compute_account_analytic_id(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_account_analytic_id()
+>>>>>>> 5322bf83372 (temp)
 
+<<<<<<< HEAD
     def action_clear_quantities(self):
         zeroed_lines = self.filtered(lambda l: l.state not in ['cancel', 'purchase', 'done'])
         zeroed_lines.write({'product_qty': 0})
@@ -285,6 +296,15 @@ class PurchaseOrderLine(models.Model):
                 }
             }
         return False
+||||||| parent of 5322bf83372 (temp)
+    def _compute_analytic_tag_ids(self):
+        for rec in self:
+            if not rec.order_id.requisition_id:
+                super(PurchaseOrderLine, self)._compute_analytic_tag_ids()
+=======
+    def _compute_analytic_tag_ids(self):
+        super(PurchaseOrderLine, self.filtered(lambda pol: not pol.order_id.requisition_id))._compute_analytic_tag_ids()
+>>>>>>> 5322bf83372 (temp)
 
     def action_choose(self):
         order_lines = (self.order_id | self.order_id.alternative_po_ids).mapped('order_line')
