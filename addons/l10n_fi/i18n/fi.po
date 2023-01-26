@@ -4,11 +4,11 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.0+e\n"
+"Project-Id-Version: Odoo Server 16.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-19 16:10+0000\n"
-"PO-Revision-Date: 2020-05-19 16:10+0000\n"
-"Last-Translator: Elmeri Niemelä <elmeri.niemela@sprintit.fi>\n"
+"POT-Creation-Date: 2023-01-26 13:22+0000\n"
+"PO-Revision-Date: 2023-01-26 13:22+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,38 +16,1451 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_vat0triangulation
+#: model:account.tax,name:l10n_fi.2_vat0triangulation
+#: model:account.tax.template,name:l10n_fi.vat0triangulation
+msgid "0% ABC"
+msgstr "0% ABC"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_aland_sales_0
+#: model:account.tax,name:l10n_fi.2_aland_sales_0
+#: model:account.tax.template,name:l10n_fi.aland_sales_0
+msgid "0% Aland"
+msgstr "0% Aland"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_construct_sales_0
+#: model:account.tax,name:l10n_fi.2_tax_construct_sales_0
+#: model:account.tax.template,name:l10n_fi.tax_construct_sales_0
+msgid "0% Construct"
+msgstr "0 % Rakenne"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_sales_goods_0
+#: model:account.tax,name:l10n_fi.2_tax_eu_sales_goods_0
+#: model:account.tax.template,name:l10n_fi.tax_eu_sales_goods_0
+msgid "0% EU G"
+msgstr "0 % EU-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_sales_service_0
+#: model:account.tax,name:l10n_fi.2_tax_eu_sales_service_0
+#: model:account.tax.template,name:l10n_fi.tax_eu_sales_service_0
+msgid "0% EU S"
+msgstr "0% EU-palvelu"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_vat0export
+#: model:account.tax,description:l10n_fi.2_vat0export
+#: model:account.tax,name:l10n_fi.1_vat0export
+#: model:account.tax,name:l10n_fi.2_vat0export
+#: model:account.tax.template,description:l10n_fi.vat0export
+#: model:account.tax.template,name:l10n_fi.vat0export
+msgid "0% EX"
+msgstr "0% EX"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_turnover_0_vat
+msgid "0-Turnover subject to zero tax rate"
+msgstr "0-verokannan alainen liikevaihto"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_goods_10
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_service_10
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_goods_10
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_service_10
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_goods_10
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_service_10
+#: model:account.tax,description:l10n_fi.1_tax_non_eu_purchase_goods_10
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_goods_10
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_service_10
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_goods_10
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_service_10
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_goods_10
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_service_10
+#: model:account.tax,description:l10n_fi.2_tax_non_eu_purchase_goods_10
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_goods_10
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_goods_10
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_goods_10
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_goods_10
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_goods_10
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_service_10
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_goods_10
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_service_10
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_goods_10
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_service_10
+#: model:account.tax.template,description:l10n_fi.tax_non_eu_purchase_goods_10
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_goods_10
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_goods_10
+msgid "10%"
+msgstr "10%"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_goods_10
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_goods_10
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_goods_10
+msgid "10% EU G"
+msgstr "10% EU-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_service_10
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_service_10
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_service_10
+msgid "10% EU S"
+msgstr "10 % EU-palvelusta"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_non_eu_purchase_goods_10
+#: model:account.tax,name:l10n_fi.2_tax_non_eu_purchase_goods_10
+#: model:account.tax.template,name:l10n_fi.tax_non_eu_purchase_goods_10
+msgid "10% EX G"
+msgstr "10% EX-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_service_10
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_service_10
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_service_10
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_service_10
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_service_10
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_service_10
+msgid "10% S"
+msgstr "10% palvelua"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_brutto_10
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_brutto_10
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_brutto_10
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_brutto_10
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_brutto_10
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_brutto_10
+msgid "10% incl"
+msgstr "10% mukana"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_sales_10
+msgid "10% tax"
+msgstr "10 %:n vero"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_goods_14
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_service_14
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_goods_14
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_service_14
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_goods_14
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_service_14
+#: model:account.tax,description:l10n_fi.1_tax_non_eu_purchase_goods_14
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_goods_14
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_service_14
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_goods_14
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_service_14
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_goods_14
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_service_14
+#: model:account.tax,description:l10n_fi.2_tax_non_eu_purchase_goods_14
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_goods_14
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_goods_14
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_goods_14
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_goods_14
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_goods_14
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_service_14
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_goods_14
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_service_14
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_goods_14
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_service_14
+#: model:account.tax.template,description:l10n_fi.tax_non_eu_purchase_goods_14
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_goods_14
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_goods_14
+msgid "14%"
+msgstr "14%"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_goods_14
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_goods_14
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_goods_14
+msgid "14% EU"
+msgstr "14% EU"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_service_14
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_service_14
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_service_14
+msgid "14% EU S"
+msgstr "14 % EU-palvelusta"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_non_eu_purchase_goods_14
+#: model:account.tax,name:l10n_fi.2_tax_non_eu_purchase_goods_14
+#: model:account.tax.template,name:l10n_fi.tax_non_eu_purchase_goods_14
+msgid "14% EX G"
+msgstr "14 % EX-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_service_14
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_service_14
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_service_14
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_service_14
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_service_14
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_service_14
+msgid "14% S"
+msgstr "14% palvelua"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_brutto_14
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_brutto_14
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_brutto_14
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_brutto_14
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_brutto_14
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_brutto_14
+msgid "14% incl"
+msgstr "14% mukana"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_sales_14
+msgid "14% tax"
+msgstr "14 %:n vero"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_import_deduct24
+#: model:account.tax,description:l10n_fi.1_import_pay24
+#: model:account.tax,description:l10n_fi.1_tax_construct_purchase_24
+#: model:account.tax,description:l10n_fi.1_tax_construct_purchase_24_finland
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_goods_24
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_service_24
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_goods_24
+#: model:account.tax,description:l10n_fi.1_tax_dom_sales_service_24
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_goods_24
+#: model:account.tax,description:l10n_fi.1_tax_eu_purchase_service_24
+#: model:account.tax,description:l10n_fi.1_tax_non_eu_purchase_goods_24
+#: model:account.tax,description:l10n_fi.2_import_deduct24
+#: model:account.tax,description:l10n_fi.2_import_pay24
+#: model:account.tax,description:l10n_fi.2_tax_construct_purchase_24
+#: model:account.tax,description:l10n_fi.2_tax_construct_purchase_24_finland
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_goods_24
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_service_24
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_goods_24
+#: model:account.tax,description:l10n_fi.2_tax_dom_sales_service_24
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_goods_24
+#: model:account.tax,description:l10n_fi.2_tax_eu_purchase_service_24
+#: model:account.tax,description:l10n_fi.2_tax_non_eu_purchase_goods_24
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_goods_24
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_goods_24
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_goods_24
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_goods_24
+#: model:account.tax.template,description:l10n_fi.import_deduct24
+#: model:account.tax.template,description:l10n_fi.import_pay24
+#: model:account.tax.template,description:l10n_fi.tax_construct_purchase_24
+#: model:account.tax.template,description:l10n_fi.tax_construct_purchase_24_finland
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_goods_24
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_service_24
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_goods_24
+#: model:account.tax.template,description:l10n_fi.tax_dom_sales_service_24
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_goods_24
+#: model:account.tax.template,description:l10n_fi.tax_eu_purchase_service_24
+#: model:account.tax.template,description:l10n_fi.tax_non_eu_purchase_goods_24
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_goods_24
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_goods_24
+msgid "24%"
+msgstr "24%"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_construct_purchase_24
+#: model:account.tax,name:l10n_fi.2_tax_construct_purchase_24
+#: model:account.tax.template,name:l10n_fi.tax_construct_purchase_24
+msgid "24% Construct"
+msgstr "24 % Rakenne"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_goods_24
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_goods_24
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_goods_24
+msgid "24% EU G"
+msgstr "24% EU-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_eu_purchase_service_24
+#: model:account.tax,name:l10n_fi.2_tax_eu_purchase_service_24
+#: model:account.tax.template,name:l10n_fi.tax_eu_purchase_service_24
+msgid "24% EU S"
+msgstr "24 % EU-palvelusta"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_non_eu_purchase_goods_24
+#: model:account.tax,name:l10n_fi.2_tax_non_eu_purchase_goods_24
+#: model:account.tax.template,name:l10n_fi.tax_non_eu_purchase_goods_24
+msgid "24% EX G"
+msgstr "24% EX-tavarat"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_construct_purchase_24_finland
+#: model:account.tax,name:l10n_fi.2_tax_construct_purchase_24_finland
+#: model:account.tax.template,name:l10n_fi.tax_construct_purchase_24_finland
+msgid "24% FI Construct"
+msgstr "24 % FI Rakenne"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_import_deduct24
+#: model:account.tax,name:l10n_fi.2_import_deduct24
+#: model:account.tax.template,name:l10n_fi.import_deduct24
+msgid "24% Import Deduct"
+msgstr "24 % tuontivähennys"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_import_pay24
+#: model:account.tax,name:l10n_fi.2_import_pay24
+#: model:account.tax.template,name:l10n_fi.import_pay24
+msgid "24% Import Pay"
+msgstr "24% tuontimaksu"
+
+#. module: l10n_fi
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_service_24
+#: model:account.tax,name:l10n_fi.1_tax_dom_sales_service_24
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_service_24
+#: model:account.tax,name:l10n_fi.2_tax_dom_sales_service_24
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_service_24
+#: model:account.tax.template,name:l10n_fi.tax_dom_sales_service_24
+msgid "24% S"
+msgstr "24% palvelua"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_tax_dom_purchase_brutto_24
+#: model:account.tax,description:l10n_fi.2_tax_dom_purchase_brutto_24
+#: model:account.tax,name:l10n_fi.1_tax_dom_purchase_brutto_24
+#: model:account.tax,name:l10n_fi.2_tax_dom_purchase_brutto_24
+#: model:account.tax.template,description:l10n_fi.tax_dom_purchase_brutto_24
+#: model:account.tax.template,name:l10n_fi.tax_dom_purchase_brutto_24
+msgid "24% incl"
+msgstr "24% mukana"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_sales_24
+msgid "24% tax"
+msgstr "24 %:n vero"
+
+#. module: l10n_fi
+#: model:account.tax,description:l10n_fi.1_triangulation_purchase
+#: model:account.tax,description:l10n_fi.2_triangulation_purchase
+#: model:account.tax,name:l10n_fi.1_triangulation_purchase
+#: model:account.tax,name:l10n_fi.2_triangulation_purchase
+#: model:account.tax.template,description:l10n_fi.triangulation_purchase
+#: model:account.tax.template,name:l10n_fi.triangulation_purchase
+msgid "ABC"
+msgstr "ABC"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2870
+#: model:account.account,name:l10n_fi.2_account_2870
+#: model:account.account.template,name:l10n_fi.account_2870
+msgid "Accounts payable"
+msgstr "Ostovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2670
+#: model:account.account,name:l10n_fi.2_account_2670
+#: model:account.account.template,name:l10n_fi.account_2670
+msgid "Accounts payable, long-term"
+msgstr "Ostovelat, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1700
+#: model:account.account,name:l10n_fi.2_account_1700
+#: model:account.account.template,name:l10n_fi.account_1700
+msgid "Accounts receivable"
+msgstr "Myyntisaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1701
+#: model:account.account,name:l10n_fi.2_account_1701
+#: model:account.account.template,name:l10n_fi.account_1701
+msgid "Accounts receivable (point of sale)"
+msgstr "Myyntisaamiset (myyntipiste)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1710
+#: model:account.account,name:l10n_fi.2_account_1710
+#: model:account.account.template,name:l10n_fi.account_1710
+msgid "Accounts receivable old system"
+msgstr "Myyntisaamiset vanha järjestelmä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1800
+#: model:account.account,name:l10n_fi.2_account_1800
+#: model:account.account.template,name:l10n_fi.account_1800
+msgid "Accruals, short-term"
+msgstr "Siirtosaamiset, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1380
+#: model:account.account,name:l10n_fi.2_account_1380
+#: model:account.account.template,name:l10n_fi.account_1380
+msgid "Advance payments and unfinished purchases"
+msgstr "Ennakkomaksut ja keskeneräiset hankinnat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1090
+#: model:account.account,name:l10n_fi.2_account_1090
+#: model:account.account.template,name:l10n_fi.account_1090
+msgid "Advance payments for intangible assets"
+msgstr "Ennakkomaksut aineettomista hyödykkeistä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1550
+#: model:account.account,name:l10n_fi.2_account_1550
+#: model:account.account.template,name:l10n_fi.account_1550
+msgid "Advance payments for inventory"
+msgstr "Ennakkomaksut vaihto-omaisuudesta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2860
+#: model:account.account,name:l10n_fi.2_account_2860
+#: model:account.account.template,name:l10n_fi.account_2860
+msgid "Advances received"
+msgstr "Saadut ennakot"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_aland
+#: model:account.fiscal.position,name:l10n_fi.2_aland
+#: model:account.fiscal.position.template,name:l10n_fi.aland
+msgid "Aland"
+msgstr "Aland"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3200
+#: model:account.account,name:l10n_fi.2_account_3200
+#: model:account.account.template,name:l10n_fi.account_3200
+msgid "Ancillary services"
+msgstr "Oheispalvelut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2030
+#: model:account.account,name:l10n_fi.2_account_2030
+#: model:account.account.template,name:l10n_fi.account_2030
+msgid "Appreciation fund (oy)"
+msgstr "Arvonkorotusrahasto (oy)"
+
+#. module: l10n_fi
+#: model:account.report.column,name:l10n_fi.vat_report_balance
+msgid "Balance"
+msgstr "Saldo"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accounts_payable
+msgid "Balance sheet: Accounts payable"
+msgstr "Tase: Ostovelat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_trade_payables_to_group
+msgid "Balance sheet: Accounts payable group"
+msgstr "Tase: Ostovelat konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_trade_payables_to_associated_companies
+msgid "Balance sheet: Accounts payable joint ventures"
+msgstr "Tase: Ostovelat omistusyhteysyritykset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accounts_receivable
+msgid "Balance sheet: Accounts receivable"
+msgstr "Tase: Myyntisaamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_trade_group
+msgid "Balance sheet: Accounts receivable group"
+msgstr "Tase: Myyntisaamiset konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accounts_receivable_from_associated_companies
+msgid "Balance sheet: Accounts receivable joint ventures"
+msgstr "Tase: Myyntisaamiset omistusyhteysyritykset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_prepayments_and_accrued_income
+msgid "Balance sheet: Accruals"
+msgstr "Tase: Siirtosaamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accrued_liabilities_short-term
+msgid "Balance sheet: Accruals are short-term"
+msgstr "Tase: Siirtovelat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_advance_payments_intangible
+msgid "Balance sheet: Advance payments immaterial"
+msgstr "Tase: Ennakkomaksut aineettomat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_advance_payments_for_property
+msgid "Balance sheet: Advance payments inventory"
+msgstr "Tase: Ennakkomaksut vaihto-omaisuus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_payments_on_account_tangible
+msgid "Balance sheet: Advance payments material"
+msgstr "Tase: Ennakkomaksut aineelliset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_advances_received_short-term
+msgid "Balance sheet: Advances received are short-term"
+msgstr "Tase: Saadut ennakot lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_building_leases
+msgid "Balance sheet: Buildings lease rights"
+msgstr "Tase: Rakennukset vuokraoikeudet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_buildings_owned
+msgid "Balance sheet: Buildings owned"
+msgstr "Tase: Rakennukset omistetut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_liquidity
+msgid "Balance sheet: Cash and bank receivables"
+msgstr "Tase: Rahat ja pankkisaamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_deferred_tax_liabilities_are_short-term
+msgid "Balance sheet: Deferred tax liabilities short-term"
+msgstr "Tase: Laskennalliset verovelat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_deferred_tax_assets
+msgid "Balance sheet: Deferred tax receivables"
+msgstr "Tase: Laskennalliset verosaamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_depreciation_difference
+msgid "Balance sheet: Depreciation difference"
+msgstr "Tase: Poistoero"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_development_costs
+msgid "Balance sheet: Development expenses"
+msgstr "Tase: Kehittämismenot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_the_fair_value_reserve
+msgid "Balance sheet: Fair value fund"
+msgstr "Tase: Käyvän arvon rahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_finished_goods_inventories
+msgid "Balance sheet: Finished products and goods inventory"
+msgstr "Tase: Valmiit tuotteet ja tavarat vaihto-omaisuus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_the_articles_of_association_or_fund_under_the_rules
+msgid "Balance sheet: Fund according to the articles of association or rules"
+msgstr "Tase: Yhtiöjärjestyksen tai sääntöjen mukainen rahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_goodwill
+msgid "Balance sheet: Goodwill"
+msgstr "Tase: Liikearvo"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_group_short-term_liabilities
+msgid "Balance sheet: Group short-term liabilities"
+msgstr "Tase: Velat konserni lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_immaterial_rights
+msgid "Balance sheet: Intangible rights"
+msgstr "Tase: Aineettomat oikeudet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_the_invested_unrestricted_equity_fund
+msgid "Balance sheet: Invested unrestricted equity fund"
+msgstr "Tase: Sijoitetun vapaan oman pääoman rahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_land_and_water_rights_lease
+msgid "Balance sheet: Land and water areas lease rights"
+msgstr "Tase: Maa- ja vesialueet vuokraoikeudet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_land_and_water_areas_owned
+msgid "Balance sheet: Land and water areas owned"
+msgstr "Tase: Maa- ja vesialueet omistetut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_payables_to_associated_companies_non-current
+msgid "Balance sheet: Liabilities joint ventures long-term"
+msgstr "Tase: Velat omistusyhteysyritykset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_payables_to_associated_companies
+msgid "Balance sheet: Liabilities of joint ventures"
+msgstr "Tase: Velat omistusyhteysyritykset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_loans
+msgid "Balance sheet: Loan receivables"
+msgstr "Tase: Lainasaamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accounts_payable-current
+msgid "Balance sheet: Long-term accounts payable"
+msgstr "Tase: Ostovelat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_trade_receivables_long-term
+msgid "Balance sheet: Long-term accounts receivable"
+msgstr "Tase: Myyntisaamiset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_prepaid_expenses_and_long-term
+msgid "Balance sheet: Long-term accruals"
+msgstr "Tase: Siirtosaamiset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_accrued_long-term
+msgid "Balance sheet: Long-term accrued liabilities"
+msgstr "Tase: Siirtovelat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_advances_received_long-term
+msgid "Balance sheet: Long-term advances received"
+msgstr "Tase: Saadut ennakot pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_bonds_are_long-term
+msgid "Balance sheet: Long-term bonds"
+msgstr "Tase: Joukkovelkakirjalainat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_subordinated_loans_long-term
+msgid "Balance sheet: Long-term capital loans"
+msgstr "Tase: Pääomalainat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_convertible_bonds_long-term
+msgid "Balance sheet: Long-term convertible bonds"
+msgstr "Tase: Vaihtovelkakirjalainat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_deferred_tax_assets_are_long-term
+msgid "Balance sheet: Long-term deferred tax assets"
+msgstr "Tase: Laskennalliset verosaamiset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_deferred_tax_liabilities_are_long-term
+msgid "Balance sheet: Long-term deferred tax liabilities"
+msgstr "Tase: Laskennalliset verovelat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_bills_of_long-term
+msgid "Balance sheet: Long-term financial bills"
+msgstr "Tase: Rahoitusvekselit pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_loan_receivables_long-term
+msgid "Balance sheet: Long-term loan receivables"
+msgstr "Tase: Lainasaamiset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_loans_from_financial_institutions_long-term
+msgid "Balance sheet: Long-term loans from financial institutions"
+msgstr "Tase: Lainat rahoituslaitoksilta pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_pension_loans_long-term
+msgid "Balance sheet: Long-term pension loans"
+msgstr "Tase: Eläkelainat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_unpaid_shares_of_long-term
+msgid "Balance sheet: Long-term unpaid shares"
+msgstr "Tase: Maksamattomat osuudet pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_machines_and_hardware
+msgid "Balance sheet: Machines and equipment"
+msgstr "Tase: Koneet ja kalusto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_materials_and_supplies_inventories
+msgid "Balance sheet: Materials and supplies, inventory"
+msgstr "Tase: Aineet ja tarvikkeet vaihto-omaisuus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_current_assets
+msgid "Balance sheet: Other current assets"
+msgstr "Tase: Muu vaihto-omaisuus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_financial_assets
+msgid "Balance sheet: Other financial securities"
+msgstr "Tase: Muut rahoitusarvopaperit"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_reserves
+msgid "Balance sheet: Other funds"
+msgstr "Tase: Muut rahastot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_long_term_expenses
+msgid "Balance sheet: Other long-term expenses"
+msgstr "Tase: Muut pitkävaikutteiset menot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_long-term_liabilities
+msgid "Balance sheet: Other long-term liabilities"
+msgstr "Tase: Muut velat pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_long-term_receivables
+msgid "Balance sheet: Other long-term receivables"
+msgstr "Tase: Muut saamiset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_provisions
+msgid "Balance sheet: Other mandatory reservations"
+msgstr "Tase: Muut pakolliset varaukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_receivables
+msgid "Balance sheet: Other receivables"
+msgstr "Tase: Muut saamiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_receivables_investments
+msgid "Balance sheet: Other receivables and investments"
+msgstr "Tase: Muut saamiset sijoitukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_shares_and_participations
+msgid "Balance sheet: Other shares and shares"
+msgstr "Tase: Muut osakkeet ja osuudet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_shares_and_marketable_securities
+msgid "Balance sheet: Other shares and shares financial securities"
+msgstr "Tase: Muut osakkeet ja osuudet rahoitusarvopaperit"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_short-term_liabilities
+msgid "Balance sheet: Other short-term liabilities"
+msgstr "Tase: Muut velat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_tangible_assets
+msgid "Balance sheet: Other tangible assets"
+msgstr "Tase: Muut aineelliset hyödykkeet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_provisions_for_pensions
+msgid "Balance sheet: Pension provisions"
+msgstr "Tase: Eläkevaraukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_share_premium_account
+msgid "Balance sheet: Premium fund"
+msgstr "Tase: Ylikurssirahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_receivables_from_associated_companies_investments
+msgid "Balance sheet: Receivables from associated companies investments"
+msgstr "Tase: Saamiset omistusyhteysyrityksiltä sijoitukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_receivables_from_associated_companies
+msgid "Balance sheet: Receivables from joint ventures"
+msgstr "Tase: Saamiset omistusyhteysyritykset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_receivables_from_associated_companies_non-current
+msgid "Balance sheet: Receivables from joint ventures long-term"
+msgstr "Tase: Saamiset omistusyhteysyritykset pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_receivables_from_group
+msgid "Balance sheet: Receivables group"
+msgstr "Tase: Saamiset konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_reserve
+msgid "Balance sheet: Reserve fund"
+msgstr "Tase: Vararahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_stock_capital
+msgid "Balance sheet: Share, share or other similar capital"
+msgstr "Tase: Osake-, osuus- tai muu vastaava pääoma"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_shares_in_group_companies
+msgid "Balance sheet: Shares in companies of the same group"
+msgstr "Tase: Osuudet saman konsernin yrityksissä"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_shares_in_the_consolidated_financial_securities
+msgid "Balance sheet: Shares in group financial securities"
+msgstr "Tase: Osuudet konserni rahoitusarvopaperit"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_shares_in_associated_companies
+msgid "Balance sheet: Shares in joint ventures"
+msgstr "Tase: Osuudet omistusyhteysyrityksissä"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_bonds_short-term
+msgid "Balance sheet: Short-term bonds"
+msgstr "Tase: Joukkovelkakirjalainat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_capital_loans_are_short-term
+msgid "Balance sheet: Short-term capital loans"
+msgstr "Tase: Pääomalainat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_convertible_bonds_short-term
+msgid "Balance sheet: Short-term convertible bonds"
+msgstr "Tase: Vaihtovelkakirjalainat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_bills_of_short-term
+msgid "Balance sheet: Short-term financial bills"
+msgstr "Tase: Rahoitusvekselit lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_loans_from_financial_institutions_short-term
+msgid "Balance sheet: Short-term loans from financial institutions"
+msgstr "Tase: Lainat rahoituslaitoksilta lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_pension_loans_short-term
+msgid "Balance sheet: Short-term pension loans"
+msgstr "Tase: Eläkelainat lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_tax_provisions
+msgid "Balance sheet: Tax provisions"
+msgstr "Tase: Verovaraukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_tax_based_reservations
+msgid "Balance sheet: Taxable reserves"
+msgstr "Tase: Verotusperäiset varaukset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_consolidated_long-term_liabilities
+msgid "Balance sheet: The group's long-term liabilities"
+msgstr "Tase: Velat konserni pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_receivables_from_group_long-term
+msgid "Balance sheet: The group's long-term receivables"
+msgstr "Tase: Saamiset konserni pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_profit_for_the_period
+msgid "Balance sheet: The result of the financial year"
+msgstr "Tase: Tilikauden tulos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_retained_earnings
+msgid "Balance sheet: The result of the previous financial periods"
+msgstr "Tase: Edellisten tilikausien tulos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_unpaid_contributions
+msgid "Balance sheet: Unpaid shares"
+msgstr "Tase: Maksamattomat osuudet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_revaluation_reserve
+msgid "Balance sheet: Value appreciation fund"
+msgstr "Tase: Arvonkorotusrahasto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_work_in_progress
+msgid "Balance sheet: Work in progress"
+msgstr "Tase: Keskeneräiset tuotteet"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_goods_in_transit
+msgid "Balance: Goods on the way"
+msgstr "Tase: Matkalla olevat tavarat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1910
+#: model:account.account,name:l10n_fi.2_account_1910
+#: model:account.account.template,name:l10n_fi.account_1910
+msgid "Bank receivables"
+msgstr "Pankkisaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1920
+#: model:account.account,name:l10n_fi.2_account_1920
+#: model:account.account.template,name:l10n_fi.account_1920
+msgid "Bank receivables, bank2"
+msgstr "Pankkisaamiset, pankki2"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1930
+#: model:account.account,name:l10n_fi.2_account_1930
+#: model:account.account.template,name:l10n_fi.account_1930
+msgid "Bank receivables, bank3"
+msgstr "Pankkisaamiset, pankki3"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1940
+#: model:account.account,name:l10n_fi.2_account_1940
+#: model:account.account.template,name:l10n_fi.account_1940
+msgid "Bank receivables, bank4"
+msgstr "Pankkisaamiset, pankki4"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2200
+#: model:account.account,name:l10n_fi.2_account_2200
+#: model:account.account.template,name:l10n_fi.account_2200
+msgid "Basic capital"
+msgstr "Peruspääoma"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5900
+#: model:account.account,name:l10n_fi.2_account_5900
+#: model:account.account.template,name:l10n_fi.account_5900
+msgid "Benefits in kind for shareholders and relatives"
+msgstr "Osakkaiden ja omaisten luontoisedut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2890
+#: model:account.account,name:l10n_fi.2_account_2890
+#: model:account.account.template,name:l10n_fi.account_2890
+msgid "Bills of exchange"
+msgstr "Rahoitusvekselit"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2810
+#: model:account.account,name:l10n_fi.2_account_2810
+#: model:account.account.template,name:l10n_fi.account_2810
+msgid "Bonds"
+msgstr "Joukkovelkakirjalainat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2610
+#: model:account.account,name:l10n_fi.2_account_2610
+#: model:account.account.template,name:l10n_fi.account_2610
+msgid "Bonds, long-term"
+msgstr "Joukkovelkakirjalainat, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1120
+#: model:account.account,name:l10n_fi.2_account_1120
+#: model:account.account.template,name:l10n_fi.account_1120
+msgid "Buildings and structures"
+msgstr "Rakennukset ja rakennelmat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2150
+#: model:account.account,name:l10n_fi.2_account_2150
+#: model:account.account.template,name:l10n_fi.account_2150
+msgid "Capital contributions (ay)"
+msgstr "Pääomapanokset (ay)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2170
+#: model:account.account,name:l10n_fi.2_account_2170
+#: model:account.account.template,name:l10n_fi.account_2170
+msgid "Capital contributions (ky)"
+msgstr "Pääomapanokset (ky)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2330
+#: model:account.account,name:l10n_fi.2_account_2330
+#: model:account.account.template,name:l10n_fi.account_2330
+msgid "Capital deficit from previous financial periods"
+msgstr "Pääomavajaus edellisiltä tilikausilta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3650
+#: model:account.account,name:l10n_fi.2_account_3650
+#: model:account.account.template,name:l10n_fi.account_3650
+msgid "Capital gains from fixed assets"
+msgstr "Myyntivoitot pysyvistä vastaavista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2600
+#: model:account.account,name:l10n_fi.2_account_2600
+#: model:account.account.template,name:l10n_fi.account_2600
+msgid "Capital loans, long-term"
+msgstr "Pääomalainat, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2800
+#: model:account.account,name:l10n_fi.2_account_2800
+#: model:account.account.template,name:l10n_fi.account_2800
+msgid "Capital loans, short-term"
+msgstr "Pääomalainat, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2000
+#: model:account.account,name:l10n_fi.2_account_2000
+#: model:account.account.template,name:l10n_fi.account_2000
+msgid "Capital stock"
+msgstr "Osakepääoma"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1720
+#: model:account.account,name:l10n_fi.2_account_1720
+#: model:account.account.template,name:l10n_fi.account_1720
+msgid "Card receivables"
+msgstr "Korttisaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3300
+#: model:account.account,name:l10n_fi.2_account_3300
+#: model:account.account.template,name:l10n_fi.account_3300
+msgid "Commission trade and agency"
+msgstr "Komissiokauppa ja agentuuri"
+
+#. module: l10n_fi
 #: model:ir.model.fields,field_description:l10n_fi.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr "Maksuviitteen tyyppi"
+msgstr "Viestintästandardi"
 
 #. module: l10n_fi
-#: code:addons/l10n_fi/models/account_partial_reconcile.py:0
-#: code:addons/l10n_fi/models/account_partial_reconcile.py:0
-#, python-format
-msgid "Currency exchange rate difference"
-msgstr "Valuuttakurssivaihtoero"
+#: model:account.account,name:l10n_fi.1_account_4110
+#: model:account.account,name:l10n_fi.2_account_4110
+#: model:account.account.template,name:l10n_fi.account_4110
+msgid "Community procurement"
+msgstr "Yhteisöhankinnat"
 
 #. module: l10n_fi
-#: model:ir.ui.menu,name:l10n_fi.account_reports_fi_statements_menu
+#: model:account.account,name:l10n_fi.1_account_3350
+#: model:account.account,name:l10n_fi.2_account_3350
+#: model:account.account.template,name:l10n_fi.account_3350
+msgid "Community sale"
+msgstr "Yhteisömyynti"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5770
+#: model:account.account,name:l10n_fi.2_account_5770
+#: model:account.account.template,name:l10n_fi.account_5770
+msgid "Compensations received from management salaries"
+msgstr "Saadut korvaukset johdon palkoista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5470
+#: model:account.account,name:l10n_fi.2_account_5470
+#: model:account.account.template,name:l10n_fi.account_5470
+msgid "Compensations received from wages"
+msgstr "Saadut korvaukset palkoista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6400
+#: model:account.account,name:l10n_fi.2_account_6400
+#: model:account.account.template,name:l10n_fi.account_6400
+msgid "Compulsory insurance premiums"
+msgstr "Pakolliset vakuutusmaksut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7650
+#: model:account.account,name:l10n_fi.2_account_7650
+#: model:account.account.template,name:l10n_fi.account_7650
+msgid "Computer device and program. rents"
+msgstr "Atk-laite ja ohjelm. vuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7640
+#: model:account.account,name:l10n_fi.2_account_7640
+#: model:account.account.template,name:l10n_fi.account_7640
+msgid "Computer equipment and software costs"
+msgstr "Atk-laite ja -ohjelmakulut"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_construction
+#: model:account.fiscal.position,name:l10n_fi.2_construction
+#: model:account.fiscal.position.template,name:l10n_fi.construction
+msgid "Construction services + Scrap metal"
+msgstr "Rakennuspalvelut + metalliromu"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2820
+#: model:account.account,name:l10n_fi.2_account_2820
+#: model:account.account.template,name:l10n_fi.account_2820
+msgid "Convertible bonds"
+msgstr "Vaihtovelkakirjalainat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1777
+#: model:account.account,name:l10n_fi.2_account_1777
+#: model:account.account.template,name:l10n_fi.account_1777
+msgid "Current account"
+msgstr "Selvittelytili"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_deductible
+msgid "Deductible tax for the tax season"
+msgstr "Verokauden vähennettävä vero"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1850
+#: model:account.account,name:l10n_fi.2_account_1850
+#: model:account.account.template,name:l10n_fi.account_1850
+msgid "Deferred tax assets"
+msgstr "Laskennalliset verosaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2980
+#: model:account.account,name:l10n_fi.2_account_2980
+#: model:account.account.template,name:l10n_fi.account_2980
+msgid "Deferred tax liabilities"
+msgstr "Laskennalliset verovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9970
+#: model:account.account,name:l10n_fi.2_account_9970
+#: model:account.account.template,name:l10n_fi.account_9970
+msgid "Deferred taxes"
+msgstr "Laskennalliset verot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3250
+#: model:account.account,name:l10n_fi.2_account_3250
+#: model:account.account.template,name:l10n_fi.account_3250
+msgid "Delivery charges and installment surcharges"
+msgstr "Toimitusveloitukset ja osamaksulisät"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2400
+#: model:account.account,name:l10n_fi.2_account_2400
+#: model:account.account.template,name:l10n_fi.account_2400
+msgid "Depreciation difference"
+msgstr "Poistoero"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6930
+#: model:account.account,name:l10n_fi.2_account_6930
+#: model:account.account.template,name:l10n_fi.account_6930
+msgid "Depreciation of group goodwill and reduction of group reserve"
+msgstr "Konserniliikearvon poisto ja konsenireservin vähennys"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1020
+#: model:account.account,name:l10n_fi.2_account_1020
+#: model:account.account.template,name:l10n_fi.account_1020
+msgid "Development costs"
+msgstr "Kehittämismenot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4230
+#: model:account.account,name:l10n_fi.2_account_4230
+#: model:account.account.template,name:l10n_fi.account_4230
+msgid "Discounts on purchases"
+msgstr "Ostojen alennukset"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_eu
+#: model:account.fiscal.position,name:l10n_fi.2_eu
+#: model:account.fiscal.position.template,name:l10n_fi.eu
+msgid "EU"
+msgstr "EU"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_eu_no_vat
+#: model:account.fiscal.position,name:l10n_fi.2_eu_no_vat
+#: model:account.fiscal.position.template,name:l10n_fi.eu_no_vat
+msgid "EU no VAT"
+msgstr "EU ei arvonlisäveroa"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4370
+#: model:account.account,name:l10n_fi.2_account_4370
+#: model:account.account.template,name:l10n_fi.account_4370
+msgid "Exchange rate differences for purchases"
+msgstr "Ostojen valuuttakurssierot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6990
+#: model:account.account,name:l10n_fi.2_account_6990
+#: model:account.account.template,name:l10n_fi.account_6990
+msgid "Extraordinary impairments of current assets"
+msgstr "Vaihtuvien vastaavien poikkeukselliset arvonalentumiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1520
+#: model:account.account,name:l10n_fi.2_account_1520
+#: model:account.account.template,name:l10n_fi.account_1520
+msgid "Finished products"
+msgstr "Valmiit tuotteet"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_finland
+#: model:account.fiscal.position,name:l10n_fi.2_finland
+#: model:account.fiscal.position.template,name:l10n_fi.finland
 msgid "Finland"
 msgstr "Suomi"
 
 #. module: l10n_fi
+#: model:account.chart.template,name:l10n_fi.fi_chart_template
+msgid "Finnish Chart of Accounts"
+msgstr "Suomen tilikartta"
+
+#. module: l10n_fi
 #: model:ir.model.fields.selection,name:l10n_fi.selection__account_journal__invoice_reference_model__fi_rf
 msgid "Finnish Creditor Reference (RF)"
-msgstr "Kansainvälinen viitenumero (RF)"
+msgstr "Suomen velkojaviite (RF)"
 
 #. module: l10n_fi
 #: model:ir.model.fields.selection,name:l10n_fi.selection__account_journal__invoice_reference_model__fi
 msgid "Finnish Standard Reference"
-msgstr "Suomalainen viitenumero"
+msgstr "Suomen standardiviite"
 
 #. module: l10n_fi
-#: code:addons/addons/l10n_fi/models/account_move.py:0
+#: model:account.account,name:l10n_fi.1_account_4290
+#: model:account.account,name:l10n_fi.2_account_4290
+#: model:account.account.template,name:l10n_fi.account_4290
+msgid "Freight, forwarding and other acquisition costs"
+msgstr "Rahdit, huolinta ja muut hankintakulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5400
+#: model:account.account,name:l10n_fi.2_account_5400
+#: model:account.account.template,name:l10n_fi.account_5400
+msgid "Fringe benefits"
+msgstr "Luontoisedut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2070
+#: model:account.account,name:l10n_fi.2_account_2070
+#: model:account.account.template,name:l10n_fi.account_2070
+msgid "Fund according to the articles of association"
+msgstr "Yhtiöjärjestyksen mukainen rahasto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2130
+#: model:account.account,name:l10n_fi.2_account_2130
+#: model:account.account.template,name:l10n_fi.account_2130
+msgid "Fund according to the rules"
+msgstr "Sääntöjen mukainen rahasto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7270
+#: model:account.account,name:l10n_fi.2_account_7270
+#: model:account.account.template,name:l10n_fi.account_7270
+msgid "Garage and parking space rentals"
+msgstr "Autotalli- ja autopaikkavuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1530
+#: model:account.account,name:l10n_fi.2_account_1530
+#: model:account.account.template,name:l10n_fi.account_1530
+msgid "Goods"
+msgstr "Tavarat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1050
+#: model:account.account,name:l10n_fi.2_account_1050
+#: model:account.account.template,name:l10n_fi.account_1050
+msgid "Goodwill"
+msgstr "Liikearvo"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3800
+#: model:account.account,name:l10n_fi.2_account_3800
+#: model:account.account.template,name:l10n_fi.account_3800
+msgid "Grants and subsidies received"
+msgstr "Saadut avustukset ja tuet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1060
+#: model:account.account,name:l10n_fi.2_account_1060
+#: model:account.account.template,name:l10n_fi.account_1060
+msgid "Group goodwill"
+msgstr "Konserniliikearvo"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9860
+#: model:account.account,name:l10n_fi.2_account_9860
+#: model:account.account.template,name:l10n_fi.account_9860
+msgid "Group grants, paid"
+msgstr "Konserniavustukset, maksetut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9850
+#: model:account.account,name:l10n_fi.2_account_9850
+#: model:account.account.template,name:l10n_fi.account_9850
+msgid "Group grants, received"
+msgstr "Konserniavustukset, saadut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2590
+#: model:account.account,name:l10n_fi.2_account_2590
+#: model:account.account.template,name:l10n_fi.account_2590
+msgid "Group reserve"
+msgstr "Konsernireservi"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4480
+#: model:account.account,name:l10n_fi.2_account_4480
+#: model:account.account.template,name:l10n_fi.account_4480
+msgid "Hired labor"
+msgstr "Vuokrattu työvoima"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1030
+#: model:account.account,name:l10n_fi.2_account_1030
+#: model:account.account.template,name:l10n_fi.account_1030
+msgid "Immaterial rights"
+msgstr "Aineettomat oikeudet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9370
+#: model:account.account,name:l10n_fi.2_account_9370
+#: model:account.account.template,name:l10n_fi.account_9370
+msgid "Impairment of financial securities of current equivalents"
+msgstr "Arvonalentumiset vaihtuvien vastaavien rahoitusarvopapereista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6950
+#: model:account.account,name:l10n_fi.2_account_6950
+#: model:account.account.template,name:l10n_fi.account_6950
+msgid "Impairment of fixed assets"
+msgstr "Arvonalentumiset pysyvien vastaavien hyödykkeistä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9300
+#: model:account.account,name:l10n_fi.2_account_9300
+#: model:account.account.template,name:l10n_fi.account_9300
+msgid "Impairment of fixed assets investments"
+msgstr "Arvonalentumiset pysyvien vastaavien sijoituksista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4130
+#: model:account.account,name:l10n_fi.2_account_4130
+#: model:account.account.template,name:l10n_fi.account_4130
+msgid "Import purchases from outside the community"
+msgstr "Tuontiostot yhteisön ulkopuolelta"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_import_goods_no_eu
+msgid "Imports of goods from outside the EU"
+msgstr "Tavaroiden maahantuonnit EU:n ulkopuolelta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9000
+#: model:account.account,name:l10n_fi.2_account_9000
+#: model:account.account.template,name:l10n_fi.account_9000
+msgid "Income from shares in companies of the same group"
+msgstr "Tuotot osuuksista saman konsernin yrityksissä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9040
+#: model:account.account,name:l10n_fi.2_account_9040
+#: model:account.account.template,name:l10n_fi.account_9040
+msgid "Income from shares in joint ventures"
+msgstr "Tuotot osuuksista omistusyhteysyrityksissä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9070
+#: model:account.account,name:l10n_fi.2_account_9070
+#: model:account.account.template,name:l10n_fi.account_9070
+msgid "Income from shares in other joint ventures"
+msgstr "Tuotot osuuksista muissa omistusyhteysyrityksissä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3570
+#: model:account.account,name:l10n_fi.2_account_3570
+#: model:account.account.template,name:l10n_fi.account_3570
+msgid "Income transfer and pass-through batches"
+msgstr "Tulonsiirto- ja läpikulkuerät"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3600
+#: model:account.account,name:l10n_fi.2_account_3600
+#: model:account.account.template,name:l10n_fi.account_3600
+msgid ""
+"Increase (+) or decrease (-) in stocks of finished and work-in-progress"
+msgstr ""
+"Valmiiden ja keskeneräisten tuotteiden varastojen lisäys (+) tai vähennys "
+"(-)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9800
+#: model:account.account,name:l10n_fi.2_account_9800
+#: model:account.account.template,name:l10n_fi.account_9800
+msgid "Increase (-) or decrease (+) of depreciation difference"
+msgstr "Poistoeron lisäys (-) tai vähennys (+)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9840
+#: model:account.account,name:l10n_fi.2_account_9840
+#: model:account.account.template,name:l10n_fi.account_9840
+msgid "Increase (-) or decrease (+) of tax-based provisions"
+msgstr "Verotusperusteisten varausten lisäys (-) tai vähennys (+)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3550
+#: model:account.account,name:l10n_fi.2_account_3550
+#: model:account.account.template,name:l10n_fi.account_3550
+msgid "Indirect taxes"
+msgstr "Välilliset verot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8452
+#: model:account.account,name:l10n_fi.2_account_8452
+#: model:account.account.template,name:l10n_fi.account_8452
+msgid "Insurance and damages"
+msgstr "Vakuutukset ja vahingonkorvaukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9420
+#: model:account.account,name:l10n_fi.2_account_9420
+#: model:account.account.template,name:l10n_fi.account_9420
+msgid "Interest expenses and other financial expenses, group"
+msgstr "Korkokulut ja muut rahoituskulut, konserni"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9440
+#: model:account.account,name:l10n_fi.2_account_9440
+#: model:account.account.template,name:l10n_fi.account_9440
+msgid "Interest expenses and other financial expenses, other"
+msgstr "Korkokulut ja muut rahoituskulut, muut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3710
+#: model:account.account,name:l10n_fi.2_account_3710
+#: model:account.account.template,name:l10n_fi.account_3710
+msgid "Interruption and other security compensations"
+msgstr "Keskeytys- ym. vakuuskorvaukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4400
+#: model:account.account,name:l10n_fi.2_account_4400
+#: model:account.account.template,name:l10n_fi.account_4400
+msgid "Inventory increase (+) or decrease (-)"
+msgstr "Varastojen lisäys (+) tai vähennys (-)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9080
+#: model:account.account,name:l10n_fi.2_account_9080
+#: model:account.account.template,name:l10n_fi.account_9080
+msgid "Investment income from investments of permanent equivalents, group"
+msgstr "Sijoitustuotot pysyvien vastaavien sijoituksista, konserni"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9090
+#: model:account.account,name:l10n_fi.2_account_9090
+#: model:account.account.template,name:l10n_fi.account_9090
+msgid "Investment income from investments of permanent equivalents, others"
+msgstr "Sijoitustuotot pysyvien vastaavien sijoituksista, muut"
+
+#. module: l10n_fi
+#. odoo-python
+#: code:addons/l10n_fi/models/account_move.py:0
 #: code:addons/l10n_fi/models/account_move.py:0
 #, python-format
 msgid "Invoice number must contain numeric characters"
-msgstr "Laskun numeron on sisällettävä numeerisia merkkejä"
+msgstr "Laskun numeron tulee sisältää numeerisia merkkejä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2010
+#: model:account.account,name:l10n_fi.2_account_2010
+#: model:account.account.template,name:l10n_fi.account_2010
+msgid "Issue of shares"
+msgstr "Osakeanti"
 
 #. module: l10n_fi
 #: model:ir.model,name:l10n_fi.model_account_journal
@@ -56,23 +1469,1252 @@ msgstr "Päiväkirja"
 
 #. module: l10n_fi
 #: model:ir.model,name:l10n_fi.model_account_move
-msgid "Journal Entries"
-msgstr "Päiväkirjaviennit"
+msgid "Journal Entry"
+msgstr "Päiväkirjan kirjaus"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1100
+#: model:account.account,name:l10n_fi.2_account_1100
+#: model:account.account.template,name:l10n_fi.account_1100
+msgid "Land and water areas"
+msgstr "Maa- ja vesialueet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3700
+#: model:account.account,name:l10n_fi.2_account_3700
+#: model:account.account.template,name:l10n_fi.account_3700
+msgid "Leasing credits"
+msgstr "Leasinghyvitykset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2710
+#: model:account.account,name:l10n_fi.2_account_2710
+#: model:account.account.template,name:l10n_fi.account_2710
+msgid "Liabilities to associated companies, long-term"
+msgstr "Velat omistusyhteysyrityksille, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2900
+#: model:account.account,name:l10n_fi.2_account_2900
+#: model:account.account.template,name:l10n_fi.account_2900
+msgid "Liabilities to companies of the same group"
+msgstr "Velat saman konsernin yrityksille"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2700
+#: model:account.account,name:l10n_fi.2_account_2700
+#: model:account.account.template,name:l10n_fi.account_2700
+msgid "Liabilities to companies of the same group, long-term"
+msgstr "Velat saman konsernin yrityksille, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2910
+#: model:account.account,name:l10n_fi.2_account_2910
+#: model:account.account.template,name:l10n_fi.account_2910
+msgid "Liabilities to joint ventures"
+msgstr "Velat omistusyhteysyrityksille"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_fi_chart_template_liquidity_transfer
+#: model:account.account,name:l10n_fi.2_fi_chart_template_liquidity_transfer
+#: model:account.account.template,name:l10n_fi.fi_chart_template_liquidity_transfer
+msgid "Liquidity Transfer"
+msgstr "Likviditeetin siirto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1650
+#: model:account.account,name:l10n_fi.2_account_1650
+#: model:account.account.template,name:l10n_fi.account_1650
+msgid "Loan receivables, long-term"
+msgstr "Lainasaamiset, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1750
+#: model:account.account,name:l10n_fi.2_account_1750
+#: model:account.account.template,name:l10n_fi.account_1750
+msgid "Loan receivables, short-term"
+msgstr "Lainasaamiset, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2630
+#: model:account.account,name:l10n_fi.1_account_2830
+#: model:account.account,name:l10n_fi.2_account_2630
+#: model:account.account,name:l10n_fi.2_account_2830
+#: model:account.account.template,name:l10n_fi.account_2630
+#: model:account.account.template,name:l10n_fi.account_2830
+msgid "Loans from financial institutions"
+msgstr "Lainat rahoituslaitoksilta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1680
+#: model:account.account,name:l10n_fi.2_account_1680
+#: model:account.account.template,name:l10n_fi.account_1680
+msgid "Long-term accruals"
+msgstr "Pitkäaikaiset siirtosaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2750
+#: model:account.account,name:l10n_fi.2_account_2750
+#: model:account.account.template,name:l10n_fi.account_2750
+msgid "Long-term accrued liabilities"
+msgstr "Pitkäaikaiset siirtovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2660
+#: model:account.account,name:l10n_fi.2_account_2660
+#: model:account.account.template,name:l10n_fi.account_2660
+msgid "Long-term advances received"
+msgstr "Pitkäaikaiset saadut ennakot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2620
+#: model:account.account,name:l10n_fi.2_account_2620
+#: model:account.account.template,name:l10n_fi.account_2620
+msgid "Long-term convertible bonds"
+msgstr "Pitkäaikaiset vaihtovelkakirjalainat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1690
+#: model:account.account,name:l10n_fi.2_account_1690
+#: model:account.account.template,name:l10n_fi.account_1690
+msgid "Long-term deferred tax assets"
+msgstr "Pitkäaikaiset laskennalliset verosaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2770
+#: model:account.account,name:l10n_fi.2_account_2770
+#: model:account.account.template,name:l10n_fi.account_2770
+msgid "Long-term deferred tax liabilities"
+msgstr "Pitkäaikaiset laskennalliset verovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2690
+#: model:account.account,name:l10n_fi.2_account_2690
+#: model:account.account.template,name:l10n_fi.account_2690
+msgid "Long-term financial bills"
+msgstr "Pitkäaikaiset rahoitusvekselit"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1430
+#: model:account.account,name:l10n_fi.2_account_1430
+#: model:account.account.template,name:l10n_fi.account_1430
+msgid "Long-term receivables from affiliated companies"
+msgstr "Pitkäaikaiset saamiset omistusyhteysyrityksiltä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2650
+#: model:account.account,name:l10n_fi.2_account_2650
+#: model:account.account.template,name:l10n_fi.account_2650
+msgid "Long-term repayment loans from occupational pension institutions"
+msgstr "Pitkäaikaiset takaisinlainat työeläkelaitoksilta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1600
+#: model:account.account,name:l10n_fi.2_account_1600
+#: model:account.account.template,name:l10n_fi.account_1600
+msgid "Long-term trade receivables"
+msgstr "Pitkäaikaiset myyntisaamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1670
+#: model:account.account,name:l10n_fi.2_account_1670
+#: model:account.account.template,name:l10n_fi.account_1670
+msgid "Long-term unpaid shares / units"
+msgstr "Pitkäaikaiset maksamattomat osakkeet / osuudet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8850
+#: model:account.account,name:l10n_fi.2_account_8850
+#: model:account.account.template,name:l10n_fi.account_8850
+msgid "Losses on disposal of fixed assets"
+msgstr "Käyttöomaisuuden luovutustappiot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7720
+#: model:account.account,name:l10n_fi.2_account_7720
+#: model:account.account.template,name:l10n_fi.account_7720
+msgid "Machine and equipment rentals"
+msgstr "Kone- ja kalustovuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7710
+#: model:account.account,name:l10n_fi.2_account_7710
+#: model:account.account.template,name:l10n_fi.account_7710
+msgid "Machinery and equipment costs"
+msgstr "Kone- ja kalustokulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1160
+#: model:account.account,name:l10n_fi.2_account_1160
+#: model:account.account.template,name:l10n_fi.account_1160
+msgid "Machines and hardware"
+msgstr "Koneet ja kalusto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5700
+#: model:account.account,name:l10n_fi.2_account_5700
+#: model:account.account.template,name:l10n_fi.account_5700
+msgid "Management fringe benefits"
+msgstr "Johdon luontoisedut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5600
+#: model:account.account,name:l10n_fi.2_account_5600
+#: model:account.account.template,name:l10n_fi.account_5600
+msgid "Management salaries and fees"
+msgstr "Johdon palkat ja palkkiot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8050
+#: model:account.account,name:l10n_fi.2_account_8050
+#: model:account.account.template,name:l10n_fi.account_8050
+msgid "Marketing expenses"
+msgstr "Markkinointikulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8890
+#: model:account.account,name:l10n_fi.2_account_8890
+#: model:account.account.template,name:l10n_fi.account_8890
+msgid "Match differences"
+msgstr "Täsmäytyserot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1500
+#: model:account.account,name:l10n_fi.2_account_1500
+#: model:account.account.template,name:l10n_fi.account_1500
+msgid "Materials and supplies"
+msgstr "Aineet ja tarvikkeet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8790
+#: model:account.account,name:l10n_fi.2_account_8790
+#: model:account.account.template,name:l10n_fi.account_8790
+msgid "Merger loss"
+msgstr "Fuusiotappio"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2390
+#: model:account.account,name:l10n_fi.2_account_2390
+#: model:account.account.template,name:l10n_fi.account_2390
+msgid "Minority interest"
+msgstr "Vähemmistöosuus"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9990
+#: model:account.account,name:l10n_fi.2_account_9990
+#: model:account.account.template,name:l10n_fi.account_9990
+msgid "Minority interests"
+msgstr "Vähemmistöosuudet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1900
+#: model:account.account,name:l10n_fi.2_account_1900
+#: model:account.account.template,name:l10n_fi.account_1900
+msgid "Money / Cash"
+msgstr "Rahat / käteisvarat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1990
+#: model:account.account,name:l10n_fi.2_account_1990
+#: model:account.account.template,name:l10n_fi.account_1990
+msgid "Money transfers and reconciliations"
+msgstr "Rahansiirrot ja täsmäytykset"
+
+#. module: l10n_fi
+#: model:account.fiscal.position,name:l10n_fi.1_non_eu
+#: model:account.fiscal.position,name:l10n_fi.2_non_eu
+#: model:account.fiscal.position.template,name:l10n_fi.non_eu
+msgid "Non EU"
+msgstr "Non EU"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8800
+#: model:account.account,name:l10n_fi.2_account_8800
+#: model:account.account.template,name:l10n_fi.account_8800
+msgid "Non-deductible business expenses"
+msgstr "Vähennyskelvottomat liikekulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5000
+#: model:account.account,name:l10n_fi.2_account_5000
+#: model:account.account.template,name:l10n_fi.account_5000
+msgid "Normal wages for working time"
+msgstr "Työssäoloajan normaalipalkat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8453
+#: model:account.account,name:l10n_fi.2_account_8453
+#: model:account.account.template,name:l10n_fi.account_8453
+msgid "Office and administrative expenses"
+msgstr "Toimisto- ja hallintokulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5990
+#: model:account.account,name:l10n_fi.2_account_5990
+#: model:account.account.template,name:l10n_fi.account_5990
+msgid "Offsetting benefits in kind account"
+msgstr "Luontoisetujen vastatili"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2935
+#: model:account.account,name:l10n_fi.2_account_2935
+#: model:account.account.template,name:l10n_fi.account_2935
+msgid "OmaVero events"
+msgstr "OmaVero-tapahtumat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2951
+#: model:account.account,name:l10n_fi.2_account_2951
+#: model:account.account.template,name:l10n_fi.account_2951
+msgid "Other accrued liabilities"
+msgstr "Muut siirtovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4380
+#: model:account.account,name:l10n_fi.2_account_4380
+#: model:account.account.template,name:l10n_fi.account_4380
+msgid "Other adjustment items for purchases"
+msgstr "Muut ostojen oikaisuerät"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8700
+#: model:account.account,name:l10n_fi.2_account_8700
+#: model:account.account.template,name:l10n_fi.account_8700
+msgid "Other business expenses"
+msgstr "Muut liikekulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2940
+#: model:account.account,name:l10n_fi.2_account_2940
+#: model:account.account.template,name:l10n_fi.account_2940
+msgid "Other debts"
+msgstr "Muut velat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9980
+#: model:account.account,name:l10n_fi.2_account_9980
+#: model:account.account.template,name:l10n_fi.account_9980
+msgid "Other direct taxes"
+msgstr "Muut välittömät verot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4490
+#: model:account.account,name:l10n_fi.2_account_4490
+#: model:account.account.template,name:l10n_fi.account_4490
+msgid "Other external services"
+msgstr "Muut ulkopuoliset palvelut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1890
+#: model:account.account,name:l10n_fi.2_account_1890
+#: model:account.account.template,name:l10n_fi.account_1890
+msgid "Other financial securities"
+msgstr "Muut rahoitusarvopaperit"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2140
+#: model:account.account,name:l10n_fi.2_account_2140
+#: model:account.account.template,name:l10n_fi.account_2140
+msgid "Other funds (osk)"
+msgstr "Muut rahastot (osk)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2080
+#: model:account.account,name:l10n_fi.2_account_2080
+#: model:account.account.template,name:l10n_fi.account_2080
+msgid "Other funds (oy)"
+msgstr "Muut rahastot (oy)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8450
+#: model:account.account,name:l10n_fi.1_account_8455
+#: model:account.account,name:l10n_fi.2_account_8450
+#: model:account.account,name:l10n_fi.2_account_8455
+#: model:account.account.template,name:l10n_fi.account_8450
+#: model:account.account.template,name:l10n_fi.account_8455
+msgid "Other governing expenses"
+msgstr "Muut hallintokulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3980
+#: model:account.account,name:l10n_fi.2_account_3980
+#: model:account.account.template,name:l10n_fi.account_3980
+msgid "Other income"
+msgstr "Muut tuotot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9150
+#: model:account.account,name:l10n_fi.2_account_9150
+#: model:account.account.template,name:l10n_fi.account_9150
+msgid "Other interest and financial income, group"
+msgstr "Muut korko- ja rahoitustuotot, konserni"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9160
+#: model:account.account,name:l10n_fi.2_account_9160
+#: model:account.account.template,name:l10n_fi.account_9160
+msgid "Other interest and financial income, other"
+msgstr "Muut korko- ja rahoitustuotot, muut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1540
+#: model:account.account,name:l10n_fi.2_account_1540
+#: model:account.account.template,name:l10n_fi.account_1540
+msgid "Other inventory"
+msgstr "Muu vaihto-omaisuus"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2720
+#: model:account.account,name:l10n_fi.2_account_2720
+#: model:account.account.template,name:l10n_fi.account_2720
+msgid "Other liabilities, long-term"
+msgstr "Muut velat, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1070
+#: model:account.account,name:l10n_fi.2_account_1070
+#: model:account.account.template,name:l10n_fi.account_1070
+msgid "Other long term expenses"
+msgstr "Muut pitkävaikutteiset menot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1470
+#: model:account.account,name:l10n_fi.2_account_1470
+#: model:account.account.template,name:l10n_fi.account_1470
+msgid "Other long-term receivables"
+msgstr "Muut pitkäaikaiset saamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2550
+#: model:account.account,name:l10n_fi.2_account_2550
+#: model:account.account.template,name:l10n_fi.account_2550
+msgid "Other mandatory reservations"
+msgstr "Muut pakolliset varaukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6500
+#: model:account.account,name:l10n_fi.2_account_6500
+#: model:account.account.template,name:l10n_fi.account_6500
+msgid "Other personnel insurance premiums"
+msgstr "Muut henkilöstön vakuutusmaksut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1660
+#: model:account.account,name:l10n_fi.2_account_1660
+#: model:account.account.template,name:l10n_fi.account_1660
+msgid "Other receivables, long-term"
+msgstr "Muut saamiset, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1760
+#: model:account.account,name:l10n_fi.2_account_1760
+#: model:account.account.template,name:l10n_fi.account_1760
+msgid "Other receivables, short-term"
+msgstr "Muut saamiset, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3590
+#: model:account.account,name:l10n_fi.2_account_3590
+#: model:account.account.template,name:l10n_fi.account_3590
+msgid "Other sales adjustment items"
+msgstr "Muut myynnin oikaisuerät"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1440
+#: model:account.account,name:l10n_fi.2_account_1440
+#: model:account.account.template,name:l10n_fi.account_1440
+msgid "Other shares and participations"
+msgstr "Muut osakkeet ja osuudet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1880
+#: model:account.account,name:l10n_fi.2_account_1880
+#: model:account.account.template,name:l10n_fi.account_1880
+msgid "Other shares and shares (financial assets)"
+msgstr "Muut osakkeet ja osuudet (rahoitusomaisuus)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1300
+#: model:account.account,name:l10n_fi.2_account_1300
+#: model:account.account.template,name:l10n_fi.account_1300
+msgid "Other tangible assets"
+msgstr "Muut aineelliset hyödykkeet"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_tax_payable
+msgid "Payable tax / Refundable tax (-)"
+msgstr "Maksettava vero / Palautukseen oikeuttava vero (-)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2880
+#: model:account.account,name:l10n_fi.2_account_2880
+#: model:account.account.template,name:l10n_fi.account_2880
+msgid "Payment account"
+msgstr "Maksuliikennetili"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2950
+#: model:account.account,name:l10n_fi.2_account_2950
+#: model:account.account.template,name:l10n_fi.account_2950
+msgid "Payroll liabilities"
+msgstr "Palkkojen siirtovelat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6100
+#: model:account.account,name:l10n_fi.2_account_6100
+#: model:account.account.template,name:l10n_fi.account_6100
+msgid "Pension insurance contributions"
+msgstr "Eläkevakuutusmaksut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2500
+#: model:account.account,name:l10n_fi.2_account_2500
+#: model:account.account.template,name:l10n_fi.account_2500
+msgid "Pension provisions"
+msgstr "Eläkevaraukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6000
+#: model:account.account,name:l10n_fi.2_account_6000
+#: model:account.account.template,name:l10n_fi.account_6000
+msgid "Pensions paid"
+msgstr "Maksetut eläkkeet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6290
+#: model:account.account,name:l10n_fi.1_account_6690
+#: model:account.account,name:l10n_fi.2_account_6290
+#: model:account.account,name:l10n_fi.2_account_6690
+#: model:account.account.template,name:l10n_fi.account_6290
+#: model:account.account.template,name:l10n_fi.account_6690
+msgid "Periodization during the accounting period"
+msgstr "Tilikauden aikainen jaksotus"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2952
+#: model:account.account,name:l10n_fi.1_account_5330
+#: model:account.account,name:l10n_fi.2_account_2952
+#: model:account.account,name:l10n_fi.2_account_5330
+#: model:account.account.template,name:l10n_fi.account_2952
+#: model:account.account.template,name:l10n_fi.account_5330
+msgid "Periodization of wages"
+msgstr "Palkkojen jaksotus"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6800
+#: model:account.account,name:l10n_fi.2_account_6800
+#: model:account.account.template,name:l10n_fi.account_6800
+msgid "Planned depreciation"
+msgstr "Suunnitelman mukaiset poistot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7200
+#: model:account.account,name:l10n_fi.2_account_7200
+#: model:account.account.template,name:l10n_fi.account_7200
+msgid "Premises expenses"
+msgstr "Toimitilakulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7230
+#: model:account.account,name:l10n_fi.2_account_7230
+#: model:account.account.template,name:l10n_fi.account_7230
+msgid "Premises rents"
+msgstr "Toimitilavuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2020
+#: model:account.account,name:l10n_fi.2_account_2020
+#: model:account.account.template,name:l10n_fi.account_2020
+msgid "Premium fund"
+msgstr "Ylikurssirahasto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2340
+#: model:account.account,name:l10n_fi.2_account_2340
+#: model:account.account.template,name:l10n_fi.account_2340
+msgid "Private accounts during the accounting period"
+msgstr "Yksityistilit tilikaudella"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3630
+#: model:account.account,name:l10n_fi.2_account_3630
+#: model:account.account.template,name:l10n_fi.account_3630
+msgid "Production for own use"
+msgstr "Valmistus omaan käyttöön"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2250
+#: model:account.account,name:l10n_fi.2_account_2250
+#: model:account.account.template,name:l10n_fi.account_2250
+msgid "Profit / loss of previous financial periods"
+msgstr "Edellisten tilikausien voitto / tappio"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8370
+#: model:account.account,name:l10n_fi.2_account_8370
+#: model:account.account.template,name:l10n_fi.account_8370
+msgid "Purchased administrative services"
+msgstr "Ostetut hallintopalvelut"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_purchase_construct_service
+msgid ""
+"Purchases of construction services and scrap metal (inverted tax liability)"
+msgstr "Rakentamispalvelun ja metalliromun ostot (käännetty verovelvollisuus)"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_purchase_goods_eu
+msgid "Purchases of goods from other EU countries"
+msgstr "Tavaraostot muista EU-maista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4200
+#: model:account.account,name:l10n_fi.2_account_4200
+#: model:account.account.template,name:l10n_fi.account_4200
+msgid "Purchases, securities and real estate"
+msgstr "Ostot, arvopaperit ja kiinteistöt"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1740
+#: model:account.account,name:l10n_fi.2_account_1740
+#: model:account.account.template,name:l10n_fi.account_1740
+msgid "Receivables from affiliated companies, short-term"
+msgstr "Saamiset omistusyhteysyrityksiltä, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1640
+#: model:account.account,name:l10n_fi.2_account_1640
+#: model:account.account.template,name:l10n_fi.account_1640
+msgid "Receivables from associated companies, long-term"
+msgstr "Saamiset omistusyhteysyrityksiltä, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1410
+#: model:account.account,name:l10n_fi.2_account_1410
+#: model:account.account.template,name:l10n_fi.account_1410
+msgid "Receivables from companies of the same group"
+msgstr "Saamiset saman konsernin yrityksiltä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1630
+#: model:account.account,name:l10n_fi.2_account_1630
+#: model:account.account.template,name:l10n_fi.account_1630
+msgid "Receivables from companies of the same group, long-term"
+msgstr "Saamiset saman konsernin yrityksiltä, pitkäaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1730
+#: model:account.account,name:l10n_fi.2_account_1730
+#: model:account.account.template,name:l10n_fi.account_1730
+msgid "Receivables from companies of the same group, short-term"
+msgstr "Saamiset saman konsernin yrityksiltä, lyhytaikaiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4270
+#: model:account.account,name:l10n_fi.2_account_4270
+#: model:account.account.template,name:l10n_fi.account_4270
+msgid "Received damages and grants"
+msgstr "Saadut vahingonkorvaukset ja avustukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5960
+#: model:account.account,name:l10n_fi.2_account_5960
+#: model:account.account.template,name:l10n_fi.account_5960
+msgid ""
+"Reimbursements received from the salaries of shareholders and relatives"
+msgstr "Saadut korvaukset osakkaiden ja omaisten palkoista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3750
+#: model:account.account,name:l10n_fi.2_account_3750
+#: model:account.account.template,name:l10n_fi.account_3750
+msgid "Rental income"
+msgstr "Vuokratuotot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2850
+#: model:account.account,name:l10n_fi.2_account_2850
+#: model:account.account.template,name:l10n_fi.account_2850
+msgid "Repayment installments of employee pension institutions' loans"
+msgstr "Työeläkelaitoksien takaisinlainojen lyhennyserät"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7950
+#: model:account.account,name:l10n_fi.2_account_7950
+#: model:account.account.template,name:l10n_fi.account_7950
+msgid "Representation expenses"
+msgstr "Edustuskulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8300
+#: model:account.account,name:l10n_fi.2_account_8300
+#: model:account.account.template,name:l10n_fi.account_8300
+msgid "Research and development costs"
+msgstr "Tutkimus- ja kehityskulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2050
+#: model:account.account,name:l10n_fi.2_account_2050
+#: model:account.account.template,name:l10n_fi.account_2050
+msgid "Reserve Fund (oy)"
+msgstr "Vararahasto (oy)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2120
+#: model:account.account,name:l10n_fi.2_account_2120
+#: model:account.account.template,name:l10n_fi.account_2120
+msgid "Reserve fund (OSK)"
+msgstr "Vararahasto (osk)"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_purchases_adjustment_items
+msgid "Result: Adjustment items for purchases"
+msgstr "Tulos: Ostojen oikaisuerät"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_administrative_services
+msgid "Result: Administrative services"
+msgstr "Tulos: Hallintopalvelut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_change_in_provisions
+msgid "Result: Change in bookings"
+msgstr "Tulos: Varausten muutos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_change_in_depreciation_difference
+msgid "Result: Change in depreciation difference"
+msgstr "Tulos: Poistoeron muutos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_change_in_inventories
+msgid "Result: Change in inventories"
+msgstr "Tulos: Varastojen muutos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_manufacturing_warehouse_change
+msgid ""
+"Result: Change in inventories of finished and work-in-progress products"
+msgstr "Tulos: Valmiiden ja keskeneräisten tuotteiden varastojen muutos"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_deferred_taxes
+msgid "Result: Deferred taxes"
+msgstr "Tulos: Laskennalliset verot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_depreciation_according_to_plan
+msgid "Result: Depreciation according to the plan"
+msgstr "Tulos: Suunnitelman mukaiset poistot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_external_services
+msgid "Result: External services"
+msgstr "Tulos: Ulkopuoliset palvelut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_financial_expenses_group
+msgid "Result: Financial expenses group"
+msgstr "Tulos: Rahoituskulut konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_group_contribution
+msgid "Result: Group grant"
+msgstr "Tulos: Konserniavustus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_it_expenses
+msgid "Result: IT costs"
+msgstr "Tulos: IT-kulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_impairment_losses_financial_assets_current_assets
+msgid "Result: Impaired financial securities are replaced by equivalents"
+msgstr "Tulos: Arvonalentumiset rahoitusarvopaperit vaihtuvat vastaavat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_impairment_losses_on_investments_in_fixed_assets
+msgid "Result: Impaired investments remain the same"
+msgstr "Tulos: Arvonalentumiset sijoitukset pysyvät vastaavat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_impairment_of_fixed_assets
+msgid "Result: Impairments remain the same"
+msgstr "Tulos: Arvonalentumiset pysyvät vastaavat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_income_from_shares_in_group
+msgid "Result: Income from shares in the group"
+msgstr "Tulos: Tuotot osuuksista konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_income_from_associated_company
+msgid "Result: Income from shares in the joint venture"
+msgstr "Tulos: Tuotot osuuksista omistusyhteysyritys"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_interest_and_financial_income_from_group
+msgid "Result: Interest and financial income group"
+msgstr "Tulos: Korko ja rahoitustuotot konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_investment_income_other_current_assets_group
+msgid "Result: Investment income other permanent corresponding group"
+msgstr "Tulos: Sijoitustuotot muut pysyvät vastaavat konserni"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_in_machinery_and_equipment_expenses
+msgid "Result: Machine and equipment costs"
+msgstr "Tulos: Kone- ja kalustokulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_marketing_expenses
+msgid "Result: Marketing expenses"
+msgstr "Tulos: Markkinointikulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_administrative_expenses
+msgid "Result: Other administrative expenses"
+msgstr "Tulos: Muut hallintokulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_income_other
+msgid "Result: Other business income"
+msgstr "Tulos: Liiketoiminnan muut tuotot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_tax
+msgid "Result: Other direct taxes"
+msgstr "Tulos: Muut välittömät verot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_financial_expenses
+msgid "Result: Other financial expenses"
+msgstr "Tulos: Rahoituskulut muut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_fixed_costs
+msgid "Result: Other fixed costs"
+msgstr "Tulos: Muut kiinteät kulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_additional_expenses_other
+msgid "Result: Other incidental expenses other"
+msgstr "Tulos: Muut sivukulut muut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_interest_and_financial_income
+msgid "Result: Other interest and financial income"
+msgstr "Tulos: Muut korko ja rahoitustuotot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_investment_income_from_fixed_assets
+msgid "Result: Other investment income remains the same"
+msgstr "Tulos: Muut sijoitustuotot pysyvät vastaavat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_pension_costs_other
+msgid "Result: Other pension expenses"
+msgstr "Tulos: Eläkekulut muut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_personnel_other
+msgid "Result: Other personnel"
+msgstr "Tulos: Henkilöstö muut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_wages_and_salaries_other
+msgid "Result: Other salaries and fees"
+msgstr "Tulos: Palkat ja palkkiot muut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_other_additional_expenses_production
+msgid "Result: Other side costs production"
+msgstr "Tulos: Muut sivukulut tuotanto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_pension_costs_of_production
+msgid "Result: Pension expenses production"
+msgstr "Tulos: Eläkekulut tuotanto"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_premises_costs
+msgid "Result: Premises expenses"
+msgstr "Tulos: Toimitilakulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_manufacturing_own_use
+msgid "Result: Production for own use"
+msgstr "Tulos: Valmistus omaan käyttöön"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_purchases
+msgid "Result: Purchases"
+msgstr "Tulos: Ostot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_representation
+msgid "Result: Representation"
+msgstr "Tulos: Edustus"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_research_and_development
+msgid "Result: Research and development"
+msgstr "Tulos: Tutkimus ja kehitys"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_sales
+msgid "Result: Sale"
+msgstr "Tulos: Myynti"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_sales_adjustment_items
+msgid "Result: Sales adjustment items"
+msgstr "Tulos: Myynnin oikaisuerät"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_selling_expenses
+msgid "Result: Selling expenses"
+msgstr "Tulos: Myyntikulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_taxes_for_the_period
+msgid "Result: Taxes for the financial year"
+msgstr "Tulos: Tilikauden verot"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_travelling
+msgid "Result: Trips"
+msgstr "Tulos: Matkat"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_vehicle_expenses
+msgid "Result: Vehicle expenses"
+msgstr "Tulos: Ajoneuvokulut"
+
+#. module: l10n_fi
+#: model:account.account.tag,name:l10n_fi.account_tag_wages_and_salaries_in_production
+msgid "Result: Wages and bonuses production"
+msgstr "Tulos: Palkat ja palkkiot tuotanto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4260
+#: model:account.account,name:l10n_fi.2_account_4260
+#: model:account.account.template,name:l10n_fi.account_4260
+msgid "Returned goods"
+msgstr "Palautetut tavarat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5200
+#: model:account.account,name:l10n_fi.2_account_5200
+#: model:account.account.template,name:l10n_fi.account_5200
+msgid "Rewards"
+msgstr "Palkkiot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3900
+#: model:account.account,name:l10n_fi.2_account_3900
+#: model:account.account.template,name:l10n_fi.account_3900
+msgid "Rewards and allowances"
+msgstr "Palkkiot ja korvaukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5800
+#: model:account.account,name:l10n_fi.2_account_5800
+#: model:account.account.template,name:l10n_fi.account_5800
+msgid "Salaries and fees of shareholders and relatives"
+msgstr "Osakkaiden ja omaisten palkat ja palkkiot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3000
+#: model:account.account,name:l10n_fi.2_account_3000
+#: model:account.account.template,name:l10n_fi.account_3000
+msgid "Sales"
+msgstr "Myynti"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8730
+#: model:account.account,name:l10n_fi.2_account_8730
+#: model:account.account.template,name:l10n_fi.account_8730
+msgid "Sales credit losses"
+msgstr "Myynnin luottotappiot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3500
+#: model:account.account,name:l10n_fi.2_account_3500
+#: model:account.account.template,name:l10n_fi.account_3500
+msgid "Sales discounts"
+msgstr "Myynnin alennukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3580
+#: model:account.account,name:l10n_fi.2_account_3580
+#: model:account.account.template,name:l10n_fi.account_3580
+msgid "Sales exchange rate differences"
+msgstr "Myynnin valuuttakurssierot"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_sales_construct_service
+msgid ""
+"Sales of construction services and scrap metal (inverted tax liability)"
+msgstr ""
+"Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_sales_goods_eu
+msgid "Sales of goods to other EU countries"
+msgstr "Tavaroiden myynnit muihin EU-maihin"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3330
+#: model:account.account,name:l10n_fi.2_account_3330
+#: model:account.account.template,name:l10n_fi.account_3330
+msgid "Sales of goods to Åland"
+msgstr "Tavaramyynti Ahvenanmaalle"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_sales_service_eu
+msgid "Sales of services to other EU countries"
+msgstr "Palvelujen myynnit muihin EU-maihin"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3380
+#: model:account.account,name:l10n_fi.2_account_3380
+#: model:account.account.template,name:l10n_fi.account_3380
+msgid "Sales outside the community"
+msgstr "Myynti yhteisön ulkopuolelle"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3440
+#: model:account.account,name:l10n_fi.2_account_3440
+#: model:account.account.template,name:l10n_fi.account_3440
+msgid "Sales, securities and real estate"
+msgstr "Myynti, arvopaperit ja kiinteistöt"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3400
+#: model:account.account,name:l10n_fi.2_account_3400
+#: model:account.account.template,name:l10n_fi.account_3400
+msgid "Sales, used goods and art, collectibles and antiques"
+msgstr "Myynti, käytetyt tavarat ja taide-, keräily- ja antiikkiesineet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8000
+#: model:account.account,name:l10n_fi.2_account_8000
+#: model:account.account.template,name:l10n_fi.account_8000
+msgid "Selling expenses"
+msgstr "Myyntikulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_3850
+#: model:account.account,name:l10n_fi.2_account_3850
+#: model:account.account.template,name:l10n_fi.account_3850
+msgid "Service income"
+msgstr "Palvelutuotot"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_base_purchase_service_eu
+msgid "Service purchases from other EU countries"
+msgstr "Palveluostot muista EU-maista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2100
+#: model:account.account,name:l10n_fi.2_account_2100
+#: model:account.account.template,name:l10n_fi.account_2100
+msgid "Share capital"
+msgstr "Osuuspääoma"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9030
+#: model:account.account,name:l10n_fi.2_account_9030
+#: model:account.account.template,name:l10n_fi.account_9030
+msgid "Share of the profit (loss) of associated companies"
+msgstr "Osuus osakkuusyritysten voitosta (tappiosta)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8990
+#: model:account.account,name:l10n_fi.2_account_8990
+#: model:account.account.template,name:l10n_fi.account_8990
+msgid "Share of the result of associated companies"
+msgstr "Osuus osakkuusyritysten tuloksesta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1400
+#: model:account.account,name:l10n_fi.1_account_1860
+#: model:account.account,name:l10n_fi.2_account_1400
+#: model:account.account,name:l10n_fi.2_account_1860
+#: model:account.account.template,name:l10n_fi.account_1400
+#: model:account.account.template,name:l10n_fi.account_1860
+msgid "Shares in companies of the same group"
+msgstr "Osuudet saman konsernin yrityksissä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1420
+#: model:account.account,name:l10n_fi.2_account_1420
+#: model:account.account.template,name:l10n_fi.account_1420
+msgid "Shares in joint ventures"
+msgstr "Osuudet omistusyhteysyrityksissä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4000
+#: model:account.account,name:l10n_fi.2_account_4000
+#: model:account.account.template,name:l10n_fi.account_4000
+msgid "Shopping"
+msgstr "Ostot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4090
+#: model:account.account,name:l10n_fi.2_account_4090
+#: model:account.account.template,name:l10n_fi.account_4090
+msgid "Shopping from Åland"
+msgstr "Tavaraostot Ahvenanmaalta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4150
+#: model:account.account,name:l10n_fi.2_account_4150
+#: model:account.account.template,name:l10n_fi.account_4150
+msgid "Shopping, used goods and art, collectibles and antiques"
+msgstr "Ostot, käytetyt tavarat ja taide-, keräily- ja antiikkiesineet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_6300
+#: model:account.account,name:l10n_fi.2_account_6300
+#: model:account.account.template,name:l10n_fi.account_6300
+msgid "Social security payments"
+msgstr "Sosiaaliturvamaksut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4450
+#: model:account.account,name:l10n_fi.2_account_4450
+#: model:account.account.template,name:l10n_fi.account_4450
+msgid "Subcontracting"
+msgstr "Alihankinta"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5100
+#: model:account.account,name:l10n_fi.2_account_5100
+#: model:account.account.template,name:l10n_fi.account_5100
+msgid "Supplements and allowances"
+msgstr "Lisät ja korvaukset"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_sales_title
+msgid "Tax on domestic sales by tax rates"
+msgstr "Vero kotimaan myynneistä verokannoittain"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_tax_import_goods_no_eu
+msgid "Tax on goods imported from outside the EU"
+msgstr "Vero tavaroiden maahantuonneista EU:n ulkopuolelta"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_tax_purchase_construct_service
+msgid ""
+"Tax on purchases of construction services and scrap metal (inverted tax "
+"liability)"
+msgstr ""
+"Vero rakentamispalvelun ja metalliromun ostoista (käännetty "
+"verovelvollisuus)"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_tax_purchase_goods_eu
+msgid "Tax on purchases of goods from other EU countries"
+msgstr "Vero tavaraostoista muista EU-maista"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.tax_report_tax_purchase_service_eu
+msgid "Tax on service purchases from other EU countries"
+msgstr "Vero palveluostoista muista EU-maista"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2530
+#: model:account.account,name:l10n_fi.2_account_2530
+#: model:account.account.template,name:l10n_fi.account_2530
+msgid "Tax provisions"
+msgstr "Verovaraukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2450
+#: model:account.account,name:l10n_fi.2_account_2450
+#: model:account.account.template,name:l10n_fi.account_2450
+msgid "Tax-based reservations"
+msgstr "Verotusperusteiset varaukset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_9900
+#: model:account.account,name:l10n_fi.2_account_9900
+#: model:account.account.template,name:l10n_fi.account_9900
+msgid "Taxes for the financial year and previous financial years"
+msgstr "Tilikauden ja aikaisempien tilikausien verot"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_8451
+#: model:account.account,name:l10n_fi.2_account_8451
+#: model:account.account.template,name:l10n_fi.account_8451
+msgid "Telephone and telecommunication costs"
+msgstr "Puhelin- ja tietoliikennekulut"
+
+#. module: l10n_fi
+#: model:account.report.line,name:l10n_fi.vat_report_relief
+msgid "The amount of lower limit relief"
+msgstr "Alarajahuojennuksen määrä"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2060
+#: model:account.account,name:l10n_fi.2_account_2060
+#: model:account.account.template,name:l10n_fi.account_2060
+msgid "The invested unrestricted equity fund"
+msgstr "Sijoitetun vapaan oman pääoman rahasto"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2370
+#: model:account.account,name:l10n_fi.2_account_2370
+#: model:account.account.template,name:l10n_fi.account_2370
+msgid "The result of the financial year"
+msgstr "Tilikauden tulos"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_4340
+#: model:account.account,name:l10n_fi.2_account_4340
+#: model:account.account.template,name:l10n_fi.account_4340
+msgid "Transfers for purposes other than sales"
+msgstr "Siirrot muuhun kuin myyntitarkoitukseen"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7800
+#: model:account.account,name:l10n_fi.2_account_7800
+#: model:account.account.template,name:l10n_fi.account_7800
+msgid "Traveling expenses"
+msgstr "Matkakulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1510
+#: model:account.account,name:l10n_fi.2_account_1510
+#: model:account.account.template,name:l10n_fi.account_1510
+msgid "Unfinished products"
+msgstr "Keskeneräiset tuotteet"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1780
+#: model:account.account,name:l10n_fi.2_account_1780
+#: model:account.account.template,name:l10n_fi.account_1780
+msgid "Unpaid shares / units, short-term"
+msgstr "Maksamattomat osakkeet / osuudet, lyhytaikaiset"
 
 #. module: l10n_fi
 #: model:account.tax.group,name:l10n_fi.tax_group_0
 msgid "VAT 0%"
-msgstr "ALV 0%"
+msgstr "ALV 0 %"
 
 #. module: l10n_fi
 #: model:account.tax.group,name:l10n_fi.tax_group_10
 msgid "VAT 10%"
-msgstr "ALV 10%"
+msgstr "ALV 10 %"
 
 #. module: l10n_fi
 #: model:account.tax.group,name:l10n_fi.tax_group_14
 msgid "VAT 14%"
-msgstr "ALV 14%"
+msgstr "ALV 14 %"
 
 #. module: l10n_fi
 #: model:account.tax.group,name:l10n_fi.tax_group_24
@@ -80,8 +2722,97 @@ msgid "VAT 24%"
 msgstr "ALV 24%"
 
 #. module: l10n_fi
+#: model:account.report,name:l10n_fi.vat_report
+msgid "VAT Report"
+msgstr "ALV-raportti"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2930
+#: model:account.account,name:l10n_fi.2_account_2930
+#: model:account.account.template,name:l10n_fi.account_2930
+msgid "VAT payable"
+msgstr "Suoritettava arvonlisävero"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_1765
+#: model:account.account,name:l10n_fi.2_account_1765
+#: model:account.account.template,name:l10n_fi.account_1765
+msgid "VAT receivables"
+msgstr "ALV-saamiset"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_5300
+#: model:account.account,name:l10n_fi.2_account_5300
+#: model:account.account.template,name:l10n_fi.account_5300
+msgid "Vacation time and social benefits"
+msgstr "Loma-ajan ja sosiaalipalkat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2110
+#: model:account.account,name:l10n_fi.2_account_2110
+#: model:account.account.template,name:l10n_fi.account_2110
+msgid "Value appreciation fund (OSK)"
+msgstr "Arvonkorotusrahasto (osk)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2160
+#: model:account.account,name:l10n_fi.2_account_2160
+#: model:account.account.template,name:l10n_fi.account_2160
+msgid "Value appreciation fund (ay)"
+msgstr "Arvonkorotusrahasto (ay)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2190
+#: model:account.account,name:l10n_fi.2_account_2190
+#: model:account.account.template,name:l10n_fi.account_2190
+msgid "Value appreciation fund (ky)"
+msgstr "Arvonkorotusrahasto (ky)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2210
+#: model:account.account,name:l10n_fi.2_account_2210
+#: model:account.account.template,name:l10n_fi.account_2210
+msgid "Value appreciation fund (tmi)"
+msgstr "Arvonkorotusrahasto (tmi)"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7500
+#: model:account.account,name:l10n_fi.2_account_7500
+#: model:account.account.template,name:l10n_fi.account_7500
+msgid "Vehicle expenses"
+msgstr "Ajoneuvokulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7520
+#: model:account.account,name:l10n_fi.2_account_7520
+#: model:account.account.template,name:l10n_fi.account_7520
+msgid "Vehicle rentals"
+msgstr "Ajoneuvovuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7000
+#: model:account.account,name:l10n_fi.2_account_7000
+#: model:account.account.template,name:l10n_fi.account_7000
+msgid "Voluntary social expenses"
+msgstr "Vapaaehtoiset henkilösivukulut"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_7250
+#: model:account.account,name:l10n_fi.2_account_7250
+#: model:account.account.template,name:l10n_fi.account_7250
+msgid "Warehouse rents"
+msgstr "Varastovuokrat"
+
+#. module: l10n_fi
+#: model:account.account,name:l10n_fi.1_account_2920
+#: model:account.account,name:l10n_fi.2_account_2920
+#: model:account.account.template,name:l10n_fi.account_2920
+msgid "Withholding tax and STM debt"
+msgstr "Ennakonpidätys- ja stm-velka"
+
+#. module: l10n_fi
 #: model:ir.model.fields,help:l10n_fi.field_account_journal__invoice_reference_model
 msgid ""
 "You can choose different models for each type of reference. The default one "
 "is the Odoo reference."
-msgstr "Voit valita erilaisen maksuviitetyypin. Oletus on Odoon laskuviite."
+msgstr "Voit valita eri malleja kullekin viitetyypille. Oletusarvo on Odoo-viite."
