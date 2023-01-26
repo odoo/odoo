@@ -601,7 +601,7 @@ QUnit.test("send message only once when enter is pressed twice quickly", async f
 QUnit.test("quick edit last self-message from UP arrow", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
-    const messageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Test",
         attachment_ids: [],
@@ -611,11 +611,11 @@ QUnit.test("quick edit last self-message from UP arrow", async function (assert)
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}]`);
-    assert.containsNone(target, `.o-mail-message[data-message-id=${messageId}] .o-mail-composer`);
+    assert.containsOnce(target, ".o-mail-message:contains(Test)");
+    assert.containsNone(target, ".o-mail-message:contains(Test) .o-mail-composer");
 
     await afterNextRender(() => triggerHotkey("ArrowUp"));
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}] .o-mail-composer`);
+    assert.containsOnce(target, ".o-mail-message .o-mail-composer");
 });
 
 QUnit.test(

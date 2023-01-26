@@ -267,22 +267,16 @@ QUnit.test("Other messages are grayed out when replying to another one", async f
         channel_type: "channel",
         name: "channel1",
     });
-    const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+    pyEnv["mail.message"].create([
         { body: "Hello world", res_id: channelId, model: "mail.channel" },
         { body: "Goodbye world", res_id: channelId, model: "mail.channel" },
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-message", 2);
-    await click(`.o-mail-message[data-message-id='${messageId_1}'] i[aria-label='Reply']`);
-    assert.doesNotHaveClass(
-        target.querySelector(`.o-mail-message[data-message-id='${messageId_1}']`),
-        "opacity-50"
-    );
-    assert.hasClass(
-        target.querySelector(`.o-mail-message[data-message-id='${messageId_2}']`),
-        "opacity-50"
-    );
+    await click(".o-mail-message:contains(Hello world) i[aria-label='Reply']");
+    assert.doesNotHaveClass($(".o-mail-message:contains(Hello world)"), "opacity-50");
+    assert.hasClass($(".o-mail-message:contains(Goodbye world)"), "opacity-50");
 });
 
 QUnit.test("Parent message body is displayed on replies", async function (assert) {
@@ -510,7 +504,7 @@ QUnit.test("basic rendering of message", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const messageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "<p>body</p>",
         date: "2019-04-20 10:00:00",
@@ -519,8 +513,8 @@ QUnit.test("basic rendering of message", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}]`);
-    const $message = $(target).find(`.o-mail-message[data-message-id=${messageId}]`);
+    assert.containsOnce(target, ".o-mail-message:contains(body)");
+    const $message = $(target).find(`.o-mail-message:contains(body)`);
     assert.containsOnce($message, ".o-mail-message-sidebar");
     assert.containsOnce($message, ".o-mail-message-sidebar .o-mail-avatar-container img");
     assert.hasAttrValue(
@@ -565,7 +559,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "general" });
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        pyEnv["mail.message"].create([
             {
                 author_id: partnerId,
                 body: "<p>body1</p>",
@@ -586,10 +580,10 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsN(target, ".o-mail-message", 2);
-        assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId_1}]`);
-        assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId_2}]`);
-        const $message1 = $(target).find(`.o-mail-message[data-message-id=${messageId_1}]`);
-        const $message2 = $(target).find(`.o-mail-message[data-message-id=${messageId_2}]`);
+        assert.containsOnce(target, ".o-mail-message:contains(body1)");
+        assert.containsOnce(target, ".o-mail-message:contains(body2)");
+        const $message1 = $(target).find(".o-mail-message:contains(body1)");
+        const $message2 = $(target).find(".o-mail-message:contains(body2)");
         assert.containsOnce($message1, ".o-mail-msg-header");
         assert.containsNone($message2, ".o-mail-msg-header");
         assert.containsNone($message1, ".o-mail-message-sidebar .o-mail-message-date");

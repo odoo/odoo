@@ -557,15 +557,10 @@ QUnit.test("inbox messages are never squashed", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsN(target, ".o-mail-message", 2);
-    const message1 = target.querySelector(`.o-mail-message[data-message-id="${messageId_1}"]`);
-    const message2 = target.querySelector(`.o-mail-message[data-message-id="${messageId_2}"]`);
-    assert.doesNotHaveClass(message1, "o-squashed");
-    assert.doesNotHaveClass(message2, "o-squashed");
+    assert.doesNotHaveClass($(".o-mail-message:contains(body1)"), "o-squashed");
+    assert.doesNotHaveClass($(".o-mail-message:contains(body2)"), "o-squashed");
     await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
-    assert.hasClass(
-        target.querySelector(`.o-mail-message[data-message-id="${messageId_2}"]`),
-        "o-squashed"
-    );
+    assert.hasClass($(".o-mail-message:contains(body2)"), "o-squashed");
 });
 
 QUnit.test("reply: stop replying button click", async function (assert) {

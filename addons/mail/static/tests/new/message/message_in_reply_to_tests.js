@@ -14,23 +14,23 @@ QUnit.module("message reply", {
 QUnit.test("click on message in reply to highlight the parent message", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
-    const messageId_1 = pyEnv["mail.message"].create({
+    const messageId = pyEnv["mail.message"].create({
         body: "Hey lol",
         message_type: "comment",
         model: "mail.channel",
         res_id: channelId,
     });
-    const messageId_2 = pyEnv["mail.message"].create({
-        body: "Response to Hey lol",
+    pyEnv["mail.message"].create({
+        body: "Reply to Hey",
         message_type: "comment",
         model: "mail.channel",
-        parent_id: messageId_1,
+        parent_id: messageId,
         res_id: channelId,
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(`.o-mail-message[data-message-id="${messageId_2}"] .o-mail-message-in-reply-body`);
-    assert.containsOnce(target, `.o-mail-message.o-highlighted[data-message-id="${messageId_1}"]`);
+    await click(".o-mail-message:contains(Reply to Hey) .o-mail-message-in-reply-body");
+    assert.containsOnce(target, ".o-mail-message:contains(Hey lol).o-highlighted");
 });
 
 QUnit.test("click on message in reply to scroll to the parent message", async function (assert) {
@@ -40,7 +40,6 @@ QUnit.test("click on message in reply to scroll to the parent message", async fu
             return this._super(true);
         },
     });
-
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "general" });
     const [oldestMessageId] = pyEnv["mail.message"].create(
@@ -53,7 +52,7 @@ QUnit.test("click on message in reply to scroll to the parent message", async fu
                 res_id: channelId,
             }))
     );
-    const latestMessageId = pyEnv["mail.message"].create({
+    pyEnv["mail.message"].create({
         body: "Response to first message",
         message_type: "comment",
         model: "mail.channel",
@@ -63,16 +62,13 @@ QUnit.test("click on message in reply to scroll to the parent message", async fu
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(
-        `.o-mail-message[data-message-id="${latestMessageId}"] .o-mail-message-in-reply-body`
+        ".o-mail-message:contains(Response to first message) .o-mail-message-in-reply-body"
     );
     await nextTick();
-
-    const thread = document.querySelector(".o-mail-thread");
-    const oldestMessage = document.querySelector(
-        `.o-mail-message[data-message-id='${oldestMessageId}']`
-    );
-    const oldestMsgTop = oldestMessage.offsetTop;
-    const oldestMsgBottom = oldestMsgTop + oldestMessage.offsetHeight;
+    const thread = $(".o-mail-thread")[0];
+    const oldestMsg = $(".o-mail-message:eq(0)")[0];
+    const oldestMsgTop = oldestMsg.offsetTop;
+    const oldestMsgBottom = oldestMsgTop + oldestMsg.offsetHeight;
     const threadTop = thread.offsetTop;
     const threadBottom = threadTop + thread.offsetHeight;
     assert.ok(

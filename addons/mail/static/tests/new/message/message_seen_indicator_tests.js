@@ -335,7 +335,7 @@ QUnit.test(
                 [0, 0, { partner_id: partnerId }],
             ],
         });
-        const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
+        const [, messageId_2] = pyEnv["mail.message"].create([
             {
                 author_id: pyEnv.currentPartnerId,
                 body: "<p>Message before last seen</p>",
@@ -350,19 +350,17 @@ QUnit.test(
             },
         ]);
         const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-        pyEnv["mail.channel.member"].write(memberIds, {
-            seen_message_id: messageId_2,
-        });
+        pyEnv["mail.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId_1}]`);
+        assert.containsOnce(target, ".o-mail-message:contains(Message before last seen)");
         assert.containsOnce(
             target,
-            `.o-mail-message[data-message-id=${messageId_1}] .o-mail-message-seen-indicator`
+            ".o-mail-message:contains(Message before last seen) .o-mail-message-seen-indicator"
         );
         assert.containsNone(
             target,
-            `.o-mail-message[data-message-id=${messageId_1}] .o-mail-message-seen-indicator i`
+            ".o-mail-message:contains(Message before last seen) .o-mail-message-seen-indicator i"
         );
     }
 );

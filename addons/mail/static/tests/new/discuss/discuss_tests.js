@@ -499,7 +499,7 @@ QUnit.test("reply to message from inbox (message linked to document)", async fun
     assert.verifySteps(["message_post"]);
     assert.containsNone(target, ".o-mail-composer");
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${messageId}]`);
+    assert.containsOnce(target, ".o-mail-message:contains(Test)");
     assert.doesNotHaveClass(target.querySelector(".o-mail-message"), "o-selected");
 });
 
@@ -566,7 +566,7 @@ QUnit.test("receive new needaction messages", async function (assert) {
     // simulate receiving a new needaction message
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
-            body: "not empty",
+            body: "not empty 1",
             id: 100,
             needaction_partner_ids: [pyEnv.currentPartnerId],
             model: "res.partner",
@@ -576,12 +576,12 @@ QUnit.test("receive new needaction messages", async function (assert) {
     assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge');
     assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(1)');
     assert.containsOnce(target, ".o-mail-message");
-    assert.containsOnce(target, ".o-mail-message[data-message-id=100]");
+    assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
 
     // simulate receiving another new needaction message
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
-            body: "not empty",
+            body: "not empty 2",
             id: 101,
             needaction_partner_ids: [pyEnv.currentPartnerId],
             model: "res.partner",
@@ -590,8 +590,8 @@ QUnit.test("receive new needaction messages", async function (assert) {
     });
     assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(2)');
     assert.containsN(target, ".o-mail-message", 2);
-    assert.containsOnce(target, '.o-mail-message[data-message-id="100"]');
-    assert.containsOnce(target, '.o-mail-message[data-message-id="101"]');
+    assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
+    assert.containsOnce(target, ".o-mail-message:contains(not empty 2)");
 });
 
 QUnit.test("basic rendering", async function (assert) {
@@ -858,12 +858,12 @@ QUnit.test(
         const pyEnv = await startServer();
         const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
             {
-                body: "not empty",
+                body: "not empty 1",
                 needaction: true,
                 needaction_partner_ids: [pyEnv.currentPartnerId],
             },
             {
-                body: "not empty",
+                body: "not empty 2",
                 needaction: true,
                 needaction_partner_ids: [pyEnv.currentPartnerId],
             },
@@ -889,16 +889,14 @@ QUnit.test(
         assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
         assert.containsN(target, ".o-mail-message", 2);
 
-        await click(
-            `.o-mail-message[data-message-id="${messageId_1}"] i[aria-label='Mark as Read']`
-        );
+        await click(".o-mail-message:contains(not empty 1) i[aria-label='Mark as Read']");
         assert.containsOnce(target, ".o-mail-message");
-        assert.containsOnce(target, `.o-mail-message[data-message-id="${messageId_2}"]`);
+        assert.containsOnce(target, ".o-mail-message:contains(not empty 2)");
 
         await click('button[data-mailbox="history"]');
         assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
         assert.containsOnce(target, ".o-mail-message");
-        assert.containsOnce(target, `.o-mail-message[data-message-id="${messageId_1}"]`);
+        assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
     }
 );
 
@@ -956,9 +954,9 @@ QUnit.test("post a simple message", async function (assert) {
     assert.verifySteps(["message_post"]);
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "");
     assert.containsOnce(target, ".o-mail-message");
-    const [postedMessageId] = pyEnv["mail.message"].search([], { order: "id DESC" });
+    pyEnv["mail.message"].search([], { order: "id DESC" });
     const $message = $(target).find(".o-mail-message");
-    assert.containsOnce(target, `.o-mail-message[data-message-id=${postedMessageId}]`);
+    assert.containsOnce(target, ".o-mail-message:contains(Test)");
     assert.strictEqual($message.find(".o-mail-own-name").text(), "Mitchell Admin");
     assert.strictEqual($message.find(".o-mail-message-body").text(), "Test");
 });
