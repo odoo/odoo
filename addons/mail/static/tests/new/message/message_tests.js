@@ -1101,21 +1101,24 @@ QUnit.test(
     "chat with author should be opened after clicking on their avatar",
     async function (assert) {
         const pyEnv = await startServer();
-        const [threadId, partnerId] = pyEnv["res.partner"].create([{}, {}]);
-        pyEnv["res.users"].create({ partner_id: partnerId });
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Partner_1" },
+            { name: "Partner_2" },
+        ]);
+        pyEnv["res.users"].create({ partner_id: partnerId_2 });
         pyEnv["mail.message"].create({
-            author_id: partnerId,
+            author_id: partnerId_2,
             body: "not empty",
             model: "res.partner",
-            res_id: threadId,
+            res_id: partnerId_1,
         });
         const { openFormView } = await start();
-        await openFormView("res.partner", threadId);
+        await openFormView("res.partner", partnerId_1);
         assert.containsOnce(document.body, ".o-mail-message-author-avatar");
         assert.hasClass(document.querySelector(".o-mail-message-author-avatar"), "o_redirect");
         await click(".o-mail-message-author-avatar");
         assert.containsOnce(target, ".o-mail-chat-window-content");
-        assert.containsOnce(target, `.o-mail-thread[data-thread-id='${threadId}']`);
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Partner_2)");
     }
 );
 
@@ -1137,7 +1140,7 @@ QUnit.test(
 
         await click(".o-mail-message span:contains(Demo User)");
         assert.containsOnce(target, ".o-mail-chat-window");
-        assert.containsOnce(target, `.o-mail-thread[data-thread-id=${partnerId}]`);
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Demo User)");
     }
 );
 
@@ -1145,26 +1148,29 @@ QUnit.test(
     "chat with author should be opened after clicking on their im status icon",
     async function (assert) {
         const pyEnv = await startServer();
-        const [threadId, partnerId] = pyEnv["res.partner"].create([{}, { im_status: "online" }]);
+        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
+            { name: "Partner_1" },
+            { name: "Partner_2", im_status: "online" },
+        ]);
         pyEnv["res.users"].create({
             im_status: "online",
-            partner_id: partnerId,
+            partner_id: partnerId_2,
         });
         pyEnv["mail.message"].create({
-            author_id: partnerId,
+            author_id: partnerId_2,
             body: "not empty",
             model: "res.partner",
-            res_id: threadId,
+            res_id: partnerId_1,
         });
         const { advanceTime, openFormView } = await start({ hasTimeControl: true });
-        await openFormView("res.partner", threadId);
+        await openFormView("res.partner", partnerId_1);
         await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
         assert.containsOnce(target, ".o-mail-partner-im-status");
         assert.hasClass(target.querySelector(".o-mail-partner-im-status"), "cursor-pointer");
 
         await click(".o-mail-partner-im-status");
         assert.containsOnce(target, ".o-mail-chat-window");
-        assert.containsOnce(target, `.o-mail-thread[data-thread-id=${threadId}]`);
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Partner_2)");
     }
 );
 

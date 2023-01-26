@@ -322,10 +322,6 @@ QUnit.test("base rendering when chatter has no attachment", async function (asse
     assert.containsOnce(target, ".o-mail-chatter-topbar");
     assert.containsNone(target, ".o-mail-attachment-box");
     assert.containsOnce(target, ".o-mail-thread");
-    assert.containsOnce(
-        target,
-        `.o-mail-thread[data-thread-id="${partnerId}"][data-thread-model="res.partner"]`
-    );
     assert.containsN(target, ".o-mail-message", 30);
 });
 
