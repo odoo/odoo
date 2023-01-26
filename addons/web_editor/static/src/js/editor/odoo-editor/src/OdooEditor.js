@@ -3632,21 +3632,6 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    /**
-     * Returns true if the current selection content is only one ZWS
-     *
-     * @private
-     * @param {Object} selection
-     * @returns {boolean}
-     */
-    _isSelectionOnlyZws(selection) {
-        let range = selection.getRangeAt(0);
-        if (selection.isCollapsed || !range) {
-            return false;
-        }
-        return range.cloneContents().textContent === '\u200B';
-    }
-
     getCurrentCollaborativeSelection() {
         const selection = this._latestComputedSelection || this._computeHistorySelection();
         if (!selection) return;
