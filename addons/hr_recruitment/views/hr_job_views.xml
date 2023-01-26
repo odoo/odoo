@@ -132,6 +132,7 @@
         <field name="name">hr.job.search</field>
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_job_filter" />
+        <field name="priority">20</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_favorite_jobs']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
