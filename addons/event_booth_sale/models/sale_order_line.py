@@ -93,8 +93,7 @@ class SaleOrderLine(models.Model):
     def _get_display_price(self):
         if self.event_booth_pending_ids and self.event_id:
             company = self.event_id.company_id or self.env.company
-            product = self.event_booth_pending_ids.booth_category_id.product_id
-            pricelist = product.product_tmpl_id._get_contextual_pricelist()
+            pricelist = self.order_id.pricelist_id
             if pricelist.discount_policy == "with_discount":
                 total_price = sum([booth.booth_category_id.price_reduce for booth in self.event_booth_pending_ids])
             else:
