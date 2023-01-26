@@ -636,6 +636,8 @@ class IrModelFields(models.Model):
                 names = seq.strip().split(".")
                 last = len(names) - 1
                 for index, name in enumerate(names):
+                    if name == "id":
+                        raise UserError("Compute method cannot depend on field 'id'.")
                     field = model._fields.get(name)
                     if field is None:
                         raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))
