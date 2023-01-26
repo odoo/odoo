@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
 
@@ -103,3 +104,134 @@ class TestPricelist(TransactionCase):
         test_unit_price(3500, kg, (tonne_price - 10) / 1000.0)
         test_unit_price(2, tonne, tonne_price)
         test_unit_price(3, tonne, tonne_price - 10)
+
+    def test_0_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        self.env['product.pricelist'].search([]).action_archive()
+        default_pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist', 'sequence': 2
+        })
+        priority_pricelist = self.env['product.pricelist'].create({
+            'name': 'Priority Pricelist', 'sequence': 1
+        })
+
+        commercial_partner = self.env['res.partner'].create({
+            'name': 'Commercial Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'parent_id': commercial_partner.id,
+        })
+
+        priority_pricelist.action_archive()
+
+        print("parent: ", commercial_partner.property_product_pricelist.name)
+        print("child: ", child_partner.property_product_pricelist.name)
+
+        self.assertEqual(commercial_partner.property_product_pricelist, default_pricelist)
+        # ==> should be default, is priority (which is archived)
+
+        self.assertEqual(child_partner.property_product_pricelist, default_pricelist)
+        # ==> should be its parent one, which should be default but is priority, but is default
+        # (which is good... 2 Falses makes True =D)
+
+    def test_1_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        self.env['product.pricelist'].search([]).action_archive()
+        default_pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist', 'sequence': 2
+        })
+        restricted_pricelist = self.env['product.pricelist'].create({
+            'name': 'Restricted Pricelist',
+            'sequence': 1,
+            'country_group_ids': [(6, 0, [self.env.ref('base.europe').id])],
+        })
+
+        restricted_pricelist.country_group_ids = []
+
+        commercial_partner = self.env['res.partner'].create({
+            'name': 'Commercial Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'country_id': self.env.ref('base.us').id,
+            'parent_id': commercial_partner.id,
+        })
+
+        print("parent: ", commercial_partner.property_product_pricelist.name)
+        print("child: ", child_partner.property_product_pricelist.name)
+
+        self.assertEqual(commercial_partner.property_product_pricelist, restricted_pricelist)
+        self.assertEqual(child_partner.property_product_pricelist, restricted_pricelist)
+        # ==> both should be the restricted since it's now available for all countries and has a
+        # higher priority, but both are default one
+
+    def test_2_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        self.env['product.pricelist'].search([]).action_archive()
+        default_pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist', 'sequence': 2
+        })
+        restricted_pricelist = self.env['product.pricelist'].create({
+            'name': 'Restricted Pricelist',
+            'sequence': 1,
+            'country_group_ids': [(6, 0, [self.env.ref('base.europe').id])],
+        })
+
+        restricted_pricelist.country_group_ids = []
+        default_pricelist.action_archive()
+
+        commercial_partner = self.env['res.partner'].create({
+            'name': 'Commercial Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'country_id': self.env.ref('base.us').id,
+            'parent_id': commercial_partner.id,
+        })
+
+        print("parent: ", commercial_partner.property_product_pricelist.name)
+        print("child: ", child_partner.property_product_pricelist.name)
+
+        self.assertEqual(commercial_partner.property_product_pricelist, restricted_pricelist)
+        self.assertEqual(child_partner.property_product_pricelist, restricted_pricelist)
+        # OMG, this one is actually correct!
+
+    def test_3_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        self.env['product.pricelist'].search([]).action_archive()
+        default_pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist', 'sequence': 2
+        })
+        restricted_pricelist = self.env['product.pricelist'].create({
+            'name': 'Restricted Pricelist',
+            'sequence': 1,
+            'country_group_ids': [(6, 0, [self.env.ref('base.europe').id])]
+        })
+
+        commercial_partner = self.env['res.partner'].create({
+            'name': 'Commercial Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'country_id': self.env.ref('base.us').id,
+            'parent_id': commercial_partner.id,
+        })
+
+        restricted_pricelist.country_group_ids = []
+        default_pricelist.action_archive()
+
+        print("parent: ", commercial_partner.property_product_pricelist.name)
+        print("child: ", child_partner.property_product_pricelist.name)
+
+        self.assertEqual(commercial_partner.property_product_pricelist, restricted_pricelist)
+        # ==> should be restricted since it's now available, is default, which is archived
+
+        self.assertEqual(child_partner.property_product_pricelist, restricted_pricelist)
+        # ==> should be its parent one, which should be restricted one but is default, but is restricted
+
+        # ==> same result as 0

@@ -341,3 +341,42 @@ class TestSaleOrder(TestSaleCommon):
                              "Price unit should be the cost price for product")
             self.assertEqual(sol_form.discount, 10,
                              "Discount should be displayed on order line since its category get some discount")
+
+    def test_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        self.env['product.pricelist'].search([]).action_archive()
+        default_pricelist = self.env['product.pricelist'].create({
+            'name': 'Default Pricelist', 'sequence': 2
+        })
+        restricted_pricelist = self.env['product.pricelist'].create({
+            'name': 'Restricted Pricelist',
+            'sequence': 1,
+            'country_group_ids': [(6, 0, [self.env.ref('base.europe').id])]
+        })
+
+        commercial_partner = self.env['res.partner'].create({
+            'name': 'Commercial Partner',
+            'country_id': self.env.ref('base.us').id,
+        })
+        child_partner = self.env['res.partner'].create({
+            'name': 'Child Partner',
+            'country_id': self.env.ref('base.us').id,
+            'parent_id': commercial_partner.id,
+        })
+
+        restricted_pricelist.country_group_ids = []
+
+        order_form_1 = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form_1.partner_id = commercial_partner
+        so_for_commercial_partner = order_form_1.save()
+        order_form_2 = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form_2.partner_id = child_partner
+        so_for_child_partner = order_form_2.save()
+
+        print("parent: ", commercial_partner.property_product_pricelist.name)
+        print("child: ", child_partner.property_product_pricelist.name)
+
+        self.assertRecordValues(so_for_commercial_partner, [{'pricelist_id': restricted_pricelist.id}])
+        self.assertRecordValues(so_for_child_partner, [{'pricelist_id': restricted_pricelist.id}])
+
+        # Both Default... T-T
