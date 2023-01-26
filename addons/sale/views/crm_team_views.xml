@@ -132,11 +132,9 @@
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_primary_bottom')]" position="after">
-                <t groups="sales_team.group_sale_manager">
-                    <div class="col-12 o_kanban_primary_bottom bottom_block">
+                    <div class="col-12 o_kanban_primary_bottom bottom_block" groups="sales_team.group_sale_manager">
                         <field name="invoiced" widget="sales_team_progressbar" title="Invoicing" options="{'current_value': 'invoiced', 'max_value': 'invoiced_target', 'editable': true, 'edit_max_value': true, 'on_change': 'update_invoiced_target'}"/>
                     </div>
-                </t>
             </xpath>
 
             <xpath expr="//div[hasclass('o_kanban_manage_view')]" position="inside">
