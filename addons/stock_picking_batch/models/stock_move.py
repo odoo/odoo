@@ -21,3 +21,7 @@ class StockMove(models.Model):
             if picking.state == 'cancel' and picking.batch_id and any(p.state != 'cancel' for p in picking.batch_id.picking_ids):
                 picking.batch_id = None
         return res
+
+    def _assign_picking_post_process(self, new=False):
+        super(StockMove, self)._assign_picking_post_process(new=new)
+        self.picking_id.action_confirm()
