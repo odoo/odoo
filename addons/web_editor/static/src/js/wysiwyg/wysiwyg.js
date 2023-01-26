@@ -897,6 +897,9 @@ const Wysiwyg = Widget.extend({
      * @returns {Promise}
      */
     saveContent: async function (reload = true) {
+        // TODO dead code: we await for nothing. But let's be extra careful and
+        // only remove it in master as `await nothing` actually allows external
+        // code to take over before the rest of the function here is executed.
         const defs = [];
         await Promise.all(defs);
 
