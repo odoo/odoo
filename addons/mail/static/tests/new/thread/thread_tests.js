@@ -441,3 +441,37 @@ QUnit.test(
         assert.containsOnce(target, "button:contains(Load More)"); // still 40 non-empty
     }
 );
+
+QUnit.test("no new messages separator on posting message", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+        ],
+        channel_type: "channel",
+        name: "General",
+    });
+    const messageId = pyEnv["mail.message"].create({
+        body: "first message",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const [memberId] = pyEnv["mail.channel.member"].search([
+        ["channel_id", "=", channelId],
+        ["partner_id", "=", pyEnv.currentPartnerId],
+    ]);
+    pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, ".o-mail-message");
+    assert.containsNone(target, "hr + span:contains(New messages)");
+
+    await insertText(".o-mail-composer-textarea", "hey !");
+    await afterNextRender(() => {
+        // need to remove focus from text area to avoid set_last_seen_message
+        target.querySelector(".o-mail-composer-send-button").focus();
+        target.querySelector(".o-mail-composer-send-button").click();
+    });
+    assert.containsN(target, ".o-mail-message", 2);
+    assert.containsNone(target, "hr + span:contains(New messages)");
+});
