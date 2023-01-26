@@ -20,7 +20,7 @@ class WebclientController(http.Controller):
             return guest.with_context(**context)._init_messaging()
         raise NotFound()
 
-    @http.route("/mail/load_message_failures", methods=["POST"], type="json", auth="user")
+    @http.route("/mail/load_message_failures", methods=["POST"], type="json", auth="user", readonly=True)
     def mail_load_message_failures(self):
         # sudo as to not check ACL, which is far too costly
         # sudo: res.users - return only failures of current user as author

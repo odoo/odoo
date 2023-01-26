@@ -61,7 +61,7 @@ class Home(http.Controller):
         except AccessError:
             return request.redirect('/web/login?error=access')
 
-    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'])
+    @http.route('/web/webclient/load_menus/<string:unique>', type='http', auth='user', methods=['GET'], readonly=True)
     def web_load_menus(self, unique, lang=None):
         """
         Loads the menus for the webclient
@@ -85,7 +85,7 @@ class Home(http.Controller):
     def _login_redirect(self, uid, redirect=None):
         return _get_login_redirect_url(uid, redirect)
 
-    @http.route('/web/login', type='http', auth="none")
+    @http.route('/web/login', type='http', auth='none', readonly=False)
     def web_login(self, redirect=None, **kw):
         ensure_db()
         request.params['login_success'] = False
@@ -139,7 +139,7 @@ class Home(http.Controller):
         valid_values = {k: v for k, v in kwargs.items() if k in LOGIN_SUCCESSFUL_PARAMS}
         return request.render('web.login_successful', valid_values)
 
-    @http.route('/web/become', type='http', auth='user', sitemap=False)
+    @http.route('/web/become', type='http', auth='user', sitemap=False, readonly=True)
     def switch_to_admin(self):
         uid = request.env.user.id
         if request.env.user._is_system():

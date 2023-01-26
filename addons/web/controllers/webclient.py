@@ -88,7 +88,7 @@ class WebClient(http.Controller):
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
-    @http.route('/web/webclient/translations/<string:unique>', type='http', auth="public", cors="*")
+    @http.route('/web/webclient/translations/<string:unique>', type='http', auth='public', cors='*', readonly=True)
     def translations(self, unique, mods=None, lang=None):
         """
         Load the translations for the specified language and modules
@@ -123,7 +123,7 @@ class WebClient(http.Controller):
     def version_info(self):
         return odoo.service.common.exp_version()
 
-    @http.route('/web/tests', type='http', auth="user")
+    @http.route('/web/tests', type='http', auth='user', readonly=True)
     def test_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_suite')
 
@@ -131,7 +131,7 @@ class WebClient(http.Controller):
     def test_mobile_suite(self, mod=None, **kwargs):
         return request.render('web.qunit_mobile_suite')
 
-    @http.route('/web/bundle/<string:bundle_name>', auth="public", methods=["GET"])
+    @http.route('/web/bundle/<string:bundle_name>', auth='public', methods=['GET'], readonly=True)
     def bundle(self, bundle_name, **bundle_params):
         """
         Request the definition of a bundle, including its javascript and css bundled assets
