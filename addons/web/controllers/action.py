@@ -12,7 +12,7 @@ _logger = logging.getLogger(__name__)
 
 class Action(Controller):
 
-    @route('/web/action/load', type='json', auth="user")
+    @route('/web/action/load', type='json', auth='user', readonly=True)
     def load(self, action_id, additional_context=None):
         Actions = request.env['ir.actions.actions']
         value = False
