@@ -89,7 +89,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
-        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-att-data-mailbox="mailbox.localId" t-esc="mailbox.name"
+        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
     />
 </t>
 

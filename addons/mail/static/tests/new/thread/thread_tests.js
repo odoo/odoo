@@ -522,12 +522,12 @@ QUnit.test(
             })
         );
         assert.containsN(target, ".o-mail-message", 2);
-        assert.containsOnce(target, ".o-mail-thread-new-message");
+        assert.containsOnce(target, "hr + span:contains(New messages)");
         assert.containsOnce(target, ".o-mail-thread-new-message ~ .o-mail-message:contains(hu)");
 
         target.querySelector(".o-mail-composer-textarea").focus();
         await nextTick();
-        assert.containsNone(target, ".o-mail-thread-new-message");
+        assert.containsNone(target, "hr + span:contains(New messages)");
     }
 );
 

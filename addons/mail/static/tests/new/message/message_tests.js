@@ -642,7 +642,7 @@ QUnit.test("toggle_star message", async function (assert) {
         },
     });
     await openDiscuss(channelId);
-    assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
+    assert.containsNone(target, "button:contains(Starred) .badge");
     assert.containsOnce(target, ".o-mail-message");
     let $message = $(target).find(".o-mail-message");
     assert.containsOnce($message, "i[aria-label='Mark as Todo']");
@@ -650,14 +650,14 @@ QUnit.test("toggle_star message", async function (assert) {
 
     await click("i[aria-label='Mark as Todo']");
     assert.verifySteps(["rpc:toggle_message_starred"]);
-    assert.strictEqual($(target).find('button[data-mailbox="starred"] .badge').text(), "1");
+    assert.strictEqual($(target).find("button:contains(Starred) .badge").text(), "1");
     assert.containsOnce(target, ".o-mail-message");
     $message = $(target).find(".o-mail-message");
     assert.hasClass($message.find("i[aria-label='Mark as Todo']"), "fa-star");
 
     await click("i[aria-label='Mark as Todo']");
     assert.verifySteps(["rpc:toggle_message_starred"]);
-    assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
+    assert.containsNone(target, "button:contains(Starred) .badge");
     assert.containsOnce(target, ".o-mail-message");
     $message = $(target).find(".o-mail-message");
     assert.hasClass($message.find("i[aria-label='Mark as Todo']"), "fa-star-o");

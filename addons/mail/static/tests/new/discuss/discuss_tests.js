@@ -558,9 +558,9 @@ QUnit.test("Can reply to history message", async function (assert) {
 QUnit.test("receive new needaction messages", async function (assert) {
     const { openDiscuss, pyEnv } = await start();
     await openDiscuss();
-    assert.containsOnce(target, 'button[data-mailbox="inbox"]');
-    assert.hasClass(document.querySelector('button[data-mailbox="inbox"]'), "o-active");
-    assert.containsNone(target, '.button[data-mailbox="inbox"] .badge');
+    assert.containsOnce(target, "button:contains(Inbox)");
+    assert.hasClass($("button:contains(Inbox)"), "o-active");
+    assert.containsNone(target, "button:contains(Inbox) .badge");
     assert.containsNone(target, ".o-mail-thread .o-mail-message");
 
     // simulate receiving a new needaction message
@@ -573,8 +573,8 @@ QUnit.test("receive new needaction messages", async function (assert) {
             res_id: 20,
         });
     });
-    assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge');
-    assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(1)');
+    assert.containsOnce(target, "button:contains(Inbox) .badge");
+    assert.containsOnce(target, "button:contains(Inbox) .badge:contains(1)");
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
 
@@ -588,7 +588,7 @@ QUnit.test("receive new needaction messages", async function (assert) {
             res_id: 20,
         });
     });
-    assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(2)');
+    assert.containsOnce(target, "button:contains(Inbox) .badge:contains(2)");
     assert.containsN(target, ".o-mail-message", 2);
     assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
     assert.containsOnce(target, ".o-mail-message:contains(not empty 2)");
@@ -764,7 +764,7 @@ QUnit.test("basic top bar rendering", async function (assert) {
     assert.isVisible($markAllRead);
     assert.ok($markAllRead[0].disabled);
 
-    await click('button[data-mailbox="starred"]');
+    await click("button:contains(Starred)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "Starred");
     const $unstarAll = $(target).find('button[data-action="unstar-all"]');
     assert.isVisible($unstarAll);
@@ -834,20 +834,20 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     ]);
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_history");
-    assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
+    assert.hasClass($(target).find("button:contains(History)"), "o-active");
     assert.containsOnce(target, '.o-mail-thread [data-empty-thread=""]');
 
-    await click('button[data-mailbox="inbox"]');
-    assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
+    await click("button:contains(Inbox)");
+    assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
     assert.containsNone(target, '.o-mail-thread [data-empty-thread=""]');
     assert.containsN(target, ".o-mail-thread .o-mail-message", 2);
 
     await click('button[data-action="mark-all-read"]');
-    assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
+    assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
     assert.containsOnce(target, '.o-mail-thread [data-empty-thread=""]');
 
-    await click('button[data-mailbox="history"]');
-    assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
+    await click("button:contains(History)");
+    assert.hasClass($(target).find("button:contains(History)"), "o-active");
     assert.containsNone(target, '.o-mail-thread [data-empty-thread=""]');
     assert.containsN(target, ".o-mail-thread .o-mail-message", 2);
 });
@@ -882,19 +882,19 @@ QUnit.test(
         ]);
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_history");
-        assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
+        assert.hasClass($(target).find("button:contains(History)"), "o-active");
         assert.containsOnce(target, '[data-empty-thread=""]');
 
-        await click('button[data-mailbox="inbox"]');
-        assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
+        await click("button:contains(Inbox)");
+        assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
         assert.containsN(target, ".o-mail-message", 2);
 
         await click(".o-mail-message:contains(not empty 1) i[aria-label='Mark as Read']");
         assert.containsOnce(target, ".o-mail-message");
         assert.containsOnce(target, ".o-mail-message:contains(not empty 2)");
 
-        await click('button[data-mailbox="history"]');
-        assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
+        await click("button:contains(History)");
+        assert.hasClass($(target).find("button:contains(History)"), "o-active");
         assert.containsOnce(target, ".o-mail-message");
         assert.containsOnce(target, ".o-mail-message:contains(not empty 1)");
     }
@@ -920,7 +920,7 @@ QUnit.test(
         await click('button[data-action="mark-all-read"]');
         assert.containsNone(target, ".o-mail-message");
 
-        await click('button[data-mailbox="history"]');
+        await click("button:contains(History)");
         await afterNextRender(() => (target.querySelector(".o-mail-thread").scrollTop = 0));
         assert.containsN(target, ".o-mail-message", 40);
     }
@@ -969,13 +969,13 @@ QUnit.test("starred: unstar all", async function (assert) {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss("mail.box_starred");
-    assert.strictEqual($(target).find('button[data-mailbox="starred"] .badge').text(), "2");
+    assert.strictEqual($(target).find("button:contains(Starred) .badge").text(), "2");
     assert.containsN(target, ".o-mail-message", 2);
     let $unstarAll = $(target).find('button[data-action="unstar-all"]');
     assert.notOk($unstarAll[0].disabled);
 
     await click($unstarAll);
-    assert.containsNone(target, 'button[data-mailbox="starred"] .badge');
+    assert.containsNone(target, "button:contains(Starred) .badge");
     assert.containsNone(target, ".o-mail-message");
     $unstarAll = $(target).find('button[data-action="unstar-all"]');
     assert.ok($unstarAll[0].disabled);
@@ -996,8 +996,8 @@ QUnit.test("auto-focus composer on opening thread", async function (assert) {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, 'button[data-mailbox="inbox"]');
-    assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
+    assert.containsOnce(target, "button:contains(Inbox)");
+    assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
     assert.containsOnce(target, ".o-mail-category-item:contains(General)");
     assert.doesNotHaveClass($(target).find(".o-mail-category-item:contains(General)"), "o-active");
     assert.containsOnce(target, ".o-mail-category-item:contains(Demo User)");

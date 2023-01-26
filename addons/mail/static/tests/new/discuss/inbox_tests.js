@@ -458,7 +458,7 @@ QUnit.test("inbox: mark all messages as read", async function (assert) {
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(2)');
+    assert.containsOnce(target, "button:contains(Inbox) .badge:contains(2)");
     assert.containsOnce(
         target,
         `.o-mail-category-item[data-channel-id="${channelId}"] .badge:contains(2)`
@@ -467,7 +467,7 @@ QUnit.test("inbox: mark all messages as read", async function (assert) {
     assert.notOk($(target).find('button[data-action="mark-all-read"]')[0].disabled);
 
     await click('.o-mail-discuss-actions button[data-action="mark-all-read"]');
-    assert.containsNone(target, 'button[data-mailbox="inbox"] .badge');
+    assert.containsNone(target, "button:contains(Inbox) .badge");
     assert.containsNone(target, `.o-mail-category-item[data-channel-id="${channelId}"] .badge`);
     assert.containsNone(target, ".o-mail-message");
     assert.ok($(target).find('button[data-action="mark-all-read"]')[0].disabled);

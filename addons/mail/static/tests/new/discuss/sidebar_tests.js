@@ -178,7 +178,7 @@ QUnit.test("sidebar: inbox with counter", async function (assert) {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, 'button[data-mailbox="inbox"] .badge:contains(1)');
+    assert.containsOnce(target, "button:contains(Inbox) .badge:contains(1)");
 });
 
 QUnit.test("default thread rendering", async function (assert) {
@@ -186,27 +186,27 @@ QUnit.test("default thread rendering", async function (assert) {
     const channelId = pyEnv["mail.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce(target, 'button[data-mailbox="inbox"]');
-    assert.containsOnce(target, 'button[data-mailbox="starred"]');
-    assert.containsOnce(target, 'button[data-mailbox="history"]');
+    assert.containsOnce(target, "button:contains(Inbox)");
+    assert.containsOnce(target, "button:contains(Starred)");
+    assert.containsOnce(target, "button:contains(History)");
     assert.containsOnce(target, `.o-mail-category-item[data-channel-id="${channelId}"]`);
-    assert.hasClass($(target).find('button[data-mailbox="inbox"]'), "o-active");
+    assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
     assert.containsOnce(target, '[data-empty-thread=""]');
     assert.strictEqual(
         $(target).find('[data-empty-thread=""]').text().trim(),
         "Congratulations, your inbox is empty  New messages appear here."
     );
 
-    await click('button[data-mailbox="starred"]');
-    assert.hasClass($(target).find('button[data-mailbox="starred"]'), "o-active");
+    await click("button:contains(Starred)");
+    assert.hasClass($(target).find("button:contains(Starred)"), "o-active");
     assert.containsOnce(target, '.o-mail-discuss-content [data-empty-thread=""]');
     assert.strictEqual(
         $(target).find('[data-empty-thread=""]').text().trim(),
         "No starred messages  You can mark any message as 'starred', and it shows up in this mailbox."
     );
 
-    await click('button[data-mailbox="history"]');
-    assert.hasClass($(target).find('button[data-mailbox="history"]'), "o-active");
+    await click("button:contains(History)");
+    assert.hasClass($(target).find("button:contains(History)"), "o-active");
     assert.containsOnce(target, '[data-empty-thread=""]');
     assert.strictEqual(
         $(target).find('[data-empty-thread=""]').text().trim(),

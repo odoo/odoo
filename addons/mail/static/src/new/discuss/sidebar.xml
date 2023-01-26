@@ -39,7 +39,6 @@
             'o-starred-box': mailbox.id === 'starred',
         }"
         t-on-click="(ev) => this.openThread(ev, mailbox)"
-        t-att-data-mailbox="mailbox.id"
     >
         <ThreadIcon className="'ms-4 me-2'" thread="mailbox"/>
         <div class="me-2 text-truncate">
