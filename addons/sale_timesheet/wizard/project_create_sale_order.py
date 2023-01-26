@@ -159,7 +159,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
             task_ids.write({
                 'sale_line_id': sale_order_line.id,
                 'partner_id': sale_order.partner_id.id,
-                'email_from': sale_order.partner_id.email,
             })
 
             # assign SOL to timesheets
@@ -234,7 +233,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
         })
         non_billable_tasks.write({
             'partner_id': sale_order.partner_id.id,
-            'email_from': sale_order.partner_id.email,
         })
 
         # assign SOL to timesheets

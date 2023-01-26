@@ -36,7 +36,6 @@
                 <field name="partner_id"/>
                 <field name="sequence"/>
                 <field name="is_closed"/>
-                <field name="partner_is_company"/>
                 <field name="displayed_image_id"/>
                 <field name="active"/>
                 <field name="allow_subtasks"/>
@@ -69,14 +68,8 @@
                                     </span>
                                     <br />
                                     <t t-if="record.partner_id.value">
-                                        <span t-if="!record.partner_is_company.raw_value">
-                                            <field name="commercial_partner_id"/>
-                                        </span>
-                                        <span t-else="">
-                                            <field name="partner_id"/>
-                                        </span>
+                                        <field name="partner_id"/>
                                     </t>
-                                    <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                 </div>
                             </div>
                             <div class="o_kanban_record_body">

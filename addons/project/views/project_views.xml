@@ -1322,12 +1322,10 @@
                         <page name="extra_info" string="Extra Info" groups="base.group_no_one">
                             <group>
                                 <group>
-                                    <field name="is_analytic_account_id_changed" invisible="1"/>
                                     <field name="parent_id" attrs="{'invisible': [('allow_subtasks', '=', False)]}" groups="base.group_no_one" context="{'search_view_ref' : 'project.view_task_search_form','search_default_display_project_id': project_id}"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" context="{'default_partner_id': partner_id}"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                                     <field name="sequence" groups="base.group_no_one"/>
-                                    <field name="email_from" invisible="1"/>
                                     <field name="email_cc" groups="base.group_no_one"/>
                                     <field name="displayed_image_id" groups="base.group_no_one" options="{'no_create': True}"/>
                                 </group>
@@ -1403,7 +1401,6 @@
                     <field name="partner_id"/>
                     <field name="sequence"/>
                     <field name="is_closed"/>
-                    <field name="partner_is_company"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
                     <field name="legend_blocked"/>
@@ -1445,14 +1442,8 @@
                                         </span>
                                         <br />
                                         <t t-if="record.partner_id.value">
-                                            <span t-if="!record.partner_is_company.raw_value">
-                                                <field name="commercial_partner_id"/>
-                                            </span>
-                                            <span t-else="">
-                                                <field name="partner_id"/>
-                                            </span>
+                                            <field name="partner_id"/>
                                         </t>
-                                        <t t-else="record.email_from.raw_value"><span><field name="email_from"/></span></t>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">

@@ -124,7 +124,6 @@ class SaleOrderLine(models.Model):
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,
-                'email_from': self.order_id.partner_id.email,
             })
             # duplicating a project doesn't set the SO on sub-tasks
             project.tasks.filtered('parent_id').write({
@@ -162,7 +161,6 @@ class SaleOrderLine(models.Model):
             'analytic_account_id': project.analytic_account_id.id,
             'planned_hours': planned_hours,
             'partner_id': self.order_id.partner_id.id,
-            'email_from': self.order_id.partner_id.email,
             'description': description,
             'project_id': project.id,
             'sale_line_id': self.id,

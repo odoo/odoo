@@ -27,13 +27,11 @@ PROJECT_TASK_READABLE_FIELDS = {
     'project_id',
     'display_project_id',
     'color',
-    'partner_is_company',
     'commercial_partner_id',
     'allow_subtasks',
     'subtask_count',
     'child_text',
     'is_closed',
-    'email_from',
     'create_date',
     'write_date',
     'company_id',
@@ -62,7 +60,6 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'description',
     'partner_id',
-    'partner_email',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -317,12 +314,6 @@ class Project(models.Model):
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10)
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
-    partner_email = fields.Char(
-        compute='_compute_partner_email', inverse='_inverse_partner_email',
-        string='Email', readonly=False, store=True, copy=False)
-    partner_phone = fields.Char(
-        compute='_compute_partner_phone', inverse='_inverse_partner_phone',
-        string="Phone", readonly=False, store=True, copy=False)
     commercial_partner_id = fields.Many2one(related="partner_id.commercial_partner_id")
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
@@ -435,28 +426,6 @@ class Project(models.Model):
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', "The project's start date must be before its end date.")
     ]
-
-    @api.depends('partner_id.email')
-    def _compute_partner_email(self):
-        for project in self:
-            if project.partner_id.email != project.partner_email:
-                project.partner_email = project.partner_id.email
-
-    def _inverse_partner_email(self):
-        for project in self:
-            if project.partner_id and project.partner_email != project.partner_id.email:
-                project.partner_id.email = project.partner_email
-
-    @api.depends('partner_id.phone')
-    def _compute_partner_phone(self):
-        for project in self:
-            if project.partner_phone != project.partner_id.phone:
-                project.partner_phone = project.partner_id.phone
-
-    def _inverse_partner_phone(self):
-        for project in self:
-            if project.partner_id and project.partner_phone != project.partner_id.phone:
-                project.partner_id.phone = project.partner_phone
 
     @api.onchange('alias_enabled')
     def _onchange_alias_name(self):
@@ -1203,17 +1172,12 @@ class Task(models.Model):
         string='Customer', recursive=True, tracking=True,
         compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    partner_is_company = fields.Boolean(related='partner_id.is_company', readonly=True)
     commercial_partner_id = fields.Many2one(related='partner_id.commercial_partner_id')
-    partner_email = fields.Char(
-        compute='_compute_partner_email', inverse='_inverse_partner_email',
-        string='Email', readonly=False, store=True, copy=False)
     partner_phone = fields.Char(
         compute='_compute_partner_phone', inverse='_inverse_partner_phone',
         string="Phone", readonly=False, store=True, copy=False)
     partner_city = fields.Char(related='partner_id.city', readonly=False)
     email_cc = fields.Char(help='Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer.')
-    manager_id = fields.Many2one('res.users', string='Project Manager', related='project_id.user_id', readonly=True)
     company_id = fields.Many2one(
         'res.company', string='Company', compute='_compute_company_id', store=True, readonly=False,
         required=True, copy=True, default=_default_company_id)
@@ -1229,13 +1193,10 @@ class Task(models.Model):
     legend_normal = fields.Char(related='stage_id.legend_normal', string='Kanban Ongoing Explanation', readonly=True)
     is_closed = fields.Boolean(related="stage_id.fold", string="Closing Stage", store=True, index=True, help="Folded in Kanban stages are closing stages.")
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
-    ancestor_id = fields.Many2one('project.task', string='Ancestor Task', compute='_compute_ancestor_id', index='btree_not_null', recursive=True, store=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     child_text = fields.Char(compute="_compute_child_text")
     allow_subtasks = fields.Boolean(string="Allow Sub-tasks", related="project_id.allow_subtasks", readonly=True)
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
-    email_from = fields.Char(string='Email From', help="These people will receive email.", index='trigram',
-        compute='_compute_email_from', recursive=True, store=True, readonly=False, copy=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', digits=(16, 2), store=True, group_operator="avg")
@@ -1366,8 +1327,6 @@ class Task(models.Model):
         help="Analytic account to which this task and its timesheets are linked.\n"
             "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
-    is_analytic_account_id_changed = fields.Boolean('Is Analytic Account Manually Changed', compute='_compute_is_analytic_account_id_changed', store=True)
-    project_analytic_account_id = fields.Many2one('account.analytic.account', string='Project Analytic Account', related='project_id.analytic_account_id')
 
     _sql_constraints = [
         ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
@@ -1383,15 +1342,8 @@ class Task(models.Model):
 
     @api.depends('project_id.analytic_account_id')
     def _compute_analytic_account_id(self):
-        self.env.remove_to_compute(self._fields['is_analytic_account_id_changed'], self)
         for task in self:
-            if not task.is_analytic_account_id_changed:
-                task.analytic_account_id = task.project_id.analytic_account_id
-
-    @api.depends('analytic_account_id')
-    def _compute_is_analytic_account_id_changed(self):
-        for task in self:
-            task.is_analytic_account_id_changed = task.project_id and task.analytic_account_id != task.project_id.analytic_account_id
+            task.analytic_account_id = task.project_id.analytic_account_id
 
     @api.depends('project_id', 'parent_id')
     def _compute_is_private(self):
@@ -1412,11 +1364,6 @@ class Task(models.Model):
     @api.depends('stage_id', 'project_id')
     def _compute_kanban_state(self):
         self.kanban_state = 'normal'
-
-    @api.depends('parent_id.ancestor_id')
-    def _compute_ancestor_id(self):
-        for task in self:
-            task.ancestor_id = task.parent_id.ancestor_id or task.parent_id
 
     @api.depends_context('uid')
     @api.depends('user_ids')
@@ -1597,17 +1544,6 @@ class Task(models.Model):
     def _compute_is_blocked(self):
         for task in self:
             task.is_blocked = any(not blocking_task.is_closed or blocking_task.is_blocked for blocking_task in task.depend_on_ids)
-
-    @api.depends('partner_id.email')
-    def _compute_partner_email(self):
-        for task in self:
-            if task.partner_id.email != task.partner_email:
-                task.partner_email = task.partner_id.email
-
-    def _inverse_partner_email(self):
-        for task in self:
-            if task.partner_id and task.partner_email != task.partner_id.email:
-                task.partner_id.email = task.partner_email
 
     @api.depends('partner_id.phone')
     def _compute_partner_phone(self):
@@ -2128,7 +2064,10 @@ class Task(models.Model):
         recurrence_update = vals.pop('recurrence_update', 'this')
         if recurrence_update == 'future':
             for task in self:
-                recurrent_task = task.ancestor_id if task.ancestor_id.recurring_task else task
+                ancestor_id = task
+                while ancestor_id.parent_id:
+                    ancestor_id = ancestor_id.parent_id
+                recurrent_task = ancestor_id if ancestor_id.recurring_task else task
                 task_for_recurrence[recurrent_task.recurrence_id] = task
 
         # The sudo is required for a portal user as the record update
@@ -2199,11 +2138,6 @@ class Task(models.Model):
                 # When the task has a parent task, the display_project_id can be False or the project choose by the user for this task.
                 project = task.display_project_id if task.parent_id and task.display_project_id else task.project_id
                 task.partner_id = self._get_default_partner_id(project, task.parent_id)
-
-    @api.depends('partner_id.email', 'parent_id.email_from')
-    def _compute_email_from(self):
-        for task in self:
-            task.email_from = task.partner_id.email or ((task.partner_id or task.parent_id) and task.email_from) or task.parent_id.email_from
 
     @api.depends('parent_id.project_id', 'display_project_id')
     def _compute_project_id(self):
@@ -2465,6 +2399,13 @@ class Task(models.Model):
         create_context['default_user_ids'] = False
         if custom_values is None:
             custom_values = {}
+        # Auto create partner if not existant when the task is created from email
+        if not msg.get('author_id') and msg.get('email_from'):
+            msg['author_id'] = self.env['res.partner'].create({
+                'email': msg['email_from'],
+                'name': msg['email_from'],
+            }).id
+
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
             'planned_hours': 0.0,
@@ -2491,8 +2432,6 @@ class Task(models.Model):
             if task.partner_id:
                 reason = _('Customer Email') if task.partner_id.email else _('Customer')
                 task._message_add_suggested_recipient(recipients, partner=task.partner_id, reason=reason)
-            elif task.email_from:
-                task._message_add_suggested_recipient(recipients, email=task.email_from, reason=_('Customer Email'))
         return recipients
 
     def _notify_by_email_get_headers(self):
@@ -2511,16 +2450,6 @@ class Task(models.Model):
             if image_attachments:
                 self.displayed_image_id = image_attachments[0]
 
-        if self.email_from and not self.partner_id:
-            # we consider that posting a message with a specified recipient (not a follower, a specific one)
-            # on a document without customer means that it was created through the chatter using
-            # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
-            new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
-            if new_partner:
-                self.search([
-                    ('partner_id', '=', False),
-                    ('email_from', '=', new_partner.email),
-                    ('is_closed', '=', False)]).write({'partner_id': new_partner.id})
         # use the sanitized body of the email from the message thread to populate the task's description
         if not self.description and message.subtype_id == self._creation_subtype() and self.partner_id == message.author_id:
             self.description = message.body
@@ -2700,7 +2629,7 @@ class Task(models.Model):
     # ---------------------------------------------------
     def _get_task_analytic_account_id(self):
         self.ensure_one()
-        return self.analytic_account_id or self.project_analytic_account_id
+        return self.analytic_account_id or self.project_id.analytic_account_id
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
