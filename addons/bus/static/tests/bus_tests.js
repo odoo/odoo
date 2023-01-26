@@ -449,6 +449,31 @@ QUnit.module('Bus', {
         await websocketCreatedDeferred;
         assert.verifySteps([`${origin.replace("http", "ws")}/websocket`]);
     });
+
+    QUnit.test("Disconnect on offline, re-connect on online", async function (assert) {
+        patchWebsocketWorkerWithCleanup();
+        const env = await makeTestEnv();
+        env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
+        env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
+        env.services["bus_service"].start();
+        window.dispatchEvent(new Event("offline"));
+        await nextTick();
+        window.dispatchEvent(new Event("online"));
+        await nextTick();
+        assert.verifySteps(["connect", "disconnect", "connect"]);
+    });
+
+    QUnit.test("No disconnect on change offline/online when bus inactive", async function (assert) {
+        patchWebsocketWorkerWithCleanup();
+        const env = await makeTestEnv();
+        env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
+        env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
+        window.dispatchEvent(new Event("offline"));
+        await nextTick();
+        window.dispatchEvent(new Event("online"));
+        await nextTick();
+        assert.verifySteps([]);
+    });
 });
 });
 
