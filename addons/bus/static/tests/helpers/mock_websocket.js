@@ -18,7 +18,7 @@ class WebSocketMock extends EventTarget {
         });
     }
 
-    close(code, reason) {
+    close(code = 1000, reason) {
         this.readyState = 3;
         const closeEv = new CloseEvent('close', {
             code,
