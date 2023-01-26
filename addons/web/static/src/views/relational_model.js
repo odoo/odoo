@@ -725,7 +725,9 @@ export class Record extends DataPoint {
                     : false;
             } else if (fieldType === "reference") {
                 const value = changes[fieldName];
-                changes[fieldName] = value ? `${value.resModel},${value.resId}` : false;
+                changes[fieldName] = value && value.resModel && value.resId
+                    ? `${value.resModel},${value.resId}`
+                    : (value || false);
             }
         }
 
