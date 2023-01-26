@@ -457,7 +457,7 @@ class HolidaysType(models.Model):
                 'leaves_requested': ('%.2f' % (self.max_leaves - self.virtual_remaining_leaves - self.leaves_taken)).rstrip('0').rstrip('.'),
                 'leaves_approved': ('%.2f' % self.leaves_taken).rstrip('0').rstrip('.'),
                 'closest_allocation_remaining': ('%.2f' % closest_allocation_remaining).rstrip('0').rstrip('.'),
-                'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to, date_format="MM/dd/yyyy") if self.closest_allocation_to_expire.date_to else False,
+                'closest_allocation_expire': format_date(self.env, self.closest_allocation_to_expire.date_to) if self.closest_allocation_to_expire.date_to else False,
                 'request_unit': self.request_unit,
                 'icon': self.sudo().icon_id.url,
                 }, self.requires_allocation, self.id)
