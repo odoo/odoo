@@ -154,6 +154,7 @@ For more specific needs, you may also assign custom-defined actions
             # Unused by guests and depends on ViewDialogs, better to remove it instead of pulling the whole view dependency tree
             ('remove', 'mail/static/src/components/composer_suggested_recipient/*'),
             ('remove', 'mail/static/src/components/activity_menu_container/*'),
+            ('remove', 'mail/static/src/components/avatar/*'),
             'mail/static/src/js/utils.js',
             ('include', 'mail.assets_messaging'),
             'mail/static/src/public/*',
