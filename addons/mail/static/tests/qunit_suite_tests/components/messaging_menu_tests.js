@@ -541,22 +541,6 @@ QUnit.module("mail", (hooks) => {
             );
         });
 
-        QUnit.skipRefactoring("open chat window from preview", async function (assert) {
-            assert.expect(1);
-
-            const pyEnv = await startServer();
-            pyEnv["mail.channel"].create({});
-            const { click } = await start();
-
-            await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-            await click(`.o_MessagingMenu_dropdownMenu .o_ChannelPreviewView`);
-            assert.strictEqual(
-                document.querySelectorAll(`.o-mail-chat-window`).length,
-                1,
-                "should have open a chat window"
-            );
-        });
-
         QUnit.skipRefactoring("no code injection in message body preview", async function (assert) {
             assert.expect(5);
 

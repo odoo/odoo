@@ -427,3 +427,12 @@ QUnit.test("mobile: active icon is highlighted", async function (assert) {
     await click(".o-mail-messaging-menu-tab:contains(Chat)");
     assert.hasClass($(target).find(".o-mail-messaging-menu-tab:contains(Chat)"), "fw-bolder");
 });
+
+QUnit.test("open chat window from preview", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({ name: "test" });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    assert.containsOnce(target, ".o-mail-chat-window");
+});
