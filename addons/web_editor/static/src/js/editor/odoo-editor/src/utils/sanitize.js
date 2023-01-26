@@ -2,7 +2,7 @@
 import {
     closestBlock,
     closestElement,
-    endPos,
+    startPos,
     fillEmpty,
     getListMode,
     isBlock,
@@ -18,56 +18,51 @@ import {
     isZWS,
     getUrlsInfosInString,
     isArtificialVoidElement,
+    ancestors,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
+
+function hasPseudoElementContent (node, pseudoSelector) {
+    const content = getComputedStyle(node, pseudoSelector).getPropertyValue('content');
+    return content && content !== 'none';
+}
+
 export function areSimilarElements(node, node2) {
-    if (
-        !node ||
-        !node2 ||
-        node.nodeType !== Node.ELEMENT_NODE ||
-        node2.nodeType !== Node.ELEMENT_NODE
-    ) {
-        return false;
+    if (![node, node2].every(n => n?.nodeType === Node.ELEMENT_NODE)) {
+        return false; // The nodes don't both exist or aren't both elements.
     }
-    if (node.tagName !== node2.tagName) {
-        return false;
+    if (node.nodeName !== node2.nodeName) {
+        return false; // The nodes aren't the same type of element.
     }
-    for (const att of node.attributes) {
-        const att2 = node2.attributes[att.name];
-        if ((att2 && att2.value) !== att.value) {
-            return false;
+    const nodeName = node.nodeName;
+
+    for (const name of new Set([
+        ...node.getAttributeNames(),
+        ...node2.getAttributeNames(),
+    ])) {
+        if (node.getAttribute(name) !== node2.getAttribute(name)) {
+            return false; // The nodes don't have the same attributes.
         }
     }
-    for (const att of node2.attributes) {
-        const att2 = node.attributes[att.name];
-        if ((att2 && att2.value) !== att.value) {
-            return false;
-        }
+    if ([node, node2].some(n => hasPseudoElementContent(n, ':before') || hasPseudoElementContent(n, ':after'))) {
+        return false; // The nodes have pseudo elements with content.
     }
-    function isNotNoneValue(value) {
-        return value && value !== 'none';
-    }
-    if (
-        isNotNoneValue(getComputedStyle(node, ':before').getPropertyValue('content')) ||
-        isNotNoneValue(getComputedStyle(node, ':after').getPropertyValue('content')) ||
-        isNotNoneValue(getComputedStyle(node2, ':before').getPropertyValue('content')) ||
-        isNotNoneValue(getComputedStyle(node2, ':after').getPropertyValue('content'))
-    ) {
-        return false;
-    }
-    if (node.tagName === 'LI' && node.classList.contains('oe-nested')) {
+    if (nodeName === 'LI' && node.classList.contains('oe-nested')) {
+        // If the nodes are adjacent nested list items, we need to compare the
+        // types of their "adjacent" list children rather that the list items
+        // themselves.
         return (
             node.lastElementChild &&
             node2.firstElementChild &&
             getListMode(node.lastElementChild) === getListMode(node2.firstElementChild)
         );
     }
-    if (['UL', 'OL'].includes(node.tagName)) {
-        return !isSelfClosingElement(node) && !isSelfClosingElement(node2);
+    if (['UL', 'OL'].includes(nodeName)) {
+        return !isSelfClosingElement(node) && !isSelfClosingElement(node2); // The nodes are non-empty lists. TODO: this doesn't check that and it will always be true!
     }
     if (isBlock(node) || isSelfClosingElement(node) || isSelfClosingElement(node2)) {
-        return false;
+        return false; // The nodes are blocks or are empty but visible. TODO: Not sure this was what we wanted to check (see just above).
     }
     const nodeStyle = getComputedStyle(node);
     const node2Style = getComputedStyle(node2);
@@ -79,151 +74,124 @@ export function areSimilarElements(node, node2) {
     );
 }
 
-function _sanitizeNodeTree(node, root) {
-    while (node) {
-        if (isProtected(node)) {
-            for (const unprotected of node.querySelectorAll('[data-oe-protected="false"]')) {
-                this._sanitizeNodeTree(unprotected.firstChild);
-            }
-            node = node.nextSibling;
-            continue;
-        }
+/**
+ * Sanitize the given node and return it.
+ *
+ * @param {Node} node
+ * @param {Element} root
+ * @returns {Node} the sanitized node
+ */
+function sanitizeNode(node, root) {
+    // First ensure elements which should not contain any content are tagged
+    // contenteditable=false to avoid any hiccup.
+    if (isArtificialVoidElement(node) && node.getAttribute('contenteditable') !== 'false') {
+        node.setAttribute('contenteditable', 'false');
+    }
+
+    if (
+        areSimilarElements(node, node.previousSibling) &&
+        !isUnbreakable(node) &&
+        !isEditorTab(node)
+    ) {
         // Merge identical elements together.
-        while (
-            areSimilarElements(node, node.previousSibling) &&
-            !isUnbreakable(node) &&
-            !isEditorTab(node)
-        ) {
-            getDeepRange(root, { select: true });
-            const restoreCursor = node.isConnected &&
-                preserveCursor(root.ownerDocument);
-            const nodeP = node.previousSibling;
-            moveNodes(...endPos(node.previousSibling), node);
-            if (restoreCursor) {
-                restoreCursor();
-            }
-            node = nodeP;
-        }
-
+        getDeepRange(root, { select: true });
+        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        moveNodes(...startPos(node), node.previousSibling);
+        restoreCursor?.();
+    } else if (node.nodeType === Node.COMMENT_NODE) {
         // Remove comment nodes to avoid issues with mso comments.
-        if (node.nodeType === Node.COMMENT_NODE) {
-            node.remove();
-        }
-
-        const selection = root.ownerDocument.getSelection();
-        const anchor = selection && selection.anchorNode;
-        const anchorEl = anchor && closestElement(anchor);
+        const parent = node.parentElement;
+        node.remove();
+        node = parent; // The node has been removed, update the reference.
+    } else if (
+        node.nodeName === 'P' && // Note: not sure we should limit to <p>.
+        node.parentElement.nodeName === 'LI' &&
+        isEmptyBlock(node)
+    ) {
+        // Remove empty paragraphs in <li>.
+        const parent = node.parentElement;
+        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        node.remove();
+        fillEmpty(parent);
+        restoreCursor?.(new Map([[node, parent]]));
+        node = parent; // The node has been removed, update the reference.
+    } else if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
+        // Transform <li> into <p> if they are not in a <ul> / <ol>.
+        const paragraph = document.createElement('p');
+        paragraph.replaceChildren(...node.childNodes);
+        node.replaceWith(paragraph);
+        node = paragraph; // The node has been removed, update the reference.
+    } else if (
+        node.nodeType === Node.TEXT_NODE &&
+        node.textContent.includes('\u200B') &&
+        node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
+        node !== root.ownerDocument.getSelection()?.anchorNode &&
+        !isBlock(node.parentElement) &&
+        (
+            node.textContent.length > 1 ||
+            // There can be multiple ajacent text nodes, in which case
+            // the zero-width space is not needed either, despite being
+            // alone (length === 1) in its own text node.
+            Array.from(node.parentNode.childNodes).find(
+                sibling =>
+                    sibling !== node &&
+                    sibling.nodeType === Node.TEXT_NODE &&
+                    sibling.length > 0
+            )
+        )
+    ) {
         // Remove zero-width spaces added by `fillEmpty` when there is
         // content and the selection is not next to it.
-        if (
-            node.nodeType === Node.TEXT_NODE &&
-            node.textContent.includes('\u200B') &&
-            node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
-            (
-                node.textContent.length > 1 ||
-                // There can be multiple ajacent text nodes, in which case
-                // the zero-width space is not needed either, despite being
-                // alone (length === 1) in its own text node.
-                Array.from(node.parentNode.childNodes).find(
-                    sibling =>
-                        sibling !== node &&
-                        sibling.nodeType === Node.TEXT_NODE &&
-                        sibling.length > 0
-                )
-            ) &&
-            !isBlock(node.parentElement) &&
-            anchor !== node
-        ) {
-            const restoreCursor = node.isConnected &&
-                preserveCursor(root.ownerDocument);
-            node.textContent = node.textContent.replace('\u200B', '');
-            node.parentElement.removeAttribute("data-oe-zws-empty-inline");
-            if (restoreCursor) {
-                restoreCursor();
-            }
-        }
-
-        // Remove empty blocks in <li>
-        if (
-            node.nodeName === 'P' &&
-            node.parentElement.tagName === 'LI' &&
-            isEmptyBlock(node)
-        ) {
-            const parent = node.parentElement;
-            const restoreCursor = node.isConnected &&
-                preserveCursor(root.ownerDocument);
-            node.remove();
-            fillEmpty(parent);
-            if (restoreCursor) {
-                restoreCursor(new Map([[node, parent]]));
-            }
-        }
-
-        // Transform <li> into <p> if they are not in a <ul> / <ol>
-        if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
-            const paragraph = document.createElement("p");
-            paragraph.replaceChildren(...node.childNodes);
-            node.replaceWith(paragraph);
-            node = paragraph;
-        }
-
+        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
+        node.textContent = node.textContent.replace('\u200B', '');
+        node.parentElement.removeAttribute("data-oe-zws-empty-inline");
+        restoreCursor?.();
+    } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
-        if (isFontAwesome(node) && node.textContent !== '\u200B') {
-            node.textContent = '\u200B';
-        }
-
+        node.textContent = '\u200B';
+    } else if (isEditorTab(node)) {
         // Ensure the editor tabs align on a 40px grid.
-        if (isEditorTab(node)) {
-            let tabPreviousSibling = node.previousSibling;
-            while (isZWS(tabPreviousSibling)) {
-                tabPreviousSibling = tabPreviousSibling.previousSibling;
-            }
-            if (isEditorTab(tabPreviousSibling)) {
-                node.style.width = '40px';
-            } else {
-                const editable = closestElement(node, '.odoo-editor-editable');
-                if (editable && editable.firstElementChild) {
-                    const nodeRect = node.getBoundingClientRect();
-                    const referenceRect = editable.firstElementChild.getBoundingClientRect();
-                    // Values from getBoundingClientRect() are all zeros
-                    // during Editor startup or saving. We cannot
-                    // recalculate the tabs width in thoses cases.
-                    if (nodeRect.width && referenceRect.width) {
-                        const width = (nodeRect.left - referenceRect.left) % 40;
-                        node.style.width = (40 - width) + 'px';
-                    }
+        let tabPreviousSibling = node.previousSibling;
+        while (isZWS(tabPreviousSibling)) {
+            tabPreviousSibling = tabPreviousSibling.previousSibling;
+        }
+        if (isEditorTab(tabPreviousSibling)) {
+            node.style.width = '40px';
+        } else {
+            const editable = closestElement(node, '.odoo-editor-editable');
+            if (editable?.firstElementChild) {
+                const nodeRect = node.getBoundingClientRect();
+                const referenceRect = editable.firstElementChild.getBoundingClientRect();
+                // Values from getBoundingClientRect() are all zeros during
+                // Editor startup or saving. We cannot recalculate the tabs
+                // width in thoses cases.
+                if (nodeRect.width && referenceRect.width) {
+                    const width = (nodeRect.left - referenceRect.left) % 40;
+                    node.style.width = (40 - width) + 'px';
                 }
             }
         }
-
-        // Ensure elements which should not contain any content are tagged
-        // contenteditable=false to avoid any hiccup.
-        if (
-            isArtificialVoidElement(node) &&
-            node.getAttribute('contenteditable') !== 'false'
-        ) {
-            node.setAttribute('contenteditable', 'false');
-        }
-        if (node.firstChild) {
-            _sanitizeNodeTree(node.firstChild);
-        }
-        // Update link URL if label is a new valid link.
-        if (node.nodeName === 'A' && anchorEl === node) {
-            const linkLabel = node.innerText;
-            const urlInfo = getUrlsInfosInString(linkLabel);
-            if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
-                node.setAttribute('href', urlInfo[0].url);
-            }
-        }
-        node = node.nextSibling;
     }
+    return node;
 }
 
 export function sanitize(root) {
+    const start = root.ownerDocument.getSelection()?.anchorNode;
     const rootClosestBlock = closestBlock(root);
     if (rootClosestBlock) {
-        const isList = ['UL', 'OL'].includes(rootClosestBlock.tagName);
-        _sanitizeNodeTree(isList ? rootClosestBlock.parentElement : rootClosestBlock, root);
+        // If the node is a list, start sanitization from its parent to ensure
+        // adjacent lists are merged when needed.
+        const isList = ['UL', 'OL'].includes(rootClosestBlock.nodeName);
+        let node = isList ? rootClosestBlock.parentElement : rootClosestBlock;
+
+        // Sanitize the tree.
+        while (node?.isConnected) {
+            if (!isProtected(node)) {
+                node = sanitizeNode(node, root); // The node itself might be replaced during sanitization.
+            }
+            node = node.firstChild || node.nextSibling || ancestors(node, root).find(a => a.nextSibling)?.nextSibling;
+        }
+
         // Ensure unique ids on checklists and stars.
         const elementsWithId = [...rootClosestBlock.querySelectorAll('[id^=checkId-]')];
         const maxId = Math.max(...[0, ...elementsWithId.map(node => +node.getAttribute('id').substring(8))]);
@@ -248,6 +216,16 @@ export function sanitize(root) {
                     node.setAttribute('id', id);
                 }
                 ids.push(id);
+            }
+        }
+
+        // Update link URL if label is a new valid link.
+        const startEl = start && closestElement(start, 'a');
+        if (startEl) {
+            const linkLabel = startEl.innerText;
+            const urlInfo = getUrlsInfosInString(linkLabel);
+            if (urlInfo.length && urlInfo[0].label === linkLabel && !startEl.href.startsWith('mailto:')) {
+                startEl.setAttribute('href', urlInfo[0].url);
             }
         }
     }
