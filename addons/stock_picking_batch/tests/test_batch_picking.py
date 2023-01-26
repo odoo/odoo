@@ -460,6 +460,71 @@ class TestBatchPicking(TransactionCase):
         self.assertFalse(picking_out_1.batch_id)
         self.assertEqual(len(picking_out_3.batch_id.picking_ids), 1)
 
+    def test_auto_batch_02(self):
+        """ Test that the auto batch works correctly in internal transfers
+            when they are created from an order point:
+            * WH1: 1 steps outgoing transfers:
+                - Delivery orders: auto batch - source location
+            * WH2: 3 steps incoming transfers, ressuply from WH1
+                - internal transfert/ WH2 : auto batch - destination location
+            * orderpoint:
+                - Product A - Location: WH2 - Route: WH2/supply from WH1 - procurement: P1 - min_qty: 1
+                - Product B - Location: WH2 - Route: WH2/supply from >H1 - procurement: P2 - min_qty: 1
+
+            * Result: 6 pickings and 3 batchs
+        """
+        warehouse_1 = self.env['stock.warehouse'].search([], limit=1)
+        warehouse_2 = self.env['stock.warehouse'].create({
+            'name': 'WH 2',
+            'code': 'WH2',
+            'company_id': warehouse_1.company_id.id,
+            'resupply_wh_ids': [(6, 0, [warehouse_1.id])],
+            'reception_steps': 'three_steps',
+        })
+        warehouse_1.int_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_src_loc': True,
+        })
+        warehouse_2.int_type_id.write({
+            'auto_batch': True,
+            'batch_group_by_dest_loc': True,
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, warehouse_1.lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, warehouse_1.lot_stock_id, 10)
+        procurement_1 = self.env['procurement.group'].create({
+                'move_type': 'direct',
+                'partner_id': self.client_1.id
+            })
+        procurement_2 = self.env['procurement.group'].create({
+                'move_type': 'direct',
+                'partner_id': self.client_1.id
+            })
+        op1 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product A',
+            'location_id': warehouse_2.lot_stock_id.id,
+            'product_id': self.productA.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'group_id': procurement_1.id,
+            'route_id': warehouse_2.route_ids[0].id,
+        })
+        op2 = self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Product B',
+            'location_id': warehouse_2.lot_stock_id.id,
+            'product_id': self.productB.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'group_id': procurement_2.id,
+            'route_id': warehouse_2.route_ids[0].id,
+        })
+        self.productA.route_ids = warehouse_2.resupply_route_ids
+        self.productB.route_ids = warehouse_2.resupply_route_ids
+        (op1 | op2)._procure_orderpoint_confirm()
+        self.assertEqual(len(procurement_1.stock_move_ids.picking_id.batch_id), 3)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id[0].batch_id, procurement_2.stock_move_ids.picking_id[0].batch_id)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id[1].batch_id, procurement_2.stock_move_ids.picking_id[1].batch_id)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id[2].batch_id, procurement_2.stock_move_ids.picking_id[2].batch_id)
+
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
             Check that the batch is canceled when all transfers are deleted
