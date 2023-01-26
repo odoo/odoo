@@ -349,4 +349,30 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "25");
         assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
     });
+
+    QUnit.test("updateTotal props: can use buttons even if single page", async function (assert) {
+        const pager = await makePager({
+            offset: 0,
+            limit: 5,
+            total: 5,
+            onUpdate(data) {
+                pager.updateProps(Object.assign({}, data));
+            },
+            async updateTotal() {
+                const total = 25;
+                pager.updateProps({ total, updateTotal: undefined });
+                return total;
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_next");
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "6-10");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "25");
+        assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+    });
 });
