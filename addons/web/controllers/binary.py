@@ -16,7 +16,7 @@ except ImportError:
 
 import odoo
 import odoo.modules.registry
-from odoo import SUPERUSER_ID, _, http
+from odoo import SUPERUSER_ID, _, http, api
 from odoo.addons.base.models.assetsbundle import ANY_UNIQUE
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request, Response
@@ -59,13 +59,15 @@ class Binary(http.Controller):
             ))
         raise http.request.not_found()
 
-    @http.route(['/web/content',
+    @http.route([
+        '/web/content',
         '/web/content/<string:xmlid>',
         '/web/content/<string:xmlid>/<string:filename>',
         '/web/content/<int:id>',
         '/web/content/<int:id>/<string:filename>',
         '/web/content/<string:model>/<int:id>/<string:field>',
-        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>'], type='http', auth="public")
+        '/web/content/<string:model>/<int:id>/<string:field>/<string:filename>',
+    ], type='http', auth='public', readonly=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_common(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                        filename=None, filename_field='name', mimetype=None, unique=False,
@@ -85,8 +87,9 @@ class Binary(http.Controller):
         return res
 
     @http.route([
-        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public")
+        '/web/assets/<string:unique>/<string:filename>'], type='http', auth="public", readonly=True)
     def content_assets(self, filename=None, unique=ANY_UNIQUE, nocache=False, assets_params=None):
+        env = request.env  # readonly
         assets_params = assets_params or {}
         assert isinstance(assets_params, dict)
         debug_assets = unique == 'debug'
@@ -94,7 +97,7 @@ class Binary(http.Controller):
             unique = ANY_UNIQUE
         attachment = None
         if unique != 'debug':
-            url = request.env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
+            url = env['ir.asset']._get_asset_bundle_url(filename, unique, assets_params)
             assert not '%' in url
             domain = [
                 ('public', '=', True),
@@ -104,37 +107,45 @@ class Binary(http.Controller):
                 ('res_id', '=', 0),
                 ('create_uid', '=', SUPERUSER_ID),
             ]
-            attachment = request.env['ir.attachment'].sudo().search(domain, limit=1)
+            attachment = env['ir.attachment'].sudo().search(domain, limit=1)
         if not attachment:
             # try to generate one
-            try:
-                if filename.endswith('.map'):
-                    _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
-                    raise request.not_found()
-                bundle_name, rtl, asset_type = request.env['ir.asset']._parse_bundle_name(filename, debug_assets)
-                css = asset_type == 'css'
-                js = asset_type == 'js'
-                bundle = request.env['ir.qweb']._get_asset_bundle(
-                    bundle_name,
-                    css=css,
-                    js=js,
-                    debug_assets=debug_assets,
-                    rtl=rtl,
-                    assets_params=assets_params,
-                )
-                # check if the version matches. If not, redirect to the last version
-                if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
-                    return request.redirect(bundle.get_link(asset_type))
-                if css and bundle.stylesheets:
-                    attachment = bundle.css()
-                elif js and bundle.javascripts:
-                    attachment = bundle.js()
-            except ValueError as e:
-                _logger.error(e.args[0])
-                raise request.not_found() from e
+            if env.cr.readonly:
+                env.cr.rollback()  # reset state to detect newly generated assets
+                cursor_manager = env.registry.cursor(readonly=False)
+            else:
+                # if we don't have a replica, the cursor is not readonly, use the same one to avoid a rollback
+                cursor_manager = nullcontext(env.cr)
+            with cursor_manager as rw_cr:  # TODO add test generating an attachment with this route
+                rw_env = api.Environment(rw_cr, env.user.id, {})
+                try:
+                    if filename.endswith('.map'):
+                        _logger.error(".map should have been generated through debug assets, (version %s most likely outdated)", unique)
+                        raise request.not_found()
+                    bundle_name, rtl, asset_type = rw_env['ir.asset']._parse_bundle_name(filename, debug_assets)
+                    css = asset_type == 'css'
+                    js = asset_type == 'js'
+                    bundle = rw_env['ir.qweb']._get_asset_bundle(
+                        bundle_name,
+                        css=css,
+                        js=js,
+                        debug_assets=debug_assets,
+                        rtl=rtl,
+                        assets_params=assets_params,
+                    )
+                    # check if the version matches. If not, redirect to the last version
+                    if not debug_assets and unique != ANY_UNIQUE and unique != bundle.get_version(asset_type):
+                        return request.redirect(bundle.get_link(asset_type))
+                    if css and bundle.stylesheets:
+                        attachment = env['ir.attachment'].sudo().browse(bundle.css().id)
+                    elif js and bundle.javascripts:
+                        attachment = env['ir.attachment'].sudo().browse(bundle.js().id)
+                except ValueError as e:
+                    _logger.error(e.args[0])
+                    raise request.not_found() from e
         if not attachment:
             raise request.not_found()
-        stream = request.env['ir.binary']._get_stream_from(attachment, 'raw', filename)
+        stream = env['ir.binary']._get_stream_from(attachment, 'raw', filename)
         send_file_kwargs = {'as_attachment': False}
         if unique and unique != 'debug':
             send_file_kwargs['immutable'] = True
@@ -144,7 +155,8 @@ class Binary(http.Controller):
 
         return stream.get_response(**send_file_kwargs)
 
-    @http.route(['/web/image',
+    @http.route([
+        '/web/image',
         '/web/image/<string:xmlid>',
         '/web/image/<string:xmlid>/<string:filename>',
         '/web/image/<string:xmlid>/<int:width>x<int:height>',
@@ -160,7 +172,8 @@ class Binary(http.Controller):
         '/web/image/<int:id>-<string:unique>',
         '/web/image/<int:id>-<string:unique>/<string:filename>',
         '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>',
-        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>'], type='http', auth="public")
+        '/web/image/<int:id>-<string:unique>/<int:width>x<int:height>/<string:filename>',
+    ], type='http', auth='public', readonly=True)
     # pylint: disable=redefined-builtin,invalid-name
     def content_image(self, xmlid=None, model='ir.attachment', id=None, field='raw',
                       filename_field='name', filename=None, mimetype=None, unique=False,
@@ -287,7 +300,10 @@ class Binary(http.Controller):
 
         return response
 
-    @http.route(['/web/sign/get_fonts', '/web/sign/get_fonts/<string:fontname>'], type='json', auth='public')
+    @http.route([
+        '/web/sign/get_fonts',
+        '/web/sign/get_fonts/<string:fontname>',
+    ], type='json', auth='none')
     def get_fonts(self, fontname=None):
         """This route will return a list of base64 encoded fonts.
 

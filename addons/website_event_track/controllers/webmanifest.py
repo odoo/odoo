@@ -14,7 +14,7 @@ from odoo.tools.translate import _
 
 class TrackManifest(http.Controller):
 
-    @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False, readonly=True)
     def webmanifest(self):
         """ Returns a WebManifest describing the metadata associated with a web application.
         Using this metadata, user agents can provide developers with means to create user 

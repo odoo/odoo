@@ -23,7 +23,7 @@ class ReportController(http.Controller):
     @http.route([
         '/report/<converter>/<reportname>',
         '/report/<converter>/<reportname>/<docids>',
-    ], type='http', auth='user', website=True)
+    ], type='http', auth='user', website=True, readonly=True)
     def report_routes(self, reportname, docids=None, converter=None, **data):
         report = request.env['ir.actions.report']
         context = dict(request.env.context)
@@ -52,7 +52,10 @@ class ReportController(http.Controller):
     #------------------------------------------------------
     # Misc. route utils
     #------------------------------------------------------
-    @http.route(['/report/barcode', '/report/barcode/<barcode_type>/<path:value>'], type='http', auth="public")
+    @http.route([
+        '/report/barcode',
+        '/report/barcode/<barcode_type>/<path:value>',
+    ], type='http', auth='public', readonly=True)
     def report_barcode(self, barcode_type, value, **kwargs):
         """Contoller able to render barcode images thanks to reportlab.
         Samples::
@@ -84,7 +87,8 @@ class ReportController(http.Controller):
         return request.make_response(barcode, headers=[('Content-Type', 'image/png')])
 
     @http.route(['/report/download'], type='http', auth="user")
-    def report_download(self, data, context=None, token=None):  # pylint: disable=unused-argument
+    # pylint: disable=unused-argument
+    def report_download(self, data, context=None, token=None, readonly=True):
         """This function is used by 'action_manager_report.js' in order to trigger the download of
         a pdf/controller report.
 
@@ -143,6 +147,6 @@ class ReportController(http.Controller):
             res = request.make_response(html_escape(json.dumps(error)))
             raise werkzeug.exceptions.InternalServerError(response=res) from e
 
-    @http.route(['/report/check_wkhtmltopdf'], type='json', auth="user")
+    @http.route(['/report/check_wkhtmltopdf'], type='json', auth='user', readonly=True)
     def check_wkhtmltopdf(self):
         return request.env['ir.actions.report'].get_wkhtmltopdf_state()
