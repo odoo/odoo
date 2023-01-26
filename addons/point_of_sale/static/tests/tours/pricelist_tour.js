@@ -1,7 +1,7 @@
 /** @odoo-module */
 /* global posmodel */
 
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 import utils from "web.utils";
 var round_di = utils.round_decimals;
 
@@ -262,4 +262,4 @@ steps = steps.concat([
     },
 ]);
 
-Tour.register("pos_pricelist", { test: true, url: "/pos/ui" }, steps);
+registry.category("web_tour.tours").add("pos_pricelist", { test: true, url: "/pos/ui", steps });

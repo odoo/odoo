@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('configurator_translation', {
+registry.category("web_tour.tours").add('configurator_translation', {
     test: true,
     url: '/website/configurator',
-},
-[
+    steps: [
     // Configurator first screen
     {
         content: "click next",
@@ -78,4 +77,4 @@ tour.register('configurator_translation', {
          trigger: 'iframe body:not(.editor_enable)',
          run: function () {}, // It's a check.
     }
-]);
+]});

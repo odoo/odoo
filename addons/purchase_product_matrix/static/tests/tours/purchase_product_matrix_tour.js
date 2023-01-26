@@ -1,12 +1,13 @@
 odoo.define('purchase_product_matrix.purchase_matrix_tour', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-tour.register('purchase_matrix_tour', {
+registry.category("web_tour.tours").add('purchase_matrix_tour', {
     url: "/web",
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="purchase.menu_purchase_root"]',
 }, {
     trigger: ".o_list_button_add",
@@ -75,8 +76,8 @@ tour.register('purchase_matrix_tour', {
 }, {
     trigger: 'button:contains("Confirm")',
     run: 'click' // apply the matrix
-}, ...tour.stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")' })
-]);
+}, ...stepUtils.saveForm({ extra_trigger: '.o_field_cell.o_data_cell.o_list_number:contains("8.20")' })
+]});
 
 
 });

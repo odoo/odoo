@@ -1,12 +1,13 @@
 odoo.define('web.test.constraint', function (require) {
     'use strict';
 
-    var tour = require("web_tour.tour");
+    const { registry } = require("@web/core/registry");
+    const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-    tour.register('sql_constaint', {
+    registry.category("web_tour.tours").add('sql_constaint', {
         url: '/web?debug=1#action=test_new_api.action_categories',
         test: true,
-    }, [
+        steps: [
     {
         content: "wait web client",
         trigger: '.breadcrumb:contains(Categories)',
@@ -32,6 +33,6 @@ odoo.define('web.test.constraint', function (require) {
         content: "close notification box",
         trigger: '.modal-footer .btn-primary',
     },
-    ...tour.stepUtils.discardForm(),
-    ]);
+    ...stepUtils.discardForm(),
+    ]});
 });

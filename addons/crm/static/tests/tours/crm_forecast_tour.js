@@ -1,12 +1,13 @@
 /** @odoo-module */
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 const today = luxon.DateTime.now();
 
-tour.register('crm_forecast', {
+registry.category("web_tour.tours").add('crm_forecast', {
     test: true,
     url: "/web",
-}, [
-    tour.stepUtils.showAppsMenuItem(),
+    steps: [
+    stepUtils.showAppsMenuItem(),
     {
         trigger: ".o_app[data-menu-xmlid='crm.crm_menu_root']",
         content: "open crm app",
@@ -93,4 +94,4 @@ tour.register('crm_forecast', {
         content: "assert that the opportunity has the Won banner",
         run: function () {},
     }
-]);
+]});

@@ -2,17 +2,17 @@
 
 import { _t } from "web.core";
 import { Markup } from "web.utils";
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register(
+registry.category("web_tour.tours").add(
     "point_of_sale_tour",
     {
         url: "/web",
         rainbowMan: false,
         sequence: 45,
-    },
-    [
-        tour.stepUtils.showAppsMenuItem(),
+        steps: [
+        stepUtils.showAppsMenuItem(),
         {
             trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
             content: Markup(_t("Ready to launch your <b>point of sale</b>?")),
@@ -37,4 +37,4 @@ tour.register(
             position: "bottom",
         },
     ]
-);
+});

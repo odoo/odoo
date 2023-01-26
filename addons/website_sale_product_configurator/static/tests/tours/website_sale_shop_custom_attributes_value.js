@@ -1,13 +1,13 @@
 odoo.define("website_sale_product_TESTurator.tour_shop_custom_attribute_value", function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 var optionVariantImage;
 
-tour.register("a_shop_custom_attribute_value", {
+registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     url: "/shop?search=Customizable Desk",
     test: true,
-}, [{
+    steps: [{
         content: "click on Customizable Desk",
         trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
 }, {
@@ -55,6 +55,6 @@ tour.register("a_shop_custom_attribute_value", {
 }, {
     trigger: 'button:has(span:contains(Proceed to Checkout))',
     run: 'click',
-}]);
+}]});
 
 });

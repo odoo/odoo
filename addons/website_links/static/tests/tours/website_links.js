@@ -1,13 +1,12 @@
 odoo.define('website_links.website_links_tour', function (require) {
 'use strict';
 
-var tour = require("web_tour.tour");
+const { registry } = require("@web/core/registry");
 
-tour.register('website_links_tour', {
+registry.category("web_tour.tours").add('website_links_tour', {
     test: true,
     url: '/r',
-},
-    [
+    steps: [
         // 1. Create a tracked URL
         {
             content: "check that existing links are shown",
@@ -76,6 +75,6 @@ tour.register('website_links_tour', {
             },
         },
     ]
-);
+});
 
 });

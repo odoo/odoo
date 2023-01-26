@@ -1,13 +1,12 @@
 odoo.define('survey.tour_test_survey_prefill', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('test_survey_prefill', {
+registry.category("web_tour.tours").add('test_survey_prefill', {
     test: true,
-    url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae'
-},
-[{      // Page-1
+    url: '/survey/start/b137640d-14d4-4748-9ef6-344caaaaaae',
+    steps: [{      // Page-1
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Survey")',
     }, { // Question: Where do you live ?
         trigger: 'div.js_question-wrapper:contains("Where do you live ?") input',
@@ -150,6 +149,6 @@ tour.register('test_survey_prefill', {
     }, {
         trigger: '.o_survey_title.tour_success_2'
     }
-]);
+]});
 
 });

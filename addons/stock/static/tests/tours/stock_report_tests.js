@@ -1,11 +1,11 @@
 odoo.define('stock.reports.setup.tour', function (require) {
     "use strict";
 
-    const tour = require('web_tour.tour');
+    const { registry } = require("@web/core/registry");
 
-    tour.register('test_stock_route_diagram_report', {
+    registry.category("web_tour.tours").add('test_stock_route_diagram_report', {
         test: true,
-    }, [
+        steps: [
     {
         trigger: '.o_kanban_record',
         extra_trigger:'.breadcrumb',
@@ -19,5 +19,5 @@ odoo.define('stock.reports.setup.tour', function (require) {
     {
         trigger: 'iframe .o_report_stock_rule',
     },
-    ]);
+    ]});
 });

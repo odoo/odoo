@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import FullScreen from '@website_slides/js/slides_course_fullscreen_player';
 
 /**
@@ -28,10 +28,10 @@ FullScreen.include({
  * they use fullscreen player to complete the course;
  * they rate the course;
  */
-tour.register('course_member_youtube', {
+registry.category("web_tour.tours").add('course_member_youtube', {
     url: '/slides',
-    test: true
-}, [
+    test: true,
+    steps: [
 // eLearning: go on /all, find free course and join it
 {
     trigger: 'a.o_wslides_home_all_slides'
@@ -61,4 +61,4 @@ tour.register('course_member_youtube', {
 }, {
     trigger: 'a:contains("Back to course")'
 }
-]);
+]});

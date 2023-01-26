@@ -1,12 +1,13 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('create_crm_team_tour', {
+registry.category("web_tour.tours").add('create_crm_team_tour', {
     url: "/web",
     test: true,
-}, [
-    ...tour.stepUtils.goToAppSteps('crm.crm_menu_root'),
+    steps: [
+    ...stepUtils.goToAppSteps('crm.crm_menu_root'),
 {
     trigger: 'button[data-menu-xmlid="crm.crm_menu_config"]',
 }, {
@@ -30,5 +31,5 @@ tour.register('create_crm_team_tour', {
 }, {
     trigger: 'button.o_select_button',
 }, 
-    ...tour.stepUtils.saveForm()
-]);
+    ...stepUtils.saveForm()
+]});

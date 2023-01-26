@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
 // Note: please keep this test without pricelist for maximum coverage.
 // The pricelist is tested on the other tours.
 
-tour.register('sale_product_configurator_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_tour', {
     url: '/web',
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
@@ -62,5 +63,5 @@ tour.register('sale_product_configurator_tour', {
 }, {
     trigger: 'span[name=amount_total]:contains("960.60")',
     run: function (){}
-}, ...tour.stepUtils.discardForm()
-]);
+}, ...stepUtils.discardForm()
+]});

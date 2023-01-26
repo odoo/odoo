@@ -2,12 +2,13 @@ odoo.define('sale_timesheet.tour', function (require) {
 "use strict";
 
 const {Markup} = require('web.utils');
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-tour.register('sale_timesheet_tour', {
+registry.category("web_tour.tours").add('sale_timesheet_tour', {
     test: true,
     url: '/web',
-}, [...tour.stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
+    steps: [...stepUtils.goToAppSteps("sale.sale_menu_root", 'Go to the Sales App'),
 {
     trigger: 'button.o_list_button_add',
     content: 'Click on CREATE button to create a quotation with service products.',
@@ -36,8 +37,8 @@ tour.register('sale_timesheet_tour', {
 }, {
     trigger: 'button[name="action_confirm"]',
     content: 'Click on Confirm button to create a sale order with this quotation.',
-}, tour.stepUtils.toggleHomeMenu(),
-...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
+}, stepUtils.toggleHomeMenu(),
+...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
 {
     trigger: 'button.o-kanban-button-new',
     content: 'Add a new project.',
@@ -294,7 +295,7 @@ tour.register('sale_timesheet_tour', {
     content: 'Check the kanban view of project update is rendered to be sure the user leaves the form view and the project update is created',
     run: function() {},
 },
-tour.stepUtils.toggleHomeMenu(),
-...tour.stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
-]);
+stepUtils.toggleHomeMenu(),
+...stepUtils.goToAppSteps("project.menu_main_pm", 'Go to the Project app.'),
+]});
 });

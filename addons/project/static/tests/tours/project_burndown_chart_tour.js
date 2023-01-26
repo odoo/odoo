@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('burndown_chart_tour', {
+registry.category("web_tour.tours").add('burndown_chart_tour', {
     test: true,
     url: '/web',
-},
-[tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="project.menu_main_pm"]',
 }, {
     content: 'Open "Burndown Chart Test" project menu',
@@ -76,4 +76,4 @@ tour.register('burndown_chart_tour', {
 }, {
     content: 'The comparison menu is not rendered',
     trigger: '.o_search_options:not(:has(.o_comparison_menu))',
-}]);
+}]});

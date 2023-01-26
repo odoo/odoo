@@ -3,7 +3,7 @@
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // --- PoS Loyalty Tour Basic Part 1 ---
 // Generate coupons for PosLoyaltyTour2.
@@ -71,7 +71,7 @@ PosLoyalty.check.hasRewardLine("50% on specific products", "-16.66"); // 17.55 -
 PosLoyalty.check.orderTotalIs("37.78");
 PosLoyalty.exec.finalizeOrder("Cash", "50");
 
-Tour.register("PosLoyaltyTour1", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyTour1", { test: true, url: "/pos/web", steps: getSteps() });
 
 // --- PoS Loyalty Tour Basic Part 2 ---
 // Using the coupons generated from PosLoyaltyTour1.
@@ -155,7 +155,7 @@ PosLoyalty.check.hasRewardLine("90% on the cheapest product", "-2.87");
 PosLoyalty.check.orderTotalIs("16.27");
 PosLoyalty.exec.finalizeOrder("Cash", "20");
 
-Tour.register("PosLoyaltyTour2", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyTour2", { test: true, url: "/pos/web", steps: getSteps() });
 
 // --- PoS Loyalty Tour Basic Part 3 ---
 
@@ -176,7 +176,7 @@ PosLoyalty.check.hasRewardLine("100% on specific products", "21.82");
 PosLoyalty.check.hasRewardLine("100% on specific products", "18.18");
 PosLoyalty.check.orderTotalIs("49.50");
 
-Tour.register("PosLoyaltyTour3", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyTour3", { test: true, url: "/pos/web", steps: getSteps() });
 
 startSteps();
 
@@ -193,7 +193,7 @@ ProductScreen.do.clickPricelistButton();
 ProductScreen.do.selectPriceList("Test multi-currency");
 PosLoyalty.check.orderTotalIs("0.00");
 
-Tour.register("PosLoyaltyTour4", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyTour4", { test: true, url: "/pos/web", steps: getSteps() });
 
 startSteps();
 
@@ -204,4 +204,4 @@ PosLoyalty.do.clickDiscountButton();
 PosLoyalty.do.clickConfirmButton();
 ProductScreen.check.totalAmountIs('92.00');
 
-Tour.register('PosCouponTour5', { test: true, url: '/pos/web' }, getSteps());
+registry.category("web_tour.tours").add('PosCouponTour5', { test: true, url: '/pos/web', steps: getSteps() });

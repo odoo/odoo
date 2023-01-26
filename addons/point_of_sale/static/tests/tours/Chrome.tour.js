@@ -6,7 +6,7 @@ import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScre
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -99,4 +99,4 @@ PaymentScreen.do.clickInvoiceButton();
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
 
-Tour.register("ChromeTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("ChromeTour", { test: true, url: "/pos/ui", steps: getSteps() });

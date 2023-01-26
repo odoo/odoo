@@ -1,15 +1,14 @@
 odoo.define('website_sale.tour_shop_no_variant_attribute', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 const tourUtils = require('website_sale.tour_utils');
 
 // This tour relies on a data created from the python test.
-tour.register('tour_shop_no_variant_attribute', {
+registry.category("web_tour.tours").add('tour_shop_no_variant_attribute', {
     test: true,
     url: '/shop?search=Test Product 3',
-},
-[
+    steps: [
     {
         content: "select Test Product 3",
         trigger: '.oe_product_cart a:containsExact("Test Product 3")',
@@ -35,5 +34,5 @@ tour.register('tour_shop_no_variant_attribute', {
         trigger: '.td-price:contains(11.0)',
         run: function () {},
     },
-]);
+]});
 });

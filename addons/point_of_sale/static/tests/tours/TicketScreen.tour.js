@@ -8,7 +8,7 @@ import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreen
 import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTourMethods";
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -137,4 +137,4 @@ ProductScreen.do.clickRefund();
 TicketScreen.do.selectOrder("-0003");
 TicketScreen.check.refundedNoteContains("2.00 Refunded");
 
-Tour.register("TicketScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("TicketScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

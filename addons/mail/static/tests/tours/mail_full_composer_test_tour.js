@@ -2,7 +2,7 @@
 
 import { createFile, inputFiles } from "web.test_utils_file";
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 /**
  * This tour depends on data created by python test in charge of launching it.
@@ -10,12 +10,11 @@ import tour from "web_tour.tour";
  * an action (action manager) which is not possible to test with QUnit.
  * @see mail/tests/test_mail_full_composer.py
  */
-tour.register(
+registry.category("web_tour.tours").add(
     "mail/static/tests/tours/mail_full_composer_test_tour.js",
     {
         test: true,
-    },
-    [
+        steps: [
         {
             content: "Click on Send Message",
             trigger: ".o_ChatterTopbar_buttonSendMessage",
@@ -97,4 +96,4 @@ tour.register(
             trigger: '.o_MessageView .o_AttachmentCard_filename:contains("text.txt")',
         },
     ]
-);
+});

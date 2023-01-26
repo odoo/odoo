@@ -1,13 +1,13 @@
 odoo.define('auth_totp_portal.tours', function(require) {
 "use strict";
 
-const tour = require('web_tour.tour');
 const ajax = require('web.ajax');
+const { registry } = require("@web/core/registry");
 
-tour.register('totportal_tour_setup', {
+registry.category("web_tour.tours").add('totportal_tour_setup', {
     test: true,
-    url: '/my/security'
-}, [{
+    url: '/my/security',
+    steps: [{
     content: "Open totp wizard",
     trigger: 'button#auth_totp_portal_enable',
 }, {
@@ -40,12 +40,12 @@ tour.register('totportal_tour_setup', {
     content: "Check that the button has changed",
     trigger: 'button:contains(Disable two-factor authentication)',
     run: () => {}
-}]);
+}]});
 
-tour.register('totportal_login_enabled', {
+registry.category("web_tour.tours").add('totportal_login_enabled', {
     test: true,
-    url: '/'
-}, [{
+    url: '/',
+    steps: [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -97,12 +97,12 @@ tour.register('totportal_login_enabled', {
     content: "Check that the button has changed",
     trigger: 'button:contains(Enable two-factor authentication)',
     run: () => {}
-}]);
+}]});
 
-tour.register('totportal_login_disabled', {
+registry.category("web_tour.tours").add('totportal_login_disabled', {
     test: true,
-    url: '/'
-}, [{
+    url: '/',
+    steps: [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -120,5 +120,5 @@ tour.register('totportal_login_disabled', {
     content: "check we're logged in",
     trigger: "h3:contains(Documents)",
     run: () => {}
-}]);
+}]});
 });

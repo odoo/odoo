@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 import wTourUtils from 'website.tour_utils';
 
-tour.register('website_sale_cart_popover_tour', {
+registry.category("web_tour.tours").add('website_sale_cart_popover_tour', {
         test: true,
         url: '/shop',
-    },
-    [
+        steps: [
         {
             content: "Search for the product",
             trigger: 'form input[name="search"]',
@@ -43,4 +42,4 @@ tour.register('website_sale_cart_popover_tour', {
             run: () => {},
         },
     ]
-);
+});

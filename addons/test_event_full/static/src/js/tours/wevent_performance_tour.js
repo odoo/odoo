@@ -1,7 +1,7 @@
 odoo.define('test_event_full.tour.performance', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
 var registerSteps = [{
     content: "Select 2 units of 'Ticket1' ticket type",
@@ -75,11 +75,11 @@ var registerSteps = [{
 }];
 
 
-tour.register('wevent_performance_register', {
-    test: true
-}, [].concat(
+registry.category("web_tour.tours").add('wevent_performance_register', {
+    test: true,
+    steps: [].concat(
         registerSteps,
     )
-);
+});
 
 });

@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
 
-tour.register('shop_editor', {
+registry.category("web_tour.tours").add('shop_editor', {
     test: true,
     url: '/shop?enable_editor=1',
-}, [{
+    steps: [{
     content: "Click on pricelist dropdown",
     trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
 }, {
@@ -16,4 +16,4 @@ tour.register('shop_editor', {
     trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
     extra_trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown][aria-expanded=false]",
     content: "Click on the pricelist again.",
-}]);
+}]});

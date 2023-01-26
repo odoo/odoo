@@ -6,6 +6,7 @@ var rpc = require('web.rpc');
 var session = require('web.session');
 var TourManager = require('web_tour.TourManager');
 const { device } = require('web.config');
+const { registry } = require("@web/core/registry");
 
 const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overlay"];
 
@@ -35,6 +36,7 @@ return session.is_bound.then(function () {
         var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
         const disabled = session.tour_disable || device.isMobile;
         var tour_manager = new TourManager(rootWidget, consumed_tours, disabled);
+        registry.add("tourManager", tour_manager);
 
         // The tests can be loaded inside an iframe. The tour manager should
         // not run in that context, as it will already run in its parent

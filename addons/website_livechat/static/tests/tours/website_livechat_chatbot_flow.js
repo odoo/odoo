@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // Due to some issue with assets bundles, the current file can be loaded while
 // LivechatButtonView isn't, causing the patch to fail as the original model was
@@ -12,9 +12,9 @@ import "@im_livechat/public_models/livechat_button_view";
 
 const messagesContain = (text) => `div.o_thread_message_content:contains("${text}")`;
 
-tour.register('website_livechat_chatbot_flow_tour', {
+registry.category("web_tour.tours").add('website_livechat_chatbot_flow_tour', {
     test: true,
-}, [{
+    steps: [{
     trigger: messagesContain("Hello! I'm a bot!"),
     async run() {
         const { messaging } = await odoo.__DEBUG__;
@@ -154,4 +154,4 @@ tour.register('website_livechat_chatbot_flow_tour', {
     // wait for chatbot script to finish.
     trigger: '.o_livechat_chatbot_restart',
 }
-]);
+]});

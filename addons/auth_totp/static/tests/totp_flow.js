@@ -1,8 +1,9 @@
 odoo.define('auth_totp.tours', function(require) {
 "use strict";
 
-const tour = require('web_tour.tour');
 const ajax = require('web.ajax');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
 function openRoot() {
     return [{
@@ -73,10 +74,10 @@ function closeProfileDialog({content, totp_state}) {
     }];
 }
 
-tour.register('totp_tour_setup', {
+registry.category("web_tour.tours").add('totp_tour_setup', {
     test: true,
-    url: '/web'
-}, [...openUserProfileAtSecurityTab(), {
+    url: '/web',
+    steps: [...openUserProfileAtSecurityTab(), {
     content: "Open totp wizard",
     trigger: 'button[name=action_totp_enable_wizard]',
 }, {
@@ -116,12 +117,12 @@ tour.register('totp_tour_setup', {
     content: "Check that the button has changed",
     totp_state: true,
 }),
-]);
+]});
 
-tour.register('totp_login_enabled', {
+registry.category("web_tour.tours").add('totp_login_enabled', {
     test: true,
-    url: '/'
-}, [{
+    url: '/',
+    steps: [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -156,12 +157,12 @@ tour.register('totp_login_enabled', {
     content: "check we're logged in",
     trigger: ".o_user_menu .oe_topbar_name",
     run() {}
-}]);
+}]});
 
-tour.register('totp_login_device', {
+registry.category("web_tour.tours").add('totp_login_device', {
     test: true,
-    url: '/'
-}, [{
+    url: '/',
+    steps: [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -237,12 +238,12 @@ tour.register('totp_login_device', {
     content: "Check that the button has changed",
     totp_state: false
 }),
-]);
+]});
 
-tour.register('totp_login_disabled', {
+registry.category("web_tour.tours").add('totp_login_disabled', {
     test: true,
-    url: '/'
-}, [{
+    url: '/',
+    steps: [{
     content: "check that we're on the login page or go to it",
     trigger: 'input#login, a:contains(Sign in)'
 }, {
@@ -264,13 +265,13 @@ tour.register('totp_login_disabled', {
 ...openUserProfileAtSecurityTab(),
 // close the dialog if that makes sense
 ...closeProfileDialog({})
-]);
+]});
 
 const columns = {};
-tour.register('totp_admin_disables', {
+registry.category("web_tour.tours").add('totp_admin_disables', {
     test: true,
-    url: '/web'
-}, [tour.stepUtils.showAppsMenuItem(), {
+    url: '/web',
+    steps: [stepUtils.showAppsMenuItem(), {
     content: 'Go to settings',
     trigger: '[data-menu-xmlid="base.menu_administration"]'
 }, {
@@ -335,5 +336,5 @@ tour.register('totp_admin_disables', {
     content: "check that demo user has been de-totp'd",
     totp_state: false,
 }),
-])
+]})
 });

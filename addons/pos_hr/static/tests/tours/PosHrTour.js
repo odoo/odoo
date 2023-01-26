@@ -8,7 +8,7 @@ import { ErrorPopup } from "@point_of_sale/../tests/tours/helpers/ErrorPopupTour
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -79,4 +79,4 @@ ProductScreen.check.totalAmountIs("8.0");
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains(4, "Mitchell Admin");
 
-Tour.register("PosHrTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("PosHrTour", { test: true, url: "/pos/ui", steps: getSteps() });

@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import tour from 'web_tour.tour';
+import { registry } from "@web/core/registry";
+import { stepUtils } from "@web_tour/js/tour_step_utils";
 
-tour.register('sale_product_configurator_edition_tour', {
+registry.category("web_tour.tours").add('sale_product_configurator_edition_tour', {
     url: '/web',
     test: true,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="sale.sale_menu_root"]',
 }, {
     trigger: '.o_list_button_add',
@@ -142,5 +143,5 @@ tour.register('sale_product_configurator_edition_tour', {
     extra_trigger: 'div[name="order_line"]',
     run: function() {},
 },
-    ...tour.stepUtils.discardForm(),
-]);
+    ...stepUtils.discardForm(),
+]});

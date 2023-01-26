@@ -20,12 +20,12 @@ publicWidget.registry['public_user_editor_test'] = publicWidget.Widget.extend({
 odoo.define('website.tour.public_user_editor', function (require) {
 'use strict';
 
-const tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 
-tour.register('public_user_editor', {
+registry.category("web_tour.tours").add('public_user_editor', {
     test: true,
-}, [{
+    steps: [{
     trigger: '.note-editable',
     run: function () {}, // Simple check
-}]);
+}]});
 });

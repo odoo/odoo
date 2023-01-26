@@ -1,7 +1,7 @@
 odoo.define('survey.test_survey_session_manage_tour', function (require) {
 "use strict";
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 var surveySessionTools = require('survey.session_tour_tools');
 
 /**
@@ -91,10 +91,10 @@ var isIncorrectAnswer = function (answer) {
  * - Check that our final leaderboard is correct based on attendees answers
  * - Close the survey session
  */
-tour.register('test_survey_session_manage_tour', {
+registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     url: "/web",
     test: true,
-}, [].concat(surveySessionTools.accessSurveySteps, [{
+    steps: [].concat(surveySessionTools.accessSurveySteps, [{
     trigger: 'button[name="action_open_session_manager"]',
 }, {
     trigger: 'h1:contains("Nickname")',
@@ -457,6 +457,6 @@ tour.register('test_survey_session_manage_tour', {
 }, {
     trigger: 'button[name="action_start_session"]',
     run: function () {} // check that we can start another session
-}]));
+}])});
 
 });

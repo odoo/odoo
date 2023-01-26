@@ -20,15 +20,16 @@ odoo.define('event.event_tour', function (require) {
 
 const {_t} = require('web.core');
 const {Markup} = require('web.utils');
+const { registry } = require("@web/core/registry");
+const { stepUtils } = require('@web_tour/js/tour_step_utils');
 
-var tour = require('web_tour.tour');
 var EventAdditionalTourSteps = require('event.event_steps');
 
-tour.register('event_tour', {
+registry.category("web_tour.tours").add('event_tour', {
     url: '/web',
     rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
     sequence: 210,
-}, [tour.stepUtils.showAppsMenuItem(), {
+    steps: [stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: Markup(_t("Ready to <b>organize events</b> in a few minutes? Let's get started!")),
     position: 'bottom',
@@ -62,7 +63,7 @@ tour.register('event_tour', {
 }, {
     trigger: '.o_event_form_view div[name="event_ticket_ids"] .o_field_x2many_list_row_add a',
     content: Markup(_t("Ticket types allow you to distinguish your attendees. Let's <b>create</b> a new one.")),
-}, tour.stepUtils.autoExpandMoreButtons(),
+}, stepUtils.autoExpandMoreButtons(),
 ...new EventAdditionalTourSteps()._get_website_event_steps(), {
     trigger: '.o_event_form_view div[name="stage_id"]',
     content: _t("Now that your event is ready, click here to move it to another stage."),
@@ -73,6 +74,6 @@ tour.register('event_tour', {
     content: Markup(_t("Use the <b>breadcrumbs</b> to go back to your kanban overview.")),
     position: 'bottom',
     run: 'click',
-}].filter(Boolean));
+}].filter(Boolean)});
 
 });

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 const requestChatSteps = [
     {
@@ -12,9 +12,9 @@ const requestChatSteps = [
     },
 ];
 
-tour.register("im_livechat_request_chat", { test: true }, requestChatSteps);
+registry.category("web_tour.tours").add("im_livechat_request_chat", { test: true, steps: requestChatSteps});
 
-tour.register("im_livechat_request_chat_and_send_message", { test: true }, [
+registry.category("web_tour.tours").add("im_livechat_request_chat_and_send_message", { test: true, steps: [
     ...requestChatSteps,
     {
         trigger: ".o_composer_text_field",
@@ -29,4 +29,4 @@ tour.register("im_livechat_request_chat_and_send_message", { test: true }, [
     {
         trigger: ".o_thread_message:contains('Hello, I need help')",
     },
-]);
+]});

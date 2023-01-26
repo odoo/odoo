@@ -4,7 +4,7 @@ import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 startSteps();
 
@@ -127,4 +127,4 @@ PosLoyalty.check.hasRewardLine("Free Product", "-3.19", "1.00");
 PosLoyalty.check.orderTotalIs("4.81");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
-Tour.register("PosLoyaltyFreeProductTour", { test: true, url: "/pos/web" }, getSteps());
+registry.category("web_tour.tours").add("PosLoyaltyFreeProductTour", { test: true, url: "/pos/web", steps: getSteps() });

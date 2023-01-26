@@ -1,13 +1,12 @@
 /** @odoo-module **/
 
-import tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
-tour.register(
+registry.category("web_tour.tours").add(
     "mail/static/tests/tours/mail_channel_as_guest_tour.js",
     {
         test: true,
-    },
-    [
+        steps: [
         {
             content: "Click join",
             trigger: ".o_WelcomeView_joinButton",
@@ -39,4 +38,4 @@ tour.register(
             trigger: ".o_mail_channel_as_guest_tour_modules_loaded",
         },
     ]
-);
+});

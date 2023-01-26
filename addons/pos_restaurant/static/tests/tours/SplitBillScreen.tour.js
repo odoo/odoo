@@ -7,7 +7,7 @@ import { ProductScreen } from "@pos_restaurant/../tests/tours/helpers/ProductScr
 import { SplitBillScreen } from "@pos_restaurant/../tests/tours/helpers/SplitBillScreenTourMethods";
 import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
-import Tour from "web_tour.tour";
+import { registry } from "@web/core/registry";
 
 // signal to start generating steps
 // when finished, steps can be taken from getSteps
@@ -49,7 +49,7 @@ ProductScreen.check.isShown();
 ProductScreen.do.clickOrderline("Water", "2.0");
 ProductScreen.do.clickOrderline("Minute Maid", "3.0");
 
-Tour.register("SplitBillScreenTour", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("SplitBillScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -75,4 +75,4 @@ TicketScreen.do.selectOrder("-0001");
 ProductScreen.do.clickOrderline("Minute Maid", "1.0");
 ProductScreen.check.totalAmountIs("2.20");
 
-Tour.register("SplitBillScreenTour2", { test: true, url: "/pos/ui" }, getSteps());
+registry.category("web_tour.tours").add("SplitBillScreenTour2", { test: true, url: "/pos/ui", steps: getSteps() });

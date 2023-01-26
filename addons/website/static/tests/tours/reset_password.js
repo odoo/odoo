@@ -1,12 +1,12 @@
 odoo.define('website.tour_reset_password', function (require) {
 'use strict';
 
-var tour = require('web_tour.tour');
+const { registry } = require("@web/core/registry");
 require('web.dom_ready');
 
-tour.register('website_reset_password', {
+registry.category("web_tour.tours").add('website_reset_password', {
     test: true,
-}, [
+    steps: [
     {
         content: "fill new password",
         trigger: '.oe_reset_password_form input[name="password"]',
@@ -26,5 +26,5 @@ tour.register('website_reset_password', {
         trigger: '.oe_topbar_name:contains("The King")',
         run: function () {}
     },
-]);
+]});
 });
