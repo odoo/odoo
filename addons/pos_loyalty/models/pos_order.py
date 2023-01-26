@@ -143,6 +143,14 @@ class PosOrder(models.Model):
             'coupon_report': coupon_per_report,
         }
 
+    def _prepare_order_line(self, order_line):
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+
+        if order_line["reward_id"]:
+            order_line["reward_id"] = order_line["reward_id"][0]
+
+        return order_line
+
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
         fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
