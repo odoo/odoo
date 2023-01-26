@@ -207,6 +207,10 @@ class MrpWorkcenter(models.Model):
         }
         return action
 
+    def get_employee_barcode(self, barcode):
+        employee_ids = self.employee_ids or self.env['hr.employee'].search([])
+        return employee_ids.sudo().filtered(lambda e: e.barcode == barcode)[:1].id
+
     def action_work_order(self):
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.action_work_orders")
         return action
