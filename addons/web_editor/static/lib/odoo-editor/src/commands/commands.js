@@ -41,6 +41,8 @@ import {
     getDeepestPosition,
     fillEmpty,
     isEmptyBlock,
+    unwrapContents,
+    getCursorDirection,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -463,25 +465,37 @@ export const editorCommands = {
     },
     unlink: editor => {
         const sel = editor.document.getSelection();
-        // we need to remove the contentEditable isolation of links
-        // before we apply the unlink, otherwise the command is not performed
-        // because the content editable root is the link
-        const closestEl = closestElement(sel.focusNode, 'a');
-        if(closestEl) {
-            closestEl.removeAttribute('class'); // To prevent firefox from adding unnecessary <span>.
+        const isCollapsed = sel.isCollapsed;
+        // If the selection is collapsed, unlink the whole link:
+        // `<a>a[]b</a>` => `a[]b`.
+        getDeepRange(editor.editable, { sel, splitText: true, select: true });
+        if (!isCollapsed) {
+            // If not, unlink only the part(s) of the link(s) that are selected:
+            // `<a>a[b</a>c<a>d</a>e<a>f]g</a>` => `<a>a</a>[bcdef]<a>g</a>`.
+            let { anchorNode, focusNode, anchorOffset, focusOffset } = sel;
+            const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+            // Split the links around the selection.
+            const [startLink, endLink] = [closestElement(anchorNode, 'a'), closestElement(focusNode, 'a')];
+            if (startLink) {
+                anchorNode = splitAroundUntil(anchorNode, startLink);
+                anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
+            }
+            // Only split the end link if it was not already done above.
+            if (endLink && endLink.isConnected) {
+                focusNode = splitAroundUntil(focusNode, endLink);
+                focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
+            }
         }
-        if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
-            editor._activateContenteditable();
-        }
-        if (sel.isCollapsed) {
+        const targetedNodes = isCollapsed ? [sel.anchorNode] : getSelectedNodes(editor.editable);
+        const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a));
+        if (links.size) {
             const cr = preserveCursor(editor.document);
-            const node = closestElement(sel.focusNode, 'a');
-            setSelection(node, 0, node, node.childNodes.length, false);
-            editor.document.execCommand('unlink');
+            for (const link of links) {
+                unwrapContents(link);
+            }
             cr();
-        } else {
-            editor.document.execCommand('unlink');
-            setSelection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
         }
     },
 
