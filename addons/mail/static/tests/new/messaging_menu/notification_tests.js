@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
@@ -279,5 +279,57 @@ QUnit.test(
         assert.containsN(target, ".o-mail-notification-item-name", 2);
         assert.strictEqual($(".o-mail-notification-item-name")[0].textContent, "Channel 2020");
         assert.strictEqual($(".o-mail-notification-item-name")[1].textContent, "Channel 2019");
+    }
+);
+
+QUnit.test(
+    "thread notifications are re-ordered on receiving a new message",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+            { name: "Channel 2019" },
+            { name: "Channel 2020" },
+        ]);
+        pyEnv["mail.message"].create([
+            {
+                date: "2019-01-01 00:00:00",
+                model: "mail.channel",
+                res_id: channelId_1,
+            },
+            {
+                date: "2020-01-01 00:00:00",
+                model: "mail.channel",
+                res_id: channelId_2,
+            },
+        ]);
+        await start();
+        await click(".o_menu_systray i[aria-label='Messages']");
+        assert.containsN(target, ".o-mail-notification-item", 2);
+
+        const channel_1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId_1]])[0];
+        await afterNextRender(() => {
+            pyEnv["bus.bus"]._sendone(channel_1, "mail.channel/new_message", {
+                id: channelId_1,
+                message: {
+                    author: { id: 7, name: "Demo User" },
+                    body: "<p>New message !</p>",
+                    date: "2020-03-23 10:00:00",
+                    id: 44,
+                    message_type: "comment",
+                    model: "mail.channel",
+                    record_name: "Channel 2019",
+                    res_id: channelId_1,
+                },
+            });
+        });
+        assert.containsN(target, ".o-mail-notification-item", 2);
+        assert.containsOnce(
+            $(target).find(".o-mail-notification-item:eq(0)"),
+            ".o-mail-notification-item-name:contains(Channel 2019)"
+        );
+        assert.containsOnce(
+            $(target).find(".o-mail-notification-item:eq(1)"),
+            ".o-mail-notification-item-name:contains(Channel 2020)"
+        );
     }
 );
