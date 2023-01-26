@@ -15,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class DataSet(http.Controller):
 
-    @http.route('/web/dataset/search_read', type='json', auth="user")
+    @http.route('/web/dataset/search_read', type='json', auth='user', readonly=True)
     def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
         return request.env[model].web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
 

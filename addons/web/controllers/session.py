@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 
 class Session(http.Controller):
 
-    @http.route('/web/session/get_session_info', type='json', auth="user")
+    @http.route('/web/session/get_session_info', type='json', auth='user', readonly=True)
     def get_session_info(self):
         # Crapy workaround for unupdatable Odoo Mobile App iOS (Thanks Apple :@)
         request.session.touch()
@@ -57,16 +57,16 @@ class Session(http.Controller):
         except Exception as e:
             return {"error": e, "title": _("Languages")}
 
-    @http.route('/web/session/modules', type='json', auth="user")
+    @http.route('/web/session/modules', type='json', auth='user', readonly=True)
     def modules(self):
         # return all installed modules. Web client is smart enough to not load a module twice
         return list(request.env.registry._init_modules.union([module.current_test] if module.current_test else []))
 
-    @http.route('/web/session/check', type='json', auth="user")
+    @http.route('/web/session/check', type='json', auth='user', readonly=True)
     def check(self):
         return  # ir.http@_authenticate does the job
 
-    @http.route('/web/session/account', type='json', auth="user")
+    @http.route('/web/session/account', type='json', auth='user', readonly=True)
     def account(self):
         ICP = request.env['ir.config_parameter'].sudo()
         params = {
@@ -77,11 +77,11 @@ class Session(http.Controller):
         }
         return 'https://accounts.odoo.com/oauth2/auth?' + url_encode(params)
 
-    @http.route('/web/session/destroy', type='json', auth="user")
+    @http.route('/web/session/destroy', type='json', auth='user', readonly=True)
     def destroy(self):
         request.session.logout()
 
-    @http.route('/web/session/logout', type='http', auth="none")
+    @http.route('/web/session/logout', type='http', auth='none', readonly=True)
     def logout(self, redirect='/web'):
         request.session.logout(keep_db=True)
         return request.redirect(redirect, 303)

@@ -285,7 +285,7 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
 
 class Export(http.Controller):
 
-    @http.route('/web/export/formats', type='json', auth="user")
+    @http.route('/web/export/formats', type='json', auth='user', readonly=True)
     def formats(self):
         """ Returns all valid export formats
 
@@ -302,7 +302,7 @@ class Export(http.Controller):
         fields = Model.fields_get()
         return fields
 
-    @http.route('/web/export/get_fields', type='json', auth="user")
+    @http.route('/web/export/get_fields', type='json', auth='user', readonly=True)
     def get_fields(self, model, prefix='', parent_name='',
                    import_compat=True, parent_field_type=None,
                    parent_field=None, exclude=None):
@@ -359,7 +359,7 @@ class Export(http.Controller):
 
         return records
 
-    @http.route('/web/export/namelist', type='json', auth="user")
+    @http.route('/web/export/namelist', type='json', auth='user', readonly=True)
     def namelist(self, model, export_id):
         # TODO: namelist really has no reason to be in Python (although itertools.groupby helps)
         export = request.env['ir.exports'].browse([export_id]).read()[0]
@@ -508,7 +508,7 @@ class ExportFormat(object):
 
 class CSVExport(ExportFormat, http.Controller):
 
-    @http.route('/web/export/csv', type='http', auth="user")
+    @http.route('/web/export/csv', type='http', auth='user', readonly=True)
     def web_export_csv(self, data):
         try:
             return self.base(data)
@@ -552,7 +552,7 @@ class CSVExport(ExportFormat, http.Controller):
 
 class ExcelExport(ExportFormat, http.Controller):
 
-    @http.route('/web/export/xlsx', type='http', auth="user")
+    @http.route('/web/export/xlsx', type='http', auth='user', readonly=True)
     def web_export_xlsx(self, data):
         try:
             return self.base(data)
