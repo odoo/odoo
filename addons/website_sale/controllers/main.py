@@ -1176,13 +1176,14 @@ class WebsiteSale(http.Controller):
         _express_checkout_route, type='json', methods=['POST'], auth="public", website=True,
         sitemap=False
     )
-    def process_express_checkout(self, billing_address):
+    def process_express_checkout(self, billing_address, **kwargs):
         """ Records the partner information on the order when using express checkout flow.
 
         Depending on whether the partner is registered and logged in, either creates a new partner
         or uses an existing one that matches all received data.
 
-        :param dict billing_address: billing information sent by the express payment form.
+        :param dict billing_address: Billing information sent by the express payment form.
+        :param dict kwargs: Optional data. This parameter is not used here.
         :return int: The order's partner id.
         """
         order_sudo = request.website.sale_get_order()
