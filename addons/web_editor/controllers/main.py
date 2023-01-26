@@ -32,26 +32,31 @@ def ensure_no_history_divergence(record, html_field_name, incoming_history_ids):
     server_history_matches = re.search(diverging_history_regex, record[html_field_name])
     # Do not check old documents without data-last-history-steps.
     if server_history_matches:
-        server_last_history_id = server_history_matches[1]
+        server_last_history_id = server_history_matches[1].split(',')[-1]
         if server_last_history_id not in incoming_history_ids:
             logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
             raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
 
 def handle_history_divergence(record, html_field_name, vals):
-    if html_field_name in vals and record[html_field_name]:
-        incoming_html = vals[html_field_name]
-        incoming_history_matches = re.search(diverging_history_regex, incoming_html)
-        incoming_history_ids = incoming_history_matches[1].split(',')
-        incoming_last_history_id = incoming_history_ids[-1]
+    # Do not handle history divergence if the field is not in the values.
+    if html_field_name not in vals:
+        return
+    incoming_html = vals[html_field_name]
+    incoming_history_matches = re.search(diverging_history_regex, incoming_html)
+    # When there is no incoming history id, it means that the value does not
+    # comes from the odoo editor or the collaboration was not activated. In
+    # project, it could come from the collaboration pad. In that case, we do not
+    # handle history divergences.
+    if incoming_history_matches is None:
+        return
+    incoming_history_ids = incoming_history_matches[1].split(',')
+    incoming_last_history_id = incoming_history_ids[-1]
 
-        if incoming_history_matches is None:
-            logger.error('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id)
-            raise ValidationError(_('The document was already saved from someone with a different history for model %r, field %r with id %r.', record._name, html_field_name, record.id))
-
+    if record[html_field_name]:
         ensure_no_history_divergence(record, html_field_name, incoming_history_ids)
 
-        # Save only the latest id.
-        vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
+    # Save only the latest id.
+    vals[html_field_name] = incoming_html[0:incoming_history_matches.start(1)] + incoming_last_history_id + incoming_html[incoming_history_matches.end(1):]
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------

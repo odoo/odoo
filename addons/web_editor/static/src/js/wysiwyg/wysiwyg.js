@@ -964,7 +964,7 @@ const Wysiwyg = Widget.extend({
         this.odooEditor.clean();
         this.$editable.find('.oe_edited_link').removeClass('oe_edited_link');
         const historyIds = this.odooEditor.historyGetBranchIds().join(',');
-        if (this.ptp) {
+        if (this.options.collaborative) {
             this.odooEditor.editable.children[0].setAttribute('data-last-history-steps', historyIds);
         }
         if (this.snippetsMenu) {
