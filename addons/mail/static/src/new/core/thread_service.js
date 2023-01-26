@@ -324,7 +324,7 @@ export class ThreadService {
             serverData: { channel: { avatarCacheKey: "hello" } },
         });
         this.sortChannels();
-        this.store.discuss.threadLocalId = thread.localId;
+        this.open(thread);
         return thread;
     }
 

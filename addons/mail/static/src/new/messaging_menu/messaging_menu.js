@@ -28,6 +28,7 @@ export class MessagingMenu extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.state = useState({
+            addingChat: false,
             addingChannel: false,
         });
     }
@@ -137,7 +138,11 @@ export class MessagingMenu extends Component {
     }
 
     onClickNewMessage() {
-        this.chatWindowService.openNewMessage();
+        if (this.store.isSmall) {
+            this.state.addingChat = true;
+        } else {
+            this.chatWindowService.openNewMessage();
+        }
         this.close();
     }
 
@@ -208,6 +213,7 @@ export class MessagingMenu extends Component {
     }
 
     onClickNavTab(tabId) {
+        Object.assign(this, { addingChat: false, addingChannel: false });
         if (this.store.discuss.activeTab === tabId) {
             return;
         }
