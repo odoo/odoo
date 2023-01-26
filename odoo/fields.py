@@ -3107,26 +3107,6 @@ class Many2oneReference(Integer):
             value = value._ids[0] if value._ids else None
         return super().convert_to_cache(value, record, validate)
 
-    def _remove_inverses(self, records, value):
-        # TODO: unused
-        # remove records from the cache of one2many fields of old corecords
-        cache = records.env.cache
-        record_ids = set(records._ids)
-        model_ids = self._record_ids_per_res_model(records)
-
-        for invf in records.pool.field_inverses[self]:
-            records = records.browse(model_ids[invf.model_name])
-            if not records:
-                continue
-            corecords = records.env[invf.model_name].browse(
-                id_ for id_ in cache.get_values(records, self)
-            )
-            for corecord in corecords:
-                ids0 = cache.get(corecord, invf, None)
-                if ids0 is not None:
-                    ids1 = tuple(id_ for id_ in ids0 if id_ not in record_ids)
-                    cache.set(corecord, invf, ids1)
-
     def _update_inverses(self, records, value):
         """ Add `records` to the cached values of the inverse fields of `self`. """
         if not value:
