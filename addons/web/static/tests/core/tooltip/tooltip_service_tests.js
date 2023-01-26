@@ -102,19 +102,15 @@ QUnit.module("Tooltip service", (hooks) => {
 
     QUnit.test("basic rendering", async (assert) => {
         class MyComponent extends Component {}
-        MyComponent.template = xml`<button data-tooltip="hello">Action</button>`;
+        MyComponent.template = xml`<button class="mybtn" data-tooltip="hello">Action</button>`;
         let simulateTimeout;
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
         };
-        let simulateInterval;
-        const mockSetInterval = (fn) => {
-            simulateInterval = fn;
-        };
-        await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
+        await makeParent(MyComponent, { mockSetTimeout });
 
         assert.containsNone(target, ".o_popover_container .o_popover");
-        target.querySelector("button").dispatchEvent(new Event("mouseenter"));
+        target.querySelector(".mybtn").dispatchEvent(new Event("mouseenter"));
         await nextTick();
         assert.containsNone(target, ".o_popover_container .o_popover");
 
@@ -126,19 +122,7 @@ QUnit.module("Tooltip service", (hooks) => {
             "hello"
         );
 
-        const buttonRect = target.querySelector("button").getBoundingClientRect();
-        const x = buttonRect.right + 10;
-        const y = buttonRect.bottom + 10;
-        await triggerEvent(target, "button", "mousemove", {
-            pageX: x,
-            layerX: x,
-            screenX: x,
-            pageY: y,
-            layerY: y,
-            screenY: y,
-        });
-        assert.containsOnce(target, ".o_popover_container .o_popover");
-        simulateInterval();
+        target.querySelector(".mybtn").dispatchEvent(new Event("mouseleave"));
         await nextTick();
         assert.containsNone(target, ".o_popover_container .o_popover");
     });
@@ -150,11 +134,7 @@ QUnit.module("Tooltip service", (hooks) => {
         const mockSetTimeout = (fn) => {
             simulateTimeout = fn;
         };
-        let simulateInterval;
-        const mockSetInterval = (fn) => {
-            simulateInterval = fn;
-        };
-        await makeParent(MyComponent, { mockSetTimeout, mockSetInterval });
+        await makeParent(MyComponent, { mockSetTimeout });
 
         assert.containsNone(target, ".o_popover_container .o_popover");
         const [outerSpan, innerSpan] = target.querySelectorAll("span.our_span");
@@ -171,19 +151,11 @@ QUnit.module("Tooltip service", (hooks) => {
             "hello"
         );
 
-        const outerSpanRect = outerSpan.getBoundingClientRect();
-        const x = outerSpanRect.right + 10;
-        const y = outerSpanRect.bottom + 10;
-        await triggerEvent(target, 'span[data-tooltip="hello"]', "mousemove", {
-            pageX: x,
-            layerX: x,
-            screenX: x,
-            pageY: y,
-            layerY: y,
-            screenY: y,
-        });
+        innerSpan.dispatchEvent(new Event("mouseleave"));
+        await nextTick();
         assert.containsOnce(target, ".o_popover_container .o_popover");
-        simulateInterval();
+
+        outerSpan.dispatchEvent(new Event("mouseleave"));
         await nextTick();
         assert.containsNone(target, ".o_popover_container .o_popover");
     });
