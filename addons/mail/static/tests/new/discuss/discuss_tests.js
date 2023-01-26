@@ -756,7 +756,7 @@ QUnit.test("default active id on mailbox", async function (assert) {
 
 QUnit.test("basic top bar rendering", async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["mail.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "Inbox");
@@ -770,7 +770,7 @@ QUnit.test("basic top bar rendering", async function (assert) {
     assert.isVisible($unstarAll);
     assert.ok($unstarAll[0].disabled);
 
-    await click(`.o-mail-category-item[data-channel-id="${channelId}"]`);
+    await click(".o-mail-category-item:contains(General)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "General");
     assert.isVisible($(target).find('.o-mail-discuss-actions button[data-action="add-users"]'));
 });
