@@ -44,8 +44,9 @@
                                         <label for="show_availability" string="Show Available Qty" class="p-0 col-4 o_light_label mb-3 mt-2"/>
                                         <field name="show_availability" class="w-auto"/>
                                         <label for="available_threshold" string="only if below" class="o_light_label" attrs="{'invisible': [('show_availability', '=', False)]}"/>
+                                        <span> </span>
                                         <field name="available_threshold" class="oe_inline col-1" widget="integer" attrs="{'invisible': [('show_availability', '=', False)]}"/>
-                                        <span attrs="{'invisible': [('show_availability', '=', False)]}">Units</span>
+                                        <span attrs="{'invisible': [('show_availability', '=', False)]}"> Units</span>
                                     </div>
                                 </div>
                             </div>
@@ -57,4 +58,3 @@
     </record>
 
 </odoo>
-
