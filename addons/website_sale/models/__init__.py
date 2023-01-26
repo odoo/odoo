@@ -5,7 +5,6 @@ from . import account_move
 from . import crm_team
 from . import digest
 from . import ir_http
-from . import payment_provider
 from . import product_attribute
 from . import product_image
 from . import product_pricelist
