@@ -97,7 +97,7 @@ QUnit.test("add an emoji", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-emoji[data-codepoints='😤']");
+    await click(".o-emoji:contains(😤)");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "😤");
 });
 
@@ -123,7 +123,7 @@ QUnit.test("add an emoji after some text", async function (assert) {
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "Blabla");
 
     await click("button[aria-label='Emojis']");
-    await click(".o-emoji[data-codepoints='🤑']");
+    await click(".o-emoji:contains(🤑)");
     assert.strictEqual(target.querySelector(".o-mail-composer-textarea").value, "Blabla🤑");
 });
 
@@ -139,7 +139,7 @@ QUnit.test("add emoji replaces (keyboard) text selection", async function (asser
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
     await click("button[aria-label='Emojis']");
-    await click('.o-emoji[data-codepoints="🤠"]');
+    await click(".o-emoji:contains(🤠)");
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "🤠");
 });
 
@@ -152,7 +152,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async function (a
     await insertText(".o-mail-composer-textarea", "Blabla");
     textarea.setSelectionRange(2, 2);
     await click("button[aria-label='Emojis']");
-    await click('.o-emoji[data-codepoints="🤠"]');
+    await click(".o-emoji:contains(🤠)");
     const expectedPos = 2 + "🤠".length;
     assert.strictEqual(textarea.selectionStart, expectedPos);
     assert.strictEqual(textarea.selectionEnd, expectedPos);
@@ -172,7 +172,7 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     document.querySelector(".o-mail-discuss-content").click();
     await nextTick();
     await click("button[aria-label='Emojis']");
-    await click('.o-emoji[data-codepoints="🤠"]');
+    await click(".o-emoji:contains(🤠)");
     assert.strictEqual(document.querySelector(".o-mail-composer-textarea").value, "Blabla🤠");
 });
 
@@ -205,7 +205,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
-        await click(".o-emoji[data-codepoints='👺']");
+        await click(".o-emoji:contains(👺)");
         await click("button[aria-label='Emojis']");
         assert.containsOnce(target, ".o-mail-emoji-picker");
     }
@@ -337,7 +337,7 @@ QUnit.test("add an emoji after a command", async function (assert) {
     );
 
     await click("button[aria-label='Emojis']");
-    await click('.o-emoji[data-codepoints="😊"]');
+    await click(".o-emoji:contains(😊)");
     assert.strictEqual(
         document.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "/who 😊"
@@ -367,7 +367,7 @@ QUnit.test("add an emoji after a canned response", async function (assert) {
     );
 
     await click("button[aria-label='Emojis']");
-    await click(".o-emoji[data-codepoints='😊']");
+    await click(".o-emoji:contains(😊)");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "Hello! How are you? 😊"
@@ -401,7 +401,7 @@ QUnit.test("add an emoji after a partner mention", async function (assert) {
     );
 
     await click("button[aria-label='Emojis']");
-    await click(".o-emoji[data-codepoints='😊']");
+    await click(".o-emoji:contains(😊)");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "@TestPartner 😊"
@@ -455,7 +455,7 @@ QUnit.test("add an emoji after a channel mention", async function (assert) {
 
     // select emoji
     await click("button[aria-label='Emojis']");
-    await click(".o-emoji[data-codepoints='😊']");
+    await click(".o-emoji:contains(😊)");
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "#General 😊"

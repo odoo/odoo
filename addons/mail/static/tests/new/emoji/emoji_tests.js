@@ -25,7 +25,7 @@ QUnit.test("search emoji from keywords", async function (assert) {
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "mexican");
-    assert.containsOnce(target, ".o-emoji[data-codepoints='🌮']");
+    assert.containsOnce(target, ".o-emoji:contains(🌮)");
 });
 
 QUnit.test("search emoji from keywords with special regex character", async function (assert) {
@@ -35,7 +35,7 @@ QUnit.test("search emoji from keywords with special regex character", async func
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
     await insertText("input[placeholder='Search for an emoji']", "(blood");
-    assert.containsOnce(target, ".o-emoji[data-codepoints='🆎']");
+    assert.containsOnce(target, ".o-emoji:contains(🆎)");
 });
 
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async function (assert) {

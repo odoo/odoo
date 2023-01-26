@@ -387,7 +387,7 @@ QUnit.test("Can add a reaction", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("i[aria-label='Add a Reaction']");
-    await click(".o-emoji[data-codepoints='😅']");
+    await click(".o-emoji:contains(😅)");
     assert.containsOnce(target, ".o-mail-message-reaction:contains('😅')");
 });
 
@@ -406,7 +406,7 @@ QUnit.test("Can remove a reaction", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("i[aria-label='Add a Reaction']");
-    await click(".o-emoji[data-codepoints='😅']");
+    await click(".o-emoji:contains(😅)");
     await click(".o-mail-message-reaction");
     assert.containsNone(target, ".o-mail-message-reaction:contains('😅')");
 });
@@ -470,7 +470,7 @@ QUnit.test("Reaction summary", async (assert) => {
         const partnerId = pyEnv["res.partner"].create({ name });
         pyEnv.currentPartnerId = partnerId;
         await click("i[aria-label='Add a Reaction']");
-        await click(".o-emoji[data-codepoints='😅']");
+        await click(".o-emoji:contains(😅)");
         assert.hasAttrValue(
             target.querySelector(".o-mail-message-reaction"),
             "title",
@@ -494,9 +494,9 @@ QUnit.test("Add the same reaction twice from the emoji picker", async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("i[aria-label='Add a Reaction']");
-    await click(".o-emoji[data-codepoints='😅']");
+    await click(".o-emoji:contains(😅)");
     await click("i[aria-label='Add a Reaction']");
-    await click(".o-emoji[data-codepoints='😅']");
+    await click(".o-emoji:contains(😅)");
     assert.containsOnce(target, ".o-mail-message-reaction:contains('😅')");
 });
 
