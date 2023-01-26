@@ -1616,11 +1616,11 @@ class Task(models.Model):
             task.stage_display = task.stage_id.name if task.project_id else task.personal_stage_type_id.name
 
     @api.depends('message_partner_ids')
-    def _compute_user_ids(self):
+    def _compute_user_ids(self): #TODO not working when project is not installed, corner case to address here...
         """ This compute method allows to set followers as assignee for todos.
             This default value will be used when converting todos to tasks.
         """
-        for todo in self.with_context({'tracking_disable': True}).filtered(lambda task: task.is_todo):
+        for todo in self.with_context({'tracking_disable': True}).filtered(lambda task: task.is_todo): #TODO no log of the change doesn't work
             todo.write({'user_ids': todo.message_partner_ids.user_ids})
 
     @api.depends('user_ids')

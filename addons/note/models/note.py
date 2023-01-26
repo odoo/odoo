@@ -122,7 +122,7 @@ class Task(models.Model):
     # --------------------------------------- Fields Declaration ----------------------------------
 
     name = fields.Char(string='Title', tracking=True, required=True, index='trigram')
-#    company_id = fields.Many2one('res.company') #TODO: to update (see project)
+    #company_id = fields.Many2one('res.company') #TODO: to update (see project)
     user_id = fields.Many2one('res.users', string='Owner', default=lambda self: self.env.uid)
     description = fields.Html(string='Description')
     sequence = fields.Integer('Sequence', default=10)
@@ -139,6 +139,7 @@ class Task(models.Model):
 
     # modifying property of ``mail.thread`` field
     message_partner_ids = fields.Many2many(compute_sudo=True)
+    user_ids = fields.Many2many('res.users')#TO DELETE: temporary field used for the render of the kanban view, has to be deleted once a decision is made about the model used
 
     is_todo = fields.Boolean(default=False, required=True)
 
