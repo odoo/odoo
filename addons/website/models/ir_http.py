@@ -150,6 +150,9 @@ class Http(models.AbstractModel):
             return False
         if getattr(response, 'status_code', 0) != 200 or request.httprequest.headers.get('X-Disable-Tracking') == '1':
             return False
+        if request.env.cr.readonly:
+            logger.warning("Skip visitor track as cursor is read-only")
+            return False
 
         template = False
         if hasattr(response, '_cached_page'):

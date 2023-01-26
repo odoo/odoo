@@ -4,6 +4,7 @@
 # pylint: disable=sql-injection
 
 from binascii import crc32
+import itertools
 import logging
 import json
 import re
@@ -443,3 +444,15 @@ def make_identifier(identifier: str) -> str:
 def make_index_name(table_name: str, column_name: str) -> str:
     """ Return an index name according to conventions for the given table and column. """
     return make_identifier(f"{table_name}__{column_name}_index")
+
+def get_write_command(sql: str):
+    statements = [word for word in sql.split() if word.isupper()]
+    it1, it2 = itertools.tee(iter(statements))
+    next(it2, None)
+
+    for current_word, next_word in zip(it1, it2):
+        if current_word in {'INSERT', 'DELETE', 'UPDATE'}:
+            return current_word
+        if current_word == 'SELECT' and next_word == 'INTO':
+            return 'SELECT INTO'
+    return None

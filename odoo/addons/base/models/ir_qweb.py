@@ -371,6 +371,7 @@ import tokenize
 import traceback
 import werkzeug
 
+import psycopg2.errors
 from markupsafe import Markup, escape
 from collections.abc import Sized, Mapping
 from itertools import count, chain
@@ -721,6 +722,8 @@ class IrQWeb(models.AbstractModel):
                     except Exception as e:
                         if isinstance(e, TransactionRollbackError):
                             raise
+                        if isinstance(e, ReadOnlySqlTransaction):
+                            raise
                         raise QWebException("Error while render the template",
                             self, template, ref={compile_context['ref']!r}, code=code) from e
                     """, 0)]
@@ -892,6 +895,7 @@ class IrQWeb(models.AbstractModel):
             'QWebException': QWebException,
             'Exception': Exception,
             'TransactionRollbackError': TransactionRollbackError, # for SerializationFailure in assets
+            'ReadOnlySqlTransaction': psycopg2.errors.ReadOnlySqlTransaction,
             'ValueError': ValueError,
             'UserError': UserError,
             'AccessDenied': AccessDenied,
