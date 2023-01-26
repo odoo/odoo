@@ -7,9 +7,9 @@
         <xpath expr="//t[@name='code_not_available']" position="replace"/>
     </template>
 
-    <template id="modify_code_form" inherit_id="website_sale.total" name="Loyalty, coupon, gift card">
-        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
-            <tr t-if="not hide_promotions" class="oe_website_sale_gift_card">
+    <template id="modify_code_form" inherit_id="website_sale.short_cart_summary" name="Loyalty, coupon, gift card">
+        <xpath expr="//div[@name='card_body']" position="after">
+            <div t-if="not hide_promotions" class="oe_website_sale_gift_card">
                 <td colspan="3" class="text-center text-xl-end border-0">
                     <span class=''>
                         <t t-if="request.params.get('code_not_available')">
@@ -64,7 +64,7 @@
                         </t>
                     </span>
                 </td>
-            </tr>
+            </div>
         </xpath>
     </template>
 
