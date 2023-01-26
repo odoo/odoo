@@ -898,9 +898,6 @@ const Wysiwyg = Widget.extend({
      * @returns {Promise}
      */
     saveContent: async function (reload = true) {
-        const defs = [];
-        await Promise.all(defs);
-
         await this.cleanForSave();
 
         const editables = this.options.getContentEditableAreas();
@@ -1876,7 +1873,7 @@ const Wysiwyg = Widget.extend({
         // Some icons are relevant for icons, that aren't for other media.
         this.toolbar.$el.find('#colorInputButtonGroup, #create-link').toggleClass('d-none', isInMedia && !$target.is('.fa'));
         this.toolbar.$el.find('.only_fa').toggleClass('d-none', !$target.is('.fa'));
-        // Hide unsuitable buttons for icon 
+        // Hide unsuitable buttons for icon
         if ($target.is('.fa')) {
             this.toolbar.$el.find([
                 '#image-shape',
