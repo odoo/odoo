@@ -884,10 +884,6 @@ class Field(MetaField('DummyField', (object,), {})):
     # Conversion of values
     #
 
-    def null(self, record):
-        """ Return the null value for this field in the record format. """
-        return False
-
     def convert_to_column(self, value, record, values=None, validate=True):
         """ Convert ``value`` from the ``write`` format to the SQL format. """
         if value is None or value is False:
@@ -2845,9 +2841,6 @@ class _Relational(Field):
                 else:
                     return f"[('company_id', 'in', [{cid}, False])]"
         return self.domain(env[self.model_name]) if callable(self.domain) else self.domain
-
-    def null(self, record):
-        return record.env[self.comodel_name]
 
 
 class Many2one(_Relational):
