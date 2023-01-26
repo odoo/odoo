@@ -50,8 +50,6 @@ export const tooltipService = {
         let openTooltipTimeout;
         let closeTooltip;
         let target = null;
-        let positionX;
-        let positionY;
         let touchPressed;
         const elementsWithTooltips = new Map();
 
@@ -78,15 +76,6 @@ export const tooltipService = {
             }
             if (hasTouch()) {
                 return !touchPressed;
-            }
-            const targetRect = target.getBoundingClientRect();
-            if (
-                positionX < targetRect.left ||
-                positionX > targetRect.right ||
-                positionY < targetRect.top ||
-                positionY > targetRect.bottom
-            ) {
-                return true; // mouse is no longer hovering the target
             }
             return false;
         }
@@ -115,18 +104,14 @@ export const tooltipService = {
             }
 
             openTooltipTimeout = browser.setTimeout(() => {
-                if (shouldCleanup()) {
-                    cleanup();
-                } else {
-                    closeTooltip = popover.add(
-                        target,
-                        Tooltip,
-                        { tooltip, template, info },
-                        { position }
-                    );
-                    // Prevent title from showing on a parent at the same time
-                    target.title = "";
-                }
+                closeTooltip = popover.add(
+                    target,
+                    Tooltip,
+                    { tooltip, template, info },
+                    { position }
+                );
+                // Prevent title from showing on a parent at the same time
+                target.title = "";
             }, delay);
         }
 
@@ -162,12 +147,14 @@ export const tooltipService = {
          * @param {MouseEvent} ev a "mouseenter" event
          */
         function onMouseenter(ev) {
-            // set mouse position in case the target contains disabled elements which won't trigger mousemove
-            positionX = ev.x;
-            positionY = ev.y;
             openElementsTooltip(ev.target);
         }
 
+        function onMouseleave(ev) {
+            if (target === ev.target) {
+                cleanup();
+            }
+        }
         /**
          * Checks whether there is a tooltip registered on the event target, and
          * if there is, creates a timeout to open the corresponding tooltip
@@ -181,8 +168,7 @@ export const tooltipService = {
         }
 
         whenReady(() => {
-            // Regularly check that the target is still in the DOM and we're still
-            // hovering it, because if not, we have to close the tooltipd
+            // Regularly check that the target is still in the DOM and if not, close the tooltip
             browser.setInterval(() => {
                 if (shouldCleanup()) {
                     cleanup();
@@ -211,16 +197,10 @@ export const tooltipService = {
                 return;
             }
 
-            // Track mouse position to be able to detect that we are no longer hovering
-            // the target, thus that we should close the tooltip
-            document.body.addEventListener("mousemove", (ev) => {
-                positionX = ev.x;
-                positionY = ev.y;
-            });
-
-            // Listen (using event delegation) to "mouseenter" events on all nodes with
-            // the "data-tooltip" or "data-tooltip-template" attribute, to open the tooltip.
+            // Listen (using event delegation) to "mouseenter" events to open the tooltip if any
             document.body.addEventListener("mouseenter", onMouseenter, { capture: true });
+            // Listen (using event delegation) to "mouseleave" events to close the tooltip if any
+            document.body.addEventListener("mouseleave", onMouseleave, { capture: true });
         });
 
         return {
