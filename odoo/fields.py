@@ -4033,31 +4033,14 @@ class _RelationalMulti(_Relational):
     # convert_to_record(), depending on the context.
 
     def _update(self, records, value):
-        """ Update the cached value of ``self`` for ``records`` with ``value``,
-            and return whether everything is in cache.
-        """
-        if not isinstance(records, BaseModel):
-            # the inverse of self is a non-relational field; `value` is a
-            # corecord that refers to `records` by an integer field
-            model = value.env[self.model_name]
-            domain = self.domain(model) if callable(self.domain) else self.domain
-            if not value.filtered_domain(domain):
-                return
-            records = model.browse(records)
-
-        result = True
-
+        """ Update the cached value of ``self`` for ``records`` with ``value``. """
         if value:
             cache = records.env.cache
             for record in records:
                 if cache.contains(record, self):
                     val = self.convert_to_cache(record[self.name] | value, record, validate=False)
                     cache.set(record, self, val)
-                else:
-                    result = False
             records.modified([self.name])
-
-        return result
 
     def convert_to_cache(self, value, record, validate=True):
         # cache format: tuple(ids)
