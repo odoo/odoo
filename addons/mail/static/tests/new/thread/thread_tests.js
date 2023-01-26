@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { config as transitionConfig } from "@web/core/transition";
 import {
     afterNextRender,
     click,
@@ -13,7 +14,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 import { makeDeferred } from "@mail/utils/deferred";
 
-import { getFixture } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 let target;
 
@@ -474,3 +475,55 @@ QUnit.test("no new messages separator on posting message", async function (asser
     assert.containsN(target, ".o-mail-message", 2);
     assert.containsNone(target, "hr + span:contains(New messages)");
 });
+
+QUnit.test(
+    "new messages separator on receiving new message [REQUIRE FOCUS]",
+    async function (assert) {
+        patchWithCleanup(transitionConfig, { disabled: true });
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Foreigner partner" });
+        const userId = pyEnv["res.users"].create({
+            name: "Foreigner user",
+            partner_id: partnerId,
+        });
+        const channelId = pyEnv["mail.channel"].create({
+            channel_member_ids: [
+                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+            ],
+            channel_type: "channel",
+            name: "General",
+            uuid: "randomuuid",
+        });
+        const messageId = pyEnv["mail.message"].create({
+            body: "blah",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const [memberId] = pyEnv["mail.channel.member"].search([
+            ["channel_id", "=", channelId],
+            ["partner_id", "=", pyEnv.currentPartnerId],
+        ]);
+        pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
+        const { env, openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(target, ".o-mail-message", "should have an initial message");
+        assert.containsNone(target, "hr + span:contains(New messages)");
+
+        document.querySelector(".o-mail-composer-textarea").blur();
+        // simulate receiving a message
+        await afterNextRender(() =>
+            env.services.rpc("/mail/chat_post", {
+                context: { mockedUserId: userId },
+                message_content: "hu",
+                uuid: "randomuuid",
+            })
+        );
+        assert.containsN(target, ".o-mail-message", 2);
+        assert.containsOnce(target, ".o-mail-thread-new-message");
+        assert.containsOnce(target, ".o-mail-thread-new-message ~ .o-mail-message:contains(hu)");
+
+        target.querySelector(".o-mail-composer-textarea").focus();
+        await nextTick();
+        assert.containsNone(target, ".o-mail-thread-new-message");
+    }
+);

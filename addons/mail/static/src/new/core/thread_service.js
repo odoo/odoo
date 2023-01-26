@@ -131,7 +131,10 @@ export class ThreadService {
                 last_message_id: mostRecentNonTransientMessage.id,
             });
         }
-        this.update(thread, { isUnread: false });
+        this.update(thread, {
+            isUnread: false,
+            serverLastSeenMsgBySelf: mostRecentNonTransientMessage?.id,
+        });
     }
 
     /**
