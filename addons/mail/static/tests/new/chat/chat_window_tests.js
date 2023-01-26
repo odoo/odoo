@@ -283,7 +283,7 @@ QUnit.test(
     "open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
     async function (assert) {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create([{ name: "mailChannel1" }, { name: "mailChannel2" }]);
+        pyEnv["mail.channel"].create([{ name: "Channel_1" }, { name: "Channel_2" }]);
         patchUiSize({ width: 1920 });
         assert.ok(
             CHAT_WINDOW_END_GAP_WIDTH * 2 + CHAT_WINDOW_WIDTH * 2 + CHAT_WINDOW_INBETWEEN_WIDTH <
@@ -292,26 +292,26 @@ QUnit.test(
         );
         await start();
         await click("button i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(mailChannel1)");
+        await click(".o-mail-notification-item:contains(Channel_1)");
         assert.containsOnce(target, ".o-mail-chat-window");
-        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Channel_1)");
         assert.strictEqual(
             document.activeElement,
             $(target)
-                .find(".o-mail-chat-window-header:contains(mailChannel1)")
+                .find(".o-mail-chat-window-header:contains(Channel_1)")
                 .closest(".o-mail-chat-window")
                 .find(".o-mail-composer-textarea")[0]
         );
 
         await click("button i[aria-label='Messages']");
-        await click(".o-mail-notification-item:contains(mailChannel2)");
+        await click(".o-mail-notification-item:contains(Channel_2)");
         assert.containsN(target, ".o-mail-chat-window", 2);
-        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel2)");
-        assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Channel_2)");
+        assert.containsOnce(target, ".o-mail-chat-window-header:contains(Channel_1)");
         assert.strictEqual(
             document.activeElement,
             $(target)
-                .find(".o-mail-chat-window-header:contains(mailChannel2)")
+                .find(".o-mail-chat-window-header:contains(Channel_2)")
                 .closest(".o-mail-chat-window")
                 .find(".o-mail-composer-textarea")[0]
         );
@@ -321,9 +321,9 @@ QUnit.test(
 QUnit.test("open 3 different chat windows: not enough screen width", async function (assert) {
     const pyEnv = await startServer();
     pyEnv["mail.channel"].create([
-        { name: "mailChannel1" },
-        { name: "mailChannel2" },
-        { name: "mailChannel3" },
+        { name: "Channel_1" },
+        { name: "Channel_2" },
+        { name: "Channel_3" },
     ]);
     patchUiSize({ width: 900 });
     assert.ok(
@@ -339,25 +339,25 @@ QUnit.test("open 3 different chat windows: not enough screen width", async funct
 
     // open, from systray menu, chat windows of channels with Id 1, 2, then 3
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-notification-item:contains(mailChannel1)");
+    await click(".o-mail-notification-item:contains(Channel_1)");
     assert.containsOnce(target, ".o-mail-chat-window");
     assert.containsNone(target, ".o-mail-chat-window-hidden-menu");
 
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-notification-item:contains(mailChannel2)");
+    await click(".o-mail-notification-item:contains(Channel_2)");
     assert.containsN(target, ".o-mail-chat-window", 2);
     assert.containsNone(target, ".o-mail-chat-window-hidden-menu");
 
     await click("button i[aria-label='Messages']");
-    await click(".o-mail-notification-item:contains(mailChannel3)");
+    await click(".o-mail-notification-item:contains(Channel_3)");
     assert.containsN(target, ".o-mail-chat-window", 2);
     assert.containsOnce(target, ".o-mail-chat-window-hidden-menu");
-    assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel1)");
-    assert.containsOnce(target, ".o-mail-chat-window-header:contains(mailChannel3)");
+    assert.containsOnce(target, ".o-mail-chat-window-header:contains(Channel_1)");
+    assert.containsOnce(target, ".o-mail-chat-window-header:contains(Channel_3)");
     assert.strictEqual(
         document.activeElement,
         $(target)
-            .find(".o-mail-chat-window-header:contains(mailChannel3)")
+            .find(".o-mail-chat-window-header:contains(Channel_3)")
             .closest(".o-mail-chat-window")
             .find(".o-mail-composer-textarea")[0]
     );
@@ -576,11 +576,8 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const userId = pyEnv["res.users"].create({
-            name: "Foreigner user",
-            partner_id: partnerId,
-        });
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const userId = pyEnv["res.users"].create({ name: "Foreigner user", partner_id: partnerId });
+        const channelId = pyEnv["mail.channel"].create({
             channel_member_ids: [
                 [
                     0,
@@ -596,18 +593,16 @@ QUnit.test(
             channel_type: "chat",
             uuid: "channel-10-uuid",
         });
-        const mailMessageId = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
-            res_id: mailChannelId,
+            res_id: channelId,
         });
-        const [mailChannelMemberId] = pyEnv["mail.channel.member"].search([
-            ["channel_id", "=", mailChannelId],
+        const [memberId] = pyEnv["mail.channel.member"].search([
+            ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
         ]);
-        pyEnv["mail.channel.member"].write([mailChannelMemberId], {
-            seen_message_id: mailMessageId,
-        });
+        pyEnv["mail.channel.member"].write([memberId], { seen_message_id: messageId });
         const { env } = await start();
         // simulate receiving a message
         await afterNextRender(async () =>

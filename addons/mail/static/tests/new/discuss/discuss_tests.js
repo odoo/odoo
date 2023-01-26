@@ -256,7 +256,7 @@ QUnit.test("Posting message should transform links.", async (assert) => {
     await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "test https://www.odoo.com/");
     await click(".o-mail-composer-send-button");
-    assert.containsOnce(target, "a[href='https://www.odoo.com/']", "Message should have a link");
+    assert.containsOnce(target, "a[href='https://www.odoo.com/']");
 });
 
 QUnit.test("Posting message should transform relevant data to emoji.", async (assert) => {
@@ -400,7 +400,7 @@ QUnit.test("No load more when fetch below fetch limit of 30", async function (as
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === "/mail/channel/messages") {
-                assert.strictEqual(args.limit, 30, "should fetch up to 30 messages");
+                assert.strictEqual(args.limit, 30);
             }
         },
     });
@@ -1036,9 +1036,9 @@ QUnit.test(
             assert.strictEqual(payload.part, "_chat");
             assert.strictEqual(payload.title, "1 Message");
         });
-        const mailChannel1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+        const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
         // simulate receiving a new message with odoo focused
-        pyEnv["bus.bus"]._sendone(mailChannel1, "mail.channel/new_message", {
+        pyEnv["bus.bus"]._sendone(channel, "mail.channel/new_message", {
             id: channelId,
             message: {
                 id: 126,

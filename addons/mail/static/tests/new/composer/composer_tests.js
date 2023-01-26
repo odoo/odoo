@@ -191,9 +191,8 @@ QUnit.test(
         const textarea = document.querySelector(".o-mail-composer-textarea");
         textarea.setSelectionRange(0, textarea.value.length);
         await nextTick();
-        const [channel_1, channel_2] = document.querySelectorAll(".o-mail-category-item");
-        await afterNextRender(() => channel_2.click());
-        await afterNextRender(() => channel_1.click());
+        await click($(".o-mail-category-item:eq(1)"));
+        await click($(".o-mail-category-item:eq(0)"));
         assert.ok(textarea.selectionStart === 0 && textarea.selectionEnd === textarea.value.length);
     }
 );
@@ -334,7 +333,7 @@ QUnit.test("add an emoji after a command", async function (assert) {
     assert.strictEqual(
         document.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "/who ",
-        "text content of composer should have previous content + used command + additional whitespace afterwards"
+        "previous content + used command + additional whitespace afterwards"
     );
 
     await click("button[aria-label='Emojis']");
@@ -364,7 +363,7 @@ QUnit.test("add an emoji after a canned response", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "Hello! How are you? ",
-        "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
+        "previous content + canned response substitution + additional whitespace afterwards"
     );
 
     await click("button[aria-label='Emojis']");
@@ -431,7 +430,7 @@ QUnit.test("mention a channel after some text", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "bluhbluh #General ",
-        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+        "previous content + mentioned channel + additional whitespace afterwards"
     );
 });
 
@@ -451,7 +450,7 @@ QUnit.test("add an emoji after a channel mention", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "#General ",
-        "text content of composer should have previous content + mentioned channel + additional whitespace afterwards"
+        "previous content + mentioned channel + additional whitespace afterwards"
     );
 
     // select emoji

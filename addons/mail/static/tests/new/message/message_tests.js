@@ -643,7 +643,7 @@ QUnit.test("toggle_star message", async function (assert) {
         async mockRPC(route, args) {
             if (args.method === "toggle_message_starred") {
                 assert.step("rpc:toggle_message_starred");
-                assert.strictEqual(args.args[0][0], messageId, "should have message Id in args");
+                assert.strictEqual(args.args[0][0], messageId);
             }
         },
     });
@@ -674,7 +674,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ channel_type: "channel" });
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "Not the current user" });
+        const partnerId = pyEnv["res.partner"].create({ name: "Not the current user" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
@@ -682,7 +682,7 @@ QUnit.test(
                 res_id: channelId,
             },
             {
-                author_id: resPartnerId1,
+                author_id: partnerId,
                 body: "not empty",
                 model: "mail.channel",
                 res_id: channelId,
@@ -701,7 +701,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
-        const resPartnerId1 = pyEnv["res.partner"].create({ name: "A" });
+        const partnerId = pyEnv["res.partner"].create({ name: "A" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
@@ -709,7 +709,7 @@ QUnit.test(
                 res_id: channelId,
             },
             {
-                author_id: resPartnerId1,
+                author_id: partnerId,
                 body: "not empty",
                 model: "mail.channel",
                 res_id: channelId,

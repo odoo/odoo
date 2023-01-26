@@ -372,7 +372,7 @@ QUnit.test(
             });
         }
         const { env } = await start();
-        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+        await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-notification-item");
         assert.ok(isScrolledToBottom($(".o-mail-thread")[0]));
 
@@ -380,7 +380,6 @@ QUnit.test(
         await nextAnimationFrame();
         assert.strictEqual($(".o-mail-thread")[0].scrollTop, 0);
 
-        // simulate receiving a message
         // simulate receiving a message
         await afterNextRender(() =>
             env.services.rpc("/mail/chat_post", {

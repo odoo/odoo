@@ -144,8 +144,8 @@ QUnit.test("open non-channel failure", async function (assert) {
 QUnit.test("different mail.channel are not grouped", async function (assert) {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
-        { name: "mailChannel1" },
-        { name: "mailChannel2" },
+        { name: "Channel_1" },
+        { name: "Channel_2" },
     ]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
@@ -275,7 +275,7 @@ QUnit.test(
             },
         ]);
         await start();
-        await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+        await click(".o_menu_systray i[aria-label='Messages']");
         assert.containsN(target, ".o-mail-notification-item-name", 2);
         assert.strictEqual($(".o-mail-notification-item-name")[0].textContent, "Channel 2020");
         assert.strictEqual($(".o-mail-notification-item-name")[1].textContent, "Channel 2019");

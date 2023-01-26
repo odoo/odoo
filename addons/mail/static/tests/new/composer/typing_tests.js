@@ -213,7 +213,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     assert.strictEqual(
         $(target).find(".o-mail-composer-is-typing").text(),
         "Other 10 and Other 11 are typing...",
-        "Should display that members 'Other 10' and 'Other 11' are typing (order: longer typer named first)"
+        "Should display longer typer named first"
     );
 
     // simulate receive typing notification from other 12 (is typing)
@@ -226,8 +226,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     );
     assert.strictEqual(
         $(target).find(".o-mail-composer-is-typing").text(),
-        "Other 10, Other 11 and more are typing...",
-        "Should display that members 'Other 10', 'Other 11' and more (at least 1 extra member) are typing (order: longer typer named first)"
+        "Other 10, Other 11 and more are typing..."
     );
 
     // simulate receive typing notification from other 10 (no longer is typing)
@@ -240,8 +239,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     );
     assert.strictEqual(
         $(target).find(".o-mail-composer-is-typing").text(),
-        "Other 11 and Other 12 are typing...",
-        "Should display that members 'Other 11' and 'Other 12' are typing ('Other 10' stopped typing)"
+        "Other 11 and Other 12 are typing..."
     );
 
     // simulate receive typing notification from other 10 (is typing again)
@@ -255,7 +253,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
     assert.strictEqual(
         $(target).find(".o-mail-composer-is-typing").text(),
         "Other 11, Other 12 and more are typing...",
-        "Should display that members 'Other 11' and 'Other 12' and more (at least 1 extra member) are typing (order by longer typer, 'Other 10' just recently restarted typing)"
+        "Should order by longer typer ('Other 10' just recently restarted typing)"
     );
 });
 

@@ -77,6 +77,6 @@ QUnit.test("click on message in reply to scroll to the parent message", async fu
     const threadBottom = threadTop + thread.offsetHeight;
     assert.ok(
         oldestMsgBottom <= threadBottom && oldestMsgTop >= threadTop,
-        "Should have scrolled into oldest message"
+        "Should have scrolled to oldest message"
     );
 });

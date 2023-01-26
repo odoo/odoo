@@ -120,7 +120,7 @@ QUnit.test("use a command for a specific channel type", async function (assert) 
     assert.strictEqual(
         document.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "/who ",
-        "text content of composer should have used command + additional whitespace afterwards"
+        "command + additional whitespace afterwards"
     );
 });
 
@@ -174,7 +174,7 @@ QUnit.test("use a canned response", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "Hello! How are you? ",
-        "text content of composer should have canned response + additional whitespace afterwards"
+        "canned response + additional whitespace afterwards"
     );
 });
 
@@ -197,7 +197,7 @@ QUnit.test("use a canned response some text", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "bluhbluh Hello! How are you? ",
-        "text content of composer should have previous content + canned response substitution + additional whitespace afterwards"
+        "previous content + canned response substitution + additional whitespace afterwards"
     );
 });
 
@@ -230,7 +230,7 @@ QUnit.test("mention a channel", async function (assert) {
     assert.strictEqual(
         target.querySelector(".o-mail-composer-textarea").value.replace(/\s/, " "),
         "#General ",
-        "text content of composer should have mentioned channel + additional whitespace afterwards"
+        "mentioned channel + additional whitespace afterwards"
     );
 });
 
@@ -243,7 +243,7 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async function 
             if (params.method === "get_mention_suggestions") {
                 const res = await originalFn(args, params);
                 assert.step("get_mention_suggestions");
-                assert.strictEqual(res.length, 1, "Should return a thread");
+                assert.strictEqual(res.length, 1);
                 deferred.resolve();
                 return res;
             }

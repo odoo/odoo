@@ -20,6 +20,6 @@ QUnit.test("should update activities when opening the activity menu", async (ass
         res_id: partnerId,
         res_model: "res.partner",
     });
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Activities'])");
+    await click(".o_menu_systray i[aria-label='Activities']");
     assert.strictEqual($(target).find(".o-mail-activity-menu-counter").text(), "1");
 });

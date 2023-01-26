@@ -264,7 +264,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -272,7 +272,7 @@ QUnit.test(
             subject: "Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -288,7 +288,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -296,7 +296,7 @@ QUnit.test(
             subject: "Re: Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -312,7 +312,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -320,7 +320,7 @@ QUnit.test(
             subject: "Re: Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -336,7 +336,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -344,7 +344,7 @@ QUnit.test(
             subject: "Fw: Re: Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -360,7 +360,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -368,7 +368,7 @@ QUnit.test(
             subject: "Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -384,7 +384,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -392,7 +392,7 @@ QUnit.test(
             subject: "fw: re: Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,
@@ -408,7 +408,7 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
-        const mailMessageId1 = pyEnv["mail.message"].create({
+        const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "mail.channel",
             res_id: channelId,
@@ -416,7 +416,7 @@ QUnit.test(
             subject: "Re: Re: Salutations, voyageur",
         });
         pyEnv["mail.notification"].create({
-            mail_message_id: mailMessageId1,
+            mail_message_id: messageId,
             notification_status: "sent",
             notification_type: "inbox",
             res_partner_id: pyEnv.currentPartnerId,

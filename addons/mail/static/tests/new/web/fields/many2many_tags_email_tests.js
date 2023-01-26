@@ -90,7 +90,7 @@ QUnit.test("fieldmany2many tags email (edition)", async function (assert) {
         "tag should only show name"
     );
     assert.hasAttrValue(firstTag.querySelector(".o_badge_text"), "title", "coucou@petite.perruche");
-    // should have read resPartnerId2 three times: when opening the dropdown, when opening the modal, and
+    // should have read Partner_1 three times: when opening the dropdown, when opening the modal, and
     // after the save
     assert.verifySteps([`[${partnerId_2}]`, `[${partnerId_2}]`, `[${partnerId_2}]`]);
 });
@@ -101,14 +101,14 @@ QUnit.test("many2many_tags_email widget can load more than 40 records", async fu
     for (let i = 100; i < 200; i++) {
         partnerIds.push(pyEnv["res.partner"].create({ display_name: `partner${i}` }));
     }
-    const mailMessageId1 = pyEnv["mail.message"].create({ partner_ids: partnerIds });
+    const messageId = pyEnv["mail.message"].create({ partner_ids: partnerIds });
     const views = {
         "mail.message,false,form":
             '<form><field name="partner_ids" widget="many2many_tags"/></form>',
     };
     const { openView } = await start({ serverData: { views } });
     await openView({
-        res_id: mailMessageId1,
+        res_id: messageId,
         res_model: "mail.message",
         views: [[false, "form"]],
     });

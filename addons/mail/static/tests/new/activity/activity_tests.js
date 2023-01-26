@@ -37,8 +37,8 @@ QUnit.test("activity upload document is available", async function (assert) {
         views: [[false, "form"]],
     });
     assert.containsOnce(target, ".o-mail-activity-name:contains('Upload Document')");
-    assert.containsOnce(target, ".fa-upload", "Should have activity upload button");
-    assert.containsOnce(target, ".o-mail-activity .o_input_file", "Should have a file uploader");
+    assert.containsOnce(target, ".fa-upload");
+    assert.containsOnce(target, ".o-mail-activity .o_input_file");
 });
 
 QUnit.test("activity simplest layout", async function (assert) {
@@ -336,7 +336,7 @@ QUnit.test("activity with mail template: preview mail", async function (assert) 
     assert.containsOnce(target, ".o-mail-activity-mail-template-preview");
 
     document.querySelector(".o-mail-activity-mail-template-preview").click();
-    assert.verifySteps(["do_action"], "should have called 'compose email' action correctly");
+    assert.verifySteps(["do_action"]);
 });
 
 QUnit.test("activity with mail template: send mail", async function (assert) {

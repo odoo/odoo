@@ -235,10 +235,10 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     assert.containsOnce(target, ".o-mail-message");
     assert.containsNone(target, ".o-mail-message-seen-indicator i");
 
-    const mailChannel1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(mailChannel1, "mail.channel.member/seen", {
+        pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/seen", {
             channel_id: channelId,
             last_message_id: 100,
             partner_id: partnerId,

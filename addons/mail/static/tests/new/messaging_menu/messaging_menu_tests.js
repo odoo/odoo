@@ -372,8 +372,8 @@ QUnit.test("mark failure as read", async function (assert) {
 QUnit.test("different mail.channel are not grouped", async function (assert) {
     const pyEnv = await startServer();
     const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
-        { name: "mailChannel1" },
-        { name: "mailChannel2" },
+        { name: "Channel_1" },
+        { name: "Channel_2" },
     ]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {

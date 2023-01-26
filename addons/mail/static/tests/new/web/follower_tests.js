@@ -98,7 +98,7 @@ QUnit.test("click on partner follower details", async function (assert) {
 
     document.querySelector(".o-mail-chatter-topbar-follower-list-follower-details").click();
     await openFormDef;
-    assert.verifySteps(["do_action"], "clicking on follower should redirect to partner form view");
+    assert.verifySteps(["do_action"], "redirect to partner profile");
 });
 
 QUnit.skipRefactoring("click on edit follower", async function (assert) {
@@ -137,7 +137,7 @@ QUnit.skipRefactoring("click on edit follower", async function (assert) {
     assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list-follower-edit-button");
 
     await click(".o-mail-chatter-topbar-follower-list-follower-edit-button");
-    assert.verifySteps(["fetch_subtypes"], "clicking on edit follower should fetch subtypes");
+    assert.verifySteps(["fetch_subtypes"]);
     assert.containsOnce(target, ".o-mail-follower-subtype-dialog");
 });
 
@@ -167,7 +167,7 @@ QUnit.test("edit follower and close subtype dialog", async function (assert) {
     assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list-follower-edit-button");
 
     await click(".o-mail-chatter-topbar-follower-list-follower-edit-button");
-    assert.verifySteps(["fetch_subtypes"], "clicking on edit follower should fetch subtypes");
+    assert.verifySteps(["fetch_subtypes"]);
     assert.containsOnce(target, ".o-mail-follower-subtype-dialog");
 
     await click(".o-mail-follower-subtype-dialog-close");

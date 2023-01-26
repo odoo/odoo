@@ -28,11 +28,7 @@ QUnit.test("base rendering not editable", async function (assert) {
 
     document.querySelector(".o-mail-chatter-topbar-follower-list-button").click();
     await nextTick();
-    assert.containsNone(
-        target,
-        ".o-mail-chatter-topbar-follower-list-dropdown",
-        "followers dropdown should still be closed as button is disabled"
-    );
+    assert.containsNone(target, ".o-mail-chatter-topbar-follower-list-dropdown");
 });
 
 QUnit.test("base rendering editable", async function (assert) {
@@ -65,9 +61,9 @@ QUnit.test("base rendering editable", async function (assert) {
 QUnit.test('click on "add followers" button', async function (assert) {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([
-        { name: "resPartner1" },
+        { name: "Partner1" },
         { name: "François Perusse" },
-        { name: "resPartner3" },
+        { name: "Partner3" },
     ]);
     pyEnv["mail.followers"].create({
         partner_id: partnerId_2,
@@ -141,8 +137,8 @@ QUnit.test('click on "add followers" button', async function (assert) {
 QUnit.test("click on remove follower", async function (assert) {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { name: "resPartner1" },
-        { name: "resPartner2" },
+        { name: "Partner1" },
+        { name: "Partner2" },
     ]);
     pyEnv["mail.followers"].create({
         partner_id: partnerId_2,
@@ -186,8 +182,8 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "resPartner1" },
-            { name: "resPartner2" },
+            { name: "Partner1" },
+            { name: "Partner2" },
         ]);
         pyEnv["mail.followers"].create([
             {
@@ -248,8 +244,8 @@ QUnit.test(
     async function (assert) {
         const pyEnv = await startServer();
         const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "resPartner1" },
-            { name: "resPartner2" },
+            { name: "Partner1" },
+            { name: "Partner2" },
         ]);
         pyEnv["mail.followers"].create([
             {

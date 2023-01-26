@@ -20,7 +20,7 @@ QUnit.test(
             name: "TestPartner",
         });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const mailChannelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["mail.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -29,7 +29,7 @@ QUnit.test(
             channel_type: "channel",
         });
         const { openDiscuss } = await start({ hasTimeControl: true });
-        await openDiscuss(mailChannelId);
+        await openDiscuss(channelId);
         await click(".o-mail-discuss-actions button[title='Add Users']");
         assert.containsOnce(target, ".o-mail-channel-invitation-form");
     }

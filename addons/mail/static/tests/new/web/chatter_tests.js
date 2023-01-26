@@ -226,11 +226,7 @@ QUnit.test("chatter: drop attachments", async function (assert) {
     ];
     await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
     assert.containsOnce(target, ".o-dropzone");
-    assert.containsNone(
-        target,
-        ".o-mail-attachment-image",
-        "should have no attachment before files are dropped"
-    );
+    assert.containsNone(target, ".o-mail-attachment-image");
 
     await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), files));
     assert.containsN(target, ".o-mail-attachment-image", 2);
