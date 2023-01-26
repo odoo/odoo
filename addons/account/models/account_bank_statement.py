@@ -150,7 +150,8 @@ class AccountBankStatement(models.Model):
     )
 
     attachment_ids = fields.Many2many(
-        comodel_name='ir.attachment'
+        comodel_name='ir.attachment',
+        string="Attachments",
     )
 
     # -------------------------------------------------------------------------
