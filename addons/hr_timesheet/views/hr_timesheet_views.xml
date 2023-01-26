@@ -178,8 +178,8 @@
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="project_id"/>
-                    <field name="ancestor_task_id" groups="project.group_subtask_project"/>
                     <field name="task_id"/>
+                    <field name="parent_task_id" groups="project.group_subtask_project"/>
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="manager_id"/>
@@ -188,7 +188,7 @@
                     <filter name="month" string="Date" date="date"/>
                     <group expand="0" string="Group By">
                         <filter string="Project" name="groupby_project" domain="[]" context="{'group_by': 'project_id'}"/>
-                        <filter string="Ancestor Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'ancestor_task_id'}" groups="project.group_subtask_project"/>
+                        <filter string="Parent Task" name="groupby_parent_task" domain="[]" context="{'group_by': 'parent_task_id'}" groups="project.group_subtask_project"/>
                         <filter string="Task" name="groupby_task" domain="[]" context="{'group_by': 'task_id'}"/>
                         <filter string="Date" name="groupby_date" domain="[]" context="{'group_by': 'date'}" help="Timesheet by Date"/>
                         <filter string="Department" name="groupby_department" domain="[]" context="{'group_by': 'department_id'}"/>

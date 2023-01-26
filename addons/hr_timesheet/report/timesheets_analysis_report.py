@@ -14,7 +14,7 @@ class TimesheetsAnalysisReport(models.Model):
     user_id = fields.Many2one("res.users", string="User", readonly=True)
     project_id = fields.Many2one("project.project", string="Project", readonly=True)
     task_id = fields.Many2one("project.task", string="Task", readonly=True)
-    ancestor_task_id = fields.Many2one("project.task", string="Ancestor Task", readonly=True)
+    parent_task_id = fields.Many2one("project.task", string="Parent Task", readonly=True)
     employee_id = fields.Many2one("hr.employee", string="Employee", readonly=True)
     manager_id = fields.Many2one("hr.employee", "Manager", readonly=True)
     company_id = fields.Many2one("res.company", string="Company", readonly=True)
@@ -37,7 +37,7 @@ class TimesheetsAnalysisReport(models.Model):
                 A.user_id AS user_id,
                 A.project_id AS project_id,
                 A.task_id AS task_id,
-                A.ancestor_task_id AS ancestor_task_id,
+                A.parent_task_id AS parent_task_id,
                 A.employee_id AS employee_id,
                 A.manager_id AS manager_id,
                 A.company_id AS company_id,

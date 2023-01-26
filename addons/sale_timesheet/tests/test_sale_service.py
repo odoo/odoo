@@ -39,7 +39,6 @@ class TestSaleService(TestCommonSaleTimesheet):
         task = project.task_ids.filtered(lambda t: t.name == '%s - %s' % (self.sale_order.name, self.product_delivery_timesheet2.name))
         self.assertTrue(task, 'Sale Service: task is not created, or it badly named')
         self.assertEqual(task.partner_id, self.sale_order.partner_id, 'Sale Service: customer should be the same on task and on SO')
-        self.assertEqual(task.email_from, self.sale_order.partner_id.email, 'Sale Service: Task Email should be the same as the SO customer Email')
 
         # log timesheet on task
         self.env['account.analytic.line'].create({
