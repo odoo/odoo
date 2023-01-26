@@ -54,7 +54,7 @@ export class Pager extends Component {
      * @returns {boolean} true if there is only one page
      */
     get isSinglePage() {
-        return this.minimum === 1 && this.maximum === this.props.total;
+        return !this.props.updateTotal && this.minimum === 1 && this.maximum === this.props.total;
     }
     /**
      * @param {-1 | 1} direction
