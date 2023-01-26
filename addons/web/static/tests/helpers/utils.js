@@ -138,7 +138,7 @@ export function patchWithCleanup(obj, patchValue, options) {
 }
 
 /**
- * @returns {HTMLElement}
+ * @returns {Element}
  */
 export function getFixture() {
     if (QUnit.config.debug) {
@@ -316,7 +316,7 @@ export async function triggerEvents(el, querySelector, events, options) {
  * the end of the scrollable area, the event can be transmitted
  * to its nearest parent until it can be triggered
  *
- * @param {HTMLElement} target target of the scroll event
+ * @param {Element} target target of the scroll event
  * @param {Object} coordinates
  * @param {Number} coordinates[left] coordinates to scroll horizontally
  * @param {Number} coordinates[top] coordinates to scroll vertically
@@ -423,7 +423,7 @@ export async function clickDiscard(htmlElement) {
  * coordinates are given, the event is located by default
  * in the middle of the target to simplify the test process
  *
- * @param {HTMLElement} el
+ * @param {Element} el
  * @param {string} selector
  * @param {Object} coordinates position of the mouseenter event
  */
@@ -714,10 +714,9 @@ function getDifferentParents(n1, n2) {
  * Note that only the last event is awaited, since all the others are
  * considered to be synchronous.
  *
- * @param {Element|string} from
- * @param {Element|string} to
- * @param {string} [position] "top" | "bottom" | "left" | "right"
- * @returns {Promise<void>}
+ * @param {Element | string} from
+ * @param {Element | string} to
+ * @param {"top" | "bottom" | "left" | "right"} [position]
  */
 export async function dragAndDrop(from, to, position) {
     const dropFunction = drag(from, to, position);
@@ -733,8 +732,8 @@ export async function dragAndDrop(from, to, position) {
  * moved.
  *
  * Returns a drop function
- * @param {Element|string} from
- * @param {Element|string} to
+ * @param {Element | string} from
+ * @param {Element | string} to
  * @param {string} [position] "top" | "bottom" | "left" | "right"
  * @returns {function: Promise<void>}
  */
