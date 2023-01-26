@@ -119,7 +119,7 @@ QUnit.test("auto-scroll to bottom of thread on load", async function (assert) {
     await openDiscuss(channelId);
     assert.containsN(target, ".o-mail-message", 25);
     const $thread = $(target).find(".o-mail-thread");
-    assert.strictEqual($thread[0].scrollTop, $thread[0].scrollHeight - $thread[0].clientHeight); // FIXME UI scaling might mess with this assertion
+    assert.ok(isScrolledToBottom($thread[0]));
 });
 
 QUnit.test("display day separator before first message of the day", async function (assert) {
