@@ -5,6 +5,7 @@ const config = require('web.config');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const dom = require('web.dom');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -79,17 +80,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
      * @private
      */
     _adaptFixedHeaderPosition() {
-        // Compensate scrollbar
-        this.el.style.removeProperty('right');
-        if (this.fixedHeader) {
-            const scrollableEl = $(this.el).parent().closestScrollable()[0];
-            const style = window.getComputedStyle(this.el);
-            const borderLeftWidth = parseInt(style.borderLeftWidth.replace('px', ''));
-            const borderRightWidth = parseInt(style.borderRightWidth.replace('px', ''));
-            const bordersWidth = borderLeftWidth + borderRightWidth;
-            const newValue = parseInt(style['right']) + scrollableEl.offsetWidth - scrollableEl.clientWidth - bordersWidth;
-            this.el.style.setProperty('right', `${newValue}px`, 'important');
-        }
+        dom.compensateScrollbar(this.el, this.fixedHeader, false, 'right');
     },
     /**
      * @private
