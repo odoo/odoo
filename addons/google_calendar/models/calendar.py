@@ -134,7 +134,7 @@ class Meeting(models.Model):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
-                'responseStatus': 'needsAction',
+                'responseStatus': 'accepted',
             }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
