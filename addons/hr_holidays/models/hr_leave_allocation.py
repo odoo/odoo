@@ -534,6 +534,9 @@ class HolidaysAllocation(models.Model):
         return holidays
 
     def write(self, values):
+        if not bool(values.get('active', True)):
+            if any(allocation.state not in ['draft', 'cancel', 'refuse'] for allocation in self):
+                raise UserError(_('You cannot archive an allocation which is in confirm or validate state.'))
         employee_id = values.get('employee_id', False)
         if values.get('state'):
             self._check_approval_update(values['state'])
