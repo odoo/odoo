@@ -10,7 +10,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment_stripe import utils as stripe_utils
-from odoo.addons.payment_stripe.const import API_VERSION, PROXY_URL, HANDLED_WEBHOOK_EVENTS
+from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.onboarding import OnboardingController
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
@@ -61,6 +61,7 @@ class PaymentProvider(models.Model):
         `state` together with writing on those custom fields, the constraint would be triggered.
 
         :return: None
+        :raise ValidationError: If the provider of a connected account is set in state 'test'.
         """
         for provider in self:
             if provider.state == 'test' and provider._stripe_has_connected_account():
@@ -76,6 +77,37 @@ class PaymentProvider(models.Model):
         Note: self.ensure_one()
 
         :return: Whether the provider is linked to a connected Stripe account
+        :rtype: bool
+        """
+        self.ensure_one()
+        return False
+
+    @api.constrains('state')
+    def _check_onboarding_of_enabled_provider_is_completed(self):
+        """ Check that the provider cannot be set to 'enabled' if the onboarding is ongoing.
+
+        This constraint is defined in the present module to allow the export of the translation
+        string of the `ValidationError` should it be raised by modules that would fully implement
+        Stripe Connect.
+
+        :return: None
+        :raise ValidationError: If the provider of a connected account is set in state 'enabled'
+                                while the onboarding is not finished.
+        """
+        for provider in self:
+            if provider.state == 'enabled' and provider._stripe_onboarding_is_ongoing():
+                raise ValidationError(_(
+                    "You cannot set the provider state to Enabled until your onboarding to Stripe "
+                    "is completed."
+                ))
+
+    def _stripe_onboarding_is_ongoing(self):
+        """ Return whether the provider is linked to an ongoing onboarding to Stripe Connect.
+
+        Note: This method serves as a hook for modules that would fully implement Stripe Connect.
+        Note: self.ensure_one()
+
+        :return: Whether the provider is linked to an ongoing onboarding to Stripe Connect
         :rtype: bool
         """
         self.ensure_one()
@@ -152,8 +184,8 @@ class PaymentProvider(models.Model):
             webhook = self._stripe_make_request(
                 'webhook_endpoints', payload={
                     'url': self._get_stripe_webhook_url(),
-                    'enabled_events[]': HANDLED_WEBHOOK_EVENTS,
-                    'api_version': API_VERSION,
+                    'enabled_events[]': const.HANDLED_WEBHOOK_EVENTS,
+                    'api_version': const.API_VERSION,
                 }
             )
             self.stripe_webhook_secret = webhook.get('secret')
@@ -228,7 +260,7 @@ class PaymentProvider(models.Model):
         url = url_join('https://api.stripe.com/v1/', endpoint)
         headers = {
             'AUTHORIZATION': f'Bearer {stripe_utils.get_secret_key(self)}',
-            'Stripe-Version': API_VERSION,  # SetupIntent requires a specific version.
+            'Stripe-Version': const.API_VERSION,  # SetupIntent requires a specific version.
             **self._get_stripe_extra_request_headers(),
         }
         if method == 'POST' and idempotency_key:
@@ -365,7 +397,7 @@ class PaymentProvider(models.Model):
                 'proxy_data': self._stripe_prepare_proxy_data(stripe_payload=payload),
             },
         }
-        url = url_join(PROXY_URL, f'{version}/{endpoint}')
+        url = url_join(const.PROXY_URL, f'{version}/{endpoint}')
         try:
             response = requests.post(url=url, json=proxy_payload, timeout=60)
             response.raise_for_status()
