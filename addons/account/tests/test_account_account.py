@@ -13,7 +13,11 @@ class TestAccountAccount(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.company_data_2 = cls.setup_company_data('company_2_data')
+
+        company_2 = cls._create_company(name="account2")
+        cls._use_chart_template(company_2)
+        cls.company_data_2 = cls.collect_company_accounting_data(company_2)
+
         cls.gold_currency = cls.setup_gold_currency()
 
     def test_changing_account_company(self):

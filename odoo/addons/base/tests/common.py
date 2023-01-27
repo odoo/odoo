@@ -19,30 +19,28 @@ DISABLED_MAIL_CONTEXT = {
 class BaseCommon(TransactionCase):
 
     @classmethod
-    def _default_currency(cls):
-        # Enforce the use of USD as main currency unless modified in inherited class(es)
-        return "USD"
-
-    @classmethod
-    def _needs_independent_company(cls):
-        return False
-
-    @classmethod
     def setUpClass(cls):
         super().setUpClass()
+
+        env_context = DISABLED_MAIL_CONTEXT.copy()
+
+        independant_company = cls.setup_independant_company()
+        if independant_company:
+            env_context['allowed_company_ids'] = independant_company.ids
 
         # Mail logic won't be tested by default in other modules.
         # Mail API overrides should be tested with dedicated tests on purpose
         # Hack to use with_context and avoid manual context dict modification
-        cls.env = cls.env['base'].with_context(**DISABLED_MAIL_CONTEXT).env
+        cls.env = cls.env['base'].with_context(**env_context).env
 
-        if cls._needs_independent_company():
-            currency = cls._enable_currency(cls._default_currency())
-            company = cls._create_company(currency_id=currency.id)
+        cls.env['res.currency.rate'].search([]).unlink()
 
-            cls.env = cls.env['base'].with_context(allowed_company_ids=company.ids).env
+        if independant_company:
+            independant_user = cls.setup_independant_user()
+            if independant_user:
+                cls.env = cls.env(user=independant_user)
         else:
-            cls._use_currency(cls._default_currency())
+            cls.setup_main_company()
 
         # Make sure all class variables have the same env.
         # Do not specify any class variables before the env changes.
@@ -53,10 +51,28 @@ class BaseCommon(TransactionCase):
         cls.group_user = cls.env.ref('base.group_user')
         cls.group_system = cls.env.ref('base.group_system')
 
-        cls.partner = cls.env['res.partner'].create({
-            'name': 'Test Partner',
-        })
-        cls.currency = cls.env.company.currency_id
+    @classmethod
+    def setup_independant_company(cls):
+        return None
+
+    @classmethod
+    def setup_independant_user(cls):
+        return cls._create_user()
+
+    @classmethod
+    def setup_main_company(cls, currency_code='USD'):
+        cls._use_currency(cls.env.company, currency_code)
+
+    @classmethod
+    def _use_currency(cls, company, currency_code):
+        # Enforce constant currency
+        currency = cls._enable_currency(currency_code)
+        if not company.currency_id == currency:
+            cls.env.transaction.cache.set(company, type(company).currency_id, currency.id, dirty=True)
+            # this is equivalent to cls.env.company.currency_id = currency but without triggering buisness code checks.
+            # The value is added in cache, and the cache value is set as dirty so that that
+            # the value will be written to the database on next flush.
+            # this was needed because some journal entries may exist when running tests, especially l10n demo data.
 
     @classmethod
     def _enable_currency(cls, currency_code):
@@ -65,13 +81,6 @@ class BaseCommon(TransactionCase):
         )
         currency.action_unarchive()
         return currency
-
-    @classmethod
-    def _create_company(cls, **create_values):
-        return cls.env['res.company'].create({
-            'name': "Test Company",
-            **create_values,
-        })
 
     @classmethod
     def _create_partner(cls, **create_values):
@@ -94,6 +103,16 @@ class BaseCommon(TransactionCase):
             'company_ids': [Command.set(cls.env.company.ids)],
             **create_values,
         })
+
+    @classmethod
+    def _create_company(cls, **create_values):
+        company = cls.env['res.company'].create({
+            'name': "Test Company",
+            **create_values,
+        })
+        cls.env.user.company_ids = [Command.link(company.id)]
+        cls.env.context['allowed_company_ids'].append(company.id)
+        return company
 
     @classmethod
     def _create_internal_user(cls):

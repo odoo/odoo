@@ -14,37 +14,14 @@ from odoo.addons.product.tests.common import ProductCommon
 class AccountTestInvoicingCommon(ProductCommon):
 
     @classmethod
-    def _chart_template_ref(cls):
-        return "l10n_generic_coa.configurable_chart_template"
-
-    @classmethod
-    def _needs_independent_company(cls):
-        return True
-
-    @classmethod
     def setUpClass(cls, **kwargs):
         assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
 
         super().setUpClass()
+        # TODO LAS: check if necessary
         cls.cr = cls.env.cr  # NOTE: LAS confusing and unnecessary variable, should not be in the BaseCommon
 
-        cls.company_data = cls.setup_company_data(
-            company_name="", # Hacky temp sol to avoid breaking all existing classes and overrides
-            company=cls.env.company)
-
-        user = cls._create_user(
-            # FIXME LAS: this makes the test depend on installed modules
-            # groups given should be fully specified, and not take the superadmin groups.
-            groups=cls.env.user.groups_id,
-        )
-
-        # Shadow the current environment/cursor with one having the report user.
-        # This is mandatory to test access rights.
-        cls.env = cls.env(user=user)
-
-        # Give multi-uom group to users, only needed for tests using a Form View
-        # TODO LAS: move lower in the hierarchy, only for tests needing it
-        cls._enable_uom()
+        cls.company_data = cls.collect_company_accounting_data(cls.env.company)
 
         # ==== Taxes ====
         cls.tax_sale_a = cls.company_data['default_tax_sale']
@@ -146,10 +123,50 @@ class AccountTestInvoicingCommon(ProductCommon):
         cls.outbound_payment_method_line = bank_journal.outbound_payment_method_line_ids[0]
 
     @classmethod
-    def setup_company_data(cls, company_name='', **create_values):
+    def setup_independant_company(cls, chart_template_ref="l10n_generic_coa.configurable_chart_template"):
+        # OVERRIDE
+        company = cls.env['res.company'].create({'name': "account"})
+        cls._use_chart_template(company, chart_template_ref=chart_template_ref)
+        return company
 
-        def search_account(company, chart_template, field_name, domain):
-            template_code = chart_template[field_name].code
+    @classmethod
+    def setup_independant_user(cls):
+        # OVERRIDE
+        independant_user = super().setup_independant_user()
+        # TODO LAS: this makes the test depend on installed modules
+        # groups given should be fully specified, and not take the superadmin groups.
+        independant_user.groups_id = cls.env.user.groups_id
+        return independant_user
+
+    @classmethod
+    def _create_product(cls, **create_values):
+        # OVERRIDE
+        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
+        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
+        create_values.setdefault('taxes_id', [(6, 0, cls.tax_sale_a.ids)])
+        return super()._create_product(**create_values)
+
+    @classmethod
+    def _use_chart_template(cls, company, chart_template_ref="l10n_generic_coa.configurable_chart_template"):
+        chart_template = cls.env.ref(chart_template_ref, raise_if_not_found=False)
+        if not chart_template:
+            cls.tearDownClass()
+            # skipTest raises exception
+            cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
+
+        # Install the chart template.
+        currency = company.currency_id
+        chart_template.try_loading(company=company, install_demo=False)
+
+        # The currency could be different after the installation of the chart template.
+        if currency != company.currency_id:
+            company.currency_id = currency
+
+    @classmethod
+    def collect_company_accounting_data(cls, company):
+
+        def search_account_by_property(property_name, domain):
+            template_code = company.chart_template_id[property_name].code
             domain = [('company_id', '=', company.id)] + domain
 
             account = None
@@ -160,27 +177,9 @@ class AccountTestInvoicingCommon(ProductCommon):
                 account = cls.env['account.account'].search(domain, limit=1)
             return account
 
-        company_rec = create_values.pop('company', None)
-        company = company_rec or cls._create_company(name=company_name, **create_values)
-
-        chart_template = company.chart_template_id or cls.env.company.chart_template_id
-        if not chart_template:
-            chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
-            if not chart_template:
-                cls.tearDownClass()
-                # skipTest raises exception
-                cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
-
-        # Install the chart template.
-        chart_template.try_loading(company=company, install_demo=False)
-
-        # The currency could be different after the installation of the chart template.
-        if create_values.get('currency_id'):
-            company.write({'currency_id': create_values['currency_id']})
-
         return {
-            'company': cls.env.company,
-            'currency': cls.env.company.currency_id,
+            'company': company,
+            'currency': company.currency_id,
             'default_account_revenue': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'income'),
@@ -191,9 +190,10 @@ class AccountTestInvoicingCommon(ProductCommon):
                     ('account_type', '=', 'expense'),
                     ('id', '!=', company.account_journal_early_pay_discount_loss_account_id.id)
                 ], limit=1),
-            'default_account_receivable': search_account(company, chart_template, 'property_account_receivable_id', [
-                ('account_type', '=', 'asset_receivable')
-            ]),
+            'default_account_receivable': search_account_by_property(
+                    'property_account_receivable_id',
+                    [('account_type', '=', 'asset_receivable')],
+                ),
             'default_account_payable': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
                     ('account_type', '=', 'liability_payable')
@@ -227,23 +227,6 @@ class AccountTestInvoicingCommon(ProductCommon):
             'default_tax_sale': company.account_sale_tax_id,
             'default_tax_purchase': company.account_purchase_tax_id,
         }
-
-    # BaseCommon override
-    @classmethod
-    def _create_partner(cls, **create_values):
-        create_values.setdefault('property_payment_term_id', cls.pay_terms_a.id)
-        create_values.setdefault('property_supplier_payment_term_id', cls.pay_terms_a.id)
-        create_values.setdefault('property_account_receivable_id', cls.company_data['default_account_receivable'].id)
-        create_values.setdefault('property_account_payable_id', cls.company_data['default_account_payable'].id)
-        return super()._create_partner(**create_values)
-
-    # ProductCommon override
-    @classmethod
-    def _create_product(cls, **create_values):
-        create_values.setdefault('property_account_income_id', cls.company_data['default_account_revenue'].id)
-        create_values.setdefault('property_account_expense_id', cls.company_data['default_account_expense'].id)
-        create_values.setdefault('taxes_id', [(6, 0, cls.tax_sale_a.ids)])
-        return super()._create_product(**create_values)
 
     @classmethod
     def setup_multi_currency_data(cls, rates, **kwargs):
@@ -533,168 +516,3 @@ class AccountTestInvoicingCommon(ProductCommon):
 
 class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, HttpCase):
     pass
-
-
-class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
-
-    """Tests for reconciliation (account.tax)
-
-    Test used to check that when doing a sale or purchase invoice in a different currency,
-    the result will be balanced.
-    """
-
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
-        cls.company = cls.company_data['company']
-        cls.company.currency_id = cls.env.ref('base.EUR')
-
-        cls.partner_agrolait = cls.env['res.partner'].create({
-            'name': 'Deco Addict',
-            'is_company': True,
-            'country_id': cls.env.ref('base.us').id,
-        })
-        cls.partner_agrolait_id = cls.partner_agrolait.id
-        cls.currency_swiss_id = cls.env.ref("base.CHF").id
-        cls.currency_usd_id = cls.env.ref("base.USD").id
-        cls.currency_euro_id = cls.env.ref("base.EUR").id
-        cls.account_rcv = cls.company_data['default_account_receivable']
-        cls.account_rsa = cls.company_data['default_account_payable']
-        cls.product = cls.env['product.product'].create({
-            'name': 'Product Product 4',
-            'standard_price': 500.0,
-            'list_price': 750.0,
-            'type': 'consu',
-            'categ_id': cls.env.ref('product.product_category_all').id,
-        })
-
-        cls.bank_journal_euro = cls.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-        cls.account_euro = cls.bank_journal_euro.default_account_id
-
-        cls.bank_journal_usd = cls.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': cls.currency_usd_id})
-        cls.account_usd = cls.bank_journal_usd.default_account_id
-
-        cls.fx_journal = cls.company.currency_exchange_journal_id
-        cls.diff_income_account = cls.company.income_currency_exchange_account_id
-        cls.diff_expense_account = cls.company.expense_currency_exchange_account_id
-
-        cls.expense_account = cls.company_data['default_account_expense']
-        # cash basis intermediary account
-        cls.tax_waiting_account = cls.env['account.account'].create({
-            'name': 'TAX_WAIT',
-            'code': 'TWAIT',
-            'account_type': 'liability_current',
-            'reconcile': True,
-            'company_id': cls.company.id,
-        })
-        # cash basis final account
-        cls.tax_final_account = cls.env['account.account'].create({
-            'name': 'TAX_TO_DEDUCT',
-            'code': 'TDEDUCT',
-            'account_type': 'asset_current',
-            'company_id': cls.company.id,
-        })
-        cls.tax_base_amount_account = cls.env['account.account'].create({
-            'name': 'TAX_BASE',
-            'code': 'TBASE',
-            'account_type': 'asset_current',
-            'company_id': cls.company.id,
-        })
-        cls.company.account_cash_basis_base_account_id = cls.tax_base_amount_account.id
-
-
-        # Journals
-        cls.purchase_journal = cls.company_data['default_journal_purchase']
-        cls.cash_basis_journal = cls.env['account.journal'].create({
-            'name': 'Test CABA',
-            'code': 'tCABA',
-            'type': 'general',
-        })
-        cls.general_journal = cls.company_data['default_journal_misc']
-
-        # Tax Cash Basis
-        cls.tax_cash_basis = cls.env['account.tax'].create({
-            'name': 'cash basis 20%',
-            'type_tax_use': 'purchase',
-            'company_id': cls.company.id,
-            'country_id': cls.company.account_fiscal_country_id.id,
-            'amount': 20,
-            'tax_exigibility': 'on_payment',
-            'cash_basis_transition_account_id': cls.tax_waiting_account.id,
-            'invoice_repartition_line_ids': [
-                    (0,0, {
-                        'repartition_type': 'base',
-                    }),
-
-                    (0,0, {
-                        'repartition_type': 'tax',
-                        'account_id': cls.tax_final_account.id,
-                    }),
-                ],
-            'refund_repartition_line_ids': [
-                    (0,0, {
-                        'repartition_type': 'base',
-                    }),
-
-                    (0,0, {
-                        'repartition_type': 'tax',
-                        'account_id': cls.tax_final_account.id,
-                    }),
-                ],
-        })
-        cls.env['res.currency.rate'].create([
-            {
-                'currency_id': cls.env.ref('base.EUR').id,
-                'name': '2010-01-02',
-                'rate': 1.0,
-            }, {
-                'currency_id': cls.env.ref('base.USD').id,
-                'name': '2010-01-02',
-                'rate': 1.2834,
-            }, {
-                'currency_id': cls.env.ref('base.USD').id,
-                'name': time.strftime('%Y-06-05'),
-                'rate': 1.5289,
-            }
-        ])
-
-    def _create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=None, date_invoice=None, payment_term_id=False, auto_validate=False):
-        date_invoice = date_invoice or time.strftime('%Y') + '-07-01'
-
-        invoice_vals = {
-            'move_type': move_type,
-            'partner_id': partner_id or self.partner_agrolait_id,
-            'invoice_date': date_invoice,
-            'date': date_invoice,
-            'invoice_line_ids': [(0, 0, {
-                'name': 'product that cost %s' % invoice_amount,
-                'quantity': 1,
-                'price_unit': invoice_amount,
-                'tax_ids': [(6, 0, [])],
-            })]
-        }
-
-        if payment_term_id:
-            invoice_vals['invoice_payment_term_id'] = payment_term_id
-
-        if currency_id:
-            invoice_vals['currency_id'] = currency_id
-
-        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
-        if auto_validate:
-            invoice.action_post()
-        return invoice
-
-    def create_invoice(self, move_type='out_invoice', invoice_amount=50, currency_id=None):
-        return self._create_invoice(move_type=move_type, invoice_amount=invoice_amount, currency_id=currency_id, auto_validate=True)
-
-    def create_invoice_partner(self, move_type='out_invoice', invoice_amount=50, currency_id=None, partner_id=False, payment_term_id=False):
-        return self._create_invoice(
-            move_type=move_type,
-            invoice_amount=invoice_amount,
-            currency_id=currency_id,
-            partner_id=partner_id,
-            payment_term_id=payment_term_id,
-            auto_validate=True
-        )
