@@ -2,7 +2,7 @@
 
 import publicWidget from "web.public.widget";
 import wSaleUtils from "website_sale.utils";
-import VariantMixin from "sale.VariantMixin";
+import VariantMixin from "website_sale.SaleVariantMixin";
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered

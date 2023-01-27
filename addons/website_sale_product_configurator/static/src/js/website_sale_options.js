@@ -3,7 +3,7 @@
 import ajax from "web.ajax";
 import core from "web.core";
 import publicWidget from "web.public.widget";
-import { OptionalProductsModal } from "@sale_product_configurator/js/product_configurator_modal";
+import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "website_sale.website_sale";
 import wsUtils from "website_sale.utils";
 

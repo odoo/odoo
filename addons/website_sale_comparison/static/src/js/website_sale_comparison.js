@@ -4,7 +4,7 @@ import concurrency from "web.concurrency";
 import core from "web.core";
 import publicWidget from "web.public.widget";
 import {getCookie, setCookie} from "web.utils.cookies";
-import VariantMixin from "sale.VariantMixin";
+import VariantMixin from "website_sale.SaleVariantMixin";
 import website_sale_utils from "website_sale.utils";
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
 
@@ -305,7 +305,7 @@ publicWidget.registry.ProductComparison = publicWidget.Widget.extend(cartHandler
         const $form = $(ev.currentTarget);
         const cellIndex = $(ev.currentTarget).closest('td')[0].cellIndex;
         this.getCartHandlerOptions(ev);
-        // Override product image container for animation. 
+        // Override product image container for animation.
         this.$itemImgContainer = this.$('#o_comparelist_table tr').first().find('td').eq(cellIndex);
         const $inputProduct = $form.find('input[type="hidden"][name="product_id"]').first();
         const productId = parseInt($inputProduct.val());
