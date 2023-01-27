@@ -614,6 +614,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/fullcalendar/list/main.js',
             'web/static/lib/fullcalendar/luxon/main.js',
 
+            'web/static/lib/zxing-library/zxing-library.js',
+
             'web/static/lib/ace/ace.js',
             'web/static/lib/ace/javascript_highlight_rules.js',
             'web/static/lib/ace/mode-python.js',
