@@ -346,6 +346,7 @@ class Message(models.Model):
         """ Access rules of mail.message:
             - read: if
                 - author_id == pid, uid is the author OR
+                - create_uid == uid, uid is the creator OR
                 - uid is in the recipients (partner_ids) OR
                 - uid has been notified (needaction) OR
                 - uid have read access to the related document if model, res_id
@@ -399,12 +400,13 @@ class Message(models.Model):
         # Read mail_message.ids to have their values
         message_values = dict((message_id, {}) for message_id in self.ids)
 
-        self.flush_recordset(['model', 'res_id', 'author_id', 'parent_id', 'message_type', 'partner_ids'])
+        self.flush_recordset(['model', 'res_id', 'author_id', 'create_uid', 'parent_id', 'message_type', 'partner_ids'])
         self.env['mail.notification'].flush_model(['mail_message_id', 'res_partner_id'])
 
         if operation == 'read':
             self._cr.execute("""
-                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.parent_id,
+                SELECT DISTINCT m.id, m.model, m.res_id, m.author_id, m.create_uid,
+                                m.parent_id,
                                 COALESCE(partner_rel.res_partner_id, needaction_rel.res_partner_id),
                                 m.message_type as message_type
                 FROM "%s" m
@@ -413,11 +415,12 @@ class Message(models.Model):
                 LEFT JOIN "mail_notification" needaction_rel
                 ON needaction_rel.mail_message_id = m.id AND needaction_rel.res_partner_id = %%(pid)s
                 WHERE m.id = ANY (%%(ids)s)""" % self._table, dict(pid=self.env.user.partner_id.id, ids=self.ids))
-            for mid, rmod, rid, author_id, parent_id, partner_id, message_type in self._cr.fetchall():
+            for mid, rmod, rid, author_id, create_uid, parent_id, partner_id, message_type in self._cr.fetchall():
                 message_values[mid] = {
                     'model': rmod,
                     'res_id': rid,
                     'author_id': author_id,
+                    'create_uid': create_uid,
                     'parent_id': parent_id,
                     'notified': any((message_values[mid].get('notified'), partner_id)),
                     'message_type': message_type,
@@ -459,7 +462,14 @@ class Message(models.Model):
         author_ids = []
         if operation == 'read':
             author_ids = [mid for mid, message in message_values.items()
-                          if message.get('author_id') and message.get('author_id') == self.env.user.partner_id.id]
+                          if (
+                                message.get('author_id') and
+                                message.get('author_id') == self.env.user.partner_id.id
+                            ) or (
+                                message.get('create_uid') and
+                                message.get('create_uid') == self.env.uid
+                            )
+                         ]
         elif operation == 'write':
             author_ids = [mid for mid, message in message_values.items() if message.get('author_id') == self.env.user.partner_id.id]
         elif operation == 'create':
