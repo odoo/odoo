@@ -1357,3 +1357,21 @@ QUnit.test(
         assert.containsOnce(target, ".o-mail-message");
     }
 );
+
+QUnit.test(
+    "message with subtype should be displayed (and not considered as empty)",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Task created" });
+        pyEnv["mail.message"].create({
+            model: "mail.channel",
+            res_id: channelId,
+            subtype_id: subtypeId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(target, ".o-mail-message");
+        assert.containsOnce(target, ".o-mail-message:contains(Task created)");
+    }
+);

@@ -138,7 +138,7 @@ export class Message extends Component {
         return (
             this.message.subtypeDescription &&
             this.message.subtypeDescription.toLowerCase() !==
-                htmlToTextContentInline(this.message.body).toLowerCase()
+                htmlToTextContentInline(this.message.body || "").toLowerCase()
         );
     }
 

@@ -86,7 +86,7 @@
                                 <t t-out="message.body"/>
                             </div>
                         </t>
-                        <t t-if="message.type !== 'notification' and !message.isTransient and !message.isBodyEmpty">
+                        <t t-if="message.type !== 'notification' and !message.isTransient and (!message.isBodyEmpty or message.subtypeDescription)">
                             <div class="position-relative">
                                 <div class="o-mail-message-bubble border rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                         'bg-info-light border-info': !message.isSelfAuthored,
@@ -98,7 +98,7 @@
                                     'flex-grow-1': state.isEditing,
                                 }">
                                     <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="o-mail-message-subject mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
-                                    <t t-out="message.body"/>
+                                    <t t-if="message.body" t-out="message.body"/>
                                     <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"
                                 </div>
                             </div>

@@ -331,51 +331,6 @@ QUnit.module("mail", (hooks) => {
         );
 
         QUnit.skipRefactoring(
-            "message with subtype should be displayed (and not considered as empty)",
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                const mailMessageSubtypeId1 = pyEnv["mail.message.subtype"].create({
-                    description: "Task created",
-                });
-                pyEnv["mail.message"].create({
-                    model: "mail.channel",
-                    res_id: mailChannelId1,
-                    subtype_id: mailMessageSubtypeId1,
-                });
-                const { afterEvent, openDiscuss } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                });
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: openDiscuss,
-                    message: "should wait until thread becomes loaded with messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            threadViewer.thread.model === "mail.channel" &&
-                            threadViewer.thread.id === mailChannelId1
-                        );
-                    },
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-message",
-                    "should display 1 message (message with subtype description 'task created')"
-                );
-                assert.strictEqual(
-                    document.body.querySelector(".o-mail-message-body").textContent,
-                    "Task created",
-                    "message should have 'Task created' (from its subtype description)"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "first unseen message should be directly preceded by the new message separator if there is a transient message just before it while composer is not focused [REQUIRE FOCUS]",
             async function (assert) {
                 // The goal of removing the focus is to ensure the thread is not marked as seen automatically.
