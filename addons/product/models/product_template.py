@@ -562,6 +562,27 @@ class ProductTemplate(models.Model):
             },
         }
 
+    def _get_product_price_context(self, combination):
+        self.ensure_one()
+        res = {}
+
+        current_attributes_price_extra = [
+            ptav.price_extra for ptav in combination.filtered(
+                lambda ptav:
+                    ptav.price_extra
+                    and ptav.product_tmpl_id == self
+            )
+        ]
+        if current_attributes_price_extra:
+            res['current_attributes_price_extra'] = tuple(current_attributes_price_extra)
+
+        return res
+
+    def _get_attributes_extra_price(self):
+        self.ensure_one()
+
+        return sum(self.env.context.get('current_attributes_price_extra', []))
+
     def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
         date = date or fields.Date.context_today(self)
@@ -579,12 +600,8 @@ class ProductTemplate(models.Model):
             price_currency = template.currency_id
             if price_type == 'standard_price':
                 price_currency = template.cost_currency_id
-
-            # yes, there can be attribute values for product template if it's not a variant YET
-            # (see field product.attribute create_variant)
-            if price_type == 'list_price' and self._context.get('current_attributes_price_extra'):
-                # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                price += sum(self._context.get('current_attributes_price_extra'))
+            elif price_type == 'list_price':
+                price += template._get_attributes_extra_price()
 
             if uom:
                 price = template.uom_id._compute_price(price, uom)

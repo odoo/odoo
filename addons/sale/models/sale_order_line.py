@@ -489,21 +489,9 @@ class SaleOrderLine(models.Model):
         :rtype: dict
         """
         self.ensure_one()
-        res = {}
-
-        # It is possible that a no_variant attribute is still in a variant if
-        # the type of the attribute has been changed after creation.
-        no_variant_attributes_price_extra = [
-            ptav.price_extra for ptav in self.product_no_variant_attribute_value_ids.filtered(
-                lambda ptav:
-                    ptav.price_extra and
-                    ptav not in self.product_id.product_template_attribute_value_ids
-            )
-        ]
-        if no_variant_attributes_price_extra:
-            res['no_variant_attributes_price_extra'] = tuple(no_variant_attributes_price_extra)
-
-        return res
+        return self.product_id._get_product_price_context(
+            self.product_no_variant_attribute_value_ids,
+        )
 
     def _get_pricelist_price_before_discount(self):
         """Compute the price used as base for the pricelist price computation.
