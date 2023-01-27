@@ -1,15 +1,22 @@
 /** @odoo-module **/
 
-import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { browser } from "@web/core/browser/browser";
 import { Field } from "@web/views/fields/field";
+import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 import { Record } from "@web/views/record";
-import { click, getFixture, mount } from "../helpers/utils";
-import { setupViewRegistries } from "../views/helpers";
+
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import {
+    click,
+    editInput,
+    getFixture,
+    mount,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
+import { setupViewRegistries } from "@web/../tests/views/helpers";
 
 import { Component, xml, useState } from "@odoo/owl";
-import { editInput, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 
 let serverData;
 let target;
@@ -234,8 +241,8 @@ QUnit.module("Record Component", (hooks) => {
     });
 
     QUnit.test("handles many2one fields", async function (assert) {
-        patchWithCleanup(AutoComplete, {
-            timeout: 0,
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
         });
 
         serverData.models = {
