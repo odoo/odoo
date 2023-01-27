@@ -9,3 +9,4 @@ class ResConfigSettings(models.TransientModel):
 
     group_l10n_in_reseller = fields.Boolean(implied_group='l10n_in.group_l10n_in_reseller', string="Manage Reseller(E-Commerce)")
     module_l10n_in_edi = fields.Boolean('Indian Electronic Invoicing')
+    module_l10n_in_edi_ewaybill = fields.Boolean('Indian Electronic Waybill')
