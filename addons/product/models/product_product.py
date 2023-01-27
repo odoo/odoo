@@ -620,6 +620,31 @@ class ProductProduct(models.Model):
                 res |= seller
         return res.sorted('price')[:1]
 
+    def _get_product_price_context(self, combination):
+        self.ensure_one()
+        res = {}
+
+        # It is possible that a no_variant attribute is still in a variant if
+        # the type of the attribute has been changed after creation.
+        no_variant_attributes_price_extra = [
+            ptav.price_extra for ptav in combination.filtered(
+                lambda ptav:
+                    ptav.price_extra
+                    and ptav.product_tmpl_id == self.product_tmpl_id
+                    and ptav not in self.product_template_attribute_value_ids
+            )
+        ]
+        if no_variant_attributes_price_extra:
+            res['no_variant_attributes_price_extra'] = tuple(no_variant_attributes_price_extra)
+
+        return res
+
+    def _get_attributes_extra_price(self):
+        self.ensure_one()
+
+        return self.price_extra + sum(
+            self.env.context.get('no_variant_attributes_price_extra', []))
+
     def price_compute(self, price_type, uom=None, currency=None, company=None, date=False):
         company = company or self.env.company
         date = date or fields.Date.context_today(self)
@@ -637,14 +662,8 @@ class ProductProduct(models.Model):
             price_currency = product.currency_id
             if price_type == 'standard_price':
                 price_currency = product.cost_currency_id
-
-            if price_type == 'list_price':
-                price += product.price_extra
-                # we need to add the price from the attributes that do not generate variants
-                # (see field product.attribute create_variant)
-                if self._context.get('no_variant_attributes_price_extra'):
-                    # we have a list of price_extra that comes from the attribute values, we need to sum all that
-                    price += sum(self._context.get('no_variant_attributes_price_extra'))
+            elif price_type == 'list_price':
+                price += product._get_attributes_extra_price()
 
             if uom:
                 price = product.uom_id._compute_price(price, uom)
