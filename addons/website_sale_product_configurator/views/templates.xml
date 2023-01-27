@@ -2,7 +2,7 @@
 <odoo>
     <template id="optional_products_modal" name="Optional Products">
         <main class="modal-body">
-            <t t-call="sale_product_configurator.configure_optional_products" />
+            <t t-call="website_sale_product_configurator.configure_optional_products" />
         </main>
     </template>
 
@@ -38,7 +38,7 @@
             <div class="col-lg-12 text-center mt-5">
                 <t t-if="product._is_add_to_cart_possible()">
                     <div class="col-lg-5 d-inline-block text-start">
-                        <t t-if="combination" t-call="sale.variants">
+                        <t t-if="combination" t-call="website_sale.variants">
                             <t t-set="parent_combination" t-value="None"/>
                         </t>
                         <h2>
@@ -57,7 +57,7 @@
                                 }'/>
                         </h2>
                         <t t-if="product.visible_qty_configurator">
-                            <t t-call="sale_product_configurator.product_quantity_config" />
+                            <t t-call="website_sale_product_configurator.product_quantity_config" />
                         </t>
                         <p class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
                     </div>
@@ -118,7 +118,7 @@
                         <t t-if="product.product_tmpl_id and not combination">
                             <t t-set="combination" t-value="product.product_tmpl_id._get_first_possible_combination()"/>
                         </t>
-                        <t t-if="combination and not already_configured" t-call="sale.variants">
+                        <t t-if="combination and not already_configured" t-call="website_sale.variants">
                             <t t-set="ul_class" t-valuef="flex-column" />
                             <t t-set="product" t-value="product.product_tmpl_id"/>
                         </t>
@@ -132,7 +132,7 @@
                     </div>
                 </td>
                 <td class="text-center td-qty">
-                    <t t-call='sale_product_configurator.product_quantity_config' />
+                    <t t-call='website_sale_product_configurator.product_quantity_config' />
                 </td>
                 <td class="text-center td-price" name="price">
                     <div t-attf-class="text-danger oe_default_price oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
@@ -167,7 +167,7 @@
             </tr>
             <t t-if="product.optional_product_ids and mode != 'edit'">
                 <tr class="o_select_options"><td colspan="4"><h4>Available Options:</h4></td></tr>
-                <t t-call="sale_product_configurator.optional_product_items">
+                <t t-call="website_sale_product_configurator.optional_product_items">
                     <t t-set="parent_combination" t-value="combination"/>
                 </t>
             </t>
@@ -196,12 +196,12 @@
                             <strong class="product-name product_display_name" t-out="combination_info['display_name']"/>
                             <div class="text-muted small" t-field="product.description_sale"/>
                         </div>
-                        <t t-call="sale.variants">
+                        <t t-call="website_sale.variants">
                             <t t-set="combination" t-value="product._get_first_possible_combination(parent_combination)"/>
                         </t>
                     </td>
                     <td class="text-center td-qty d-none">
-                        <t t-call='sale_product_configurator.product_quantity_config' />
+                        <t t-call='website_sale_product_configurator.product_quantity_config' />
                     </td>
                     <td class="text-center td-price">
                         <div t-attf-class="text-danger oe_default_price oe_optional oe_striked_price {{'' if combination_info['has_discounted_price'] else 'd-none'}}"

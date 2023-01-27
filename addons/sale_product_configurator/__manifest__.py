@@ -17,7 +17,6 @@ It also enables the "optional products" feature.
     'data': [
         'views/product_template_views.xml',
         'views/sale_order_views.xml',
-        'views/templates.xml',
     ],
     'demo': [
         'data/sale_demo.xml',

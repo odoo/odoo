@@ -1,7 +1,7 @@
 /** @odoo-module alias=website_sale_stock.VariantMixin **/
 
 import {Markup} from "web.utils";
-import VariantMixin from "sale.VariantMixin";
+import VariantMixin from "website_sale.SaleVariantMixin";
 import publicWidget from "web.public.widget";
 import core from "web.core";
 var QWeb = core.qweb;

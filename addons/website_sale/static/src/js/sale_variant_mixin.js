@@ -1,4 +1,4 @@
-/** @odoo-module alias=sale.VariantMixin **/
+/** @odoo-module alias=website_sale.SaleVariantMixin **/
 
 import concurrency from "web.concurrency";
 import core from "web.core";
