@@ -748,7 +748,7 @@ class Channel(models.Model):
             [('guest_id', '=', current_guest.id) if current_guest else expression.FALSE_LEAF],
         ])
         all_needed_members = self.env['mail.channel.member'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]), order='id')
-        all_needed_members.partner_id.mail_partner_format()  # prefetch in batch
+        all_needed_members.partner_id.sudo().mail_partner_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
@@ -784,7 +784,7 @@ class Channel(models.Model):
                 info['message_needaction_counter'] = channel.message_needaction_counter
                 member = member_of_current_user_by_channel.get(channel, self.env['mail.channel.member']).with_prefetch([m.id for m in member_of_current_user_by_channel.values()])
                 if member:
-                    channel_data['channelMembers'] = [('insert', list(member._mail_channel_member_format().values()))]
+                    channel_data['channelMembers'] = [('insert', list(member.sudo()._mail_channel_member_format().values()))]
                     info['state'] = member.fold_state or 'open'
                     channel_data['serverMessageUnreadCounter'] = member.message_unread_counter
                     info['is_minimized'] = member.is_minimized
@@ -799,7 +799,7 @@ class Channel(models.Model):
                 # avoid sending potentially a lot of members for big channels
                 # exclude chat and other small channels from this optimization because they are
                 # assumed to be smaller and it's important to know the member list for them
-                channel_data['channelMembers'] = [('insert', list(members_by_channel[channel]._mail_channel_member_format().values()))]
+                channel_data['channelMembers'] = [('insert', list(members_by_channel[channel].sudo()._mail_channel_member_format().values()))]
                 info['seen_partners_info'] = sorted([{
                     'id': cp.id,
                     'partner_id': cp.partner_id.id,
