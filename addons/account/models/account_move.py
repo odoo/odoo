@@ -1497,6 +1497,7 @@ class AccountMove(models.Model):
     @api.onchange('currency_id')
     def _inverse_currency_id(self):
         for invoice in self:
+            invoice.invoice_line_ids._compute_currency_id()
             if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
                 self.env.add_to_compute(self._fields['journal_id'], invoice)
 
