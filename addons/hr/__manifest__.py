@@ -37,6 +37,7 @@
         'views/mail_channel_views.xml',
         'views/res_users.xml',
         'views/res_partner_views.xml',
+        'views/hr_templates.xml',
         'data/hr_data.xml',
     ],
     'demo': [
