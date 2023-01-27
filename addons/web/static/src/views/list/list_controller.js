@@ -70,6 +70,7 @@ export class ListController extends Component {
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
+            countLimit: this.archInfo.countLimit,
             defaultOrder: this.archInfo.defaultOrder,
             expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,

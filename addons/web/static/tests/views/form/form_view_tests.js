@@ -12784,6 +12784,63 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
     });
 
+    QUnit.test("status indicator: field dirty state", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "dirty";
+        await triggerEvent(input, null, "input");
+
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test("status indicator: field dirty state (date)", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="date"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "03/26/2019";
+        await triggerEvent(input, null, "input");
+
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test("status indicator: field dirty state (datetime)", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="datetime"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "12/12/2012 11:55:05";
+        await triggerEvent(input, null, "input");
+
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
     QUnit.test("status indicator: save dirty state", async (assert) => {
         await makeView({
             type: "form",

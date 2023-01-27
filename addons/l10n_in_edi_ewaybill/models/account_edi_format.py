@@ -78,8 +78,8 @@ class AccountEdiFormat(models.Model):
     def _check_move_configuration(self, move):
         if self.code != "in_ewaybill_1_03":
             return super()._check_move_configuration(move)
-        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
         error_message = []
+        base = self._l10n_in_edi_ewaybill_base_irn_or_direct(move)
         if not move.l10n_in_type_id and base == "direct":
             error_message.append(_("- Document Type"))
         if not move.l10n_in_mode:

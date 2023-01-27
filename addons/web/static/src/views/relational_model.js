@@ -3426,10 +3426,12 @@ export class RelationalModel extends Model {
                 this.rootParams.mode = params.mode;
             }
         } else {
-            this.rootParams.openGroupsByDefault = params.openGroupsByDefault || false;
-            this.rootParams.limit = params.limit;
-            this.rootParams.expand = params.expand;
-            this.rootParams.groupsLimit = params.groupsLimit;
+            const { limit, countLimit, groupsLimit, openGroupsByDefault, expand } = params;
+            this.rootParams.openGroupsByDefault = openGroupsByDefault || false;
+            this.rootParams.limit = limit;
+            this.rootParams.countLimit = countLimit && Math.max(limit, countLimit);
+            this.rootParams.groupsLimit = groupsLimit;
+            this.rootParams.expand = expand;
         }
         this.initialValues = params.initialValues;
 
