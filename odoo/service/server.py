@@ -138,6 +138,14 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.protocol_version = "HTTP/1.1"
         return environ
 
+    def send_header(self, keyword, value):
+        # Prevent `WSGIRequestHandler` from sending the connection close header (compatibility with werkzeug >= 2.1.1 )
+        # since it is incompatible with websocket.
+        if self.headers.get('Upgrade') == 'websocket' and keyword == 'Connection' and value == 'close':
+            # Do not keep processing requests.
+            self.close_connection = True
+            return
+        super().send_header(keyword, value)
 
 class ThreadedWSGIServerReloadable(LoggingBaseWSGIServerMixIn, werkzeug.serving.ThreadedWSGIServer):
     """ werkzeug Threaded WSGI Server patched to allow reusing a listen socket
