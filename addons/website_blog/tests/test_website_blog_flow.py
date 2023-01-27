@@ -56,7 +56,7 @@ class TestWebsiteBlogFlow(TestWebsiteBlogCommon):
             'website_blog: peuple following a blog should be notified of a published post')
 
         # Armand posts a message -> becomes follower
-        self.test_blog_post.sudo().message_post(
+        self.test_blog_post.with_user(self.user_employee).message_post(
             body='Armande BlogUser Commented',
             message_type='comment',
             author_id=self.user_employee.partner_id.id,

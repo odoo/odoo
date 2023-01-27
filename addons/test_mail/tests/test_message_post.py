@@ -659,6 +659,61 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 partner_ids=self.partner_portal.ids,
             )
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('employee')
+    def test_message_post_author(self):
+        """ Test author recognition """
+        test_record = self.test_record.with_env(self.env)
+
+        # when a user spoofs the author: the actual author is the current user
+        # and not the message author
+        with self.assertSinglePostNotifications(
+                [{'partner': self.partner_admin, 'type': 'email'}],
+                {'content': 'Body'}
+            ):
+            new_message = test_record.message_post(
+                author_id=self.partner_employee_2.id,
+                body='Body',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+                partner_ids=[self.partner_admin.id],
+            )
+
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee_2,
+             'email_from': formataddr((self.partner_employee_2.name, self.partner_employee_2.email_normalized)),
+             'message_type': 'comment',
+             'notified_partner_ids': self.partner_admin,
+             'subtype_id': self.env.ref('mail.mt_comment'),
+            }
+        )
+        self.assertEqual(test_record.message_partner_ids, self.partner_employee,
+                         'Real author is added in followers, not message author')
+
+        # should be skipped with notifications
+        test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
+        _new_message = test_record.message_post(
+            author_id=self.partner_employee_2.id,
+            body='Body',
+            message_type='notification',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_admin.id],
+        )
+        self.assertFalse(test_record.message_partner_ids, 'Notification should not add author in followers')
+
+        # inactive users are not considered as authors
+        self.env.user.with_user(self.user_admin).active = False
+        _new_message = test_record.message_post(
+            author_id=self.partner_employee_2.id,
+            body='Body',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_admin.id],
+        )
+        self.assertEqual(test_record.message_partner_ids, self.partner_employee_2,
+                         'Author is the message author when user is inactive, and shoud be added in followers')
+
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
     def test_message_post_defaults(self):
