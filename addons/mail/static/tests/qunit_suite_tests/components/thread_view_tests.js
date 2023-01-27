@@ -90,63 +90,6 @@ QUnit.module("mail", (hooks) => {
         });
 
         QUnit.skipRefactoring(
-            "delete all attachments of a message with some text content should still keep it displayed",
-            async function (assert) {
-                assert.expect(2);
-
-                const pyEnv = await startServer();
-                const irAttachmentId1 = pyEnv["ir.attachment"].create({
-                    mimetype: "text/plain",
-                    name: "Blah.txt",
-                });
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                pyEnv["mail.message"].create({
-                    attachment_ids: [irAttachmentId1],
-                    body: "Some content",
-                    model: "mail.channel",
-                    res_id: mailChannelId1,
-                });
-                const { afterEvent, click, messaging, openDiscuss } = await start({
-                    discuss: {
-                        context: { active_id: mailChannelId1 },
-                    },
-                });
-                // wait for messages of the thread to be loaded
-                await afterEvent({
-                    eventName: "o-thread-view-hint-processed",
-                    func: openDiscuss,
-                    message: "thread become loaded with messages",
-                    predicate: ({ hint, threadViewer }) => {
-                        return (
-                            hint.type === "messages-loaded" &&
-                            threadViewer.thread.model === "mail.channel" &&
-                            threadViewer.thread.id === mailChannelId1
-                        );
-                    },
-                });
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-message",
-                    "there should be 1 message displayed initially"
-                );
-
-                await click(
-                    `.o_AttachmentCard[data-id="${
-                        messaging.models["Attachment"].findFromIdentifyingData({
-                            id: irAttachmentId1,
-                        }).localId
-                    }"] .o_AttachmentCard_asideItemUnlink`
-                );
-                await click(".o_AttachmentDeleteConfirmView_confirmButton");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-message",
-                    "message should still be displayed after removing its attachments (non-empty content)"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
             "Post a message containing an email address followed by a mention on another line",
             async function (assert) {
                 assert.expect(1);

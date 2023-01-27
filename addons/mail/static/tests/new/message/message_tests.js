@@ -1324,10 +1324,36 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(document.body, ".o-mail-message");
+        assert.containsOnce(target, ".o-mail-message");
 
         await click(".o-mail-attachment-card button[title='Remove']");
         await click(".modal button:contains(Ok)");
-        assert.containsNone(document.body, ".o-mail-message");
+        assert.containsNone(target, ".o-mail-message");
+    }
+);
+
+QUnit.test(
+    "delete all attachments of a message with some text content should still keep it displayed",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const attachmentId = pyEnv["ir.attachment"].create({
+            mimetype: "text/plain",
+            name: "Blah.txt",
+        });
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({
+            attachment_ids: [attachmentId],
+            body: "Some content",
+            message_type: "comment",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(target, ".o-mail-message");
+
+        await click(".o-mail-attachment-card button[title='Remove']");
+        await click(".modal button:contains(Ok)");
+        assert.containsOnce(target, ".o-mail-message");
     }
 );
