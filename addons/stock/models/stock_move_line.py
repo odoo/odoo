@@ -835,4 +835,5 @@ class StockMoveLine(models.Model):
             'picking_type_id': self.picking_id.picking_type_id.id,
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
+            'partner_id': self.picking_id.partner_id.id,
         }
