@@ -1635,5 +1635,10 @@
             <field name="name">Eurasian Economic Union</field>
             <field name="country_ids" eval="[(6, 0, [ref('ru'),ref('by'),ref('am'),ref('kg'),ref('kz')])]"/>
         </record>
+
+        <record id="ch_and_li" model="res.country.group">
+            <field name="name">Switzerland and Liechtenstein</field>
+            <field name="country_ids" eval="[Command.set([ref('ch'), ref('li')])]"/>
+        </record>
     </data>
 </odoo>
