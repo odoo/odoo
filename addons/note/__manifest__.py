@@ -32,6 +32,8 @@
             'note/static/src/components/**/*',
             'note/static/src/scss/note.scss',
             'note/static/src/views/**/*',
+#            'note/static/src/views/**/*.js',
+#            'note/static/src/views/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'note/static/tests/**/*',
