@@ -1927,9 +1927,25 @@ class MailThread(models.AbstractModel):
         )  # attachement_ids, body
         new_message = self._message_create([msg_values])
 
-        if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-                self._message_subscribe(partner_ids=[msg_values['author_id']])
+        # subscribe author(s) so that they receive answers; do it only when it is
+        # a manual post by the author (aka not a system notification, not a message
+        # posted 'in behalf of', and if still active).
+        author_subscribe = (not self._context.get('mail_create_nosubscribe') and
+                             msg_values['message_type'] != 'notification')
+        if author_subscribe:
+            real_author_id = False
+            # if current user is active, they are the one doing the action and should
+            # be notified of answers. If they are inactive they are posting on behalf
+            # of someone else (a custom, mailgateway, ...) and the real author is the
+            # message author
+            if self.env.user.active:
+                real_author_id = self.env.user.partner_id.id
+            elif msg_values['author_id']:
+                author = self.env['res.partner'].browse(msg_values['author_id'])
+                if author.active:
+                    real_author_id = author.id
+            if real_author_id:
+                self._message_subscribe(partner_ids=[real_author_id])
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2177,18 +2193,7 @@ class MailThread(models.AbstractModel):
             composer = self.env['mail.compose.message'].with_context(
                 **composer_ctx
             ).create(composer_values)
-            # Simulate the onchange (like trigger in form the view) only
-            # when having a template in single-email mode
-            if template:
-                update_values = composer._onchange_template_id(
-                    template.id,
-                    'mass_mail',
-                    self._name,
-                    subset.ids,
-                )['value']
-                composer.write(update_values)
-
-            mails_as_sudo, _messages_as_sudo = composer._action_send_mail(auto_commit=auto_commit)
+            mails_as_sudo, _messages = composer._action_send_mail(auto_commit=auto_commit)
             mails_su += mails_as_sudo
         return mails_su
 
@@ -2246,7 +2251,7 @@ class MailThread(models.AbstractModel):
         if not subtype_id:
             subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
 
-        messages = self.env['mail.message']
+        messages_all = self.env['mail.message']
         for record in self:
             if template:
                 composer = self.env['mail.compose.message'].with_context(
@@ -2259,26 +2264,16 @@ class MailThread(models.AbstractModel):
                     'subtype_id': subtype_id,
                     **kwargs,
                 })
-
-                # Simulate the onchange (like trigger in form the view) to do the
-                # rendering in mono-record mode
-                update_values = composer._onchange_template_id(
-                    template.id,
-                    'comment',
-                    self._name,
-                    record.ids,
-                )['value']
-                composer.write(update_values)
-                _mails_as_sudo, messages_as_sudo = composer._action_send_mail()
-                messages += messages_as_sudo
+                _mails_as_sudo, messages = composer._action_send_mail()
+                messages_all += messages
             else:
-                messages += record.message_post(
+                messages_all += record.message_post(
                     body=bodies[record.id],
                     message_type=message_type,
                     subtype_id=subtype_id,
                     **kwargs
                 )
-        return messages
+        return messages_all
 
     @api.returns('mail.message', lambda value: value.id)
     def message_notify(self, *,
@@ -2286,6 +2281,7 @@ class MailThread(models.AbstractModel):
                        author_id=None, email_from=None,
                        model=False, res_id=False,
                        subtype_xmlid=None, subtype_id=False, partner_ids=False,
+                       attachments=None, attachment_ids=None,
                        **kwargs):
         """ Shortcut allowing to notify partners of messages that should not be
         displayed on a document. It pushes notifications on inbox or by email
@@ -2311,7 +2307,13 @@ class MailThread(models.AbstractModel):
         :param int subtype_id: subtype_id of the message, used mainly for followers
           notification mechanism;
         :param list(int) partner_ids: partner_ids to notify in addition to partners
-          computed based on subtype / followers matching;
+            computed based on subtype / followers matching;
+        :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
+            tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
+            is NOT base64 encoded;
+        :param list attachment_ids: list of existing attachments to link to this message
+            Should not be a list of commands. Attachment records attached to mail
+            composer will be attached to the related document.
 
         Extra keyword arguments will be used either
           * as default column values for the new mail.message record if they match
@@ -2331,6 +2333,23 @@ class MailThread(models.AbstractModel):
             set(kwargs.keys()),
             forbidden_names={'message_id', 'message_type', 'parent_id'}
         )
+        if attachments:
+            # attachments should be a list (or tuples) of 3-elements list (or tuple)
+            format_error = not tools.is_list_of(attachments, list) and not tools.is_list_of(attachments, tuple)
+            if not format_error:
+                format_error = not all(len(attachment) in {2, 3} for attachment in attachments)
+            if format_error:
+                raise ValueError(
+                    _('Notification should receive attachments as a list of list or tuples (received %(aids)s)',
+                      aids=repr(attachment_ids),
+                     )
+                )
+        if attachment_ids and not tools.is_list_of(attachment_ids, int):
+            raise ValueError(
+                _('Notification should receive attachments records as a list of IDs (received %(aids)s)',
+                  aids=repr(attachment_ids),
+                 )
+            )
         if not tools.is_list_of(partner_ids, int):
             raise ValueError(
                 _('Notification should receive partners given as a list of IDs (received %(pids)s)',
@@ -2378,6 +2397,10 @@ class MailThread(models.AbstractModel):
         # add default-like values afterwards, to avoid useless queries
         if 'reply_to' not in msg_values:
             msg_values['reply_to'] = self._notify_get_reply_to(default=email_from)[self.id if self else False]
+
+        msg_values.update(
+            self._process_attachments_for_post(attachments, attachment_ids, msg_values)
+        )  # attachement_ids, body
 
         new_message = self._message_create([msg_values])
         self._fallback_lang()._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -2671,6 +2694,7 @@ class MailThread(models.AbstractModel):
             'force_send',
             'mail_auto_delete',
             'model_description',
+            'notify_author',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -2833,7 +2857,7 @@ class MailThread(models.AbstractModel):
             } for pid in inbox_pids]
             self.env['mail.notification'].sudo().create(notif_create_values)
 
-            message_format_values = message.message_format()[0]
+            message_format_values = message.message_format(msg_vals=msg_vals)[0]
             for partner_id in inbox_pids:
                 bus_notifications.append((self.env['res.partner'].browse(partner_id), 'mail.message/inbox', dict(message_format_values)))
         self.env['bus.bus'].sudo()._sendmany(bus_notifications)
@@ -3159,6 +3183,10 @@ class MailThread(models.AbstractModel):
         methods. See those methods for more details about supported parameters.
         Specific kwargs used in this method:
 
+          * ``notify_author``: allows to notify the author, which is False by
+            default as we don't want people to receive their own content. It is
+            used notably when impersonating partners or having automated
+            notifications send by current user, targeting current user;
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -3185,9 +3213,19 @@ class MailThread(models.AbstractModel):
         if not res:
             return recipients_data
 
-        author_id = msg_vals.get('author_id') or message.author_id.id
+        # notify author of its own messages, False by default
+        notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
+        real_author_id = False
+        if not notify_author:
+            if self.env.user.active:
+                real_author_id = self.env.user.partner_id.id
+            elif msg_vals.get('author_id'):
+                real_author_id = msg_vals['author_id']
+            else:
+                real_author_id = message.author_id.id
+
         for pid, pdata in res.items():
-            if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
+            if pid and pid == real_author_id:
                 continue
             if pdata['active'] is False:
                 continue

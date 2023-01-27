@@ -99,6 +99,9 @@ Model({
             if ("recipients" in data) {
                 data2.recipients = data.recipients;
             }
+            if ("scheduledDatetime" in data) {
+                data2.scheduledDatetime = data.scheduledDatetime;
+            }
             if ("starred_partner_ids" in data && this.messaging.currentPartner) {
                 data2.isStarred = data.starred_partner_ids.includes(
                     this.messaging.currentPartner.id
@@ -698,6 +701,23 @@ Model({
             },
         }),
         recipients: many("Partner"),
+        /**
+         * In case of delayed notification, a scheduled datetime linked to the
+         * message scheduler is given in order to display it new to the post
+         * datetime.
+         */
+        scheduledDatetime: attr(),
+        scheduledMomentDate: attr({
+            compute() {
+                if (!this.scheduledDatetime) {
+                    return clear();
+                }
+                if (!moment.isMoment(this.scheduledDatetime)) {
+                    return moment(str_to_datetime(this.scheduledDatetime));
+                }
+                return this.scheduledDatetime;
+            },
+        }),
         shortTime: attr({
             compute() {
                 if (!this.momentDate) {

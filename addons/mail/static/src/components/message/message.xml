@@ -76,6 +76,11 @@
                                 on <a class="o_MessageView_originThreadLink fs-6" t-att-href="message.originThread.url" t-on-click="onClickOriginThread"><t t-if="message.originThread.displayName"><t t-esc="message.originThread.displayName"/></t><t t-else="">document</t></a>
                             </t>
                         </small>
+                        <div t-if="message.scheduledDatetime" class="o_MessageView_headerScheduledDatetime" t-att-class="{ 'ms-2': isInChatWindowAndIsAlignedRight }" t-att-title="scheduledFromNow">
+                            <span class="text-600 cursor-pointer">
+                                <i class="fa fa-calendar-o"></i>
+                            </span>
+                        </div>
                         <div t-if="messageListViewItemOwner and message.originThread and message.originThread === messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': isInChatWindowAndIsAlignedRight }">
                             <span t-if="message.failureNotifications.length > 0" class="o_MessageView_notificationIconClickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
                                 <i class="o_MessageView_notificationIcon" t-att-class="failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="failureNotificationIconLabel" t-out="failureNotificationIconLabel"/>
