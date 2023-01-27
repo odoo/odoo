@@ -11,11 +11,11 @@ class MrpBom(models.Model):
     def _check_bom_lines(self):
         res = super()._check_bom_lines()
         for bom in self:
-            if all(not bl.cost_share for bl in bom.bom_lines):
+            if all(not bl.cost_share for bl in bom.bom_line_ids):
                 continue
-            if any(bl.cost_share < 0 for bl in bom.bom_lines):
+            if any(bl.cost_share < 0 for bl in bom.bom_line_ids):
                 raise UserError(_("Components cost share have to be positive or equals to zero."))
-            if sum(bom.bom_lines.mapped('cost_share')) != 100:
+            if sum(bom.bom_line_ids.mapped('cost_share')) != 100:
                 raise UserError(_("The total cost share for a BoM's component have to be 100"))
         return res
 
