@@ -6,14 +6,24 @@ import Dialog from "web.OwlDialog";
 import { delay } from "web.concurrency";
 import { loadJS, templates } from "@web/core/assets";
 import { isVideoElementReady, buildZXingBarcodeDetector } from "./ZXingBarcodeDetector";
+import { CropOverlay } from "./crop_overlay";
 
-import { App, Component, EventBus, onMounted, onWillStart, onWillUnmount, useRef } from "@odoo/owl";
-import { _t } from "web.core";
+import {
+    App,
+    Component,
+    EventBus,
+    onMounted,
+    onWillStart,
+    onWillUnmount,
+    useRef,
+    useState,
+} from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 const bus = new EventBus();
 const busOk = "BarcodeDialog-Ok";
 const busError = "BarcodeDialog-Error";
 
-class BarcodeDialog extends Component {
+export class BarcodeDialog extends Component {
     /**
      * @override
      */
@@ -22,6 +32,11 @@ class BarcodeDialog extends Component {
         this.interval = null;
         this.stream = null;
         this.detector = null;
+        this.overlayInfo = {};
+        this.zoomRatio = 1;
+        this.state = useState({
+            isReady: false,
+        });
 
         onWillStart(async () => {
             let DetectorClass;
@@ -58,6 +73,15 @@ class BarcodeDialog extends Component {
             }
             this.videoPreviewRef.el.srcObject = this.stream;
             await this.isVideoReady();
+            const { height, width } = getComputedStyle(this.videoPreviewRef.el);
+            const divWidth = width.slice(0, -2);
+            const divHeight = height.slice(0, -2);
+            const tracks = this.stream.getVideoTracks();
+            if (tracks.length) {
+                const [track] = tracks;
+                const settings = track.getSettings();
+                this.zoomRatio = Math.min(divWidth / settings.width, divHeight / settings.height);
+            }
             this.interval = setInterval(this.detectCode.bind(this), 100);
         });
 
@@ -82,8 +106,13 @@ class BarcodeDialog extends Component {
             while (!isVideoElementReady(this.videoPreviewRef.el)) {
                 await delay(10);
             }
+            this.state.isReady = true;
             resolve();
         });
+    }
+
+    onResize(overlayInfo) {
+        this.overlayInfo = overlayInfo;
     }
 
     /**
@@ -112,10 +141,25 @@ class BarcodeDialog extends Component {
     async detectCode() {
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
-            if (codes.length === 0) {
-                return;
+            for (const code of codes) {
+                let { x, y, width, height } = code.boundingBox;
+                x *= this.zoomRatio;
+                y *= this.zoomRatio;
+                width *= this.zoomRatio;
+                height *= this.zoomRatio;
+                if (this.overlayInfo.x && this.overlayInfo.y) {
+                    if (
+                        x < this.overlayInfo.x ||
+                        x + width > this.overlayInfo.x + this.overlayInfo.width ||
+                        y < this.overlayInfo.y ||
+                        y + height > this.overlayInfo.y + this.overlayInfo.height
+                    ) {
+                        continue;
+                    }
+                }
+                this.onResult(code.rawValue);
+                break;
             }
-            this.onResult(codes[0].rawValue);
         } catch (err) {
             this.onError(err);
         }
@@ -125,6 +169,7 @@ class BarcodeDialog extends Component {
 Object.assign(BarcodeDialog, {
     components: {
         Dialog,
+        CropOverlay,
     },
     template: "web.BarcodeDialog",
 });
