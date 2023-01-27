@@ -231,15 +231,19 @@ export class Chrome extends PosComponent {
             this.env.pos.config.limited_partners_loading &&
             this.env.pos.config.partner_load_background
         ) {
-            this.env.pos.loadPartnersBackground();
+            // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+            reactive(this.env.pos).loadPartnersBackground();
         }
         if (
             this.env.pos.config.limited_products_loading &&
             this.env.pos.config.product_load_background
         ) {
-            this.env.pos.loadProductsBackground().then(() => {
-                this.render(true);
-            });
+            // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+            reactive(this.env.pos)
+                .loadProductsBackground()
+                .then(() => {
+                    this.render(true);
+                });
         }
     }
 
