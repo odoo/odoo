@@ -39,6 +39,7 @@ class BaseAutomation(models.Model):
     action_server_id = fields.Many2one(
         'ir.actions.server', 'Server Actions',
         domain="[('model_id', '=', model_id)]",
+        index=True,
         delegate=True, required=True, ondelete='restrict')
     active = fields.Boolean(default=True, help="When unchecked, the rule is hidden and will not be executed.")
     trigger = fields.Selection([
