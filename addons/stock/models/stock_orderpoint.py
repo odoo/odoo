@@ -225,7 +225,6 @@ class StockWarehouseOrderpoint(models.Model):
                 'res_model': 'product.product',
                 'res_id': self.product_id.id,
                 'views': [(self.env.ref('product.product_normal_form_view').id, 'form')],
-                'context': {'form_view_initial_mode': 'edit'}
             }, _('Edit Product'))
         notification = False
         if len(self) == 1:
