@@ -3072,6 +3072,7 @@ class Many2oneReference(Integer):
     type = 'many2one_reference'
 
     model_field = None
+    group_operator = None
 
     _related_model_field = property(attrgetter('model_field'))
 
