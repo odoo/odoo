@@ -473,7 +473,7 @@ class Partner(models.Model):
 
     @api.onchange('state_id')
     def _onchange_state(self):
-        if self.state_id.country_id:
+        if self.state_id.country_id and self.country_id != self.state_id.country_id:
             self.country_id = self.state_id.country_id
 
     @api.onchange('email')
