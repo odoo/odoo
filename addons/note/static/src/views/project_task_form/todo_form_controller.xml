@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="note.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_form_view_container')]/Layout" position="inside">
+            <t t-set-slot="control-panel-todo-name">
+                <div class="o_editable_breadcrumb_todo_name">
+                    <input type="text" title="Rename" class="o_todo_breadcrumb_name_input"
+                           t-ref="recordNameInput"
+                           t-on-focus="_onFocus"
+                           t-attf-style="width: {{state_todo.inputSize}}px"
+                           t-att-placeholder="placeholder"
+                           t-on-input="_onInput"
+                           t-att-class="state_todo.isUntitled ? 'o-todo-untitled' : ''"
+                           t-on-change="_onNameChanged"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+
+</templates>

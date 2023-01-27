@@ -1,0 +1,35 @@
+.o_editable_breadcrumb_todo_name {
+    display: inline-block;
+    max-width: 95%;
+
+    input {
+        max-width: 100%;
+        text-overflow: clip;
+        overflow: hidden;
+        border: none;
+        padding: 0px 5px 0px 2px;
+        color: $o-brand-secondary;
+
+        &:focus {
+            outline: 1px solid #ccc;
+            outline-offset: -1px;
+            color: #000;
+        }
+
+        &.o-todo-untitled {
+            font-style: italic;
+        }
+
+        &.o-todo-untitled:focus {
+            font-style: normal;
+        }
+
+        &:disabled {
+            background-color: inherit;
+        }
+    }
+
+    input:hover {
+        border-bottom: $input-border-width solid $o-brand-primary;
+    }
+}

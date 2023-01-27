@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="note.TodoFormControlPanel" t-inherit="web.FormControlPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div/t/t[@t-slot='control-panel-breadcrumb']" position="replace">
+            <t t-slot="control-panel-breadcrumb">
+                <t t-if="env.isSmall">
+                    <t t-call="note.TodoBreadcrumbs.Small" t-if="!env.config.noBreadcrumbs"/>
+                </t>
+                <t t-else="">
+                    <t t-call="note.TodoBreadcrumbs" t-if="!env.config.noBreadcrumbs"/>
+                </t>
+            </t>
+        </xpath>
+
+    </t>
+
+    <t t-name="note.TodoBreadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]//li[hasclass('active')]" position="replace">
+            <li t-else="" class="breadcrumb-item active"> <!-- copying the condition present on web.Breadcrumbs -->
+                <t t-slot="control-panel-todo-name" />
+                <div class="o_todo_control_panel_status">
+                    <t t-slot="control-panel-status-indicator" />
+                </div>
+            </li>
+        </xpath>
+    </t>
+
+    <t t-name="note.TodoBreadcrumbs.Small" t-inherit="web.Breadcrumbs.Small" t-inherit-mode="primary" owl="1">
+        <xpath expr="//ol[hasclass('breadcrumb')]//li[hasclass('active')]" position="replace">
+            <li t-if="breadcrumbs.length > 0" class="breadcrumb-item active">
+                <t t-slot="control-panel-todo-name" />
+            </li>
+        </xpath>
+    </t>
+
+
+</templates>

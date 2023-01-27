@@ -163,9 +163,10 @@
         <field name="name">note.note.form</field>
         <field name="model">project.task</field>
         <field name="arch" type="xml">
-            <form string="Note" class="o_note_form_view">
+            <form string="Note"
+                  class="o_note_form_view"
+                  js_class = "todo_form">
                 <header>
-                    <field name="name" placeholder="Name"/>
                     <field name="tag_ids"
                            widget="many2many_tags"
                            options="{'color_field': 'color'}"
