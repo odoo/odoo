@@ -29,7 +29,7 @@
                     </t>
                     <t t-set-slot="control-panel-status-indicator">
                         <t t-if="canEdit">
-                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" />
+                            <FormStatusIndicator model="model" discard.bind="discard" save.bind="saveButtonClicked" isDisabled="state.isDisabled" fieldIsDirty="state.fieldIsDirty" />
                         </t>
                     </t>
                     <t t-set-slot="control-panel-create-button">
@@ -37,7 +37,7 @@
                             <button type="button" class="btn btn-outline-primary o_form_button_create" data-hotkey="c" t-on-click.stop="create" t-att-disabled="state.isDisabled">Create</button>
                         </t>
                     </t>
-                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
+                    <t t-component="props.Renderer" record="model.root" Compiler="props.Compiler" archInfo="archInfo" translateAlert="translateAlert" setFieldAsDirty.bind="setFieldAsDirty" enableViewButtons.bind="enableButtons" disableViewButtons.bind="disableButtons" onNotebookPageChange.bind="onNotebookPageChange" activeNotebookPages="props.state and props.state.activeNotebookPages"/>
                 </Layout>
             </div>
         </div>
