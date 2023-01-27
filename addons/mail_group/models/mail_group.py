@@ -495,7 +495,7 @@ class MailGroup(models.Model):
 
         for group in groups:
             moderators_to_notify = group.moderator_ids
-            MailThread = self.env['mail.thread'].with_context(mail_notify_author=True)
+            MailThread = self.env['mail.thread']
             for moderator in moderators_to_notify:
                 body = self.env['ir.qweb']._render('mail_group.mail_group_notify_moderation', {
                     'moderator': moderator,
@@ -508,6 +508,7 @@ class MailGroup(models.Model):
                     body=body,
                     email_from=email_from,
                     model='mail.group',
+                    notify_author=True,
                     res_id=group.id,
                 )
 
