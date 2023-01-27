@@ -265,8 +265,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             // default can be set elsewhere otherwise.
             wysiwygOptions.allowCommandImage = Boolean(this.nodeOptions.allowCommandImage);
         }
-        if (this.field.sanitize && this.field.sanitize_tags) {
-            wysiwygOptions.allowCommandVideo = false; // Sanitized fields remove videos.
+        if (this.field.sanitize_tags || (this.field.sanitize_tags === undefined && this.field.sanitize)) {
+            wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
         } else if ('allowCommandVideo' in this.nodeOptions) {
             // Set the option only if it is explicitly set in the view so a
             // default can be set elsewhere otherwise.
