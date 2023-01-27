@@ -54,6 +54,7 @@
             <field name="name" position="attributes">
                 <attribute name="attrs">{'invisible':[('name', '=', '/'), ('posted_before', '=', False), ('quick_edit_mode', '=', False)],
                                          'readonly': ['|', ('state', '!=', 'draft'), ('l10n_latam_use_documents', '=', True)]}</attribute>
+                <attribute name="force_save">1</attribute>
             </field>
 
         </field>
