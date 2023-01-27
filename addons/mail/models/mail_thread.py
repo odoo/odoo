@@ -1927,9 +1927,25 @@ class MailThread(models.AbstractModel):
         )  # attachement_ids, body
         new_message = self._message_create([msg_values])
 
-        if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-                self._message_subscribe(partner_ids=[msg_values['author_id']])
+        # subscribe author(s) so that they receive answers; do it only when it is
+        # a manual post by the author (aka not a system notification, not a message
+        # posted 'in behalf of', and if still active).
+        author_subscribe = (not self._context.get('mail_create_nosubscribe') and
+                             msg_values['message_type'] != 'notification')
+        if author_subscribe:
+            real_author_id = False
+            # if current user is active, they are the one doing the action and should
+            # be notified of answers. If they are inactive they are posting on behalf
+            # of someone else (a custom, mailgateway, ...) and the real author is the
+            # message author
+            if self.env.user.active:
+                real_author_id = self.env.user.partner_id.id
+            elif msg_values['author_id']:
+                author = self.env['res.partner'].browse(msg_values['author_id'])
+                if author.active:
+                    real_author_id = author.id
+            if real_author_id:
+                self._message_subscribe(partner_ids=[real_author_id])
 
         self._message_post_after_hook(new_message, msg_values)
         self._notify_thread(new_message, msg_values, **notif_kwargs)
@@ -3220,9 +3236,17 @@ class MailThread(models.AbstractModel):
 
         # notify author of its own messages, False by default
         notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
-        author_id = msg_vals.get('author_id') or message.author_id.id
+        real_author_id = False
+        if not notify_author:
+            if self.env.user.active:
+                real_author_id = self.env.user.partner_id.id
+            elif msg_vals.get('author_id'):
+                real_author_id = msg_vals['author_id']
+            else:
+                real_author_id = message.author_id.id
+
         for pid, pdata in res.items():
-            if pid and not notify_author and pid == author_id:
+            if pid and pid == real_author_id:
                 continue
             if pdata['active'] is False:
                 continue
