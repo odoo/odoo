@@ -4,7 +4,7 @@ import json
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.sale_product_configurator.controllers.main import ProductConfiguratorController
+from odoo.addons.website_sale_product_configurator.controllers.sale_product_configurator import ProductConfiguratorController
 from odoo.addons.website_sale.controllers import main
 
 

@@ -1,6 +1,6 @@
 /** @odoo-module alias=website_sale.VariantMixin **/
 
-import VariantMixin from "sale.VariantMixin";
+import VariantMixin from "website_sale.SaleVariantMixin";
 
 /**
  * Website behavior is slightly different from backend so we append

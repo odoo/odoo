@@ -41,6 +41,7 @@
         'views/website_sale_delivery_templates.xml',
         'views/website_sale_menus.xml',
         'views/website_sale_delivery_views.xml',
+        'views/variant_templates.xml',
     ],
     'demo': [
         'data/demo.xml',
@@ -58,8 +59,7 @@
             'website_sale/static/src/scss/website_sale_delivery.scss',
             'website/static/lib/multirange/multirange_custom.scss',
             'sale/static/src/scss/sale_portal.scss',
-            'sale/static/src/scss/product_configurator.scss',
-            'sale/static/src/js/variant_mixin.js',
+            'website_sale/static/src/js/sale_variant_mixin.js',
             'website_sale/static/src/js/variant_mixin.js',
             'website_sale/static/src/js/website_sale.js',
             'website_sale/static/src/xml/website_sale.xml',
@@ -80,6 +80,7 @@
             'website_sale/static/src/xml/website_sale_reorder_modal.xml',
             'website_sale/static/src/js/website_sale_reorder.js',
             'website_sale/static/src/js/website_sale_delivery.js',
+            'website_sale/static/src/scss/product_configurator.scss',
         ],
         'web._assets_primary_variables': [
             'website_sale/static/src/scss/primary_variables.scss',

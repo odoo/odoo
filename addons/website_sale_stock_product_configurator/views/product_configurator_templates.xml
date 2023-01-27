@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="website_sale_stock_modal" inherit_id="sale_product_configurator.product_quantity_config" name="Stocks Modal">
+    <template id="website_sale_stock_modal" inherit_id="website_sale_product_configurator.product_quantity_config" name="Stocks Modal">
         <xpath expr="//input[@type='text'][hasclass('quantity')]" position="attributes">
           <attribute name='t-att-data-max'>max(product.sudo()._get_max_available_qty(), 1) if handle_stock and product.type == "product" and not product.allow_out_of_stock_order else None</attribute>
         </xpath>
