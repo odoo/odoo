@@ -114,7 +114,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await click(".o-mail-discuss-actions button[data-action='add-users']");
+        await click(".o-mail-discuss-actions button[title='Add Users']");
         await insertText(".o-mail-channel-invitation-form-search-input", "TestPartner2");
         await click(".form-check-input");
         await click("button[title='Create Group Chat']");

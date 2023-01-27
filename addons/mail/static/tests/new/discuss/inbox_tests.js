@@ -461,13 +461,13 @@ QUnit.test("inbox: mark all messages as read", async function (assert) {
     assert.containsOnce(target, "button:contains(Inbox) .badge:contains(2)");
     assert.containsOnce(target, ".o-mail-category-item:contains(General) .badge:contains(2)");
     assert.containsN(target, ".o-mail-discuss-content .o-mail-message", 2);
-    assert.notOk($(target).find('button[data-action="mark-all-read"]')[0].disabled);
+    assert.notOk($(target).find("button:contains(Mark all read)")[0].disabled);
 
-    await click('.o-mail-discuss-actions button[data-action="mark-all-read"]');
+    await click(".o-mail-discuss-actions button:contains(Mark all read)");
     assert.containsNone(target, "button:contains(Inbox) .badge");
     assert.containsNone(target, ".o-mail-category-item:contains(General) .badge");
     assert.containsNone(target, ".o-mail-message");
-    assert.ok($(target).find('button[data-action="mark-all-read"]')[0].disabled);
+    assert.ok($(target).find("button:contains(Mark all read)")[0].disabled);
 });
 
 QUnit.test(

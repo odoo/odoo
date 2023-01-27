@@ -242,7 +242,7 @@ QUnit.test("Message following a notification should not be squashed", async (ass
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await editInput(target, ".o-mail-composer-textarea", "Hello world!");
-    await click(".o-mail-composer button[data-action='send']");
+    await click(".o-mail-composer button:contains(Send)");
     assert.containsOnce(target, ".o-mail-message-sidebar .o-mail-avatar-container");
 });
 
@@ -292,12 +292,12 @@ QUnit.test(
         await openDiscuss(channelId);
         // write 1 message
         await editInput(target, ".o-mail-composer-textarea", "abc");
-        await click(".o-mail-composer button[data-action='send']");
+        await click(".o-mail-composer button:contains(Send)");
 
         // write another message, but /mail/message/post is delayed by promise
         flag = true;
         await editInput(target, ".o-mail-composer-textarea", "def");
-        await click(".o-mail-composer button[data-action='send']");
+        await click(".o-mail-composer button:contains(Send)");
         assert.containsN(target, ".o-mail-message", 2);
         assert.containsN(target, ".o-mail-msg-header", 1); // just 1, because 2nd message is squashed
     }
@@ -332,7 +332,7 @@ QUnit.test("Can use channel command /who", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-composer-textarea", "/who");
-    await click(".o-mail-composer button[data-action='send']");
+    await click(".o-mail-composer button:contains(Send)");
     assert.strictEqual(
         document.querySelector(".o_mail_notification").textContent,
         "You are alone in this channel."
@@ -760,19 +760,19 @@ QUnit.test("basic top bar rendering", async function (assert) {
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "Inbox");
-    const $markAllRead = $(target).find('button[data-action="mark-all-read"]');
+    const $markAllRead = $(target).find("button:contains(Mark all read)");
     assert.isVisible($markAllRead);
     assert.ok($markAllRead[0].disabled);
 
     await click("button:contains(Starred)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "Starred");
-    const $unstarAll = $(target).find('button[data-action="unstar-all"]');
+    const $unstarAll = $(target).find("button:contains(Unstar all)");
     assert.isVisible($unstarAll);
     assert.ok($unstarAll[0].disabled);
 
     await click(".o-mail-category-item:contains(General)");
     assert.strictEqual($(target).find(".o-mail-discuss-thread-name")[0].value, "General");
-    assert.isVisible($(target).find('.o-mail-discuss-actions button[data-action="add-users"]'));
+    assert.isVisible($(target).find(".o-mail-discuss-actions button[title='Add Users']"));
 });
 
 QUnit.test("rendering of inbox message", async function (assert) {
@@ -842,7 +842,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     assert.containsNone(target, ".o-mail-thread:contains(Congratulations, your inbox is empty)");
     assert.containsN(target, ".o-mail-thread .o-mail-message", 2);
 
-    await click('button[data-action="mark-all-read"]');
+    await click("button:contains(Mark all read)");
     assert.hasClass($(target).find("button:contains(Inbox)"), "o-active");
     assert.containsOnce(target, ".o-mail-thread:contains(Congratulations, your inbox is empty)");
 
@@ -917,7 +917,7 @@ QUnit.test(
         }
         const { openDiscuss } = await start();
         await openDiscuss();
-        await click('button[data-action="mark-all-read"]');
+        await click("button:contains(Mark all read)");
         assert.containsNone(target, ".o-mail-message");
 
         await click("button:contains(History)");
@@ -974,13 +974,13 @@ QUnit.test("starred: unstar all", async function (assert) {
     await openDiscuss("mail.box_starred");
     assert.strictEqual($(target).find("button:contains(Starred) .badge").text(), "2");
     assert.containsN(target, ".o-mail-message", 2);
-    let $unstarAll = $(target).find('button[data-action="unstar-all"]');
+    let $unstarAll = $(target).find("button:contains(Unstar all)");
     assert.notOk($unstarAll[0].disabled);
 
     await click($unstarAll);
     assert.containsNone(target, "button:contains(Starred) .badge");
     assert.containsNone(target, ".o-mail-message");
-    $unstarAll = $(target).find('button[data-action="unstar-all"]');
+    $unstarAll = $(target).find("button:contains(Unstar all)");
     assert.ok($unstarAll[0].disabled);
 });
 
@@ -1187,7 +1187,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, "button[data-action='add-users']");
+        assert.containsOnce(target, "button[title='Add Users']");
     }
 );
 
@@ -1205,7 +1205,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, "button[data-action='add-users']");
+        assert.containsOnce(target, "button[title='Add Users']");
     }
 );
 
@@ -1223,7 +1223,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce(target, "button[data-action='add-users']");
+        assert.containsOnce(target, "button[title='Add Users']");
     }
 );
 
@@ -1232,7 +1232,7 @@ QUnit.test(
     async function (assert) {
         const { openDiscuss } = await start();
         await openDiscuss("mail.box_starred");
-        assert.containsNone(target, "button[data-action='add-users']");
+        assert.containsNone(target, "button[title='Add Users']");
     }
 );
 
