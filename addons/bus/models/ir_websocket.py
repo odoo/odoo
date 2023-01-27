@@ -38,6 +38,19 @@ class IrWebsocket(models.AbstractModel):
         channels = set(self._build_bus_channel_list(data['channels']))
         dispatch.subscribe(channels, data['last'], self.env.registry.db_name, wsrequest.ws)
 
+    def _serve_ir_websocket(self, event_name, data):
+        """
+        Delegate most of the processing to the ir.websocket model
+        which is extensible by applications. Directly call the
+        appropriate ir.websocket method since only two events are
+        tolerated: `subscribe` and `update_presence`.
+        """
+        self._authenticate()
+        if event_name == 'subscribe':
+            self._subscribe(data)
+        if event_name == 'update_presence':
+            self._update_bus_presence(**data)
+
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):
         if self.env.user and not self.env.user._is_public():
             self.env['bus.presence'].update_presence(

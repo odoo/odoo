@@ -758,23 +758,9 @@ class WebsocketRequest:
             self.env = api.Environment(cr, self.session.uid, self.session.context)
             threading.current_thread().uid = self.env.uid
             service_model.retrying(
-                functools.partial(self._serve_ir_websocket, event_name, data),
+                functools.partial(self.env['ir.websocket']._serve_ir_websocket, event_name, data),
                 self.env,
             )
-
-    def _serve_ir_websocket(self, event_name, data):
-        """
-        Delegate most of the processing to the ir.websocket model
-        which is extensible by applications. Directly call the
-        appropriate ir.websocket method since only two events are
-        tolerated: `subscribe` and `update_presence`.
-        """
-        ir_websocket = self.env['ir.websocket']
-        ir_websocket._authenticate()
-        if event_name == 'subscribe':
-            ir_websocket._subscribe(data)
-        if event_name == 'update_presence':
-            ir_websocket._update_bus_presence(**data)
 
     def _get_session(self):
         session = root.session_store.get(self.ws._session.sid)
