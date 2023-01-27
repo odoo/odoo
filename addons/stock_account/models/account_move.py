@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         for move in self:
             for line in move.line_ids:
                 # if a line has correction layers hide the 'Reset to Darft' button
-                if line._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
+                if line.sudo()._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
                     move.show_reset_to_draft_button = False
                     break
 
