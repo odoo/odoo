@@ -21,7 +21,7 @@ class SaleOrder(models.Model):
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
     def _compute_timesheet_ids(self):
-        timesheet_groups = self.env['account.analytic.line'].sudo().read_group(
+        timesheet_groups = self.env['account.analytic.line'].sudo()._read_group(
             [('so_line', 'in', self.mapped('order_line').ids), ('project_id', '!=', False)],
             ['so_line', 'ids:array_agg(id)'],
             ['so_line'])

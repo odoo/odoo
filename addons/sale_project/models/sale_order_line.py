@@ -46,7 +46,7 @@ class SaleOrderLine(models.Model):
         if not lines_by_milestones:
             return
 
-        project_milestone_read_group = self.env['project.milestone'].read_group(
+        project_milestone_read_group = self.env['project.milestone']._read_group(
             [('sale_line_id', 'in', lines_by_milestones.ids), ('is_reached', '=', True)],
             ['sale_line_id', 'quantity_percentage'],
             ['sale_line_id'],
@@ -289,11 +289,11 @@ class SaleOrderLine(models.Model):
             elif self.project_id.analytic_account_id:
                 values['analytic_distribution'] = {self.project_id.analytic_account_id.id: 100}
             elif self.is_service and not self.is_expense:
-                task_analytic_account_id = self.env['project.task'].read_group([
+                task_analytic_account_id = self.env['project.task']._read_group([
                     ('sale_line_id', '=', self.id),
                     ('analytic_account_id', '!=', False),
                 ], ['analytic_account_id'], ['analytic_account_id'])
-                project_analytic_account_id = self.env['project.project'].read_group([
+                project_analytic_account_id = self.env['project.project']._read_group([
                     ('analytic_account_id', '!=', False),
                     '|',
                         ('sale_line_id', '=', self.id),

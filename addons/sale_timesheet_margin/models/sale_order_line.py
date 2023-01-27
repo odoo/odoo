@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
         )
         super(SaleOrderLine, self - timesheet_sols)._compute_purchase_price()
         if timesheet_sols:
-            group_amount = self.env['account.analytic.line'].read_group(
+            group_amount = self.env['account.analytic.line']._read_group(
                 [('so_line', 'in', timesheet_sols.ids), ('project_id', '!=', False)],
                 ['so_line', 'amount:sum', 'unit_amount:sum'],
                 ['so_line'])

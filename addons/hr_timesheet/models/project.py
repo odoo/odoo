@@ -135,7 +135,7 @@ class Project(models.Model):
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):
-        timesheets_read_group = self.env['account.analytic.line'].read_group(
+        timesheets_read_group = self.env['account.analytic.line']._read_group(
             [('project_id', 'in', self.ids)],
             ['project_id', 'unit_amount', 'product_uom_id'],
             ['project_id', 'product_uom_id'],
@@ -273,7 +273,7 @@ class Task(models.Model):
             for task in self:
                 task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
             return
-        timesheet_read_group = self.env['account.analytic.line'].read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
+        timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['unit_amount', 'task_id'], ['task_id'])
         timesheets_per_task = {res['task_id'][0]: res['unit_amount'] for res in timesheet_read_group}
         for task in self:
             task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
