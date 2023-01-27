@@ -588,6 +588,9 @@ class ResCompany(models.Model):
         """Checks that all posted moves have still the same data as when they were posted
         and raises an error with the result.
         """
+        if not self.env.user.has_group('account.group_account_user'):
+            raise UserError(_('Please contact your accountant to print the Hash integrity result.'))
+
         def build_move_info(move):
             return(move.name, move.inalterable_hash, fields.Date.to_string(move.date))
 
@@ -615,8 +618,11 @@ class ResCompany(models.Model):
                 results_by_journal['results'].append(rslt)
                 continue
 
-            all_moves_count = self.env['account.move'].search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
-            moves = self.env['account.move'].search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
+            # We need the `sudo()` to ensure that all the moves are searched, no matter the user's access rights.
+            # This is required in order to generate consistent hashs.
+            # It is not an issue, since the data is only used to compute a hash and not to return the actual values.
+            all_moves_count = self.env['account.move'].sudo().search_count([('state', '=', 'posted'), ('journal_id', '=', journal.id)])
+            moves = self.env['account.move'].sudo().search([('state', '=', 'posted'), ('journal_id', '=', journal.id),
                                             ('secure_sequence_number', '!=', 0)], order="secure_sequence_number ASC")
             if not moves:
                 rslt.update({
