@@ -10,7 +10,12 @@
         <field name="binding_model_id" ref="crm.model_crm_lead"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-        <field name="code">action = model.action_set_lost_with_reason()</field>
+        <field name="code">
+if not 'opportunity' in records.mapped('type'):
+    action = records.action_set_lost()
+else:
+    action = model.action_set_lost_with_reason()
+        </field>
     </record>
 
     <record id="action_your_pipeline" model="ir.actions.server">
