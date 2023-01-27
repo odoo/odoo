@@ -1403,6 +1403,10 @@ class ReportSaleDetails(models.AbstractModel):
                 domain = AND([domain, [('config_id', 'in', config_ids)]])
 
         orders = self.env['pos.order'].search(domain)
+        return self._prepare_sale_details(orders, domain, date_start, date_stop, config_ids, session_ids)
+
+    @api.model
+    def _prepare_sale_details(self, orders, domain, date_start, date_stop, config_ids, session_ids):
 
         user_currency = self.env.company.currency_id
 
@@ -1435,7 +1439,7 @@ class ReportSaleDetails(models.AbstractModel):
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
-                SELECT COALESCE(method.name->>%s, method.name->>'en_US') as name, sum(amount) total
+                SELECT COALESCE(method.name->>%s, method.name->>'en_US') as name, sum(amount) total, count(DISTINCT payment.pos_order_id)
                 FROM pos_payment AS payment,
                      pos_payment_method AS method
                 WHERE payment.payment_method_id = method.id
