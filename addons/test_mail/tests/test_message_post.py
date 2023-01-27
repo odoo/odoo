@@ -314,6 +314,49 @@ class TestMessageNotify(TestMessagePostCommon):
         self.assertNotIn('/mail/view?model=', partner_mail_body, 'The email sent to customer should not contain an access link')
 
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_notify_author(self):
+        """ Author is not added in notified people by default, unless asked to
+        using the 'notify_author' parameter or context key. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.message_notify(
+                body='<p>You have received a notification</p>',
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(new_notification.notified_partner_ids, self.partner_1)
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.message_notify(
+                body='<p>You have received a notification</p>',
+                notify_author=True,
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(
+            new_notification.notified_partner_ids,
+            self.partner_1 + self.partner_employee,
+            'Notify: notify_author parameter skips the author restriction'
+        )
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.with_context(mail_notify_author=True).message_notify(
+                body='<p>You have received a notification</p>',
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(
+            new_notification.notified_partner_ids,
+            self.partner_1 + self.partner_employee,
+            'Notify: mail_notify_author context key skips the author restriction'
+        )
+
+    @users('employee')
     def test_notify_batch(self):
         """ Test notify in batch. Currently not supported. """
         test_records, _partners = self._create_records_for_batch('mail.test.simple', 10)
@@ -615,6 +658,61 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 subtype_xmlid='mail.mt_comment',
                 partner_ids=self.partner_portal.ids,
             )
+
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink')
+    @users('employee')
+    def test_message_post_author(self):
+        """ Test author recognition """
+        test_record = self.test_record.with_env(self.env)
+
+        # when a user spoofs the author: the actual author is the current user
+        # and not the message author
+        with self.assertSinglePostNotifications(
+                [{'partner': self.partner_admin, 'type': 'email'}],
+                {'content': 'Body'}
+            ):
+            new_message = test_record.message_post(
+                author_id=self.partner_employee_2.id,
+                body='Body',
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+                partner_ids=[self.partner_admin.id],
+            )
+
+        self.assertMessageFields(
+            new_message,
+            {'author_id': self.partner_employee_2,
+             'email_from': formataddr((self.partner_employee_2.name, self.partner_employee_2.email_normalized)),
+             'message_type': 'comment',
+             'notified_partner_ids': self.partner_admin,
+             'subtype_id': self.env.ref('mail.mt_comment'),
+            }
+        )
+        self.assertEqual(test_record.message_partner_ids, self.partner_employee,
+                         'Real author is added in followers, not message author')
+
+        # should be skipped with notifications
+        test_record.message_unsubscribe(partner_ids=self.partner_employee.ids)
+        _new_message = test_record.message_post(
+            author_id=self.partner_employee_2.id,
+            body='Body',
+            message_type='notification',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_admin.id],
+        )
+        self.assertFalse(test_record.message_partner_ids, 'Notification should not add author in followers')
+
+        # inactive users are not considered as authors
+        self.env.user.with_user(self.user_admin).active = False
+        _new_message = test_record.message_post(
+            author_id=self.partner_employee_2.id,
+            body='Body',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.partner_admin.id],
+        )
+        self.assertEqual(test_record.message_partner_ids, self.partner_employee_2,
+                         'Author is the message author when user is inactive, and shoud be added in followers')
 
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.models.unlink', 'odoo.tests')
     @users('employee')
@@ -1133,7 +1231,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
                 fields_values={
                     'auto_delete': False,
                     'is_internal': False,
-                    'is_notification': True,  # auto_delete_keep_log -> keep underlying mail.message
+                    'is_notification': False,  # no to_delete -> no keep_log
                     'message_type': 'email',
                     'model': test_record._name,
                     'notified_partner_ids': self.env['res.partner'],

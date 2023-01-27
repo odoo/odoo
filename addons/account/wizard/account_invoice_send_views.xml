@@ -14,14 +14,23 @@
                         <field name="move_types"/>
                     </div>
                     <!-- truly invisible fields for control and options -->
+                    <field name="author_id" invisible="1"/>
                     <field name="composition_mode" invisible="1"/>
-                    <field name="invoice_ids" invisible="1"/>
                     <field name="email_from" invisible="1" />
+                    <field name="invoice_ids" invisible="1"/>
+                    <field name="lang" invisible="1"/>
                     <field name="mail_server_id" invisible="1"/>
+                    <field name="model" invisible="1"/>
+                    <field name="render_model" invisible="1"/>
+                    <field name="res_ids" invisible="1"/>
+                    <field name="subtype_id" invisible="1"/>
+
                     <div name="option_print">
                         <field name="is_print" />
                         <b><label for="is_print"/></b>
-                        <div name="info_form" attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">
+                        <div name="info_form"
+                             attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}"
+                             class="text-center text-muted d-inline-block ms-2">
                             Preview as a PDF
                         </div>
                     </div>
@@ -29,8 +38,8 @@
                         <field name="is_email" />
                         <b><label for="is_email"/></b>
                     </div>
-                    <div class="text-start d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
-                        <field name="invoice_without_email" class="mr4"/>
+                    <div class="text-start d-inline-block me-3" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                        <field name="invoice_without_email" class="me-3"/>
                     </div>
                     <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
                         <!-- visible wizard -->
