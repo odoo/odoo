@@ -3513,7 +3513,7 @@ var SnippetsMenu = Widget.extend({
      */
     _onClick(ev) {
         // Clicking in the page should be ignored on save
-        if (this.willDestroyEditors) {
+        if (this.options.wysiwyg.isSaving()) {
             return;
         }
 
