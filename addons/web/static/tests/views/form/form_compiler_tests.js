@@ -53,7 +53,7 @@ QUnit.module("Form Compiler", (hooks) => {
             const expected = /*xml*/ `
             <t>
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
-                    <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" />
+                    <Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" setDirty="props.setFieldAsDirty"/>
                     <FormLabel id="'test'" fieldName="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" className="&quot;&quot;" string="\`\`" />
                 </div>
             </t>`;
@@ -68,7 +68,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }}" class="o_form_nosheet" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
-                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"  setDirty="props.setFieldAsDirty"/>
                     </div>
                 </div>
             </t>`;
@@ -89,14 +89,14 @@ QUnit.module("Form Compiler", (hooks) => {
                <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
                      <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:props.record,string:props.record.fields.display_name.string,fieldInfo:props.archInfo.fieldNodes['display_name']}" Component="constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
-                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" class="scope &amp;&amp; scope.className" />
+                        <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" setDirty="props.setFieldAsDirty" class="scope &amp;&amp; scope.className"/>
                      </t>
                   </InnerGroup>
                </t>
                <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
                      <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:props.record,string:props.record.fields.charfield.string,fieldInfo:props.archInfo.fieldNodes['charfield']}" Component="constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
-                        <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']" class="scope &amp;&amp; scope.className" />
+                        <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']" setDirty="props.setFieldAsDirty" class="scope &amp;&amp; scope.className"/>
                      </t>
                   </InnerGroup>
                </t>
@@ -126,7 +126,7 @@ QUnit.module("Form Compiler", (hooks) => {
                             <InnerGroup class="scope &amp;&amp; scope.className">
                                 <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                                     <div t-att-class="props.class" t-attf-class="{{props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ props.record.isDirty ? 'o_form_dirty' : !props.record.isVirtual ? 'o_form_saved' : '' }} {{scope &amp;&amp; scope.className || &quot;&quot; }}" class="o_form_nosheet">
-                                        <div><Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']"/></div>
+                                        <div><Field id="'test'" name="'test'" record="props.record" fieldInfo="props.archInfo.fieldNodes['test']" setDirty="props.setFieldAsDirty"/></div>
                                     </div>
                                 </t>
                             </InnerGroup>
@@ -151,10 +151,10 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <Notebook defaultPage="props.record.isNew ? undefined : props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; this.props.onNotebookPageChange(0, page)">
                 <t t-set-slot="page_1" title="\`Page1\`" name="\`p1\`" isVisible="true">
-                    <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']"/>
+                    <Field id="'charfield'" name="'charfield'" record="props.record" fieldInfo="props.archInfo.fieldNodes['charfield']" setDirty="props.setFieldAsDirty"/>
                 </t>
                 <t t-set-slot="page_2" title="\`Page2\`" name="\`p2\`" isVisible="true">
-                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+                    <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" setDirty="props.setFieldAsDirty"/>
                </t>
            </Notebook>`;
 
@@ -168,7 +168,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']"/>
+            <Field id="'display_name'" name="'display_name'" record="props.record" fieldInfo="props.archInfo.fieldNodes['display_name']" setDirty="props.setFieldAsDirty"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
