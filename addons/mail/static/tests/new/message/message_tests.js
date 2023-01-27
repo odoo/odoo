@@ -1306,3 +1306,28 @@ QUnit.test("Channel should be opened after clicking on its mention", async funct
     assert.containsOnce(target, ".o-mail-chat-window-content");
     assert.containsOnce(target, ".o-mail-chat-window-header:contains(my-channel)");
 });
+
+QUnit.test(
+    "delete all attachments of message without content should no longer display the message",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const attachmentId = pyEnv["ir.attachment"].create({
+            mimetype: "text/plain",
+            name: "Blah.txt",
+        });
+        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        pyEnv["mail.message"].create({
+            attachment_ids: [attachmentId],
+            message_type: "comment",
+            model: "mail.channel",
+            res_id: channelId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsOnce(document.body, ".o-mail-message");
+
+        await click(".o-mail-attachment-card button[title='Remove']");
+        await click(".modal button:contains(Ok)");
+        assert.containsNone(document.body, ".o-mail-message");
+    }
+);
