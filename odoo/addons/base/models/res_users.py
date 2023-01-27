@@ -280,7 +280,7 @@ class Users(models.Model):
         return image_process(image, colorize=True)
 
     partner_id = fields.Many2one('res.partner', required=True, ondelete='restrict', auto_join=True,
-        string='Related Partner', help='Partner-related data of the user')
+        index=True, string='Related Partner', help='Partner-related data of the user')
     login = fields.Char(required=True, help="Used to log into the system")
     password = fields.Char(
         compute='_compute_password', inverse='_set_password',
