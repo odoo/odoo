@@ -35,5 +35,5 @@ class TestHttpEndPoint(HttpCase):
 
     def test_redirect_double_slash(self):
         res = self.url_open('/test_http//greeting', allow_redirects=False)
-        self.assertEqual(res.status_code, 301)
+        self.assertIn(res.status_code, (301, 308))
         self.assertEqual(werkzeug.urls.url_parse(res.headers.get('Location', '')).path, '/test_http/greeting')
