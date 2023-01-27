@@ -276,9 +276,7 @@ export class HtmlField extends Component {
         const value = this.getEditingValue();
         const lastValue = (this.props.value || "").toString();
         if (value !== null && !(!lastValue && value === "<p><br></p>") && value !== lastValue) {
-            if (this.props.setDirty) {
-                this.props.setDirty(true);
-            }
+            this.props.setDirty(false);
             this.currentEditingValue = value;
             await this.props.update(value);
         }
@@ -298,6 +296,9 @@ export class HtmlField extends Component {
             this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
+        this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
+            this.props.setDirty(this._isDirty())
+        );
 
         this.isRendered = true;
     }
@@ -369,7 +370,7 @@ export class HtmlField extends Component {
         }
     }
     _isDirty() {
-        return !this.props.readonly && this.props.value !== this.getEditingValue();
+        return !this.props.readonly && this.props.value.toString() !== this.getEditingValue();
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
