@@ -55,7 +55,7 @@ QUnit.test("Attachment shows spinner during upload", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({ name: "channel_1" });
     const { openDiscuss } = await start({
-        async mockXHR(route) {
+        async mockRPC(route) {
             if (route === "/mail/attachment/upload") {
                 // never fulfill the attachment upload promise.
                 await new Promise(() => {});

@@ -349,7 +349,6 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @param {Object} [param0.legacyServices]
  * @param {Object} [param0.services]
  * @param {function} [param0.mockRPC]
- * @param {function} [param0.mockXHR]
  * @param {boolean} [param0.hasTimeControl=false] if set, all flow of time with
  *   `messaging.browser.setTimeout` are fully controlled by test itself.
  * @param {integer} [param0.loadingBaseDelayDuration=0]

@@ -738,7 +738,7 @@ QUnit.test("composer: add an attachment in reply to message in history", async f
     );
 });
 
-QUnit.skipRefactoring(
+QUnit.test(
     "composer: send button is disabled if attachment upload is not finished",
     // FIXME: upload uses XHR, so not properly testable.
     async function (assert) {

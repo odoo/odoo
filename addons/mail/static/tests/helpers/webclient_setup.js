@@ -7,7 +7,6 @@ import { multiTabService } from "@bus/multi_tab_service";
 import { makeMultiTabToLegacyEnv } from "@bus/services/legacy/make_multi_tab_to_legacy_env";
 import { makeBusServiceToLegacyEnv } from "@bus/services/legacy/make_bus_service_to_legacy_env";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
-import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { ActivityMenu } from "@mail/new/activity/activity_menu";
 import { ChatWindowContainer } from "@mail/new/chat/chat_window_container";
@@ -55,7 +54,6 @@ const SERVICES_PARAMETER_NAMES = new Set([
     "legacyServices",
     "loadingBaseDelayDuration",
     "messagingBus",
-    "mockXHR",
     "services",
 ]);
 
@@ -63,12 +61,13 @@ const SERVICES_PARAMETER_NAMES = new Set([
  * @returns function that returns an `XMLHttpRequest`-like object whose response
  * is computed by the given mock server.
  */
-function getCreateXHR(mockServer, mockXHR) {
+function getCreateXHR() {
     const mockedXHR = makeMockXHR();
     return function () {
         const xhr = mockedXHR();
         let response = "";
         let route = "";
+        const self = this;
         patch(xhr, "mail", {
             open(method, dest) {
                 route = dest;
@@ -77,11 +76,8 @@ function getCreateXHR(mockServer, mockXHR) {
             async send(data) {
                 const _super = this._super;
                 await new Promise(setTimeout);
-                const performXHR = mockXHR ?? mockServer.performRPC.bind(mockServer);
                 response = JSON.stringify(
-                    await performXHR(route, {
-                        body: data,
-                    })
+                    await self.env.services.rpc(route, { body: data, method: "POST" })
                 );
                 return _super(data);
             },
@@ -115,14 +111,13 @@ function setupMainComponentRegistry() {
  * @param {Object} [param0.services]
  * @param {number} [param0.loadingBaseDelayDuration=0]
  * @param {EventBus} [param0.messagingBus]
- * @param {Function} [param0.mockXHR]
+ * @param {Function} [param0.mockRPC]
  * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
  * to the webClient as a legacy parameter.
  */
 async function setupMessagingServiceRegistries({
     loadingBaseDelayDuration = 0,
     messagingBus,
-    mockXHR,
     services,
 }) {
     const serviceRegistry = registry.category("services");
@@ -174,10 +169,13 @@ async function setupMessagingServiceRegistries({
         ...services,
     };
     if (!serviceRegistry.contains("file_upload")) {
-        const pyEnv = await getPyEnv();
         serviceRegistry.add("file_upload", {
             ...fileUploadService,
-            createXhr: getCreateXHR(pyEnv.mockServer, mockXHR),
+            start(env, ...args) {
+                this.env = env;
+                return fileUploadService.start.call(this, env, ...args);
+            },
+            createXhr: getCreateXHR(),
         });
     }
 
