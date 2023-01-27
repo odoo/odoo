@@ -74,17 +74,24 @@ class HrPlanWizard(models.TransientModel):
             activities = set()
             for activity_type in self._get_activities_to_schedule():
                 responsible = activity_type.get_responsible_id(employee)['responsible']
-                if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
-                    date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
-                    employee.activity_schedule(
-                        activity_type_id=activity_type.activity_type_id.id,
-                        summary=activity_type.summary,
-                        note=activity_type.note,
-                        user_id=responsible.id,
-                        date_deadline=date_deadline
-                    )
-                    activity = _('%(activity)s, assigned to %(name)s, due on the %(deadline)s', activity=activity_type.summary, name=responsible.name, deadline=date_deadline)
-                    activities.add(activity)
+                record = employee
+                if not self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
+                    record = self.env['hr.plan.employee.activity'].sudo().search([('employee_id', '=', employee.id)], limit=1)
+                    if not record:
+                        record = self.env['hr.plan.employee.activity'].sudo().create({
+                            'employee_id': employee.id,
+                        })
+
+                date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                record.activity_schedule(
+                    activity_type_id=activity_type.activity_type_id.id,
+                    summary=activity_type.summary,
+                    note=activity_type.note,
+                    user_id=responsible.id,
+                    date_deadline=date_deadline
+                )
+                activity = _('%(activity)s, assigned to %(name)s, due on the %(deadline)s', activity=activity_type.summary, name=responsible.name, deadline=date_deadline)
+                activities.add(activity)
 
             if activities:
                 body += '<ul>'

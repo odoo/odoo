@@ -60,5 +60,17 @@
         <field name="model_id" ref="model_hr_plan_activity_type"/>
         <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
     </record>
+
+    <record id="hr_plan_employee_activity_company_rule" model="ir.rule">
+        <field name="name">Plan Employee Activity: multi-company rule</field>
+        <field name="model_id" ref="model_hr_plan_employee_activity"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="hr_plan_employee_activity_own_user" model="ir.rule">
+        <field name="name">Plan Employee Activity: own employee or subordinates</field>
+        <field name="model_id" ref="model_hr_plan_employee_activity"/>
+        <field name="domain_force">['|', ('user_id', '=', user.id), ('activity_ids.user_id', '=', user.id)]</field>
+    </record>
 </data>
 </odoo>
