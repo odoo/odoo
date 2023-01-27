@@ -2699,6 +2699,7 @@ class MailThread(models.AbstractModel):
             'force_send',
             'mail_auto_delete',
             'model_description',
+            'notify_author',
             'resend_existing',
             'scheduled_date',
             'send_after_commit',
@@ -3187,6 +3188,10 @@ class MailThread(models.AbstractModel):
         methods. See those methods for more details about supported parameters.
         Specific kwargs used in this method:
 
+          * ``notify_author``: allows to notify the author, which is False by
+            default as we don't want people to receive their own content. It is
+            used notably when impersonating partners or having automated
+            notifications send by current user, targeting current user;
           * ``skip_existing``: check existing notifications and skip them in order
             to avoid having several notifications / partner as it would make
             constraints crash. This is disabled by default to optimize speed;
@@ -3213,9 +3218,11 @@ class MailThread(models.AbstractModel):
         if not res:
             return recipients_data
 
+        # notify author of its own messages, False by default
+        notify_author = kwargs.get('notify_author') or self.env.context.get('mail_notify_author')
         author_id = msg_vals.get('author_id') or message.author_id.id
         for pid, pdata in res.items():
-            if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
+            if pid and not notify_author and pid == author_id:
                 continue
             if pdata['active'] is False:
                 continue

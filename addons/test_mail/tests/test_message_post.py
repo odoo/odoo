@@ -314,6 +314,49 @@ class TestMessageNotify(TestMessagePostCommon):
         self.assertNotIn('/mail/view?model=', partner_mail_body, 'The email sent to customer should not contain an access link')
 
     @users('employee')
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_notify_author(self):
+        """ Author is not added in notified people by default, unless asked to
+        using the 'notify_author' parameter or context key. """
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.message_notify(
+                body='<p>You have received a notification</p>',
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(new_notification.notified_partner_ids, self.partner_1)
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.message_notify(
+                body='<p>You have received a notification</p>',
+                notify_author=True,
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(
+            new_notification.notified_partner_ids,
+            self.partner_1 + self.partner_employee,
+            'Notify: notify_author parameter skips the author restriction'
+        )
+
+        with self.mock_mail_gateway():
+            new_notification = test_record.with_context(mail_notify_author=True).message_notify(
+                body='<p>You have received a notification</p>',
+                partner_ids=(self.partner_1 + self.partner_employee).ids,
+                subject='This should be a subject',
+            )
+
+        self.assertEqual(
+            new_notification.notified_partner_ids,
+            self.partner_1 + self.partner_employee,
+            'Notify: mail_notify_author context key skips the author restriction'
+        )
+
+    @users('employee')
     def test_notify_batch(self):
         """ Test notify in batch. Currently not supported. """
         test_records, _partners = self._create_records_for_batch('mail.test.simple', 10)
