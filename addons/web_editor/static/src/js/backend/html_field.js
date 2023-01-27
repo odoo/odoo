@@ -638,8 +638,8 @@ HtmlField.extractProps = ({ attrs, field }) => {
         // can be set elsewhere otherwise.
         wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
     }
-    if (field.sanitize && field.sanitize_tags) {
-        wysiwygOptions.allowCommandVideo = false; // Sanitized fields remove videos.
+    if (field.sanitize_tags || (field.sanitize_tags === undefined && field.sanitize)) {
+        wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
     } else if ('allowCommandVideo' in attrs.options) {
         // Set the option only if it is explicitly set in the view so a default
         // can be set elsewhere otherwise.
