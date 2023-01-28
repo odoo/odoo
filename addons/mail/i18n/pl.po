@@ -28,7 +28,6 @@
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2022
 # Tomasz Leppich <t.leppich@gmail.com>, 2022
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
-# Piotr Strębski <strebski@gmail.com>, 2022
 # Karol Rybak <karolrybak85@gmail.com>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
@@ -36,6 +35,7 @@
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
+# Piotr Strębski <strebski@gmail.com>, 2023
 # Maksym <ms@myodoo.pl>, 2023
 # 
 msgid ""
@@ -797,12 +797,12 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Button Color</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Kolor przycisku</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"d-block w-75 py-2\">Header Color</span>"
-msgstr ""
+msgstr "<span class=\"d-block w-75 py-2\">Kolor nagłówka</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -812,7 +812,7 @@ msgstr "<span class=\"o_form_label\">Czynności</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Custom ICE server list</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Spersonalizowana lista serwerów ICE</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1296,7 +1296,7 @@ msgstr "Dodaj użytkowników"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr ""
+msgstr "Dodaj certyfikaty twilio dla serwerów ICE"
 
 #. module: mail
 #. odoo-python
@@ -1920,7 +1920,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__secondary_color
 msgid "Button Color"
-msgstr ""
+msgstr "Kolor przycisku"
 
 #. module: mail
 #. odoo-python
@@ -2429,7 +2429,7 @@ msgstr "Konfiguracja"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr ""
+msgstr "Skonfiguruj listę serwerów ICE dla webRTC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2767,7 +2767,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Customize the look and feel of automated emails"
-msgstr ""
+msgstr "Dostosuj wygląd i styl automatycznych wiadomości e-mail"
 
 #. module: mail
 #. odoo-javascript
@@ -4201,7 +4201,7 @@ msgstr "Ma błąd"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__primary_color
 msgid "Header Color"
-msgstr ""
+msgstr "Kolor nagłówka"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__headers
@@ -6877,6 +6877,13 @@ msgstr "Otwórz rozmowę"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "Otwórz profil"
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
@@ -7895,7 +7902,7 @@ msgstr "Ponów"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Review All Templates"
-msgstr ""
+msgstr "Przejrzyj wszystkie szablony"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
@@ -9787,7 +9794,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
-msgstr ""
+msgstr "Użyj serwerów Twilio ICE"
 
 #. module: mail
 #. odoo-python
@@ -11634,7 +11641,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "banner"
-msgstr ""
+msgstr "baner"
 
 #. module: mail
 #. odoo-javascript
@@ -13114,7 +13121,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "business"
-msgstr ""
+msgstr "firmy"
 
 #. module: mail
 #. odoo-javascript
@@ -13479,7 +13486,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "carousel"
-msgstr ""
+msgstr "karuzela"
 
 #. module: mail
 #. odoo-javascript
@@ -27065,7 +27072,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "picture"
-msgstr ""
+msgstr "obraz"
 
 #. module: mail
 #. odoo-javascript

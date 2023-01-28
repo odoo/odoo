@@ -113,14 +113,14 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr "Code-barres invalide, ne peut pas être formaté comme une date"
+msgstr "Code-barres invalide : ne peut pas être formaté comme une date"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr "Code-barres non valide : le chiffre de contrôle est incorrect"
+msgstr "Code-barres invalide : le chiffre de contrôle est incorrect"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -131,7 +131,7 @@ msgstr "Est de nomenclature GS1"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
 msgid "Location"
-msgstr "Lieu"
+msgstr "Emplacement"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__lot
@@ -146,7 +146,7 @@ msgstr "Mesure"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr "Identificateur numérique"
+msgstr "Identifiant numérique"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__pack_date
@@ -186,9 +186,9 @@ msgid ""
 msgstr ""
 "Le type de contenu GS1 définit ce quelles données cette règle va gérer:   "
 "*Date: le code-barres sera converti en datetime Odoo;     *Mesure:  le code-"
-"barres est relatif à une unité de mesure spécifique;     *Numeric "
-"Identifier: code-barres de taille fixe suivi d'un encodage spécifique;     "
-"*Nom Alpha-numérique: code-barres à taille variable"
+"barres est relatif à une unité de mesure spécifique;     *Identifiant "
+"numérique : code-barres de taille fixe suivi d'un encodage spécifique;     "
+"*Nom alphanumérique: code-barres à taille variable"
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-python
@@ -207,7 +207,7 @@ msgid ""
 "\t- A second one to catch the value."
 msgstr ""
 "Le modèle de règle \"%s\" est invalide, il nécessite 2 groupes:\n"
-"\t- Un premier pour l'Application Identifier (normallement 2 à 4 chiffres);\n"
+"\t- Un premier pour l'identifiant de l'application (normalement 2 à 4 chiffres);\n"
 "\t- Un second pour la valeur"
 
 #. module: barcodes_gs1_nomenclature
@@ -219,9 +219,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
-"Il y a une erreur avec le modele de règle \"%s\".\n"
-"Si cette règle utilise des décimales, veillez à ce qu'il ne puisse jamais obtenir autre chose qu'un chiffre comme dernier caractère de l'Application Identifier.\n"
-"Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
+"Il y a une erreur avec la règle de code-barres \"%s\".\n"
+"Si cette règle utilise des décimales, vérifiez qu'elle ne peut pas obtenir autre chose qu'un chiffre comme dernier caractère de l'identifiant de l'application.\n"
+"Vérifiez également que les valeurs correspondantes possibles ne peuvent être que des chiffres, sinon la valeur ne peut pas être convertie en mesure."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -238,14 +238,14 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr "Ce code-barres ne peut être traduit par aucune règle"
+msgstr "Ce code-barres ne peut être analysé par aucune règle de code-barres."
 
 #. module: barcodes_gs1_nomenclature
 #. odoo-javascript
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr "Ce code-barres ne peut être traduit complètement"
+msgstr "Ce code-barres ne peut pas être partiellement ou totalement analysé."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding
