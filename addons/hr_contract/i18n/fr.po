@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +29,7 @@ msgstr "# Contrats"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_resource_calendar__contracts_count
 msgid "# Contracts using it"
-msgstr "# Contrats qui l'utilise"
+msgstr "# Contrats qui l'utilisent"
 
 #. module: hr_contract
 #: code:addons/hr_contract/report/hr_contract_history.py:0
@@ -88,12 +89,12 @@ msgstr "Nécessite une action"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__active_employee
 msgid "Active Employee"
-msgstr "Employé Actif"
+msgstr "Employé actif"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
@@ -134,7 +135,7 @@ msgid ""
 "\n"
 "Employee: %(employee_name)s"
 msgstr ""
-"Un employé ne peut avoir qu'un seul contrat à la fois. (Hors projets de contrats et contrats annulés).\n"
+"Un employé ne peut avoir qu'un seul contrat à la fois. (Hors contrats brouillon et contrats annulés).\n"
 "\n"
 "Employé : %(employee_name)s"
 
@@ -147,12 +148,12 @@ msgstr "Archivé"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_attachment_count
 msgid "Attachment Count"
-msgstr "Compte des pièces jointes"
+msgstr "Nombre de pièces jointes"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_res_users__bank_account_id
 msgid "Bank Account Number"
-msgstr "Numéro de Compte Bancaire"
+msgstr "Numéro de compte bancaire"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
@@ -176,7 +177,7 @@ msgstr "Société"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__vehicle
 #: model:ir.model.fields,field_description:hr_contract.field_res_users__vehicle
 msgid "Company Vehicle"
-msgstr "Véhicule de service"
+msgstr "Véhicule de société"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__company_country_id
@@ -198,13 +199,13 @@ msgid ""
 "Contract %(contract)s: start date (%(start)s) must be earlier than contract "
 "end date (%(end)s)."
 msgstr ""
-"Contrat %(contract)s: la date de début (%(start)s) doit être antérieure à la"
-" date de fin du contrat (%(end)s)."
+"Contrat %(contract)s : la date de début (%(start)s) doit être antérieure à "
+"la date de fin du contrat (%(end)s)."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr "Nombre de contrat(s)"
+msgstr "Nombre de contrats"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -243,7 +244,7 @@ msgstr "Date de début du contrat"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
 msgid "Contract Type"
-msgstr "Type de Contrat"
+msgstr "Type de contrat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
@@ -265,12 +266,12 @@ msgstr "Contrat en voie d'expiration"
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_close
 msgid "Contract expired"
-msgstr "Contra expiré"
+msgstr "Contrat expiré"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_contract_history
 msgid "Contract history"
-msgstr "Historique des Contrats"
+msgstr "Historique des contrats"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -320,7 +321,7 @@ msgstr "Créer"
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
 msgid "Create a new contract"
-msgstr "Créez un nouveau contrat"
+msgstr "Créer un nouveau contrat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__create_uid
@@ -429,7 +430,7 @@ msgstr "Contrat de l'employé"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_ids
 msgid "Employee Contracts"
-msgstr "Contrats des Employés"
+msgstr "Contrats des employés"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -490,7 +491,7 @@ msgstr "Expiré"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__first_contract_date
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee_public__first_contract_date
 msgid "First Contract Date"
-msgstr "Première Date de Contrat"
+msgstr "Première date de contrat"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_follower_ids
@@ -505,7 +506,7 @@ msgstr "Abonnés (Partenaires)"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icône Font Awesome e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -533,7 +534,7 @@ msgstr "Regrouper par"
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
-msgstr "Contrat de personnel : mettre à jour l'état"
+msgstr "Contrat RH : mettre à jour le statut"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
@@ -577,7 +578,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si actif, certains messages ont une erreur de livraison."
+msgstr "Si coché, certains messages ont une erreur de livraison."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
@@ -595,7 +596,7 @@ msgstr "Est un abonné"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Job Position"
-msgstr "Poste Occupé"
+msgstr "Poste de travail"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
@@ -672,7 +673,7 @@ msgstr "Activité suivante de l'événement du calendrier"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'activité à venir"
+msgstr "Date limite de l'activité suivante"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
@@ -844,7 +845,7 @@ msgstr "Date de début"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_public_view_form
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_state
@@ -863,7 +864,7 @@ msgstr ""
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__state
 msgid "Status of the contract"
-msgstr "État du contrat"
+msgstr "Statut du contrat"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__country_code
@@ -884,12 +885,12 @@ msgstr "Le contrat de %s est sur le point d'expirer."
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr "À renouveller"
+msgstr "À renouveler"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Today Activities"
-msgstr "Activités du Jour"
+msgstr "Activités du jour"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -899,7 +900,7 @@ msgstr "Tapez des notes sur ce contrat..."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type d'activité d'exception enregistrée"
+msgstr "Type d'activité d'exception enregistrée."
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
@@ -947,4 +948,4 @@ msgstr "N° de permis de travail"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__resource_calendar_id
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Working Schedule"
-msgstr "Heures de travail"
+msgstr "Horaire de travail"

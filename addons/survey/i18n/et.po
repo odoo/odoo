@@ -14,8 +14,8 @@
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Leaanika Randmets, 2022
-# Jana Jaakson, 2022
 # Anna, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -271,6 +271,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Me kasutame uuringu koostanud ettevõtte logo (mitme ettevõtte puhul). -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Sertifikaat: <t t-out=\"object.survey_id.display_name or ''\">Tagasiside</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Hea <span t-out=\"object.partner_id.name or 'participant'\">osaleja</span></p>\n"
+"                <p>\n"
+"                    Palun leidke lisatud\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Mööbli valmistamise </strong>\n"
+"                    sertifikaat\n"
+"                </p>\n"
+"                <p>Õnnitleme testi läbimise eest skooriga <strong t-out=\"object.scoring_percentage\"/>% !</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -307,6 +333,37 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hea <t t-out=\"object.partner_id.name or 'participant'\">osaleja</t><br/><br/>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            Teid on kutsutud uuele sertifitseerimisele.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Me korraldame küsitlust ja Teie vastus oleks teretulnud.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t t-if=\"object.survey_id.certification\">\n"
+"                    Alustage sertifitseerimist\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Alustage küsitlust\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            Palun vastake küsimustele hiljemalt <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"        </t>\n"
+"        <t t-if=\"object.survey_id.certification\">\n"
+"            Soovime Teile edu!\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Ette tänades osalemise eest.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_matrix
@@ -321,12 +378,12 @@ msgstr "<i class=\"fa fa-bar-chart\"/> Tulemused"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-check-square-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-check-square-o fa-lg me-2\"/>vastus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-circle-o  fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-circle-o  fa-lg me-2\"/>vastus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -345,7 +402,7 @@ msgstr "<i class=\"fa fa-close\"/> Sulge"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-dot-circle-o fa-lg me-2\"/>vastus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -389,7 +446,7 @@ msgstr "<i class=\"fa fa-list-ol me-1\"/>Kõige tavapärasem"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "<i class=\"fa fa-square-o fa-lg me-2\"/>answer"
-msgstr ""
+msgstr "<i class=\"fa fa-square-o fa-lg me-2\"/>vastus"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -404,6 +461,10 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
+"            </p>\n"
+"        "
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p4_q4
@@ -413,6 +474,10 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/pinus_sylvestris.jpg\" style=\"width: 100%;\"/><br/>\n"
+"            </p>\n"
+"        "
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p4
@@ -422,11 +487,15 @@ msgid ""
 "            </p>\n"
 "        "
 msgstr ""
+"<p>\n"
+"                Meile meeldib öelda, et õun ei lange puu otsast kaugele, nii et siin on puud.\n"
+"            </p>\n"
+"        "
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p3
 msgid "<p>An apple a day keeps the doctor away.</p>"
-msgstr ""
+msgstr "<p>Õun päevas hoiab haigused eemal.</p>"
 
 #. module: survey
 #: model:survey.survey,description:survey.survey_demo_burger_quiz
@@ -627,6 +696,9 @@ msgid ""
 "start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
 "position-relative\">Key</span></span>"
 msgstr ""
+"<span class=\"o_survey_key text-center position-absolute bg-white rounded-"
+"start py-0 ps-2\"><span class=\"text-primary text-center text-center w-100 "
+"position-relative\">Võti</span></span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_manage_content
@@ -677,7 +749,7 @@ msgstr "<span>Kõik küsitlused</span>"
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
-msgstr ""
+msgstr "<span>Parim aeg seda teha, on õige aeg seda teha.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -685,6 +757,8 @@ msgid ""
 "<span>Click on the filter icon (<span class=\"fa fa-filter text-primary\"/>)\n"
 "                                    next to an answer to filter surveys on similar answers only.</span>"
 msgstr ""
+"<span>Klikake filtri ikoonil (<span class=\"fa fa-filter text-primary\"/>)\n"
+"                                    vastuse kõrval, et filtreerida küsitlusi sarnaste vastuste alusel.</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -995,7 +1069,7 @@ msgstr "Kõik küsitlused"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
 msgid "Amenhotep"
-msgstr ""
+msgstr "Amenhotep"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_user_input_unique_token
@@ -1147,6 +1221,8 @@ msgid ""
 "Automated email sent to the user when they succeed the certification, "
 "containing their certification document."
 msgstr ""
+"Automaatne e-kiri, mis saadetakse kasutajale peale õnnestunud "
+"sertifitseerimist ja mis sisaldab tema sertifikaati."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q6_sug3
@@ -1240,7 +1316,7 @@ msgstr "Brüssel, Belgia"
 #. module: survey
 #: model:survey.survey,title:survey.survey_demo_burger_quiz
 msgid "Burger Quiz"
-msgstr ""
+msgstr "Burger Quiz"
 
 #. module: survey
 #. odoo-python
@@ -1299,6 +1375,8 @@ msgstr "Sertifitseerimise märk"
 #, python-format
 msgid "Certification Badge is not configured for the survey %(survey_name)s"
 msgstr ""
+"Sertifitseerimismärki ei ole küsitluse %(survey_name)s jaoks "
+"konfigureeritud."
 
 #. module: survey
 #: model:mail.template,report_name:survey.mail_template_certification
@@ -1330,7 +1408,7 @@ msgstr "Sertifitseerimise mall"
 #. module: survey
 #: model:mail.template,subject:survey.mail_template_certification
 msgid "Certification: {{ object.survey_id.display_name }}"
-msgstr ""
+msgstr "Sertifitseerimine: {{ object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.report,name:survey.certification_report
@@ -1488,12 +1566,12 @@ msgstr "Koosta e-kiri"
 #: code:addons/survey/models/survey_user_input.py:0
 #, python-format
 msgid "Computing score requires a question in arguments."
-msgstr ""
+msgstr "Skoori arvutamine eeldab küsimust argumentides."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__is_conditional
 msgid "Conditional Display"
-msgstr ""
+msgstr "Tingimuslik kuvamine"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1563,7 +1641,7 @@ msgstr "Kopeeritud !"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q1_sug3
 msgid "Cornaceae"
-msgstr ""
+msgstr "Cornaceae"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_2_question_2_choice_1
@@ -1807,7 +1885,7 @@ msgstr "Näidatav nimi"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__progression_mode
 msgid "Display Progress as"
-msgstr ""
+msgstr "Progressi kuvamine kui"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1833,7 +1911,7 @@ msgstr "Koerad"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees ?"
-msgstr ""
+msgstr "Koerupuu kuulub millisesse puude perekonda ?"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
@@ -1843,7 +1921,7 @@ msgstr "Ära ole häbelik, ole metsik!"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p4_q5_sug1
 msgid "Douglas Fir"
-msgstr ""
+msgstr "Douglase kuusk"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_4
@@ -1925,7 +2003,7 @@ msgstr "Olemasolevad e-kirjad"
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p2_q3_sug2
 msgid "Eyjafjallajökull (Iceland)"
-msgstr ""
+msgstr "Eyjafjallajökull (Iceland)"
 
 #. module: survey
 #. odoo-python
@@ -2009,7 +2087,7 @@ msgstr "Saatja"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q4
 msgid "From which continent is native the Scots pine (pinus sylvestris) ?"
-msgstr ""
+msgstr "Milliselt mandrilt on pärit mänd (Pinus sylvestris) ?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q1_sug1
@@ -2092,7 +2170,7 @@ msgstr "Grupeeri"
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_mode
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Handle existing"
-msgstr ""
+msgstr "Käsitleda olemasolevaid"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -2343,6 +2421,8 @@ msgid ""
 "If checked, this question will be displayed only\n"
 "        if the specified conditional answer have been selected in a previous question"
 msgstr ""
+"Kui see on märgitud, kuvatakse see küsimus ainult\n"
+"        sellisel juhul, kui antud tingimuslik vastus on eelmises küsimuses valitud."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -2573,7 +2653,7 @@ msgstr "See on teie vaatajaskonna jaoks köitvam"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "It's a Belgian word for \"Management\""
-msgstr ""
+msgstr "Sõna \"Juhtimine\" on tulnud Belgiast. "
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p5_q1_sug3
@@ -2773,7 +2853,7 @@ msgstr "Otseülekanded"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Load a <b>sample Survey</b> to get started quickly."
-msgstr ""
+msgstr "Laadige <b>näidisküsitlus</b>, et kiiresti alustada."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -2980,12 +3060,12 @@ msgstr "Minu tegevuse tähtaeg"
 #. module: survey
 #: model:gamification.badge,name:survey.vendor_certification_badge
 msgid "MyCompany Vendor"
-msgstr ""
+msgstr "MyCompany Tarnija"
 
 #. module: survey
 #: model:survey.survey,title:survey.vendor_certification
 msgid "MyCompany Vendor Certification"
-msgstr ""
+msgstr "MyCompany Tarnija sertifitseerimine"
 
 #. module: survey
 #. odoo-python
@@ -3188,7 +3268,7 @@ msgstr "Numbriline vastus"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Object-Directed Open Organization"
-msgstr ""
+msgstr "Object-Directed Open Organization"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.question_result_number_or_date_or_datetime
@@ -3221,6 +3301,7 @@ msgstr "Sageli (1-3 korda nädalas)"
 msgid ""
 "On Survey questions, one can define \"placeholders\". But what are they for?"
 msgstr ""
+"On Survey questions, one can define \"placeholders\". But what are they for?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p1_q3_sug1
@@ -3340,7 +3421,7 @@ msgstr "Seaded"
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Organizational Development for Operation Officers"
-msgstr ""
+msgstr "Organizational Development for Operation Officers"
 
 #. module: survey
 #. odoo-python
@@ -3420,6 +3501,8 @@ msgstr "Participants"
 #: model:mail.template,subject:survey.mail_template_user_input_invite
 msgid "Participate to {{ object.survey_id.display_name }} survey"
 msgstr ""
+"Osalege {{ object.survey_id.display_name }} uuringus {{ "
+"object.survey_id.display_name }}"
 
 #. module: survey
 #: model:ir.actions.act_window,name:survey.action_survey_user_input
@@ -3705,7 +3788,7 @@ msgstr "Valmis"
 #: code:addons/survey/static/src/js/tours/survey_tour.js:0
 #, python-format
 msgid "Ready to change the way you <b>gather data</b>?"
-msgstr ""
+msgstr "Oled valmis muutma oma <b>andmekogumise</b> viisi?"
 
 #. module: survey
 #: model_terms:ir.actions.act_window,help:survey.action_survey_form
@@ -4040,6 +4123,8 @@ msgstr ""
 #, python-format
 msgid "Show them slides with a ton of text they need to read fast"
 msgstr ""
+"Näidake neile slaide, millel on palju teksti ja mida nad peavad kiiresti "
+"lugema."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__char_box
@@ -4308,7 +4393,7 @@ msgstr "Küsitluse kasutaja sisendid"
 #. module: survey
 #: model:mail.template,name:survey.mail_template_certification
 msgid "Survey: Certification Success"
-msgstr ""
+msgstr "Küsitlus: sertifitseerimine õnnestus"
 
 #. module: survey
 #: model:mail.template,name:survey.mail_template_user_input_invite
@@ -5206,6 +5291,8 @@ msgid ""
 "YYYY-MM-DD\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -5213,6 +5300,8 @@ msgid ""
 "YYYY-MM-DD hh:mm:ss\n"
 "                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 msgstr ""
+"YYYY-MM-DD hh:mm:ss\n"
+"                                        <i class=\"fa fa-calendar\" role=\"img\" aria-label=\"Calendar\" title=\"Calendar\"/>"
 
 #. module: survey
 #. odoo-python
@@ -5358,7 +5447,7 @@ msgstr "sulge"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "dropdown-item d-flex align-items-center justify-content-between"
-msgstr ""
+msgstr "dropdown-item d-flex align-items-center justify-content-between"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form

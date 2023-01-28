@@ -9,6 +9,7 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Anzelika Adejanova, 2022
 # Martin Trigaux, 2022
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -485,10 +486,11 @@ msgid ""
 "\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <!-- GOOGLE MAPS LINK -->\n"
-"                    <table t-if=\"event_address\" style=\"width:100%;\"><tr><td>\n"
+"                    <table t-if=\"event_address and location\" style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
+"                            <i class=\"fa fa-map-marker\"/>\n"
 "                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
-"                                <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                               See location on Google Maps\n"
 "                            </a>\n"
 "                        </div>\n"
 "                    </td></tr></table>\n"
@@ -705,8 +707,9 @@ msgid ""
 "                    <t t-if=\"event_address\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
+"                                <i class=\"fa fa-map-marker\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
-"                                    <img t-attf-src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C{{ location }}\" style=\"vertical-align:bottom; width: 100%;\" alt=\"Google Maps\"/>\n"
+"                                   See location on Google Maps\n"
 "                                </a>\n"
 "                            </div>\n"
 "                        </td></tr></table>\n"
@@ -3139,7 +3142,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
 msgid "Ticket"
-msgstr ""
+msgstr "Biļete"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions

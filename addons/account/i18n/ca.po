@@ -2750,7 +2750,7 @@ msgstr "Aplicabilitats del plan analític"
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
 msgid "Analytic Plans"
-msgstr "Plans analítics:"
+msgstr "Plans analítics"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_precision
@@ -5042,6 +5042,7 @@ msgstr "Factura de client"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -5816,7 +5817,7 @@ msgstr "Mostra en factures"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__preview_ready
 msgid "Display preview button"
-msgstr "Mostra el botó de previsualització"
+msgstr "Mostra el botó de vista prèvia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__display_on_invoice
@@ -6348,7 +6349,7 @@ msgstr "Exemple no vàlid"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term__example_preview
 msgid "Example Preview"
-msgstr "Previsualització d'exemple"
+msgstr "Vista prèvia d'exemple"
 
 #. module: account
 #. odoo-javascript
@@ -6828,7 +6829,7 @@ msgstr "Moneda Estrangera"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr "NIF Fiscal Estranger"
+msgstr "NIF estranger"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7527,22 +7528,22 @@ msgstr "Importació en format CAMT.053"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr "Importa els teus extractes bancaris a CAMT.053"
+msgstr "Importar els teus extractes bancaris en CAMT.053"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CSV"
-msgstr "Importa els teus extractes bancaris en CSV"
+msgstr "Importar els teus extractes bancaris en CSV"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in OFX"
-msgstr "Importeu els vostres extractes bancaris a OFX"
+msgstr "Importar els teus extractes bancaris en OFX"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in QIF"
-msgstr "Importeu els vostres extractes bancaris en QIF"
+msgstr "Importar els teus extractes bancaris en QIF"
 
 #. module: account
 #. odoo-python
@@ -8006,7 +8007,7 @@ msgstr "Giny de Pagament de Factures"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__preview_invoice
 msgid "Invoice Preview"
-msgstr "Vista Prèvia de la Factura"
+msgstr "Vista prèvia de la factura"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__state
@@ -11319,27 +11320,27 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Preview"
-msgstr "Previsualitza"
+msgstr "Vista prèvia"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__preview_data
 msgid "Preview Data"
-msgstr "Dades de vista prèvia"
+msgstr "Previsualitzar les dades"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_resequence_view
 msgid "Preview Modifications"
-msgstr "Vista prèvia Modificacions"
+msgstr "Previsualitzar les modificacions"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__preview_move_data
 msgid "Preview Move Data"
-msgstr "Vista prèvia Mou les dades"
+msgstr "Previsualitzar les dades del moviment"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__preview_moves
 msgid "Preview Moves"
-msgstr "Vista prèvia dels moviments"
+msgstr "Previsualitzar les escriptures"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -13391,7 +13392,7 @@ msgstr "Grups de impostos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "ID d'impost"
+msgstr "NIF"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
@@ -13636,7 +13637,7 @@ msgstr "Impostos per aplicar"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr "RecaptadorCulod"
+msgstr "TaxCloud"
 
 #. module: account
 #. odoo-python
@@ -14792,8 +14793,8 @@ msgstr ""
 msgid ""
 "The tax ID of your company in the region mapped by this fiscal position."
 msgstr ""
-"L' ID dels impostos de la seva empresa a la regió mapat per aquesta posició "
-"fiscal."
+"El número d'identificació fiscal de la seva empresa a la regió mapejada per "
+"aquesta posició fiscal."
 
 #. module: account
 #. odoo-python
@@ -15416,7 +15417,7 @@ msgstr "Residual total en moneda"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #, python-format
 msgid "Total Rounded"
-msgstr ""
+msgstr "Total arrodonit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -16005,6 +16006,7 @@ msgstr "Factura de proveïdor creada"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -17358,6 +17360,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"La Unitat de mesura (UdM) «%s» que heu seleccionat per al producte «%s», és "
+"incompatible amb la seva categoria: %s."
 
 #. module: account
 #. odoo-python
@@ -17367,6 +17371,9 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"Aquest producte ja s'està utilitzant en entrades de revistes publicades. Si "
+"voleu canviar la seva unitat de mesura, arxiveu aquest producte i creeu-ne "
+"un de nou."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form

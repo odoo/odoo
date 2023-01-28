@@ -5,7 +5,7 @@
 # Translators:
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3855,6 +3855,8 @@ msgstr "Dominio inválido para el operando derecho %s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"La configuración de la regla no es válida, la siguiente regla causa un bucle"
+" infinito: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -8700,6 +8702,16 @@ msgstr ""
 "uno nuevo."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La empresa de este producto no se puede cambiar mientras tenga cantidades "
+"que pertenecen a otra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9884,7 +9896,7 @@ msgstr "No puede ingresar cantidades negativas."
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft or cancelled moves."
-msgstr ""
+msgstr "Solo puede eliminar movimientos en estado de borrador o cancelados."
 
 #. module: stock
 #. odoo-python
@@ -10459,4 +10471,4 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "Días de visibilidad global"

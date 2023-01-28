@@ -3,9 +3,9 @@
 # 	* event
 # 
 # Translators:
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,25 +36,25 @@ msgstr "عدد المرسلة "
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(event_name)s (%(count)s مقاعد متبقية) "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
-msgstr ""
+msgstr "%(event_name)s (نفدت الكمية) "
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
-msgstr ""
+msgstr "%(ticket_name)s (%(count)s مقاعد متبقية) "
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
-msgstr ""
+msgstr "%(ticket_name)s (نفدت الكمية) "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
@@ -90,7 +90,7 @@ msgstr "'تذكرة كامل الصفحة - %s' % (object.name or 'Event').repla
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr ""
+msgstr "- \"%(event_name)s\": ينقصها %(nb_too_many)i مقاعد. "
 
 #. module: event
 #: code:addons/event/models/event_ticket.py:0
@@ -99,6 +99,8 @@ msgid ""
 "- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
 "seats."
 msgstr ""
+"- التذكرة \"%(ticket_name)s\" (%(event_name)s): ينقصها %(nb_too_many)i "
+"مقاعد. "
 
 #. module: event
 #: model:event.tag,name:event.event_tag_category_1_tag_2
@@ -242,6 +244,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"End date\"/>"
 msgstr ""
+"<i class=\"fa fa-arrow-right me-2 o_event_fontsize_09\" title=\"تاريخ "
+"الاتنهاء \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -286,7 +290,7 @@ msgstr ""
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"Location\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-map-marker mt-1 me-1\" title=\"الموقع \"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -334,6 +338,9 @@ msgid ""
 "                                Registration statistics\n"
 "                            </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                إحصائيات التسجيل\n"
+"                            </span> "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -848,7 +855,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Add some internal notes (to do lists, contact info, ...)"
-msgstr ""
+msgstr "أضف بعض الملاحظات الداخلية (قوائم المهام، معلومات التواصل، ...) "
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_search
@@ -1635,6 +1642,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"تجمع قوالب الفعاليات بين التهيئات التي تستخدمها بكثرة\n"
+"                والتي تعتمد عادةً على أنواع الفعاليات التي تقوم بتنظيمها (مثال: \"ورشة عمل\"،\n"
+"                \"عرض ترويجي\"، \"ندوة عبر الويب\"، وما إلى ذلك). "
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -1742,6 +1752,8 @@ msgid ""
 "Every year we invite our community, partners and end-users to come and meet us! It's the ideal event to get together and present new features, roadmap of future versions, achievements of the software, workshops, training sessions, etc...\n"
 "            This event is also an opportunity to showcase our partners' case studies, methodology or developments. Be there and see directly from the source the features of the new version!"
 msgstr ""
+"في كل عام، نقوم بدعوة أفراد مجتمعنا وشركائنا ومستخدمينا لنلتقي بهم! إنها الفعالية المثالية لنجتمع معاً ونقدم خصائصنا الجديدة ومخططاتنا للإصدارات المستقبلية وإنجازات برنامجنا وورش العمل والجلسات التدريبية وغير ذلك الكثير...\n"
+"            تمثل هذه الفعالية أيضاً فرصة لعرض دراسات حالات أعمال شركائنا أو منهجياتهم أو تطوراتهم. لا تفوت فرصة الحضور حتى تتمكن من اكتشاف خصائص الإصدار الجديد من المصدر بحد ذاته! "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2275,7 +2287,7 @@ msgstr "فلنقم بإنشاء <b>فعاليتك</b> الأولى. "
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_limited
 #: model:ir.model.fields,field_description:event.field_event_type_ticket__seats_limited
 msgid "Limit Attendees"
-msgstr ""
+msgstr "تحديد عدد الحاضرين "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -3199,13 +3211,15 @@ msgid ""
 "The stop date cannot be earlier than the start date. Please check ticket "
 "%(ticket_name)s"
 msgstr ""
+"لا يمكن أن يقع تاريخ الإيقاف قبل تاريخ البدء. يرجى التحقق من التذكرة "
+"%(ticket_name)s "
 
 #. module: event
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "There are not enough seats available for:"
-msgstr ""
+msgstr "لا توجد مقاعد كافية لـ: "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -3468,7 +3482,7 @@ msgstr "المبنى "
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__address_inline
 msgid "Venue (formatted for one line uses)"
-msgstr ""
+msgstr "المكان (تم تنسيقه للاستخدام في سطر واحد) "
 
 #. module: event
 #: code:addons/event/models/event_mail.py:0
@@ -3546,12 +3560,12 @@ msgstr "ما إذا كانت الفعالية قد بدأت أم لا "
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__sale_available
 msgid "Whether it is possible to sell these tickets"
-msgstr ""
+msgstr "ما إذا كان من الممكن بيع تلك التذاكر "
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event_ticket__is_sold_out
 msgid "Whether seats are not available for this ticket."
-msgstr ""
+msgstr "ما إذا كانت المقاعد غير متاحة لهذه التذكرة أم لا. "
 
 #. module: event
 #: model:event.event.ticket,description:event.event_0_ticket_2
@@ -3595,7 +3609,7 @@ msgstr "مثال: مؤتمر للمعماريين "
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "e.g. How to get to your event, door closing time, ..."
-msgstr ""
+msgstr "مثال: كيفية الوصول إلى فعاليتك، وقت إغلاق الأبواب، ... "
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form

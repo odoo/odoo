@@ -3850,6 +3850,7 @@ msgstr "Domini invàlid per l'operant dret %s"
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Configuració de regla no vàlida, la següent regla causa un bucle infinit: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -8669,6 +8670,16 @@ msgstr ""
 "Una millor solució podria ser arxivar el producte i crear-ne un de nou."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"L'empresa d'aquest producte no es pot canviar mentre hi hagi quantitats que "
+"pertanyin a una altra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9850,7 +9861,7 @@ msgstr "No pots introduir quantitats negatives."
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft or cancelled moves."
-msgstr ""
+msgstr "Només podeu suprimir esborranys o moviments cancel·lats."
 
 #. module: stock
 #. odoo-python
@@ -10424,4 +10435,4 @@ msgstr ""
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "Global Visibility Days"
-msgstr ""
+msgstr "Dies globals de visibilitat"
