@@ -224,7 +224,7 @@
             <field name="parent_id" ref="l10n_bg_tax_report_b"/>
             <field name="sequence">203000</field>
             <field name="code">BG_TR_33</field>
-            <field name="formula">(BG_TR_11 + BG_TR_12_1 + BG_TR_13)/(BG_TR_01 + BG_TR_17 + BG_TR_18 + BG_TR_19)</field>
+            <field name="formula">(BG_TR_01 + BG_TR_17 + BG_TR_18 + BG_TR_19 != 0) and (BG_TR_11 + BG_TR_12_1 + BG_TR_13)/(BG_TR_01 + BG_TR_17 + BG_TR_18 + BG_TR_19)</field>
         </record>
 
         <record id="l10n_bg_tax_report_41" model="account.tax.report.line">
@@ -275,7 +275,7 @@
             <field name="parent_id" ref="l10n_bg_tax_report_c"/>
             <field name="sequence">301000</field>
             <field name="code">BG_TR_50</field>
-            <field name="formula">((BG_TR_20 - BG_TR_40) >= 0) and (BG_TR_20 - BG_TR_40) or 0</field>
+            <field name="formula">max(BG_TR_20 - BG_TR_40, 0)</field>
         </record>
 
         <record id="l10n_bg_tax_report_60" model="account.tax.report.line">
@@ -284,6 +284,6 @@
             <field name="parent_id" ref="l10n_bg_tax_report_c"/>
             <field name="sequence">302000</field>
             <field name="code">BG_TR_60</field>
-            <field name="formula">((0 > (BG_TR_20 - BG_TR_40)) and (BG_TR_20 - BG_TR_40)) or 0</field>
+            <field name="formula">min(BG_TR_20 - BG_TR_40, 0)</field>
         </record>
 </odoo>

@@ -9,6 +9,7 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Jana Jaakson, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
+"Last-Translator: Jana Jaakson, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,9 @@ msgid ""
 "    Please answer those questions to help recruitment officers to preprocess your application.\n"
 "</p>"
 msgstr ""
+"<p>\n"
+"    Palun vastake järgmistele küsimustele, et personaliosakond saaks parema ülevaade teie kandideerimisest.\n"
+"</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -38,6 +42,8 @@ msgid ""
 "<p>Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application.</p>"
 msgstr ""
+"<p>Palun sisestage enda kohta lisainformatsiooni: kes te olete, milline on teie haridustase, eelnev töökogemus ja tegevused.\n"
+"    See aitab meil paremini teie kandideerimist hinnata.</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
@@ -46,6 +52,8 @@ msgid ""
 "<p>Please summarize your education history: schools, location, diplomas, "
 "...</p>"
 msgstr ""
+"<p>Palun andke ülevaade oma hariduslikust taustast: lõpetatud koolid, "
+"diplomid, ...</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -53,12 +61,16 @@ msgid ""
 "<p>Please tell us a bit more about yourself: what are your main activities, "
 "...</p>"
 msgstr ""
+"<p>Palun rääkige endast rohkem: mis on teie peamised huvialad, tegevused, "
+"...</p>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid ""
 "<p>What are your main knowledge regarding the job you are applying to ?</p>"
 msgstr ""
+"<p>Millised on teie peamised teadmised seoses töökohaga, millele "
+"kandideerite? ?</p>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -66,11 +78,13 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Consult</span>\n"
+"                        <span class=\"o_stat_text\">Interview</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
-msgstr ""
+msgstr "Sinust"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -113,7 +127,7 @@ msgstr "Haridus"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate ?"
-msgstr ""
+msgstr "Millise ülikooli sa lõpetasid või lõpetad?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -123,22 +137,22 @@ msgstr "Kolleegidega läbisaamine"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row8
 msgid "Getting perks such as free parking, gym passes"
-msgstr ""
+msgstr "Hüved, nagu tasuta parkimine, jõusaalipääsmed"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row1
 msgid "Having a good pay"
-msgstr ""
+msgstr "Hea töötasu"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row3
 msgid "Having a nice office environment"
-msgstr ""
+msgstr "Kena töökeskkond"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row7
 msgid "Having freebies such as tea, coffee and stationery"
-msgstr ""
+msgstr "Tasuta tee, kohv ja kirjatarbed"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,comments_message:hr_recruitment_survey.survey_recruitment_form_p1
@@ -167,12 +181,12 @@ msgstr "Intervjuu ankeet"
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form : %s"
-msgstr ""
+msgstr "Intervjuu ankeet : %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "Intervjuu küsimused"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -187,7 +201,7 @@ msgstr "Teadmised"
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
 msgid "Management quality"
-msgstr ""
+msgstr "Juhtimiskvaliteet"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col1
@@ -202,7 +216,7 @@ msgstr "Kontori asukoht"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Past work experiences"
-msgstr ""
+msgstr "Eelnev töökogemus"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
@@ -222,12 +236,12 @@ msgstr "Vastus"
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "SEND INTERVIEW"
-msgstr ""
+msgstr "SAADA  INTERVJUU"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr ""
+msgstr "Vaata intervjuude aruandlust"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_state
@@ -255,6 +269,7 @@ msgstr "Tagasiside Kasutajapoolne Sisend"
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
 msgid "Thank you for answering this survey. We will come back to you soon."
 msgstr ""
+"Tänan, et leidsite aega küsimustele vastata. Võtame teiega varsti ühendust."
 
 #. module: hr_recruitment_survey
 #: model:survey.question,validation_error_msg:hr_recruitment_survey.survey_recruitment_form_p1
@@ -273,13 +288,13 @@ msgstr "Sinu vastus ei ole õige."
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "Kandideerija \"%s\" on lõpetanud küsimustiku täitmise."
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "Küsitluse tulemused %(survey_link)s on saadetud %(partner_link)s"
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
@@ -308,25 +323,25 @@ msgstr "Väga oluline"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
-msgstr ""
+msgstr "Kas teid soovitas töötaja?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you ?"
-msgstr ""
+msgstr "Mis on teie jaoks oluline?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from ?"
-msgstr ""
+msgstr "Millisest riigist te pärit olete ?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4
 msgid "Working with state of the art technology"
-msgstr ""
+msgstr "Töötamine kaasaegse tehnoloogiaga"
 
 #. module: hr_recruitment_survey
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "Määrake sellele kandideerijale nimi."

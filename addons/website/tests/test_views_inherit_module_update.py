@@ -27,6 +27,9 @@ def test_01_cow_views_inherit_on_module_update(env):
     View.with_context(_force_unlink=True, active_test=False).search([('website_id', '=', 1)]).unlink()
     child_view = env.ref('portal.footer_language_selector')
     parent_view = env.ref('portal.portal_back_in_edit_mode')
+    # Remove any possibly existing COW view (another theme etc)
+    parent_view.with_context(_force_unlink=True, active_test=False)._get_specific_views().unlink()
+    child_view.with_context(_force_unlink=True, active_test=False)._get_specific_views().unlink()
     # Change `inherit_id` so the module update will set it back to the XML value
     child_view.write({'inherit_id': parent_view.id, 'arch': child_view.arch_db.replace('o_footer_copyright_name', 'text-center')})
     # Trigger COW on view
@@ -34,6 +37,7 @@ def test_01_cow_views_inherit_on_module_update(env):
     child_cow_view = child_view._get_specific_views()
 
     # 2. Ensure setup is as expected
+    assert len(child_cow_view.inherit_id) == 1, "Should only be the XML view and its COW counterpart."
     assert child_cow_view.inherit_id == parent_view, "Ensure test is setup as expected."
 
     # 3. Upgrade the module

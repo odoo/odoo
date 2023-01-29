@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Dorin Hongu <dhongu@gmail.com>, 2022
+# Claudia Baisan, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-01 12:13+0000\n"
 "PO-Revision-Date: 2022-03-03 13:11+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2022\n"
+"Last-Translator: Claudia Baisan, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 ".\n"
 "                <br/>"
 msgstr ""
+".\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,body_html:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -73,6 +76,8 @@ msgid ""
 "<i class=\"fa fa-envelope-o\"/>\n"
 "                To login, enter below the six-digit authentication code just sent via email to"
 msgstr ""
+"<i class=\"fa fa-envelope-o\"/>\n"
+"                Pentru a vă autentifica, introduceți mai jos codul de autentificare de șase cifre trimis recent prin e-mail la"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__all_required
@@ -88,7 +93,7 @@ msgstr "Email-ul nu poate fi trimis: utilizatorul %s nu are adresă de email."
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__code_check
 msgid "Code Checking"
-msgstr ""
+msgstr "Verificare cod"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_res_config_settings
@@ -113,7 +118,7 @@ msgstr "Nume afișat"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__res_config_settings__auth_totp_policy__employee_required
 msgid "Employees only"
-msgstr ""
+msgstr "Doar angajați"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
@@ -122,11 +127,14 @@ msgid ""
 "                                (including portal users) if they didn't enable any other two-factor authentication\n"
 "                                method."
 msgstr ""
+"Aplicați autentificarea cu doi factori prin e-mail pentru angajați sau pentru toți utilizatorii\n"
+"                                (inclusiv utilizatorii portal) dacă nu au activat nici o altă metodă de autentificare cu doi factori\n"
+"                                metoda."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
 msgid "Enforce two-factor authentication"
-msgstr ""
+msgstr "Aplică autentificarea cu doi factori"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__id
@@ -136,7 +144,7 @@ msgstr "ID"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__ip
 msgid "Ip"
-msgstr ""
+msgstr "Ip"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log____last_update
@@ -161,12 +169,12 @@ msgstr "Aflați mai multe"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__limit_type
 msgid "Limit Type"
-msgstr ""
+msgstr "Tip limită"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
 msgid "Re-send email"
-msgstr ""
+msgstr "Retrimiteți email-ul"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__send_email
@@ -186,12 +194,12 @@ msgstr ""
 #. module: auth_totp_mail_enforce
 #: model:ir.model,name:auth_totp_mail_enforce.model_auth_totp_rate_limit_log
 msgid "TOTP rate limit logs"
-msgstr ""
+msgstr "Jurnale de limitare a ratei TOTP"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_policy
 msgid "Two-factor authentication enforcing policy"
-msgstr ""
+msgstr "Politica de aplicare a autentificării cu doi factori"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__user_id
@@ -207,7 +215,7 @@ msgstr "Utilizatori"
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Verificarea a eșuat, vă rugăm să verificați codul de 6 cifre"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -215,20 +223,23 @@ msgid ""
 "We strongly recommend enabling the two-factor authentication using an authenticator app to help secure your account.\n"
 "                <br/>"
 msgstr ""
+"Vă recomandăm să activați autentificarea cu doi factori utilizând o aplicație de autentificare pentru a vă ajuta să vă protejați contul.\n"
+"                <br/>"
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
 msgstr ""
+"Ați atins limita de email-uri de autentificare trimise pentru contul dvs."
 
 #. module: auth_totp_mail_enforce
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"
-msgstr ""
+msgstr "Ați atins limita de verificări de cod pentru contul dvs."
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,subject:auth_totp_mail_enforce.mail_template_totp_mail_code
 msgid "Your two-factor authentication code"
-msgstr ""
+msgstr "Codul dvs. de autentificare cu doi factori"

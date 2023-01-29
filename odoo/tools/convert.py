@@ -564,7 +564,10 @@ form: module.record_id""" % (xml_id,)
                     val = self.model_id_get(f_ref)
                     f_val = val[0] + ',' + str(val[1])
                 else:
-                    f_val = self.id_get(f_ref)
+                    f_val = self.id_get(f_ref, raise_if_not_found=nodeattr2bool(rec, 'forcecreate', True))
+                    if not f_val:
+                        _logger.warning("Skipping creation of %r because %s=%r could not be resolved", xid, f_name, f_ref)
+                        return None
             else:
                 f_val = _eval_xml(self, field, env)
                 if f_name in model._fields:

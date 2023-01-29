@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 
 from odoo.exceptions import UserError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import TransactionCase
 
 
@@ -368,3 +368,64 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.batch.state, 'in_progress', 'Batch Transfers should be in progress.')
         self.batch.write({'picking_ids': [[5, 0, 0]]})
         self.assertEqual(self.batch.state, 'cancel', 'Batch Transfers should be cancelled when there are no transfers.')
+
+
+@tagged('-at_install', 'post_install')
+class TestBatchPicking02(TransactionCase):
+
+    def setUp(self):
+        super().setUp()
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.picking_type_internal = self.env.ref('stock.picking_type_internal')
+        self.productA = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+
+    def test_same_package_several_pickings(self):
+        """
+        A batch with two transfers, source and destination are the same. The
+        first picking contains 3 x P, the second one 7 x P. The 10 P are in a
+        package. It should be possible to transfer the whole package across the
+        two pickings
+        """
+        package = self.env['stock.quant.package'].create({
+            'name': 'superpackage',
+        })
+
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10, package_id=package)
+
+        pickings = self.env['stock.picking'].create([{
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'move_lines': [(0, 0, {
+                'name': 'test_put_in_pack_from_multiple_pages',
+                'location_id': loc1.id,
+                'location_dest_id': loc2.id,
+                'product_id': self.productA.id,
+                'product_uom': self.productA.uom_id.id,
+                'product_uom_qty': qty,
+            })]
+        } for qty in (3, 7)])
+        pickings.action_confirm()
+        pickings.action_assign()
+
+        batch_form = Form(self.env['stock.picking.batch'])
+        batch_form.picking_ids.add(pickings[0])
+        batch_form.picking_ids.add(pickings[1])
+        batch = batch_form.save()
+        batch.action_confirm()
+
+        pickings.move_line_ids[0].qty_done = 3
+        pickings.move_line_ids[1].qty_done = 7
+        pickings.move_line_ids.result_package_id = package
+
+        batch.action_done()
+        self.assertRecordValues(pickings.move_lines, [
+            {'state': 'done', 'quantity_done': 3},
+            {'state': 'done', 'quantity_done': 7},
+        ])
+        self.assertEqual(pickings.move_line_ids.result_package_id, package)

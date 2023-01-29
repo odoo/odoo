@@ -516,6 +516,52 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(webClient, ".o_data_row", 5);
     });
 
+    QUnit.test("A new form view can be reloaded after a failed one", async function (assert) {
+        assert.expect(5);
+        const webClient = await createWebClient({serverData});
+
+        await doAction(webClient, 3);
+        await cpHelpers.switchView(webClient.el, "list");
+        assert.containsOnce(webClient, ".o_list_view", "The list view should be displayed");
+
+        // Click on the first record
+        await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view", "The form view should be displayed");
+
+        // Delete the current record
+        await testUtils.controlPanel.toggleActionMenu(document);
+        await testUtils.controlPanel.toggleMenuItem(document, "Delete");
+        assert.ok($('.modal').length, 'a confirm modal should be displayed');
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+        await legacyExtraNextTick();
+
+        // The form view is automatically switched to the next record
+        // Go back to the previous (now deleted) record
+        webClient.env.bus.trigger("test:hashchange", {
+            model: "partner",
+            id: 1,
+            action: 3,
+            view_type: "form",
+        });
+        await legacyExtraNextTick();
+
+        // Go back to the list view
+        webClient.env.bus.trigger("test:hashchange", {
+            model: "partner",
+            action: 3,
+            view_type: "list",
+        });
+        await legacyExtraNextTick();
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_list_view", "should still display the list view");
+
+        await testUtils.dom.click($(webClient.el).find(".o_list_view .o_data_row:first"));
+        await legacyExtraNextTick();
+        assert.containsOnce(webClient, ".o_form_view",
+            "The form view should still load after a previous failed update | reload");
+    });
+
     QUnit.test("there is no flickering when switching between views", async function (assert) {
         assert.expect(20);
         let def;
@@ -1584,6 +1630,40 @@ QUnit.module("ActionManager", (hooks) => {
             );
         }
     );
+
+    QUnit.test("pivot view with default favorite and context.active_id", async function (assert) {
+        // note: we use a pivot view because we need a owl view
+        assert.expect(4);
+
+        serverData.views["partner,false,pivot"] = "<pivot/>";
+        serverData.actions[3].views = [[false, "pivot"]];
+        serverData.actions[3].context = { active_id: 4, active_ids: [4], active_model: "whatever" };
+        serverData.models.partner.filters = [
+            {
+                name: "favorite filter",
+                id: 5,
+                context: "{}",
+                sort: "[]",
+                domain: '[("bar", "=", 1)]',
+                is_default: true,
+            },
+        ];
+        registry.category("services").add("user", makeFakeUserService());
+        const mockRPC = (route, args) => {
+            if (args.method === "read_group") {
+                assert.deepEqual(args.kwargs.domain, [["bar", "=", 1]]);
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 3);
+
+        assert.containsOnce(webClient.el, ".o_pivot_view");
+        assert.containsOnce(webClient.el, ".o_searchview .o_searchview_facet");
+        assert.strictEqual(
+            webClient.el.querySelector(".o_facet_value").innerText,
+            "favorite filter"
+        );
+    });
 
     QUnit.test(
         "search menus are still available when switching between actions",

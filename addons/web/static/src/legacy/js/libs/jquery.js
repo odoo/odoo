@@ -123,13 +123,21 @@ $.fn.extend({
         });
     },
     /**
+     * @todo Should really be converted to no jQuery and probably even removed
+     * from jQuery utilities in master
      * @return {jQuery}
      */
     closestScrollable() {
+        const document = this.length ? this[0].ownerDocument : window.document;
+
         let $el = this;
         while ($el[0] !== document.scrollingElement) {
-            // Avoid infinite loop.
-            if (!$el.length) {
+            if (!$el.length || $el[0] instanceof Document) {
+                // Ensure that $().closestScrollable() -> $() and handle the
+                // case of elements not attached to the DOM.
+                // Also, .parent() used to loop through ancestors can
+                // theoretically reach the document if nothing up to the HTML
+                // included is not scrollable.
                 return $();
             }
             if ($el.isScrollable()) {
@@ -198,9 +206,13 @@ $.fn.extend({
      * @returns {boolean}
      */
     isScrollable() {
+        if (!this.length) {
+            return false;
+        }
         const overflow = this.css('overflow-y');
+        const el = this[0];
         return overflow === 'auto' || overflow === 'scroll'
-            || (overflow === 'visible' && this === document.scrollingElement);
+            || (overflow === 'visible' && el === el.ownerDocument.scrollingElement);
     },
 });
 

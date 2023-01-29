@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -35,7 +36,7 @@ msgstr ""
 #: code:addons/payment_paypal/models/payment_acquirer.py:0
 #, python-format
 msgid "Add your PayPal account to Odoo"
-msgstr ""
+msgstr "Ajoutez votre compte Paypal à Odoo"
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
@@ -72,18 +73,19 @@ msgstr "Identifiant du compte marchand"
 #, python-format
 msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
 msgstr ""
+"Valeur manquante pour for txn_id (%(txn_id)s) ou txn_type (%(txn_type)s)."
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "No transaction found matching reference %s."
-msgstr ""
+msgstr "Aucune transaction trouvée correspondant à la référence %s."
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
 #, python-format
 msgid "Notification data were not acknowledged."
-msgstr ""
+msgstr "Données de notification n'ont pas été reconnues."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
@@ -93,7 +95,7 @@ msgstr "Jeton d'Identité PDT"
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
 msgid "PayPal Transaction Type"
-msgstr ""
+msgstr "Type de transaction PayPal"
 
 #. module: payment_paypal
 #: model:ir.model,name:payment_paypal.model_payment_acquirer
@@ -130,7 +132,7 @@ msgstr "Fournisseur"
 #: code:addons/payment_paypal/models/payment_transaction.py:0
 #, python-format
 msgid "Received data with invalid payment status: %s"
-msgstr ""
+msgstr "Réception de données avec statut de paiement invalide : %s"
 
 #. module: payment_paypal
 #: code:addons/payment_paypal/controllers/main.py:0
@@ -139,6 +141,8 @@ msgid ""
 "Received unrecognized authentication check response code: received %s, "
 "expected VERIFIED or INVALID."
 msgstr ""
+"Code de réponse de contrôle d'authentification non reconnu : reçu %s, "
+"attendu VÉRIFIÉ ou NON VALIDE."
 
 #. module: payment_paypal
 #: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
@@ -149,17 +153,20 @@ msgstr "Définir les identifiants Paypal"
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider
 msgid "The Payment Service Provider to use with this acquirer"
 msgstr ""
+"Le fournisseur de services de paiement à utiliser avec cet intermédiaire"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
 msgid ""
 "The public business email solely used to identify the account with PayPal"
 msgstr ""
+"L'email professionnel public uniquement utilisé pour identifier le compte "
+"avec PayPal"
 
 #. module: payment_paypal
 #: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
 msgid "This has no use in Odoo except for debugging."
-msgstr ""
+msgstr "Cela n'a aucune utilité dans Odoo, sauf pour le débogage."
 
 #. module: payment_paypal
 #: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn

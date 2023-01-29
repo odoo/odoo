@@ -350,4 +350,11 @@ registry.category("website_navbar_widgets").add("TranslatePageMenu", {
     Widget: TranslatePageMenu,
     selector: '.o_menu_systray:has([data-action="translate"])',
 });
+
+return {
+    TranslatorInfoDialog: TranslatorInfoDialog,
+    AttributeTranslateDialog: AttributeTranslateDialog,
+    TranslatePageMenu: TranslatePageMenu,
+};
+
 });

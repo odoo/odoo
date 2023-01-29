@@ -385,6 +385,9 @@ odoo.define('website.s_website_form', function (require) {
             // Loop on all fields
             this.$target.find('.form-field, .s_website_form_field').each(function (k, field) { // !compatibility
                 var $field = $(field);
+                // FIXME that seems broken, "for" does not contain the field
+                // but this is used to retrieve errors sent from the server...
+                // need more investigation.
                 var field_name = $field.find('.col-form-label').attr('for');
 
                 // Validate inputs for this field
@@ -394,17 +397,27 @@ odoo.define('website.s_website_form', function (require) {
                     // field as it seems checkValidity forces every required
                     // checkbox to be checked, instead of looking at other
                     // checkboxes with the same name and only requiring one
-                    // of them to be checked.
+                    // of them to be valid.
                     if (input.required && input.type === 'checkbox') {
                         // Considering we are currently processing a single
                         // field, we can assume that all checkboxes in the
                         // inputs variable have the same name
+                        // TODO should be improved: probably do not need to
+                        // filter neither on required, nor on checkbox and
+                        // checking the validity of the group of checkbox is
+                        // currently done for each checkbox of that group...
                         var checkboxes = _.filter(inputs, function (input) {
                             return input.required && input.type === 'checkbox';
                         });
-                        return !_.any(checkboxes, checkbox => checkbox.checked);
+                        return !_.any(checkboxes, checkbox => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
+                    // FIXME this seems like dead code, the inputs do not use
+                    // those classes, their parent does (but it seemed to work
+                    // at some point given that https://github.com/odoo/odoo/commit/75e03c0f7692a112e1b0fa33267f4939363f3871
+                    // was made)... need more investigation (if restored,
+                    // consider checking the date inputs are not disabled before
+                    // saying they are invalid (see checkValidity used here))
                     } else if ($(input).hasClass('s_website_form_date') || $(input).hasClass('o_website_form_date')) { // !compatibility
                         if (!self.is_datetime_valid(input.value, 'date')) {
                             return true;
@@ -414,13 +427,26 @@ odoo.define('website.s_website_form', function (require) {
                             return true;
                         }
                     }
+
+                    // Note that checkValidity also takes care of the case where
+                    // the input is disabled, in which case, it is considered
+                    // valid (as the data will not be sent anyway).
+                    // This takes care of conditionally-hidden fields (whose
+                    // inputs are disabled while they are hidden) which should
+                    // not require validation while they are hidden. Indeed,
+                    // their purpose is to be able to enter additional data when
+                    // some condition is fulfilled. If such a field is required,
+                    // it is only required when visible for example.
                     return !input.checkValidity();
                 });
 
                 // Update field color if invalid or erroneous
-                $field.removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
+                const $controls = $field.find('.form-control, .custom-select, .form-check-input, .form-control-file');
+                $field.removeClass('o_has_error');
+                $controls.removeClass('is-invalid');
                 if (invalid_inputs.length || error_fields[field_name]) {
-                    $field.addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
+                    $field.addClass('o_has_error');
+                    $controls.addClass('is-invalid');
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.

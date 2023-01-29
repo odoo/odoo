@@ -10,6 +10,7 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Leaanika Randmets, 2022
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 14:47+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Arma Gedonsky <armagedonsky@hot.ee>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2022\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -66,7 +67,7 @@ msgstr "Date"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
 msgid "Decimal"
-msgstr ""
+msgstr "Kümnend"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location_dest
@@ -86,17 +87,17 @@ msgstr "Kõlblik kuni"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__gs1_separator_fnc1
 msgid "FNC1 Separator"
-msgstr ""
+msgstr "FNC1 eraldaja"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__gs1_content_type
 msgid "GS1 Content Type"
-msgstr ""
+msgstr "GS1 sisu tüüp"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__encoding__gs1-128
 msgid "GS1-128"
-msgstr ""
+msgstr "GS1-128"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__gs1_decimal_usage
@@ -109,20 +110,20 @@ msgstr ""
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: can't be formated as date"
-msgstr ""
+msgstr "Kehtetu triipkood: ei saa kuupäevana vormindada"
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "Invalid barcode: the check digit is incorrect"
-msgstr ""
+msgstr "Kehtetu triipkood: kontrollnumber on vale"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
 #: model:ir.model.fields,field_description:barcodes_gs1_nomenclature.field_barcode_rule__is_gs1_nomenclature
 msgid "Is GS1 Nomenclature"
-msgstr ""
+msgstr "On GS1 nomenklatuur"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__location
@@ -142,7 +143,7 @@ msgstr "Mõõt"
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__gs1_content_type__identifier
 msgid "Numeric Identifier"
-msgstr ""
+msgstr "Numbriline identifikaator"
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields.selection,name:barcodes_gs1_nomenclature.selection__barcode_rule__type__package
@@ -194,6 +195,9 @@ msgid ""
 "\t- A first one for the Application Identifier (usually 2 to 4 digits);\n"
 "\t- A second one to catch the value."
 msgstr ""
+"Reegli muster \"%s\" ei kehti, see vajab kahte gruppi:\n"
+"- Esimene rakenduse identifikaator (tavaliselt 2–4 numbrit);\n"
+"- Teine, et väärtust tabada."
 
 #. module: barcodes_gs1_nomenclature
 #: code:addons/barcodes_gs1_nomenclature/models/barcode_nomenclature.py:0
@@ -203,6 +207,9 @@ msgid ""
 "If this rule uses decimal, check it can't get sometime else than a digit as last char for the Application Identifier.\n"
 "Check also the possible matched values can only be digits, otherwise the value can't be casted as a measure."
 msgstr ""
+"Triipkoodireegli \"%s\" mustriga on midagi valesti.\n"
+"Kui see reegel kasutab kümnendsüsteemi, kontrollige, et see ei saaks rakenduse identifikaatori viimase tähena kunagi midagi muud kui numbrit.\n"
+"Kontrollige ka, et võimalikud sobitatud väärtused võivad olla ainult numbrid, vastasel juhul ei saa väärtust mõõta."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_nomenclature__is_gs1_nomenclature
@@ -211,20 +218,22 @@ msgid ""
 "This Nomenclature use the GS1 specification, only GS1-128 encoding rules is "
 "accepted is this kind of nomenclature."
 msgstr ""
+"See nomenklatuur kasutab GS1 spetsifikatsiooni, seda tüüpi nomenklatuuri "
+"puhul aktsepteeritakse ainult GS1-128 kodeerimisreegleid."
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be parsed by any barcode rules."
-msgstr ""
+msgstr "Seda triipkoodi ei saa parsida ühegi triipkoodi reegliga."
 
 #. module: barcodes_gs1_nomenclature
 #. openerp-web
 #: code:addons/barcodes_gs1_nomenclature/static/src/js/barcode_parser.js:0
 #, python-format
 msgid "This barcode can't be partially or fully parsed."
-msgstr ""
+msgstr "Seda triipkoodi ei saa osaliselt või täielikult parsida."
 
 #. module: barcodes_gs1_nomenclature
 #: model:ir.model.fields,help:barcodes_gs1_nomenclature.field_barcode_rule__encoding

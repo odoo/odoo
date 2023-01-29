@@ -64,12 +64,12 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.classList.add('text-left');
         const options = {
             position: {
-                collision: 'flip fit',
+                collision: 'flip flipfit',
             },
             classes: {
                 "ui-autocomplete": 'o_website_ui_autocomplete'
             },
-        }
+        };
         wUtils.autocompleteWithPages(this, $(this.inputEl), options);
     },
 
@@ -117,6 +117,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
+        const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
+        this.googleLocalFonts = googleLocalFontsProperty ?
+            googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
 
         await this._super(...arguments);
 
@@ -134,14 +137,25 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             this.menuEl.appendChild(fontEl);
         });
 
+        if (this.googleLocalFonts.length) {
+            const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
+            googleLocalFontsEls.forEach((el, index) => {
+                $(el).append(core.qweb.render('website.delete_google_font_btn', {
+                    index: index,
+                    local: true,
+                }));
+            });
+        }
+
         if (this.googleFonts.length) {
-            const googleFontsEls = fontEls.slice(-this.googleFonts.length);
+            const googleFontsEls = fontEls.splice(-this.googleFonts.length);
             googleFontsEls.forEach((el, index) => {
                 $(el).append(core.qweb.render('website.delete_google_font_btn', {
                     index: index,
                 }));
             });
         }
+
         $(this.menuEl).append($(core.qweb.render('website.add_google_font_btn', {
             variable: variable,
         })));
@@ -215,10 +229,16 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         }
 
                         const font = m[1].replace(/\+/g, ' ');
-                        this.googleFonts.push(font);
+                        const googleFontServe = dialog.el.querySelector('#google_font_serve').checked;
+                        if (googleFontServe) {
+                            this.googleFonts.push(font);
+                        } else {
+                            this.googleLocalFonts.push(`'${font}': ''`);
+                        }
                         this.trigger_up('google_fonts_custo_request', {
                             values: {[variable]: `'${font}'`},
                             googleFonts: this.googleFonts,
+                            googleLocalFonts: this.googleLocalFonts,
                         });
                     },
                 },
@@ -236,6 +256,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _onDeleteGoogleFontClick: async function (ev) {
         ev.preventDefault();
+        const values = {};
 
         const save = await new Promise(resolve => {
             Dialog.confirm(this, _t("Deleting a font requires a reload of the page. This will save all your changes and reload the page, are you sure you want to proceed?"), {
@@ -249,15 +270,23 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         // Remove Google font
         const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
-        const googleFont = this.googleFonts[googleFontIndex];
-        this.googleFonts.splice(googleFontIndex, 1);
+        const isLocalFont = ev.target.dataset.localFont;
+        let googleFontName;
+        if (isLocalFont) {
+            const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
+            googleFontName = googleFont[0];
+            values['delete-font-attachment-id'] = googleFont[1];
+            this.googleLocalFonts.splice(googleFontIndex, 1);
+        } else {
+            googleFontName = this.googleFonts[googleFontIndex];
+            this.googleFonts.splice(googleFontIndex, 1);
+        }
 
         // Adapt font variable indexes to the removal
-        const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
             const value = weUtils.getCSSVariableValue(variable, style);
-            if (value.substring(1, value.length - 1) === googleFont) {
+            if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
                 values[variable] = 'null';
@@ -267,12 +296,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         this.trigger_up('google_fonts_custo_request', {
             values: values,
             googleFonts: this.googleFonts,
+            googleLocalFonts: this.googleLocalFonts,
         });
     },
 });
 
 const GPSPicker = InputUserValueWidget.extend({
-    events: { // Explicitely not consider all InputUserValueWidget events
+    events: { // Explicitly not consider all InputUserValueWidget events
         'blur input': '_onInputBlur',
     },
 
@@ -292,10 +322,20 @@ const GPSPicker = InputUserValueWidget.extend({
             this.trigger_up('gmap_api_request', {
                 editableMode: true,
                 configureIfNecessary: true,
-                onSuccess: key => resolve(!!key),
+                onSuccess: key => {
+                    if (!key) {
+                        resolve(false);
+                        return;
+                    }
+
+                    // TODO see _notifyGMapError, this tries to trigger an error
+                    // early but this is not consistent with new gmap keys.
+                    this._nearbySearch('(50.854975,4.3753899)', !!key)
+                        .then(place => resolve(!!place));
+                },
             });
         });
-        if (!this._gmapLoaded) {
+        if (!this._gmapLoaded && !this._gmapErrorNotified) {
             this.trigger_up('user_value_widget_critical');
             return;
         }
@@ -329,17 +369,36 @@ const GPSPicker = InputUserValueWidget.extend({
      */
     async setValue() {
         await this._super(...arguments);
+        if (!this._gmapLoaded) {
+            return;
+        }
 
-        await new Promise(resolve => {
-            const gps = this._value;
-            if (this._gmapCacheGPSToPlace[gps]) {
-                this._gmapPlace = this._gmapCacheGPSToPlace[gps];
-                resolve();
-                return;
-            }
+        this._gmapPlace = await this._nearbySearch(this._value);
+
+        if (this._gmapPlace) {
+            this.inputEl.value = this._gmapPlace.formatted_address;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {string} gps
+     * @param {boolean} [notify=true]
+     * @returns {Promise}
+     */
+    async _nearbySearch(gps, notify = true) {
+        if (this._gmapCacheGPSToPlace[gps]) {
+            return this._gmapCacheGPSToPlace[gps];
+        }
+
+        const p = gps.substring(1).slice(0, -1).split(',');
+        const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
+        return new Promise(resolve => {
             const service = new google.maps.places.PlacesService(document.createElement('div'));
-            const p = gps.substring(1).slice(0, -1).split(',');
-            const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
             service.nearbySearch({
                 // Do a 'nearbySearch' followed by 'getDetails' to avoid using
                 // GMap Geocoder which the user may not have enabled... but
@@ -354,23 +413,59 @@ const GPSPicker = InputUserValueWidget.extend({
                         placeId: results[0].place_id,
                         fields: ['geometry', 'formatted_address'],
                     }, (place, status) => {
-                        resolve();
                         if (status === google.maps.places.PlacesServiceStatus.OK) {
                             this._gmapCacheGPSToPlace[gps] = place;
-                            this._gmapPlace = place;
+                            resolve(place);
                         } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
-                            this.trigger_up('user_value_widget_critical');
+                            if (notify) {
+                                this._notifyGMapError();
+                            }
+                            resolve();
                         }
                     });
                 } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                    if (notify) {
+                        this._notifyGMapError();
+                    }
                     resolve();
-                    this.trigger_up('user_value_widget_critical');
+                } else {
+                    resolve();
                 }
             });
         });
-        if (this._gmapPlace) {
-            this.inputEl.value = this._gmapPlace.formatted_address;
+    },
+    /**
+     * Indicates to the user there is an error with the google map API and
+     * re-opens the configuration dialog. For good measures, this also notifies
+     * a critical error which normally removes the related snippet entirely.
+     *
+     * @private
+     */
+    _notifyGMapError() {
+        // TODO this should be better to detect all errors. This is random.
+        // When misconfigured (wrong APIs enabled), sometimes Google throw
+        // errors immediately (which then reaches this code), sometimes it
+        // throws them later (which then induces an error log in the console
+        // and random behaviors).
+        if (this._gmapErrorNotified) {
+            return;
         }
+        this._gmapErrorNotified = true;
+
+        this.displayNotification({
+            type: 'danger',
+            sticky: true,
+            message: _t("A Google Map error occurred. Make sure to read the key configuration popup carefully."),
+        });
+        this.trigger_up('gmap_api_request', {
+            editableMode: true,
+            reconfigure: true,
+            onSuccess: () => {
+                this._gmapErrorNotified = false;
+            },
+        });
+
+        setTimeout(() => this.trigger_up('user_value_widget_critical'));
     },
 
     //--------------------------------------------------------------------------
@@ -386,10 +481,24 @@ const GPSPicker = InputUserValueWidget.extend({
         if (gmapPlace && gmapPlace.geometry) {
             this._gmapPlace = gmapPlace;
             const location = this._gmapPlace.geometry.location;
+            const oldValue = this._value;
             this._value = `(${location.lat()},${location.lng()})`;
             this._gmapCacheGPSToPlace[this._value] = gmapPlace;
-            this._onUserValueChange(ev);
+            if (oldValue !== this._value) {
+                this._onUserValueChange(ev);
+            }
         }
+    },
+    /**
+     * @override
+     */
+    _onInputBlur() {
+        // As a stable fix: do not call the _super as we actually don't want
+        // input focusout messing with the google map API. Because of this,
+        // clicking on google map autocomplete suggestion on Firefox was not
+        // working properly. This is kept as an empty function because of stable
+        // policy (ensures custo can still extend this).
+        // TODO review in master.
     },
 });
 
@@ -752,10 +861,17 @@ options.Class.include({
     _onGoogleFontsCustoRequest: function (ev) {
         const values = ev.data.values ? _.clone(ev.data.values) : {};
         const googleFonts = ev.data.googleFonts;
+        const googleLocalFonts = ev.data.googleLocalFonts;
         if (googleFonts.length) {
             values['google-fonts'] = "('" + googleFonts.join("', '") + "')";
         } else {
             values['google-fonts'] = 'null';
+        }
+        // check undefined, this is a backport, a custo might not pass this key
+        if (googleLocalFonts !== undefined && googleLocalFonts.length) {
+            values['google-local-fonts'] = "(" + googleLocalFonts.join(", ") + ")";
+        } else {
+            values['google-local-fonts'] = 'null';
         }
         this.trigger_up('snippet_edition_request', {exec: async () => {
             return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values);
@@ -838,7 +954,16 @@ options.registry.BackgroundShape.include({
             return el;
         }
         return _getLastPreFilterLayerElement(this.$target);
-    }
+    },
+    /**
+     * @override
+     */
+    _removeShapeEl(shapeEl) {
+        this.trigger_up('widgets_stop_request', {
+            $target: $(shapeEl),
+        });
+        return this._super(...arguments);
+    },
 });
 
 options.registry.ReplaceMedia.include({
@@ -1692,10 +1817,17 @@ options.registry.CarouselItem = options.Class.extend({
         const $items = this.$carousel.find('.carousel-item');
         const newLength = $items.length - 1;
         if (!this.removing && newLength > 0) {
-            const $toDelete = $items.filter('.active');
+            // The active indicator is deleted to ensure that the other
+            // indicators will still work after the deletion.
+            const $toDelete = $items.filter('.active').add(this.$indicators.find('.active'));
             this.$carousel.one('active_slide_targeted.carousel_item_option', () => {
                 $toDelete.remove();
-                this.$indicators.find('li:last').remove();
+                // To ensure the proper functioning of the indicators, their
+                // attributes must reflect the position of the slides.
+                const indicatorsEls = this.$indicators[0].querySelectorAll('li');
+                for (let i = 0; i < indicatorsEls.length; i++) {
+                    indicatorsEls[i].setAttribute('data-slide-to', i);
+                }
                 this.$controls.toggleClass('d-none', newLength === 1);
                 this.$carousel.trigger('content_changed');
                 this.removing = false;
@@ -2051,7 +2183,7 @@ options.registry.HeaderNavbar = options.Class.extend({
     async _computeWidgetVisibility(widgetName, params) {
         switch (widgetName) {
             case 'option_logo_height_scrolled': {
-                return !this.$('.navbar-brand').hasClass('d-none');
+                return !!this.$('.navbar-brand').length;
             }
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
@@ -2071,8 +2203,20 @@ const VisibilityPageOptionUpdate = options.Class.extend({
      */
     async start() {
         await this._super(...arguments);
-        const shown = await this._isShown();
-        this.trigger_up('snippet_option_visibility_update', {show: shown});
+        // When entering edit mode via the URL (enable_editor) the WebsiteNavbar
+        // is not yet ReadyForActions because it is waiting for its
+        // sub-component EditPageMenu to start edit mode. Then invisible blocks
+        // options start (so this option too). But for isShown() to work, the
+        // navbar must be ReadyForActions. This is the reason why we can't wait
+        // for isShown here, otherwise we would have a deadlock. On one hand the
+        // navbar waiting for the invisible snippets options to be started to be
+        // ReadyForActions and on the other hand this option which needs the
+        // navbar to be ReadyForActions to be started.
+        // TODO in master: Use the data-invisible system to get rid of this
+        // piece of code.
+        this._isShown().then(isShown => {
+            this.trigger_up('snippet_option_visibility_update', {show: isShown});
+        });
     },
     /**
      * @override
@@ -2568,29 +2712,6 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
 
         $content.empty().append($template);
     },
-    /**
-     * @override
-     */
-    onTargetShow: async function () {
-        // @see this.onTargetHide
-        this.$target.parent('#website_cookies_bar').show();
-        this._super(...arguments);
-
-    },
-    /**
-     * @override
-     */
-    onTargetHide: async function () {
-        // We hide the parent because contenteditable="true" would force the bar to stay visible in hidden mode.
-        this.$target.parent('#website_cookies_bar').hide();
-        this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    cleanForSave: function () {
-        this.$target.parent('#website_cookies_bar').show();
-    },
 });
 
 /**
@@ -2832,6 +2953,44 @@ options.registry.ScrollButton = options.Class.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        // TODO adapt in master. This sets up a different UI for the image
+        // gallery snippet: for this one, we allow to force a specific height
+        // in auto mode. It was done in stable as without it, the default height
+        // is difficult to understand for the user as it depends on screen
+        // height of the one who edited the website and not on the added images.
+        // It was also a regression as in <= 11.0, this was a possibility.
+        if (this.$target[0].dataset.snippet !== 's_image_gallery') {
+            return;
+        }
+        let minHeightEl = uiFragment.querySelector('[data-name="minheight_auto_opt"]');
+        if (!minHeightEl) {
+            return;
+        }
+        minHeightEl = minHeightEl.parentElement;
+        minHeightEl.setAttribute('string', _t("Min-Height"));
+        const heightEl = document.createElement('we-input');
+        heightEl.setAttribute('string', _t("└ Height"));
+        heightEl.dataset.dependencies = 'minheight_auto_opt';
+        heightEl.dataset.unit = 'px';
+        heightEl.dataset.selectStyle = '';
+        heightEl.dataset.cssProperty = 'height';
+        // For this setting, we need to always force the style (= if the block
+        // is naturally 800px tall and the user enters 800px for this setting,
+        // we set 800px as inline style anyway). Indeed, this snippet's style
+        // is based on the height that is forced but once the related public
+        // widgets are started, the inner carousel items receive a min-height
+        // which makes it so the snippet "natural" height is equal to the
+        // initially forced height... so if the style is not forced, it would
+        // ultimately be removed by mistake thinking it is not necessary.
+        // Note: this is forced as not important as we still need the height to
+        // be reset to 'auto' in mobile (generic css rules).
+        heightEl.dataset.forceStyle = '';
+        uiFragment.appendChild(heightEl);
+    },
     /**
      * @override
      */

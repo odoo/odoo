@@ -151,6 +151,7 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
  * @returns {string}
  */
 export function formatDate(value, options = {}) {
+    value = value.setZone("utc", { keepLocalTime: true });
     return formatDateTime(value, {
         timezone: false, // Timezone should never alter a 'date' value.
         ...options,

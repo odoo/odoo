@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -199,7 +200,7 @@ msgstr "Premier"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "First week"
-msgstr ""
+msgstr "Première semaine"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__4
@@ -280,6 +281,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Working "
 "Time without removing it."
 msgstr ""
+"Si le champs actif est False, vous pourrez cacher le temps de travail sans "
+"le supprimer."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
@@ -287,6 +290,8 @@ msgstr ""
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr ""
+"En mode calendrier à 2 semaines, toutes les périodes doivent être dans les "
+"sections."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
@@ -480,7 +485,7 @@ msgstr "Seconde"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Second week"
-msgstr ""
+msgstr "Deuxième semaine"
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__display_type__line_section
@@ -551,13 +556,13 @@ msgstr "Tester le modèle de ressource"
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
-msgstr ""
+msgstr "La semaine actuelle (du %s au %s) correspond à la  %s."
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
-msgstr ""
+msgstr "La date de début du congé doit se situer plus tôt que la date de fin."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
@@ -580,6 +585,10 @@ msgid ""
 "the efficiency factor is 200%, however the expected duration will be 30 "
 "minutes."
 msgstr ""
+"Ce champ est utilisé pour calculer la durée prévue d'un ordre de travail à "
+"ce poste de travail. Par exemple, si un ordre de travail prend une heure et "
+"que le facteur d'efficacité est de 100 %, la durée prévue sera d'une heure. "
+"Si le facteur d'efficacité est de 200 %, la durée prévue sera de 30 minutes."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -682,7 +691,7 @@ msgstr "Mercredi Matin"
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__week_type
 msgid "Week Number"
-msgstr ""
+msgstr "Numéro de la semaine"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
@@ -756,13 +765,13 @@ msgstr "Vous ne pouvez pas supprimer une section entre deux semaines."
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "first"
-msgstr ""
+msgstr "remière"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "other week"
-msgstr ""
+msgstr "autre semaine"
 
 #. module: resource
 #: code:addons/resource/models/resource.py:0

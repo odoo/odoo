@@ -91,17 +91,25 @@ const parseField = (field, value, opts = {}) => {
         return value;
     }
     const type = field.type === "id" ? "integer" : field.type;
+    const options = { field, ...opts };
+    if (["date", "datetime"].includes(type)) {
+        options.timezone = type === "datetime";
+    }
     const parse = parsers.contains(type) ? parsers.get(type) : (v) => v;
-    return parse(value, { field, ...opts });
+    return parse(value, options);
 };
 
 const formatField = (field, value, opts = {}) => {
     if (FIELD_TYPES[field.type] === "char") {
         return value;
     }
+    const options = { field, ...opts };
     const type = field.type === "id" ? "integer" : field.type;
+    if (["date", "datetime"].includes(type)) {
+        options.timezone = type === "datetime";
+    }
     const format = formatters.contains(type) ? formatters.get(type) : (v) => v;
-    return format(value, { field, ...opts });
+    return format(value, options);
 };
 
 export class CustomFilterItem extends Component {
@@ -220,7 +228,7 @@ export class CustomFilterItem extends Component {
                 domainValue = condition.value.map(serialize);
                 descriptionArray.push(
                     `"${condition.value
-                        .map((val) => formatField(field, val, { timezone: true }))
+                        .map((val) => formatField(field, val))
                         .join(" " + this.env._t("and") + " ")}"`
                 );
             } else {

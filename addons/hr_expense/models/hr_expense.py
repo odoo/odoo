@@ -65,7 +65,7 @@ class HrExpense(models.Model):
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
     product_id = fields.Many2one('product.product', string='Product', readonly=True, tracking=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'approved': [('readonly', False)], 'refused': [('readonly', False)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_from_product_id_company_id',
-        store=True, copy=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]},
+        store=True, copy=True, readonly=True,
         default=_default_product_uom_id, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True, string="UoM Category")
     unit_amount = fields.Float("Unit Price", compute='_compute_from_product_id_company_id', store=True, required=True, copy=True,
@@ -244,7 +244,7 @@ class HrExpense(models.Model):
         for expense in self.filtered('product_id'):
             expense = expense.with_company(expense.company_id)
             expense.name = expense.name or expense.product_id.display_name
-            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount):
+            if not expense.attachment_number or (expense.attachment_number and not expense.unit_amount) or (expense.attachment_number and expense.unit_amount and not expense.product_id.standard_price):
                 expense.unit_amount = expense.product_id.price_compute('standard_price')[expense.product_id.id]
             expense.product_uom_id = expense.product_id.uom_id
             expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.price_include and tax.company_id == expense.company_id)  # taxes only from the same company
@@ -699,6 +699,9 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ('user_id.email', 'ilike', email_address)
         ], limit=1)
 
+        if not employee:
+            return super().message_new(msg_dict, custom_values=custom_values)
+
         expense_description = msg_dict.get('subject', '')
 
         if employee.user_id:
@@ -761,15 +764,16 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
         symbols_pattern = '|'.join(symbols)
         price_pattern = "((%s)?\s?%s\s?(%s)?)" % (symbols_pattern, float_pattern, symbols_pattern)
         matches = re.findall(price_pattern, expense_description)
+        currency = currencies and currencies[0]
         if matches:
             match = max(matches, key=lambda match: len([group for group in match if group])) # get the longuest match. e.g. "2 chairs 120$" -> the price is 120$, not 2
             full_str = match[0]
             currency_str = match[1] or match[3]
             price = match[2].replace(',', '.')
 
-            if currency_str:
-                currency = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])[0]
-                currency = currency or currencies[0]
+            if currency_str and currencies:
+                currencies = currencies.filtered(lambda c: currency_str in [c.symbol, c.name])
+                currency = (currencies and currencies[0]) or currency
             expense_description = expense_description.replace(full_str, ' ') # remove price from description
             expense_description = re.sub(' +', ' ', expense_description.strip())
 
@@ -1049,6 +1053,7 @@ class HrExpenseSheet(models.Model):
         return res
 
     def action_unpost(self):
+        self = self.with_context(clean_context(self.env.context))
         moves = self.account_move_id
         self.write({
             'account_move_id': False,
@@ -1196,7 +1201,7 @@ class HrExpenseSheet(models.Model):
             'context': {
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
-                'default_partner_bank_id': self.employee_id.bank_account_id.id,
+                'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',

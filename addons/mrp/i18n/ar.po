@@ -1097,6 +1097,8 @@ msgid ""
 "Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
+"يجب أن تكون مجموعات المكونات فريدة للإنتاج الجماعي. يرجى مراجعة الحجز لـ : "
+"\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -2537,7 +2539,7 @@ msgid ""
 "Make sure enough quantities of these components are reserved to carry on "
 "production:\n"
 msgstr ""
-"تأكد من أنه يتم حفظ كميات كافية من تلك المكونات للاستمرار في عملية الإنتاج: "
+"تأكد من أنه يتم حجز كميات كافية من تلك المكونات للاستمرار في عملية الإنتاج: "
 "\n"
 
 #. module: mrp
@@ -2968,6 +2970,14 @@ msgstr ""
 "ننصح بحذف مركز العمل عوضاً عن ذلك. "
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -3024,6 +3034,10 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"عدد القطع (في قائمة مواد المنتج) التي يمكن إنتاجها بشكل موازٍ (في نفس الوقت)"
+" في مركز العمل هذا. على سبيل المثال: السعة هي 5 وتحتاج إلى إنتاج 10 وحدات، "
+"ستم مضاعفة وقت العملية المذكور في قائمة المواد، ولكن يرجى العلم بأنه سيتم "
+"حساب الوقت قبل وبعد الإنتاج مرة واحدة فقط. "
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3032,6 +3046,8 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
 msgstr ""
+"يجب أن تكون هذه أصغر كمية يمكن إنتاج المنتج فيها. إذا كانت قائمة المواد "
+"تحتوي على العمليات، تأكد من أن سعة مركز العمل دقيقة. "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4555,6 +4571,8 @@ msgid ""
 "The selected serial number does not correspond to the one used in the "
 "manufacturing order, please select another one."
 msgstr ""
+"لا يتوافق الرقم التسلسلي المحدد مع الرقم التسلسلي المستخدَم في أمر التصنيع. "
+"يرجى تحديد غيره. "
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_visitor__event_registration_count
@@ -482,7 +482,7 @@ msgstr "Mostrar la pestaña de comunidad en el sitio web"
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Don't forget to click <b>save</b> when you're done."
-msgstr "No olvide dar clic en <b>guardar</b> cuando termine."
+msgstr "No olvide hacer clic en <b>guardar</b> cuando termine."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -600,7 +600,7 @@ msgstr "Eventos"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Expired"
-msgstr "Vencido"
+msgstr "Expiró"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__menu_register_cta
@@ -772,7 +772,7 @@ msgstr "Nombre"
 #: code:addons/website_event/static/src/js/website_event.editor.js:0
 #, python-format
 msgid "New Event"
-msgstr "Evento nuevo"
+msgstr "Nuevo evento"
 
 #. module: website_event
 #: code:addons/website_event/models/website.py:0
@@ -1169,7 +1169,7 @@ msgstr "Sitio web"
 #: model:ir.model,name:website_event.model_website_event_menu
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_form
 msgid "Website Event Menu"
-msgstr "Menú de eventos del Sitio web"
+msgstr "Menú de eventos del sitio web"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.website_event_menu_view_search

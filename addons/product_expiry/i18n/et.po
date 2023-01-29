@@ -14,6 +14,7 @@
 # Egon Raamat <egon@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,7 +50,7 @@ msgstr "Hoiatuse kuupäev"
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
 msgid "Alert Date Reached"
-msgstr ""
+msgstr "Hoiatuse kuupäev on kätte jõudnud"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__alert_time
@@ -133,7 +134,7 @@ msgstr "Loobu"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
 msgid "Display Expiration Dates on Delivery Slips"
-msgstr ""
+msgstr "Kuvage saatelehtedel aegumiskuupäevad"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
@@ -165,17 +166,17 @@ msgstr "Kõlblik kuni aeg"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
 msgid "Expiration dates will appear on the delivery slip"
-msgstr ""
+msgstr "Aegumiskuupäevad kuvatakse tarnelehele"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Expired Lot(s)"
-msgstr ""
+msgstr "Aegunud partii(d)"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__product_expiry_reminded
 msgid "Expiry has been reminded"
-msgstr ""
+msgstr "Aegumist on meelde tuletatud"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
@@ -185,7 +186,7 @@ msgstr "ID"
 #. module: product_expiry
 #: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
 msgid "Include expiration dates on delivery slip"
-msgstr ""
+msgstr "Lisage saatelehele aegumiskuupäevad"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
@@ -220,6 +221,9 @@ msgid ""
 "stock after production) after which the goods may become dangerous and must "
 "not be consumed. It will be computed on the lot/serial number."
 msgstr ""
+"Päevade arv pärast toodete kättesaamist (müüjalt või laos pärast tootmist), "
+"mille möödudes võib kaup muutuda ohtlikuks ja seda ei tohi tarbida. See "
+"arvutatakse partii/seerianumbri alusel."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__alert_time
@@ -229,6 +233,8 @@ msgid ""
 "raised on the lot/serial number. It will be computed on the lot/serial "
 "number."
 msgstr ""
+"Päevade arv enne aegumiskuupäeva, pärast mida tuleks partii/seerianumbri "
+"kohta hoiatus esitada. See arvutatakse partii/seerianumbri alusel."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__removal_time
@@ -237,6 +243,8 @@ msgid ""
 "Number of days before the Expiration Date after which the goods should be "
 "removed from the stock. It will be computed on the lot/serial number."
 msgstr ""
+"Päevade arv enne aegumiskuupäeva, mille möödumisel tuleks kaup laost "
+"eemaldada. See arvutatakse partii/seerianumbri alusel."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_time
@@ -246,6 +254,8 @@ msgid ""
 "deteriorating, without being dangerous yet. It will be computed on the "
 "lot/serial number."
 msgstr ""
+"Päevade arv enne aegumiskuupäeva, mille järel kaup hakkab riknema, ilma et "
+"see oleks veel ohtlik. See arvutatakse partii/seerianumbri alusel."
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
@@ -255,7 +265,7 @@ msgstr "Laoleht"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Proceed except for expired one"
-msgstr ""
+msgstr "Jätkake, välja arvatud aegunud toodetega"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -302,7 +312,7 @@ msgstr "Eemaldamise aeg"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
 msgid "Show Lots"
-msgstr ""
+msgstr "Näita partiisid"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
@@ -318,7 +328,7 @@ msgstr "Kõlblik kuni kuupäev on jõudnud."
 #: code:addons/product_expiry/models/production_lot.py:0
 #, python-format
 msgid "The alert date has been reached for this lot/serial number"
-msgstr ""
+msgstr "Selle partii/seerianumbri hoiatuskuupäev on kätte jõudnud"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_move_line__expiration_date
@@ -337,6 +347,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number should be "
 "removed from the stock. This date will be used in FEFO removal strategy."
 msgstr ""
+"See on kuupäev, mil selle seerianumbriga kaup tuleks laost eemaldada. Seda "
+"kuupäeva kasutatakse FEFO eemaldamise strateegia puhul."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_date
@@ -356,12 +368,12 @@ msgstr "Ülekanne"
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__use_expiration_date
 msgid "Use Expiration Date"
-msgstr ""
+msgstr "Kasutage aegumiskuupäeva"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Use by:"
-msgstr ""
+msgstr "Kasutamine:"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__use_expiration_date
@@ -374,6 +386,8 @@ msgid ""
 " product expiration, on the product and on the corresponding lot/serial "
 "numbers"
 msgstr ""
+"Kui see valik on märgitud, on Teil võimalik määrata kuupäevi toodete "
+"aegumiskuupäevade ja partii/seerianumbrite haldamiseks."
 
 #. module: product_expiry
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0

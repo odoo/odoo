@@ -50,6 +50,7 @@ export class Powerbox {
             groupWrapperEl.append(groupNameEl);
             this._mainWrapperElement.append(groupWrapperEl);
             groupNameEl.innerText = this.options._t('No results');
+            this._resetPosition();
             return;
         }
 
@@ -208,8 +209,7 @@ export class Powerbox {
             }
             const term = this._lastText;
 
-            this._currentFilteredCommands =
-                term === '' ? this._currentOpenOptions.commands : await onValueChangeFunction(term);
+            this._currentFilteredCommands = await onValueChangeFunction(term);
             this.render(this._currentFilteredCommands);
         };
         const keydown = ev => {
@@ -320,7 +320,10 @@ export class Powerbox {
     // -------------------------------------------------------------------------
 
     _filter(term, commands) {
-        const initalCommands = commands;
+        const initalCommands = commands.filter(c => !c.isDisabled || !c.isDisabled());
+        if (term === '') {
+            return initalCommands;
+        }
         term = term.toLowerCase();
         term = term.replaceAll(/\s/g, '\\s');
         const regex = new RegExp(
@@ -328,6 +331,7 @@ export class Powerbox {
                 .split('')
                 .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
                 .join('.*'),
+            'i'
         );
         if (term.length) {
             commands = initalCommands.filter(command => {
@@ -339,17 +343,12 @@ export class Powerbox {
     }
 
     _resetPosition() {
-        const position = getRangePosition(this.el, this.options.document);
+        const position = getRangePosition(this.el, this.options.document, this.options);
         if (!position) {
             this.hide();
             return;
         }
         let { left, top } = position;
-        if (this.options.getContextFromParentRect) {
-            const parentContextRect = this.options.getContextFromParentRect();
-            left += parentContextRect.left;
-            top += parentContextRect.top;
-        }
 
         this.el.style.left = `${left}px`;
         this.el.style.top = `${top}px`;

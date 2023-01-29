@@ -25,6 +25,10 @@ class IrModel(models.Model):
     def unlink(self):
         # Delete followers, messages and attachments for models that will be unlinked.
         models = tuple(self.mapped('model'))
+        model_ids = tuple(self.ids)
+
+        query = "DELETE FROM mail_activity WHERE res_model_id IN %s"
+        self.env.cr.execute(query, [model_ids])
 
         query = "DELETE FROM mail_activity_type WHERE res_model IN %s"
         self.env.cr.execute(query, [models])

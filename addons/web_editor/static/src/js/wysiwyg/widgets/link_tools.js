@@ -58,14 +58,16 @@ const LinkTools = Link.extend({
             return this._super(...arguments);
         }
         const $contents = this.$link.contents();
-        if (!this.$link.attr('href') && !this.colorCombinationClass) {
+        if (this.shouldUnlink()) {
             $contents.unwrap();
         }
         this._observer.disconnect();
         this._super(...arguments);
         this._removeHintClasses();
     },
-
+    shouldUnlink: function () {
+        return !this.$link.attr('href') && !this.colorCombinationClass
+    },
     applyLinkToDom() {
         this._observer.disconnect();
         this._removeHintClasses();
@@ -106,6 +108,12 @@ const LinkTools = Link.extend({
      */
     _doStripDomain: function () {
         return this.$('we-checkbox[name="do_strip_domain"]').closest('we-button.o_we_checkbox_wrapper').hasClass('active');
+    },
+    /**
+     * @override
+     */
+    _getIsNewWindowFormRow() {
+        return this.$('we-checkbox[name="is_new_window"]').closest('we-row');
     },
     /**
      * @override
@@ -210,7 +218,7 @@ const LinkTools = Link.extend({
     /**
      * @override
      */
-    _updateOptionsUI: function () {
+    _updateOptionsUI: async function () {
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
@@ -219,9 +227,9 @@ const LinkTools = Link.extend({
             // Show custom colors only for Custom style.
             this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
 
-            this._updateColorpicker('color');
-            this._updateColorpicker('background-color');
-            this._updateColorpicker('border-color');
+            await this._updateColorpicker('color');
+            await this._updateColorpicker('background-color');
+            await this._updateColorpicker('border-color');
 
             const borderWidth = this.linkEl.style['border-width'];
             const numberAndUnit = getNumericAndUnit(borderWidth);
@@ -367,6 +375,15 @@ const LinkTools = Link.extend({
         if ($target.closest('[name="link_border_style"]').length) {
             return;
         }
+        if ($target.closest('[name="link_style_color"]')) {
+            // Reset custom styles when changing link style.
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
+        }
         const $select = $target.closest('we-select');
         $select.find('we-selection-items we-button').toggleClass('active', false);
         this._setSelectOption($target, true);
@@ -415,6 +432,15 @@ const LinkTools = Link.extend({
             $target.siblings('we-button').removeClass("active");
             this.options.wysiwyg.odooEditor.historyStep();
         }
+    },
+    /**
+     * @override
+     */
+    __onURLInput() {
+        this._super(...arguments);
+        this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._adaptPreview();
+        this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
     },
 });
 

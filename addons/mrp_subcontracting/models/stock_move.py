@@ -163,6 +163,8 @@ class StockMove(models.Model):
         self.ensure_one()
         production = self._get_subcontract_production()[-1:]
         view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
+        context = dict(self._context)
+        context.pop('default_picking_id', False)
         return {
             'name': _('Subcontract'),
             'type': 'ir.actions.act_window',
@@ -172,7 +174,7 @@ class StockMove(models.Model):
             'view_id': view.id,
             'target': 'new',
             'res_id': production.id,
-            'context': self.env.context,
+            'context': context,
         }
 
     def _get_subcontract_bom(self):

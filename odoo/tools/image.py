@@ -46,9 +46,9 @@ EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = { # Initial side on 1st row/col:
     8: [Transpose.ROTATE_90],                           # left/bottom
 }
 
-# Arbitrary limit to fit most resolutions, including Nokia Lumia 1020 photo,
+# Arbitrary limit to fit most resolutions, including Samsung Galaxy A22 photo,
 # 8K with a ratio up to 16:10, and almost all variants of 4320p
-IMAGE_MAX_RESOLUTION = 45e6
+IMAGE_MAX_RESOLUTION = 50e6
 
 
 class ImageProcess():
@@ -90,7 +90,7 @@ class ImageProcess():
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 10e6)))
+                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
 
     def image_quality(self, quality=0, output_format=''):
         """Return the image resulting of all the image processing
@@ -460,6 +460,8 @@ def image_apply_opt(image, format, **params):
     :return: the image formatted
     :rtype: bytes
     """
+    if format == 'JPEG' and image.mode not in ['1', 'L', 'RGB']:
+        image = image.convert("RGB")
     stream = io.BytesIO()
     image.save(stream, format=format, **params)
     return stream.getvalue()

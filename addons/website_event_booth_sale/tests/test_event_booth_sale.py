@@ -4,12 +4,14 @@
 from datetime import datetime, timedelta
 
 from odoo import Command, fields
+from odoo.addons.website_event_sale.tests.common import TestWebsiteEventSaleCommon
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
 
+
 @tagged('post_install', '-at_install')
-class TestWebsiteEventBoothSale(HttpCase):
+class TestWebsiteEventBoothSale(HttpCase, TestWebsiteEventSaleCommon):
 
     def setUp(self):
         super().setUp()
@@ -61,3 +63,6 @@ class TestWebsiteEventBoothSale(HttpCase):
 
     def test_tour(self):
         self.start_tour('/event', 'website_event_booth_tour', login='portal')
+
+    def test_booth_pricelists_different_currencies(self):
+        self.start_tour("/web", 'event_booth_sale_pricelists_different_currencies')

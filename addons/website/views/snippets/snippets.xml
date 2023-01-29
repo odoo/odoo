@@ -540,6 +540,8 @@
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
         data-drop-in=".content, nav"/>
+    <!-- TODO in master: remove the `.content` above, as it will not refer to
+        anything when the `content` classes in carousel will be removed. -->
 
     <div data-js="SnippetSave"
         t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}"
@@ -834,6 +836,8 @@
             <t t-set="dependencies" t-valuef="option_header_brand_none"/>
         </t>
     </div>
+    <!-- TODO adapt in master, the logo image options related to type and -->
+    <!-- height are moved back in the navbar section in JS -->
     <div data-selector="#wrapwrap > header nav.navbar .navbar-brand img" data-no-check="true">
         <t t-call="website.snippet_options_header_brand">
             <t t-set="label">Type</t>
@@ -1083,6 +1087,7 @@
     <!-- Scroll to next section button (only for full height) -->
     <div data-js="ScrollButton" data-selector="section" data-exclude="[data-snippet] :not(.oe_structure) > [data-snippet]">
         <!-- Min height of section -->
+        <!-- TODO adapt in master, this is patched in JS -->
         <we-button-group string="Height" data-show-scroll-button="">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
             <we-button data-select-class="o_half_screen_height" title="Half screen">50%</we-button>

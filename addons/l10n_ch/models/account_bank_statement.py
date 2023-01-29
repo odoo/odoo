@@ -9,7 +9,7 @@ class AccountBankStatementLine(models.Model):
     _inherit = "account.bank.statement.line"
 
     def _find_or_create_bank_account(self):
-        if self.company_id.account_fiscal_country_id.code == 'CH' and _is_l10n_ch_postal(self.account_number):
+        if self.company_id.account_fiscal_country_id.code in ('CH', 'LI') and _is_l10n_ch_postal(self.account_number):
             bank_account = self.env['res.partner.bank'].search(
                 [('company_id', '=', self.company_id.id),
                  ('sanitized_acc_number', 'like', self.account_number + '%'),

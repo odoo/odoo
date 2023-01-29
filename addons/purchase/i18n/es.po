@@ -7,8 +7,8 @@
 # Alejandro Concepción <alconor23@hotmail.com>, 2021
 # Daniela Cervantes <dace@odoo.com>, 2021
 # Francisco J. Luna Vázquez, 2021
-# Camille Dantinne <cmd@odoo.com>, 2022
 # marcescu, 2022
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -16,13 +16,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Víctor Martínez <victor.martinez@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -178,17 +178,17 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Adjuntamos la orden de compra <strong t-out=\"object.name or ''\">P00015</strong>\n"
+"        Aquí se adjunta el pedido de compra <strong t-out=\"object.name or ''\">P00015</strong>\n"
 "        <t t-if=\"object.partner_ref\">\n"
-"            con la referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"            con referencia: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
 "        </t>\n"
-"        por el valor de <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
+"        por valor de <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</strong>\n"
 "        de <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
 "        <br/><br/>\n"
 "        <t t-if=\"object.date_planned\">\n"
-"            Se espera que lo recibe el <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
+"            La recepción se espera para <strong t-out=\"format_date(object.date_planned) or ''\">05/05/2021</strong>.\n"
 "            <br/><br/>\n"
-"            ¿Podría confirmar la recepción de esta ordén?\n"
+"            ¿Podría por favor confirmar la recepción de este pedido?\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"

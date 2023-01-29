@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
 import FormController from "web.FormController";
-import { patch } from "../../src/core/utils/patch";
 import { SERVICES_METADATA } from "../../src/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
@@ -39,7 +38,12 @@ export function clearServicesMetadataWithCleanup() {
     for (const key of Object.keys(SERVICES_METADATA)) {
         delete SERVICES_METADATA[key];
     }
-    registerCleanup(() => patch(SERVICES_METADATA, servicesMetadata));
+    registerCleanup(() => {
+        for (const key of Object.keys(SERVICES_METADATA)) {
+            delete SERVICES_METADATA[key];
+        }
+        Object.assign(SERVICES_METADATA, servicesMetadata);
+    });
 }
 
 export function prepareRegistriesWithCleanup() {

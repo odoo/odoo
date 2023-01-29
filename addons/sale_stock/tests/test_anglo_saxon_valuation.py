@@ -1391,3 +1391,78 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(cogs_aml.debit, 0)
         self.assertEqual(cogs_aml.credit, 20, 'Should be to the value of the returned product')
+
+    def test_fifo_several_invoices_reset_repost(self):
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+
+        svl_values = [10, 15, 65]
+        total_value = sum(svl_values)
+        in_moves = self.env['stock.move'].create([{
+            'name': 'IN move @%s' % p,
+            'product_id': self.product.id,
+            'location_id': self.env.ref('stock.stock_location_suppliers').id,
+            'location_dest_id': self.company_data['default_warehouse'].lot_stock_id.id,
+            'product_uom': self.product.uom_id.id,
+            'product_uom_qty': 1,
+            'price_unit': p,
+        } for p in svl_values])
+        in_moves._action_confirm()
+        in_moves.quantity_done = 1
+        in_moves._action_done()
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.product.name,
+                    'product_id': self.product.id,
+                    'product_uom_qty': 3.0,
+                    'product_uom': self.product.uom_id.id,
+                    'price_unit': 100,
+                    'tax_id': False,
+                })],
+        })
+        so.action_confirm()
+
+        # Deliver one by one, so it creates an out-SVL each time.
+        # Then invoice the delivered quantity
+        invoices = self.env['account.move']
+        picking = so.picking_ids
+        while picking:
+            picking.move_lines.quantity_done = 1
+            action = picking.button_validate()
+            if isinstance(action, dict):
+                wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+                wizard.process()
+            picking = picking.backorder_ids
+
+            invoice = so._create_invoices()
+            invoice.action_post()
+            invoices |= invoice
+
+        out_account = self.product.categ_id.property_stock_account_output_categ_id
+        invoice01, _invoice02, invoice03 = invoices
+        cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
+        self.assertEqual(cogs.mapped('credit'), svl_values)
+
+        # Reset and repost each invoice
+        for i, inv in enumerate(invoices):
+            inv.button_draft()
+            inv.action_post()
+            cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
+            self.assertEqual(cogs.mapped('credit'), svl_values, 'Incorrect values while posting again invoice %s' % (i + 1))
+
+        # Reset and repost all invoices (we only check the total value as the
+        # distribution changes but does not really matter)
+        invoices.button_draft()
+        invoices.action_post()
+        cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
+        self.assertEqual(sum(cogs.mapped('credit')), total_value)
+
+        # Reset and repost few invoices (we only check the total value as the
+        # distribution changes but does not really matter)
+        (invoice01 | invoice03).button_draft()
+        (invoice01 | invoice03).action_post()
+        cogs = invoices.line_ids.filtered(lambda l: l.account_id == out_account)
+        self.assertEqual(sum(cogs.mapped('credit')), total_value)

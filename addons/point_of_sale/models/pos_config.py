@@ -26,7 +26,11 @@ class PosConfig(models.Model):
         return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _default_payment_methods(self):
-        return self.env['pos.payment.method'].search([('split_transactions', '=', False), ('company_id', '=', self.env.company.id)])
+        domain = [('split_transactions', '=', False), ('company_id', '=', self.env.company.id)]
+        non_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', False)])
+        available_cash_pm = self.env['pos.payment.method'].search(domain + [('is_cash_count', '=', True),
+                                                                            ('config_ids', '=', False)], limit=1)
+        return non_cash_pm | available_cash_pm
 
     def _default_pricelist(self):
         return self.env['product.pricelist'].search([('company_id', 'in', (False, self.env.company.id)), ('currency_id', '=', self.env.company.currency_id.id)], limit=1)
@@ -63,7 +67,7 @@ class PosConfig(models.Model):
     iface_electronic_scale = fields.Boolean(string='Electronic Scale', help="Enables Electronic Scale integration.")
     iface_customer_facing_display = fields.Boolean(compute='_compute_customer_facing_display')
     iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
-    iface_customer_facing_display_local = fields.Boolean(string='Local Customer Facing Display', help="Show checkout to customers.")
+    iface_customer_facing_display_local = fields.Boolean(string='Local Customer Facing Display', help="Show customers checkout in a pop-up window. Recommend to be moved to a second screen visible to the client.")
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
@@ -183,6 +187,13 @@ class PosConfig(models.Model):
     def _compute_cash_control(self):
         for config in self:
             config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
+
+    @api.onchange('payment_method_ids')
+    def _check_cash_payment_method(self):
+        for config in self:
+            if len(config.payment_method_ids.filtered('is_cash_count')) > 1:
+                config.payment_method_ids = config.payment_method_ids._origin
+                raise ValidationError(_('You can only have one cash payment method.'))
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):

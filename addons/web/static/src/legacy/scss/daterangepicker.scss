@@ -71,15 +71,18 @@
         }
     }
 
-    .calendar-time select {
-        &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
-            display: initial;
-            -webkit-appearance: menulist-button;
-            -moz-appearance: menulist-button;
-            appearance: menulist-button;
+    .calendar-time{
+        /*rtl:ignore*/
+        direction:ltr;
+        select {
+            &.hourselect, &.minuteselect, &.secondselect, &.ampmselect {
+                display: initial;
+                -webkit-appearance: menulist-button;
+                -moz-appearance: menulist-button;
+                appearance: menulist-button;
+            }
         }
-    }
-
+    } 
     .drp-buttons .drp-selected {
         display: none;
     }

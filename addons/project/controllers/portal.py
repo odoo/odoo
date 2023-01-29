@@ -248,7 +248,22 @@ class ProjectCustomerPortal(CustomerPortal):
             'user': request.env.user,
             'project_accessible': project_accessible,
         }
-        return self._get_page_view_values(task, access_token, values, history, False, **kwargs)
+
+        values = self._get_page_view_values(task, access_token, values, history, False, **kwargs)
+        if project:
+            history = request.session.get('my_project_tasks_history', [])
+            try:
+                current_task_index = history.index(task.id)
+            except ValueError:
+                return values
+
+            total_task = len(history)
+            task_url = f"{task.project_id.access_url}/task/%s?model=project.project&res_id={values['user'].id}&access_token={access_token}"
+
+            values['prev_record'] = current_task_index != 0 and task_url % history[current_task_index - 1]
+            values['next_record'] = current_task_index < total_task - 1 and task_url % history[current_task_index + 1]
+
+        return values
 
     def _task_get_searchbar_sortings(self):
         return {

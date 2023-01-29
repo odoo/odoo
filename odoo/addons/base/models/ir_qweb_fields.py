@@ -6,7 +6,7 @@ from io import BytesIO
 
 import babel
 import babel.dates
-from markupsafe import Markup as M, escape
+from markupsafe import Markup, escape
 from PIL import Image
 from lxml import etree, html
 
@@ -25,7 +25,7 @@ def nl2br(string):
     :param str string:
     :rtype: unicode
     """
-    return pycompat.to_text(string).replace('\n', M('<br>\n'))
+    return pycompat.to_text(string).replace('\n', Markup('<br>\n'))
 
 #--------------------------------------------------------------------
 # QWeb Fields converters
@@ -349,7 +349,7 @@ class HTMLConverter(models.AbstractModel):
                 attrib = irQweb._post_processing_att(element.tag, attrib, options.get('template_options'))
                 element.attrib.clear()
                 element.attrib.update(attrib)
-        return M(etree.tostring(body, encoding='unicode', method='html')[6:-7])
+        return Markup(etree.tostring(body, encoding='unicode', method='html')[6:-7])
 
 
 class ImageConverter(models.AbstractModel):
@@ -375,7 +375,7 @@ class ImageConverter(models.AbstractModel):
         except: # image.verify() throws "suitable exceptions", I have no idea what they are
             raise ValueError("Invalid image content")
 
-        return M('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii')))
+        return Markup('<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii')))
 
 class ImageUrlConverter(models.AbstractModel):
     """ ``image_url`` widget rendering, inserts an image tag in the
@@ -387,7 +387,7 @@ class ImageUrlConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        return M('<img src="%s">' % (value))
+        return Markup('<img src="%s">' % (value))
 
 class MonetaryConverter(models.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
@@ -455,9 +455,9 @@ class MonetaryConverter(models.AbstractModel):
             sep = lang.decimal_point
             integer_part, decimal_part = formatted_amount.split(sep)
             integer_part += sep
-            return M('{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
+            return Markup('{pre}<span class="oe_currency_value">{0}</span><span class="oe_currency_value" style="font-size:0.5em">{1}</span>{post}').format(integer_part, decimal_part, pre=pre, post=post)
 
-        return M('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
+        return Markup('{pre}<span class="oe_currency_value">{0}</span>{post}').format(formatted_amount, pre=pre, post=post)
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -672,7 +672,7 @@ class BarcodeConverter(models.AbstractModel):
         if not img_element.get('alt'):
             img_element.set('alt', _('Barcode %s') % value)
         img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
-        return M(html.tostring(img_element, encoding='unicode'))
+        return Markup(html.tostring(img_element, encoding='unicode'))
 
 
 class Contact(models.AbstractModel):
@@ -720,7 +720,7 @@ class Contact(models.AbstractModel):
             # escaped joiners will auto-escape joined params
             opsep = escape(', ')
         else:
-            opsep = M('<br/>')
+            opsep = Markup('<br/>')
 
         value = value.sudo().with_context(show_address=True)
         name_get = value.name_get()[0][1]

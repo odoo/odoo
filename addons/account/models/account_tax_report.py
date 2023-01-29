@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
@@ -269,12 +268,22 @@ class AccountTaxReportLine(models.Model):
     def _remove_tags_used_only_by_self(self):
         """ Deletes and removes from taxes and move lines all the
         tags from the provided tax report lines that are not linked
-        to any other tax report lines.
+        to any other tax report lines nor move lines.
+        The tags that are used by at least one move line will be archived instead, to avoid loosing history.
         """
         all_tags = self.mapped('tag_ids')
         tags_to_unlink = all_tags.filtered(lambda x: not (x.tax_report_line_ids - self))
         self.write({'tag_ids': [(3, tag.id, 0) for tag in tags_to_unlink]})
-        self._delete_tags_from_taxes(tags_to_unlink.ids)
+
+        for tag in tags_to_unlink:
+            aml_using_tags = self.env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+            # if the tag is still referenced in move lines we archive the tag, else we delete it.
+            if aml_using_tags:
+                rep_lines_with_archived_tags = self.env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', tag.id)])
+                rep_lines_with_archived_tags.write({'tag_ids': [(3, tag.id)]})
+                tag.active = False
+            else:
+                self._delete_tags_from_taxes([tag.id])
 
     @api.model
     def _delete_tags_from_taxes(self, tag_ids_to_delete):

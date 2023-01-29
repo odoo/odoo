@@ -27,9 +27,12 @@
 
                     <!-- Amounts. -->
                     <ram:SpecifiedLineTradeAgreement>
-                        <!-- Line information: unit_price (discount is below the taxes) -->
+                        <!-- Line information: unit_price
+                        NB: the gross_price_unit should be the price tax excluded !
+                        if price_unit = 100 and tax 10% price_include -> then the gross_price_unit is 91
+                        -->
                         <ram:GrossPriceProductTradePrice>
-                            <ram:ChargeAmount t-out="format_monetary(line.price_unit, 2)"/>
+                            <ram:ChargeAmount t-out="format_monetary(line_vals['gross_price_total_unit'], 2)"/>
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
@@ -62,17 +65,6 @@
                             </ram:ApplicableTradeTax>
                         </t>
 
-                        <!-- Discount. -->
-                        <!-- A discount in percent can only be on the whole document (CalculationPercent), not on a line... -->
-                        <ram:SpecifiedTradeAllowanceCharge t-if="line.discount">
-                            <ram:ChargeIndicator>
-                                <udt:Indicator>false</udt:Indicator>
-                            </ram:ChargeIndicator>
-                            <ram:ActualAmount t-out="format_monetary(line.price_unit * line.discount/100, 2)"/>
-                            <!-- https://unece.org/fileadmin/DAM/trade/untdid/d16b/tred/tred5189.htm -->
-                            <ram:ReasonCode>95</ram:ReasonCode>
-                        </ram:SpecifiedTradeAllowanceCharge>
-
                         <!-- Subtotal. -->
                         <ram:SpecifiedTradeSettlementLineMonetarySummation>
                             <ram:LineTotalAmount t-out="format_monetary(line.price_subtotal, 2)"/>
@@ -93,6 +85,17 @@
                     <ram:ID t-att-schemeID="str('0002')"
                             t-out="specified_legal_organization_val"/>
                 </ram:SpecifiedLegalOrganization>
+
+                <ram:DefinedTradeContact t-if="not hide_dtc">
+                    <ram:PersonName t-esc="partner.name"/>
+                    <ram:TelephoneUniversalCommunication t-if="partner.phone or partner.mobile">
+                        <ram:CompleteNumber t-esc="partner.phone or partner.mobile"/>
+                    </ram:TelephoneUniversalCommunication>
+                    <ram:EmailURIUniversalCommunication t-if="partner.email">
+                        <ram:URIID schemeID='SMTP' t-esc="partner.email"/>
+                    </ram:EmailURIUniversalCommunication>
+                </ram:DefinedTradeContact>
+
                 <!-- Address. -->
                 <t t-call="account_edi_ubl_cii.account_invoice_address_facturx_export_22"/>
             </t>
@@ -197,6 +200,7 @@
                             <t t-call="account_edi_ubl_cii.account_invoice_partner_facturx_export_22">
                                 <t t-set="partner"
                                    t-value="ship_to_trade_party"/>
+                                <t t-set="hide_dtc" t-value="document_context_id == 'urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2'"/>
                             </t>
                         </ram:ShipToTradeParty>
 

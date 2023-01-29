@@ -7,6 +7,7 @@ import re
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
+from odoo.osv import expression
 from odoo.tools import email_re
 
 
@@ -82,6 +83,12 @@ class MailComposer(models.TransientModel):
         filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
         return filtered_result
 
+    def _partner_ids_domain(self):
+        return expression.OR([
+            [('type', '!=', 'private')],
+            [('id', 'in', self.env.context.get('default_partner_ids', []))],
+        ])
+
     # content
     subject = fields.Char('Subject', compute=False)
     body = fields.Html('Contents', render_engine='qweb', compute=False, default='', sanitize_style=True)
@@ -139,7 +146,7 @@ class MailComposer(models.TransientModel):
     partner_ids = fields.Many2many(
         'res.partner', 'mail_compose_message_res_partner_rel',
         'wizard_id', 'partner_id', 'Additional Contacts',
-        domain=[('type', '!=', 'private')])
+        domain=_partner_ids_domain)
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
     auto_delete = fields.Boolean('Delete Emails',
@@ -369,7 +376,11 @@ class MailComposer(models.TransientModel):
         reply_to_value = dict.fromkeys(res_ids, None)
         if mass_mail_mode and not self.reply_to_force_new:
             records = self.env[self.model].browse(res_ids)
-            reply_to_value = records._notify_get_reply_to(default=self.email_from)
+            reply_to_value = records._notify_get_reply_to(default=False)
+            # when having no specific reply-to, fetch rendered email_from value
+            for res_id, reply_to in reply_to_value.items():
+                if not reply_to:
+                    reply_to_value[res_id] = rendered_values.get(res_id, {}).get('email_from', False)
 
         for res_id in res_ids:
             # static wizard (mail.message) values

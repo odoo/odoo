@@ -11,7 +11,6 @@
 # Yedigen, 2021
 # Gökhan Yüksel <yg_yuksel@hotmail.com>, 2021
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2021
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2021
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2021
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2021
 # Tugay Hatıl <tugayh@projetgrup.com>, 2021
@@ -26,6 +25,8 @@
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
 # Ediz Duman <neps1192@gmail.com>, 2022
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2022
+# Jérôme JEK <jek@odoo.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
@@ -366,33 +367,40 @@ msgid ""
 "            "
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">Sevgili\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Sevgili\n"
 "        <t t-if=\"object.partner_id.parent_id\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>İşte sizin\n"
+"        <br/><br/>\n"
+"        İşte Sizin\n"
 "        <t t-if=\"object.name\">\n"
-"            fatura <strong t-out=\"object.name or ''\">FAT/2021/05/0005</strong>\n"
+"            invoice <strong t-out=\"object.name or ''\">INV/2021/05/0005</strong>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            fatura\n"
 "        </t>\n"
 "        <t t-if=\"object.invoice_origin\">\n"
-"            (referansla: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"            (with reference: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong> cinsinden tutar\n"
-"        <t t-out=\"object.company_id.name or ''\">Sizin Şirket'ten</t>.\n"
+"        amounting in <strong t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</strong>\n"
+"        from <t t-out=\"object.company_id.name or ''\">Şirketiniz</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
 "            Bu fatura zaten ödendi.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            Lütfen ödemeyi en kısa zamanda havale edin.            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>Ödemeniz için lütfen aşağıdaki iletişimi kullanın: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.            </t>\n"
+"            Lütfen ödemenizi en kısa sürede yerine getirin.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br/><br/>\n"
+"                Lütfen ödemeniz için aşağıdaki referansı kullanın: <strong t-out=\"object.payment_reference or ''\">INV/2021/05/0005</strong>.\n"
+"            </t>\n"
 "        </t>\n"
-"        <br/><br/>Herhangi bir sorunuz varsa bizimle iletişime geçmekten çekinmeyin.        <t t-if=\"object.invoice_user_id.signature\">\n"
+"        <br/><br/>\n"
+"        Herhangi bir sorunuz varsa bizimle iletişime geçmekten çekinmeyin.\n"
+"        <t t-if=\"object.invoice_user_id.signature\">\n"
 "            <br/>\n"
 "            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
 "        </t>\n"
@@ -785,6 +793,11 @@ msgid "<span class=\"o_stat_text\">Invoiced</span>"
 msgstr "<span class=\"o_stat_text\">Faturalandı</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span class=\"o_stat_text\">Journal Entry</span>"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ""
 "<span class=\"oe_inline o_form_label mr-3 ml-5 oe_edit_only\" "
@@ -932,6 +945,12 @@ msgstr "<span>Tutar</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
+msgid "<span>Amount In Currency</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Description</span>"
 msgstr "<span>Açıklama</span>"
@@ -1065,6 +1084,11 @@ msgstr "<strong>Şirket:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Customer Code:</strong>"
 msgstr "<strong>Müşteri Kodu</strong>"
 
@@ -1075,6 +1099,11 @@ msgstr "<strong>Müşteri</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Date:</strong>"
+msgstr "<strong>Tarih:</strong>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Due Date:</strong>"
 msgstr "<strong>Vade Tarihi:</strong>"
@@ -1109,6 +1138,11 @@ msgstr "<strong>Yevmiye:</strong>"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 msgid "<strong>Product</strong>"
 msgstr "<strong>Ürün</strong>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>Alım Tarihi:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2555,7 +2589,7 @@ msgstr "Analitik Varsayılanları"
 #: model:ir.actions.act_window,name:account.action_analytic_default_list
 #: model:ir.ui.menu,name:account.menu_analytic_default_list
 msgid "Analytic Defaults Rules"
-msgstr "Analitik Temerrüt Kuralları"
+msgstr "Analitik Öndeğer Kuralları"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_default
@@ -4635,8 +4669,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Credit_note_{{ (object.name veya '').replace('/','_') }}{{ object.state == "
-"'taslak' ve '_draft' veya '' }}"
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -7460,8 +7494,8 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
-"Invoice_{{ (object.name veya '').replace('/','_') }}{{ object.state == "
-"'taslak' ve '_draft' veya '' }}"
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7744,7 +7778,6 @@ msgstr "Tarihe Göre Yevmiye Kayıtları"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 #, python-format
 msgid "Journal Entry"
 msgstr "Yevmiye Kaydı"
@@ -16908,21 +16941,19 @@ msgstr "ek olarak bir faturanın pdf'si ile."
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "{{ (object.name or '').replace('/','-') }}"
-msgstr "{{ (object.name veya '').replace('/','-') }}"
+msgstr "{{ (object.name or '').replace('/','-') }}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} Alacak Dekontu (Ref {{ object.name veya 'n/a' "
-"}})"
+"{{ object.company_id.name }} Alacak Dekontu (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-"{{ object.company_id.name }} Fatura (Ref {{ object.name veya 'n/a' }})"
+msgstr "{{ object.company_id.name }} Fatura (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -16930,8 +16961,7 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
-"{{ object.company_id.name }} Ödeme Alış İrsaliyesi (Ref {{ object.name veya "
-"'n/a' }})"
+"{{ object.company_id.name }} Ödeme Makbuzu (Ref {{ object.name or 'n/a' }})"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

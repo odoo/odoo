@@ -3,8 +3,8 @@
 # 	* delivery
 # 
 # Translators:
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
 # Martin Trigaux, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
 #: code:addons/delivery/models/sale_order.py:0
@@ -54,18 +54,18 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"o_warning_text\">Prueba</span>\n"
-"                                    <span class=\"o_stat_text\">Entorno</span>"
+"<span class=\"o_warning_text\">Entorno de</span>\n"
+"                                    <span class=\"o_stat_text\">prueba</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-danger\">No debug</span>"
-msgstr "<span class=\"text-danger\">Sin debug </span>"
+msgstr "<span class=\"text-danger\">Sin solución de bugs</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "<span class=\"text-success\">Debug requests</span>"
-msgstr "<span class=\"text-success\">Solicitudes de debug</span>"
+msgstr "<span class=\"text-success\">Solicitudes de solución de bugs</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -73,8 +73,8 @@ msgid ""
 "<span class=\"text-success\">Production</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"text-success\">Producción</span>\n"
-"                                    <span class=\"o_stat_text\">Entorno</span>"
+"<span class=\"text-success\">Entorno de</span>\n"
+"                                    <span class=\"o_stat_text\">producción</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.stock_report_delivery_package_section_line_inherit_delivery
@@ -190,7 +190,7 @@ msgstr "Transportistas disponibles"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__delivery_type__base_on_rule
 msgid "Based on Rules"
-msgstr "Según reglas"
+msgstr "Con base en reglas"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
@@ -284,13 +284,14 @@ msgstr "Cliente"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__debug_logging
 msgid "Debug logging"
-msgstr "Registro de debug"
+msgstr "Registro de solución de bugs"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_res_partner__property_delivery_carrier_id
 #: model:ir.model.fields,help:delivery.field_res_users__property_delivery_carrier_id
 msgid "Default delivery method used in sales orders."
-msgstr "Método de envío predeterminado usado en las ordenes de venta."
+msgstr ""
+"Método de envío predeterminado que se utiliza en las órdenes de venta."
 
 #. module: delivery
 #: model_terms:ir.actions.act_window,help:delivery.action_delivery_carrier_form
@@ -354,7 +355,7 @@ msgstr "Producto de envío"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_rating_success
 msgid "Delivery Rating Success"
-msgstr "Tasa de éxito de envíos"
+msgstr "Envíos con calificación exitosa"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__delivery_set
@@ -386,7 +387,7 @@ msgstr "País destino"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__sequence
 msgid "Determine the display order"
-msgstr "Determine el orden de visualización"
+msgstr "Determinar el orden de visualización"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -583,7 +584,7 @@ msgstr "Última actualización el"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__debug_logging
 msgid "Log requests in order to ease debugging"
-msgstr "Solicitudes de registro para facilitar el debug"
+msgstr "Solicitudes de registro para facilitar la solución de bugs"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__margin
@@ -688,12 +689,12 @@ msgstr "Reglas de precio"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Precio"
+msgstr "Precios"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
 msgid "Pricing Rules"
-msgstr "Reglas de precios."
+msgstr "Reglas de precios"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
@@ -779,7 +780,7 @@ msgstr "Guardar"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
 msgid "Send to Shipper"
-msgstr "Enviar al transportista."
+msgstr "Enviar al transportista"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__sequence
@@ -790,7 +791,7 @@ msgstr "Secuencia"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_sale_order__is_all_service
 msgid "Service Product"
-msgstr "Producto: servicio"
+msgstr "Producto de servicio"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
@@ -838,7 +839,7 @@ msgstr "Métodos de envío"
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__shipping_weight
 msgid "Shipping Weight"
-msgstr "Peso del envío"
+msgstr "Peso de envío"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
@@ -872,7 +873,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"EL código ISO del país en dos caracteres.\n"
+"El código ISO del país en dos caracteres.\n"
 "Puede utilizar este campo para una búsqueda rápida."
 
 #. module: delivery
@@ -1083,16 +1084,16 @@ msgid ""
 "The following delivery lines (product, invoiced quantity and price) have already been processed:\n"
 "\n"
 msgstr ""
-"¡No puede actualizar los costos de envío de una orden que ya fue facturada!\n"
+"¡No puede actualizar los costos de envío de una orden que ya se facturó!\n"
 "\n"
-"Las siguientes líneas de entrega (producto, cantidad facturada y precio) ya fueron procesadas:\n"
+"Las siguientes líneas de entrega (producto, cantidad facturada y precio) ya se procesaron:\n"
 "\n"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
 msgstr ""
-"Tiene múltiples rastreadores de enlaces, están disponibles en el historial."
+"Tiene múltiples rastreadores de enlaces, están disponibles en el chatter."
 
 #. module: delivery
 #: code:addons/delivery/models/stock_picking.py:0
@@ -1117,4 +1118,4 @@ msgstr "CP hasta"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "Ej, UPS Express"
+msgstr "Por ejemplo, UPS Express"

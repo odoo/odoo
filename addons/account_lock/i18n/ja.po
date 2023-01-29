@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:19+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2022\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,7 +26,7 @@ msgstr ""
 msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
-msgstr ""
+msgstr "新しい全ユーザロック日は、以前のものより後（または等しい）でなければなりません。"
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -36,19 +37,19 @@ msgstr "会社"
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
-msgstr ""
+msgstr "アドバイザのロック日は不可逆であり、削除することはできません。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
-msgstr ""
+msgstr "新しい税ロック日は、前のロック日より後に設定する必要があります。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "税ロック日は不可逆であり、削除することはできません。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -56,7 +57,7 @@ msgstr ""
 msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
-msgstr ""
+msgstr "まだ終了していない期間をロックすることはできません。したがって、全ユーザロック日は前月の最終日より前（または同じ）でなければなりません。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -64,7 +65,7 @@ msgstr ""
 msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
-msgstr ""
+msgstr "まだ終了していない期間をロックすることはできません。したがって、税ロック日は前月の最終日よりも前（または等しい）でなければなりません。"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -74,3 +75,5 @@ msgid ""
 "the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
 "Lock Date."
 msgstr ""
+"アドバイザには、ユーザよりも厳しい制限を設定することはできません。したがって、全ユーザロック日 は 顧客/仕入先請求書ロック日 "
+"よりも前でなければなりません。"

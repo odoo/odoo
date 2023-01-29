@@ -77,6 +77,14 @@ class AccountPaymentMethod(models.Model):
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
 
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
+
 
 class AccountPaymentMethodLine(models.Model):
     _name = "account.payment.method.line"

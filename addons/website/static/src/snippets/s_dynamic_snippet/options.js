@@ -27,6 +27,12 @@ const dynamicSnippetOptions = options.Class.extend({
      */
     onBuilt: function () {
         this._setOptionsDefaultValues();
+        // TODO Remove in master: adapt dropped snippet template.
+        if (this.$target[0].classList.contains('d-none') && !this.$target[0].classList.contains('d-md-block')) {
+            // Remove the 'd-none' of the old template if it is not related to
+            // the visible on mobile option.
+            this.$target[0].classList.remove('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -58,6 +64,9 @@ const dynamicSnippetOptions = options.Class.extend({
             if (numberOfElementsSmallDevices > numberOfRecords) {
                 dataSet.numberOfElementsSmallDevices = numberOfRecords;
             }
+
+            // TODO adapt in master
+            dataSet.forceMinimumMaxLimitTo16 = '1';
         }
     },
 

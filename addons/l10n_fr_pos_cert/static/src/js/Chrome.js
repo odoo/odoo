@@ -13,7 +13,8 @@ odoo.define('l10n_fr_pos_cert.Chrome', function (require) {
                     let limitDate = new Date(this.env.pos.pos_session.start_at);
                     limitDate.setDate(limitDate.getDate() + 1);
                     if (limitDate < now) {
-                        this.showPopup('ClosePosPopup');
+                        const info = await this.env.pos.getClosePosInfo();
+                        this.showPopup('ClosePosPopup', { info: info });
                     }
                 }
             }

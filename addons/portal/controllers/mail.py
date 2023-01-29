@@ -227,6 +227,10 @@ class MailController(mail.MailController):
             If so, those two parameters are used to authentify the recipient in the chatter, if any.
         :return:
         """
+        # no model / res_id, meaning no possible record -> direct skip to super
+        if not model or not res_id or model not in request.env:
+            return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
+
         if issubclass(type(request.env[model]), request.env.registry['portal.mixin']):
             uid = request.session.uid or request.env.ref('base.public_user').id
             record_sudo = request.env[model].sudo().browse(res_id).exists()
@@ -246,4 +250,4 @@ class MailController(mail.MailController):
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params)).to_url()
                         return request.redirect(url)
-        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token)
+        return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)

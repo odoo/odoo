@@ -239,7 +239,7 @@ class ir_cron(models.Model):
         #
         # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
-        cr.execute("""
+        query = """
             SELECT *
             FROM ir_cron
             WHERE active = true
@@ -255,7 +255,18 @@ class ir_cron(models.Model):
               AND id in %s
             ORDER BY priority
             LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
-        """, [job_ids])
+        """
+        try:
+            cr.execute(query, [job_ids], log_exceptions=False)
+        except psycopg2.extensions.TransactionRollbackError:
+            # A serialization error can occur when another cron worker
+            # commits the new `nextcall` value of a cron it just ran and
+            # that commit occured just before this query. The error is
+            # genuine and the job should be skipped in this cron worker.
+            raise
+        except Exception as exc:
+            _logger.error("bad query: %s\nERROR: %s", query, exc)
+            raise
         return cr.dictfetchone()
 
     @classmethod

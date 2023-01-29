@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2021
 # marcescu, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -34,7 +35,7 @@ msgstr ""
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr "<span class=\"o_vat_label\">IVA</span>"
+msgstr "<span class=\"o_vat_label\">NIF</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -80,22 +81,18 @@ msgstr ""
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
-"Parece que el RFC [%(wrong_vat)s] para %(record_label)s no es válido.\n"
-"Nota: el formato esperado es %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
-"VAT validation check or did not respect the expected format "
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s either failed "
+"the VIES VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
-"El RFC [%(wrong_vat)s] para %(record_label)s no pasó la verificación de "
-"validación del NIF VIES o no tiene el formato esperado %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0

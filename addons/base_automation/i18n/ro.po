@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Dorin Hongu <dhongu@gmail.com>, 2021
 # Cozmin Candea <office@terrabit.ro>, 2021
 # Foldi Robert <foldirobert@nexterp.ro>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2021\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +31,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -104,12 +106,12 @@ msgstr "Automatizare"
 #: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
 #: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
 msgid "Base Action Rule: check and execute"
-msgstr ""
+msgstr "Regulă de bază pentru acțiuni: verifică și execută"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
 msgid "Based on Form Modification"
-msgstr ""
+msgstr "Bazat pe modificarea formularului"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
@@ -147,6 +149,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
+"Acțiuni server subordonate care vor fi executate. Notați că ultima valoare "
+"returnată va fi folosită ca valoare globală de returnare."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -188,7 +192,7 @@ msgstr "Tip intarziere"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Dezactivează Acțiunea"
 
 #. module: base_automation
 #. openerp-web
@@ -200,6 +204,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Dezactivarea acestei acțiuni automate vă va permite să continuați fluxul de lucru\n"
+"                dar orice date create după aceasta pot fi corupte,\n"
+"                deoarece dezactivați o personalizare care poate seta\n"
+"                câmpuri importante și/sau obligatorii."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -221,7 +229,7 @@ msgstr "Tip scadență"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Editează acțiunea"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -355,7 +363,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr ""
+msgstr "Declanșator câmpuri On Change"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -432,7 +440,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Configurați o nouă automatizare automată"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -461,6 +469,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"\"%(trigger_value)s\" %(trigger_label)s poate fi utilizat numai cu "
+"\"%(state_value)s\" tipul de acțiune"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -479,6 +489,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"Eroarea a apărut în timpul execuției acțiunii automate\n"
+"                \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -550,6 +562,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Utilizați acțiunile automate pentru a declanșa automat acțiuni pentru\n"
+"                diferite ecrane. De exemplu: un lead creat de un utilizator specific poate\n"
+"                fi setat automat la o echipă de vânzări specifică, sau o\n"
+"                oportunitate care are încă starea în așteptare după 14 zile ar putea\n"
+"                declanșa un e-mail de reamintire automat."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -616,6 +633,8 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Puteți solicita unui administrator să dezactiveze sau să corecteze această "
+"acțiune automată."
 
 #. module: base_automation
 #. openerp-web
@@ -623,6 +642,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Puteți dezactiva această acțiune automată sau să o editați pentru a rezolva "
+"problema."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -631,3 +652,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Nu puteți trimite un e-mail, adăugați urmăritori sau creați o activitate "
+"pentru un înregistrare ștearsă.  Nu funcționează."

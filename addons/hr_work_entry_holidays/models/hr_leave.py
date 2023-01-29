@@ -9,6 +9,7 @@ from odoo.exceptions import ValidationError
 from odoo.osv.expression import AND
 from odoo.tools import format_date
 
+
 class HrLeaveType(models.Model):
     _inherit = 'hr.leave.type'
 
@@ -190,8 +191,8 @@ Contracts:
         return super()._get_leaves_on_public_holiday().filtered(
             lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE280'])
 
-    def action_validate(self):
-        super(HrLeave, self).action_validate()
+    def _validate_leave_request(self):
+        super(HrLeave, self)._validate_leave_request()
         self.sudo()._cancel_work_entry_conflict()  # delete preexisting conflicting work_entries
         return True
 

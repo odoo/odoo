@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, datetime
+from freezegun import freeze_time
 from pytz import timezone, utc
 
 from odoo import fields
@@ -530,6 +531,35 @@ class TestCalendar(TestResourceCommon):
         start = datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.john.tz)
         calendar_dt = self.calendar_john._get_closest_work_time(dt, resource=self.john.resource_id)
         self.assertEqual(calendar_dt, start, "It should have found the attendance on the 3rd April")
+
+    def test_attendance_intervals_batch_tz(self):
+        # Calendar for Jean and Pierre:
+        # Europe/Brussels, Monday to Friday, 8->16
+        # resource TZ : Pierre in UTC, Jean in Europe/Brussels (from calendar)
+        pierre = self.env['resource.test'].create({
+            'name': 'Pierre',
+            'resource_calendar_id': self.calendar_jean.id,
+            'tz': 'UTC'
+        })
+        # Friday (summer): 7->15 UTC / 9->17 Europe/Brussels
+        start_dt = datetime_tz(2020, 4, 3, 7, 0, 0, tzinfo='UTC')
+        end_dt = datetime_tz(2020, 4, 3, 15, 0, 0, tzinfo='UTC')
+        resources = [self.jean.resource_id, pierre.resource_id]
+
+        common_calendar = pierre.resource_calendar_id
+        attendance_intervals = common_calendar._attendance_intervals_batch(start_dt, end_dt, resources)
+        jean_intervals = list(attendance_intervals[self.jean.resource_id.id])
+        pierre_intervals = list(attendance_intervals[pierre.resource_id.id])
+
+        # Intervals should take each resource tz into account separately
+        self.assertEqual(len(jean_intervals), 1)
+        self.assertEqual(jean_intervals[0][0], datetime_tz(2020, 4, 3, 9, 0, 0, tzinfo=self.jean.tz))
+        self.assertEqual(jean_intervals[0][1], datetime_tz(2020, 4, 3, 16, 0, 0, tzinfo=self.jean.tz))
+
+        self.assertEqual(len(pierre_intervals), 1)
+        self.assertEqual(pierre_intervals[0][0], datetime_tz(2020, 4, 3, 8, 0, 0, tzinfo=pierre.tz))
+        self.assertEqual(pierre_intervals[0][1], datetime_tz(2020, 4, 3, 15, 0, 0, tzinfo=pierre.tz))
+
 
 class TestResMixin(TestResourceCommon):
 
@@ -1219,4 +1249,17 @@ class TestTimezones(TestResourceCommon):
             (date(2018, 4, 11), 8),
             (date(2018, 4, 12), 8),
             (date(2018, 4, 13), 8),
+        ])
+
+    @freeze_time("2022-09-21 15:30:00", tz_offset=-10)
+    def test_unavailable_intervals(self):
+        resource = self.env['resource.resource'].create({
+            'name': 'resource',
+            'tz': self.tz3,
+        })
+        intervals = resource._get_unavailable_intervals(datetime(2022, 9, 21), datetime(2022, 9, 22))
+        self.assertEqual(list(intervals.values())[0], [
+            (datetime(2022, 9, 21, 0, 0, tzinfo=utc), datetime(2022, 9, 21, 6, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 10, 0, tzinfo=utc), datetime(2022, 9, 21, 11, 0, tzinfo=utc)),
+            (datetime(2022, 9, 21, 15, 0, tzinfo=utc), datetime(2022, 9, 22, 0, 0, tzinfo=utc)),
         ])

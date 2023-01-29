@@ -3,7 +3,7 @@
 
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import UserError
+from odoo.exceptions import AccessError, UserError
 
 
 class TestPartner(TransactionCase):
@@ -18,6 +18,13 @@ class TestPartner(TransactionCase):
         self.assertEqual(set(i[0] for i in ns_res), set((test_partner | test_user.partner_id).ids))
 
         ns_res = self.env['res.partner'].name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
+        self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
+
+        # Check a partner may be searched when current user has no access but sudo is used
+        public_user = self.env.ref('base.public_user')
+        with self.assertRaises(AccessError):
+            test_partner.with_user(public_user).check_access_rule('read')
+        ns_res = self.env['res.partner'].with_user(public_user).sudo().name_search('Vlad', args=[('user_ids.email', 'ilike', 'vlad')])
         self.assertEqual(set(i[0] for i in ns_res), set(test_user.partner_id.ids))
 
     def test_name_get(self):

@@ -6,14 +6,16 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # Martin Trigaux, 2022
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"POT-Creation-Date: 2022-08-24 01:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +109,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"用户\" title=\"用户\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -134,7 +136,7 @@ msgstr "<span>顺祝安好,</span><br/><br/>"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "<span>Hello,</span><br/>Here's a copy of your conversation with"
-msgstr "<span>你好，</span><br/>这是您对话的备份"
+msgstr "<span>您好，</span><br/>这是您对话的备份"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__is_without_answer
@@ -196,7 +198,7 @@ msgstr "自动弹出时间"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_form
 msgid "Avatar"
-msgstr "头像"
+msgstr "形象"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__duration
@@ -374,7 +376,7 @@ msgstr "代号"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -633,9 +635,21 @@ msgid "Group By..."
 msgstr "分组"
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
+#: model:im_livechat.channel,button_text:im_livechat.im_livechat_channel_data
+#, python-format
+msgid "Have a Question? Chat with us."
+msgstr "有问题吗？跟我们聊一聊吧"
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__header_background_color
 msgid "Header Background Color"
 msgstr "页眉背景颜色"
+
+#. module: im_livechat
+#: model:im_livechat.channel,default_message:im_livechat.im_livechat_channel_data
+msgid "Hello, how may I help you?"
+msgstr "您好，需要帮助吗？"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__hide_button
@@ -1032,12 +1046,12 @@ msgstr "离线"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Online"
-msgstr "在线"
+msgstr "线上"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
-msgstr "在线聊天名称"
+msgstr "线上聊天名称"
 
 #. module: im_livechat
 #. openerp-web
@@ -1113,7 +1127,7 @@ msgstr "满意度"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Please check your internet connection."
-msgstr "请检查你的互联网连接"
+msgstr "请检查您的互联网连接"
 
 #. module: im_livechat
 #. openerp-web
@@ -1133,7 +1147,7 @@ msgstr "请等待......"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid "Powered by"
-msgstr "技术支持"
+msgstr "技术提供"
 
 #. module: im_livechat
 #. openerp-web
@@ -1295,7 +1309,7 @@ msgstr "满意率"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "Save your Channel to get your configuration widget."
-msgstr "保存你的频道以获得你的配置部件。"
+msgstr "保存您的频道以获得您的配置部件。"
 
 #. module: im_livechat
 #. openerp-web
@@ -1490,7 +1504,7 @@ msgstr "这是一个自动的‘欢迎’信息，当初始化新的会话的时
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_username
 msgid "This username will be used as your name in the livechat channels."
-msgstr "这个用户名将被用作你在即时聊天频道中的名字。"
+msgstr "这个用户名将被用作您在即时聊天频道中的名字。"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__time_to_answer
@@ -1546,7 +1560,7 @@ msgstr "重试"
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
-msgstr "键入<b>:快捷键</b>，在你的信息中插入一个预制的回应。<br>"
+msgstr "键入<b>:快捷键</b>，在您的信息中插入一个预制的回应。<br>"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1558,7 +1572,7 @@ msgstr "URL的正则表达式"
 msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
-msgstr "你可以在静态网页的URL和客户讨论"
+msgstr "您可以在静态网页的URL和客户讨论"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__uuid
@@ -1631,7 +1645,7 @@ msgstr "用户离线"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "User is online"
-msgstr "用户在线"
+msgstr "用户上线"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -1708,7 +1722,7 @@ msgstr "访客， Mitchell Admin"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
 msgid "Web Page"
-msgstr "Web页"
+msgstr "网络页面"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
@@ -1745,7 +1759,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Your chatter history is empty"
-msgstr "你的聊天历史是空的"
+msgstr "您的聊天历史是空的"
 
 #. module: im_livechat
 #. openerp-web
@@ -1771,12 +1785,12 @@ msgstr "例如：/contactus"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
-msgstr "例如：您好！请问有什么可以帮你的吗？"
+msgstr "例如：您好！请问有什么可以帮您的吗？"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "例如：你的网站地址 "
+msgstr "例如：您的网站地址 "
 
 #. module: im_livechat
 #. openerp-web

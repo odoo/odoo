@@ -6,6 +6,7 @@ import random
 import select
 import threading
 import time
+from psycopg2 import InterfaceError
 
 import odoo
 import odoo.service.server as servermod
@@ -170,7 +171,7 @@ class ImDispatch:
             conn = cr._cnx
             cr.execute("listen imbus")
             cr.commit();
-            while True:
+            while not stop_event.is_set():
                 if select.select([conn], [], [], TIMEOUT) == ([], [], []):
                     pass
                 else:
@@ -195,10 +196,12 @@ class ImDispatch:
                 event.set()
 
     def run(self):
-        while True:
+        while not stop_event.is_set():
             try:
                 self.loop()
-            except Exception:
+            except Exception as exc:
+                if isinstance(exc, InterfaceError) and stop_event.is_set():
+                    continue
                 _logger.exception("Bus.loop error, sleep and retry")
                 time.sleep(TIMEOUT)
 
@@ -216,8 +219,10 @@ class ImDispatch:
         return self
 
 dispatch = None
+stop_event = threading.Event()
 if not odoo.multi_process or odoo.evented:
     # We only use the event dispatcher in threaded and gevent mode
     dispatch = ImDispatch()
     if servermod.server:
+        servermod.server.on_stop(stop_event.set)
         servermod.server.on_stop(dispatch.wakeup_workers)

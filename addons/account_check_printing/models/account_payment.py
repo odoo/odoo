@@ -228,7 +228,7 @@ class AccountPayment(models.Model):
         def prepare_vals(invoice, partials):
             number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name])
 
-            if invoice.is_outbound():
+            if invoice.is_outbound() or invoice.move_type == 'entry':
                 invoice_sign = 1
                 partial_field = 'debit_amount_currency'
             else:
@@ -249,10 +249,11 @@ class AccountPayment(models.Model):
                 'currency': invoice.currency_id,
             }
 
-        # Decode the reconciliation to keep only invoices.
+        # Decode the reconciliation to keep only bills.
         term_lines = self.line_ids.filtered(lambda line: line.account_id.internal_type in ('receivable', 'payable'))
-        invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
-            .filtered(lambda x: x.is_outbound())
+        invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id) \
+            .filtered(lambda move: move.is_outbound() or move.move_type == 'entry')
+
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)
 
         # Group partials by invoices.
@@ -279,7 +280,7 @@ class AccountPayment(models.Model):
         else:
             stub_lines = [prepare_vals(invoice, partials)
                           for invoice, partials in invoice_map.items()
-                          if invoice.move_type == 'in_invoice']
+                          if invoice.move_type in ('in_invoice', 'entry')]
 
         # Crop the stub lines or split them on multiple pages
         if not self.company_id.account_check_printing_multi_stub:

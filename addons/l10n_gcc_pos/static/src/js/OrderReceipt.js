@@ -10,7 +10,8 @@ odoo.define('l10n_gcc_pos.OrderReceipt', function (require) {
             get receiptEnv() {
                 let receipt_render_env = super.receiptEnv;
                 let receipt = receipt_render_env.receipt;
-                receipt.is_gcc_country = ['SA', 'AE', 'BH', 'OM', 'QA', 'KW'].includes(receipt_render_env.order.pos.company.country.code);
+                let company = this.env.pos.company;
+                receipt.is_gcc_country = company.country ? ['SA', 'AE', 'BH', 'OM', 'QA', 'KW'].includes(company.country.code) : false;
                 return receipt_render_env;
             }
         }

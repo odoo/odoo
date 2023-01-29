@@ -48,6 +48,7 @@ Here is how it works:
         'report/swissqr_report.xml',
         'views/res_bank_view.xml',
         'views/account_invoice_view.xml',
+        'views/account_invoice.xml',
         'views/res_config_settings_views.xml',
         'views/setup_wizard_views.xml',
     ],

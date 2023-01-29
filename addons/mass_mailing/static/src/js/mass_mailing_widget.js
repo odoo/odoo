@@ -123,6 +123,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         this.$content.find('.o_layout').addBack().data('name', 'Mailing');
         // We don't want to drop snippets directly within the wysiwyg.
         this.$content.removeClass('o_editable');
+        this.wysiwyg.getEditable().find('img').attr('loading', '');
     },
     /**
      * Returns true if the editable area is empty.
@@ -169,7 +170,7 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (_t.database.multi_lang && this.record.fields[fieldName].translate && this.res_id) {
             return $('<button>', {
                     type: 'button',
-                    'class': 'o_field_translate fa fa-globe btn btn-link',
+                    'class': 'o_field_translate fa fa-globe btn btn-primary',
                 })
                 .on('click', this._onTranslate.bind(this));
         }

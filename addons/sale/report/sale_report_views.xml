@@ -53,6 +53,7 @@
                 <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
                 <filter name="filter_date" date="date" default_period="this_month"/>
+                <filter name="filter_order_date" invisible="1" string="Order Date: Last 365 Days" domain="[('date', '&gt;=', (datetime.datetime.combine(context_today() + relativedelta(days=-365), datetime.time(0,0,0))).strftime('%Y-%m-%d %H:%M:%S'))]"/>
                 <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>

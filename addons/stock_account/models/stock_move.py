@@ -46,6 +46,7 @@ class StockMove(models.Model):
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
         return price_unit if not float_is_zero(price_unit, precision) or self._should_force_price_unit() else self.product_id.standard_price
@@ -86,7 +87,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_in_move_lines():
+        if self._get_in_move_lines() and not self._is_dropshipped_returned():
             return True
         return False
 
@@ -114,7 +115,7 @@ class StockMove(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        if self._get_out_move_lines():
+        if self._get_out_move_lines() and not self._is_dropshipped():
             return True
         return False
 
@@ -220,23 +221,26 @@ class StockMove(models.Model):
 
             common_vals = dict(move._prepare_common_svl_vals(), remaining_qty=0)
 
-            # create the in
-            in_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity,
-                'quantity': quantity,
-            }
-            in_vals.update(common_vals)
-            svl_vals_list.append(in_vals)
+            # create the in if it does not come from a valued location (eg subcontract -> customer)
+            if not move.location_id._should_be_valued():
+                in_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity,
+                    'quantity': quantity,
+                }
+                in_vals.update(common_vals)
+                svl_vals_list.append(in_vals)
 
-            # create the out
-            out_vals = {
-                'unit_cost': unit_cost,
-                'value': unit_cost * quantity * -1,
-                'quantity': quantity * -1,
-            }
-            out_vals.update(common_vals)
-            svl_vals_list.append(out_vals)
+            # create the out if it does not go to a valued location (eg customer -> subcontract)
+            if not move.location_dest_id._should_be_valued():
+                out_vals = {
+                    'unit_cost': unit_cost,
+                    'value': unit_cost * quantity * -1,
+                    'quantity': quantity * -1,
+                }
+                out_vals.update(common_vals)
+                svl_vals_list.append(out_vals)
+
         return self.env['stock.valuation.layer'].sudo().create(svl_vals_list)
 
     def _create_dropshipped_returned_svl(self, forced_quantity=None):
@@ -261,6 +265,9 @@ class StockMove(models.Model):
         valued_moves['in'].product_price_update_before_done()
 
         res = super(StockMove, self)._action_done(cancel_backorder=cancel_backorder)
+
+        # '_action_done' might have deleted some exploded stock moves
+        valued_moves = {value_type: moves.exists() for value_type, moves in valued_moves.items()}
 
         # '_action_done' might have created an extra move to be valued
         for move in res - self:

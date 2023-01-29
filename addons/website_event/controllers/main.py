@@ -18,8 +18,9 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.http import request
 from odoo.osv import expression
-from odoo.tools.misc import get_lang
 
+from odoo.tools.misc import get_lang
+from odoo.exceptions import UserError
 
 class WebsiteEventController(http.Controller):
 
@@ -254,6 +255,9 @@ class WebsiteEventController(http.Controller):
         """
         allowed_fields = request.env['event.registration']._get_website_registration_allowed_fields()
         registration_fields = {key: v for key, v in request.env['event.registration']._fields.items() if key in allowed_fields}
+        for ticket_id in list(filter(lambda x: x is not None, [form_details[field] if 'event_ticket_id' in field else None for field in form_details.keys()])):
+            if int(ticket_id) not in event.event_ticket_ids.ids and len(event.event_ticket_ids.ids) > 0:
+                raise UserError(_("This ticket is not available for sale for this event"))
         registrations = {}
         global_values = {}
         for key, value in form_details.items():
@@ -311,8 +315,17 @@ class WebsiteEventController(http.Controller):
     def registration_confirm(self, event, **post):
         registrations = self._process_attendees_form(event, post)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
+        visitor_sudo = attendees_sudo.visitor_id
 
-        return request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+        redirect = request.redirect(('/event/%s/registration/success?' % event.id) + werkzeug.urls.url_encode({'registration_ids': ",".join([str(id) for id in attendees_sudo.ids])}))
+
+        # make sure the vistor's uuid is correctly logged in cookies when disabling "Track Visitor" on all the pages of the event
+        # we set visitor_uuid in the cookie to be sure "event_registration_success" can retrieve the visitor
+        if request.httprequest.cookies.get('visitor_uuid', '') != visitor_sudo.access_token:
+            expiration_date = datetime.now() + timedelta(days=365)
+            redirect.set_cookie('visitor_uuid', visitor_sudo.access_token, expires=expiration_date)
+
+        return redirect
 
     @http.route(['/event/<model("event.event"):event>/registration/success'], type='http', auth="public", methods=['GET'], website=True, sitemap=False)
     def event_registration_success(self, event, registration_ids):

@@ -5,6 +5,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
     const { useModel } = require('web.Model');
+    const { SearchDropdownItem } = require("@web/search/search_dropdown_item/search_dropdown_item");
     const { Component, useState } = owl;
 
     /**
@@ -81,7 +82,7 @@ odoo.define('web.FavoriteMenu', function (require) {
     }
 
     FavoriteMenu.registry = new Registry();
-    FavoriteMenu.components = { Dialog };
+    FavoriteMenu.components = { Dialog, DropdownItem: SearchDropdownItem };
     FavoriteMenu.template = 'web.Legacy.FavoriteMenu';
 
     return FavoriteMenu;

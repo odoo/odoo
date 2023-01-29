@@ -74,6 +74,28 @@ class TestCIIFR(TestUBLCommon):
             'country_id': cls.env.ref('base.fr').id,
         })
 
+        cls.tax_5_purchase = cls.env['account.tax'].create({
+            'name': 'tax_5',
+            'amount_type': 'percent',
+            'amount': 5,
+            'type_tax_use': 'purchase',
+        })
+
+        cls.tax_5 = cls.env['account.tax'].create({
+            'name': 'tax_5',
+            'amount_type': 'percent',
+            'amount': 5,
+            'type_tax_use': 'sale',
+        })
+
+        cls.tax_5_incl = cls.env['account.tax'].create({
+            'name': 'tax_5_incl',
+            'amount_type': 'percent',
+            'amount': 5,
+            'type_tax_use': 'sale',
+            'price_include': True,
+        })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template):
         # OVERRIDE
@@ -210,9 +232,100 @@ class TestCIIFR(TestUBLCommon):
         self.assertEqual(xml_filename, "factur-x.xml")
         self._assert_imported_invoice_from_etree(refund, xml_etree, xml_filename)
 
+    def test_export_tax_included(self):
+        """
+        Tests whether the tax included price_units are correctly converted to tax excluded
+        amounts in the exported xml
+        """
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [(6, 0, self.tax_5_incl.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 100,
+                    'tax_ids': [(6, 0, self.tax_5.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 200,
+                    'discount': 10,
+                    'tax_ids': [(6, 0, self.tax_5_incl.ids)],
+                },
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 200,
+                    'discount': 10,
+                    'tax_ids': [(6, 0, self.tax_5.ids)],
+                },
+            ],
+        )
+        self._assert_invoice_attachment(
+            invoice,
+            xpaths='''
+                <xpath expr="./*[local-name()='ExchangedDocument']/*[local-name()='ID']" position="replace">
+                        <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='IssuerAssignedID']" position="replace">
+                        <IssuerAssignedID>___ignore___</IssuerAssignedID>
+                </xpath>
+            ''',
+            expected_file='from_odoo/facturx_out_invoice_tax_incl.xml'
+        )
+
+    def test_encoding_in_attachment_facturx(self):
+        self._test_encoding_in_attachment('facturx_1_0_05', 'factur-x.xml')
+
     ####################################################
     # Test import
     ####################################################
+
+    def test_import_partner_facturx(self):
+        self._test_import_partner('facturx_1_0_05', 'factur-x.xml')
+
+    def test_import_tax_included(self):
+        """
+        Tests whether the tax included / tax excluded are correctly decoded when
+        importing a document. The imported xml represents the following invoice:
+
+        Description         Quantity    Unit Price    Disc (%)   Taxes            Amount
+        --------------------------------------------------------------------------------
+        Product A                  1           100          0    5% (incl)         95.24
+        Product A                  1           100          0    5% (not incl)       100
+        Product A                  2           200         10    5% (incl)        171.43
+        Product A                  2           200         10    5% (not incl)       180
+        -----------------------
+        Untaxed Amount: 546.67
+        Taxes: 27.334
+        -----------------------
+        Total: 574.004
+        """
+        self._assert_imported_invoice_from_file(
+            subfolder='tests/test_files/from_odoo',
+            filename='facturx_out_invoice_tax_incl.xml',
+            amount_total=574.004,
+            amount_tax=27.334,
+            list_line_subtotals=[95.24, 100, 171.43, 180],
+            # /!\ The price_unit are different for taxes with price_include, because all amounts in Factur-X should be
+            # tax excluded. At import, the tax included amounts are thus converted into tax excluded ones.
+            # Yet, the line subtotals and total will be the same (if an equivalent tax exist with price_include = False)
+            list_line_price_unit=[95.24, 100, 190.48, 200],
+            list_line_discount=[0, 0, 10, 10],
+            # Again, all taxes in the imported invoice are price_include = False
+            list_line_taxes=[self.tax_5_purchase]*4,
+            move_type='in_invoice',
+            currency_id=self.env['res.currency'].search([('name', '=', 'USD')], limit=1).id,
+        )
 
     def test_import_fnfe_examples(self):
         # Source: official documentation of the FNFE (subdirectory: "5. FACTUR-X 1.0.06 - Examples")

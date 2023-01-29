@@ -86,7 +86,7 @@ class ProductTemplate(models.Model):
             'active_id': self._context.get('active_id'),
             'active_model': 'sale.report',
             'search_default_Sales': 1,
-            'time_ranges': {'field': 'date', 'range': 'last_365_days'}
+            'search_default_filter_order_date': 1,
         }
         return action
 

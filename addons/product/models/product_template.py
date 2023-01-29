@@ -291,8 +291,13 @@ class ProductTemplate(models.Model):
         return [('id', 'in', templates.ids)]
 
     def _set_barcode(self):
-        if len(self.product_variant_ids) == 1:
+        variant_count = len(self.product_variant_ids)
+        if variant_count == 1:
             self.product_variant_ids.barcode = self.barcode
+        elif variant_count == 0:
+            archived_variants = self.with_context(active_test=False).product_variant_ids
+            if len(archived_variants) == 1:
+                archived_variants.barcode = self.barcode
 
     @api.model
     def _get_weight_uom_id_from_ir_config_parameter(self):
@@ -1065,6 +1070,18 @@ class ProductTemplate(models.Model):
             'product_tmpl_id': self.id,
             'product_template_attribute_value_ids': [(6, 0, combination._without_no_variant_attributes().ids)]
         })
+
+    def _create_first_product_variant(self, log_warning=False):
+        """Create if necessary and possible and return the first product
+        variant for this template.
+
+        :param log_warning: whether a warning should be logged on fail
+        :type log_warning: bool
+
+        :return: the first product variant or none
+        :rtype: recordset of `product.product`
+        """
+        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
     @tools.ormcache('self.id', 'frozenset(filtered_combination.ids)')
     def _get_variant_id_for_combination(self, filtered_combination):

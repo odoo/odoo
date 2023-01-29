@@ -105,3 +105,22 @@ class TestProjectCommon(TransactionCase):
 
         with self.assertRaises(UserError):
             self.project_pigs.unlink()
+
+    def test_auto_assign_stages_when_importing_tasks(self):
+        self.assertFalse(self.project_pigs.type_ids)
+        self.assertEqual(len(self.project_goats.type_ids), 2)
+        first_stage = self.project_goats.type_ids[0]
+        self.env['project.task']._load_records_create([{
+            'name': 'First Task',
+            'project_id': self.project_pigs.id,
+            'stage_id': first_stage.id,
+        }])
+        self.assertEqual(self.project_pigs.type_ids, first_stage)
+        self.env['project.task']._load_records_create([
+            {
+                'name': 'task',
+                'project_id': self.project_pigs.id,
+                'stage_id': stage.id,
+            } for stage in self.project_goats.type_ids
+        ])
+        self.assertEqual(self.project_pigs.type_ids, self.project_goats.type_ids)

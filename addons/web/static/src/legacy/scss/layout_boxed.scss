@@ -7,10 +7,14 @@
     img {
         max-height: 100px;
     }
-    h4 {
+    /* "h4 + p" selector is necessary when P is ejected outside of H4 */
+    h4, h4 + p {
         color: #999999;
         font-weight: 700;
         text-transform: uppercase;
+    }
+    h4 + p {
+        font-size: 1.5rem;
     }
 }
 .o_boxed_footer {

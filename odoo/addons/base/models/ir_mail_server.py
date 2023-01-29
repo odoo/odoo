@@ -75,7 +75,13 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [formataddr(('', c), charset='ascii') for c in candidates]
+    valid_addresses = []
+    for c in candidates:
+        try:
+            valid_addresses.append(formataddr(('', c), charset='ascii'))
+        except idna.IDNAError:
+            pass
+    return valid_addresses
 
 
 class IrMailServer(models.Model):
@@ -129,6 +135,14 @@ class IrMailServer(models.Model):
 
     def _get_test_email_addresses(self):
         self.ensure_one()
+        if self.from_filter:
+            if "@" in self.from_filter:
+                # All emails will be sent from the same address
+                return self.from_filter, "noreply@odoo.com"
+            # All emails will be sent from any address in the same domain
+            default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
+            return f"{default_from}@{self.from_filter}", "noreply@odoo.com"
+        # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
             raise UserError(_('Please configure an email on the current user to simulate '
@@ -385,8 +399,6 @@ class IrMailServer(models.Model):
         body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
-        msg.set_charset('utf-8')
-
         if not message_id:
             if object_id:
                 message_id = tools.generate_tracking_message_id(object_id)
@@ -410,9 +422,11 @@ class IrMailServer(models.Model):
 
         email_body = ustr(body)
         if subtype == 'html' and not body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(tools.html2plaintext(email_body), subtype='plain', charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         elif body_alternative:
+            msg['MIME-Version'] = '1.0'
             msg.add_alternative(ustr(body_alternative), subtype=subtype_alternative, charset='utf-8')
             msg.add_alternative(email_body, subtype=subtype, charset='utf-8')
         else:

@@ -105,6 +105,16 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
                     self.wishlistProductIDs.push(productId);
                     self._updateWishlistView();
                     wSaleUtils.animateClone($navButton, $el.closest('form'), 25, 40);
+                    // It might happen that `onChangeVariant` is called at the same time as this function.
+                    // In this case we need to set the button to disabled again.
+                    // Do this only if the productID is still the same.
+                    let currentProductId = $el.data('product-product-id');
+                    if ($el.hasClass('o_add_wishlist_dyn')) {
+                        currentProductId = parseInt($el.closest('.js_product').find('.product_id:checked').val());
+                    }
+                    if (productId === currentProductId) {
+                        $el.prop("disabled", true).addClass('disabled');
+                    }
                 }).guardedCatch(function () {
                     $el.prop("disabled", false).removeClass('disabled');
                 });

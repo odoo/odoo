@@ -432,6 +432,9 @@ def get_modules():
 
     plist = []
     for ad in odoo.addons.__path__:
+        if not os.path.exists(ad):
+            _logger.warning("addons path does not exist: %s", ad)
+            continue
         plist.extend(listdir(ad))
     return list(set(plist))
 

@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Lucia Pacheco <lpo@odoo.com>, 2021
+# Lucia Pacheco <lpo@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2021\n"
+"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -94,8 +94,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona sus existencias. Debe tener instalada la aplicación de inventario.\n"
-"Un producto consumible es un producto para el que no se gestionan sus existencias.\n"
+"Un producto almacenable es un producto para el que gestionan las existencias. Debe instalar la aplicación de Inventario.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: sale_stock
@@ -107,7 +107,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Según la configuración del producto, el mecanismo puede calcular automáticamente la cantidad enviada:\n"
+"Según la configuración del producto, se puede calcular automáticamente la cantidad enviada:\n"
 "  - Manual: la cantidad se establece de forma manual en la línea.\n"
 "  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados.\n"
 "  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
@@ -116,7 +116,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
 msgid "After-Sale"
-msgstr "Postventa"
+msgstr "Posventa"
 
 #. module: sale_stock
 #. openerp-web
@@ -210,10 +210,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"Fecha de entrega que puede prometer al cliente, en el caso de los productos "
-"de servicio, se calcula a partir del plazo mínimo de las líneas de orden. En"
-" el caso de los envíos, se tendrá en cuenta la política de envíos de la "
-"orden para utilizar el plazo mínimo o máximo de las líneas de orden."
+"Fecha de entrega que puede prometer al cliente, en el caso de los servicios,"
+" se calcula a partir del plazo mínimo de las líneas de orden. En el caso de "
+"los envíos, se tendrá en cuenta la política de envíos de la orden para "
+"utilizar el plazo mínimo o máximo de las líneas de orden."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget

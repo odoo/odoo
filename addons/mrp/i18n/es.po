@@ -8,6 +8,8 @@
 # juankfj, 2022
 # Nelson Ramírez <info@konos.cl>, 2022
 # marcescu, 2022
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1112,6 +1114,8 @@ msgid ""
 "Component Lots must be unique for mass production. Please review reservation"
 " for:\n"
 msgstr ""
+"Los lotes de componentes deben ser únicos para la producción en masa. "
+"Compruebe la reserva para:\n"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__components_availability
@@ -3018,6 +3022,17 @@ msgstr ""
 "trabajo para prevenir esto."
 
 #. module: mrp
+#: code:addons/mrp/models/product.py:0 code:addons/mrp/models/product.py:0
+#, python-format
+msgid ""
+"Note that product(s): '%s' is/are still linked to active Bill of Materials, "
+"which means that the product can still be used on it/them."
+msgstr ""
+"Fíjese que el/los producto/s: '%s' está/n aún enlazado/s a listas de "
+"materiales activas, lo que significa que el producto aún podría usarse en "
+"ellas."
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_needaction_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_needaction_counter
@@ -3074,6 +3089,12 @@ msgid ""
 "multiplied by two. However, note that both time before and after production "
 "will only be counted once. "
 msgstr ""
+"El número de piezas (en la unidad de medida del producto) que se pueden "
+"producir en paralelo (al mismo tiempo) en este centro de trabajo. Por "
+"ejemplo: la capacidad es 5 y necesita producir 10 unidades, por lo que el "
+"tiempo de operación que se indica en la LdM se multiplicará por 2. Sin "
+"embargo, tome en cuenta que ambos tiempos, el anterior y el posterior a "
+"producción, se contarán solo una vez."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_qty
@@ -3082,6 +3103,9 @@ msgid ""
 "If the BOM contains operations, make sure the work center capacity is "
 "accurate. "
 msgstr ""
+"Ésta debería ser la cantidad más pequeña que se puede producir de este "
+"producto. Si la LdM contiene operaciones, asegúrese de que la capacidad del "
+"centro de trabajo sea precisa."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__mrp_production_source_count
@@ -4627,6 +4651,8 @@ msgid ""
 "The selected serial number does not correspond to the one used in the "
 "manufacturing order, please select another one."
 msgstr ""
+"El número de serie seleccionado no corresponde con el que se utilizó en la "
+"orden de fabricación, seleccione otro."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0

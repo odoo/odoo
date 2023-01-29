@@ -5,6 +5,7 @@ import { FACET_ICONS, GROUPABLE_TYPES } from "../utils/misc";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 
 const { Component } = owl;
 
@@ -65,7 +66,7 @@ export class GroupByMenu extends Component {
     }
 }
 
-GroupByMenu.components = { CustomGroupByItem };
+GroupByMenu.components = { CustomGroupByItem, DropdownItem: SearchDropdownItem };
 GroupByMenu.template = "web.GroupByMenu";
 GroupByMenu.defaultProps = {
     showActiveItems: true,

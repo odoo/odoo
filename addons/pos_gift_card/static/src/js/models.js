@@ -2,6 +2,8 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   "use strict";
 
   const models = require("point_of_sale.models");
+  const core = require('web.core');
+  const _t = core._t;
 
   models.load_fields("pos.order.line", "generated_gift_card_ids");
   models.load_fields("pos.order.line", "redeem_pos_order_line_ids");
@@ -35,6 +37,9 @@ odoo.define("pos_gift_card.gift_card", function (require) {
         orderline.generated_gift_card_ids = [options.generated_gift_card_ids];
       }
       if (options && options.gift_card_id) {
+        if (orderline.order.orderlines.find((line) => line.gift_card_id === options.gift_card_id)) {
+            throw new Error(_t('This gift card is already applied'));
+        }
         orderline.gift_card_id = options.gift_card_id;
       }
     },

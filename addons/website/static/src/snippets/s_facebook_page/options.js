@@ -134,6 +134,16 @@ options.registry.facebookPage = options.Class.extend({
         return this._super(...arguments);
     },
     /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (params.optionName === 'show_facepile') {
+            // TODO: Remove this option in master (in the meantime we hide it).
+            return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      */
     _checkURL: function () {

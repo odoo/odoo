@@ -1476,6 +1476,31 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line), 3, 'Promotion should add 1 line')
         self.assertEqual(order.amount_total, 5, '10$ discount should be applied on top of the 15$ original price')
 
+    def test_fixed_amount_with_tax_sale_order_amount_remain_positive(self):
+
+        prod = self.env['coupon.program'].create({
+            'name': '$10 coupon',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'fixed_amount',
+            'discount_fixed_amount': 10,
+            'active': True,
+            'discount_apply_on': 'on_order',
+        })
+        prod.discount_line_product_id.taxes_id = self.tax_15pc_excl
+
+        order = self.empty_order
+        self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'price_unit': 5,
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+            'tax_id': self.tax_15pc_excl,
+        })
+        order.recompute_coupon_lines()
+        self.assertEqual(order.amount_total, 0, 'Sale Order total amount cannot be negative')
+
     def test_fixed_amount_change_promo_amount(self):
 
         promo = self.env['coupon.program'].create({

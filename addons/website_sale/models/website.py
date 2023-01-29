@@ -258,6 +258,11 @@ class Website(models.Model):
         # Test validity of the sale_order_id
         sale_order = self.env['sale.order'].with_company(request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
 
+        # Ignore the current order if a payment has been initiated. We don't want to retrieve the
+        # cart and allow the user to update it when the payment is about to confirm it.
+        if sale_order and sale_order.get_portal_last_transaction().state in ('pending', 'authorized', 'done'):
+            sale_order = None
+
         # Do not reload the cart of this user last visit if the Fiscal Position has changed.
         if check_fpos and sale_order:
             fpos_id = (

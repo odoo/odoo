@@ -70,7 +70,7 @@ class MrpProduction(models.Model):
             "res_model": "account.analytic.account",
             'res_id': self.analytic_account_id.id,
             "context": {"create": False},
-            "name": "Analytic Account",
+            "name": _("Analytic Account"),
             'view_mode': 'form',
         }
 

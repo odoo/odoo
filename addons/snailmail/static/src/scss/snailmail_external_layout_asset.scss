@@ -1,53 +1,66 @@
-/* Generic report layouts*/
-.header {
-    max-height: 40mm;
-    overflow: hidden;
-}
-.container {
-    margin-top: 5mm;
-}
-.o_standard_footer, .o_clean_footer, .o_boxed_footer, .o_background_footer {
-    max-height: 90px !important;
-    overflow: hidden;
-    width: 95%;
-    div > div:first-child {
-        padding-left: 10mm;
-    }
-}
-.o_background_footer {
-    padding-left: 8mm;
-}
-.article>.page {
-    > h1, > h2, > h3 {
-        width: 50%;
-    }
-}
-.pt-5 {
-    padding-top: 48px !important;
-}
-.article > .address.row > div[name="address"] {
-    height: 65mm;
-    background-color: #ffffff;
-    padding-top: 11mm;
-    padding-left: 5mm;
-    padding-bottom: 5mm;
-    left: -20px !important;
-    address {
-        height: 28mm;
+/*Modifications for the Standard and Boxed document layouts */
+.article.o_report_layout_standard.o_company_1_layout, .article.o_report_layout_boxed.o_company_1_layout {
+    > .pt-5 {
+        padding-top: 0 !important;
+        > .address.row {
+            width: 117% !important;
+            height: 68mm !important;
+            margin-top: -4mm !important;
+            line-height: 1.1em;
+        }
     }
 }
 
-/*l10n_de_din layout*/
-.din {
-    .invoice_address {
-        top: 27.7mm !important;
+/*Modifications for Bold and Striped document layouts*/
+.article.o_report_layout_bold.o_company_1_layout, .article.o_report_layout_striped.o_company_1_layout {
+    > .address.row {
+        width: 117% !important;
+        height: 68mm !important;
+        margin-top: -4mm !important;
+        line-height: 1.1em;
     }
-    &.article {
-        .page {
-            top: 18.46mm !important;
+}
+
+/* Modifications for all layouts */
+div .address.row > div[name="address"] {
+    position: relative !important;
+    margin-left: 48% !important;
+    background-color: #ffffff;
+    > address, div {
+        > address {
+            width: 100% !important;
+            position: absolute !important;
+            bottom: 0 !important;
+            padding-left: 5mm;
+            padding-top: 3mm;
+            height: 33mm;
+            max-height: 33mm;
         }
     }
-    &.o_background_footer {
-        top: -8mm !important;
+}
+
+div .header.o_company_1_layout > div[class$="_header"] {
+    overflow: hidden !important;
+    max-height: 150px;
+}
+
+/* Follow-up Letters */
+div .row.fallback_header {
+    margin-top: -4mm !important;
+    height: 68mm !important;
+    width: 117% !important;
+    > div.col-5.offset-7 {
+        background-color: #ffffff;
+        margin-left: 48.5% !important;
+        position: relative !important;
+        > div:first-child {
+            width: 100%;
+            padding-left: 2mm !important;
+            height: 33mm;
+            max-height: 33mm !important;
+            line-height: 1.1em;
+            position: absolute;
+            bottom: 0;
+        }
     }
 }

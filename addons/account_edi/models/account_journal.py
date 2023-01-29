@@ -73,7 +73,8 @@ class AccountJournal(models.Model):
 
         for journal in self:
             enabled_edi_formats = edi_formats.filtered(lambda e: e._is_compatible_with_journal(journal) and
-                                                                 e._is_enabled_by_default_on_journal(journal))
+                                                                 (e._is_enabled_by_default_on_journal(journal)
+                                                                  or (e in journal.edi_format_ids)))
 
             # The existing edi formats that are already in use so we can't remove it.
             protected_edi_format_ids = protected_edi_formats_per_journal.get(journal.id, set())

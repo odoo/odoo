@@ -7,6 +7,7 @@
 # 黎伟杰 <674416404@qq.com>, 2021
 # xu aaron, 2021
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'draft' and '维修报价单 - %s' % (object.name) or\n"
+"                object.state == 'draft' and '维修报价 - %s' % (object.name) or\n"
 "                '维修订单 - %s' % (object.name))"
 
 #. module: repair
@@ -58,7 +59,7 @@ msgstr ""
 "* 已确认 \"状态是在用户确认维修单时使用的。\n"
 "* Ready to Repair \"状态用于开始维修，用户只有在维修单被确认后才能开始维修。\n"
 "* 维修中 \"状态用于维修正在进行中。\n"
-"* 待开发票 \"状态用于在维修完成之前或之后生成发票。\n"
+"* 待开结算单 \"状态用于在维修完成之前或之后生成结算单。\n"
 "* 完成 \"状态是在维修完成后设置的。\n"
 "* 取消 \"状态在用户取消维修订单时使用。"
 
@@ -93,7 +94,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        你好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/>\n"
+"        您好，<t t-out=\"object.partner_id.name or ''\">布兰登-弗里曼</t>。<br/>\n"
 "        这是您的维修单<strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "       <t t-if=\"object.invoice_method != 'none'\">\n"
 "            金额为<strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">100.00美元</t></strong>。<br/>\n"
@@ -101,9 +102,9 @@ msgstr ""
 "       <t t-else=\"\">\n"
 "            .<br/>\n"
 "       </t>\n"
-"        如果你有任何问题，可以回复此邮件。\n"
+"        如果您有任何问题，可以回复此邮件。\n"
 "       <br/><br/>\n"
-"        谢谢你。\n"
+"        谢谢您。\n"
 "        <t t-if=\"user.signature\">\n"
 "            <br/>\n"
 "            <t t-out=\"user.signature or ''\">--<br/>Mitchell 管理</t>\n"
@@ -123,7 +124,7 @@ msgid ""
 "                                <span class=\"o_stat_text\">Invoices</span>"
 msgstr ""
 "<span class=\"o_stat_text\">1</span>\n"
-"                                <span class=\"o_stat_text\">发票</span>"
+"                                <span class=\"o_stat_text\">结算单</span>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_production_lot_view_form
@@ -183,7 +184,7 @@ msgstr "？这可能会导致库存不一致。"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
 msgid "Action Needed"
-msgstr "需要行动"
+msgstr "需要采取动作"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_ids
@@ -218,7 +219,7 @@ msgstr "添加内部备注。"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes."
-msgstr "添加报价单备注。"
+msgstr "添加报价备注。"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
@@ -281,7 +282,7 @@ msgstr "公司"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_config
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -302,7 +303,7 @@ msgstr "已确认"
 msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
-msgstr "计量单位转换只能基于转换比例对同一个类型进行转换。"
+msgstr "计量单位转换只能基于转换比例对同一个类别进行转换。"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -312,7 +313,7 @@ msgid ""
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
 "找不到与此产品和数额匹配的价格表。\n"
-"你必须修改产品、数量或者价格表。"
+"您必须修改产品、数量或者价格表。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
@@ -409,7 +410,7 @@ msgstr "您确认要维修吗"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "你真的要创建结算单吗 ？"
+msgstr "您真的要创建结算单吗 ？"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
@@ -425,7 +426,7 @@ msgstr "草稿"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
-msgstr "该订单的发票草稿将被取消。 您确认吗？"
+msgstr "该订单的结算单草稿将被取消。 您确认吗？"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -532,8 +533,8 @@ msgid ""
 "                add or replace and record the time you spent on the different\n"
 "                operations."
 msgstr ""
-"在维修订单中，你可以非常详细定义你要移除和添加或者替代的组件\n"
-"并且可以记录你在不同操作上花费的时间"
+"在维修订单中，您可以非常详细定义您要移除和添加或者替代的组件\n"
+"并且可以记录您在不同操作上花费的时间"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__internal_notes
@@ -593,7 +594,7 @@ msgstr "开票日期。"
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoiced
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Invoiced"
-msgstr "已开票"
+msgstr "已结算"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_invoice_id
@@ -608,7 +609,7 @@ msgstr "关注者"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
@@ -755,7 +756,7 @@ msgstr "正常"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
 msgid "Number of Actions"
-msgstr "动作个数"
+msgstr "动作数量"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
@@ -765,7 +766,7 @@ msgstr "错误数"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "需要作业消息数量"
+msgstr "需要采取动作消息数量"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -819,7 +820,7 @@ msgstr "所选伙伴的价格列表"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr "打印报价单"
+msgstr "打印报价"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__priority
@@ -870,7 +871,7 @@ msgstr "维修的产品全属于此批次"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
 msgid "Quant"
-msgstr "即时库存"
+msgstr "量化"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_qty
@@ -890,18 +891,18 @@ msgstr "报价"
 #. module: repair
 #: model:ir.actions.report,name:repair.action_report_repair_order
 msgid "Quotation / Order"
-msgstr "报价单/订单"
+msgstr "报价/订单"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__quotation_notes
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Quotation Notes"
-msgstr "报价单说明"
+msgstr "报价说明"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Quotations"
-msgstr "报价单"
+msgstr "报价"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -993,12 +994,12 @@ msgstr "维修订单标签"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Repair Quotation #:"
-msgstr "维修报价单＃"
+msgstr "维修报价＃"
 
 #. module: repair
 #: model:mail.template,name:repair.mail_template_repair_quotation
 msgid "Repair Quotation: Send by email"
-msgstr "维修报价单:通过电子邮件发送"
+msgstr "维修报价:通过电子邮件发送"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
@@ -1121,7 +1122,7 @@ msgstr "选择“维修前”或“维修后”选项来确定在维修前后生
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr "发送报价单"
+msgstr "发送报价"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1137,7 +1138,7 @@ msgstr "设为草稿"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
-msgstr "显示所有的在今天之前的下一个行动日期的记录"
+msgstr "显示所有的在今天之前的下一个动作日期的记录"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
@@ -1209,7 +1210,7 @@ msgstr "税金"
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_tax
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Taxes"
-msgstr "税金设置"
+msgstr "税"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_order_name
@@ -1222,7 +1223,7 @@ msgstr "维修单的名必须唯一！"
 msgid ""
 "The product unit of measure you chose has a different category than the "
 "product unit of measure."
-msgstr "你选择的产品计量单位跟产品的计量单位类别不同。"
+msgstr "您选择的产品计量单位跟产品的计量单位类别不同。"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_line__state
@@ -1369,7 +1370,7 @@ msgstr "确认维修订单后，您将无法删除它。 您必须先取消它�
 msgid ""
 "You can not delete a repair order which is linked to an invoice which has "
 "been posted once."
-msgstr "您不能删除链接到已过帐发票的维修单。"
+msgstr "您不能删除链接到已过帐结算单的维修单。"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1389,7 +1390,7 @@ msgstr "您必须在维修表单中选择一个价目表！ 在选择产品之�
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "你必须在维修单上选择结算单地址。"
+msgstr "您必须在维修单上选择结算单地址。"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view

@@ -100,8 +100,10 @@ class RecurrenceRule(models.Model):
                 # Create new attendees
                 if attendee[2].get('self'):
                     partner = self.env.user.partner_id
-                else:
+                elif attendee[1]:
                     partner = attendee[1]
+                else:
+                    continue
                 self.calendar_event_ids.write({'attendee_ids': [(0, 0, {'state': attendee[2].get('responseStatus'), 'partner_id': partner.id})]})
                 if attendee[2].get('displayName') and not partner.name:
                     partner.name = attendee[2].get('displayName')

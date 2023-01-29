@@ -704,10 +704,10 @@ class TestMrpOrder(TestMrpCommon):
         mo.move_raw_ids.filtered(lambda m: m.state != 'done')[0].quantity_done = 0
         update_quantity_wizard.change_prod_qty()
 
-        self.assertEqual(len(mo.move_raw_ids), 2)
+        self.assertEqual(len(mo.move_raw_ids), 4)
 
         mo.button_mark_done()
-        self.assertTrue(all(s == 'done' for s in mo.move_raw_ids.mapped('state')))
+        self.assertTrue(all(s in ['done', 'cancel'] for s in mo.move_raw_ids.mapped('state')))
         self.assertEqual(sum(mo.move_raw_ids.mapped('move_line_ids.product_uom_qty')), 0)
 
     def test_consumption_strict_1(self):
@@ -2188,18 +2188,24 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.state, 'confirmed')
         self.assertEqual(wo_1.state, 'ready')
 
+        duration_expected = wo_1.duration_expected
         wo_1.button_start()
         wo_1.qty_producing = 10
         self.assertEqual(mo.state, 'progress')
         wo_1.button_finish()
+        self.assertEqual(duration_expected, wo_1.duration_expected)
 
+        duration_expected = wo_2.duration_expected
         wo_2.button_start()
         wo_2.qty_producing = 8
         wo_2.button_finish()
+        self.assertEqual(duration_expected, wo_2.duration_expected)
 
+        duration_expected = wo_3.duration_expected
         wo_3.button_start()
         wo_3.qty_producing = 8
         wo_3.button_finish()
+        self.assertEqual(duration_expected, wo_3.duration_expected)
 
         self.assertEqual(mo.state, 'to_close')
         mo.button_mark_done()
@@ -2737,3 +2743,63 @@ class TestMrpOrder(TestMrpCommon):
         self.assertFalse(wo_01.show_json_popover)
         self.assertFalse(wo_02.show_json_popover)
         self.assertEqual(wo_01.date_planned_finished, wo_02.date_planned_start)
+
+    def test_move_raw_uom_rounding(self):
+        """Test that the correct rouding is applied on move_raw in
+        manufacturing orders"""
+
+        self.box250 = self.env['uom.uom'].create({
+            'name': 'box250',
+            'category_id': self.env.ref('uom.product_uom_categ_unit').id,
+            'ratio': 250.0,
+            'uom_type': 'bigger',
+            'rounding': 1.0,
+        })
+
+        test_bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': self.product_7_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 250.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1.0, 'product_uom_id': self.box250.id}),
+            ]
+        })
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = test_bom
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        update_quantity_wizard = self.env['change.production.qty'].create({
+            'mo_id': mo.id,
+            'product_qty': 300,
+        })
+        update_quantity_wizard.change_prod_qty()
+
+        self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 2)
+
+    def test_update_qty_to_consume_of_component(self):
+        """
+        The UoM of the finished product has a rounding precision equal to 1.0
+        and the UoM of the component has a decimal one. When the producing qty
+        is set, an onchange autocomplete the consumed quantity of the component.
+        Then, when updating the 'to consume' quantity of the components, their
+        consumed quantity is updated again. The test ensures that this update
+        respects the rounding precisions
+        """
+        self.uom_dozen.rounding = 1
+        self.bom_4.product_uom_id = self.uom_dozen
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_4
+        mo = mo_form.save()
+        mo.action_confirm()
+
+        mo.action_toggle_is_locked()
+        with Form(mo) as mo_form:
+            mo_form.qty_producing = 1
+            with mo_form.move_raw_ids.edit(0) as raw:
+                raw.product_uom_qty = 1.25
+
+        self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)

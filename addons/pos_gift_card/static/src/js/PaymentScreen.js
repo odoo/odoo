@@ -38,7 +38,7 @@ odoo.define('pos_gift_card.PaymentScreen', function(require) {
                                     fields: ['balance'],
                                   });
 
-                                if(Math.abs(line.price) > gift_card[0].balance) {
+                                if(Math.abs(line.get_unit_price()) > gift_card[0].balance) {
                                     await this.showPopup('ErrorPopup', {
                                         'title': _t("Gift Card Error"),
                                         'body': _t("Gift card balance is too low."),

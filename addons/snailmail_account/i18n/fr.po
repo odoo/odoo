@@ -4,6 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
@@ -52,6 +54,9 @@ msgid ""
 "                                    Some customer addresses are incomplete.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                    Certaines adresses de client sont incomplètes.\n"
+"                                </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -59,6 +64,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
 "                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> à: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> L'adresse du client est incomplète : </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -125,7 +132,7 @@ msgstr "Nombre d'Adresses Invalides"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoices
 msgid "Invalid Invoices Count"
-msgstr ""
+msgstr "Nombre de factures non valides"
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
@@ -185,3 +192,4 @@ msgstr "Timbre(s)"
 #, python-format
 msgid "You cannot send an invoice which has no partner assigned."
 msgstr ""
+"Vous ne pouvez pas envoyer une facture qui n'a pas de partenaire assigné."

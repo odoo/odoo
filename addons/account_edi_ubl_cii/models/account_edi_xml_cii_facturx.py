@@ -75,7 +75,8 @@ class AccountEdiXmlCII(models.AbstractModel):
             # invoiced item VAT rate (BT-152) shall be greater than 0 (zero).
             'igic_tax_rate': self._check_non_0_rate_tax(vals)
                 if vals['record']['commercial_partner_id']['country_id']['code'] == 'ES'
-                   and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
+                    and vals['record']['commercial_partner_id']['zip']
+                    and vals['record']['commercial_partner_id']['zip'][:2] in ['35', '38'] else None,
         })
         return constraints
 
@@ -189,7 +190,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         if supplier.country_id.code == 'DE':
             template_values['document_context_id'] = "urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2"
         else:
-            template_values['document_context_id'] = "urn:cen.eu:en16931:2017"
+            template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
 
         return template_values
 
@@ -197,7 +198,8 @@ class AccountEdiXmlCII(models.AbstractModel):
         vals = self._export_invoice_vals(invoice)
         errors = [constraint for constraint in self._export_invoice_constraints(invoice, vals).values() if constraint]
         xml_content = self.env['ir.qweb']._render('account_edi_ubl_cii.account_invoice_facturx_export_22', vals)
-        return etree.tostring(cleanup_xml_node(xml_content)), set(errors)
+        xml_content = b"<?xml version='1.0' encoding='UTF-8'?>\n" + etree.tostring(cleanup_xml_node(xml_content))
+        return xml_content, set(errors)
 
     # -------------------------------------------------------------------------
     # IMPORT
@@ -214,7 +216,6 @@ class AccountEdiXmlCII(models.AbstractModel):
             logs.append(_("The invoice has been converted into a credit note and the quantities have been reverted."))
 
         # ==== partner_id ====
-
         partner_type = invoice_form.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
         invoice_form.partner_id = self.env['account.edi.format']._retrieve_partner(
             name=_find_value(f"//ram:{partner_type}/ram:Name"),
@@ -222,7 +223,7 @@ class AccountEdiXmlCII(models.AbstractModel):
             vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
         )
         if not invoice_form.partner_id:
-            logs.append(_("Could not retrieve the vendor."))
+            logs.append(_("Could not retrieve the %s.", _("customer") if invoice_form.move_type in ('out_invoice', 'out_refund') else _("vendor")))
 
         # ==== currency_id ====
 
@@ -310,13 +311,14 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # Product.
         name = _find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree)
-        if name:
-            invoice_line_form.name = name
         invoice_line_form.product_id = self.env['account.edi.format']._retrieve_product(
             default_code=_find_value('.//ram:SpecifiedTradeProduct/ram:SellerAssignedID', tree),
             name=_find_value('.//ram:SpecifiedTradeProduct/ram:Name', tree),
             barcode=_find_value('.//ram:SpecifiedTradeProduct/ram:GlobalID', tree)
         )
+        # force original line description instead of the one copied from product's Sales Description
+        if name:
+            invoice_line_form.name = name
 
         xpath_dict = {
             'basis_qty': [
@@ -332,32 +334,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'allowance_charge_amount': './{*}ActualAmount',  # below allowance_charge node
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
-        self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
-
-        if not invoice_line_form.product_uom_id:
-            logs.append(
-                _("Could not retrieve the unit of measure for line with label '%s'. Did you install the inventory "
-                  "app and enabled the 'Units of Measure' option ?", invoice_line_form.name))
-
-        # Taxes
-        taxes = []
+        inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line_form, qty_factor)
+        # retrieve tax nodes
         tax_nodes = tree.findall('.//{*}ApplicableTradeTax/{*}RateApplicablePercent')
-        for tax_node in tax_nodes:
-            tax = self.env['account.tax'].search([
-                ('company_id', '=', journal.company_id.id),
-                ('amount', '=', float(tax_node.text)),
-                ('amount_type', '=', 'percent'),
-                ('type_tax_use', '=', 'purchase'),
-            ], limit=1)
-            if tax:
-                taxes.append(tax)
-            else:
-                logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", float(tax_node.text), invoice_line_form.name))
-
-        invoice_line_form.tax_ids.clear()
-        for tax in taxes:
-            invoice_line_form.tax_ids.add(tax)
-        return logs
+        return self._import_fill_invoice_line_taxes(journal, tax_nodes, invoice_line_form, inv_line_vals, logs)
 
     # -------------------------------------------------------------------------
     # IMPORT : helpers
@@ -373,9 +353,9 @@ class AccountEdiXmlCII(models.AbstractModel):
         if move_type_code is None:
             return None, None
         if move_type_code.text == '381':
-            return 'in_refund', 1
+            return ('in_refund', 'out_refund'), 1
         if move_type_code.text == '380':
             amount_node = tree.find('.//{*}SpecifiedTradeSettlementHeaderMonetarySummation/{*}TaxBasisTotalAmount')
             if amount_node is not None and float(amount_node.text) < 0:
-                return 'in_refund', -1
-            return 'in_invoice', 1
+                return ('in_refund', 'out_refund'), -1
+            return ('in_invoice', 'out_invoice'), 1

@@ -6,11 +6,12 @@ import odoo.tests
 from odoo import api
 from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
 from odoo.addons.website_sale.controllers.main import WebsiteSale
+from odoo.addons.website_sale.tests.common import TestWebsiteSaleCommon
 from odoo.addons.website.tools import MockRequest
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestUi(HttpCaseWithUserDemo):
+class TestUi(HttpCaseWithUserDemo, TestWebsiteSaleCommon):
 
     def setUp(self):
         super(TestUi, self).setUp()
@@ -201,6 +202,8 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
             # 2. Logged in user, edit billing
             self.default_address_values['partner_id'] = self.demo_partner.id
+            # Name cannot be changed if there are issued invoices
+            self.default_address_values['name'] = self.demo_partner.name
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
 

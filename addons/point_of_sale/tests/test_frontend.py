@@ -473,11 +473,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
 
         # Change the default sale pricelist of customers,
         # so the js tests can expect deterministically this pricelist when selecting a customer.
-        env['ir.property']._set_default(
-            "property_product_pricelist",
-            "res.partner",
-            public_pricelist,
-        )
+        env['ir.property']._set_default("property_product_pricelist", "res.partner", public_pricelist, main_company)
 
 
 @odoo.tests.tagged('post_install', '-at_install')
@@ -584,3 +580,28 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertAlmostEqual(lines[1].balance, 0)
         self.assertEqual(lines[2].account_id, tax_received_account)
         self.assertAlmostEqual(lines[2].balance, 1)
+
+    def test_change_without_cash_method(self):
+        #create bank payment method
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'receivable_account_id': self.env.company.account_default_pos_receivable_account_id.id,
+            'is_cash_count': False,
+            'split_transactions': False,
+            'company_id': self.env.company.id,
+        })
+        self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")
+
+    def test_refund_without_cash_method(self):
+        """ Assert that a refund cannot be made without cash payment method.
+        """
+
+        bank_pm = self.env['pos.payment.method'].create({
+            'name': 'Bank',
+            'journal_id': self.bank_journal.id,
+        })
+        self.main_pos_config.write({"payment_method_ids": [(6, 0, bank_pm.ids)]})
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour3', login="accountman")

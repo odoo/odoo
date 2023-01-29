@@ -159,7 +159,9 @@ class PaymentAcquirer(models.Model):
 
     # === BUSINESS METHODS - PAYMENT FLOW === #
 
-    def _stripe_make_request(self, endpoint, payload=None, method='POST', offline=False):
+    def _stripe_make_request(
+        self, endpoint, payload=None, method='POST', offline=False, idempotency_key=None
+    ):
         """ Make a request to Stripe API at the specified endpoint.
 
         Note: self.ensure_one()
@@ -168,6 +170,7 @@ class PaymentAcquirer(models.Model):
         :param dict payload: The payload of the request
         :param str method: The HTTP method of the request
         :param bool offline: Whether the operation of the transaction being processed is 'offline'
+        :param str idempotency_key: The idempotency key to pass in the request.
         :return The JSON-formatted content of the response
         :rtype: dict
         :raise: ValidationError if an HTTP error occurs
@@ -180,6 +183,8 @@ class PaymentAcquirer(models.Model):
             'Stripe-Version': API_VERSION,  # SetupIntent requires a specific version.
             **self._get_stripe_extra_request_headers(),
         }
+        if method == 'POST' and idempotency_key:
+            headers['Idempotency-Key'] = idempotency_key
         try:
             response = requests.request(method, url, data=payload, headers=headers, timeout=60)
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).

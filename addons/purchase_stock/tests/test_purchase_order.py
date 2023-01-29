@@ -369,6 +369,54 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         picking.button_validate()
         self.assertEqual(po.order_line.mapped('qty_received'), [4.0], 'Purchase: no conversion error on receipt in different uom"')
 
+    def test_05_po_update_qty_stock_move_merge(self):
+        """ This test ensures that changing product quantity when unit price has high decimal precision
+            merged with the original instead of creating a new return
+        """
+
+        unit_price_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')])
+        unit_price_precision.digits = 6
+
+        tax = self.env["account.tax"].create({
+            "name": "Dummy Tax",
+            "amount": "5.00",
+            "type_tax_use": "purchase",
+        })
+
+        super_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'categ_id': self.stock_account_product_categ.id,
+            'standard_price': 9.876543,
+        })
+
+        purchase_order = self.env['purchase.order'].create({
+            'partner_id': self.env.ref('base.res_partner_3').id,
+            'order_line': [(0, 0, {
+                'name': super_product.name,
+                'product_id': super_product.id,
+                'product_qty': 7,
+                'product_uom': super_product.uom_id.id,
+                'price_unit': super_product.standard_price,
+                'taxes_id': [(4, tax.id)],
+            })],
+        })
+
+        purchase_order.button_confirm()
+        self.assertEqual(purchase_order.state, 'purchase')
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.product_qty, 7)
+
+
+        purchase_order.order_line.product_qty = 4
+        # updating quantity shouldn't create a seperate stock move
+        # the new stock move (-3) should be merged with the previous
+        purchase_order.button_confirm()
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_line_ids), 1)
+        self.assertEqual(purchase_order.picking_ids.move_line_ids.product_qty, 4)
+
     def test_message_qty_already_received(self):
         _product = self.env['product.product'].create({
             'name': 'TempProduct',
@@ -452,3 +500,26 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
             with po_form.order_line.edit(0) as pol_form:
                 pol_form.product_qty = 25
         self.assertEqual(pol.name, "[C02] Name02")
+
+    def test_packaging_and_qty_decrease(self):
+        packaging = self.env['product.packaging'].create({
+            'name': "Super Packaging",
+            'product_id': self.product_a.id,
+            'qty': 10.0,
+        })
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 10
+        po = po_form.save()
+        po.button_confirm()
+
+        self.assertEqual(po.order_line.product_packaging_id, packaging)
+
+        with Form(po) as po_form:
+            with po_form.order_line.edit(0) as line:
+                line.product_qty = 8
+
+        self.assertEqual(po.picking_ids.move_lines.product_uom_qty, 8)
