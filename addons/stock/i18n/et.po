@@ -3142,7 +3142,7 @@ msgstr "Invalid domain right operand %s"
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
-msgstr ""
+msgstr "Vale reegli seadistus, järgmine reegel põhjustab lõputu tsükli: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
@@ -6737,6 +6737,9 @@ msgid ""
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
 msgstr ""
+"Toote \"%s\" jaoks tehtud kogus ei järgi mõõtühikus \"%s\" määratud "
+"ümardamise täpsust. Palun muutke tehtud kogust või mõõtühiku ümardamise "
+"täpsust."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6963,6 +6966,16 @@ msgstr ""
 "Seda toodet on kasutatud vähemalt ühes laoliikumises. Ei ole soovitatav "
 "muuta toote tüüpi kuna see võib viia vastuoludeni. Parem lahendus oleks "
 "arhiveerida toode ja luua uus. "
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"Tootega seotud ettevõtet ei saa muuta, kuna osad tooted kuuluvad teisele "
+"ettevõttele."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8091,6 +8104,12 @@ msgstr ""
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr ""
 "Sa ei saa reserveeringust vabastada laosiiret, mis on \"Tehtud\" staatuses."
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
