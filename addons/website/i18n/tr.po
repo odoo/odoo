@@ -32,7 +32,7 @@
 # Ediz Duman <neps1192@gmail.com>, 2021
 # Martin Trigaux, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# İmat Yahya Çataklı, 2022
+# İmat Yahya Çataklı <yahya.catakli@soluto.com.tr>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Halil, 2022
@@ -510,14 +510,8 @@ msgstr "Sütun boyutunu değiştirmek için bu düğmeyi <b>kaydırın.</b> "
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
-"<br/><br/>\n"
-"                    Kural örneği:<br/>\n"
-"                    <code class=\"ml-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ml-4\">Allow: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1047,6 +1041,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_chart
 msgid "A Chart Title"
 msgstr "Bir Grafik Başlığı"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid ""
+"A Google Map error occurred. Make sure to read the key configuration popup "
+"carefully."
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_image
@@ -3247,6 +3250,13 @@ msgstr "Google Projenizde faturalandırmayı etkinleştirin"
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Enable the right google map APIs in your google account"
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Enter an API Key"
@@ -5056,6 +5066,29 @@ msgid "Main actions"
 msgstr "Ana aksiyonlar"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure billing is enabled"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid ""
+"Make sure to wait if errors keep being shown: sometimes enabling an API "
+"allows to use it immediately but Google keeps triggering errors for a while"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Make sure your settings are properly configured:"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Manage Pages"
 msgstr "Sayfaları Yönet"
@@ -5074,6 +5107,20 @@ msgstr "Websitenizin Sayfalarını Yönetin"
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Manage this page"
 msgstr "Bu sayfayı yönet"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps JavaScript API"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Maps Static API"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5183,6 +5230,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Middle"
 msgstr "Orta"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Min-Height"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
@@ -5915,6 +5969,13 @@ msgid "Pills"
 msgstr "Haplar"
 
 #. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Places API"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Plain"
 msgstr "Sade"
@@ -6643,6 +6704,13 @@ msgstr "Ayrılmış bağlantı"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
 msgstr "Sıra"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "Serve font from Google servers"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -7438,6 +7506,13 @@ msgid ""
 msgstr ""
 "Bu alan, üzerine yazmadan önce geçerli \"arch_db\" yi kaydeder.\n"
 "                                                                        Kırık bir görünümü (yumuşak) sıfırlamak için kullanışlıdır."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/xml/website.editor.xml:0
+#, python-format
+msgid "This font is hosted and served to your visitors by Google servers"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
@@ -9456,3 +9531,10 @@ msgstr "⌙ Video"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "⌙ Width"
 msgstr "⌙ Genişlik"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "└ Height"
+msgstr ""

@@ -7,10 +7,10 @@
 # Michael Yeung, 2020
 # 226408 台北 <226408@so8d.com>, 2021
 # Mandy Choy <mnc@odoo.com>, 2021
-# JustinC <dev@dottdot.com>, 2021
+# dott.dev <dottdot.dev@gmail.com>, 2021
 # Martin Trigaux, 2021
-# Benson <Benson.Dr@Gmail.com>, 2021
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# Benson <Benson.Dr@Gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1469,7 +1469,7 @@ msgstr "自訂您的報價和訂單."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 快遞連接器"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -4463,6 +4463,15 @@ msgid ""
 " communication will be given to the customer when they choose the payment "
 "method."
 msgstr "您可以在此處設定將在銷售訂單上顯示的通信類型。當客戶選擇付款方式時，將與客戶進行通信。"
+
+#. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr "您不能更改產品的類型，因為它已在銷售訂單中使用."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
