@@ -17,9 +17,9 @@
 # Jonatan Gk, 2022
 # marcescu, 2022
 # CristianCruzParra, 2022
-# Josep Anton Belchi, 2022
 # Farouk Jabiri, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
+# jabelchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:22+0000\n"
-"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2022\n"
+"Last-Translator: jabelchi, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1287,7 +1287,7 @@ msgstr "Per l'aprenent del treballador"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Per l'aparcament de l'empleat i l'agent de temps lliure"
+msgstr "Per l'aprovador de l'empleat i pel responsable d'absències"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1363,7 +1363,7 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Click on the 'Edit' button to add new rules."
-msgstr ""
+msgstr "Feu clic al botó 'Editar' per a afegir regles noves."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__color
@@ -1498,7 +1498,7 @@ msgstr "Hores personalitzades"
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "DAYS"
-msgstr ""
+msgstr "DIES"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__frequency__daily
@@ -1894,7 +1894,7 @@ msgstr "Temps d'inactivitat del grup"
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "HOURS"
-msgstr ""
+msgstr "HORES"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_approval
@@ -2537,7 +2537,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar_employee.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "Temps Nou Desactivat"
+msgstr "Nova petició d'absència"
 
 #. module: hr_holidays
 #. openerp-web
@@ -2545,7 +2545,7 @@ msgstr "Temps Nou Desactivat"
 #: code:addons/hr_holidays/static/src/js/time_off_calendar_employee.js:0
 #, python-format
 msgid "New time off"
-msgstr ""
+msgstr "Nova petició d'absència"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_calendar_event_id
@@ -2598,7 +2598,7 @@ msgstr "Sense límit"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No rules added"
-msgstr ""
+msgstr "No s'han afegir regles"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no
@@ -2770,6 +2770,8 @@ msgid ""
 "Only a Time off Approver can apply the second approval on allocation "
 "requests."
 msgstr ""
+"Només un aprovador d'absències pot aplicar la segona validació a les "
+"peticions d'assignació."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2793,8 +2795,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Només un temps fora d'oficina/esponsable o gerent pot aprovar o rebutjar les"
-" sol·licituds de temps lliure."
+"Només els administradors i responsables d'absències poden aprovar o refusar "
+"les sol·licituds d'absència. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
@@ -3535,7 +3537,7 @@ msgstr "Temps de desaprovació"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_tree_inherit_leave
 msgid "Time Off Approver"
-msgstr "Temps de desconnexió"
+msgstr "Aprovador d'absències"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_leave_report_calendar

@@ -40,6 +40,8 @@ msgid ""
 "\"\n"
 "                (ID:"
 msgstr ""
+"\"\n"
+"                (ID:"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -200,7 +202,7 @@ msgstr "Viivituse tüüp"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Disable Action"
-msgstr ""
+msgstr "Keela tegevus"
 
 #. module: base_automation
 #. openerp-web
@@ -212,6 +214,10 @@ msgid ""
 "                as you are effectively disabling a customization that may set\n"
 "                important and/or required fields."
 msgstr ""
+"Selle automatiseeritud tegevuse keelamine võimaldab Teil oma töövooga jätkata\n"
+"                 kuid kõik pärast seda loodud andmed võivad olla rikutud,\n"
+"                 kuna tegelikult keelate seadistuse, mis määrab\n"
+"                 olulised ja/või kohustuslikud väljad."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
@@ -233,7 +239,7 @@ msgstr "Tähtaja liik"
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "Edit action"
-msgstr ""
+msgstr "Muuda toimingut"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
@@ -442,7 +448,7 @@ msgstr ""
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
 msgid "Setup a new automated automation"
-msgstr ""
+msgstr "Seadistage uus automatiseeritud automaatika"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -471,6 +477,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
+"Funktsiooni „%(trigger_value)s” %(trigger_label)s saab kasutada ainult "
+"toimingutüübiga „%(state_value)s”"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -487,6 +495,8 @@ msgid ""
 "The error occurred during the execution of the automated action\n"
 "                \""
 msgstr ""
+"Viga ilmnes automatiseeritud tegevuse sooritamise ajal\n"
+"                 \""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
@@ -549,6 +559,11 @@ msgid ""
 "                opportunity which still has status pending after 14 days might\n"
 "                trigger an automatic reminder email."
 msgstr ""
+"Kasutage automaatseid tegevusi toimingute automaatseks käivitamiseks\n"
+"                 erinevates moodulites. Näide: konkreetse kasutaja loodud müügivihje saab\n"
+"                 määrata automaatselt konkreetsele müügimeeskonnale või\n"
+"                 võimalus, mille olek on ootel veel 14 päeva pärast,\n"
+"                 käivitab automaatse meeldetuletusmeili saatmise."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
@@ -615,6 +630,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
+"Võite paluda administraatoril see automaatne tegevus keelata või parandada."
 
 #. module: base_automation
 #. openerp-web
@@ -622,6 +638,7 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
+"Saate selle automaatse tegevuse keelata või probleemi lahendamiseks muuta."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -630,3 +647,5 @@ msgid ""
 "You cannot send an email, add followers or create an activity for a deleted "
 "record.  It simply does not work."
 msgstr ""
+"Kustutatud kirje jaoks ei saa meili saata, jälgijaid lisada ega tegevust "
+"luua. See lihtsalt ei tööta."

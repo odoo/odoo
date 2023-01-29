@@ -13,9 +13,9 @@
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2023
 # Anna, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +37,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "%d records successfully imported"
-msgstr ""
+msgstr "%d kirjet edukalt imporditud"
 
 #. module: base_import
 #. openerp-web
@@ -69,7 +69,7 @@ msgstr "Edasijõudnu"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Allow matching with subfields"
-msgstr ""
+msgstr "Luba sobitamine alamväljadega"
 
 #. module: base_import
 #. openerp-web
@@ -81,6 +81,9 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Importimise ajal ilmnes tundmatu probleem (võimalik, et ühendus katkes, "
+"andmemaht või mälumaht on ületatud). Palun proovige uuesti. Kui probleem "
+"kordub, proovige fail jagada väiksemateks osadeks."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -95,14 +98,14 @@ msgstr "Baasi import"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Baasimpordi kaardistamine"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Batch Import"
-msgstr ""
+msgstr "Koondi import"
 
 #. module: base_import
 #. openerp-web
@@ -123,7 +126,7 @@ msgstr "Tühista"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr ""
+msgstr "Importimise jätkamiseks klõpsake nuppu \"Jätka\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -140,7 +143,7 @@ msgstr "Veeg %s sisaldab mittekorrektseid väärtusi. Viga real %d: %s"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Veeru nimi"
 
 #. module: base_import
 #. openerp-web
@@ -164,13 +167,14 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"URL-i ei saanud tuua: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Create new values"
-msgstr ""
+msgstr "Loo uued väärtused"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -291,12 +295,12 @@ msgstr "Laadige alla"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Download Template"
-msgstr ""
+msgstr "Laadige mall alla"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__dt
 msgid "Dt"
-msgstr ""
+msgstr "Dt"
 
 #. module: base_import
 #. openerp-web
@@ -316,7 +320,7 @@ msgstr "Viga kuupäeva liigendamisel [%s:L%d]: %s"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Estimated time left:"
-msgstr ""
+msgstr "Hinnanguline järelejäänud aeg:"
 
 #. module: base_import
 #. openerp-web
@@ -330,7 +334,7 @@ msgstr "Kõik tundub õige."
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as formatting is automatic."
-msgstr ""
+msgstr "Exceli failid on soovitatavad, kuna vormindamine on automaatne."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -357,7 +361,7 @@ msgstr "Fail"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "File Column"
-msgstr ""
+msgstr "Faili veerg"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
@@ -374,7 +378,7 @@ msgstr "Failitüüp"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
-msgstr ""
+msgstr "Faili suurus ületab määratud maksimumi (%s baiti)"
 
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
@@ -387,21 +391,21 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr ""
+msgstr "Praeguse partii lõpetamine enne katkestamist..."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
+msgstr "CSV-failide puhul peate valima õige eraldaja."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Formatting"
-msgstr ""
+msgstr "Vormindamine"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -410,13 +414,15 @@ msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
 msgstr ""
+"Leiti kehtetuid pildiandmeid, kujutised tuleks importida kas URL-ide või "
+"base64-kodeeringuga andmetena."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr ""
+msgstr "Minge jaotisse Impordi FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -463,6 +469,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Kui fail sisaldab\n"
+"                     veergude nimesid, võib Odoo proovida automaatset tuvastamist\n"
+"                     veerule vastava väljaga. See muudab impordi\n"
+"                     lihtsamaks, eriti kui failis on palju veerge."
 
 #. module: base_import
 #. openerp-web
@@ -472,6 +482,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Kui mudel kasutab openchatterit, teeb ajaloo jälgimine impordi ajal "
+"tellimusi ja saadab teatisi, kuid aeglustab ka importi."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -479,6 +491,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
+"Pildi suurus on liiga suur, imporditud kujutised peavad olema väiksemad kui "
+"42 miljonit pikslit"
 
 #. module: base_import
 #. openerp-web
@@ -492,7 +506,7 @@ msgstr "Impordi"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr ""
+msgstr "Impordi FAQ"
 
 #. module: base_import
 #. openerp-web
@@ -505,7 +519,7 @@ msgstr "Impordi fail"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr ""
+msgstr "Impordifailil pole sisu või see on rikutud"
 
 #. module: base_import
 #. openerp-web
@@ -530,26 +544,29 @@ msgid ""
 "may be too big for the system's configuration, try to split it (import less "
 "records per file)."
 msgstr ""
+"Import aegus, palun proovge uuesti. Kui probleem siiski jätkub, võib fail "
+"olla liiga suur. Proovige see osadeks jagada (importige faili kohta vähem "
+"kirjeid)."
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Imported file"
-msgstr ""
+msgstr "Imporditud fail"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Importing"
-msgstr ""
+msgstr "Importimine"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
+msgstr "Vale lahtri väärtus real %(row)s, veerg %(col)s: %(cell_value)s"
 
 #. module: base_import
 #. openerp-web
@@ -633,7 +650,7 @@ msgstr "Lae fail"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Loading file..."
-msgstr ""
+msgstr "Faili laadimine..."
 
 #. module: base_import
 #. openerp-web
@@ -648,7 +665,7 @@ msgstr "Mudel"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr ""
+msgstr "Ilmnes mitu viga"
 
 #. module: base_import
 #. openerp-web
@@ -671,28 +688,28 @@ msgstr "Vajate abi?"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "No Separator"
-msgstr ""
+msgstr "Eraldaja puudub"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for"
-msgstr ""
+msgstr "Päringule ei leitud ühtegi vastavat kirjet"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "No matching records found for the following"
-msgstr ""
+msgstr "Järgmiste kohta ei leitud ühtegi vastavat kirjet"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Odoo Field"
-msgstr ""
+msgstr "Odoo väli"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__othervalue
@@ -709,7 +726,7 @@ msgstr "Ülem"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Prevent import"
-msgstr ""
+msgstr "Importimise keelamine"
 
 #. module: base_import
 #. openerp-web
@@ -742,7 +759,7 @@ msgstr "Jätka"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Search for a field..."
-msgstr ""
+msgstr "Otsi välja..."
 
 #. module: base_import
 #. openerp-web
@@ -778,42 +795,42 @@ msgstr "Eraldaja:"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to:"
-msgstr ""
+msgstr "Määratud:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: False"
-msgstr ""
+msgstr "Määra väärtuseks: Väär"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set to: True"
-msgstr ""
+msgstr "Määra väärtuseks: Tõene"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Set value as empty"
-msgstr ""
+msgstr "Ära määra väärtust"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Sheet:"
-msgstr ""
+msgstr "Leht:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Skip record"
-msgstr ""
+msgstr "Jäta vahele"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__somevalue
@@ -832,7 +849,7 @@ msgstr "Tühik"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Standard Fields"
-msgstr ""
+msgstr "Standardväljad"
 
 #. module: base_import
 #. openerp-web
@@ -846,14 +863,14 @@ msgstr "Alusta reast"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Stop Import"
-msgstr ""
+msgstr "Peata import"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Suggested Fields"
-msgstr ""
+msgstr "Soovitatud väljad"
 
 #. module: base_import
 #. openerp-web
@@ -879,77 +896,77 @@ msgstr "Testimine"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
 msgid "Tests : Base Import Model Preview"
-msgstr ""
+msgstr "Testid: baasimpordi mudeli eelvaade"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char
 msgid "Tests : Base Import Model, Character"
-msgstr ""
+msgstr "Tests : Base Import Model, Character"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr ""
+msgstr "Tests : Base Import Model, Character No readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr ""
+msgstr "Tests : Base Import Model, Character readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
 msgid "Tests : Base Import Model, Character required"
-msgstr ""
+msgstr "Tests : Base Import Model, Character required"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_states
 msgid "Tests : Base Import Model, Character states"
-msgstr ""
+msgstr "Tests : Base Import Model, Character states"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
-msgstr ""
+msgstr "Tests : Base Import Model, Character still readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
 msgid "Tests : Base Import Model, Many to One"
-msgstr ""
+msgstr "Tests : Base Import Model, Many to One"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_related
 msgid "Tests : Base Import Model, Many to One related"
-msgstr ""
+msgstr "Tests : Base Import Model, Many to One related"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required
 msgid "Tests : Base Import Model, Many to One required"
-msgstr ""
+msgstr "Tests : Base Import Model, Many to One required"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o_required_related
 msgid "Tests : Base Import Model, Many to One required related"
-msgstr ""
+msgstr "Tests : Base Import Model, Many to One required related"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m
 msgid "Tests : Base Import Model, One to Many"
-msgstr ""
+msgstr "Tests : Base Import Model, One to Many"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_o2m_child
 msgid "Tests : Base Import Model, One to Many child"
-msgstr ""
+msgstr "Tests : Base Import Model, One to Many child"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_complex
 msgid "Tests: Base Import Model Complex"
-msgstr ""
+msgstr "Tests: Base Import Model Complex"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_float
 msgid "Tests: Base Import Model Float"
-msgstr ""
+msgstr "Tests: Base Import Model Float"
 
 #. module: base_import
 #. openerp-web
@@ -963,35 +980,35 @@ msgstr "Teksti eraldaja"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains blocking errors (see below)"
-msgstr ""
+msgstr "Fail sisaldab blokeerimisvigu (vt allpool)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "The file contains non-blocking warnings (see below)"
-msgstr ""
+msgstr "Fail sisaldab mitteblokeerivaid hoiatusi (vt allpool)"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "The file will be imported by batches"
-msgstr ""
+msgstr "Fail imporditakse koonditena"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "This column will be concatenated in field"
-msgstr ""
+msgstr "See veerg ühendatakse väljale"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr ""
+msgstr "See fail on edukalt imporditud kuni reani %d."
 
 #. module: base_import
 #. openerp-web
@@ -1005,14 +1022,14 @@ msgstr "Tuhande eraldaja"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "To import multiple values, separate them by a comma"
-msgstr ""
+msgstr "Mitme väärtuse importimiseks eraldage need komaga"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "To import, select a field..."
-msgstr ""
+msgstr "Vali väli importimiseks"
 
 #. module: base_import
 #. openerp-web
@@ -1064,14 +1081,14 @@ msgstr "Laadi fail üles"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Upload an Excel or CSV file to import"
-msgstr ""
+msgstr "Laadige importimiseks üles Exceli või CSV-fail"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Use first row as header"
-msgstr ""
+msgstr "Kasutage esimest rida päisena"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_res_users
@@ -1098,7 +1115,7 @@ msgstr "Väärtus"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_float__value2
 msgid "Value2"
-msgstr ""
+msgstr "Väärtus2"
 
 #. module: base_import
 #. openerp-web
@@ -1108,13 +1125,15 @@ msgid ""
 "Warning: ignores the labels line, empty lines and lines composed only of "
 "empty cells"
 msgstr ""
+"Hoiatus: ignoreerib pealkirjarida (labels line), tühje ridu ja ainult "
+"tühjadest lahtritest koosnevaid ridu"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "When a value cannot be matched:"
-msgstr ""
+msgstr "Kui väärtust ei saa sobitada:"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1131,7 +1150,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr ""
+msgstr "Enne importimise jätkamist saate faili testida või uuesti laadida."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1144,21 +1163,21 @@ msgstr "Sa pead seadistama vähemalt ühe välja, et importida"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at multiple rows"
-msgstr ""
+msgstr "mitmel real"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "at row"
-msgstr ""
+msgstr "real"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "batch"
-msgstr ""
+msgstr "Koond"
 
 #. module: base_import
 #. openerp-web
@@ -1166,7 +1185,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "in field"
-msgstr ""
+msgstr "väljal"
 
 #. module: base_import
 #. openerp-web
@@ -1180,7 +1199,7 @@ msgstr "minutit"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "more)"
-msgstr ""
+msgstr "rohkem)"
 
 #. module: base_import
 #. openerp-web
@@ -1193,4 +1212,4 @@ msgstr "otsas"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr ""
+msgstr "tundmatu veakood %s"

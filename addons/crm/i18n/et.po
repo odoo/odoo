@@ -16,9 +16,9 @@
 # Piia Paurson <piia@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Jana Jaakson, 2022
 # Anna, 2023
 # Leaanika Randmets, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -95,6 +95,8 @@ msgstr "%(duplicates)s duplikaadid on ühendatud."
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
+"%(members_assigned)s kontaktid, mis on jaotatud %(member_count)s müüjate "
+"vahel."
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -284,6 +286,11 @@ msgid ""
 "                                        specified otherwise.\n"
 "                                    </span>"
 msgstr ""
+"<span>Määrata perioodiliselt müügivihjeid reeglite alusel</span><br/>\n"
+"                                    <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                        Kõik müügimeeskonnad kasutavad seda seadistust vaikimisi, välja arvatud juhul\n"
+"                                        kui ei ole määratud teisiti.\n"
+"                                    </span>"
 
 #. module: crm
 #: model:mail.template,body_html:crm.mail_template_demo_crm_lead
@@ -359,6 +366,76 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- PÄIS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Teie vihje/võimalus</span><br/>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Huvi Teie toodete vastu</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- SISU -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Tere <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br/><br/>\n"
+"                            Tere tulemast <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            Tore sinuga kohtuda! Nüüd, kui olete pardal, saate avastada mida ettevõttel <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> on pakkuda. Minu nimi on <t t-out=\"object.user_id.name or ''\">Marc Demo</t> ja ma aitan Teil Odoo'st kõige rohkem kasu saada. Kas me võiksime varsti planeerida kiire demo?<br/>\n"
+"                            Võite minuga julgesti ühendust võtta!<br/><br/>\n"
+"                            Tervitades,,<br/>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                                <br/>E-mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br/>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- JALUS -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\"/>\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br/>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -378,6 +455,11 @@ msgid ""
 " Click on the grey area of the progress bar to see all opportunities that "
 "have no next activity."
 msgstr ""
+"A great tip to boost sales efficiency is to always define a next step on "
+"each opportunity. To manage ongoing activities, click on any status of the "
+"progress bar to filter opportunities based on their next activities' status."
+" Click on the grey area of the progress bar to see all opportunities that "
+"have no next activity."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -486,7 +568,7 @@ msgstr "Lisa järgmine %s"
 msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
-msgstr ""
+msgstr "Täiendav filtri domeen, kui otsitakse meeskonnale määramata vihjeid."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -607,7 +689,7 @@ msgstr "Määramise reeglid"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "Meeskonna %(team)s määramise domeen on valesti vormistatud."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -848,7 +930,7 @@ msgstr "Õnnitlused, soovime edu nii suurte võimalustega!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "Consider leads created as of the:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1153,6 +1235,9 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
+"Kas teadsite, et saate otsida ettevõtet nime või käibemaksukohuslase numbri "
+"järgi, et täita automaatselt kõik andmed? Odoo täidab automaatselt kõik Teie"
+" eest: logo, aadress, ettevõtte suurus, äriteave, sotsiaalmeediakontod jne."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1161,6 +1246,9 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
+"Kas teadsite, et saate vaadata võimaluste nimekirja kaardivaates, kasutades "
+"paremal üleval asuvat kaardisümbolit? Paljud Odoo vaated saab muuta "
+"kaardiks: ülesanded, kontaktid, tarnetellimused jne."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1415,6 +1503,10 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
+"Müügimeeskonna jaoks ei ole midagi hullemat, kui neil puuduvad müügivihjed. "
+"Õnneks saate vaid mõne klikiga genereerida müügivihjeid, mis on genereeritud"
+" just Teie vajaduste järgi (nt ettevõtte suurus, tööstusharu jne.) Et aidata"
+" Teil funktsiooni testida, pakume Teile tasuta krediiti - 200."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1543,6 +1635,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
+"Kui see on märgitud, sunnib see müüjat värskendama uuendatud võimalusi, "
+"isegi kui need on juba määratud."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1647,6 +1741,7 @@ msgstr "Ettevõttesisesed märkmed"
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
 msgstr ""
+"Intervalli tüüp iga cron-käigu vahel (nt iga 2 päeva või iga 2 tunni järel)"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -1655,6 +1750,8 @@ msgid ""
 "Invalid repeat frequency. Consider changing frequency type instead of using "
 "large numbers."
 msgstr ""
+"Lubamatu kordussagedus. Kaaluge suurte numbrite kasutamise asemel sageduse "
+"tüübi muutmist."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1845,6 +1942,8 @@ msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
 msgstr ""
+"Müügivihjete/võimaluste automaatne määramine on piiratud juhtide või "
+"administraatoritega."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1916,7 +2015,7 @@ msgstr "Müügivihje loomine"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
-msgstr ""
+msgstr "Müügivihjed on etapp enne võimaluse loomist."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -1931,6 +2030,8 @@ msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
 msgstr ""
+"Meeskondadele müügivihjete jagamine peaks toimuma vähemalt 0,2 või "
+"maksimaalselt 30 tööpäeva jooksul, mitte %.2f."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1992,6 +2093,8 @@ msgid ""
 "Linked partner (optional). Usually created when converting the lead. You can"
 " find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
+"Seotud partner (vabatahtlik). Luuakse tavaliselt müügivihje loomisel. "
+"Partnerit saab leida tema nime, TINi, e-posti või sisemise viite järgi."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_cc
@@ -2074,6 +2177,9 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"Manual assign allow to trigger assignment from team form view using an "
+"action button. Automatic configures a cron running repeatedly assignment in "
+"all teams."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2123,6 +2229,8 @@ msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
 msgstr ""
+"Kasutaja %(user)s ja meeskonna %(team)s liikmete määramise domeen on valesti"
+" vormistatud."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2210,6 +2318,7 @@ msgstr "Igakuine"
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
 msgstr ""
+"Kõigi meeskonda kuuluvate müügimeeste igakuine keskmine müügivihjete maht"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2323,6 +2432,8 @@ msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
 msgstr ""
+"Meeskonnale %(team_name)s ja selle müügiinimestele ei ole müügivihjeid "
+"eraldatud, sest ükski määramata müügivihjetest ei vasta selle domeenile."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2331,6 +2442,8 @@ msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
 msgstr ""
+"Meeskonnale %(team_name)s ei ole müügivihjeid määratud, sest puudub "
+"ressurss. Lisage müügiinimestele ressurssi juurde."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2339,6 +2452,9 @@ msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
 msgstr ""
+"Ühtegi müügivihjet ei ole meeskonnale või müügiinimesele määratud. "
+"Kontrollige oma müügimeeskondade , müügiinimeste ja müügivõimaluste "
+"seadistusi."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2359,6 +2475,8 @@ msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
 msgstr ""
+"Müügiinimestele ei ole ühtegi müügivihjet määratud, sest ükski määramata "
+"müügivihje ei vasta nende domeenidele."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2367,6 +2485,8 @@ msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
 msgstr ""
+"Meeskonnale %(team_name)s ei ole määratud uut müügivihjet, sest ükski "
+"määramata müügivihje ei vasta selle domeenile."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2374,6 +2494,8 @@ msgstr ""
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
 msgstr ""
+"Meeskondadele ei ole eraldatud uut müügivihjet, sest ükski müügivihje ei "
+"vasta nende domeenidele."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2428,6 +2550,8 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
+"Intervallitüübi arv iga croni käivitamise vahel (nt iga 2 päeva või iga 4 "
+"päeva tagant)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2466,6 +2590,10 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Odoo's artificial intelligence engine predicts the success rate of each "
+"opportunity based on your history. You can always update the success rate "
+"manually, but if you let Odoo do the job the score is updated while the "
+"opportunity moves forward in your sales cycle."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2770,24 +2898,24 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "Potentsiaalne dubleeriv müügivihje"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
 msgid "Potential Duplicate Lead Count"
-msgstr ""
+msgstr "Potentsiaalne dubleeriv müügivihjete arv"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr ""
+msgstr "Predictive Lead Scoring Field Labels"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr ""
+msgstr "Predictive Lead Scoring: Recompute Automated Probabilities"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -3035,6 +3163,8 @@ msgid ""
 "Set Recurring Plans on Opportunities to display the contracts' renewal "
 "periodicity<br>(e.g: Monthly, Yearly)."
 msgstr ""
+"Seadistage müügivihjete kohta korduvad plaanid, et kuvada lepingute "
+"uuendamise perioodilisus<br> (nt: igakuiselt, kord aastas)."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3316,7 +3446,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "See analüüs näitab, kui palju müügivihjeid on kuus loodud."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3337,11 +3467,15 @@ msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
 msgstr ""
+"Seda saab kasutada müügivihjete automaatseks määramiseks müügiinimestele "
+"(reeglite alusel)"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "This can be used to compute statistical probability to close a lead"
 msgstr ""
+"Seda saab kasutada müügivihje sulgemise statistilise tõenäosuse "
+"arvutamiseks."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -3400,7 +3534,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
-msgstr ""
+msgstr "See määrab müügivihjed kõigile liikmetele. Kas soovite jätkata?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
@@ -3438,7 +3572,7 @@ msgstr "Vihje: Müügivõimaluse võidumäära protsent ennustatakse AI abil"
 #: model:digest.tip,name:crm.digest_tip_crm_5
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
 msgid "Tip: Turn a selection of opportunities into a map"
-msgstr ""
+msgstr "Vihje: Muutke võimaluste valik nähtavaks kaardil"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
@@ -3508,7 +3642,7 @@ msgstr "UTM kampaania"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr ""
+msgstr "UX: Limit to lead company or all if no company"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3592,6 +3726,11 @@ msgid ""
 "qualified, the lead can be converted into a business opportunity and/or a "
 "new customer in your address book."
 msgstr ""
+"Kasutage müügivihjeid, kui Teil on vaja teha kvalifitseerimise samm enne "
+"müügivõimaluse või kliendi loomist. See võib olla Teie visiitkaart, "
+"veebilehel täidetud kontaktvorm või imporditud potentsiaalsete klientide "
+"fail jne. Pärast kvalifitseerimist saab juhtumi muuta ärivõimaluseks ja/või "
+"uueks kliendiks Teie kontaktide nimekirjas."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper

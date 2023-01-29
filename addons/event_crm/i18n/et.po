@@ -15,6 +15,7 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Anna, 2023
+# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,11 +157,14 @@ msgid ""
 "Confirmation: when attendee is confirmed, manually or automatically;\n"
 "Attended: when attendance is confirmed and registration set to done;"
 msgstr ""
+"Loomine: kohalviibija loomisel;\n"
+"Kinnitamine: kui osaleja kinnitatakse käsitsi või automaatselt;\n"
+"Osalenud: kui kohalolek on kinnitatud ja registreerimine tehtud;"
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__lead_type
 msgid "Default lead type when this rule is applied."
-msgstr ""
+msgstr "Müügivihje vaikimisi tüüp selle vihje rakendamisel."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__display_name
@@ -209,6 +213,9 @@ msgid ""
 "Filter the attendees to include those of this specific event category. If "
 "not set, no event category restriction will be applied."
 msgstr ""
+"Filtreerige osalejad, et kaasata selle konkreetse sündmusekategooria "
+"osalejad. Kui seda pole määratud, ei rakendata sündmuse kategooria "
+"piirangut."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
@@ -216,6 +223,8 @@ msgid ""
 "Filter the attendees to include those of this specific event. If not set, no"
 " event restriction will be applied."
 msgstr ""
+"Filtreerige osalejad, et kaasata selle konkreetse sündmuse osalejad. Kui "
+"seda pole määratud, siis sündmuste piiranguid ei rakendata."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -380,6 +389,8 @@ msgid ""
 "Restrict the trigger of this rule to events belonging to a specific company.\n"
 "If not set, no company restriction will be applied."
 msgstr ""
+"Piirake selle reegli käivitamist konkreetsele ettevõttele kuuluvate sündmustega.\n"
+"Kui seda ei määrata, siis ettevõtte piirangut ei kohaldata."
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__name
@@ -419,7 +430,7 @@ msgstr "Sündmuse allikas"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_ids
 msgid "Source Registrations"
-msgstr ""
+msgstr "Allikate registreerimised"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_tag_ids
