@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import socket
 
 from unittest.mock import DEFAULT
@@ -1474,6 +1475,23 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(len(record), 1)
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_file_encoding(self):
+        """ Incoming email with file encoding """
+        file_content = 'Hello World'
+        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE']:
+            file_content_b64 = base64.b64encode(file_content.encode(encoding or 'utf-8')).decode()
+            record = self.format_and_process(test_mail_data.MAIL_FILE_ENCODING,
+                self.email_from, 'groups@test.com',
+                subject='Test Charset %s' % encoding or 'Unset',
+                charset='; charset="%s"' % encoding if encoding else '',
+                content=file_content_b64
+            )
+            attachment = record.message_ids.attachment_ids
+            self.assertEqual(file_content, attachment.raw.decode(encoding or 'utf-8'))
+            if encoding not in ['', 'UTF-8']:
+                self.assertNotEqual(file_content, attachment.raw.decode('utf-8'))
 
 
 class TestMailThreadCC(TestMailCommon):
