@@ -174,7 +174,7 @@ msgstr "'作業類型 - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr ""
+msgstr "'包裝 - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -626,7 +626,7 @@ msgstr "<strong>已訂購</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>包裝日期:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -715,7 +715,7 @@ msgstr "完成的移動名細將永遠不能有預留數量。"
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
-msgstr ""
+msgstr "此位置已存在此產品的補貨規則."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -978,7 +978,7 @@ msgstr "套用"
 #: code:addons/stock/static/src/xml/inventory_adjustments.xml:0
 #, python-format
 msgid "Apply All"
-msgstr ""
+msgstr "套用全部"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__route_ids
@@ -1186,7 +1186,7 @@ msgstr "條碼掃瞄器"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__valid_ean
 msgid "Barcode is valid EAN"
-msgstr ""
+msgstr "合法的EAN條碼"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1408,7 +1408,7 @@ msgstr "選擇摘要格式"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "選擇要列印的標籤類型"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1425,7 +1425,7 @@ msgstr "選擇目的庫位"
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "選擇紙張格式以列印批次標籤"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1435,7 +1435,7 @@ msgstr "選擇表單格式來列印摘要"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "選擇是否列印產品或批次/序列號標籤"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1455,7 +1455,7 @@ msgstr "清除明細"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "清除數量"
 
 #. module: stock
 #. openerp-web
@@ -1926,12 +1926,12 @@ msgstr "客戶位置"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form
 msgid "Cyclic Counting"
-msgstr ""
+msgstr "循環計數"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL 快遞連接器"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -2089,7 +2089,7 @@ msgstr "通過此倉庫的預設路線"
 msgid ""
 "Define a minimum stock rule so that Odoo automatically creates requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
-msgstr ""
+msgstr "定義最低庫存規則，以便 Odoo 自動建立報價請求或確認製造訂單以重新補貨您的庫存."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2123,6 +2123,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"定義用於建議從何處獲取產品的確切位置(貨架)、該位置的哪個批次等的預設方法. 可以在產品類別級別強制執行此方法，如果此處未設定任何內容，則會在上級位置上進行回退\n"
+"\n"
+"先進先出: 最先入庫的產品/批次將最先移出(FIFO).\n"
+"後進先出: 最後入庫的產品/批次將最先移出(LIFO).\n"
+"封閉位置: 最靠近目標位置的產品/批次將首先移出.\n"
+"臨期先出: 到期日期最近的產品/批次將首先移出(FEFO) (此方法的可用性取決於“到期日期”設定)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -2406,7 +2412,7 @@ msgstr "顯示分配序列"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_clear_serial
 msgid "Display Clear Serial"
-msgstr ""
+msgstr "顯示清除序列"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__display_complete
@@ -2525,12 +2531,12 @@ msgstr "草稿移動"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
 msgid "Duplicated SN Warning"
-msgstr ""
+msgstr "重複編號警告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__sn_duplicated
 msgid "Duplicated Serial Number"
-msgstr ""
+msgstr "重複序號警告"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_easypost
@@ -3076,7 +3082,7 @@ msgstr "隱藏揀貨類型"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__hide_reservation_method
 msgid "Hide Reservation Method"
-msgstr ""
+msgstr "隱藏預留方式"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3192,7 +3198,7 @@ msgstr "如果設定，此作業即打包到此包裹內"
 msgid ""
 "If the UoM of a lot is not 'units', the lot will be considered as a unit and"
 " only one label will be printed for this lot."
-msgstr ""
+msgstr "如果批次的 UoM 不是'單位'，則該批次將被視為一個單位，並且只會為該批次列印一個標籤."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__active
@@ -3223,7 +3229,7 @@ msgstr "若果揀貨被解鎖，您可以編輯初始需求（用於揀貨草稿
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
 msgid "If the same SN is in another Quant"
-msgstr ""
+msgstr "如果同一個 SN 在另一個定量"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__show_reserved
@@ -3239,7 +3245,7 @@ msgstr "若勾選，Odoo 將自動用相應的產品、位置和批次/序號預
 msgid ""
 "If this checkbox is ticked, Odoo will automatically show the reception "
 "report (if there are moves to allocate to) when validating."
-msgstr ""
+msgstr "如果勾選此復選框，Odoo 將在驗證時自動顯示接收報表 (如果有要分配的移動)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__print_label
@@ -3733,7 +3739,7 @@ msgstr "批次/序列號："
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
-msgstr ""
+msgstr "要列印的標簽"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
@@ -3753,7 +3759,7 @@ msgstr "過去30天"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__last_count_date
 msgid "Last Count Date"
-msgstr ""
+msgstr "最後計數日期"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__last_delivery_partner_id
@@ -3916,7 +3922,7 @@ msgstr "最後更新於"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__last_count_date
 msgid "Last time the Quantity was Updated"
-msgstr ""
+msgstr "上次已更新數量"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__late
@@ -4578,7 +4584,7 @@ msgstr "影響到的下一步調撥:"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "No %s selected or a delivery order selected"
-msgstr ""
+msgstr "沒有選擇 %s 或選擇送貨單"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
@@ -4598,7 +4604,7 @@ msgstr "無追蹤資訊"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 msgid "No allocation need found."
-msgstr ""
+msgstr "沒有發現需要分配."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -4664,7 +4670,7 @@ msgstr "未發現庫存移動"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "No Stock On Hand"
-msgstr ""
+msgstr "無在庫庫存"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -4807,12 +4813,12 @@ msgstr "在庫："
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__lots
 msgid "One per lot/SN"
-msgstr ""
+msgstr "每個 批次/序列號 一個"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__lot_label_layout__label_quantity__units
 msgid "One per unit"
-msgstr ""
+msgstr "每個單位一個"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -5074,12 +5080,12 @@ msgstr "包裹"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__pack_date
 msgid "Pack Date"
-msgstr ""
+msgstr "包裝日期"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "Pack Date:"
-msgstr ""
+msgstr "包裝日期:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__pack_type_id
@@ -5189,7 +5195,7 @@ msgstr "使用包裹"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__valid_sscc
 msgid "Package name is valid SSCC"
-msgstr ""
+msgstr "包裝名稱是有效的SSCC系列貨運包裝箱代碼"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
@@ -5414,7 +5420,7 @@ msgstr "最優路線"
 msgid ""
 "Press the CREATE button to define quantity for each product in your stock or"
 " import them from a spreadsheet throughout Favorites"
-msgstr ""
+msgstr "按建立按鈕定義庫存中每個產品的數量，或從整個收藏夾中的試算表匯入它們"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -5424,12 +5430,12 @@ msgstr "列印"
 #. module: stock
 #: model:res.groups,name:stock.group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lot & Serial Numbers"
-msgstr ""
+msgstr "列印批號和序列號的 GS1 條碼"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_lot_print_gs1
 msgid "Print GS1 Barcodes for Lots & Serial Numbers"
-msgstr ""
+msgstr "列印 GS1 條碼 給批號和序列號"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__print_label
@@ -5582,7 +5588,7 @@ msgstr "產品標籤報告"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__picking_label_type__label_type__products
 msgid "Product Labels"
-msgstr ""
+msgstr "產品標籤"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
@@ -6142,7 +6148,7 @@ msgstr "入庫報告"
 #. module: stock
 #: model:ir.actions.report,name:stock.label_picking
 msgid "Reception Report Label"
-msgstr ""
+msgstr "入庫報表標籤"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__name
@@ -6600,7 +6606,7 @@ msgstr "簡訊發送錯誤"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
 msgid "SSCC:"
-msgstr ""
+msgstr "SSCC(系列貨運包裝箱代碼):"
 
 #. module: stock
 #. openerp-web
@@ -6866,6 +6872,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"設定將使用的特定刪除策略，無論此產品類別的來源位置如何.\n"
+"\n"
+"先進先出: 最先入庫的產品/批次將最先移出(FIFO).\n"
+"後進先出: 最後入庫的產品/批次將最先移出(LIFO).\n"
+"封閉位置: 最靠近目標位置的產品/批次將首先移出.\n"
+"臨期先出: 到期日期最近的產品/批次將首先移出(FEFO) ( 此方法的可用性取決於“到期日期”設定)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6956,7 +6968,7 @@ msgstr "顯示檢查可用"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr ""
+msgstr "顯示清除數量按鈕"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__show_operations
@@ -7005,7 +7017,7 @@ msgstr "在過帳時顯示接收報告"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr ""
+msgstr "顯示設定數量按鈕"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation__show_transfers
@@ -7151,7 +7163,7 @@ msgstr "標註星號"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Starred Products"
-msgstr ""
+msgstr "星標產品"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -7644,7 +7656,7 @@ msgstr "每個公司的倉庫名稱必須唯一!"
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
 msgid "The number of Serial Numbers to generate must be greater than zero."
-msgstr ""
+msgstr "要產生的序列號必須大於零."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7695,7 +7707,7 @@ msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
 "precision defined on the unit of measure \"%s\". Please change the quantity "
 "done or the rounding precision of your unit of measure."
-msgstr ""
+msgstr "產品“%s”的完成數量不符合度量單位“%s”上定義的捨入精度. 請更改已完成的數量或您的計量單位的捨入精度."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7711,7 +7723,7 @@ msgstr "請求的作業無法處理，因為一個程序錯誤，設定`product_
 msgid ""
 "The requested operation cannot be processed because of a programming error "
 "setting the `reserved_qty` field instead of the `reserved_uom_qty`."
-msgstr ""
+msgstr "由於設定“reserved_qty”欄位而不是“reserved_uom_qty”的程式錯誤，無法處理請求的操作."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -7788,7 +7800,7 @@ msgstr "還沒有產品移動"
 msgid ""
 "This analysis gives you an overview of the current stock level of your "
 "products."
-msgstr ""
+msgstr "此分析讓您大致了解產品的目前庫存情況."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7860,7 +7872,7 @@ msgstr "此批次 %(lot_name)s 與此產品 %(product_name)s 不兼容"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "This lot/serial number is already in another location"
-msgstr ""
+msgstr "該批次/序列號已使用在其他位置"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_action
@@ -7922,6 +7934,14 @@ msgid ""
 msgstr "該產品已用於至少一次庫存移動。不建議更改產品類型，因為這會導致不一致。更好的解決方案可能是歸檔產品並建立一個新產品。"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -7938,7 +7958,7 @@ msgstr "此記錄已存在。"
 #: code:addons/stock/report/report_stock_reception.py:0
 #, python-format
 msgid "This report cannot be used for done and not done %s at the same time"
-msgstr ""
+msgstr "此報表不能同時用於 %s 已完成和未完成"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__property_stock_production
@@ -7975,6 +7995,8 @@ msgid ""
 "Those products you added are tracked but lots/serials were not defined. Once applied those can't be changed.<br/>\n"
 "                    Apply anyway?"
 msgstr ""
+"追踪您增加的那些產品，但未定義批次/序列號. 一旦套用，便無法更改.<br/>\n"
+"                    仍然套用?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8209,7 +8231,7 @@ msgstr "當沒有庫存，觸發另一個規則"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 msgid "Trigger Manual"
-msgstr ""
+msgstr "手動觸發"
 
 #. module: stock
 #. openerp-web
@@ -8406,7 +8428,7 @@ msgstr "使用已有批次/序號"
 msgid ""
 "Use GS1 nomenclature datamatrix whenever barcodes are printed for lots and "
 "serial numbers."
-msgstr ""
+msgstr "每當為批次和序列號列印條碼時，都使用 GS1 命名法資料矩陣."
 
 #. module: stock
 #: model:res.groups,name:stock.group_reception_report
@@ -8647,7 +8669,7 @@ msgstr "警告"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Warning Duplicated SN"
-msgstr ""
+msgstr "重複編號警告"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
@@ -8899,7 +8921,7 @@ msgstr "您無法更改目前在庫存移動中保留的產品類型。 如果�
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "You can not change the type of a product that was already used."
-msgstr ""
+msgstr "您不能更改已使用的產品類型."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9040,6 +9062,12 @@ msgstr "您不能從“視圖”類型 (%s) 的位置取貨或交付產品。"
 #, python-format
 msgid "You cannot unreserve a stock move that has been set to 'Done'."
 msgstr "您無法取消狀態已標記為「完成」的庫存移動。"
+
+#. module: stock
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -9190,7 +9218,7 @@ msgstr "帶價格的 ZPL 標籤"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Your stock is currently empty"
-msgstr ""
+msgstr "您的庫存目前是空的"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
