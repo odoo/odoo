@@ -146,8 +146,10 @@ class PosOrder(models.Model):
     def _prepare_order_line(self, order_line):
         order_line = super(PosOrder, self)._prepare_order_line(order_line)
 
-        if order_line["reward_id"]:
+        if order_line.get("reward_id"):
             order_line["reward_id"] = order_line["reward_id"][0]
+        if order_line.get("coupon_id"):
+            order_line["coupon_id"] = order_line["coupon_id"][0]
 
         return order_line
 
