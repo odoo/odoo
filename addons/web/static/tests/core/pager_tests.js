@@ -382,4 +382,30 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
         assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
     });
+
+    QUnit.test("updateTotal props: click previous", async function (assert) {
+        const pager = await makePager({
+            offset: 0,
+            limit: 5,
+            total: 10,
+            onUpdate(data) {
+                pager.updateProps(data);
+            },
+            async updateTotal() {
+                const total = 23;
+                pager.updateProps({ total, updateTotal: undefined });
+                return total;
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "10+");
+        assert.hasClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+
+        await click(target, ".o_pager_previous");
+
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "21-23");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "23");
+        assert.doesNotHaveClass(target.querySelector(".o_pager_limit"), "o_pager_limit_fetch");
+    });
 });
