@@ -12,11 +12,11 @@ odoo.define('account.hierarchy.selection', function (require) {
     var qweb = core.qweb;
 
     var HierarchySelection = FieldSelection.extend({
-        _renderEdit: function () {
-            var self = this;
-            var prom = Promise.resolve()
+        _setValues: function () {
+            this.loadingPromise = Promise.resolve();
+            const self = this;
             if (!self.hierarchy_groups) {
-                prom = this._rpc({
+                this.loadingPromise = this._rpc({
                     model: 'account.account.type',
                     method: 'search_read',
                     kwargs: {
@@ -45,8 +45,10 @@ odoo.define('account.hierarchy.selection', function (require) {
                     ]
                 });
             }
-
-            Promise.resolve(prom).then(function() {
+        },
+        _renderEdit: function () {
+            var self = this;
+            Promise.resolve(this.loadingPromise).then(function () {
                 self.$el.empty();
                 self._addHierarchy(self.$el, self.hierarchy_groups, 0);
                 var value = self.value;
