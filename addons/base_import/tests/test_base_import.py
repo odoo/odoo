@@ -278,10 +278,10 @@ class TestPreview(TransactionCase):
     def test_csv_success(self):
         import_wizard = self.env['base_import.import'].create({
             'res_model': 'base_import.tests.models.preview',
-            'file': b'name,Some Value,Counter\n'
-                    b'foo,1,2\n'
-                    b'bar,3,4\n'
-                    b'qux,5,6\n',
+            'file': b'name,Some Value,Counter,Some DateTime,Other Date\n'
+                    b'foo,1,2,2023-01-31 14:46:00,2023-01-31\n'
+                    b'bar,3,4,2023-01-31 00:00:00,2023-02-01\n'
+                    b'qux,5,6,2023-01-31 14:46:00,2023-02-02\n',
             'file_type': 'text/csv'
         })
 
@@ -291,19 +291,21 @@ class TestPreview(TransactionCase):
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
-        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None, 3: ['somedatetime'], 4: ['otherdate']})
+        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter', 'Some DateTime', 'Other Date'])
         # Order depends on iteration order of fields_get
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'somedatetime', 'name': 'somedatetime', 'string': 'Some DateTime', 'required': False, 'fields': [], 'type': 'datetime'},
+            {'id': 'otherdate', 'name': 'otherdate', 'string': 'Other Date', 'required': False, 'fields': [], 'type': 'date'},
         ])
         self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
+            ['foo', '1', '2', '2023-01-31 14:46:00', '2023-01-31'],
+            ['bar', '3', '4', '2023-01-31 00:00:00', '2023-02-01'],
+            ['qux', '5', '6', '2023-01-31 14:46:00', '2023-02-02'],
         ])
 
     @unittest.skipUnless(can_import('xlrd'), "XLRD module not available")
@@ -320,18 +322,20 @@ class TestPreview(TransactionCase):
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
-        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None, 3: ['somedatetime'], 4: ['otherdate']})
+        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter', 'Some DateTime', 'Other Date'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'somedatetime', 'name': 'somedatetime', 'string': 'Some DateTime', 'required': False, 'fields': [], 'type': 'datetime'},
+            {'id': 'otherdate', 'name': 'otherdate', 'string': 'Other Date', 'required': False, 'fields': [], 'type': 'date'},
         ])
         self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
+            ['foo', '1', '2', '2023-01-31 14:46:00', '2023-01-31'],
+            ['bar', '3', '4', '2023-01-31 00:00:00', '2023-02-01'],
+            ['qux', '5', '6', '2023-01-31 14:46:00', '2023-02-02'],
         ])
 
     @unittest.skipUnless(can_import('xlrd.xlsx'), "XLRD/XLSX not available")
@@ -348,18 +352,20 @@ class TestPreview(TransactionCase):
             'headers': True,
         })
         self.assertIsNone(result.get('error'))
-        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None})
-        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter'])
+        self.assertEqual(result['matches'], {0: ['name'], 1: ['somevalue'], 2: None, 3: ['somedatetime'], 4: ['otherdate']})
+        self.assertEqual(result['headers'], ['name', 'Some Value', 'Counter', 'Some DateTime', 'Other Date'])
         self.assertItemsEqual(result['fields'], [
             ID_FIELD,
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'somedatetime', 'name': 'somedatetime', 'string': 'Some DateTime', 'required': False, 'fields': [], 'type': 'datetime'},
+            {'id': 'otherdate', 'name': 'otherdate', 'string': 'Other Date', 'required': False, 'fields': [], 'type': 'date'},
         ])
         self.assertEqual(result['preview'], [
-            ['foo', '1', '2'],
-            ['bar', '3', '4'],
-            ['qux', '5', '6'],
+            ['foo', '1', '2', '2023-01-31 14:46:00', '2023-01-31'],
+            ['bar', '3', '4', '2023-01-31 00:00:00', '2023-02-01'],
+            ['qux', '5', '6', '2023-01-31 14:46:00', '2023-02-02'],
         ])
 
     @unittest.skipUnless(can_import('odf'), "ODFPY not available")
@@ -383,6 +389,8 @@ class TestPreview(TransactionCase):
             {'id': 'name', 'name': 'name', 'string': 'Name', 'required': False, 'fields': [], 'type': 'char'},
             {'id': 'somevalue', 'name': 'somevalue', 'string': 'Some Value', 'required': True, 'fields': [], 'type': 'integer'},
             {'id': 'othervalue', 'name': 'othervalue', 'string': 'Other Variable', 'required': False, 'fields': [], 'type': 'integer'},
+            {'id': 'somedatetime', 'name': 'somedatetime', 'string': 'Some DateTime', 'required': False, 'fields': [], 'type': 'datetime'},
+            {'id': 'otherdate', 'name': 'otherdate', 'string': 'Other Date', 'required': False, 'fields': [], 'type': 'date'},
         ])
         self.assertEqual(result['preview'], [
             ['foo', '1', '2'],

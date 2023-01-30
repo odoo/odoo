@@ -270,6 +270,8 @@ class Import(models.TransientModel):
 
     def _read_xls_book(self, book, sheet_name):
         sheet = book.sheet_by_name(sheet_name)
+        rows = []
+        date_cols = {}
         # emulate Sheet.get_rows for pre-0.9.4
         for rowx, row in enumerate(map(sheet.row, range(sheet.nrows)), 1):
             values = []
@@ -283,13 +285,14 @@ class Import(models.TransientModel):
                     )
                 elif cell.ctype is xlrd.XL_CELL_DATE:
                     is_datetime = cell.value % 1 != 0.0
+                    if is_datetime:
+                        date_cols[colx] = DEFAULT_SERVER_DATETIME_FORMAT
+                    else:
+                        date_cols.setdefault(colx, DEFAULT_SERVER_DATE_FORMAT)
+
                     # emulate xldate_as_datetime for pre-0.9.3
                     dt = datetime.datetime(*xlrd.xldate.xldate_as_tuple(cell.value, book.datemode))
-                    values.append(
-                        dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-                        if is_datetime
-                        else dt.strftime(DEFAULT_SERVER_DATE_FORMAT)
-                    )
+                    values.append(dt)
                 elif cell.ctype is xlrd.XL_CELL_BOOLEAN:
                     values.append(u'True' if cell.value else u'False')
                 elif cell.ctype is xlrd.XL_CELL_ERROR:
@@ -302,8 +305,16 @@ class Import(models.TransientModel):
                     )
                 else:
                     values.append(cell.value)
-            if any(x for x in values if x.strip()):
-                yield values
+            if any(x for x in values if isinstance(x, datetime.datetime) or x.strip()):
+                rows.append(values)
+
+        for colx, format_ in date_cols.items():
+            for cols in rows:
+                dt = cols[colx - 1]
+                if isinstance(dt, datetime.datetime):
+                    cols[colx - 1] = dt.strftime(format_)
+
+        return iter(rows)
 
     # use the same method for xlsx and xls files
     _read_xlsx = _read_xls
