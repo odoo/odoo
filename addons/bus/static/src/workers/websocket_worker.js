@@ -34,8 +34,9 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.2';
+export const WORKER_VERSION = '1.0.3';
 const INITIAL_RECONNECT_DELAY = 1000;
+const MAXIMUM_RECONNECT_DELAY = 60000;
 
 /**
  * This class regroups the logic necessary in order for the
@@ -335,7 +336,7 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
-        this.connectRetryDelay = this.connectRetryDelay * 1.5 + 1000 * Math.random();
+        this.connectRetryDelay = Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
@@ -376,6 +377,7 @@ export class WebsocketWorker {
         clearTimeout(this.connectTimeout);
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;
+        this.lastChannelSubscription = null;
         if (this.websocket) {
             this.websocket.close();
         }
