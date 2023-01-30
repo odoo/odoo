@@ -1,55 +1,2223 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <!-- account.tax.template -->
-    <record id="tr_vat_sale_18" model="account.tax.template">
-        <field name="sequence">11</field>
+    <record id="tr_stopaj_purchase_10" model="account.tax.template">
+        <field name="sequence">510</field>
+        <field name="description">Withholding I.T. %10</field>
+        <field name="name">Withholding Income Tax  %10 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">10</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_gv_stopaji"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_stopaj_purchase_15" model="account.tax.template">
+        <field name="sequence">515</field>
+        <field name="description">Withholding I.T.  %15</field>
+        <field name="name">Withholding Income Tax  %15 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">15</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_gv_stopaji"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_stopaj_purchase_20" model="account.tax.template">
+        <field name="sequence">520</field>
+        <field name="description">Withholding I.T.  %20</field>
+        <field name="name">Withholding income Tax %20 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">20</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_gv_stopaji"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kira_stopaj_purchase_20" model="account.tax.template">
+        <field name="sequence">520</field>
+        <field name="description">Withholding I.T.  %20</field>
+        <field name="name">Withholding %20 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">20</field>
+        <field name="amount_type">division</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_kv_stopaji"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr360'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18" model="account.tax.template">
+        <field name="sequence">1011</field>
         <field name="description">VAT %18</field>
-        <field name="name">VAT %18(sale)</field>
-        <field name="price_include" eval="0"/>
+        <field name="name">VAT %18 (Sale)</field>
+        <field name="price_include" eval="False"/>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
         <field name="chart_template_id" ref="l10n_tr_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_kdv_18"/>
-        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
+        <field name="tax_group_id" ref="tax_group_vat_full"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr391'),
             }),
         ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr191'),
             }),
         ]"/>
     </record>
 
-    <record id="tr_vat_purchase_18" model="account.tax.template">
-        <field name="sequence">11</field>
+    <record id="tr_kdv_purchase_18" model="account.tax.template">
+        <field name="sequence">1011</field>
         <field name="description">VAT %18</field>
-        <field name="name">VAT %18(purchase)</field>
-        <field name="price_include" eval="0"/>
+        <field name="name">VAT %18 (Purchase)</field>
+        <field name="price_include" eval="False"/>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
         <field name="chart_template_id" ref="l10n_tr_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_kdv_18"/>
-        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
+        <field name="tax_group_id" ref="tax_group_vat_full"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr391'),
             }),
         ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5,0,0),
-            (0,0, {'repartition_type': 'base'}),
-            (0,0, {
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('tr191'),
             }),
         ]"/>
     </record>
+
+    <record id="tr_kdv2_purchase_18" model="account.tax.template">
+        <field name="sequence">1053</field>
+        <field name="description">VAT2 %18</field>
+        <field name="name">VAT2 %18</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="tax_scope">service</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_full"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8" model="account.tax.template">
+        <field name="sequence">1055</field>
+        <field name="description">VAT %8</field>
+        <field name="name">VAT %8 (Sale)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_discounted"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8" model="account.tax.template">
+        <field name="sequence">1055</field>
+        <field name="description">VAT %8</field>
+        <field name="name">VAT %8 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_discounted"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_1" model="account.tax.template">
+        <field name="sequence">1059</field>
+        <field name="description">VAT %1</field>
+        <field name="name">VAT %1 (Sale)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_double_discount"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_1" model="account.tax.template">
+        <field name="sequence">1059</field>
+        <field name="description">VAT %1</field>
+        <field name="name">VAT %1 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_double_discount"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_inc" model="account.tax.template">
+        <field name="sequence">1021</field>
+        <field name="description">VAT %18 Inc.</field>
+        <field name="name">VAT %18 Included (Sales)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_full"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_inc" model="account.tax.template">
+        <field name="sequence">1021</field>
+        <field name="description">VAT %18 Inc.</field>
+        <field name="name">VAT %18 Included (Purchase)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_full"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_inc" model="account.tax.template">
+        <field name="sequence">1065</field>
+        <field name="description">VAT %8 Inc.</field>
+        <field name="name">VAT %8 Included (Sales)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_discounted"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_inc" model="account.tax.template">
+        <field name="sequence">1065</field>
+        <field name="description">VAT %8 Inc.</field>
+        <field name="name">VAT %8 Included (Purchase)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_discounted"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_1_inc" model="account.tax.template">
+        <field name="sequence">1069</field>
+        <field name="description">VAT %1 Inc.</field>
+        <field name="name">VAT %1 Included (Sales)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_double_discount"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_1_inc" model="account.tax.template">
+        <field name="sequence">1069</field>
+        <field name="description">VAT %1 Inc.</field>
+        <field name="name">VAT %1 Included (Purchase)</field>
+        <field name="price_include" eval="True"/>
+        <field name="amount">1</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_double_discount"/>
+        <field name="invoice_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+            Command.clear(),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            Command.create({
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_0" model="account.tax.template">
+        <field name="sequence">1201</field>
+        <field name="description">VAT %0</field>
+        <field name="name">VAT %0 (Sale)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_zero_vat"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_exemption_201'), ref('l10n_tr.vat_exemption_202'),
+                ref('l10n_tr.vat_exemption_204'), ref('l10n_tr.vat_exemption_205'),
+                ref('l10n_tr.vat_exemption_206'), ref('l10n_tr.vat_exemption_207'),
+                ref('l10n_tr.vat_exemption_208'), ref('l10n_tr.vat_exemption_209'),
+                ref('l10n_tr.vat_exemption_211'), ref('l10n_tr.vat_exemption_212'),
+                ref('l10n_tr.vat_exemption_213'), ref('l10n_tr.vat_exemption_214'),
+                ref('l10n_tr.vat_exemption_215'), ref('l10n_tr.vat_exemption_216'),
+                ref('l10n_tr.vat_exemption_217'), ref('l10n_tr.vat_exemption_218'),
+                ref('l10n_tr.vat_exemption_219'), ref('l10n_tr.vat_exemption_220'),
+                ref('l10n_tr.vat_exemption_221'), ref('l10n_tr.vat_exemption_223'),
+                ref('l10n_tr.vat_exemption_225'), ref('l10n_tr.vat_exemption_226'),
+                ref('l10n_tr.vat_exemption_227'), ref('l10n_tr.vat_exemption_228'),
+                ref('l10n_tr.vat_exemption_229'), ref('l10n_tr.vat_exemption_230'),
+                ref('l10n_tr.vat_exemption_231'), ref('l10n_tr.vat_exemption_232'),
+                ref('l10n_tr.vat_exemption_234'), ref('l10n_tr.vat_exemption_235'),
+                ref('l10n_tr.vat_exemption_236'), ref('l10n_tr.vat_exemption_237'),
+                ref('l10n_tr.vat_exemption_238'), ref('l10n_tr.vat_exemption_239'),
+                ref('l10n_tr.vat_exemption_240'), ref('l10n_tr.vat_exemption_241'),
+                ref('l10n_tr.vat_exemption_242'), ref('l10n_tr.vat_exemption_250'),
+                ref('l10n_tr.vat_exemption_301'), ref('l10n_tr.vat_exemption_302'),
+                ref('l10n_tr.vat_exemption_303'), ref('l10n_tr.vat_exemption_304'),
+                ref('l10n_tr.vat_exemption_305'), ref('l10n_tr.vat_exemption_306'),
+                ref('l10n_tr.vat_exemption_307'), ref('l10n_tr.vat_exemption_308'),
+                ref('l10n_tr.vat_exemption_309'), ref('l10n_tr.vat_exemption_310'),
+                ref('l10n_tr.vat_exemption_311'), ref('l10n_tr.vat_exemption_312'),
+                ref('l10n_tr.vat_exemption_313'), ref('l10n_tr.vat_exemption_314'),
+                ref('l10n_tr.vat_exemption_315'), ref('l10n_tr.vat_exemption_316'),
+                ref('l10n_tr.vat_exemption_317'), ref('l10n_tr.vat_exemption_318'),
+                ref('l10n_tr.vat_exemption_319'), ref('l10n_tr.vat_exemption_320'),
+                ref('l10n_tr.vat_exemption_321'), ref('l10n_tr.vat_exemption_322'),
+                ref('l10n_tr.vat_exemption_323'), ref('l10n_tr.vat_exemption_324'),
+                ref('l10n_tr.vat_exemption_325'), ref('l10n_tr.vat_exemption_326'),
+                ref('l10n_tr.vat_exemption_327'), ref('l10n_tr.vat_exemption_328'),
+                ref('l10n_tr.vat_exemption_330'), ref('l10n_tr.vat_exemption_331'),
+                ref('l10n_tr.vat_exemption_332'), ref('l10n_tr.vat_exemption_333'),
+                ref('l10n_tr.vat_exemption_334'), ref('l10n_tr.vat_exemption_335'),
+                ref('l10n_tr.vat_exemption_336'), ref('l10n_tr.vat_exemption_337'),
+                ref('l10n_tr.vat_exemption_350'), ref('l10n_tr.vat_exemption_351'),
+           ])
+       ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_no_vat" model="account.tax.template">
+        <field name="sequence">1801</field>
+        <field name="description">Not Subjected</field>
+        <field name="name">Not Subjected to VAT (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_not_subjected"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_exemption_801'),ref('l10n_tr.vat_exemption_802'),
+                ref('l10n_tr.vat_exemption_803'),ref('l10n_tr.vat_exemption_804'),
+                ref('l10n_tr.vat_exemption_805'),ref('l10n_tr.vat_exemption_806'),
+                ref('l10n_tr.vat_exemption_807'),ref('l10n_tr.vat_exemption_808'),
+                ref('l10n_tr.vat_exemption_809'),ref('l10n_tr.vat_exemption_810'),
+                ref('l10n_tr.vat_exemption_811'),ref('l10n_tr.vat_exemption_812'),
+            ])
+        ]"/>        
+    </record>
+
+    <record id="tr_kdv_purchase_0" model="account.tax.template">
+        <field name="sequence">1201</field>
+        <field name="description">VAT %0</field>
+        <field name="name">VAT %0 (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_zero_vat"/>
+        <field name="invoice_repartition_line_ids"
+               eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids"
+               eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_exemption_201'), ref('l10n_tr.vat_exemption_202'),
+                ref('l10n_tr.vat_exemption_204'), ref('l10n_tr.vat_exemption_205'),
+                ref('l10n_tr.vat_exemption_206'), ref('l10n_tr.vat_exemption_207'),
+                ref('l10n_tr.vat_exemption_208'), ref('l10n_tr.vat_exemption_209'),
+                ref('l10n_tr.vat_exemption_211'), ref('l10n_tr.vat_exemption_212'),
+                ref('l10n_tr.vat_exemption_213'), ref('l10n_tr.vat_exemption_214'),
+                ref('l10n_tr.vat_exemption_215'), ref('l10n_tr.vat_exemption_216'),
+                ref('l10n_tr.vat_exemption_217'), ref('l10n_tr.vat_exemption_218'),
+                ref('l10n_tr.vat_exemption_219'), ref('l10n_tr.vat_exemption_220'),
+                ref('l10n_tr.vat_exemption_221'), ref('l10n_tr.vat_exemption_223'),
+                ref('l10n_tr.vat_exemption_225'), ref('l10n_tr.vat_exemption_226'),
+                ref('l10n_tr.vat_exemption_227'), ref('l10n_tr.vat_exemption_228'),
+                ref('l10n_tr.vat_exemption_229'), ref('l10n_tr.vat_exemption_230'),
+                ref('l10n_tr.vat_exemption_231'), ref('l10n_tr.vat_exemption_232'),
+                ref('l10n_tr.vat_exemption_234'), ref('l10n_tr.vat_exemption_235'),
+                ref('l10n_tr.vat_exemption_236'), ref('l10n_tr.vat_exemption_237'),
+                ref('l10n_tr.vat_exemption_238'), ref('l10n_tr.vat_exemption_239'),
+                ref('l10n_tr.vat_exemption_240'), ref('l10n_tr.vat_exemption_241'),
+                ref('l10n_tr.vat_exemption_242'), ref('l10n_tr.vat_exemption_250'),
+                ref('l10n_tr.vat_exemption_301'), ref('l10n_tr.vat_exemption_302'),
+                ref('l10n_tr.vat_exemption_303'), ref('l10n_tr.vat_exemption_304'),
+                ref('l10n_tr.vat_exemption_305'), ref('l10n_tr.vat_exemption_306'),
+                ref('l10n_tr.vat_exemption_307'), ref('l10n_tr.vat_exemption_308'),
+                ref('l10n_tr.vat_exemption_309'), ref('l10n_tr.vat_exemption_310'),
+                ref('l10n_tr.vat_exemption_311'), ref('l10n_tr.vat_exemption_312'),
+                ref('l10n_tr.vat_exemption_313'), ref('l10n_tr.vat_exemption_314'),
+                ref('l10n_tr.vat_exemption_315'), ref('l10n_tr.vat_exemption_316'),
+                ref('l10n_tr.vat_exemption_317'), ref('l10n_tr.vat_exemption_318'),
+                ref('l10n_tr.vat_exemption_319'), ref('l10n_tr.vat_exemption_320'),
+                ref('l10n_tr.vat_exemption_321'), ref('l10n_tr.vat_exemption_322'),
+                ref('l10n_tr.vat_exemption_323'), ref('l10n_tr.vat_exemption_324'),
+                ref('l10n_tr.vat_exemption_325'), ref('l10n_tr.vat_exemption_326'),
+                ref('l10n_tr.vat_exemption_327'), ref('l10n_tr.vat_exemption_328'),
+                ref('l10n_tr.vat_exemption_330'), ref('l10n_tr.vat_exemption_331'),
+                ref('l10n_tr.vat_exemption_332'), ref('l10n_tr.vat_exemption_333'),
+                ref('l10n_tr.vat_exemption_334'), ref('l10n_tr.vat_exemption_335'),
+                ref('l10n_tr.vat_exemption_336'), ref('l10n_tr.vat_exemption_337'),
+                ref('l10n_tr.vat_exemption_350'), ref('l10n_tr.vat_exemption_351'),
+           ])
+       ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_no_vat" model="account.tax.template">
+        <field name="sequence">1801</field>
+        <field name="description">Not Subjected</field>
+        <field name="name">Not Subjected to VAT (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">0</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_not_subjected"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+             }),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_exemption_801'),ref('l10n_tr.vat_exemption_802'),
+                ref('l10n_tr.vat_exemption_803'),ref('l10n_tr.vat_exemption_804'),
+                ref('l10n_tr.vat_exemption_805'),ref('l10n_tr.vat_exemption_806'),
+                ref('l10n_tr.vat_exemption_807'),ref('l10n_tr.vat_exemption_808'),
+                ref('l10n_tr.vat_exemption_809'),ref('l10n_tr.vat_exemption_810'),
+                ref('l10n_tr.vat_exemption_811'),ref('l10n_tr.vat_exemption_812'),
+           ])
+        ]"/>
+    </record>
+
+<!--    VAT TEVKIFAT-->
+<!--    %18 VAT base-->
+    <record id="tr_kdv_sale_18_withholding_2" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (2/10)</field>
+        <field name="name">VAT %18 Withholding (2/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-3.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_2" model="account.tax.template">
+        <field name="sequence">2182</field>
+        <field name="description">VAT %18 Withholding (2/10)</field>
+        <field name="name">VAT %18 Withholding (2/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_2')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_624'),ref('l10n_tr.vat_withholding_626'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_2" model="account.tax.template">
+        <field name="sequence">12</field>
+        <field name="description">VAT %18 Withholding (2/10)</field>
+        <field name="name">VAT %18 Withholding (2/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-14.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_2" model="account.tax.template">
+        <field name="sequence">2182</field>
+        <field name="description">VAT %18 Withholding (2/10)</field>
+        <field name="name">VAT %18 Withholding (2/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_2')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_624'),ref('l10n_tr.vat_withholding_626'),
+           ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_3" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (3/10)</field>
+        <field name="name">VAT %18 Withholding (3/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-5.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_3" model="account.tax.template">
+        <field name="sequence">2183</field>
+        <field name="description">VAT %18 Withholding (3/10)</field>
+        <field name="name">VAT %18 Withholding (3/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_3')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_625'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_3" model="account.tax.template">
+        <field name="sequence">13</field>
+        <field name="description">VAT %18 Withholding (3/10)</field>
+        <field name="name">VAT %18 Withholding (3/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-12.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_3" model="account.tax.template">
+        <field name="sequence">2183</field>
+        <field name="description">VAT %18 Withholding (3/10)</field>
+        <field name="name">VAT %18 Withholding (3/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_3')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_625'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_4" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (4/10)</field>
+        <field name="name">VAT %18 Withholding (4/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-7.2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_4" model="account.tax.template">
+        <field name="sequence">2184</field>
+        <field name="description">VAT %18 Withholding (4/10)</field>
+        <field name="name">VAT %18 Withholding (4/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_4')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_601'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_4" model="account.tax.template">
+        <field name="sequence">14</field>
+        <field name="description">VAT %18 Withholding (4/10)</field>
+        <field name="name">VAT %18 Withholding (4/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-10.8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_4" model="account.tax.template">
+        <field name="sequence">2184</field>
+        <field name="description">VAT %18 Withholding (4/10)</field>
+        <field name="name">VAT %18 Withholding (4/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_4')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_601'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_5" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (5/10)</field>
+        <field name="name">VAT %18 Withholding (5/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_5" model="account.tax.template">
+        <field name="sequence">2185</field>
+        <field name="description">VAT %18 Withholding (5/10)</field>
+        <field name="name">VAT %18 Withholding (5/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_5')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_604'),ref('l10n_tr.vat_withholding_605'),
+                ref('l10n_tr.vat_withholding_614'),ref('l10n_tr.vat_withholding_616'),
+                ref('l10n_tr.vat_withholding_623'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_5" model="account.tax.template">
+        <field name="sequence">15</field>
+        <field name="description">VAT %18 Withholding (5/10)</field>
+        <field name="name">VAT %18 Withholding (5/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_5" model="account.tax.template">
+        <field name="sequence">2185</field>
+        <field name="description">VAT %18 Withholding (5/10)</field>
+        <field name="name">VAT %18 Withholding (5/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_5')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_604'),ref('l10n_tr.vat_withholding_605'),
+                ref('l10n_tr.vat_withholding_614'),ref('l10n_tr.vat_withholding_616'),
+                ref('l10n_tr.vat_withholding_623'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_7" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (7/10)</field>
+        <field name="name">VAT %18 Withholding (7/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-12.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_7" model="account.tax.template">
+        <field name="sequence">2187</field>
+        <field name="description">VAT %18 Withholding (7/10)</field>
+        <field name="name">VAT %18 Withholding (7/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_7')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_603'),ref('l10n_tr.vat_withholding_609'),
+                ref('l10n_tr.vat_withholding_615'),ref('l10n_tr.vat_withholding_617'),
+                ref('l10n_tr.vat_withholding_618'),ref('l10n_tr.vat_withholding_619'),
+                ref('l10n_tr.vat_withholding_620'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_7" model="account.tax.template">
+        <field name="sequence">17</field>
+        <field name="description">VAT %18 Withholding (7/10)</field>
+        <field name="name">VAT %18 Withholding (7/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-5.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_7" model="account.tax.template">
+        <field name="sequence">2187</field>
+        <field name="description">VAT %18 Withholding (7/10)</field>
+        <field name="name">VAT %18 Withholding (7/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_7')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_603'),ref('l10n_tr.vat_withholding_609'),
+                ref('l10n_tr.vat_withholding_615'),ref('l10n_tr.vat_withholding_617'),
+                ref('l10n_tr.vat_withholding_618'),ref('l10n_tr.vat_withholding_619'),
+                ref('l10n_tr.vat_withholding_620'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_9" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %18 Withholding (9/10)</field>
+        <field name="name">VAT %18 Withholding (9/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-16.2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_18_withholding_group_9" model="account.tax.template">
+        <field name="sequence">2189</field>
+        <field name="description">VAT %18 Withholding (9/10)</field>
+        <field name="name">VAT %18 Withholding (9/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_18')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_18_withholding_9')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_602'),ref('l10n_tr.vat_withholding_606'),
+                ref('l10n_tr.vat_withholding_607'),ref('l10n_tr.vat_withholding_608'),
+                ref('l10n_tr.vat_withholding_610'),ref('l10n_tr.vat_withholding_611'),
+                ref('l10n_tr.vat_withholding_612'),ref('l10n_tr.vat_withholding_613'),
+                ref('l10n_tr.vat_withholding_621'),ref('l10n_tr.vat_withholding_622'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_9" model="account.tax.template">
+        <field name="sequence">19</field>
+        <field name="description">VAT %18 Withholding (9/10)</field>
+        <field name="name">VAT %18 Withholding (9/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-1.8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_18_withholding_group_9" model="account.tax.template">
+        <field name="sequence">2189</field>
+        <field name="description">VAT %18 Withholding (9/10)</field>
+        <field name="name">VAT %18 Withholding (9/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_18_withholding_9')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_602'),ref('l10n_tr.vat_withholding_606'),
+                ref('l10n_tr.vat_withholding_607'),ref('l10n_tr.vat_withholding_608'),
+                ref('l10n_tr.vat_withholding_610'),ref('l10n_tr.vat_withholding_611'),
+                ref('l10n_tr.vat_withholding_612'),ref('l10n_tr.vat_withholding_613'),
+                ref('l10n_tr.vat_withholding_621'),ref('l10n_tr.vat_withholding_622'),
+            ])
+        ]"/>
+    </record>
+<!--    %8 VAT based-->
+    <record id="tr_kdv_sale_8_withholding_2" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (2/10)</field>
+        <field name="name">VAT %8 Withholding (2/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-1.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_2" model="account.tax.template">
+        <field name="sequence">2082</field>
+        <field name="description">VAT %8 Withholding (2/10)</field>
+        <field name="name">VAT %8 Withholding (2/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_2')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_624'),ref('l10n_tr.vat_withholding_626'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_2" model="account.tax.template">
+        <field name="sequence">12</field>
+        <field name="description">VAT %8 Withholding (2/10)</field>
+        <field name="name">VAT %8 Withholding (2/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-6.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_2" model="account.tax.template">
+        <field name="sequence">2082</field>
+        <field name="description">VAT %8 Withholding (2/10)</field>
+        <field name="name">VAT %8 Withholding (2/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_2')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_624'),ref('l10n_tr.vat_withholding_626'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_3" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (3/10)</field>
+        <field name="name">VAT %8 Withholding (3/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-2.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_3" model="account.tax.template">
+        <field name="sequence">2083</field>
+        <field name="description">VAT %8 Withholding (3/10)</field>
+        <field name="name">VAT %8 Withholding (3/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_3')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_625'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_3" model="account.tax.template">
+        <field name="sequence">13</field>
+        <field name="description">VAT %8 Withholding (3/10)</field>
+        <field name="name">VAT %8 Withholding (3/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-5.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_3" model="account.tax.template">
+        <field name="sequence">2083</field>
+        <field name="description">VAT %8 Withholding (3/10)</field>
+        <field name="name">VAT %8 Withholding (3/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_3')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_625'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_4" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (4/10)</field>
+        <field name="name">VAT %8 Withholding (4/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-3.2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_4" model="account.tax.template">
+        <field name="sequence">2084</field>
+        <field name="description">VAT %8 Withholding (4/10)</field>
+        <field name="name">VAT %8 Withholding (4/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_4')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_601'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_4" model="account.tax.template">
+        <field name="sequence">14</field>
+        <field name="description">VAT %8 Withholding (4/10)</field>
+        <field name="name">VAT %8 Withholding (4/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-4.8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_4" model="account.tax.template">
+        <field name="sequence">2084</field>
+        <field name="description">VAT %8 Withholding (4/10)</field>
+        <field name="name">VAT %8 Withholding (4/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_4')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_601'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_5" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (5/10)</field>
+        <field name="name">VAT %8 Withholding (5/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_5" model="account.tax.template">
+        <field name="sequence">2085</field>
+        <field name="description">VAT %8 Withholding (5/10)</field>
+        <field name="name">VAT %8 Withholding (5/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_5')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_604'),ref('l10n_tr.vat_withholding_605'),
+                ref('l10n_tr.vat_withholding_614'),ref('l10n_tr.vat_withholding_616'),
+                ref('l10n_tr.vat_withholding_623'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_5" model="account.tax.template">
+        <field name="sequence">15</field>
+        <field name="description">VAT %8 Withholding (5/10)</field>
+        <field name="name">VAT %8 Withholding (5/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-9</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_5" model="account.tax.template">
+        <field name="sequence">2085</field>
+        <field name="description">VAT %8 Withholding (5/10)</field>
+        <field name="name">VAT %8 Withholding (5/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_5')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_604'),ref('l10n_tr.vat_withholding_605'),
+                ref('l10n_tr.vat_withholding_614'),ref('l10n_tr.vat_withholding_616'),
+                ref('l10n_tr.vat_withholding_623'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_7" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (7/10)</field>
+        <field name="name">VAT %8 Withholding (7/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-5.6</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_7" model="account.tax.template">
+        <field name="sequence">2087</field>
+        <field name="description">VAT %8 Withholding (7/10)</field>
+        <field name="name">VAT %8 Withholding (7/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_7')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_603'),ref('l10n_tr.vat_withholding_609'),
+                ref('l10n_tr.vat_withholding_615'),ref('l10n_tr.vat_withholding_617'),
+                ref('l10n_tr.vat_withholding_618'),ref('l10n_tr.vat_withholding_619'),
+                ref('l10n_tr.vat_withholding_620'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_7" model="account.tax.template">
+        <field name="sequence">17</field>
+        <field name="description">VAT %8 Withholding (7/10)</field>
+        <field name="name">VAT %8 Withholding (7/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-2.4</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_7" model="account.tax.template">
+        <field name="sequence">2087</field>
+        <field name="description">VAT %8 Withholding (7/10)</field>
+        <field name="name">VAT %8 Withholding (7/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_7')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_603'),ref('l10n_tr.vat_withholding_609'),
+                ref('l10n_tr.vat_withholding_615'),ref('l10n_tr.vat_withholding_617'),
+                ref('l10n_tr.vat_withholding_618'),ref('l10n_tr.vat_withholding_619'),
+                ref('l10n_tr.vat_withholding_620'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_9" model="account.tax.template">
+        <field name="sequence">1601</field>
+        <field name="description">VAT %8 Withholding (9/10)</field>
+        <field name="name">VAT %8 Withholding (9/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-7.2</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr391'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr191'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_sale_8_withholding_group_9" model="account.tax.template">
+        <field name="sequence">2089</field>
+        <field name="description">VAT %8 Withholding (9/10)</field>
+        <field name="name">VAT %8 Withholding (9/10) (Sales)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_sale_8')),
+                Command.link(ref('l10n_tr.tr_kdv_sale_8_withholding_9')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_602'),ref('l10n_tr.vat_withholding_606'),
+                ref('l10n_tr.vat_withholding_607'),ref('l10n_tr.vat_withholding_608'),
+                ref('l10n_tr.vat_withholding_610'),ref('l10n_tr.vat_withholding_611'),
+                ref('l10n_tr.vat_withholding_612'),ref('l10n_tr.vat_withholding_613'),
+                ref('l10n_tr.vat_withholding_621'),ref('l10n_tr.vat_withholding_622'),
+            ])
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_9" model="account.tax.template">
+        <field name="sequence">19</field>
+        <field name="description">VAT %8 Withholding (9/10)</field>
+        <field name="name">VAT %8 Withholding (9/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount">-0.8</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">none</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="tax_group_id" ref="tax_group_vat_partial_withdrawal"/>
+        <field name="invoice_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[
+             Command.clear(),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'base',
+             }),
+             Command.create({
+                 'factor_percent': 100,
+                 'repartition_type': 'tax',
+                 'account_id': ref('tr360'),
+             }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_purchase_8_withholding_group_9" model="account.tax.template">
+        <field name="sequence">2089</field>
+        <field name="description">VAT %8 Withholding (9/10)</field>
+        <field name="name">VAT %8 Withholding (9/10) (Purchase)</field>
+        <field name="price_include" eval="False"/>
+        <field name="amount_type">group</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10n_tr_chart_template"/>
+        <field name="children_tax_ids" eval="[
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8')),
+                Command.link(ref('l10n_tr.tr_kdv_purchase_8_withholding_9')),
+        ]"/>
+        <field name="l10n_tr_exception_code_ids" eval="[
+            Command.set([
+                ref('l10n_tr.vat_withholding_602'),ref('l10n_tr.vat_withholding_606'),
+                ref('l10n_tr.vat_withholding_607'),ref('l10n_tr.vat_withholding_608'),
+                ref('l10n_tr.vat_withholding_610'),ref('l10n_tr.vat_withholding_611'),
+                ref('l10n_tr.vat_withholding_612'),ref('l10n_tr.vat_withholding_613'),
+                ref('l10n_tr.vat_withholding_621'),ref('l10n_tr.vat_withholding_622'),
+            ])
+        ]"/>
+    </record>
+
 </odoo>

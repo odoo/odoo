@@ -16,6 +16,10 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
     'author': 'Odoo',
     'depends': [
         'l10n_multilang',
+        # there is no use of base_address_extended features here but setting up view_address_id of th company should be
+        # different if this module is installed.
+        # Hence, we explicitly depend on it, otherwise we don't know if it is installed or not
+        'base_address_extended',
     ],
     'data': [
         # Chart of Accounts
@@ -25,14 +29,33 @@ Bu modül kurulduktan sonra, Muhasebe yapılandırma sihirbazı çalışır
 
         # Taxes
         "data/account_tax_group_data.xml",
+        "data/l10n_tr.exception_reason.csv",
         "data/account_tax_template_data.xml",
 
-        # post processing
+        # Post processing
         "data/account_chart_post_data.xml",
         "data/account_chart_template_try_loading.xml",
 
+        # Data
+        "data/l10n_tr.tax_office.csv",
+        "data/res.city.csv",
+
+        # Views
+        "views/tax_office_views.xml",
+        "views/res_partner_views.xml",
+        "views/ir_qweb_widget_templates.xml",
+        'views/account_tax_views.xml',
+        'views/account_move_line_views.xml',
+
+        "data/res_country_data.xml",
+
+        # Security
+        "security/ir.model.access.csv",
+
     ],
     'demo': [
+        'demo/res_partner_demo.xml',
+        'demo/product_demo.xml',
         'demo/demo_company.xml',
     ],
     'post_init_hook': 'load_translations',
