@@ -24,7 +24,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -353,7 +353,7 @@ class ProjectCustomerPortal(CustomerPortal):
                                          key=lambda item: item[1]["sequence"]))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         searchbar_inputs = self._task_get_searchbar_inputs()
