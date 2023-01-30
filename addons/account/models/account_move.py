@@ -2102,10 +2102,10 @@ class AccountMove(models.Model):
                     container=invoice_container,
                 ))
                 stack.enter_context(self._sync_invoice(invoice_container))
-                line_container = {'records': self.line_ids}
+                line_container = {'records': self.line_ids.with_context(skip_invoice_sync=True)}
                 with self.line_ids._sync_invoice(line_container):
                     yield
-                    line_container['records'] = self.line_ids
+                    line_container['records'] = self.line_ids.with_context(skip_invoice_sync=True)
                 tax_container['records'] = container['records'].filtered(tax_filter)
                 invoice_container['records'] = container['records'].filtered(invoice_filter)
                 misc_container['records'] = container['records'].filtered(misc_filter)
