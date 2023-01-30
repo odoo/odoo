@@ -228,6 +228,10 @@ class PosOrder(models.Model):
         price_unit = product.with_company(self.company_id)._compute_average_price(0, quantity, moves)
         return price_unit
 
+    def _prepare_order_line(self, order_line):
+        # This method is used in pos_restaurant for orders synchronization between different POSes
+        return order_line
+
     name = fields.Char(string='Order Ref', required=True, readonly=True, copy=False, default='/')
     date_order = fields.Datetime(string='Date', readonly=True, index=True, default=fields.Datetime.now)
     user_id = fields.Many2one(
