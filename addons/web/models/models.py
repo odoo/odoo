@@ -771,7 +771,7 @@ class Base(models.AbstractModel):
                 definition_record_ids = self.browse(query).with_context(prefetch_fields=False).mapped(field.definition_record)
 
             model_name_definition = self._fields[field.definition_record].comodel_name
-            definition_records = self.env[model_name_definition].browse(definition_record_ids)
+            definition_records = self.env[model_name_definition].browse(definition_record_ids).sudo()
             res[field.name] = [
                 {"id": rec.id, "display_name": rec.display_name, "definitions": rec[field.definition_record_field]}
                 for rec in definition_records
