@@ -78,7 +78,7 @@ class GoogleService(models.AbstractModel):
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
+        base_url = self._context.get('base_url') or self.env.user.get_base_url()
         client_id = get_param('google_%s_client_id' % (service,), default=False)
 
         encoded_params = urls.url_encode({
