@@ -18,6 +18,8 @@ _logger = logging.getLogger(__name__)
 ETA_DOMAINS = {
     'preproduction': 'https://api.preprod.invoicing.eta.gov.eg',
     'production': 'https://api.invoicing.eta.gov.eg',
+    'invoice.preproduction': 'https://preprod.invoicing.eta.gov.eg/',
+    'invoice.production': 'https://invoicing.eta.gov.eg',
     'token.preproduction': 'https://id.preprod.eta.gov.eg',
     'token.production': 'https://id.eta.gov.eg',
 }
@@ -40,6 +42,10 @@ class L10nEgHTTPAdapter(requests.adapters.HTTPAdapter):
 
 class AccountEdiFormat(models.Model):
     _inherit = 'account.edi.format'
+
+    @api.model
+    def _l10n_eg_get_eta_qr_domain(self, production_enviroment=False):
+        return production_enviroment and ETA_DOMAINS['invoice.production'] or ETA_DOMAINS['invoice.preproduction']
 
     @api.model
     def _l10n_eg_get_eta_api_domain(self, production_enviroment=False):
