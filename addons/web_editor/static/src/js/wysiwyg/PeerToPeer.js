@@ -429,6 +429,8 @@ export class PeerToPeer {
                         reason: 'ice connection disconnected',
                     });
                     break;
+                default:
+                    this._exponentialBackoffDepth = 0;
             }
         };
         // This event does not work in FF. Let's try with oniceconnectionstatechange if it is sufficient.
@@ -446,6 +448,8 @@ export class PeerToPeer {
                         reason: 'connection disconnected',
                     });
                     break;
+                default:
+                    this._exponentialBackoffDepth = 0;
             }
         };
         pc.onicecandidateerror = async error => {
@@ -505,7 +509,7 @@ export class PeerToPeer {
         if (!dataChannel || dataChannel.readyState !== 'open') {
             if (clientInfo && !clientInfo.zombieTimeout) {
                 if (debugShowLog) console.warn(
-                    `Impossible to communicate with client ${clientId}. The connection be killed in 10 seconds if the datachannel state has not changed.`,
+                    `Impossible to communicate with client ${clientId}. The connection will be killed in 10 seconds if the datachannel state has not changed.`,
                 );
                 this._killPotentialZombie(clientId);
             }
@@ -552,11 +556,12 @@ export class PeerToPeer {
      * negotiationneeded -> offer -> answer -> ...
      *
      * @private
-     * @param {Object} [param1]
-     * @param {number} [param1.delay] in ms
-     * @param {string} [param1.reason]
+     * @param {number} clientId
+     * @param {Object} [param2]
+     * @param {number} [param2.delay] in ms (defaults to 1000)
+     * @param {string} [param2.reason]
      */
-    _recoverConnection(clientId, { delay = 0, reason = '' } = {}) {
+    _recoverConnection(clientId, { delay = 1000, reason = '' } = {}) {
         if (this._stopped) {
             this.removeClient(clientId);
             return;
@@ -564,7 +569,18 @@ export class PeerToPeer {
         const clientInfos = this.clientsInfos[clientId];
         if (!clientInfos || clientInfos.fallbackTimeout) return;
 
+        this._exponentialBackoffDepth = this._exponentialBackoffDepth || 0;
+        const computedDelay = delay * (2 ** this._exponentialBackoffDepth);
+        if (computedDelay >= 1000*60*60) {
+            // We've reached a point where we have to wait a whole hour to
+            // retry. It's time to stop trying.
+            if (clientInfos.fallbackTimeout) {
+                clientInfos.fallbackTimeout.clearTimeout();
+            }
+            return;
+        }
         clientInfos.fallbackTimeout = setTimeout(async () => {
+            this._exponentialBackoffDepth++;
             clientInfos.fallbackTimeout = undefined;
             const pc = clientInfos.peerConnection;
             if (!pc || pc.iceConnectionState === 'connected') {
@@ -581,7 +597,7 @@ export class PeerToPeer {
                 );
             this.removeClient(clientId);
             await this._createClient(clientId);
-        }, delay);
+        }, computedDelay);
     }
     // todo: do we try to salvage the connection after killing the zombie ?
     // Maybe the salvage should be done when the connection is dropped.
