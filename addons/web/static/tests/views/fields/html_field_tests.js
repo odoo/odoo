@@ -93,6 +93,28 @@ QUnit.module("Fields", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test(
+        "html field displays an empty string for the value false in list view",
+        async (assert) => {
+            serverData.models.partner.records[0].txt = false;
+
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <tree editable="top">
+                        <field name="txt"/>
+                    </tree>`,
+            });
+
+            assert.strictEqual(target.querySelector(".o_data_row [name='txt']").textContent, "");
+
+            await click(target.querySelector(".o_data_row [name='txt']"));
+            assert.strictEqual(target.querySelector(".o_data_row [name='txt'] textarea").value, "");
+        }
+    );
+
     QUnit.test("html fields are correctly rendered in kanban view", async (assert) => {
         await makeView({
             type: "kanban",
