@@ -482,27 +482,24 @@ export class CalendarModel extends Model {
         const { fields, fieldMapping, isTimeHidden, scale } = this.meta;
 
         const startType = fields[fieldMapping.date_start].type;
-        let start =
-            startType === "date"
-                ? deserializeDate(rawRecord[fieldMapping.date_start])
-                : deserializeDateTime(rawRecord[fieldMapping.date_start]);
+        const isAllDay =
+            startType === "date" ||
+            (fieldMapping.all_day && rawRecord[fieldMapping.all_day]) ||
+            false;
+        let start = isAllDay
+            ? deserializeDate(rawRecord[fieldMapping.date_start])
+            : deserializeDateTime(rawRecord[fieldMapping.date_start]);
 
         let end = start;
         let endType = startType;
         if (fieldMapping.date_stop) {
             endType = fields[fieldMapping.date_stop].type;
-            end =
-                endType === "date"
-                    ? deserializeDate(rawRecord[fieldMapping.date_stop])
-                    : deserializeDateTime(rawRecord[fieldMapping.date_stop]);
+            end = isAllDay
+                ? deserializeDate(rawRecord[fieldMapping.date_stop])
+                : deserializeDateTime(rawRecord[fieldMapping.date_stop]);
         }
 
         const duration = rawRecord[fieldMapping.date_delay] || 1;
-
-        const isAllDay =
-            startType === "date" ||
-            (fieldMapping.all_day && rawRecord[fieldMapping.all_day]) ||
-            false;
 
         if (isAllDay) {
             start = start.startOf("day");
