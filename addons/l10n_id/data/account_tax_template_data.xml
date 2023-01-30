@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="default_tax_group" model="account.tax.group">
+        <field name="country_id" ref="base.id"/>
+        <field name="name">Taxes</field>
+    </record>
     <record id="ppn_tag" model="account.account.tag">
         <field name="name">PPN - 08</field>
         <field name="applicability">taxes</field>
