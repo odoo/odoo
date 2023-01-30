@@ -1328,7 +1328,7 @@ class AccountMoveLine(models.Model):
 
     @contextmanager
     def _sync_invoice(self, container):
-        if container['records'].env.context.get('skip_sync_invoice'):
+        if container['records'].env.context.get('skip_invoice_line_sync'):
             yield
             return  # avoid infinite recursion
 
@@ -1341,7 +1341,7 @@ class AccountMoveLine(models.Model):
                     'price_subtotal': line.currency_id.round(line.price_subtotal),
                     'move_type': line.move_id.move_type,
                 } for line in container['records'].with_context(
-                    skip_sync_invoice=True,
+                    skip_invoice_line_sync=True,
                 ).filtered(lambda l: l.move_id.is_invoice(True))
             }
 
@@ -1567,7 +1567,8 @@ class AccountMoveLine(models.Model):
             SELECT account.root_id
               FROM account_account account,
                    LATERAL ({query_str}) line
-        """, query_param)
+             WHERE account.company_id IN %s
+        """, query_param + [tuple(self.env.companies.ids)])
         return {
             root.id: {'id': root.id, 'display_name': root.display_name}
             for root in self.env['account.root'].browse(id for [id] in self.env.cr.fetchall())

@@ -2260,17 +2260,6 @@ class AccountMove(models.Model):
 
         return res
 
-    @api.ondelete(at_uninstall=False)
-    def _unlink_forbid_parts_of_chain(self):
-        """ Moves with a sequence number can only be deleted if they are the last element of a chain of sequence.
-        If they are not, deleting them would create a gap. If the user really wants to do this, he still can
-        explicitly empty the 'name' field of the move; but we discourage that practice.
-        """
-        if not self._context.get('force_delete') and not self.filtered(lambda move: move.name != '/')._is_end_of_seq_chain():
-            raise UserError(_(
-                "You cannot delete this entry, as it has already consumed a sequence number and is not the last one in the chain. You should probably revert it instead."
-            ))
-
     def unlink(self):
         self = self.with_context(skip_invoice_sync=True, dynamic_unlink=True)  # no need to sync to delete everything
         self.line_ids.unlink()
@@ -3359,6 +3348,10 @@ class AccountMove(models.Model):
         )._invoice_paid_hook()
 
         return to_post
+
+    def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, prefer_purchase_line=False, timeout=10):
+        # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
+        self.ensure_one()
 
     # -------------------------------------------------------------------------
     # PUBLIC ACTIONS
