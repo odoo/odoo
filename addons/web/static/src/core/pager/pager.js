@@ -64,6 +64,10 @@ export class Pager extends Component {
     async navigate(direction) {
         let minimum = this.props.offset + this.props.limit * direction;
         let total = this.props.total;
+        if (this.props.updateTotal && minimum < 0) {
+            // we must know the real total to be able to loop by doing "previous"
+            total = await this.props.updateTotal();
+        }
         if (minimum >= total) {
             if (!this.props.updateTotal) {
                 // only loop forward if we know the real total, otherwise let the minimum

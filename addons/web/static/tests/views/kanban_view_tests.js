@@ -1365,6 +1365,47 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["search_count"]);
     });
 
+    QUnit.test(
+        "pager, ungrouped, deleting all records from last page should move to previous page",
+        async (assert) => {
+            patchDialog((_cls, props) => {
+                assert.step("open-dialog");
+                props.confirm();
+            });
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div><a role="menuitem" type="delete" class="dropdown-item">Delete</a></div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+
+            assert.deepEqual(getPagerValue(target), [1, 3]);
+            assert.strictEqual(getPagerLimit(target), 4);
+
+            // move to next page
+            await pagerNext(target);
+
+            assert.deepEqual(getPagerValue(target), [4, 4]);
+
+            // delete a record
+            await click(target, ".o_kanban_record a");
+
+            assert.verifySteps(["open-dialog"]);
+            assert.deepEqual(getPagerValue(target), [1, 3]);
+            assert.strictEqual(getPagerLimit(target), 3);
+        }
+    );
+
     QUnit.test("pager, update calls onUpdatedPager before the render", async (assert) => {
         assert.expect(8);
 

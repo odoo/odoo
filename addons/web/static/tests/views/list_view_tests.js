@@ -5299,6 +5299,37 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["web_search_read"]);
     });
 
+    QUnit.test("pager, ungrouped, with count limit reached, click previous", async (assert) => {
+        patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+        serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
+
+        let expectedCountLimit = 4;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_search_read") {
+                    assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        expectedCountLimit = undefined;
+        await click(target.querySelector(".o_pager_previous"));
+        assert.containsOnce(target, ".o_data_row");
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "5-5");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "5");
+        assert.verifySteps(["search_count", "web_search_read"]);
+    });
+
     QUnit.test("pager, ungrouped, with count limit reached, edit pager", async (assert) => {
         patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
         serverData.models.foo.records.push({ id: 5, bar: true, foo: "xxx" });
