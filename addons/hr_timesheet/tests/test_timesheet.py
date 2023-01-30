@@ -555,3 +555,12 @@ class TestTimesheet(TestCommonTimesheet):
         self.project_customer.analytic_account_id.company_id = False
         timesheet = self.env['account.analytic.line'].with_user(self.user_employee).create({'unit_amount': 1.0, 'project_id': self.project_customer.id})
         self.assertFalse(timesheet.product_uom_id, "The product_uom_id of the timesheet should be set to False for its analytic account has no company_id")
+
+    def test_create_timesheet_with_default_employee_in_context(self):
+        timesheet = self.env['account.analytic.line'].with_context(default_employee_id=self.empl_employee.id).create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'Timesheet with default employee in context',
+            'unit_amount': 3,
+        })
+        self.assertEqual(timesheet.employee_id, self.empl_employee)
