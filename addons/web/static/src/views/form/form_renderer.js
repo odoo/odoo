@@ -116,6 +116,7 @@ FormRenderer.props = {
     disableViewButtons: { type: Function, optional: true },
     onNotebookPageChange: { type: Function, optional: true },
     activeNotebookPages: { type: Object, optional: true },
+    setFieldAsDirty: { type: Function, optional: true },
 };
 FormRenderer.defaultProps = {
     activeNotebookPages: {},

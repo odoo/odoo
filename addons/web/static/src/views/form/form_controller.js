@@ -103,6 +103,7 @@ export class FormController extends Component {
         this.ui = useService("ui");
         this.state = useState({
             isDisabled: false,
+            fieldIsDirty: false,
         });
         useBus(this.ui.bus, "resize", this.render);
 
@@ -395,6 +396,10 @@ export class FormController extends Component {
 
     enableButtons() {
         this.state.isDisabled = false;
+    }
+
+    setFieldAsDirty(dirty) {
+        this.state.fieldIsDirty = dirty;
     }
 
     async beforeExecuteActionButton(clickParams) {
