@@ -5,7 +5,7 @@
             <div t-if="!activityMenuView.isAddingNote" class="o_note_show d-grid" t-on-click="activityMenuView.onClickAddNote">
                 <a role="button" class="btn text-center">Add new note</a>
             </div>
-            <div t-if="activityMenuView.isAddingNote" class="o_note o_ActivityMenuView_activityGroup">
+            <div t-if="activityMenuView.isAddingNote" class="o_note o_ActivityMenuView_activityGroup bg-view">
                 <div class="o_ActivityMenuView_activityGroupIconContainer">
                     <img src="/note/static/description/icon.svg" alt="Channel"/>
                 </div>
@@ -19,9 +19,9 @@
                         />
                     </div>
                     <div class="o_note_input_box">
-                        <p><input class="o_note_input" type="text" placeholder="Remember..." t-on-keydown="activityMenuView.onKeydownNoteInput" t-ref="noteInput"/></p>
-                        <span class="ml8 mr4">
-                            <a class="o_note_save" t-on-click="activityMenuView.onClickSaveNote">SAVE</a>
+                        <p><input class="o_note_input form-control ps-0 shadow-none" type="text" placeholder="Remember..." t-on-keydown="activityMenuView.onKeydownNoteInput" t-ref="noteInput"/></p>
+                        <span class="d-flex align-items-end ml8 mr4">
+                            <a class="o_note_save btn-sm btn-link" t-on-click="activityMenuView.onClickSaveNote">SAVE</a>
                         </span>
                     </div>
                 </div>
