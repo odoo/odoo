@@ -1,25 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_crm
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2023
-# Martin Trigaux, 2023
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2022
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_crm
@@ -31,7 +30,7 @@ msgstr "# Leads"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_crm_lead__registration_count
 msgid "# Registrations"
-msgstr "# Registraties"
+msgstr "# Inschrijvingen"
 
 #. module: event_crm
 #: code:addons/event_crm/models/event_registration.py:0
@@ -104,7 +103,7 @@ msgstr "Teller voor de registraties die aan deze lead zijn gekoppeld."
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__lead_creation_basis
 msgid "Create"
-msgstr "Maken"
+msgstr "Aanmaken"
 
 #. module: event_crm
 #: model_terms:ir.actions.act_window,help:event_crm.event_lead_rule_action
@@ -119,12 +118,12 @@ msgstr "Aangemaakte leads"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_uid
 msgid "Created by"
-msgstr "Aangemaakt door"
+msgstr "Gemaakt door"
 
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__create_date
 msgid "Created on"
-msgstr "Aangemaakt op"
+msgstr "Gemaakt op"
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_search
@@ -171,7 +170,7 @@ msgstr "Regels voor evenement leads."
 #. module: event_crm
 #: model:ir.model,name:event_crm.model_event_registration
 msgid "Event Registration"
-msgstr "Evenementregistratie"
+msgstr "Evenementinschrijving"
 
 #. module: event_crm
 #: model:ir.actions.act_window,name:event_crm.event_registration_action_from_lead
@@ -195,23 +194,13 @@ msgstr "Filter de bezoekers die al dan niet leads genereren."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_type_ids
-msgid ""
-"Filter the attendees to include those of this specific event category. If "
-"not set, no event category restriction will be applied."
-msgstr ""
-"Filter de bezoekers om die in deze specifieke evenementcategorie op te "
-"nemen. Indien het niet is ingesteld, wordt er geen beperking van de "
-"evenementcategorie toegepast."
+msgid "Filter the attendees to include those of this specific event category. If not set, no event category restriction will be applied."
+msgstr "Filter de bezoekers om die in deze specifieke evenementcategorie op te nemen. Indien het niet is ingesteld, wordt er geen beperking van de evenementcategorie toegepast."
 
 #. module: event_crm
 #: model:ir.model.fields,help:event_crm.field_event_lead_rule__event_id
-msgid ""
-"Filter the attendees to include those of this specific event. If not set, no"
-" event restriction will be applied."
-msgstr ""
-"Filter de bezoekers om die in deze specifieke evenement op te nemen. Indien "
-"het niet is ingesteld, wordt er geen beperking van de evenementcategorie "
-"toegepast."
+msgid "Filter the attendees to include those of this specific event. If not set, no event restriction will be applied."
+msgstr "Filter de bezoekers om die in deze specifieke evenement op te nemen. Indien het niet is ingesteld, wordt er geen beperking van de evenementcategorie toegepast."
 
 #. module: event_crm
 #: model_terms:ir.ui.view,arch_db:event_crm.event_lead_rule_view_form
@@ -241,7 +230,7 @@ msgstr "Laatst bijgewerkt door"
 #. module: event_crm
 #: model:ir.model.fields,field_description:event_crm.field_event_lead_rule__write_date
 msgid "Last Updated on"
-msgstr "Laatst bijgewerkt op"
+msgstr "Laatst geupdate op"
 
 #. module: event_crm
 #: model:ir.model.fields.selection,name:event_crm.selection__event_lead_rule__lead_type__lead
@@ -325,7 +314,6 @@ msgid "Opportunity"
 msgstr "Verkoopkans"
 
 #. module: event_crm
-#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Participants"
@@ -435,7 +423,6 @@ msgid "Trigger Type"
 msgstr "Soort trigger"
 
 #. module: event_crm
-#: code:addons/event_crm/models/event_registration.py:0
 #: code:addons/event_crm/models/event_registration.py:0
 #, python-format
 msgid "Updated registrations"

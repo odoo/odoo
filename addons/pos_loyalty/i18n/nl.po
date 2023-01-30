@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_loyalty
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:53+0000\n"
-"PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pos_loyalty
@@ -29,7 +29,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Technisch veld dat wordt gebruikt om meerdere beloningsregels van dezelfde beloning aan elkaar te koppelen.\n"
+"        Technisch veld dat wordt gebruikt om meerdere beloningslijnen van dezelfde beloning aan elkaar te koppelen.\n"
 "    "
 
 #. module: pos_loyalty
@@ -48,12 +48,8 @@ msgstr "Er wordt al een betere globale korting toegepast."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
-msgid ""
-"A technical field used as an alternative to the promo code. This is "
-"automatically generated when the promo code is changed."
-msgstr ""
-"Een technisch veld dat wordt gebruikt als alternatief voor de promotiecode. "
-"Deze wordt automatisch gegenereerd wanneer de promotiecode wordt gewijzigd."
+msgid "A technical field used as an alternative to the promo code. This is automatically generated when the promo code is changed."
+msgstr "Een technisch veld dat wordt gebruikt als alternatief voor de promotiecode. Deze wordt automatisch gegenereerd wanneer de promotiecode wordt gewijzigd."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -188,7 +184,7 @@ msgstr "Voer de cadeauboncode in"
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
 #, python-format
 msgid "Error"
-msgstr "Foutmelding"
+msgstr "Fout"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -238,18 +234,14 @@ msgstr "Hoeveel punten deze beloning kost op de kortingsbon."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr ""
-"Ongeldige beloning voor cadeaubonprogramma. Gebruik 1 valuta per punt "
-"korting."
+msgstr "Ongeldige beloning voor cadeaubonprogramma. Gebruik 1 valuta per punt korting."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr ""
-"Ongeldige programmaregel voor cadeaubonnen. Gebruik 1 punt per uitgegeven "
-"valuta."
+msgstr "Ongeldige programmaregel voor cadeaubonnen. Gebruik 1 punt per uitgegeven valuta."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -412,12 +404,8 @@ msgstr "Terugbetaling met eWallet"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/TicketScreen.js:0
 #, python-format
-msgid ""
-"Refunding a top up or reward product for an eWallet or gift card program is "
-"not allowed."
-msgstr ""
-"Het terugbetalen van een opwaardeer- of beloningsproduct voor een eWallet- "
-"of cadeaubonprogramma is niet toegestaan."
+msgid "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
+msgstr "Het terugbetalen van een opwaardeer- of beloningsproduct voor een eWallet- of cadeaubonprogramma is niet toegestaan."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -460,12 +448,8 @@ msgstr "Selecteer programma"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
-msgid ""
-"Some coupons are invalid. The applied coupons have been updated. Please "
-"check the order."
-msgstr ""
-"Sommige kortingsbonnen zijn ongeldig. De toegepaste kortingsbonnen zijn "
-"bijgewerkt. Controleer de bestelling."
+msgid "Some coupons are invalid. The applied coupons have been updated. Please check the order."
+msgstr "Sommige kortingsbonnen zijn ongeldig. De toegepaste kortingsbonnen zijn bijgewerkt. Controleer de bestelling."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -511,12 +495,8 @@ msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
-msgid ""
-"The report action to be executed when creating a coupon/gift card/loyalty "
-"card in the PoS."
-msgstr ""
-"De meldactie die moet worden uitgevoerd bij het aanmaken van een "
-"kortingsbon/cadeaubon/klantenkaart in de kassa."
+msgid "The report action to be executed when creating a coupon/gift card/loyalty card in the PoS."
+msgstr "De meldactie die moet worden uitgevoerd bij het aanmaken van een kortingsbon/cadeaubon/klantenkaart in de kassa."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -542,39 +522,28 @@ msgstr "Er zijn niet genoeg punten voor de kortingsbon: %s."
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
-"Er zijn niet genoeg punten op de kortingsbon om deze beloning te claimen."
+msgstr "Er zijn niet genoeg punten op de kortingsbon om deze beloning te claimen."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
-"Er zijn niet genoeg producten in het winkelmandje om deze beloning te "
-"claimen."
+msgstr "Er zijn niet genoeg producten in het winkelmandje om deze beloning te claimen."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"There is no email template on the gift card program and your pos is set to "
-"print them."
-msgstr ""
-"Er is geen e-mailsjabloon op het cadeaubonprogramma en je kassa is ingesteld"
-" om ze af te drukken."
+msgid "There is no email template on the gift card program and your pos is set to print them."
+msgstr "Er is geen e-mailsjabloon op het cadeaubonprogramma en je kassa is ingesteld om ze af te drukken."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"There is no print report on the gift card program and your pos is set to "
-"print them."
-msgstr ""
-"Er is geen afdrukrapport over het cadeaubonprogramma en je kassa is "
-"ingesteld om ze af te drukken."
+msgid "There is no print report on the gift card program and your pos is set to print them."
+msgstr "Er is geen afdrukrapport over het cadeaubonprogramma en je kassa is ingesteld om ze af te drukken."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -606,34 +575,25 @@ msgstr "Deze cadeaubon is al verkocht"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
-msgid ""
-"This gift card is not linked to any order. Do you really want to apply its "
-"reward?"
-msgstr ""
-"Deze cadeaubon is niet gekoppeld aan een bestelling. Wil je de beloning echt"
-" toepassen?"
+msgid "This gift card is not linked to any order. Do you really want to apply its reward?"
+msgstr "Deze cadeaubon is niet gekoppeld aan een bestelling. Wil je de beloning echt toepassen?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "This is used to print the generated gift cards from PoS."
-msgstr ""
-"Dit wordt gebruikt om de gegenereerde cadeaubonnen van de kassa af te "
-"drukken."
+msgstr "Dit wordt gebruikt om de gegenereerde cadeaubonnen van de kassa af te drukken."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"To continue, make the following reward products available in Point of Sale."
-msgstr ""
-"Maak de volgende beloningsproducten beschikbaar in Point of Sale om door te "
-"gaan."
+msgid "To continue, make the following reward products available in Point of Sale."
+msgstr "Maak de volgende beloningsproducten beschikbaar in Point of Sale om door te gaan."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -706,9 +666,7 @@ msgstr "Je kunt een cadeaubon die al is verkocht niet verkopen."
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr ""
-"Je kunt geen negatieve hoeveelheid of prijs instellen op cadeaubon of "
-"e-wallet."
+msgstr "Je kunt geen negatieve hoeveelheid of prijs instellen op cadeaubon of e-wallet."
 
 #. module: pos_loyalty
 #. odoo-python

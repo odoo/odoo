@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* delivery
-# 
+#
 # Translators:
+# Cécile Collart <cco@odoo.com>, 2022
+# Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# Cécile Collart <cco@odoo.com>, 2023
-# Martin Trigaux, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:54+0000\n"
-"PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: delivery
@@ -155,14 +155,8 @@ msgstr ""
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__carrier_description
-msgid ""
-"A description of the delivery method that you want to communicate to your "
-"customers on the Sales Order and sales confirmation email.E.g. instructions "
-"for customers to follow."
-msgstr ""
-"Une description du mode de livraison que vous souhaitez communiquer à vos "
-"clients sur le bon de commande et l'email de confirmation de vente. Par "
-"exemple : instructions à suivre par les clients."
+msgid "A description of the delivery method that you want to communicate to your customers on the Sales Order and sales confirmation email.E.g. instructions for customers to follow."
+msgstr "Une description du mode de livraison que vous souhaitez communiquer à vos clients sur le bon de commande et l'email de confirmation de vente. Par exemple : instructions à suivre par les clients."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
@@ -172,7 +166,7 @@ msgstr "Action à la validation des bons de livraison"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
 msgid "Active"
-msgstr "Actif"
+msgstr "Active"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -199,12 +193,8 @@ msgstr "Montant"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__amount
-msgid ""
-"Amount of the order to benefit from a free shipping, expressed in the "
-"company currency"
-msgstr ""
-"Montant de la commande pour bénéficier de la livraison gratuite, exprimé "
-"dans la devise de la société"
+msgid "Amount of the order to benefit from a free shipping, expressed in the company currency"
+msgstr "Montant de la commande pour bénéficier de la livraison gratuite, exprimé dans la devise de la société"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -239,12 +229,8 @@ msgstr "Annuler"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_picking_withcarrier_out_form
-msgid ""
-"Cancelling a delivery may not be undoable. Are you sure you want to "
-"continue?"
-msgstr ""
-"L'annulation d'une livraison peut être irréversible. Etes-vous sur de "
-"vouloir continuer ?"
+msgid "Cancelling a delivery may not be undoable. Are you sure you want to continue?"
+msgstr "L'annulation d'une livraison peut être irréversible. Etes-vous sur de vouloir continuer ?"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__carrier_id
@@ -467,7 +453,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__display_name
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Afficher Nom"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
@@ -480,10 +466,7 @@ msgid ""
 "Each carrier (e.g. UPS) can have several delivery methods (e.g.\n"
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
-msgstr ""
-"Chaque société de transport (par exemple UPS ) peut avoir plusieurs méthodes"
-" de livraison (par exemple UPS Express , UPS Standard ) avec un ensemble de "
-"règles de tarification pour chaque méthode."
+msgstr "Chaque société de transport (par exemple UPS ) peut avoir plusieurs méthodes de livraison (par exemple UPS Express , UPS Standard ) avec un ensemble de règles de tarification pour chaque méthode."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -496,8 +479,7 @@ msgstr "Environnement"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
-"Erreur: cette méthode de livraison n'est pas disponible pour cette adresse."
+msgstr "Erreur: cette méthode de livraison n'est pas disponible pour cette adresse."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__invoice_policy
@@ -516,18 +498,12 @@ msgstr "Coût estimé"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
-msgstr ""
-"Complétez ce champ si vous envisagez de facturer l'expédition en fonction du"
-" ramassage."
+msgstr "Complétez ce champ si vous envisagez de facturer l'expédition en fonction du ramassage."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid ""
-"Filling this form allows you to filter delivery carriers according to the "
-"delivery address of your customer."
-msgstr ""
-"Lorsque vous remplissez ce formulaire, vous pouvez filtrer les transporteurs"
-" vers l'adresse de livraison de votre client."
+msgid "Filling this form allows you to filter delivery carriers according to the delivery address of your customer."
+msgstr "Lorsque vous remplissez ce formulaire, vous pouvez filtrer les transporteurs vers l'adresse de livraison de votre client."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -591,12 +567,8 @@ msgstr "ID"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
-msgid ""
-"If the order total amount (shipping excluded) is above or equal to this "
-"value, the customer benefits from a free shipping"
-msgstr ""
-"Si le montant total de la commande (hors frais de livraison) est supérieur "
-"ou égal à cette valeur, le client bénéficiera d'une livraison gratuite"
+msgid "If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping"
+msgstr "Si le montant total de la commande (hors frais de livraison) est supérieur ou égal à cette valeur, le client bénéficiera d'une livraison gratuite"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -703,9 +675,7 @@ msgstr "Aucune intégration avec un transporteur"
 #: code:addons/delivery/models/delivery_grid.py:0
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
-msgstr ""
-"Aucune règle de prix ne correspond à cette commande ; impossible de calculer"
-" les frais de livraison."
+msgstr "Aucune règle de prix ne correspond à cette commande ; impossible de calculer les frais de livraison."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -756,7 +726,7 @@ msgstr "Colis"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__picking_id
 msgid "Picking"
-msgstr "Picking"
+msgstr "Opération de manutention"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_zip_prefix__name
@@ -770,17 +740,8 @@ msgstr "Le préfixe existe déjà !"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__zip_prefix_ids
-msgid ""
-"Prefixes of zip codes that this carrier applies to. Note that regular "
-"expressions can be used to support countries with varying zip code lengths, "
-"i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
-"will only match '100' and not '1000')"
-msgstr ""
-"Préfixes des codes postaux auxquels s'applique ce transporteur. Notez que "
-"les expressions régulières peuvent être utilisées pour prendre en charge les"
-" pays dont la longueur des codes postaux varie, c'est-à-dire que le signe "
-"'$' peut être ajouté à la fin du préfixe pour correspondre au code postal "
-"exact (par exemple '100$' correspondra uniquement à '100' et non à '1000')"
+msgid "Prefixes of zip codes that this carrier applies to. Note that regular expressions can be used to support countries with varying zip code lengths, i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' will only match '100' and not '1000')"
+msgstr "Préfixes des codes postaux auxquels s'applique ce transporteur. Notez que les expressions régulières peuvent être utilisées pour prendre en charge les pays dont la longueur des codes postaux varie, c'est-à-dire que le signe '$' peut être ajouté à la fin du préfixe pour correspondre au code postal exact (par exemple '100$' correspondra uniquement à '100' et non à '1000')"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -797,7 +758,7 @@ msgstr "Règles de prix"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "Pricing"
-msgstr "Tarification"
+msgstr "Tarif"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__price_rule_ids
@@ -857,7 +818,7 @@ msgstr "Étiquette de retour accessible depuis le portail client"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Transfert de retour"
+msgstr "Retour à la cueillette"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__country_of_origin
@@ -888,7 +849,7 @@ msgstr "Bon de commande"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bon de commande"
+msgstr "Ligne de bons de commande"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
@@ -914,20 +875,14 @@ msgstr "Produit de Service"
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__prod_environment
 msgid "Set to True if your credentials are certified for production."
-msgstr ""
-"Définissez la valeur sur Vrai si vos identifiants sont certifiés pour la "
-"production."
+msgstr "Définissez la valeur sur Vrai si vos identifiants sont certifiés pour la production."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
-msgid ""
-"Shipment sent to carrier %(carrier_name)s for shipping with tracking number "
-"%(ref)s<br/>Cost: %(price).2f %(currency)s"
-msgstr ""
-"Colisage envoyé au transporteur %(carrier_name)s pour expédition avec le "
-"numéro de suivi %(ref)s<br/>Coût: %(price).2f%(currency)s"
+msgid "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s"
+msgstr "Colisage envoyé au transporteur %(carrier_name)s pour expédition avec le numéro de suivi %(ref)s<br/>Coût: %(price).2f%(currency)s"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__carrier_price
@@ -952,7 +907,7 @@ msgstr "Méthode d'expédition"
 #: model:ir.ui.menu,name:delivery.sale_menu_action_delivery_carrier_form
 #: model_terms:ir.ui.view,arch_db:delivery.res_config_settings_view_form
 msgid "Shipping Methods"
-msgstr "Modes d'expédition"
+msgstr "Méthodes d'expédition"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_package__shipping_weight
@@ -968,33 +923,19 @@ msgstr "Poids de livraison:"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__shipping_insurance
-msgid ""
-"Shipping insurance is a service which may reimburse senders whose parcels "
-"are lost, stolen, and/or damaged in transit."
-msgstr ""
-"L'assurance expédition est un service qui peut rembourser les expéditeurs "
-"dont les colis sont perdus, volés et/ou endommagés pendant le transport."
+msgid "Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit."
+msgstr "L'assurance expédition est un service qui peut rembourser les expéditeurs dont les colis sont perdus, volés et/ou endommagés pendant le transport."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
-msgid ""
-"Shipping method details to be included at bottom sales orders and their "
-"confirmation emails. E.g. Instructions for customers to follow."
-msgstr ""
-"Les détails de la méthode d'expédition doivent être inclus dans les bons de "
-"commande et leurs emails de confirmation. Par exemple : Instructions à "
-"suivre par les clients."
+msgid "Shipping method details to be included at bottom sales orders and their confirmation emails. E.g. Instructions for customers to follow."
+msgstr "Les détails de la méthode d'expédition doivent être inclus dans les bons de commande et leurs emails de confirmation. Par exemple : Instructions à suivre par les clients."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_product_product__hs_code
 #: model:ir.model.fields,help:delivery.field_product_template__hs_code
-msgid ""
-"Standardized code for international shipping and goods declaration. At the "
-"moment, only used for the FedEx shipping provider."
-msgstr ""
-"Code normalisé pour l'expédition internationale et la déclaration de "
-"marchandises. Pour le moment, utilisé uniquement pour le fournisseur "
-"d’expédition FedEx."
+msgid "Standardized code for international shipping and goods declaration. At the moment, only used for the FedEx shipping provider."
+msgstr "Code normalisé pour l'expédition internationale et la déclaration de marchandises. Pour le moment, utilisé uniquement pour le fournisseur d’expédition FedEx."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__state_ids
@@ -1004,12 +945,12 @@ msgstr "États"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_move
 msgid "Stock Move"
-msgstr "Mouvement de stock"
+msgstr "Stock déplacer"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_package_type
 msgid "Stock package type"
-msgstr "Type de colis du stock"
+msgstr "Stock package type"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__supports_shipping_insurance
@@ -1024,8 +965,7 @@ msgstr "Champ technique indiquant le nombre de décimales du poids."
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__weight_is_kg
 msgid "Technical field indicating whether weight uom is kg or not (i.e. lb)"
-msgstr ""
-"Champ technique indiquant si l'uom de poids est en kg ou non (i.e. lb)"
+msgstr "Champ technique indiquant si l'uom de poids est en kg ou non (i.e. lb)"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_move_line__destination_country_code
@@ -1040,22 +980,14 @@ msgstr ""
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
-#: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
-msgid ""
-"The package cannot be created because the total weight of the products in "
-"the picking is 0.0 %s"
-msgstr ""
-"Le colis ne peut pas être créé, parce que le poids total des produits dans "
-"le transfert est 0.0 %s"
+msgid "The package cannot be created because the total weight of the products in the picking is 0.0 %s"
+msgstr "Le colis ne peut pas être créé, parce que le poids total des produits dans le transfert est 0.0 %s"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
-msgid ""
-"The return label can be downloaded by the customer from the customer portal."
-msgstr ""
-"L'étiquette de retour peut être téléchargée par le client à partir du "
-"portail client."
+msgid "The return label can be downloaded by the customer from the customer portal."
+msgstr "L'étiquette de retour peut être téléchargée par le client à partir du portail client."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__return_label_on_delivery
@@ -1065,16 +997,14 @@ msgstr "L'étiquette de retour est automatiquement générée à la livraison."
 #. module: delivery
 #: model:ir.model.constraint,message:delivery.constraint_delivery_carrier_shipping_insurance_is_percentage
 msgid "The shipping insurance must be a percentage between 0 and 100."
-msgstr ""
-"L'assurance expédition doit être un pourcentage compris entre 0 et 100."
+msgstr "L'assurance expédition doit être un pourcentage compris entre 0 et 100."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/delivery_carrier.py:0
 #, python-format
 msgid "The shipping is free since the order amount exceeds %.2f."
-msgstr ""
-"L'expédition est gratuite puisque le montant de la commande dépasse %.2f."
+msgstr "L'expédition est gratuite puisque le montant de la commande dépasse %.2f."
 
 #. module: delivery
 #. odoo-python
@@ -1087,12 +1017,8 @@ msgstr "Le prix d'expédition sera fixé une fois la livraison effectuée."
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
-msgid ""
-"The weight of your package is higher than the maximum weight authorized for "
-"this package type. Please choose another package type."
-msgstr ""
-"Le poids de votre paquet est supérieur au poids maximal autorisé pour ce "
-"type de paquet. Veuillez choisir un autre type de paquet."
+msgid "The weight of your package is higher than the maximum weight authorized for this package type. Please choose another package type."
+msgstr "Le poids de votre paquet est supérieur au poids maximal autorisé pour ce type de paquet. Veuillez choisir un autre type de paquet."
 
 #. module: delivery
 #. odoo-python
@@ -1128,14 +1054,8 @@ msgstr "Poids total de tous les produits contenus dans le colis."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__shipping_weight
-msgid ""
-"Total weight of packages and products not in a package. Packages with no "
-"shipping weight specified will default to their products' total weight. This"
-" is the weight used to compute the cost of the shipping."
-msgstr ""
-"Poids total des colis et des produits non emballés. Les colis sans poids "
-"spécifié utiliseront le total du poids des produits. Ce poids est utilisé "
-"pour calculer le coût d'expédition."
+msgid "Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping."
+msgstr "Poids total des colis et des produits non emballés. Les colis sans poids spécifié utiliseront le total du poids des produits. Ce poids est utilisé pour calculer le coût d'expédition."
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_stock_picking__weight_bulk
@@ -1180,7 +1100,7 @@ msgstr "Suivi :"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking
 msgid "Transfer"
-msgstr "Virement"
+msgstr "Transfert"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1271,19 +1191,14 @@ msgstr ""
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "You have multiple tracker links, they are available in the chatter."
-msgstr ""
-"Il existe de multiples liens de suivi, ils sont disponibles dans le chatter."
+msgstr "Il existe de multiples liens de suivi, ils sont disponibles dans le chatter."
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
-msgid ""
-"Your delivery method has no redirect on courier provider's website to track "
-"this order."
-msgstr ""
-"Votre mode de livraison n'a pas de redirection sur le site Web du "
-"fournisseur de messagerie pour suivre cet ordre."
+msgid "Your delivery method has no redirect on courier provider's website to track this order."
+msgstr "Votre mode de livraison n'a pas de redirection sur le site Web du fournisseur de messagerie pour suivre cet ordre."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_delivery_zip_prefix_list

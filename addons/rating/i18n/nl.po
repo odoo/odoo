@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* rating
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2023-01-17 14:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: rating
@@ -48,11 +48,8 @@ msgstr "Toegangtoken om de beoordeling in te stellen op de waarde"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
-msgid ""
-"Associated message when posting a review. Mainly used in website addons."
-msgstr ""
-"Geassocieerd bericht bij het plaatsen van een recensie. Voornamelijk "
-"gebruikt in website addons."
+msgid "Associated message when posting a review. Mainly used in website addons."
+msgstr "Geassocieerd bericht bij het plaatsen van een recensie. Voornamelijk gebruikt in website addons."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
@@ -63,7 +60,7 @@ msgstr "Auteur van de beoordeling"
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg
 msgid "Average Rating"
-msgstr "Gemiddelde beoordeling"
+msgstr "Gemiddelde score"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_avg_percentage
@@ -73,7 +70,7 @@ msgstr "Gemiddelde score (%)"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
 msgid "Comment"
-msgstr "Reactie"
+msgstr "Opmerking"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
@@ -125,7 +122,7 @@ msgstr "Documentmodel"
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mailthread"
+msgstr "E-mail discussie"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -145,7 +142,7 @@ msgstr "Ga terug naar de startpagina"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
@@ -154,11 +151,8 @@ msgstr "Halve ster"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__is_internal
-msgid ""
-"Hide to public / portal users, independently from subtype configuration."
-msgstr ""
-"Verbergen voor openbare/portaal gebruikers, onafhankelijk van de "
-"configuratie van het subtype."
+msgid "Hide to public / portal users, independently from subtype configuration."
+msgstr "Verbergen voor openbare/portaal gebruikers, onafhankelijk van de configuratie van het subtype."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -176,7 +170,6 @@ msgid "Image URL"
 msgstr "Afbeelding URL"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:0
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "Incorrect rating: should be 1, 3 or 5 (received %d)"
@@ -292,8 +285,7 @@ msgstr "Percentage tevreden beoordelingen"
 #: code:addons/rating/models/mail_thread.py:0
 #, python-format
 msgid "Posting a rating should be done using message post API."
-msgstr ""
-"Een beoordeling moet worden geplaatst met behulp van de berichtpost-API."
+msgstr "Een beoordeling moet worden geplaatst met behulp van de berichtpost-API."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
@@ -313,7 +305,7 @@ msgstr "Beoordeling"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg_text
 msgid "Rating Avg Text"
-msgstr "Gem. tekst beoordelen"
+msgstr "Beoordeling gem. tekst"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
@@ -344,12 +336,12 @@ msgstr "Beoordeling bovenliggende mixin"
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr "Beoordeling tevredenheid"
+msgstr "Beoordeling"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_text
 msgid "Rating Text"
-msgstr "Beoordeling tekst"
+msgstr "Beoordelingstekst"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
@@ -409,7 +401,7 @@ msgstr "Reden van de beoordeling"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr "Gerelateerd documentmodel"
+msgstr "Gerelateerde documentmodel"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
@@ -430,7 +422,7 @@ msgstr "Bron ref"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr "Naam resource"
+msgstr "Naam bron"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0

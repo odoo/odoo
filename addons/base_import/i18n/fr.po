@@ -1,24 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_import
-# 
+#
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2023
+# Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 11:02+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_import
@@ -39,9 +38,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid ""
-"A single column was found in the file, this often means the file separator "
-"is incorrect."
+msgid "A single column was found in the file, this often means the file separator is incorrect."
 msgstr ""
 
 #. module: base_import
@@ -69,16 +66,8 @@ msgstr "Permet la mise en correspondance avec des sous-champs"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid ""
-"An unknown issue occurred during import (possibly lost connection, data "
-"limit exceeded or memory limits exceeded). Please retry in case the issue is"
-" transient. If the issue still occurs, try to split the file rather than "
-"import it at once."
-msgstr ""
-"Une erreur inconnue est survenue pendant l'import (probablement une perte de"
-" connexion, un fichier trop volumineux,...). Veuillez réessayer au cas où "
-"cette erreur est temporaire. Si elle persiste, essayez de partager votre "
-"fichier en plusieurs plutôt que de l'importer en une fois."
+msgid "An unknown issue occurred during import (possibly lost connection, data limit exceeded or memory limits exceeded). Please retry in case the issue is transient. If the issue still occurs, try to split the file rather than import it at once."
+msgstr "Une erreur inconnue est survenue pendant l'import (probablement une perte de connexion, un fichier trop volumineux,...). Veuillez réessayer au cas où cette erreur est temporaire. Si elle persiste, essayez de partager votre fichier en plusieurs plutôt que de l'importer en une fois."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -142,8 +131,7 @@ msgstr "La colonne %s contient des valeurs incorrectes (valeur: %s)"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
-"La colonne %s contient des valeurs incorrectes. Erreur à la ligne %d: %s"
+msgstr "La colonne %s contient des valeurs incorrectes. Erreur à la ligne %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -152,8 +140,6 @@ msgstr "Nom de la colonne"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Comma"
@@ -170,12 +156,8 @@ msgstr "Commentaires"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
-msgstr ""
-"Impossible de récupérer l'URL: %(url)s [%(field_name)s: L%(line_number)d]: "
-"%(error)s"
+msgid "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
+msgstr "Impossible de récupérer l'URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. odoo-javascript
@@ -198,7 +180,6 @@ msgstr "Créé le"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
@@ -229,11 +210,10 @@ msgstr ""
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Afficher Nom"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_model.js:0
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Dot"
@@ -292,15 +272,14 @@ msgstr "Les fichiers Excel sont recommandés car le formatage est automatique."
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
-#: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "External ID"
-msgstr "ID externe"
+msgstr "ID Externe"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__field_name
 msgid "Field Name"
-msgstr "Nom de champ"
+msgstr "Nom de Champ"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
@@ -317,7 +296,7 @@ msgstr "Colonne de fichier"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr "Nom de fichier"
+msgstr "Nom de Fichier"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
@@ -326,7 +305,6 @@ msgstr "Type de fichier"
 
 #. module: base_import
 #. odoo-python
-#: code:addons/base_import/models/base_import.py:0
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "File size exceeds configured maximum (%s bytes)"
@@ -349,8 +327,7 @@ msgstr "Finalisation du groupe en cours avant d'interrompre..."
 #: code:addons/base_import/static/src/import_data_content/import_data_content.xml:0
 #, python-format
 msgid "For CSV files, you may need to select the correct separator."
-msgstr ""
-"Pour les fichiers CSV, vous devrez peut-être choisir le séparateur adéquat."
+msgstr "Pour les fichiers CSV, vous devrez peut-être choisir le séparateur adéquat."
 
 #. module: base_import
 #. odoo-javascript
@@ -363,12 +340,8 @@ msgstr "Formatage"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Found invalid image data, images should be imported as either URLs or "
-"base64-encoded data."
-msgstr ""
-"Données d'image non valides trouvées, les images doivent être importées sous"
-" forme d'URL ou de données encodées en base64."
+msgid "Found invalid image data, images should be imported as either URLs or base64-encoded data."
+msgstr "Données d'image non valides trouvées, les images doivent être importées sous forme d'URL ou de données encodées en base64."
 
 #. module: base_import
 #. odoo-javascript
@@ -382,7 +355,7 @@ msgstr "Aller à la Foire aux Questions sur l'import"
 #: code:addons/base_import/static/src/import_data_sidepanel/import_data_sidepanel.xml:0
 #, python-format
 msgid "Help"
-msgstr "Assistance"
+msgstr "Aide"
 
 #. module: base_import
 #. odoo-javascript
@@ -416,11 +389,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Image size excessive, imported images must be smaller than 42 million pixel"
-msgstr ""
-"Taille d'image excessive, les images importées doivent être inférieures à 42"
-" millions de pixels"
+msgid "Image size excessive, imported images must be smaller than 42 million pixel"
+msgstr "Taille d'image excessive, les images importées doivent être inférieures à 42 millions de pixels"
 
 #. module: base_import
 #. odoo-javascript
@@ -468,15 +438,8 @@ msgstr "Importer des enregistrements"
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
-msgid ""
-"Import timed out. Please retry. If you still encounter this issue, the file "
-"may be too big for the system's configuration, try to split it (import less "
-"records per file)."
-msgstr ""
-"L'importation a expiré. Veuillez réessayer. Si vous rencontrez toujours ce "
-"incident, le fichier est peut-être trop volumineux pour la configuration du "
-"système. Essayez de le scinder (importez moins d'enregistrements par "
-"fichier)."
+msgid "Import timed out. Please retry. If you still encounter this issue, the file may be too big for the system's configuration, try to split it (import less records per file)."
+msgstr "L'importation a expiré. Veuillez réessayer. Si vous rencontrez toujours ce incident, le fichier est peut-être trop volumineux pour la configuration du système. Essayez de le scinder (importez moins d'enregistrements par fichier)."
 
 #. module: base_import
 #. odoo-javascript
@@ -497,9 +460,7 @@ msgstr "En cours d'importation"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr ""
-"Valeur de cellule non valide à la ligne %(row)s, colonne "
-"%(col)s:%(cell_value)s"
+msgstr "Valeur de cellule non valide à la ligne %(row)s, colonne %(col)s:%(cell_value)s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -605,14 +566,14 @@ msgstr "Champs relationnels"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
-msgstr "Modèle Res"
+msgstr "Res Model"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_action/import_action.xml:0
 #, python-format
 msgid "Resume"
-msgstr "Curriculum vitae"
+msgstr "Reprendre"
 
 #. module: base_import
 #. odoo-javascript
@@ -687,7 +648,6 @@ msgstr "Feuille :"
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
-#: code:addons/base_import/static/src/import_data_options/import_data_options.js:0
 #, python-format
 msgid "Skip record"
 msgstr "Sauter l'enregistrement"
@@ -715,7 +675,6 @@ msgstr "Démarrer à la ligne"
 
 #. module: base_import
 #. odoo-javascript
-#: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Stop Import"
@@ -810,19 +769,14 @@ msgstr "Activer l'historique des modifications pendant l'importation"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
-"Impossible de charger le fichier \"{extension}\" : le module Python "
-"\"{modname}\" est requis"
+msgstr "Impossible de charger le fichier \"{extension}\" : le module Python \"{modname}\" est requis"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
-msgstr ""
-"Format de fichier \"{}\" non pris en charge, l'importation ne prend en "
-"compte que les formats CSV, ODS, XLS et XLSX"
+msgid "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
+msgstr "Format de fichier \"{}\" non pris en charge, l'importation ne prend en compte que les formats CSV, ODS, XLS et XLSX"
 
 #. module: base_import
 #. odoo-javascript
@@ -868,21 +822,15 @@ msgstr "Lorsqu'une valeur ne peut pas être mise en correspondance :"
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
-msgid ""
-"You can not import images via URL, check with your administrator or support "
-"for the reason."
-msgstr ""
-"Vous ne pouvez pas importer des images via URL, vérifiez avec votre "
-"administrateur ou le support pour savoir la raison."
+msgid "You can not import images via URL, check with your administrator or support for the reason."
+msgstr "Vous ne pouvez pas importer des images via URL, vérifiez avec votre administrateur ou le support pour savoir la raison."
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr ""
-"Vous pouvez tester ou recharger votre fichier avant de reprendre "
-"l'importation."
+msgstr "Vous pouvez tester ou recharger votre fichier avant de reprendre l'importation."
 
 #. module: base_import
 #. odoo-python

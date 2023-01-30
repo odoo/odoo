@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_management
-# 
+#
 # Translators:
-# Felix Schubert <felix.schubert@go-erp.com>, 2023
-# Michael Hofer, 2023
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+# Felix Schubert <felix.schubert@go-erp.com>, 2022
+# Michael Hofer, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:53+0000\n"
-"PO-Revision-Date: 2023-01-17 14:58+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Michael Hofer, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_management
@@ -34,7 +34,7 @@ msgstr "<span>Zahlung</span>"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "<span>Signature</span>"
-msgstr "<span>Unterschrift</span>"
+msgstr "Unterschrift"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -65,7 +65,7 @@ msgstr "Hinzufügen"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Add to cart"
-msgstr "In den Warenkorb legen"
+msgstr "Dem Warenkorb hinzufügen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
@@ -117,13 +117,8 @@ msgstr "Bestätigungsmail"
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__product_uom_category_id
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_option__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
-"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
-"Kennzahlen."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
@@ -212,8 +207,7 @@ msgstr "Display-Typ"
 #: code:addons/sale_management/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Kein Zugriff, überspringen Sie diese Daten für die E-Mail des Benutzer"
+msgstr "Keine Zugriffsberechtigung, überspringen dieser Daten für die Zusammenfassungs-E-Mail der Benutzer."
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
@@ -223,15 +217,12 @@ msgstr ""
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
 msgid "Gives the sequence order when displaying a list of optional products."
-msgstr ""
-"Gibt die Reihenfolge an, in der eine Liste der optionalen Produkte angezeigt"
-" wird."
+msgstr "Gibt die Reihenfolge an, in der eine Liste der optionalen Produkte angezeigt wird."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template_line__sequence
 msgid "Gives the sequence order when displaying a list of sale quote lines."
-msgstr ""
-"Gibt die Reihenfolge bei der Anzeige einer Liste von Angebotszeilen an."
+msgstr "Gibt die Reihenfolge bei der Anzeige einer Liste von Angebotszeilen an."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
@@ -248,12 +239,8 @@ msgstr "ID"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__active
-msgid ""
-"If unchecked, it will allow you to hide the quotation template without "
-"removing it."
-msgstr ""
-"Wenn diese Option nicht aktiviert ist, können Sie die Angebotsvorlage "
-"ausblenden, ohne sie zu entfernen."
+msgid "If unchecked, it will allow you to hide the quotation template without removing it."
+msgstr "Wenn diese Option nicht aktiviert ist, können Sie die Angebotsvorlage ausblenden, ohne sie zu entfernen."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_digest_digest__kpi_all_sale_total_value
@@ -279,19 +266,18 @@ msgstr "Zuletzt aktualisiert am"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__line_id
 msgid "Line"
-msgstr "Zeile"
+msgstr "Linie"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__sale_order_template_line_ids
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "Lines"
-msgstr "Linien"
+msgstr "Auftragszeilen"
 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_accountable_product_id_required
 msgid "Missing required product and UoM on accountable sale quote line."
-msgstr ""
-"Fehlende erforderliche Produkte und UoM auf der kontoführende Angebotszeile."
+msgstr "Fehlende erforderliche Produkte und UoM auf der kontoführende Angebotszeile."
 
 #. module: sale_management
 #: model:ir.model.fields.selection,name:sale_management.selection__sale_order_template_line__display_type__line_note
@@ -428,21 +414,13 @@ msgstr "Entfernen"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_signature
-msgid ""
-"Request a online signature to the customer in order to confirm orders "
-"automatically."
-msgstr ""
-"Beantragung einer Online-Unterschrift an den Kunden, um Bestellungen "
-"automatisch zu bestätigen."
+msgid "Request a online signature to the customer in order to confirm orders automatically."
+msgstr "Beantragung einer Online-Unterschrift an den Kunden, um Bestellungen automatisch zu bestätigen."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__require_payment
-msgid ""
-"Request an online payment to the customer in order to confirm orders "
-"automatically."
-msgstr ""
-"Fordern Sie eine Online-Zahlung vom Kunden an, um Bestellungen automatisch "
-"zu bestätigen."
+msgid "Request an online payment to the customer in order to confirm orders automatically."
+msgstr "Fordern Sie eine Online-Zahlung vom Kunden an, um Bestellungen automatisch zu bestätigen."
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_sale_order_option
@@ -487,15 +465,8 @@ msgstr "Sektion"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
-msgid ""
-"Selling the same product in different sizes or colors? Try the product grid "
-"and populate your orders with multiple quantities of each variant. This "
-"feature also exists in the Purchase application."
-msgstr ""
-"Verkaufen Sie das gleiche Produkt in verschiedenen Größen oder Farben? "
-"Probieren Sie das Produktraster aus und bestücken Sie Ihre Bestellungen mit "
-"mehreren Mengen jeder Variante. Diese Funktion gibt es auch in der Anwendung"
-" Einkauf."
+msgid "Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application."
+msgstr "Verkaufen Sie das gleiche Produkt in verschiedenen Größen oder Farben? Probieren Sie das Produktraster aus und bestücken Sie Ihre Bestellungen mit mehreren Mengen jeder Variante. Diese Funktion gibt es auch in der Anwendung Einkauf."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -505,16 +476,8 @@ msgstr "Sequenz"
 
 #. module: sale_management
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
-msgid ""
-"Struggling with a complex product catalog? Try out the Product Configurator "
-"to help sales configure a product with different options: colors, size, "
-"capacity, etc. Make sale orders encoding easier and error-proof."
-msgstr ""
-"Kämpfen Sie mit einem komplexen Produktkatalog? Probieren Sie den "
-"Produktkonfigurator aus, um den Vertrieb bei der Konfiguration eines "
-"Produkts mit verschiedenen Optionen zu unterstützen: Farben, Größe, "
-"Kapazität, etc. Machen Sie die Codierung von Verkaufsaufträgen einfacher und"
-" fehlerfrei."
+msgid "Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof."
+msgstr "Kämpfen Sie mit einem komplexen Produktkatalog? Probieren Sie den Produktkonfigurator aus, um den Vertrieb bei der Konfiguration eines Produkts mit verschiedenen Optionen zu unterstützen: Farben, Größe, Kapazität, etc. Machen Sie die Codierung von Verkaufsaufträgen einfacher und fehlerfrei."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -528,31 +491,18 @@ msgstr "Allgemeine Geschäftsbedingungen"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
-msgid ""
-"The Administrator can set default Terms & Conditions in Sales Settings. "
-"Terms set here will show up instead if you select this quotation template."
-msgstr ""
-"Der Administrator kann in den Verkaufseinstellungen Standardbedingungen "
-"festlegen. Die hier festgelegten Begriffe werden stattdessen angezeigt, wenn"
-" Sie diese Angebotsvorlage auswählen."
+msgid "The Administrator can set default Terms & Conditions in Sales Settings. Terms set here will show up instead if you select this quotation template."
+msgstr "Der Administrator kann in den Verkaufseinstellungen Standardbedingungen festlegen. Die hier festgelegten Begriffe werden stattdessen angezeigt, wenn Sie diese Angebotsvorlage auswählen."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_template__mail_template_id
-msgid ""
-"This e-mail template will be sent on confirmation. Leave empty to send "
-"nothing."
-msgstr ""
-"Diese E-Mail-Vorlage wird nach der Bestätigung verschickt. Leer lassen, um "
-"nichts zu senden."
+msgid "This e-mail template will be sent on confirmation. Leave empty to send nothing."
+msgstr "Diese E-Mail-Vorlage wird nach der Bestätigung verschickt. Leer lassen, um nichts zu senden."
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__is_present
-msgid ""
-"This field will be checked if the option line's product is already present "
-"in the quotation."
-msgstr ""
-"Dieses Feld wird markiert, wenn das Produkt der Optionslinie bereits im "
-"Angebot vorhanden ist."
+msgid "This field will be checked if the option line's product is already present in the quotation."
+msgstr "Dieses Feld wird markiert, wenn das Produkt der Optionslinie bereits im Angebot vorhanden ist."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
@@ -612,12 +562,8 @@ msgstr "Sie können keine Optionen zu einer bestätigten Bestellung hinzufügen.
 #. odoo-python
 #: code:addons/sale_management/models/sale_order_template_line.py:0
 #, python-format
-msgid ""
-"You cannot change the type of a sale quote line. Instead you should delete "
-"the current line and create a new line of the proper type."
-msgstr ""
-"Sie können den Typ einer Angebotszeile nicht ändern. Stattdessen sollten Sie"
-" die aktuelle Zeile löschen und eine neue Zeile vom richtigen Typ anlegen."
+msgid "You cannot change the type of a sale quote line. Instead you should delete the current line and create a new line of the proper type."
+msgstr "Sie können den Typ einer Angebotszeile nicht ändern. Stattdessen sollten Sie die aktuelle Zeile löschen und eine neue Zeile vom richtigen Typ anlegen."
 
 #. module: sale_management
 #. odoo-python

@@ -1,22 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_requisition
-# 
+#
 # Translators:
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_requisition
@@ -92,7 +92,7 @@ msgstr "Aktivitäten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme-Dekoration"
+msgstr "Aktivität Ausnahme Dekoration"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -291,13 +291,8 @@ msgstr "Bestätigt"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_line__product_uom_category_id
-msgid ""
-"Conversion between Units of Measure can only occur if they belong to the "
-"same category. The conversion will be made based on the ratios."
-msgstr ""
-"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
-"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
-"Kennzahlen."
+msgid "Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."
+msgstr "Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
@@ -460,12 +455,12 @@ msgstr "ID"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon"
-msgstr "Symbol"
+msgstr "Icon"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
@@ -480,17 +475,12 @@ msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
-msgid ""
-"If the chosen vendor or if any of the products in the original PO have a "
-"blocking warning then we prevent creation of alternative PO. This is because"
-" normally these fields are cleared w/warning message within form view, but "
-"we cannot recreate that in this case."
+msgid "If the chosen vendor or if any of the products in the original PO have a blocking warning then we prevent creation of alternative PO. This is because normally these fields are cleared w/warning message within form view, but we cannot recreate that in this case."
 msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
-msgid ""
-"If this is checked, the product quantities of the original PO will be copied"
+msgid "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
 
 #. module: purchase_requisition
@@ -536,7 +526,7 @@ msgstr "Verspätete Aktivitäten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Linien"
+msgstr "Zeilen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -879,12 +869,8 @@ msgstr "Sequenz"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_type__active
-msgid ""
-"Set active to false to hide the Purchase Agreement Types without removing "
-"it."
-msgstr ""
-"Setzen Sie active auf false, um die Kaufvertragsarten auszublenden, ohne sie"
-" zu entfernen."
+msgid "Set active to false to hide the Purchase Agreement Types without removing it."
+msgstr "Setzen Sie active auf false, um die Kaufvertragsarten auszublenden, ohne sie zu entfernen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -907,8 +893,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
-msgid ""
-"Some quantities were not cleared because their status is not a RFQ status."
+msgid "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
 
 #. module: purchase_requisition
@@ -967,11 +952,8 @@ msgstr "Bedingungen und Konditionen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
-msgid ""
-"The expected and scheduled delivery date where all the products are received"
-msgstr ""
-"Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert "
-"sind"
+msgid "The expected and scheduled delivery date where all the products are received"
+msgstr "Das erwartete und disponierte Lieferdatum, an dem alle Produkte geliefert sind"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
@@ -982,10 +964,7 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
-msgid ""
-"The vendor you have selected or at least one of the products you are copying"
-" from the original order has a blocking warning on it and cannot be selected"
-" to create an alternative."
+msgid "The vendor you have selected or at least one of the products you are copying from the original order has a blocking warning on it and cannot be selected to create an alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -999,17 +978,11 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid ""
-"There is already an open blanket order for this supplier. We suggest you "
-"complete this open blanket order, instead of creating a new one."
-msgstr ""
-"Es gibt bereits eine offene Rahmenbestellung für diesen Lieferanten. Wir "
-"schlagen vor, dass Sie diesen offenen Rahmenauftrag abschließen, anstatt "
-"einen neuen zu erstellen."
+msgid "There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one."
+msgstr "Es gibt bereits eine offene Rahmenbestellung für diesen Lieferanten. Wir schlagen vor, dass Sie diesen offenen Rahmenauftrag abschließen, anstatt einen neuen zu erstellen."
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
@@ -1100,13 +1073,11 @@ msgstr "Website-Nachrichten"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Website-Kommunikationshistorie"
+msgstr "Website-Kommunikationsverlauf"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
-msgid ""
-"Whether or not this purchase order is linked to another purchase order as an"
-" alternative."
+msgid "Whether or not this purchase order is linked to another purchase order as an alternative."
 msgstr ""
 
 #. module: purchase_requisition
@@ -1123,22 +1094,18 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "You can only delete draft requisitions."
-msgstr "Sie können nur Bestellanforderungen im Entwurf löschen."
+msgid "You can only delete draft or cancelled requisitions."
+msgstr ""
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm agreement '%s' because there is no product line."
-msgstr ""
-"Sie können die Vereinbarung '%s' nicht bestätigen, da es keine Produktzeile "
-"gibt."
+msgstr "Sie können die Vereinbarung '%s' nicht bestätigen, da es keine Produktzeile gibt."
 
 #. module: purchase_requisition
 #. odoo-python
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
-#: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You cannot confirm the blanket order without price."
@@ -1155,18 +1122,12 @@ msgstr "Sie können die Rahmenbestellung nicht ohne Menge bestätigen."
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid ""
-"You have to cancel or validate every RfQ before closing the purchase "
-"requisition."
-msgstr ""
-"Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die "
-"Bestellanforderung abschließen."
+msgid "You have to cancel or validate every RfQ before closing the purchase requisition."
+msgstr "Sie müssen jede Anfrage stornieren oder validieren, bevor Sie die Bestellanforderung abschließen."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
-msgid ""
-"alternative request for quotations are still open, do you want to cancel "
-"them?"
+msgid "alternative request for quotations are still open, do you want to cancel them?"
 msgstr ""
 
 #. module: purchase_requisition

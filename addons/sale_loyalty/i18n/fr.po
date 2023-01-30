@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_loyalty
-# 
+#
 # Translators:
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# Cécile Collart <cco@odoo.com>, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2023-01-17 14:45+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: sale_loyalty
@@ -51,11 +51,8 @@ msgstr "Une meilleure remise globale est déjà appliquée."
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
-msgid ""
-"A minimum of %(amount)s %(currency)s should be purchased to get the reward"
-msgstr ""
-"Un montant minimal de %(amount)s %(currency)s doit être commandé pour "
-"bénéficier de la remise"
+msgid "A minimum of %(amount)s %(currency)s should be purchased to get the reward"
+msgstr "Un montant minimal de %(amount)s %(currency)s doit être commandé pour bénéficier de la remise"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_coupon_wizard_view_form
@@ -104,9 +101,7 @@ msgstr "Point du coupon"
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
-msgstr ""
-"Coupon introuvable lors de la tentative d'ajout de la récompense suivante : "
-"%s"
+msgstr "Coupon introuvable lors de la tentative d'ajout de la récompense suivante : %s"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
@@ -180,7 +175,7 @@ msgstr "Code carte cadeau"
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr "Cartes cadeau & e-wallet"
+msgstr "Cartes cadeau & eWallet"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -265,12 +260,8 @@ msgstr "Multi Produits"
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
-msgid ""
-"No card found for this loyalty program and no points will be given with this"
-" order."
-msgstr ""
-"Aucune carte trouvée pour ce programme de fidélité et aucun point ne sera "
-"attribué avec cette commande."
+msgid "No card found for this loyalty program and no points will be given with this order."
+msgstr "Aucune carte trouvée pour ce programme de fidélité et aucun point ne sera attribué avec cette commande."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
@@ -287,9 +278,7 @@ msgstr "Aucune récompense disponible pour ce client !"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
-msgstr ""
-"Une ou plusieurs récompenses sur le bon de commande ne sont pas valides. "
-"Veuillez les vérifier."
+msgstr "Une ou plusieurs récompenses sur le bon de commande ne sont pas valides. Veuillez les vérifier."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_coupon_wizard__order_id
@@ -356,11 +345,8 @@ msgstr "Vente Fidélité - Assistant de sélection des récompenses"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_coupon_points
-msgid ""
-"Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
-msgstr ""
-"Points de coupon des bons de commande - Garde une trace de l'impact d'un bon"
-" de commande sur un coupon"
+msgid "Sale Order Coupon Points - Keeps track of how a sale order impacts a coupon"
+msgstr "Points de coupon des bons de commande - Garde une trace de l'impact d'un bon de commande sur un coupon"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_loyalty_program__sale_ok
@@ -375,7 +361,7 @@ msgstr "Bon de commande"
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bon de commande"
+msgstr "Ligne de bons de commande"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__selected_product_id
@@ -397,8 +383,7 @@ msgstr "Le coupon ne peut être réclamé que sur les commandes futures."
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
-msgstr ""
-"Le coupon ne contient pas assez de points pour la récompense sélectionnée."
+msgstr "Le coupon ne contient pas assez de points pour la récompense sélectionnée."
 
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
@@ -434,7 +419,6 @@ msgid "This code is expired (%s)."
 msgstr "Ce code est expiré (%s)."
 
 #. module: sale_loyalty
-#: code:addons/sale_loyalty/models/sale_order.py:0
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is invalid (%s)."
@@ -479,22 +463,15 @@ msgstr "Ce code promo est déjà appliqué."
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
 msgid "Update current promotional lines and select new rewards if applicable."
-msgstr ""
-"Mettez à jour les lignes promotionnelles actuelles et sélectionnez de "
-"nouvelles récompenses, le cas échéant."
+msgstr "Mettez à jour les lignes promotionnelles actuelles et sélectionnez de nouvelles récompenses, le cas échéant."
 
 #. module: sale_loyalty
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "You don't have the required product quantities on your sales order."
-msgstr ""
-"Vous n'avez pas les quantités de produit requises sur votre bon de commande."
+msgstr "Vous n'avez pas les quantités de produit requises sur votre bon de commande."
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
-msgid ""
-"You will find below your gift cards code. An email has been sent with it. "
-"You can use it starting right now."
-msgstr ""
-"Vous trouverez ci-dessous votre code carte cadeau. Il vous a également été "
-"envoyé par email. Vous pouvez l'utiliser dès maintenant."
+msgid "You will find below your gift cards code. An email has been sent with it. You can use it starting right now."
+msgstr "Vous trouverez ci-dessous votre code carte cadeau. Il vous a également été envoyé par email. Vous pouvez l'utiliser dès maintenant."

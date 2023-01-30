@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* pos_loyalty
-# 
+#
 # Translators:
+# RHTodoo, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Martin Trigaux, 2022
 # Jolien De Paepe, 2023
-# Cécile Collart <cco@odoo.com>, 2023
-# Martin Trigaux, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:53+0000\n"
-"PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_loyalty
@@ -47,12 +48,8 @@ msgstr "Une meilleure remise globale est déjà appliquée."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__promo_barcode
-msgid ""
-"A technical field used as an alternative to the promo code. This is "
-"automatically generated when the promo code is changed."
-msgstr ""
-"Un champ technique utilisé comme alternative au code promo. Celui-ci est "
-"généré automatiquement lorsque le code promotionnel est modifié."
+msgid "A technical field used as an alternative to the promo code. This is automatically generated when the promo code is changed."
+msgstr "Un champ technique utilisé comme alternative au code promo. Celui-ci est généré automatiquement lorsque le code promotionnel est modifié."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -101,7 +98,7 @@ msgstr ""
 #: code:addons/pos_loyalty/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "Balance"
-msgstr "Solde"
+msgstr "Balance"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -119,7 +116,7 @@ msgstr "Règle de code-barres"
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de configuration"
+msgstr "Paramètres de config"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_pos_order_line__coupon_id
@@ -225,7 +222,7 @@ msgstr "Chèque cadeau ou code de remise"
 #: model:ir.ui.menu,name:pos_loyalty.menu_gift_ewallet_type_config
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.res_config_view_form_inherit_pos_loyalty
 msgid "Gift cards & eWallet"
-msgstr "Cartes cadeau & e-wallet"
+msgstr "Cartes cadeau & eWallet"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__points_cost
@@ -237,18 +234,14 @@ msgstr "Combien de points cette récompense coûte sur le montant du coupon."
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program reward. Use 1 currency per point discount."
-msgstr ""
-"Récompense du programme de carte-cadeau non valide. Utilisez 1 devise par "
-"point de remise."
+msgstr "Récompense du programme de carte-cadeau non valide. Utilisez 1 devise par point de remise."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
 msgid "Invalid gift card program rule. Use 1 point per currency spent."
-msgstr ""
-"Règle du programme de carte-cadeau non valide. Utilisez 1 point par devise "
-"dépensée."
+msgstr "Règle du programme de carte-cadeau non valide. Utilisez 1 point par devise dépensée."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -341,12 +334,12 @@ msgstr "Commande PoS pour laquelle ce coupon a été généré."
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_program__pos_ok
 #: model_terms:ir.ui.view,arch_db:pos_loyalty.loyalty_program_view_form_inherit_pos_loyalty
 msgid "Point of Sale"
-msgstr "Point de Vente"
+msgstr "Point de vente"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Configuration du point de vente"
+msgstr "Paramétrage du point de vente"
 
 #. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_pos_order_line
@@ -411,12 +404,8 @@ msgstr "Remboursement avec le eWallet"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/TicketScreen.js:0
 #, python-format
-msgid ""
-"Refunding a top up or reward product for an eWallet or gift card program is "
-"not allowed."
-msgstr ""
-"Le remboursement d'un produit de recharge ou de récompense pour un programme"
-" d'eWallet ou de carte-cadeau n'est pas autorisé."
+msgid "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
+msgstr "Le remboursement d'un produit de recharge ou de récompense pour un programme d'eWallet ou de carte-cadeau n'est pas autorisé."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -459,12 +448,8 @@ msgstr "Sélectionnez un programme"
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
-msgid ""
-"Some coupons are invalid. The applied coupons have been updated. Please "
-"check the order."
-msgstr ""
-"Certains coupons sont invalides. Les coupons appliqués ont été mis à jour. "
-"Veuillez vérifier la commande."
+msgid "Some coupons are invalid. The applied coupons have been updated. Please check the order."
+msgstr "Certains coupons sont invalides. Les coupons appliqués ont été mis à jour. Veuillez vérifier la commande."
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -510,12 +495,8 @@ msgstr ""
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_mail__pos_report_print_id
-msgid ""
-"The report action to be executed when creating a coupon/gift card/loyalty "
-"card in the PoS."
-msgstr ""
-"L'action de rapport à exécuter lors de la création d'un coupon/carte-"
-"cadeau/carte de fidélité dans le Point de Vente."
+msgid "The report action to be executed when creating a coupon/gift card/loyalty card in the PoS."
+msgstr "L'action de rapport à exécuter lors de la création d'un coupon/carte-cadeau/carte de fidélité dans le Point de Vente."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_pos_order_line__reward_id
@@ -541,39 +522,28 @@ msgstr "Il n'y a pas assez de points pour le coupon : %s."
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough points on the coupon to claim this reward."
-msgstr ""
-"Il n'y a pas assez de points sur le coupon pour réclamer cette récompense."
+msgstr "Il n'y a pas assez de points sur le coupon pour réclamer cette récompense."
 
 #. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
 msgid "There are not enough products in the basket to claim this reward."
-msgstr ""
-"Il n'y a pas assez de produits dans le panier pour réclamer cette "
-"récompense."
+msgstr "Il n'y a pas assez de produits dans le panier pour réclamer cette récompense."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"There is no email template on the gift card program and your pos is set to "
-"print them."
-msgstr ""
-"Il n'y a pas de modèle d'email sur le programme de carte-cadeau et votre "
-"point de vente est configuré pour les imprimer."
+msgid "There is no email template on the gift card program and your pos is set to print them."
+msgstr "Il n'y a pas de modèle d'email sur le programme de carte-cadeau et votre point de vente est configuré pour les imprimer."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"There is no print report on the gift card program and your pos is set to "
-"print them."
-msgstr ""
-"Il n'y a pas de rapport d'impression sur le programme de carte-cadeau et "
-"votre point de vente est configuré pour les imprimer."
+msgid "There is no print report on the gift card program and your pos is set to print them."
+msgstr "Il n'y a pas de rapport d'impression sur le programme de carte-cadeau et votre point de vente est configuré pour les imprimer."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_rule__valid_product_ids
@@ -605,29 +575,20 @@ msgstr "Cette carte cadeau a déjà été vendue"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/Loyalty.js:0
 #, python-format
-msgid ""
-"This gift card is not linked to any order. Do you really want to apply its "
-"reward?"
-msgstr ""
-"Cette carte cadeau n'est liée à aucune commande. Voulez-vous vraiment "
-"appliquer sa récompense ?"
+msgid "This gift card is not linked to any order. Do you really want to apply its reward?"
+msgstr "Cette carte cadeau n'est liée à aucune commande. Voulez-vous vraiment appliquer sa récompense ?"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_program__pos_report_print_id
 msgid "This is used to print the generated gift cards from PoS."
-msgstr ""
-"Ceci est utilisé pour imprimer les cartes-cadeaux générées à partir du Point"
-" de Vente."
+msgstr "Ceci est utilisé pour imprimer les cartes-cadeaux générées à partir du Point de Vente."
 
 #. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_config.py:0
 #, python-format
-msgid ""
-"To continue, make the following reward products available in Point of Sale."
-msgstr ""
-"Pour continuer, rendez les produits récompense suivants disponibles en Point"
-" de Vente."
+msgid "To continue, make the following reward products available in Point of Sale."
+msgstr "Pour continuer, rendez les produits récompense suivants disponibles en Point de Vente."
 
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
@@ -705,9 +666,7 @@ msgstr "Vous ne pouvez pas vendre une carte-cadeau qui a déjà été vendue."
 #: code:addons/pos_loyalty/static/src/js/ProductScreen.js:0
 #, python-format
 msgid "You cannot set negative quantity or price to gift card or ewallet."
-msgstr ""
-"Vous ne pouvez pas définir une quantité ou un prix négatif pour une carte-"
-"cadeau ou un eWallet."
+msgstr "Vous ne pouvez pas définir une quantité ou un prix négatif pour une carte-cadeau ou un eWallet."
 
 #. module: pos_loyalty
 #. odoo-python

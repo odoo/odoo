@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_totp
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# Cécile Collart <cco@odoo.com>, 2023
-# 
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 11:02+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: auth_totp
@@ -60,21 +60,13 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
-"muted\">This account is protected!</span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
-"muted\">Ce compte est protégé !</span>"
+msgid "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-muted\">This account is protected!</span>"
+msgstr "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-muted\">Ce compte est protégé !</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
-"muted\">Your account is protected!</span>"
-msgstr ""
-"<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-"
-"muted\">Votre compte est protégé !</span>"
+msgid "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-muted\">Your account is protected!</span>"
+msgstr "<span attrs=\"{'invisible': [('totp_enabled', '=', False)]}\" class=\"text-muted\">Votre compte est protégé !</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -96,12 +88,8 @@ msgstr ""
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
-msgid ""
-"<span class=\"text-muted\">Popular ones include Authy, Google Authenticator "
-"or the Microsoft Authenticator.</span>"
-msgstr ""
-"<span class=\"text-muted\">Les plus populaires incluent Authy, Google "
-"Authenticator ou Microsoft Authenticator.</span>"
+msgid "<span class=\"text-muted\">Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.</span>"
+msgstr "<span class=\"text-muted\">Les plus populaires incluent Authy, Google Authenticator ou Microsoft Authenticator.</span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -121,21 +109,13 @@ msgstr "Ajoute lé"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
-msgid ""
-"Are you sure? The user may be asked to enter two-factor codes again on those"
-" devices"
-msgstr ""
-"Êtes-vous sûr? L'utilisateur peut être invité à saisir à nouveau des codes à"
-" deux facteurs sur ces appareils."
+msgid "Are you sure? The user may be asked to enter two-factor codes again on those devices"
+msgstr "Êtes-vous sûr? L'utilisateur peut être invité à saisir à nouveau des codes à deux facteurs sur ces appareils."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
-msgid ""
-"Are you sure? You may be asked to enter two-factor codes again on those "
-"devices"
-msgstr ""
-"Êtes-vous sûr? Il se peut que vous soyez invité à saisir à nouveau des codes"
-" à deux facteurs sur ces appareils."
+msgid "Are you sure? You may be asked to enter two-factor codes again on those devices"
+msgstr "Êtes-vous sûr? Il se peut que vous soyez invité à saisir à nouveau des codes à deux facteurs sur ces appareils."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -265,7 +245,7 @@ msgstr "En savoir plus"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Log in"
-msgstr "Se connecter"
+msgstr "Connexion"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -400,17 +380,14 @@ msgstr "Authentification à deux facteurs déjà activée"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
-"L'authentification à deux facteurs ne peut être activée que pour vous-même"
+msgstr "L'authentification à deux facteurs ne peut être activée que pour vous-même"
 
 #. module: auth_totp
 #. odoo-python
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for the following user(s): %s"
-msgstr ""
-"Authentification à deux facteurs désactivée pour les utilisateurs suivants :"
-" %s"
+msgstr "Authentification à deux facteurs désactivée pour les utilisateurs suivants : %s"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url

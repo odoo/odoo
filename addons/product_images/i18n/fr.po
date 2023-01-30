@@ -1,35 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_images
-# 
+#
 # Translators:
-# Martin Trigaux, 2023
-# Cécile Collart <cco@odoo.com>, 2023
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
-msgid ""
-"%(matching_images_count)s matching images have been found for "
-"%(product_count)s products."
-msgstr ""
-"%(matching_images_count)s images correspondantes ont été trouvés pour "
-"%(product_count)s produits."
+msgid "%(matching_images_count)s matching images have been found for %(product_count)s products."
+msgstr "%(matching_images_count)s images correspondantes ont été trouvés pour %(product_count)s produits."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -47,12 +43,8 @@ msgstr ""
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
-msgid ""
-"A task to process products in the background is already running. Please try "
-"againlater."
-msgstr ""
-"Une tâche pour traiter les produits est déjà en cours en arrière-plan. "
-"Veuillez réessayer plus tard."
+msgid "A task to process products in the background is already running. Please try againlater."
+msgstr "Une tâche pour traiter les produits est déjà en cours en arrière-plan. Veuillez réessayer plus tard."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -67,7 +59,7 @@ msgstr "Annuler"
 #. module: product_images
 #: model:ir.model,name:product_images.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de configuration"
+msgstr "Paramètres de config"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__create_uid
@@ -86,12 +78,8 @@ msgstr "Afficher le nom"
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_product_fetch_image_wizard
-msgid ""
-"Fetch product images from Google Images based on the product's barcode "
-"number."
-msgstr ""
-"Collecter des images de produit depuis Google Images en fonction du code-"
-"barres du produit."
+msgid "Fetch product images from Google Images based on the product's barcode number."
+msgstr "Collecter des images de produit depuis Google Images en fonction du code-barres du produit."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -184,12 +172,8 @@ msgstr "Produits à traiter"
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
-msgid ""
-"Products are processed in the background. Images will be updated "
-"progressively."
-msgstr ""
-"Les produits sont traités en arrière-plan. Les images seront mises à jour "
-"progressivement."
+msgid "Products are processed in the background. Images will be updated progressively."
+msgstr "Les produits sont traités en arrière-plan. Les images seront mises à jour progressivement."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.res_config_settings_view_form
@@ -200,22 +184,13 @@ msgstr "ID moteur de recherche"
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
-msgstr ""
-"La clé API et l'ID du moteur de recherche doivent être configurées dans les "
-"paramètres généraux."
+msgstr "La clé API et l'ID du moteur de recherche doivent être configurées dans les paramètres généraux."
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
-msgid ""
-"The Custom Search API is not enabled in your Google project. Please visit "
-"your Google Cloud Platform project page and enable it, then retry. If you "
-"enabled this API recently, please wait a few minutes and retry."
-msgstr ""
-"La recherche personnalisée API n'est pas activée dans votre projet Google. "
-"Allez à voter page de projet Google Cloud Platform et activez-la, puis "
-"réessayez. Si vous avez activé cet API récemment, veuillez attendre quelques"
-" minutes et réessayer plus tard."
+msgid "The Custom Search API is not enabled in your Google project. Please visit your Google Cloud Platform project page and enable it, then retry. If you enabled this API recently, please wait a few minutes and retry."
+msgstr "La recherche personnalisée API n'est pas activée dans votre projet Google. Allez à voter page de projet Google Cloud Platform et activez-la, puis réessayez. Si vous avez activé cet API récemment, veuillez attendre quelques minutes et réessayer plus tard."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
@@ -224,25 +199,14 @@ msgstr "L'identifiant du moteur de recherche programmable de Google"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
-msgid ""
-"The list of selected products that meet the criteria (have a barcode and no "
-"image)"
-msgstr ""
-"La liste des produits sélectionnés qui correspondent aux critères (ont un "
-"code-barres et pas d'image)"
+msgid "The list of selected products that meet the criteria (have a barcode and no image)"
+msgstr "La liste des produits sélectionnés qui correspondent aux critères (ont un code-barres et pas d'image)"
 
 #. module: product_images
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
-#: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
-msgid ""
-"The scheduled action \"Product Images: Get product images from Google\" has "
-"been deleted. Please contact your administrator to have the action restored "
-"or to reinstall the module \"product_images\"."
-msgstr ""
-"L'action planifiée \"Images de produits : Obtenir des images de Google\" a "
-"été supprimée. Veuillez contacter votre administrateur pour restaurer "
-"l'action ou réinstaller le module \"product_images\"."
+msgid "The scheduled action \"Product Images: Get product images from Google\" has been deleted. Please contact your administrator to have the action restored or to reinstall the module \"product_images\"."
+msgstr "L'action planifiée \"Images de produits : Obtenir des images de Google\" a été supprimée. Veuillez contacter votre administrateur pour restaurer l'action ou réinstaller le module \"product_images\"."
 
 #. module: product_images
 #: code:addons/product_images/models/ir_cron_trigger.py:0
@@ -258,9 +222,7 @@ msgstr "Actions déclenchées"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr ""
-"Indique si une image doit être récupérée pour ce produit. Manipulé par un "
-"cron."
+msgstr "Indique si une image doit être récupérée pour ce produit. Manipulé par un cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -271,8 +233,7 @@ msgstr "Vous avez sélectionné"
 #: code:addons/product_images/wizard/product_fetch_image_wizard.py:0
 #, python-format
 msgid "Your API Key or your Search Engine ID is incorrect."
-msgstr ""
-"Votre clé API ou votre identifiant de moteur de recherche est incorrect."
+msgstr "Votre clé API ou votre identifiant de moteur de recherche est incorrect."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

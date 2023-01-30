@@ -1,29 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* resource
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 14:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: resource
 #. odoo-python
-#: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "%s (copy)"
@@ -49,21 +47,13 @@ msgstr "Gearchiveerd"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid ""
-"Are you sure you want to switch this calendar to 1 week calendar ? All "
-"entries will be lost"
-msgstr ""
-"Ben je zeker dat je de kalender weergave naar 1 week wilt wisselen? Alle "
-"boekingen gaan verloren"
+msgid "Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"
+msgstr "Ben je zeker dat je de kalender weergave naar 1 week wilt wisselen? Alle boekingen gaan verloren"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
-msgid ""
-"Are you sure you want to switch this calendar to 2 weeks calendar ? All "
-"entries will be lost"
-msgstr ""
-"Ben je zeker dat je de kalender weergave naar 2 weken wilt wisselen? Alle "
-"boekingen gaan verloren"
+msgid "Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"
+msgstr "Ben je zeker dat je de kalender weergave naar 2 weken wilt wisselen? Alle boekingen gaan verloren"
 
 #. module: resource
 #. odoo-python
@@ -79,11 +69,8 @@ msgstr "Gemiddeld aantal uren per dag"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__hours_per_day
-msgid ""
-"Average hours per day a resource is supposed to work with this calendar."
-msgstr ""
-"Gemiddeld aantal uren per dag dat een resource met deze kalender hoort te "
-"werken."
+msgid "Average hours per day a resource is supposed to work with this calendar."
+msgstr "Gemiddeld aantal uren per dag dat een resource met deze kalender hoort te werken."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__two_weeks_calendar
@@ -145,11 +132,8 @@ msgstr "Standaard werkuren"
 
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_calendar_form
-msgid ""
-"Define working hours and time table that could be scheduled to your project "
-"members"
-msgstr ""
-"Definieer werkuren en tijdschema dat kan gepland worden voor je projectleden"
+msgid "Define working hours and time table that could be scheduled to your project members"
+msgstr "Definieer werkuren en tijdschema dat kan gepland worden voor je projectleden"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__display_name
@@ -157,7 +141,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__display_name
 #: model:ir.model.fields,field_description:resource.field_resource_resource__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__display_type
@@ -214,9 +198,7 @@ msgstr "Vrijdagochtend"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_attendance__sequence
 msgid "Gives the sequence of this line when displaying the resource calendar."
-msgstr ""
-"Geeft de reeks van deze regels wanneer ze getoond wordt in de resource "
-"kalender."
+msgstr "Geeft de reeks van deze regels wanneer ze getoond wordt in de resource kalender."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__global_leave_ids
@@ -227,7 +209,7 @@ msgstr "Algemene verlof"
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_attendance_form
@@ -238,7 +220,7 @@ msgstr "Uren"
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__user
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Human"
-msgstr "Mens"
+msgstr "Persoon"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__id
@@ -250,39 +232,25 @@ msgstr "ID"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__resource_id
-msgid ""
-"If empty, this is a generic time off for the company. If a resource is set, "
-"the time off is only for this resource"
-msgstr ""
-"Indien leeg, dan is dit een algemene vrije dag voor het bedrijf. Als de "
-"resource is ingevuld dan geldt de verlof alleen voor deze resource"
+msgid "If empty, this is a generic time off for the company. If a resource is set, the time off is only for this resource"
+msgstr "Indien leeg, dan is dit een algemene vrije dag voor het bedrijf. Als de resource is ingevuld dan geldt de verlof alleen voor deze resource"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__active
-msgid ""
-"If the active field is set to False, it will allow you to hide the resource "
-"record without removing it."
-msgstr ""
-"Als het actief veld is ingesteld op False, kun je het resource record "
-"verbergen zonder deze te verwijderen."
+msgid "If the active field is set to False, it will allow you to hide the resource record without removing it."
+msgstr "Als het actief veld uitstaat, kun je het resource record verbergen zonder deze te verwijderen."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__active
-msgid ""
-"If the active field is set to false, it will allow you to hide the Working "
-"Time without removing it."
-msgstr ""
-"Indien het actief veld is uitgevinkt heb je de mogelijkheid om de werktijd "
-"te verbergen, zonder deze te verwijderen."
+msgid "If the active field is set to false, it will allow you to hide the Working Time without removing it."
+msgstr "Indien het actief veld is uitgevinkt heb je de mogelijkheid om de werktijd te verbergen, zonder deze te verwijderen."
 
 #. module: resource
 #. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
-msgid ""
-"In a calendar with 2 weeks mode, all periods need to be in the sections."
-msgstr ""
-"In een kalender met 2 weken modus moeten alle periodes in de secties staan."
+msgid "In a calendar with 2 weeks mode, all periods need to be in the sections."
+msgstr "In een kalender met 2 weken modus moeten alle periodes in de secties staan."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -357,8 +325,7 @@ msgstr "Reden"
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr ""
-"Gekoppelde gebruikersnaam voor de werknemer om zijn toegang te beheren."
+msgstr "Gekoppelde gebruikersnaam voor de resource om zijn toegang te beheren."
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance__resource_id
@@ -369,7 +336,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
 msgid "Resource"
-msgstr "Bron"
+msgstr "Resource"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_mixin
@@ -416,14 +383,8 @@ msgstr "Resource verlof"
 #. module: resource
 #: model_terms:ir.actions.act_window,help:resource.action_resource_resource_tree
 #: model_terms:ir.actions.act_window,help:resource.resource_resource_action_from_calendar
-msgid ""
-"Resources allow you to create and manage resources that should be involved "
-"in a specific project phase. You can also set their efficiency level and "
-"workload based on their weekly working hours."
-msgstr ""
-"Resources laat je resources maken en beheren die worden betrokken bij een "
-"specifieke projectfase. Je kunt ook hun efficiëntie niveau en werkbelasting "
-"instellen op basis van hun wekelijkse werktijden."
+msgid "Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours."
+msgstr "Resources laat je resources maken en beheren die worden betrokken bij een specifieke projectfase. Je kunt ook hun efficiëntie niveau en werkbelasting instellen op basis van hun wekelijkse werktijden."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__5
@@ -535,27 +496,13 @@ msgstr "De startdatum van het verlof moet eerder zijn dan de einddatum."
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar__tz
 #: model:ir.model.fields,help:resource.field_resource_mixin__tz
-msgid ""
-"This field is used in order to define in which timezone the resources will "
-"work."
-msgstr ""
-"Dit veld wordt gebruikt om aan te geven in welke tijdzone de resource zal "
-"werken."
+msgid "This field is used in order to define in which timezone the resources will work."
+msgstr "Dit veld wordt gebruikt in de order om te definiëren in welke tijdzone de resource zal werken."
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_resource__time_efficiency
-msgid ""
-"This field is used to calculate the expected duration of a work order at "
-"this work center. For example, if a work order takes one hour and the "
-"efficiency factor is 100%, then the expected duration will be one hour. If "
-"the efficiency factor is 200%, however the expected duration will be 30 "
-"minutes."
-msgstr ""
-"Dit veld wordt gebruikt om de verwachte duur van een werkorder in deze "
-"werkplek te berekenen. Bijvoorbeeld, als een werkorder een uur in beslag "
-"neemt en de efficiëntiefactor 100% is, zal de verwachte duur 1 uur zijn. "
-"Indien de efficiëntiefactor 200% is zal de verwachte duur echter 30 minuten "
-"zijn."
+msgid "This field is used to calculate the expected duration of a work order at this work center. For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour. If the efficiency factor is 200%, however the expected duration will be 30 minutes."
+msgstr "Dit veld wordt gebruikt om de verwachte duur van een werkorder in deze werkplek te berekenen. Bijvoorbeeld, als een werkorder een uur duurt en de efficiëntie factor 100% is, zal de verwachte duur 1 uur zijn. Indien de efficiëntie factor 200% is zal de verwachte duur echter 30 minuten zijn."
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__3
@@ -639,7 +586,7 @@ msgstr "Dinsdagochtend"
 #: model:ir.model.fields,field_description:resource.field_resource_resource__resource_type
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: resource
 #: model:ir.model,name:resource.model_res_users
@@ -674,12 +621,8 @@ msgstr "Weeknummer"
 
 #. module: resource
 #: model:ir.model.fields,help:resource.field_resource_calendar_leaves__time_type
-msgid ""
-"Whether this should be computed as a time off or as work time (eg: "
-"formation)"
-msgstr ""
-"Of dit berekend moet worden als afwezige tijd of als werktijd (bijvoorbeeld:"
-" formatie)"
+msgid "Whether this should be computed as a time off or as work time (eg: formation)"
+msgstr "Of dit berekend moet worden als afwezige tijd of als werktijd (bijvoorbeeld: formatie)"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_calendar_attendance

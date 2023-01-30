@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_sms
-# 
+#
 # Translators:
-# Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-04-19 13:58+0000\n"
-"PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: event_sms
@@ -28,7 +28,7 @@ msgstr "Evenement geautomatiseerde e-mail"
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "Evenementregistratie"
+msgstr "Evenementinschrijving"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
@@ -63,7 +63,7 @@ msgstr "Evenement inschrijvingen e-mail planner"
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr "sms"
+msgstr "SMS"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_sms_template
@@ -78,11 +78,5 @@ msgstr "Verzenden"
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
-msgid ""
-"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: We are happy to confirm your registration for the "
-"{{ object.event_id.name }} event."
-msgstr ""
-"{{ object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name }}: We bevestigen graag je inschrijving voor het {{ "
-"object.event_id.name }} evenement."
+msgid "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or user.env.company.name }}: We are happy to confirm your registration for the {{ object.event_id.name }} event."
+msgstr "{{ object.event_id.organizer_id.name or object.event_id.company_id.name or user.env.company.name }}: We bevestigen graag je inschrijving voor het {{ object.event_id.name }} evenement."

@@ -1,45 +1,36 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_signup
-# 
+#
 # Translators:
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2022
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Jolien De Paepe, 2023
-# Martin Trigaux, 2023
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2023-01-17 11:02+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>A password reset has been requested for this user. An email "
-"containing the following link has been sent:</strong>"
-msgstr ""
-"<strong>Voor deze gebruiker werd een aanvraag ingediend om het wachtwoord "
-"opnieuw in te stellen. Een e-mail werd verzonden met de volgende "
-"link:</strong>"
+msgid "<strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>"
+msgstr "<strong>Voor deze gebruiker werd een aanvraag ingediend om het wachtwoord opnieuw in te stellen. Een e-mail werd verzonden met de volgende link:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid ""
-"<strong>An invitation email containing the following subscription link has "
-"been sent:</strong>"
-msgstr ""
-"<strong>Een uitnodigingsemail met de volgende inschrijvingslink is "
-"verzonden:</strong>"
+msgid "<strong>An invitation email containing the following subscription link has been sent:</strong>"
+msgstr "<strong>Een uitnodigingsemail met de volgende inschrijvingslink is verzonden:</strong>"
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
@@ -657,13 +648,12 @@ msgstr "Terug naar login"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
-"E-mail kan niet verzonden worden: gebruiker %s heeft geen e-mailadres. "
+msgstr "E-mail kan niet verzonden worden: gebruiker %s heeft geen e-mailadres. "
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
@@ -683,7 +673,7 @@ msgstr "Bevestigd"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_partner
 msgid "Contact"
-msgstr "Contacteer"
+msgstr "Contact"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -721,7 +711,7 @@ msgstr "Wachtwoord reset vanaf login pagina toestaan"
 #. module: auth_signup
 #: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Gratis registratie"
+msgstr "Vrije registratie"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
@@ -780,9 +770,7 @@ msgstr "Wachtwoord resetten"
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Password reset instructions sent to your email"
-msgstr ""
-"Instructies voor het opnieuw instellen van het wachtwoord zijn verzonden "
-"naar je e-mailadres"
+msgstr "Instructies voor het opnieuw instellen van het wachtwoord zijn verzonden naar je e-mailadres"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -819,11 +807,8 @@ msgstr "Verzend een uitnodigingsmail"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.mail_template_data_unregistered_users
-msgid ""
-"Sent automatically to admin if new user haven't responded to the invitation"
-msgstr ""
-"Automatisch verzonden naar beheerder als nieuwe gebruiker niet op de "
-"uitnodiging heeft gereageerd"
+msgid "Sent automatically to admin if new user haven't responded to the invitation"
+msgstr "Automatisch verzonden naar beheerder als nieuwe gebruiker niet op de uitnodiging heeft gereageerd"
 
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.set_password_email
@@ -838,8 +823,7 @@ msgstr "Verzonden naar de portaalgebruiker die zichtzelf heeft geregistreerd"
 #. module: auth_signup
 #: model:mail.template,description:auth_signup.reset_password_email
 msgid "Sent to user who requested a password reset"
-msgstr ""
-"Verzonden naar een gebruiker die zijn wachtwoord opnieuw wil instellen"
+msgstr "Verzonden naar een gebruiker die zijn wachtwoord opnieuw wil instellen"
 
 #. module: auth_signup
 #: model:mail.template,name:auth_signup.set_password_email
@@ -940,8 +924,7 @@ msgstr "Status"
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_template_user_id
 msgid "Template user for new users created through signup"
-msgstr ""
-"Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelding"
+msgstr "Sjabloon gebruiker voor het aanmaken van nieuwe gebruikers, bij aanmelding"
 
 #. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
@@ -951,14 +934,8 @@ msgstr "Dit formulier is niet correct ingevuld."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
-msgid ""
-"To send invitations in B2B mode, open a contact or select several ones in "
-"list view and click on 'Portal Access Management' option in the dropdown "
-"menu *Action*."
-msgstr ""
-"Om uitnodigingen in B2B modus te sturen, open je een contact of selecteer je"
-" er meerdere in een lijstweergave. Klik dan op de optie 'Portaal "
-"toegangsbeheer' in het actie menu."
+msgid "To send invitations in B2B mode, open a contact or select several ones in list view and click on 'Portal Access Management' option in the dropdown menu *Action*."
+msgstr "Om uitnodigingen in B2B modus te sturen, open je een contact of selecteer je er meerdere in een lijstweergave. Klik dan op de optie 'Portaal toegangsbeheer' in het actie menu."
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_users
@@ -1001,9 +978,5 @@ msgstr "bijv. John Doe"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.set_password_email
-msgid ""
-"{{ object.create_uid.name }} from {{ object.company_id.name }} invites you "
-"to connect to Odoo"
-msgstr ""
-"{{ object.create_uid.name }} van {{ object.company_id.name }} nodigt je uit "
-"om verbinding te maken met Odoo"
+msgid "{{ object.create_uid.name }} from {{ object.company_id.name }} invites you to connect to Odoo"
+msgstr "{{ object.create_uid.name }} van {{ object.company_id.name }} nodigt je uit om verbinding te maken met Odoo"

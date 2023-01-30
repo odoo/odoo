@@ -1,34 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-# 
+#
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2019
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
 # Martin Trigaux, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
 msgid ""
-"Automatically create local user accounts for new users authenticating via "
-"LDAP"
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 msgstr ""
-"Création automatique des comptes utilisateur locaux pour les nouveaux "
-"utilisateurs authentifiés par LDAP."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgstr "Création automatique des comptes utilisateur locaux pour les nouveaux utilisateurs authentifiés par LDAP."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -64,6 +77,11 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "Créé le"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -143,12 +161,10 @@ msgid "Login Information"
 msgstr "Information de connexion"
 
 #. module: auth_ldap
-#: code:addons/auth_ldap/models/res_company_ldap.py:202
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr ""
-"Pas d'utilisateur local trouvé pour l’identifiant LDAP et n'est pas "
-"configuré pour en créer un"
+msgstr "Pas d'utilisateur local trouvé pour l’identifiant LDAP et n'est pas configuré pour en créer un"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -157,14 +173,8 @@ msgstr "Paramètre du processus"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid ""
-"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication"
-" attempts will fail."
-msgstr ""
-"Demander un chiffrement sécurisé via TLS/SSL lors de la connexion au serveur"
-" LDAP. Cette option nécessite un serveur avec STARTTLS activé, sinon toutes "
-"les tentatives d'authentification échoueront."
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgstr "Demander un chiffrement sécurisé via TLS/SSL lors de la connexion au serveur LDAP. Cette option nécessite un serveur avec STARTTLS activé, sinon toutes les tentatives d'authentification échoueront."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -188,21 +198,13 @@ msgstr "Utilisateur modèle"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid ""
-"The password of the user account on the LDAP server that is used to query "
-"the directory."
-msgstr ""
-"Le mot de passe du compte d'utilisateur sur le serveur LDAP qui est utilisé "
-"pour interroger l'annuaire."
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr "Le mot de passe du compte d'utilisateur sur le serveur LDAP qui est utilisé pour interroger l'annuaire."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid ""
-"The user account on the LDAP server that is used to query the directory. "
-"Leave empty to connect anonymously."
-msgstr ""
-"Compte utilisateur sur le serveur LDAP qui est utilisé pour interroger "
-"l'annuaire. Laisser vide pour se connecter anonymement."
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr "Compte utilisateur sur le serveur LDAP qui est utilisé pour interroger l'annuaire. Laisser vide pour se connecter anonymement."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

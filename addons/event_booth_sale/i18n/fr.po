@@ -1,24 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* event_booth_sale
-# 
+#
 # Translators:
-# Cécile Collart <cco@odoo.com>, 2023
-# Martin Trigaux, 2023
+# Martin Trigaux, 2022
+# Cécile Collart <cco@odoo.com>, 2022
 # Jolien De Paepe, 2023
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: event_booth_sale
@@ -29,8 +29,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un produit stockable est un produit pour lequel vous gérez un stock. L'application \"Inventaire\" doit être installée. \n"
-"Un produit consommable est un produit pour lequel vous ne gérez pas de stock.\n"
+"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
 "Un service est un produit immatériel que vous fournissez."
 
 #. module: event_booth_sale
@@ -47,9 +47,7 @@ msgstr "Catégorie de stand"
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Booth Category for which booths are still available. Used in frontend"
-msgstr ""
-"Catégorie de stand pour laquelle des stands sont encore disponibles. Utilisé"
-" en front-end"
+msgstr "Catégorie de stand pour laquelle des stands sont encore disponibles. Utilisé en front-end"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
@@ -184,7 +182,7 @@ msgstr "Configurateur de stand événementiel"
 #: model:ir.model,name:event_booth_sale.model_event_booth_registration
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__event_booth_registration_ids
 msgid "Event Booth Registration"
-msgstr "Réservation d'un stand d'événement"
+msgstr "Réservation d'un stand événementiel"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_type_booth
@@ -220,7 +218,7 @@ msgstr "Est payé"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_account_move
 msgid "Journal Entry"
-msgstr "Écriture comptable"
+msgstr "Pièce comptable"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator____last_update
@@ -312,9 +310,7 @@ msgstr "Inscriptions"
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
-msgstr ""
-"Les inscriptions d'une même ligne de commande doivent appartenir à un seul "
-"événement."
+msgstr "Les inscriptions d'une même ligne de commande doivent appartenir à un seul événement."
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_registration_ids
@@ -330,7 +326,7 @@ msgstr "Bon de commande"
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__sale_order_line_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "Ligne de bon de commande"
+msgstr "Ligne de commande"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order
@@ -340,7 +336,7 @@ msgstr "Bon de commande"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bon de commande"
+msgstr "Ligne de bons de commande"
 
 #. module: event_booth_sale
 #: model:ir.actions.act_window,name:event_booth_sale.event_booth_configurator_action
@@ -350,19 +346,13 @@ msgstr "Sélectionnez un stand d'événement"
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
-msgid ""
-"The following booths are unavailable, please remove them to continue : "
-"%(booth_names)s"
-msgstr ""
-"Les stands suivants sont indisponibles, veuillez les retirer pour continuer "
-":%(booth_names)s"
+msgid "The following booths are unavailable, please remove them to continue : %(booth_names)s"
+msgstr "Les stands suivants sont indisponibles, veuillez les retirer pour continuer :%(booth_names)s"
 
 #. module: event_booth_sale
 #: model:ir.model.constraint,message:event_booth_sale.constraint_event_booth_registration_unique_registration
 msgid "There can be only one registration for a booth by sale order line"
-msgstr ""
-"Il ne peut y avoir qu'une seule inscription pour un stand par ligne de "
-"commande de vente"
+msgstr "Il ne peut y avoir qu'une seule inscription pour un stand par ligne de commande de vente"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_tree_from_event
@@ -372,24 +362,18 @@ msgstr "Total"
 #. module: event_booth_sale
 #: model:product.product,uom_name:event_booth_sale.product_product_event_booth
 msgid "Units"
-msgstr "Unités"
+msgstr "Unité(s)"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
-msgstr ""
-"Utilisé pour créer une inscription lors de la fourniture du stand "
-"d'événement souhaité."
+msgstr "Utilisé pour créer une inscription lors de la fourniture du stand d'événement souhaité."
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth.py:0
 #, python-format
-msgid ""
-"You can't delete the following booths as they are linked to sales orders: "
-"%(booths)s"
-msgstr ""
-"Vous ne pouvez pas supprimer les stands suivants car ils sont liés à des "
-"bons de commande : %(booths)s"
+msgid "You can't delete the following booths as they are linked to sales orders: %(booths)s"
+msgstr "Vous ne pouvez pas supprimer les stands suivants car ils sont liés à des bons de commande : %(booths)s"
 
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
@@ -400,7 +384,5 @@ msgstr "Vous devez sélectionner au moins un stand."
 #. module: event_booth_sale
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
 #, python-format
-msgid ""
-"Your order has been cancelled because the following booths have been "
-"reserved"
+msgid "Your order has been cancelled because the following booths have been reserved"
 msgstr "Votre commande a été annulée car les stands suivants ont été réservés"

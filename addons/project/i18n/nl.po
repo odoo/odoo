@@ -1,28 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* project
-# 
+#
 # Translators:
-# Eric Geens <ericgeens@yahoo.com>, 2023
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
-# Lukas Van Cauter <cvl@odoo.com>, 2023
-# Dylan Kiss, 2023
+# Eric Geens <ericgeens@yahoo.com>, 2022
+# Lukas Van Cauter <cvl@odoo.com>, 2022
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
-# 
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
-"PO-Revision-Date: 2023-01-17 14:38+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: project
@@ -40,7 +39,7 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Geen mijlstones gevonden. Laten we er een maken!\n"
+"                    Geen milestones gevonden. Laten we er een maken!\n"
 "                </p><p>\n"
 "                    Houd belangrijke voortgangspunten bij die moeten worden bereikt om succes te behalen.\n"
 "                </p>\n"
@@ -80,12 +79,8 @@ msgstr "# Taken"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid ""
-"#{record.milestone_count_reached.value} Milestones reached out of "
-"#{record.milestone_count.value}"
-msgstr ""
-"#{record.milestone_count_reached.value} Milestones bereikt van "
-"#{record.milestone_count.value}"
+msgid "#{record.milestone_count_reached.value} Milestones reached out of #{record.milestone_count.value}"
+msgstr "#{record.milestone_count_reached.value} Milestones bereikt van #{record.milestone_count.value}"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -143,8 +138,6 @@ msgstr "%(name)s's updates"
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
-#: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #: code:addons/project/models/project_project_stage.py:0
 #, python-format
@@ -533,13 +526,8 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid ""
-"<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> "
-"Customer Ratings</b> are disabled on the following project(s) : <br/>"
-msgstr ""
-"<i class=\"fa fa-warning\" title=\"Klant uitgeschakeld op projecten\"/><b> "
-"Klantbeoordelingen </b> zijn uitgeschakeld voor de volgende project "
-"(en):<br/>"
+msgid "<i class=\"fa fa-warning\" title=\"Customer disabled on projects\"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>"
+msgstr "<i class=\"fa fa-warning\" title=\"Klant uitgeschakeld op projecten\"/><b> Klantbeoordelingen </b> zijn uitgeschakeld voor de volgende project (en):<br/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -560,12 +548,8 @@ msgstr "<small class=\"text-end\">Fase:</small>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
-msgid ""
-"<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
-"('repeat_show_month', '=', False)]}\">of</span>"
-msgstr ""
-"<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), "
-"('repeat_show_month', '=', False)]}\">van</span>"
+msgid "<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}\">of</span>"
+msgstr "<span attrs=\"{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}\">van</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -574,12 +558,8 @@ msgstr "<span class=\"fa fa-clock-o me-2\" title=\"Dates\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
-msgid ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" "
-"title=\"Domain Alias\"/>"
-msgstr ""
-"<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domeinalias\" "
-"title=\"Domeinalias\"/>"
+msgid "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domain Alias\" title=\"Domain Alias\"/>"
+msgstr "<span class=\"fa fa-envelope-o me-2\" aria-label=\"Domeinalias\" title=\"Domeinalias\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -631,7 +611,7 @@ msgstr "<span>Rapportages</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span>View</span>"
-msgstr "<span>Bekijken</span>"
+msgstr "<span>Overzicht</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -690,22 +670,13 @@ msgstr "=&gt;"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_defaults
-msgid ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
-msgstr ""
-"Een Python woordenboek dat zal worden geëvalueerd om standaardwaarden te "
-"bieden bij het aanmaken van nieuwe records voor deze alias."
+msgid "A Python dictionary that will be evaluated to provide default values when creating new records for this alias."
+msgstr "Een Python bibliotheek dat zal worden gebruikt om standaardwaarden te bieden bij het maken van nieuwe records voor deze alias."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
-msgid ""
-"A collaborator cannot be selected more than once in the project sharing "
-"access. Please remove duplicate(s) and try again."
-msgstr ""
-"Een bijdrager kan niet meer dan één keer worden geselecteerd in de "
-"deeltoegang voor het project. Verwijder duplicaat(en) en probeer het "
-"opnieuw."
+msgid "A collaborator cannot be selected more than once in the project sharing access. Please remove duplicate(s) and try again."
+msgstr "Een bijdrager kan niet meer dan één keer worden geselecteerd in de deeltoegang voor het project. Verwijder duplicaat(en) en probeer het opnieuw."
 
 #. module: project
 #. odoo-python
@@ -718,12 +689,8 @@ msgstr "Op de volgende data wordt een nieuwe taak aangemaakt:"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"A personal stage cannot be linked to a project because it is only visible to"
-" its corresponding user."
-msgstr ""
-"Een persoonlijke fase kan niet gekoppeld worden aan een project omdat het "
-"enkel zichtbaar is voor de corresponderende gebruiker."
+msgid "A personal stage cannot be linked to a project because it is only visible to its corresponding user."
+msgstr "Een persoonlijke fase kan niet gekoppeld worden aan een project omdat het enkel zichtbaar is voor de corresponderende gebruiker."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
@@ -743,7 +710,7 @@ msgstr "Accepteer e-mails van"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_instruction_message
 msgid "Access Instruction Message"
-msgstr "Instructiebericht bekijken"
+msgstr "Toegangsinstructiebericht"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__access_mode
@@ -763,7 +730,7 @@ msgstr "Toegang waarschuwing"
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction
 #: model:ir.model.fields,field_description:project.field_project_update__message_needaction
 msgid "Action Needed"
-msgstr "Actie nodig"
+msgstr "Actie gevraagd"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__active
@@ -787,27 +754,27 @@ msgstr "Activiteiten"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activiteit Uitzondering Decoratie"
+msgstr "Activiteit uitzondering decoratie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_state
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 #: model:ir.model.fields,field_description:project.field_project_update__activity_state
 msgid "Activity State"
-msgstr "Activiteitsstatus"
+msgstr "Activiteitsfase"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitstype icoon"
+msgstr "Activiteitensoort icoon"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
 #: model:ir.ui.menu,name:project.project_menu_config_activity_type
 msgid "Activity Types"
-msgstr "Activiteitstypes"
+msgstr "Activiteitssoorten"
 
 #. module: project
 #. odoo-javascript
@@ -820,24 +787,19 @@ msgstr "Voeg milestone toe"
 #: model_terms:ir.ui.view,arch_db:project.personal_task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Add a description..."
-msgstr "Een omschrijving toevoegen..."
+msgstr "Voeg een omschrijving toe..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
 msgid "Add a note"
-msgstr "Notitie toevoegen"
+msgstr "Voeg een notitie toe"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
-"Progress - Done</i>."
-msgstr ""
-"Voeg kolommen toe om je taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw - "
-"In uitvoering - Gereed</i>."
+msgid "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>."
+msgstr "Voeg kolommen toe om je taken in <b>fasen</b> te ordenen, <i>bijv. Nieuw - In uitvoering - Gereed</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -906,7 +868,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
 msgid "Aliased Model"
-msgstr "Gealiased model"
+msgstr "Aliased Model"
 
 #. module: project
 #. odoo-python
@@ -964,7 +926,7 @@ msgid ""
 msgstr ""
 "Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
 "Volg de kosten en inkomsten van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"De kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Deze kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
 "Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
 
 #. module: project
@@ -982,23 +944,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Analytics"
-msgstr "Analytics"
+msgstr "Analyses"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
-msgid ""
-"Analyze how quickly your team is completing your project's tasks and check "
-"if everything is progressing according to plan."
-msgstr ""
-"Analyseer hoe snel je team de taken van je project voltooit en controleer of"
-" alles volgens plan verloopt."
+msgid "Analyze how quickly your team is completing your project's tasks and check if everything is progressing according to plan."
+msgstr "Analyseer hoe snel je team de taken van je project voltooit en controleer of alles volgens plan verloopt."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
-msgid ""
-"Analyze the progress of your projects and the performance of your employees."
-msgstr ""
-"Analyseer de voortgang van je projecten en de prestaties van je werknemers."
+msgid "Analyze the progress of your projects and the performance of your employees."
+msgstr "Analyseer de voortgang van je projecten en de prestaties van je werknemers."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
@@ -1035,9 +991,7 @@ msgstr "Gearchiveerd"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
-msgstr ""
-"Gearchiveerde taken kunnen niet terugkerend zijn. Maak de taak eerst "
-"ongedaan."
+msgstr "Gearchiveerde taken kunnen niet terugkerend zijn. Maak de taak eerst ongedaan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -1047,7 +1001,7 @@ msgstr "Weet je zeker dat je door wilt gaan?"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete those stages ?"
-msgstr "Weet je zeker dat je deze fasen wilt verwijderen?"
+msgstr "Weet je zeker dat je deze fase wilt verwijderen?"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1214,7 +1168,7 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:project.field_project_task__rating_avg
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__rating_avg
 msgid "Average Rating"
-msgstr "Gemiddelde beoordeling"
+msgstr "Gemiddelde score"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_avg_percentage
@@ -1242,7 +1196,6 @@ msgstr "Gemiddelde beoordeling: tevreden"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
 msgstr "Backlog"
@@ -1263,7 +1216,7 @@ msgstr "Gefactureerd"
 #: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
 msgid "Block"
-msgstr "Blokkeren"
+msgstr "Blok"
 
 #. module: project
 #. odoo-python
@@ -1328,7 +1281,7 @@ msgstr "Kan veld %r niet agregeren."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon."
+msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1350,15 +1303,13 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
-msgstr ""
-"Kies een <b>taaknaam</b> <i>(bijv. Website-ontwerp, goederen kopen...)</i>"
+msgid "Choose a task <b>name</b> <i>(e.g. Website Design, Purchase Goods...)</i>"
+msgstr "Kies een <b>taaknaam</b> <i>(bijv. Website-ontwerp, goederen kopen...)</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_city
 msgid "City"
-msgstr "Stad"
+msgstr "Plaats"
 
 #. module: project
 #. odoo-javascript
@@ -1376,14 +1327,8 @@ msgstr "Afsluitfase"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
-msgid ""
-"Collaborate efficiently with key stakeholders by sharing with them the "
-"Kanban view of your tasks. Collaborators will be able to edit parts of tasks"
-" and send messages."
-msgstr ""
-"Werk efficiënt samen met de belangrijkste belanghebbenden door de Kanban-"
-"weergave van je taken met hen te delen. Medewerkers kunnen delen van taken "
-"bewerken en berichten verzenden."
+msgid "Collaborate efficiently with key stakeholders by sharing with them the Kanban view of your tasks. Collaborators will be able to edit parts of tasks and send messages."
+msgstr "Werk efficiënt samen met de belangrijkste belanghebbenden door de Kanban-weergave van je taken met hen te delen. Medewerkers kunnen delen van taken bewerken en berichten verzenden."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_id
@@ -1399,7 +1344,7 @@ msgstr "Medewerkers"
 #. module: project
 #: model:ir.model,name:project.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr "Werknemers in project gedeeld"
+msgstr "Medewerkers in project gedeeld"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_status
@@ -1502,7 +1447,7 @@ msgstr "Consulting"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
 msgid "Contact"
-msgstr "Contacteer"
+msgstr "Contact"
 
 #. module: project
 #. odoo-javascript
@@ -1528,17 +1473,14 @@ msgstr "Kosten"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr "Omslagfoto"
+msgstr "Omslagafbeelding"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"Create <b>activities</b> to set yourself to-dos or to schedule meetings."
-msgstr ""
-"Maak <b>activiteiten</b> om taken voor uzelf in te stellen of om "
-"vergaderingen te plannen."
+msgid "Create <b>activities</b> to set yourself to-dos or to schedule meetings."
+msgstr "Maak <b>activiteiten</b> om taken voor uzelf in te stellen of om vergaderingen te plannen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__create_date
@@ -1562,21 +1504,13 @@ msgstr "Project maken"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
-msgid ""
-"Create projects to organize your tasks and define a different workflow for "
-"each project."
-msgstr ""
-"Maak projecten aan om je taken te organiseren en definieer voor elk project "
-"een andere workflow."
+msgid "Create projects to organize your tasks and define a different workflow for each project."
+msgstr "Maak projecten aan om je taken te organiseren en definieer voor elk project een andere workflow."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
-msgid ""
-"Create projects to organize your tasks. Define a different workflow for each"
-" project."
-msgstr ""
-"Maak projecten om je taken te organiseren. Definieer voor elk project een "
-"andere workflow."
+msgid "Create projects to organize your tasks. Define a different workflow for each project."
+msgstr "Maak projecten om je taken te organiseren. Definieer voor elk project een andere workflow."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1587,9 +1521,7 @@ msgstr "Maak taken door een e-mail te sturen naar"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Create tasks by sending an email to the email address of your project."
-msgstr ""
-"Maak taken aan door een e-mail te sturen naar het e-mailadres van je "
-"project."
+msgstr "Maak taken aan door een e-mail te sturen naar het e-mailadres van je project."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
@@ -1651,28 +1583,20 @@ msgstr "Huidige fase van deze taak"
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
-msgid ""
-"Currently available to everyone viewing this document, click to restrict to "
-"internal employees."
-msgstr ""
-"Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te"
-" beperken tot interne werknemers."
+msgid "Currently available to everyone viewing this document, click to restrict to internal employees."
+msgstr "Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te beperken tot interne werknemers."
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
 #, python-format
-msgid ""
-"Currently restricted to internal employees, click to make it available to "
-"everyone viewing this document."
-msgstr ""
-"Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken "
-"voor iedereen die dit document bekijkt."
+msgid "Currently restricted to internal employees, click to make it available to everyone viewing this document."
+msgstr "Momenteel beperkt tot interne werknemers. Klik om het beschikbaar te maken voor iedereen die dit document bekijkt."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Aangepast bounced bericht"
+msgstr "Aangepast teruggestuurd bericht"
 
 #. module: project
 #. odoo-python
@@ -1691,7 +1615,6 @@ msgstr "Klant"
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customer Email"
@@ -1743,14 +1666,8 @@ msgstr "Klanten worden toegevoegd aan de volgers van hun project en taken."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
-msgid ""
-"Customize how tasks are named according to the project and create tailor "
-"made status messages for each step of the workflow. It helps to document "
-"your workflow: what should be done at which step."
-msgstr ""
-"Pas aan hoe taken worden benoemd volgens het project en maak op maat "
-"gemaakte statusberichten voor elke stap van de workflow. Het helpt om je "
-"workflow te documenteren: wat moet er bij welke stap worden gedaan."
+msgid "Customize how tasks are named according to the project and create tailor made status messages for each step of the workflow. It helps to document your workflow: what should be done at which step."
+msgstr "Pas aan hoe taken worden benoemd volgens het project en maak op maat gemaakte statusberichten voor elke stap van de workflow. Het helpt om je workflow te documenteren: wat moet er bij welke stap worden gedaan."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
@@ -1800,22 +1717,13 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__date
-msgid ""
-"Date on which this project ends. The timeframe defined on the project is "
-"taken into account when viewing its planning."
-msgstr ""
-"Datum waarop dit project eindigt. Het tijdschema dat op het project is "
-"gedefinieerd, wordt in aanmerking genomen bij het bekijken van de planning."
+msgid "Date on which this project ends. The timeframe defined on the project is taken into account when viewing its planning."
+msgstr "Datum waarop dit project eindigt. Het tijdschema dat op het project is gedefinieerd, wordt in aanmerking genomen bij het bekijken van de planning."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
-msgid ""
-"Date on which this task was last assigned (or unassigned). Based on this, "
-"you can get statistics on the time it usually takes to assign tasks."
-msgstr ""
-"Datum waarop deze taak voor het laatst is toegewezen (of niet is "
-"toegewezen). Op basis hiervan kunt je statistieken krijgen over de tijd die "
-"gewoonlijk nodig is om taken toe te wijzen."
+msgid "Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks."
+msgstr "Datum waarop deze taak voor het laatst is toegewezen (of niet is toegewezen). Op basis hiervan kunt je statistieken krijgen over de tijd die gewoonlijk nodig is om taken toe te wijzen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_weekday
@@ -1909,16 +1817,13 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
-msgid ""
-"Define the steps your projects move through from creation to completion."
-msgstr ""
-"Definieer de stappen die je projecten doorlopen van creatie tot voltooiing."
+msgid "Define the steps your projects move through from creation to completion."
+msgstr "Definieer de stappen die je projecten doorlopen van creatie tot voltooiing."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Define the steps your tasks move through from creation to completion."
-msgstr ""
-"Definieer de stappen die je taken doorlopen van creatie tot voltooiing."
+msgstr "Definieer de stappen die je taken doorlopen van creatie tot voltooiing."
 
 #. module: project
 #. odoo-javascript
@@ -1944,20 +1849,15 @@ msgstr "Milestone verwijderen"
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 #, python-format
 msgid "Delete Stage"
-msgstr "Fase verwijderen"
+msgstr "Verwijder fase"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__milestone_id
-msgid ""
-"Deliver your services automatically when a milestone is reached by linking "
-"it to a sales order item."
-msgstr ""
-"Lever je diensten automatisch bij het bereiken van een milestone door deze "
-"te koppelen aan een verkooporderregel."
+msgid "Deliver your services automatically when a milestone is reached by linking it to a sales order item."
+msgstr "Lever je diensten automatisch bij het bereiken van een milestone door deze te koppelen aan een verkooporderregel."
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Delivered"
@@ -1992,8 +1892,6 @@ msgstr "Beschrijving om meer informatie en context over dit project te geven"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Design"
 msgstr "Ontwerp"
@@ -2014,7 +1912,7 @@ msgstr "Ontwikkeling"
 #. module: project
 #: model:ir.model,name:project.model_digest_digest
 msgid "Digest"
-msgstr "Overzicht"
+msgstr "Samenvatting"
 
 #. module: project
 #. odoo-javascript
@@ -2057,7 +1955,7 @@ msgstr "Toegangsmodus weergeven"
 #: model:ir.model.fields,field_description:project.field_project_update__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
@@ -2080,17 +1978,12 @@ msgstr "Ontevreden"
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
-msgstr ""
-"Heeft geen toegang, sla deze gegevens over voor de gebruikers digest e-mail"
+msgstr "Heeft geen toegang, sla deze gegevens over voor de gebruikers overzicht e-mail"
 
 #. module: project
 #. odoo-python
 #. odoo-javascript
 #: code:addons/project/models/project.py:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__done
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__done
@@ -2111,7 +2004,7 @@ msgstr "Concept"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
-msgstr "Bewerken"
+msgstr "Wijzigen"
 
 #. module: project
 #. odoo-javascript
@@ -2127,7 +2020,6 @@ msgstr "Bewerk terugkerende taak"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
@@ -2153,12 +2045,8 @@ msgstr "E-mailsjabloon"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
-msgid ""
-"Email addresses that were in the CC of the incoming emails from this task "
-"and that are not currently linked to an existing customer."
-msgstr ""
-"E-mailadressen die in de CC van de inkomende e-mails van deze taak stonden "
-"en die momenteel niet zijn gekoppeld aan een bestaande klant."
+msgid "Email addresses that were in the CC of the incoming emails from this task and that are not currently linked to an existing customer."
+msgstr "E-mailadressen die in de CC van de inkomende e-mails van deze taak stonden en die momenteel niet zijn gekoppeld aan een bestaande klant."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -2211,7 +2099,6 @@ msgstr "Iedereen kan ideeën voorstellen, en de Editor markeert de beste als"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
-#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Expected"
 msgstr "Verwacht"
@@ -2247,12 +2134,8 @@ msgstr "Februari"
 #. odoo-python
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
-msgid ""
-"Field %s is not a stored field, only stored fields (regular or many2many) "
-"are valid for the 'groupby' parameter"
-msgstr ""
-"Veld %s is geen opgeslagen veld, alleen opgeslagen velden (regular of "
-"many2many) zijn geldig voor de 'groupby' parameter"
+msgid "Field %s is not a stored field, only stored fields (regular or many2many) are valid for the 'groupby' parameter"
+msgstr "Veld %s is geen opgeslagen veld, alleen opgeslagen velden (regular of many2many) zijn geldig voor de 'groupby' parameter"
 
 #. module: project
 #. odoo-javascript
@@ -2281,12 +2164,8 @@ msgstr "Gevouwen Kanban-fasen zijn slotfasen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
-msgid ""
-"Follow this project to automatically track the events associated to tasks "
-"and issues of this project."
-msgstr ""
-"Volg dit project om automatisch de gebeurtenissen bij gekoppelde taken en "
-"problemen te volgen bij dit project."
+msgid "Follow this project to automatically track the events associated to tasks and issues of this project."
+msgstr "Volg dit project om automatisch de gebeurtenissen bij gekoppelde taken en problemen te volgen bij dit project."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
@@ -2319,7 +2198,7 @@ msgstr "Volgers (Relaties)"
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icon bijv. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -2352,12 +2231,8 @@ msgstr "GTD"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
-msgid ""
-"Get a snapshot of the status of your project and share its progress with key"
-" stakeholders."
-msgstr ""
-"Krijg een momentopname van de status van je project en deel de voortgang met"
-" de belangrijkste belanghebbenden."
+msgid "Get a snapshot of the status of your project and share its progress with key stakeholders."
+msgstr "Krijg een momentopname van de status van je project en deel de voortgang met de belangrijkste belanghebbenden."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2368,22 +2243,15 @@ msgstr "Krijg klant feedback"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"Grant employees access to your project or tasks by adding them as followers."
-msgstr ""
-"Geef werknemers toegang tot je project of taken door ze toe te voegen als "
-"volgers."
+msgid "Grant employees access to your project or tasks by adding them as followers."
+msgstr "Geef werknemers toegang tot je project of taken door ze toe te voegen als volgers."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"Grant portal users access to your project or tasks by adding them as "
-"followers."
-msgstr ""
-"Verleen portalgebruikers toegang tot je project of taken door ze als volgers"
-" toe te voegen."
+msgid "Grant portal users access to your project or tasks by adding them as followers."
+msgstr "Verleen portalgebruikers toegang tot je project of taken door ze als volgers toe te voegen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_done
@@ -2401,18 +2269,14 @@ msgstr "Grijs kanban label"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Group By"
-msgstr "Groeperen op"
+msgstr "Groepeer op"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
-msgid ""
-"Handle your idea gathering within Tasks of your new Project and discuss them"
-" in the chatter of the tasks. Use the"
-msgstr ""
-"Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek"
-" ze in het gebabbel van de taken. Gebruik de"
+msgid "Handle your idea gathering within Tasks of your new Project and discuss them in the chatter of the tasks. Use the"
+msgstr "Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek ze in het gebabbel van de taken. Gebruik de"
 
 #. module: project
 #. odoo-javascript
@@ -2439,7 +2303,7 @@ msgstr "Heeft een late en onbereikte milestone"
 #: model:ir.model.fields,field_description:project.field_project_task__has_message
 #: model:ir.model.fields,field_description:project.field_project_update__has_message
 msgid "Has Message"
-msgstr "Heeft een bericht"
+msgstr "Heeft bericht"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__priority__1
@@ -2488,12 +2352,8 @@ msgstr "ID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
-msgid ""
-"ID of the parent record holding the alias (example: project holding the task"
-" creation alias)"
-msgstr ""
-"ID van het bovenliggende record dat de alias bezit (bijvoorbeeld: het "
-"project bezit de alias van de aangemaakte taken)"
+msgid "ID of the parent record holding the alias (example: project holding the task creation alias)"
+msgstr "ID van het bovenliggende record dat de alias bezit (bijvoorbeeld: het project bezit de alias van de aangemaakte taken)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_exception_icon
@@ -2507,11 +2367,10 @@ msgstr "Icoon"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icoon om een uitzonderingsactiviteit aan te geven."
+msgstr "Icoon om uitzondering op activiteit aan te geven."
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Ideas"
@@ -2523,7 +2382,7 @@ msgstr "Ideeën"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction
 #: model:ir.model.fields,help:project.field_project_update__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error
@@ -2535,27 +2394,17 @@ msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
 #: model:ir.model.fields,help:project.field_project_update__message_has_error
 #: model:ir.model.fields,help:project.field_project_update__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
+msgstr "Indien aangevinkt hebben sommige leveringen een fout."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__fold
-msgid ""
-"If enabled, this stage will be displayed as folded in the Kanban view of "
-"your projects. Projects in a folded stage are considered as closed."
-msgstr ""
-"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-"
-"weergave van je projecten. Projecten in een gevouwen fase worden als "
-"afgesloten beschouwd."
+msgid "If enabled, this stage will be displayed as folded in the Kanban view of your projects. Projects in a folded stage are considered as closed."
+msgstr "Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-weergave van je projecten. Projecten in een gevouwen fase worden als afgesloten beschouwd."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__fold
-msgid ""
-"If enabled, this stage will be displayed as folded in the Kanban view of "
-"your tasks. Tasks in a folded stage are considered as closed."
-msgstr ""
-"Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-"
-"weergave van je taken. Taken in een gevouwen fase worden als gesloten "
-"beschouwd."
+msgid "If enabled, this stage will be displayed as folded in the Kanban view of your tasks. Tasks in a folded stage are considered as closed."
+msgstr "Indien ingeschakeld, wordt deze fase weergegeven als gevouwen in de Kanban-weergave van je taken. Taken in een gevouwen fase worden als gesloten beschouwd."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
@@ -2570,52 +2419,35 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
-msgid ""
-"If set, an email will be automatically sent to the customer when the project"
-" reaches this stage."
-msgstr ""
-"Indien ingesteld, wordt er automatisch een e-mail naar de klant gestuurd "
-"wanneer het project deze fase bereikt."
+msgid "If set, an email will be automatically sent to the customer when the project reaches this stage."
+msgstr "Indien ingesteld, wordt er automatisch een e-mail naar de klant gestuurd wanneer het project deze fase bereikt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
-msgid ""
-"If set, an email will be automatically sent to the customer when the task "
-"reaches this stage."
-msgstr ""
-"Indien ingesteld, wordt er automatisch een e-mail naar de klant gestuurd "
-"wanneer de taak deze fase bereikt."
+msgid "If set, an email will be automatically sent to the customer when the task reaches this stage."
+msgstr "Indien ingesteld, wordt er automatisch een e-mail naar de klant gestuurd wanneer de taak deze fase bereikt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_bounced_content
-msgid ""
-"If set, this content will automatically be sent out to unauthorized users "
-"instead of the default message."
-msgstr ""
-"Indien ingesteld, wordt deze inhoud automatisch naar niet-geautoriseerde "
-"gebruikers verzonden in plaats van het standaardbericht."
+msgid "If set, this content will automatically be sent out to unauthorized users instead of the default message."
+msgstr "Indien ingesteld, wordt deze inhoud automatisch naar niet-geautoriseerde gebruikers verzonden in plaats van het standaardbericht."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
-msgid ""
-"If the active field is set to False, it will allow you to hide the project "
-"without removing it."
-msgstr ""
-"Als het actief veld uitstaat kun je het project verbergen zonder deze te "
-"verwijderen."
+msgid "If the active field is set to False, it will allow you to hide the project without removing it."
+msgstr "Als het actief veld uitstaat kun je het project verbergen zonder deze te verwijderen."
 
 #. module: project
 #. odoo-python
 #. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__kanban_state__normal
 #: model:project.project.stage,name:project.project_project_stage_1
 #, python-format
 msgid "In Progress"
-msgstr "In uitvoering"
+msgstr "In behandeling"
 
 #. module: project
 #. odoo-javascript
@@ -2634,7 +2466,7 @@ msgstr "Postvak in"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__planned_hours
 msgid "Initially Planned Hours"
-msgstr "Initieel geplande uren"
+msgstr "Geplande uren"
 
 #. module: project
 #. odoo-javascript
@@ -2645,14 +2477,8 @@ msgstr "Interne notitie"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_id
-msgid ""
-"Internal email associated with this project. Incoming emails are "
-"automatically synchronized with Tasks (or optionally Issues if the Issue "
-"Tracker module is installed)."
-msgstr ""
-"Interne e-mail verbonden met dit project. Incomende e-mail worden "
-"automatisch gesynchroniseerd met Taken (of optioneel problemen als de "
-"Problemen volg module is geïnstalleerd)."
+msgid "Internal email associated with this project. Incoming emails are automatically synchronized with Tasks (or optionally Issues if the Issue Tracker module is installed)."
+msgstr "Interne e-mail verbonden met dit project. Incomende e-mail worden automatisch gesynchroniseerd met Taken (of optioneel problemen als de Problemen volg module is geïnstalleerd)."
 
 #. module: project
 #. odoo-javascript
@@ -2670,7 +2496,6 @@ msgstr "Foutieve aggregatie functie %r."
 
 #. module: project
 #. odoo-python
-#: code:addons/project/report/project_task_burndown_chart_report.py:0
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Invalid field %r on model %r"
@@ -2747,7 +2572,7 @@ msgstr "Deadline is in toekomst"
 #: model:ir.model.fields,field_description:project.field_project_update__message_is_follower
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__message_is_follower
 msgid "Is Follower"
-msgstr "Is volger"
+msgstr "Is een volger"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
@@ -2780,13 +2605,8 @@ msgstr "Het lijkt erop dat sommige taken deel uitmaken van een herhaling."
 #. odoo-javascript
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
-msgid ""
-"It seems that some tasks are part of a recurrence. At least one of them must"
-" be kept as a model to create the next occurences."
-msgstr ""
-"Het lijkt erop dat sommige taken deel uitmaken van een herhaling. Ten minste"
-" één ervan moet als model worden bewaard om de volgende gebeurtenissen te "
-"creëren."
+msgid "It seems that some tasks are part of a recurrence. At least one of them must be kept as a model to create the next occurences."
+msgstr "Het lijkt erop dat sommige taken deel uitmaken van een herhaling. Ten minste één ervan moet als model worden bewaard om de volgende gebeurtenissen te creëren."
 
 #. module: project
 #. odoo-javascript
@@ -2799,11 +2619,8 @@ msgstr "Het lijkt erop dat deze taak onderdeel is van een herhaling."
 #. odoo-javascript
 #: code:addons/project/static/src/services/project_task_recurrence.js:0
 #, python-format
-msgid ""
-"It seems that this task is recurrent. Would you like to stop its recurrence?"
-msgstr ""
-"Het lijkt erop dat deze taak herhalend is. Wil je de herhaling ervan "
-"stoppen?"
+msgid "It seems that this task is recurrent. Would you like to stop its recurrence?"
+msgstr "Het lijkt erop dat deze taak herhalend is. Wil je de herhaling ervan stoppen?"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2846,7 +2663,7 @@ msgstr "Kanban status label"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
 msgid "Kanban Valid Explanation"
-msgstr "Kanban geldige uitleg"
+msgstr "Kanban valide uitleg"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -2893,7 +2710,7 @@ msgstr "Vorige maand"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 #, python-format
 msgid "Last Stage Update"
-msgstr "Bijwerking laatste fase"
+msgstr "Laatste fase aanpassing"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__last_update_id
@@ -2975,7 +2792,6 @@ msgstr "Schrijf een reactie"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first <b>project</b>."
 msgstr "Maak je eerste <b>project</b> aan."
@@ -2991,12 +2807,8 @@ msgstr "Maak je eerste <b>taak</b> aan."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"Let's go back to the <b>kanban view</b> to have an overview of your next "
-"tasks."
-msgstr ""
-"Laten we teruggaan naar de <b>kanban-weergave</b> voor een overzicht van je "
-"volgende taken."
+msgid "Let's go back to the <b>kanban view</b> to have an overview of your next tasks."
+msgstr "Laten we teruggaan naar de <b>kanban-weergave</b> voor een overzicht van je volgende taken."
 
 #. module: project
 #. odoo-javascript
@@ -3063,7 +2875,6 @@ msgstr ""
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Manufacturing"
 msgstr "Productie"
@@ -3096,12 +2907,8 @@ msgstr "Mei"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
-msgid ""
-"Measure your customer satisfaction by sending rating requests when your "
-"tasks reach a certain stage."
-msgstr ""
-"Meet je klanttevredenheid door beoordelingsverzoeken te verzenden wanneer je"
-" taken een bepaalde fase bereiken."
+msgid "Measure your customer satisfaction by sending rating requests when your tasks reach a certain stage."
+msgstr "Meet je klanttevredenheid door beoordelingsverzoeken te verzenden wanneer je taken een bepaalde fase bereiken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -3119,7 +2926,7 @@ msgstr "Menu"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error
 msgid "Message Delivery error"
-msgstr "Fout bij bezorging van bericht"
+msgstr "Bericht afleverfout"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_ids
@@ -3132,7 +2939,6 @@ msgstr "Berichten"
 #. module: project
 #. odoo-python
 #. odoo-javascript
-#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
 #: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
@@ -3254,21 +3060,13 @@ msgstr "Naam van de taak"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__name
-msgid ""
-"Name of your project. It can be anything you want e.g. the name of a "
-"customer or a service."
-msgstr ""
-"Naam van je project. Het kan van alles zijn, b.v. de naam van een klant of "
-"een dienst."
+msgid "Name of your project. It can be anything you want e.g. the name of a customer or a service."
+msgstr "Naam van je project. Het kan van alles zijn, b.v. de naam van een klant of een dienst."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
-msgid ""
-"Name used to refer to the tasks of your project e.g. tasks, tickets, "
-"sprints, etc..."
-msgstr ""
-"Naam die wordt gebruikt om te verwijzen naar de taken van je project, b.v. "
-"taken, tickets, sprints, enz..."
+msgid "Name used to refer to the tasks of your project e.g. tasks, tickets, sprints, etc..."
+msgstr "Naam die wordt gebruikt om te verwijzen naar de taken van je project, b.v. taken, tickets, sprints, enz..."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -3280,7 +3078,6 @@ msgstr "Neutraal gezicht"
 #. odoo-python
 #. odoo-javascript
 #: code:addons/project/models/project.py:0
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_project_stage_view_form
 #, python-format
@@ -3296,7 +3093,6 @@ msgstr "Nieuwe milestone"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "New Orders"
@@ -3319,14 +3115,12 @@ msgstr "Nieuw verzoek"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Newest"
 msgstr "Nieuwste"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Next"
@@ -3343,7 +3137,7 @@ msgstr "Volgende activiteit"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteiten kalenderafspraak"
+msgstr "Volgende activiteitenkalender Evenement"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
@@ -3357,14 +3151,14 @@ msgstr "Volgende activiteit deadline"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_update__activity_summary
 msgid "Next Activity Summary"
-msgstr "Volgende activiteit overzicht"
+msgstr "Omschrijving volgende actie"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_id
 #: model:ir.model.fields,field_description:project.field_project_update__activity_type_id
 msgid "Next Activity Type"
-msgstr "Volgende activiteitstype"
+msgstr "Volgende activiteit type"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__next_recurrence_date
@@ -3427,7 +3221,7 @@ msgstr "Geen projecten gevonden. Maak er één aan!"
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 #: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
 msgid "No stages found. Let's create one!"
-msgstr "Geen fases gevonden. Maak er één aan!"
+msgstr "Geen labels gevonden. Maak er één aan!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3516,7 +3310,7 @@ msgstr "Aantal toegevoegde documenten"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_error_counter
 msgid "Number of errors"
-msgstr "Aantal foutmeldingen"
+msgstr "Aantal fouten"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_needaction_counter
@@ -3524,7 +3318,7 @@ msgstr "Aantal foutmeldingen"
 #: model:ir.model.fields,help:project.field_project_task__message_needaction_counter
 #: model:ir.model.fields,help:project.field_project_update__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Aantal berichten waarvoor een actie vereist is"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_milestone__message_has_error_counter
@@ -3532,7 +3326,7 @@ msgstr "Aantal berichten waarvoor een actie vereist is"
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 #: model:ir.model.fields,help:project.field_project_update__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Aantal berichten met afleverfout"
+msgstr "Aantal berichten met leveringsfout"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
@@ -3564,7 +3358,7 @@ msgstr "Vorige voltooide sprint"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr "Gepauzeerd"
+msgstr "Op Hold"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3583,9 +3377,7 @@ msgstr "Eenmaal per maand"
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
-msgstr ""
-"Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te "
-"loggen."
+msgstr "Oeps! Er is iets mis gegaan. Probeer de pagina te herladen en terug in te loggen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_digest_digest__kpi_project_task_opened
@@ -3613,14 +3405,8 @@ msgstr "De bewerking moet = of != zijn (niet %s)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_force_thread_id
-msgid ""
-"Optional ID of a thread (record) to which all incoming messages will be "
-"attached, even if they did not reply to it. If set, this will disable the "
-"creation of new records completely."
-msgstr ""
-"Optionele ID van een thread (record) waaraan alle inkomende berichten worden"
-" gekoppeld, zelfs als ze hierop niet geantwoord hebben. Indien ingesteld, "
-"zal dit het aanmaken van nieuwe records uitzetten."
+msgid "Optional ID of a thread (record) to which all incoming messages will be attached, even if they did not reply to it. If set, this will disable the creation of new records completely."
+msgstr "Optionele ID van een thread (record) waaraan alle inkomende berichten worden gekoppeld, zelfs als ze hierop niet geantwoord hebben. Indien ingesteld, zal dit het aanmaken van nieuwe records uitzetten."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3637,7 +3423,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr "Overige"
+msgstr "Andere"
 
 #. module: project
 #. odoo-python
@@ -3686,13 +3472,10 @@ msgstr "Bovenliggende taak"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_model_id
-msgid ""
-"Parent model holding the alias. The model holding the alias reference is not"
-" necessarily the model given by alias_model_id (example: project "
-"(parent_model) and task (model))"
+msgid "Parent model holding the alias. The model holding the alias reference is not necessarily the model given by alias_model_id (example: project (parent_model) and task (model))"
 msgstr ""
-"Bovenliggend model dat de alias bevat. Het model dat de aliasverwijzing bevat,\n"
-"is niet noodzakelijk het model dat door alias_model_id wordt gegeven (bijvoorbeeld: project (parent_model) en taak (model))"
+"Bovenliggend model welke de alias bezit. Het model dat de alias referentie bezit\n"
+"is niet noodzakelijk het model wat wordt gegeven door alias_model_id (bijvoorbeeld: project (parent_model) en taak (model))"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__privacy_visibility
@@ -3768,12 +3551,8 @@ msgstr "Telefoon"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid ""
-"Plan resource allocation across projects and estimate deadlines more "
-"accurately"
-msgstr ""
-"Plan de toewijzing van middelen over projecten en schat deadlines "
-"nauwkeuriger in"
+msgid "Plan resource allocation across projects and estimate deadlines more accurately"
+msgstr "Plan de toewijzing van middelen over projecten en schat deadlines nauwkeuriger in"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -3789,12 +3568,8 @@ msgstr "Planning"
 #. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
-msgid ""
-"Please remove existing tasks in the project linked to the accounts you want "
-"to delete."
-msgstr ""
-"Verwijder bestaande taken in het project die zijn gekoppeld aan de "
-"kostenplaats die je wilt verwijderen."
+msgid "Please remove existing tasks in the project linked to the accounts you want to delete."
+msgstr "Verwijder aub bestaande taken in het project gekoppeld aan de rekeningen die je wilt verwijderen."
 
 #. module: project
 #. odoo-javascript
@@ -3811,7 +3586,7 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Afspraak om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
+"Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
 "-relaties: alleen geautoriseerde relaties\n"
 "-volgers: allen volgers van een bijbehorend document of volgers van gevolgde kanalen\n"
@@ -3831,16 +3606,11 @@ msgstr "Portaal gebruikersnamen"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"Portal users will be removed from the followers of the project and its "
-"tasks."
-msgstr ""
-"Portalgebruikers worden verwijderd uit de volgers van het project en zijn "
-"taken."
+msgid "Portal users will be removed from the followers of the project and its tasks."
+msgstr "Portalgebruikers worden verwijderd uit de volgers van het project en zijn taken."
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_pager.xml:0
 #, python-format
 msgid "Previous"
@@ -3855,7 +3625,6 @@ msgstr "Prioriteer taken met behulp van de"
 
 #. module: project
 #. odoo-python
-#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__priority
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__priority
@@ -3875,7 +3644,6 @@ msgstr "Waarschuwing voor privacyzichtbaarheid"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
 #: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
 #: code:addons/project/static/src/xml/project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
@@ -3907,7 +3675,6 @@ msgstr "Voortgangspercentage"
 #. module: project
 #. odoo-python
 #. odoo-javascript
-#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
 #: code:addons/project/static/src/js/project_rating_pivot_view.js:0
@@ -3970,7 +3737,7 @@ msgstr "Projectmanager"
 #. module: project
 #: model:ir.model,name:project.model_project_milestone
 msgid "Project Milestone"
-msgstr "Projectmilestone"
+msgstr "Project milestone"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban
@@ -4105,22 +3872,13 @@ msgstr "Projecten"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
-msgid ""
-"Projects contain tasks on the same topic, and each has its own dashboard."
-msgstr ""
-"Projecten bevatten taken over hetzelfde onderwerp en elk heeft zijn eigen "
-"dashboard."
+msgid "Projects contain tasks on the same topic, and each has its own dashboard."
+msgstr "Projecten bevatten taken over hetzelfde onderwerp en elk heeft zijn eigen dashboard."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__project_ids
-msgid ""
-"Projects in which this stage is present. If you follow a similar workflow in"
-" several projects, you can share this stage among them and get consolidated "
-"information this way."
-msgstr ""
-"Projecten waarin deze fase aanwezig is. Als je een vergelijkbare workflow in"
-" verschillende projecten volgt, kun je deze fase onderling delen en op deze "
-"manier geconsolideerde informatie krijgen."
+msgid "Projects in which this stage is present. If you follow a similar workflow in several projects, you can share this stage among them and get consolidated information this way."
+msgstr "Projecten waarin deze fase aanwezig is. Als je een vergelijkbare workflow in verschillende projecten volgt, kun je deze fase onderling delen en op deze manier geconsolideerde informatie krijgen."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -4129,7 +3887,6 @@ msgstr "Eigenschappen"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Published"
@@ -4210,12 +3967,12 @@ msgstr "Beoordeling aanvraag deadline"
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 #: model:ir.model.fields,field_description:project.field_project_task__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr "Beoordeling tevredenheid"
+msgstr "Beoordeling"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_text
 msgid "Rating Text"
-msgstr "Beoordeling tekst"
+msgstr "Beoordelingstekst"
 
 #. module: project
 #. odoo-javascript
@@ -4246,12 +4003,12 @@ msgstr "Beoordelingen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_reached
 msgid "Reached"
-msgstr "Behaald"
+msgstr "Gehaald"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__reached_date
 msgid "Reached Date"
-msgstr "Behaalde datum"
+msgstr "Bereikte datum"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_share_wizard__access_mode__read
@@ -4319,7 +4076,7 @@ msgstr "Terugkerende taken"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__legend_blocked
 msgid "Red Kanban Label"
-msgstr "Rood kanbanlabel"
+msgstr "Rood kanban label"
 
 #. module: project
 #. odoo-javascript
@@ -4341,7 +4098,7 @@ msgstr "Gerelateerde document ID"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
-msgstr "Gerelateerd documentmodel"
+msgstr "Gerelateerde documentmodel"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4402,7 +4159,7 @@ msgstr "Herhaal weergaveweek"
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_unit
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_unit
 msgid "Repeat Unit"
-msgstr "Eenheid herhalen"
+msgstr "Herhaal eenheid"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_week
@@ -4419,11 +4176,10 @@ msgstr "Herhalingen"
 #. module: project
 #: model:ir.ui.menu,name:project.menu_project_report
 msgid "Reporting"
-msgstr "Rapportage"
+msgstr "Rapportages"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
@@ -4470,7 +4226,7 @@ msgstr "Omzet"
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_update__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leverfout"
+msgstr "SMS fout bij versturen"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -4482,7 +4238,7 @@ msgstr "Ongelukkig gezicht"
 #: model:ir.model.fields,field_description:project.field_project_task__sat
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sat
 msgid "Sat"
-msgstr "Za"
+msgstr "Zat"
 
 #. module: project
 #. odoo-python
@@ -4620,7 +4376,7 @@ msgstr "Verzenden"
 #: model:ir.actions.act_window,name:project.action_send_mail_project_project
 #: model:ir.actions.act_window,name:project.action_send_mail_project_task
 msgid "Send Email"
-msgstr "E-mail verzenden"
+msgstr "Verzend e-mail"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
@@ -4664,21 +4420,13 @@ msgstr ""
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
-msgid ""
-"Set this template on a project stage to request feedback from your "
-"customers. Enable the \"customer ratings\" feature on the project"
-msgstr ""
-"Definieer dit sjabloon op de fase van een project om feedback te vragen van "
-"je klanten. Activeer de \"klantenbeoordelingsfunctie\" op het project"
+msgid "Set this template on a project stage to request feedback from your customers. Enable the \"customer ratings\" feature on the project"
+msgstr "Definieer dit sjabloon op de fase van een project om feedback te vragen van je klanten. Activeer de \"klantenbeoordelingsfunctie\" op het project"
 
 #. module: project
 #: model:mail.template,description:project.mail_template_data_project_task
-msgid ""
-"Set this template on a project's stage to automate email when tasks reach "
-"stages"
-msgstr ""
-"Stel deze sjabloon in op de fase van een project om e-mail te automatiseren "
-"wanneer taken de fasen bereiken"
+msgid "Set this template on a project's stage to automate email when tasks reach stages"
+msgstr "Stel deze sjabloon in op de fase van een project om e-mail te automatiseren wanneer taken de fasen bereiken"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -4727,7 +4475,7 @@ msgstr "Toon project op dashboard"
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr "Toon alle records welke een actiedatum vóór vandaag hebben"
+msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4785,7 +4533,6 @@ msgstr "Sprint in behandeling"
 #. module: project
 #. odoo-python
 #. odoo-javascript
-#: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
 #: model:ir.model.fields,field_description:project.field_project_project__stage_id
@@ -4848,7 +4595,6 @@ msgstr "Startdatum"
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
-#: code:addons/project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state
 #: model:ir.model.fields,field_description:project.field_project_update__status
 #: model_terms:ir.ui.view,arch_db:project.view_project
@@ -4877,7 +4623,7 @@ msgid ""
 msgstr ""
 "Status gebaseerd op activiteiten\n"
 "Te laat: Datum is al gepasseerd\n"
-"Vandaag: Activiteitsdatum is vandaag\n"
+"Vandaag: Activiteit datum is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
 #. module: project
@@ -4917,14 +4663,8 @@ msgstr "Ingediend op"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
-msgid ""
-"Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) "
-"linked to this task. Usually less than or equal to the allocated hours of "
-"this task."
-msgstr ""
-"Som van de toegekende uren voor alle deeltaken (en hun eigen deeltaken) die "
-"aan deze taak zijn gekoppeld. Meestal minder dan of gelijk aan de toegewezen"
-" uren van deze taak."
+msgid "Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task."
+msgstr "Som van de toegekende uren voor alle deeltaken (en hun eigen deeltaken) die aan deze taak zijn gekoppeld. Meestal minder dan of gelijk aan de toegewezen uren van deze taak."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4935,7 +4675,7 @@ msgstr "Samenvatting"
 #: model:ir.model.fields,field_description:project.field_project_task__sun
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__sun
 msgid "Sun"
-msgstr "Zo"
+msgstr "Zon"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
@@ -5097,12 +4837,12 @@ msgstr "Taak in uitvoering"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr "Taak in uitvoering. Klik om te blokkeren of markeer als gereed."
+msgstr "Taak in bewerking. Klik op blokkeer of zet op gereed."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr "Taak is geblokkeerd. Klik om te deblokkeren of markeer als gereed."
+msgstr "Taak is geblokkeerd. Klik om blokkering ongedaan te maken of zet op gereed."
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -5203,12 +4943,8 @@ msgstr "De persoonlijke taakfase van de huidige gebruiker."
 #. odoo-python
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
-msgid ""
-"The end date should be after the day of the month or the last day of the "
-"month"
-msgstr ""
-"De einddatum moet na de dag van de maand of de laatste dag van de maand "
-"liggen"
+msgid "The end date should be after the day of the month or the last day of the month"
+msgstr "De einddatum moet na de dag van de maand of de laatste dag van de maand liggen"
 
 #. module: project
 #. odoo-python
@@ -5236,50 +4972,25 @@ msgstr "De interval moet groter zijn dan 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
-msgid ""
-"The model (Odoo Document Kind) to which this alias corresponds. Any incoming"
-" email that does not reply to an existing record will cause the creation of "
-"a new record of this model (e.g. a Project Task)"
-msgstr ""
-"Het model waar deze alias bijhoort. Iedere inkomende e-mail dat niet bij een"
-" bestaand record hoort zal leiden tot het aanmaken van een nieuw record in "
-"dit model (Bijv. een projecttaak)."
+msgid "The model (Odoo Document Kind) to which this alias corresponds. Any incoming email that does not reply to an existing record will cause the creation of a new record of this model (e.g. a Project Task)"
+msgstr "Het model waar deze alias bij hoort. Iedere inkomende e-mail dat niet bij een bestaande regel hoort, zal leiden tot het aanmaken van een nieuwe regel in dit model (Bijv. een projecttaak)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
-msgid ""
-"The name of the email alias, e.g. 'jobs' if you want to catch emails for "
-"<jobs@example.odoo.com>"
-msgstr ""
-"De naam van de e-mailalias, bijvoorbeeld: 'vacatures' als je alle e-mails "
-"van vacature@bedrijf.nl wilt afvangen"
+msgid "The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>"
+msgstr "De naam van de e-mail alias, bijvoorbeeld: 'vacature' als je alle e-mails van <vacature@bedrijf.nl> wilt afvangen"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
-msgid ""
-"The owner of records created upon receiving emails on this alias. If this "
-"field is not set the system will attempt to find the right owner based on "
-"the sender (From) address, or will use the Administrator account if no "
-"system user is found for that address."
-msgstr ""
-"De eigenaar van records die worden aangemaakt bij het ontvangen van e-mails "
-"op deze alias. Indien dit veld niet is ingesteld zal het systeem proberen de"
-" juiste eigenaar te vinden op basis van het afzender (van) adres. Indien "
-"geen systeemgebruiker wordt gevonden, zal het de Administrator account "
-"gebruiken."
+msgid "The owner of records created upon receiving emails on this alias. If this field is not set the system will attempt to find the right owner based on the sender (From) address, or will use the Administrator account if no system user is found for that address."
+msgstr "De eigenaar van de regels welke zijn aangemaakt bij het ontvangen van de e-mails op deze alias. Indien dit veld niet is ingesteld zal het systeem proberen om de juiste eigenaar te vinden op basis van het verzend (van) adres. Indien geen gebruiker wordt gevonden, wordt de Administrator gebruiker gebruikt."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"The project cannot be shared with the recipient(s) because the privacy of "
-"the project is too restricted. Set the privacy to 'Visible by following "
-"customers' in order to make it accessible by the recipient(s)."
-msgstr ""
-"Het project kan niet worden gedeeld met de ontvanger(s) omdat de privacy van"
-" het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om "
-"voor de ontvanger(s) toegankelijk te maken."
+msgid "The project cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy to 'Visible by following customers' in order to make it accessible by the recipient(s)."
+msgstr "Het project kan niet worden gedeeld met de ontvanger(s) omdat de privacy van het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om voor de ontvanger(s) toegankelijk te maken."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
@@ -5297,14 +5008,8 @@ msgstr "De zoekopdracht ondersteunt de %soperator of %s waarde niet."
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"The task cannot be shared with the recipient(s) because the privacy of the "
-"project is too restricted. Set the privacy of the project to 'Visible by "
-"following customers' in order to make it accessible by the recipient(s)."
-msgstr ""
-"De taak kan niet worden gedeeld met de ontvanger(s) omdat de privacy van het"
-" project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om voor "
-"de ontvanger(s) toegankelijk te maken."
+msgid "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s)."
+msgstr "De taak kan niet worden gedeeld met de ontvanger(s) omdat de privacy van het project te beperkt is. Stel de privacy in 'Zichtbaar door klanten' om voor de ontvanger(s) toegankelijk te maken."
 
 #. module: project
 #. odoo-python
@@ -5383,7 +5088,7 @@ msgstr "Deze en volgende taken"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr "Deze stap is gedaan. Klik om te blokkeren of markeer als gereed."
+msgstr "Deze stap is gedaan. Klik op blokkeer of zet op gereed."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__this
@@ -5392,21 +5097,13 @@ msgstr "Deze taak"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
-msgid ""
-"This will archive the stages and all the tasks they contain from the "
-"following projects:"
-msgstr ""
-"Hiermee worden de fasen en alle taken die ze bevatten van de volgende "
-"projecten gearchiveerd:"
+msgid "This will archive the stages and all the tasks they contain from the following projects:"
+msgstr "Hiermee worden de fasen en alle taken die ze bevatten van de volgende projecten gearchiveerd:"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.mail_activity_type_action_config_project_types
-msgid ""
-"Those represent the different categories of things you have to do (e.g. "
-"\"Call\" or \"Send email\")."
-msgstr ""
-"Die vertegenwoordigen de verschillende categorieën van dingen die je moet "
-"doen (bijvoorbeeld \"Bellen\" of \"E-mail verzenden\")."
+msgid "Those represent the different categories of things you have to do (e.g. \"Call\" or \"Send email\")."
+msgstr "Die vertegenwoordigen de verschillende categorieën van dingen die je moet doen (bijvoorbeeld \"Bellen\" of \"E-mail verzenden\")."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__thu
@@ -5499,7 +5196,6 @@ msgstr "Activiteiten van vandaag"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
-#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Total"
 msgstr "Totaal"
@@ -5513,29 +5209,19 @@ msgstr "Volg klanttevredenheid op taken"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
-msgstr ""
-"Volg belangrijke voortgangspunten die moeten worden bereikt om succes te "
-"behalen"
+msgstr "Volg belangrijke voortgangspunten die moeten worden bereikt om succes te behalen"
 
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Track major progress points that must be reached to achieve success."
-msgstr ""
-"Houd belangrijke voortgangspunten bij die moeten worden bereikt om succes te"
-" behalen."
+msgstr "Houd belangrijke voortgangspunten bij die moeten worden bereikt om succes te behalen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid ""
-"Track the profitability of your projects. Any project, its tasks and "
-"timesheets are linked to an analytic account and any analytic account "
-"belongs to a plan."
-msgstr ""
-"Volg de winstgevendheid van je projecten. Elk project, zijn taken en "
-"urenstaten zijn gekoppeld aan een kostenplaats en elke kostenplaats hoort "
-"bij een plan."
+msgid "Track the profitability of your projects. Any project, its tasks and timesheets are linked to an analytic account and any analytic account belongs to a plan."
+msgstr "Volg de winstgevendheid van je projecten. Elk project, zijn taken en urenstaten zijn gekoppeld aan een kostenplaats en elke kostenplaats hoort bij een plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5549,12 +5235,8 @@ msgstr "Traceer tijd gespendeerd op projecten en taken"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_tags__color
-msgid ""
-"Transparent tags are not visible in the kanban view of your projects and "
-"tasks."
-msgstr ""
-"Transparante labels zijn niet zichtbaar in de kanbanweergave van je "
-"projecten en taken."
+msgid "Transparent tags are not visible in the kanban view of your projects and tasks."
+msgstr "Transparante labels zijn niet zichtbaar in de kanbanweergave van je projecten en taken."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -5585,7 +5267,7 @@ msgstr "Twee taken kunnen niet van elkaar afhankelijk zijn."
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type activiteit uitzondering op record."
+msgstr "Type van activiteit uitzondering op record."
 
 #. module: project
 #. odoo-python
@@ -5633,7 +5315,7 @@ msgstr "T/m"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__update_ids
 msgid "Update"
-msgstr "Update"
+msgstr "Bijwerken"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_update_create
@@ -5704,14 +5386,6 @@ msgstr "Gebruik labels om je taken te categoriseren."
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Use the"
 msgstr "Gebruik de"
@@ -5744,7 +5418,7 @@ msgstr "Waarde moet Waar of Onwaar zijn (niet %s)"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "View"
-msgstr "Bekijken"
+msgstr "Weergave"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5773,13 +5447,9 @@ msgstr "Zichtbaar"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
-#: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
-msgstr ""
-"Wil je een betere manier om je <b>projecten te beheren</b>? <i>Het begint "
-"hier.</i>"
+msgid "Want a better way to <b>manage your projects</b>? <i>It starts here.</i>"
+msgstr "Wil je een betere manier om je <b>projecten te beheren</b>? <i>Het begint hier.</i>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__website_message_ids
@@ -5787,7 +5457,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_update__website_message_ids
 msgid "Website Messages"
-msgstr "Berichten website"
+msgstr "Websiteberichten"
 
 #. module: project
 #. odoo-javascript
@@ -5802,7 +5472,7 @@ msgstr "Website herontwerp"
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr "Website gespreksgeschiedenis"
+msgstr "Website communicatie geschiedenis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
@@ -5868,14 +5538,11 @@ msgstr "Werktijd om te sluiten"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
-msgid ""
-"Would you like to unarchive all of the tasks contained in these stages as "
-"well?"
+msgid "Would you like to unarchive all of the tasks contained in these stages as well?"
 msgstr "Wil je ook alle taken in deze fasen de-archiveren?"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Writing"
@@ -5894,23 +5561,13 @@ msgstr "Jaren"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
-msgid ""
-"You can also add a description to help your coworkers understand the meaning"
-" and purpose of the stage."
-msgstr ""
-"Je kunt ook een omschrijving toevoegen om je werknemers te helpen begrijpen "
-"wat de bedoeling is van de fase."
+msgid "You can also add a description to help your coworkers understand the meaning and purpose of the stage."
+msgstr "Je kunt ook een omschrijving toevoegen om je werknemers te helpen begrijpen wat de bedoeling is van de fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__tag_ids
-msgid ""
-"You can only see tags that are already present in your project. If you try "
-"creating a tag that is already existing in other projects, it won't generate"
-" any duplicates."
-msgstr ""
-"Je kunt alleen labels zien die al aanwezig zijn in je project. Als je een "
-"label probeert te maken die al in andere projecten bestaat, maakt deze geen "
-"dubbele labels."
+msgid "You can only see tags that are already present in your project. If you try creating a tag that is already existing in other projects, it won't generate any duplicates."
+msgstr "Je kunt alleen labels zien die al aanwezig zijn in je project. Als je een label probeert te maken die al in andere projecten bestaat, maakt deze geen dubbele labels."
 
 #. module: project
 #. odoo-python
@@ -5923,39 +5580,25 @@ msgstr "Je kunt alleen een persoonlijk fase instellen op een privétaak."
 #. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
-msgid ""
-"You cannot change the company of an analytic account if it is related to a "
-"project."
-msgstr ""
-"Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is "
-"gerelateerd aan een project."
+msgid "You cannot change the company of an analytic account if it is related to a project."
+msgstr "Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is gerelateerd aan een project."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"You cannot delete recurring tasks. Please disable the recurrence first."
-msgstr ""
-"Je kunt terugkerende taken niet verwijderen. Schakel eerst de herhaling uit."
+msgid "You cannot delete recurring tasks. Please disable the recurrence first."
+msgstr "Je kunt terugkerende taken niet verwijderen. Schakel eerst de herhaling uit."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
-msgid ""
-"You cannot delete stages containing tasks. You can either archive them or "
-"first delete all of their tasks."
-msgstr ""
-"Je kunt geen fasen met taken verwijderen. Je kunt ze archiveren of eerst al "
-"de taken verwijderen."
+msgid "You cannot delete stages containing tasks. You can either archive them or first delete all of their tasks."
+msgstr "Je kunt geen fasen met taken verwijderen. Je kunt ze archiveren of eerst al de taken verwijderen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
-msgid ""
-"You cannot delete stages containing tasks. You should first delete all of "
-"their tasks."
-msgstr ""
-"Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
-"verwijderen."
+msgid "You cannot delete stages containing tasks. You should first delete all of their tasks."
+msgstr "Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken verwijderen."
 
 #. module: project
 #. odoo-python
@@ -5994,14 +5637,8 @@ msgstr "Je hebt geen schrijftoegang tot het veld %s."
 #. odoo-javascript
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
-msgid ""
-"You have unsaved changes - no worries! Odoo will automatically save it as "
-"you navigate.<br/> You can discard these changes from here or manually save "
-"your task.<br/>Let's save it manually."
-msgstr ""
-"Je hebt niet-opgeslagen wijzigingen - geen zorgen! Odoo zal het automatisch "
-"opslaan terwijl je navigeert. <br/> Je kunt deze wijzigingen hier ongedaan "
-"maken of je taak handmatig opslaan. <br/>Laten we deze handmatig opslaan."
+msgid "You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually."
+msgstr "Je hebt niet-opgeslagen wijzigingen - geen zorgen! Odoo zal het automatisch opslaan terwijl je navigeert. <br/> Je kunt deze wijzigingen hier ongedaan maken of je taak handmatig opslaan. <br/>Laten we deze handmatig opslaan."
 
 #. module: project
 #. odoo-javascript
@@ -6014,12 +5651,8 @@ msgstr "Je moet"
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
-msgid ""
-"You should at least have one personal stage. Create a new stage to which the"
-" tasks can be transferred after this one is deleted."
-msgstr ""
-"Je moet op zijn minst één persoonlijke fase hebben. Maak een nieuwe fase aan"
-" waarnaar de taken kunnen worden overgedragen nadat deze is verwijderd."
+msgid "You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."
+msgstr "Je moet op zijn minst één persoonlijke fase hebben. Maak een nieuwe fase aan waarnaar de taken kunnen worden overgedragen nadat deze is verwijderd."
 
 #. module: project
 #. odoo-python
@@ -6030,8 +5663,6 @@ msgstr "Je moet minimaal één dag selecteren"
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "and"
@@ -6071,10 +5702,8 @@ msgstr "opsommingstekens om de status van een taak aan te geven."
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
-msgid ""
-"button to inform your colleagues that a task is ready for the next stage."
-msgstr ""
-"om je collega's te informeren dat een taak klaar is voor de volgende fase."
+msgid "button to inform your colleagues that a task is ready for the next stage."
+msgstr "om je collega's te informeren dat een taak klaar is voor de volgende fase."
 
 #. module: project
 #. odoo-javascript
@@ -6119,19 +5748,12 @@ msgstr "bijvoorbeeld: productlancering"
 #. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
 msgstr "pictogram om je dagelijkse activiteiten te organiseren."
 
 #. module: project
 #. odoo-javascript
-#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon."

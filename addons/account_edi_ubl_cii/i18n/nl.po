@@ -1,25 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_edi_ubl_cii
-# 
+#
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
 # Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Martin Trigaux, 2023
-# 
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
-"PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_edi_ubl_cii
@@ -43,11 +43,8 @@ msgstr "<strong>Formaat gebruikt om de factuur te importeren: %s</strong>"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid ""
-"<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
-msgstr ""
-"<strong>Formaat gebruikt om de factuur te importeren: %s</strong> <p><li> %s"
-" </li></p>"
+msgid "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
+msgstr "<strong>Formaat gebruikt om de factuur te importeren: %s</strong> <p><li> %s </li></p>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -56,7 +53,6 @@ msgstr "A-NZ BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
@@ -76,23 +72,16 @@ msgstr "BIS3 DE (XRechnung)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
-msgid ""
-"Common functions for EDI documents: generate the data, the constraints, etc"
-msgstr ""
-"Algemene functies voor EDI-documenten: genereer de gegevens, de beperkingen,"
-" enz."
+msgid "Common functions for EDI documents: generate the data, the constraints, etc"
+msgstr "Algemene functies voor EDI-documenten: genereer de gegevens, de beperkingen, enz."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
-msgid ""
-"Could not retrieve currency: %s. Did you enable the multicurrency option and"
-" activate the currency ?"
-msgstr ""
-"Kan valuta niet ophalen: %s. Heb je de optie voor meerdere valuta's "
-"ingeschakeld en de valuta geactiveerd?"
+msgid "Could not retrieve currency: %s. Did you enable the multicurrency option and activate the currency ?"
+msgstr "Kan valuta niet ophalen: %s. Heb je de optie voor meerdere valuta's ingeschakeld en de valuta geactiveerd?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -104,7 +93,6 @@ msgstr "Kon de %s niet ophalen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
@@ -169,12 +157,8 @@ msgstr "Elektronisch document voor een boeking"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_format.py:0
 #, python-format
-msgid ""
-"Errors occured while creating the EDI document (format: %s). The receiver "
-"might refuse it."
-msgstr ""
-"Er zijn fouten opgetreden bij het maken van het EDI-document (formaat: %s). "
-"De ontvanger kan het weigeren."
+msgid "Errors occured while creating the EDI document (format: %s). The receiver might refuse it."
+msgstr "Er zijn fouten opgetreden bij het maken van het EDI-document (formaat: %s). De ontvanger kan het weigeren."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -191,22 +175,16 @@ msgstr "Factur-x/XRechnung CII 2.2.0"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
-msgid ""
-"For intracommunity supply, the actual delivery date or the invoicing period "
-"should be included."
-msgstr ""
-"Bij intracommunautaire leveringen dient de werkelijke leveringsdatum of de "
-"facturatieperiode te worden vermeld."
+msgid "For intracommunity supply, the actual delivery date or the invoicing period should be included."
+msgstr "Bij intracommunautaire leveringen dient de werkelijke leveringsdatum of de facturatieperiode te worden vermeld."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr ""
-"Bij intracommunautaire levering dient het afleveradres te worden vermeld."
+msgstr "Bij intracommunautaire levering dient het afleveradres te worden vermeld."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -222,7 +200,6 @@ msgstr "Factuur gegenereerd door Odoo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "No Electronic Address Scheme (EAS) could be found for %s."
@@ -282,12 +259,8 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
-msgid ""
-"The VAT number of the supplier does not seem to be valid. It should be of "
-"the form: NO179728982MVA."
-msgstr ""
-"Het btw-nummer van de leverancier lijkt niet geldig. Het moet de vorm "
-"hebben: NO179728982MVA."
+msgid "The VAT number of the supplier does not seem to be valid. It should be of the form: NO179728982MVA."
+msgstr "Het btw-nummer van de leverancier lijkt niet geldig. Het moet de vorm hebben: NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -307,7 +280,6 @@ msgstr "De klant %s moet een KVK- of OIN-nummer hebben."
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
 msgstr "Het element %s is vereist op %s."
@@ -323,26 +295,19 @@ msgstr "Het veld %s is verplicht op %s."
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
-msgid ""
-"The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr ""
-"Het veld 'Opgeschoond Rekeningnummer' is verplicht op de ontvangende Bank."
+msgid "The field 'Sanitized Account Number' is required on the Recipient Bank."
+msgstr "Het veld 'Opgeschoond Rekeningnummer' is verplicht op de ontvangende Bank."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
-msgid ""
-"The invoice has been converted into a credit note and the quantities have "
-"been reverted."
-msgstr ""
-"De factuur is omgezet in een creditfactuur en de hoeveelheden zijn "
-"teruggekeerd."
+msgid "The invoice has been converted into a credit note and the quantities have been reverted."
+msgstr "De factuur is omgezet in een creditfactuur en de hoeveelheden zijn teruggekeerd."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
@@ -374,26 +339,15 @@ msgstr "UBL BIS-facturering 3.0.12"
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
-msgid ""
-"When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
-"each invoice line should be greater than 0."
-msgstr ""
-"Wanneer de algemene indirecte belasting van de Canarische Eilanden (IGIC) "
-"van toepassing is, moet het belastingtarief op elke factuurregel groter zijn"
-" dan 0."
+msgid "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on each invoice line should be greater than 0."
+msgstr "Wanneer de algemene indirecte belasting van de Canarische Eilanden (IGIC) van toepassing is, moet het belastingtarief op elke factuurregel groter zijn dan 0."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
 #, python-format
-msgid ""
-"You should include at least one tax per invoice line. [BR-CO-04]-Each "
-"Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
-" code (BT-151)."
-msgstr ""
-"Je moet ten minste één btw per factuurregel opnemen. [BR-CO-04]-Elke "
-"factuurregel (BG-25) wordt gecategoriseerd met een btw-categoriecode voor "
-"gefactureerd artikel (BT-151)."
+msgid "You should include at least one tax per invoice line. [BR-CO-04]-Each Invoice line (BG-25) shall be categorized with an Invoiced item VAT category code (BT-151)."
+msgstr "Je moet ten minste één btw per factuurregel opnemen. [BR-CO-04]-Elke factuurregel (BG-25) wordt gecategoriseerd met een btw-categoriecode voor gefactureerd artikel (BT-151)."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

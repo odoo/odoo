@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
-# 
+# Martin Trigaux, 2022
+# Friederike Fasterling-Nesselbosch, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
-"PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_check_printing
@@ -34,12 +34,8 @@ msgstr ": Schecknummernfolge"
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid ""
-"Adjust the margins of generated checks to make it fit your printer's "
-"settings."
-msgstr ""
-"Passen Sie die Ränder des erzeugten Schecks an, damit dieser mit den "
-"Einstellungen Ihres Druckers übereinstimmt."
+msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgstr "Passen Sie die Ränder des erzeugten Schecks an, damit dieser mit den Einstellungen Ihres Druckers übereinstimmt."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -100,9 +96,7 @@ msgstr "Schecknummern können nur aus Ziffern bestehen"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"Wählen Sie diese Option, wenn Ihre vorab ausgedruckten Schecks nicht "
-"nummeriert sind."
+msgstr "Wählen Sie diese Option, wenn Ihre vorab ausgedruckten Schecks nicht nummeriert sind."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -165,10 +159,9 @@ msgstr "Anzeigename"
 #. module: account_check_printing
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
-#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "Benutzen Sie das Hauptmenü"
+msgstr "Gehen Sie zum Konfigurationspanel"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -179,11 +172,8 @@ msgstr "ID"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
-msgstr ""
-"Zum Druck mehrerer Schecks, müssen diese zum gleichen Bankjournal gehören."
+msgid "In order to print multiple checks at once, they must belong to the same bank journal."
+msgstr "Zum Druck mehrerer Schecks, müssen diese zum gleichen Bankjournal gehören."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -276,21 +266,13 @@ msgstr "Zahlungen"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"Payments to print as a checks must have 'Check' selected as payment method "
-"and not have already been reconciled"
-msgstr ""
-"Zahlungen durch einen auszudruckenden Scheck müssen \"Scheck\" als "
-"Zahlungsmethode haben und dürfen noch nicht abgeglichen sein."
+msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
+msgstr "Zahlungen durch einen auszudruckenden Scheck müssen \"Scheck\" als Zahlungsmethode haben und dürfen noch nicht abgeglichen sein."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
-msgstr ""
-"Bitte geben Sie die Nummer des ersten vorgedruckten Schecks ein, den Sie "
-"bedrucken möchten."
+msgid "Please enter the number of the first pre-printed check that you are about to print on."
+msgstr "Bitte geben Sie die Nummer des ersten vorgedruckten Schecks ein, den Sie bedrucken möchten."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -302,15 +284,8 @@ msgstr "Bevorzugte Zahlungsmethode"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid ""
-"Preferred payment method when paying this vendor. This is used to filter "
-"vendor bills by preferred payment method to register payments in mass. Use "
-"cases: create bank files for batch wires, check runs."
-msgstr ""
-"Bevorzugte Zahlungsmethode beim Bezahlen dieses Lieferanten. Dies wird "
-"verwendet, um Lieferantenrechnungen nach bevorzugter Zahlungsmethode zu "
-"filtern, um Zahlungen in Massen zu registrieren. Anwendungsfälle: Erstellen "
-"von Bankdateien für Stapelüberweisungen, Scheckläufe."
+msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
+msgstr "Bevorzugte Zahlungsmethode beim Bezahlen dieses Lieferanten. Dies wird verwendet, um Lieferantenrechnungen nach bevorzugter Zahlungsmethode zu filtern, um Zahlungen in Massen zu registrieren. Anwendungsfälle: Erstellen von Bankdateien für Stapelüberweisungen, Scheckläufe."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -381,13 +356,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"Something went wrong with Check Layout, please select another layout in "
-"Invoicing/Accounting Settings and try again."
-msgstr ""
-"Beim Scheck-Layout ist ein Fehler aufgetreten. Bitte wählen Sie ein anderes "
-"Layout in den Einstellungen für die Rechnungsstellung/Buchhaltung und "
-"versuchen Sie es erneut."
+msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgstr "Beim Scheck-Layout ist ein Fehler aufgetreten. Bitte wählen Sie ein anderes Layout in den Einstellungen für die Rechnungsstellung/Buchhaltung und versuchen Sie es erneut."
 
 #. module: account_check_printing
 #. odoo-python
@@ -404,34 +374,19 @@ msgstr ""
 #. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid ""
-"The last check number was %s. In order to avoid a check being rejected by "
-"the bank, you can only use a greater number."
-msgstr ""
-"Die letzte Schecknummer war %s. Um die Zurückweisung des Schecks durch die "
-"Bank zu verhindern, müssen Sie eine darauffolgende Nummer wählen."
+msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
+msgstr "Die letzte Schecknummer war %s. Um die Zurückweisung des Schecks durch die Bank zu verhindern, müssen Sie eine darauffolgende Nummer wählen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid ""
-"The selected journal is configured to print check numbers. If your pre-"
-"printed check paper already has numbers or if the current numbering is "
-"wrong, you can change it in the journal configuration page."
-msgstr ""
-"Das ausgewählte Journal ist für den Druck von Schecknummern konfiguriert. "
-"Wenn Ihr vorgedrucktes Scheckpapier bereits mit Nummern versehen ist oder "
-"wenn die aktuelle Nummerierung falsch ist, können Sie sie auf der Journal-"
-"Konfigurationsseite ändern."
+msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
+msgstr "Das ausgewählte Journal ist für den Druck von Schecknummern konfiguriert. Wenn Ihr vorgedrucktes Scheckpapier bereits mit Nummern versehen ist oder wenn die aktuelle Nummerierung falsch ist, können Sie sie auf der Journal-Konfigurationsseite ändern."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid ""
-"This option allows you to print check details (stub) on multiple pages if "
-"they don't fit on a single page."
-msgstr ""
-"Mit dieser Option können Sie Scheckdetails (Stub) auf mehrere Seiten "
-"drucken, wenn sie nicht auf eine Seite passen."
+msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
+msgstr "Mit dieser Option können Sie Scheckdetails (Stub) auf mehrere Seiten drucken, wenn sie nicht auf eine Seite passen."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
@@ -445,11 +400,8 @@ msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"This will allow to save on payments the number of the corresponding check."
-msgstr ""
-"Dies ermöglicht es, bei Zahlungen die Nummer des entsprechenden Schecks zu "
-"speichern."
+msgid "This will allow to save on payments the number of the corresponding check."
+msgstr "Dies ermöglicht es, bei Zahlungen die Nummer des entsprechenden Schecks zu speichern."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -465,10 +417,5 @@ msgstr "Ungültiger Scheck"
 #. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"You have to choose a check layout. For this, go in Invoicing/Accounting "
-"Settings, search for 'Checks layout' and set one."
-msgstr ""
-"Sie müssen ein Scheck-Layout wählen. Gehen Sie dazu in "
-"Rechnungs-/Buchhaltungseinstellungen, suchen Sie nach 'Scheck-Layout' und "
-"stellen Sie eines ein."
+msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgstr "Sie müssen ein Scheck-Layout wählen. Gehen Sie dazu in Rechnungs-/Buchhaltungseinstellungen, suchen Sie nach 'Scheck-Layout' und stellen Sie eines ein."

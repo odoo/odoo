@@ -1,24 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* website_event_questions
-# 
+#
 # Translators:
-# Martin Trigaux, 2023
-# Jolien De Paepe, 2023
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# 
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2022
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:55+0000\n"
-"PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_event_questions
@@ -103,7 +104,7 @@ msgstr "Antwoord van de evenementvraag"
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration
 msgid "Event Registration"
-msgstr "Evenementregistratie"
+msgstr "Evenementinschrijving"
 
 #. module: website_event_questions
 #: model:ir.model,name:website_event_questions.model_event_registration_answer
@@ -118,7 +119,7 @@ msgstr "Evenementsjabloon"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__event_type_id
 msgid "Event Type"
-msgstr "Evenementsoort"
+msgstr "Soort evenement"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__general_question_ids
@@ -134,14 +135,8 @@ msgstr "ID"
 
 #. module: website_event_questions
 #: model:ir.model.fields,help:website_event_questions.field_event_question__once_per_order
-msgid ""
-"If True, this question will be asked only once and its value will be "
-"propagated to every attendees.If not it will be asked for every attendee of "
-"a reservation."
-msgstr ""
-"Als dit waar is, wordt deze vraag slechts één keer gesteld en wordt de "
-"waarde ervan overgedragen aan elke bezoeker, anders wordt het bij elke "
-"bezoeker van een reservering gevraagd."
+msgid "If True, this question will be asked only once and its value will be propagated to every attendees.If not it will be asked for every attendee of a reservation."
+msgstr "Als dit waar is, wordt deze vraag slechts één keer gesteld en wordt de waarde ervan overgedragen aan elke bezoeker, anders wordt het bij elke bezoeker van een reservering gevraagd."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
@@ -191,15 +186,14 @@ msgstr "Vraag"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__question_type
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__question_type
 msgid "Question Type"
-msgstr "Vraagtype"
+msgstr "Soort vraag"
 
 #. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
-msgstr ""
-"Vraag kan niet behoren aan een evenementcategorie en het evenement zelf."
+msgstr "Vraag kan niet behoren aan een evenementcategorie en het evenement zelf."
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__question_ids
@@ -213,7 +207,7 @@ msgstr "Vragen"
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__registration_id
 msgid "Registration"
-msgstr "Registratie"
+msgstr "Inschrijving"
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_search
@@ -276,36 +270,28 @@ msgstr "Titel"
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_form_inherit_question
 msgid "Type"
-msgstr "Type"
+msgstr "Soort"
 
 #. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
-msgid ""
-"You cannot change the question type of a question that already has answers!"
-msgstr ""
-"Je kunt het vraagtype niet wijzigen van een vraag die al antwoorden heeft!"
+msgid "You cannot change the question type of a question that already has answers!"
+msgstr "Je kunt het vraagtype niet wijzigen van een vraag die al antwoorden heeft!"
 
 #. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
-msgid ""
-"You cannot delete a question that has already been answered by attendees."
-msgstr ""
-"Je kan een vraag waarop de deelnemers reeds geantwoord hebben niet "
-"verwijderen."
+msgid "You cannot delete a question that has already been answered by attendees."
+msgstr "Je kan een vraag waarop de deelnemers reeds geantwoord hebben niet verwijderen."
 
 #. module: website_event_questions
 #. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
-msgid ""
-"You cannot delete an answer that has already been selected by attendees."
-msgstr ""
-"Je kan een antwoord die de deelnemers reeds geselecteerd hebben niet "
-"verwijderen."
+msgid "You cannot delete an answer that has already been selected by attendees."
+msgstr "Je kan een antwoord die de deelnemers reeds geselecteerd hebben niet verwijderen."
 
 #. module: website_event_questions
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form

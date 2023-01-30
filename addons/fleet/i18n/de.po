@@ -1,23 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* fleet
-# 
+#
 # Translators:
-# Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
-# 
+# Friederike Fasterling-Nesselbosch, 2022
+# Christian Kliebhan, 2022
+# Martin Trigaux, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
-"PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: fleet
@@ -84,7 +85,7 @@ msgstr "Aktivitäten"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme-Dekoration"
+msgstr "Aktivität Ausnahme Dekoration"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
@@ -98,7 +99,7 @@ msgstr "Status der Aktivität"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Aktivitäts-Typ-Symbol"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
@@ -291,10 +292,8 @@ msgstr "Wählen Sie, ob der Vertrag noch gültig ist oder nicht"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_service_type__category
-msgid ""
-"Choose whether the service refer to contracts, vehicle services or both"
-msgstr ""
-"Wählen Sie, ob sich der Service auf Verträge, Fahrzeuge oder beides bezieht"
+msgid "Choose whether the service refer to contracts, vehicle services or both"
+msgstr "Wählen Sie, ob sich der Service auf Verträge, Fahrzeuge oder beides bezieht"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -360,7 +359,7 @@ msgstr "Enthält Fahrzeuge"
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_costs_report_view_search
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contract"
-msgstr "Arbeitsvertrag"
+msgstr "Vertrag"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
@@ -567,9 +566,7 @@ msgstr "Datum Vertragsbeginn"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
-msgid ""
-"Date when the coverage of the contract expirates (by default, one year after"
-" begin date)"
+msgid "Date when the coverage of the contract expirates (by default, one year after begin date)"
 msgstr "Ablaufdatum des Vertrags (Standardwert: ein Jahr nach dem Startdatum)"
 
 #. module: fleet
@@ -580,8 +577,7 @@ msgstr "Datum, an dem das Fahrzeug zugelassen wurde"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__write_off_date
 msgid "Date when the vehicle's license plate has been cancelled/removed."
-msgstr ""
-"Datum, an dem das Nummernschild des Fahrzeugs entwertet/entfernt wurde."
+msgstr "Datum, an dem das Nummernschild des Fahrzeugs entwertet/entfernt wurde."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_res_config_settings__delay_alert_contract
@@ -688,9 +684,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_service_types_action
 msgid "Each service can used in contracts, as a standalone service or both."
-msgstr ""
-"Jede Dienstleistung kann in Verträgen, eigenständig oder kombiniert "
-"eingesetzt werden."
+msgstr "Jede Dienstleistung kann in Verträgen, eigenständig oder kombiniert eingesetzt werden."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__fuel_type__electric
@@ -709,8 +703,7 @@ msgstr "Elektrische Unterstützung"
 #: code:addons/fleet/models/fleet_vehicle_log_services.py:0
 #, python-format
 msgid "Emptying the odometer value of a vehicle is not allowed."
-msgstr ""
-"Eine Manipulation des Kilometerstand eines Fahrzeugs ist nicht zulässig."
+msgstr "Eine Manipulation des Kilometerstand eines Fahrzeugs ist nicht zulässig."
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_end
@@ -732,12 +725,8 @@ msgstr "Motor"
 #. odoo-javascript
 #: code:addons/fleet/static/src/js/fleet_form.js:0
 #, python-format
-msgid ""
-"Every service and contract of this vehicle will be considered as archived. "
-"Are you sure that you want to archive this record?"
-msgstr ""
-"Jeder Service und jeder Vertrag für dieses Fahrzeug wird als archiviert "
-"betrachtet. Sind Sie sicher, dass Sie diesen Datensatz archivieren möchten?"
+msgid "Every service and contract of this vehicle will be considered as archived. Are you sure that you want to archive this record?"
+msgstr "Jeder Service und jeder Vertrag für dieses Fahrzeug wird als archiviert betrachtet. Sind Sie sicher, dass Sie diesen Datensatz archivieren möchten?"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__contract_state__expired
@@ -754,7 +743,7 @@ msgstr "Läuft heute ab"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
 msgid "First Contract Date"
-msgstr "Eintrittsdatum"
+msgstr "Erstes Vertragsdatum"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -802,8 +791,7 @@ msgstr "Fuhrpark-Service-Typ"
 #. module: fleet
 #: model:ir.actions.server,name:fleet.ir_cron_contract_costs_generator_ir_actions_server
 msgid "Fleet: Generate contracts costs based on costs frequency"
-msgstr ""
-"Fuhrpark: Generieren Sie Auftragskosten basierend auf der Kostenfrequenz"
+msgstr "Fuhrpark: Generieren Sie Auftragskosten basierend auf der Kostenfrequenz"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__message_follower_ids
@@ -938,14 +926,14 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_exception_icon
 msgid "Icon"
-msgstr "Symbol"
+msgstr "Icon"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_icon
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__message_needaction
@@ -971,7 +959,7 @@ msgstr "Zulassungsdatum"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__open
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_search
 msgid "In Progress"
-msgstr "Laufend"
+msgstr "In Arbeit"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__service_ids
@@ -1078,7 +1066,7 @@ msgstr "Amtliches Kennzeichen des Fahrzeugs (i= Autokennzeichen)"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Standort"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
@@ -1117,15 +1105,13 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_costs_reporting_action
 msgid "Manage efficiently your different effective vehicles Costs with Odoo."
-msgstr ""
-"Verwalten Sie effizient Ihre verschiedenen effektiven Fahrzeugkosten mit "
-"Odoo."
+msgstr "Verwalten Sie effizient Ihre verschiedenen effektiven Fahrzeugkosten mit Odoo."
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__transmission__manual
 msgid "Manual"
-msgstr "Manuell"
+msgstr "Handschaltung"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
@@ -1392,7 +1378,7 @@ msgstr "Tachostand nach Fahrzeug"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
-msgstr "Tachostände für ein Fahrzeug"
+msgstr "Fahrtenbuch für ein Fahrzeug"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer
@@ -1519,12 +1505,12 @@ msgstr "Verantwortlich"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
 msgid "Running"
-msgstr "Laufend"
+msgstr "Läuft"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1611,7 +1597,7 @@ msgstr "Bestimmen Sie das Ende von %s"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
 msgid "Stage"
-msgstr "Phase"
+msgstr "Stufe"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
@@ -1665,19 +1651,19 @@ msgstr "Summe Kosten"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
 msgid "Tag Name"
-msgstr "Tag Bezeichnung"
+msgstr "Schlagwort"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Stichwort existiert bereits!"
+msgstr "Schlagwort existiert bereits!"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_tag_action
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_tag_menu
 msgid "Tags"
-msgstr "Tags"
+msgstr "Schlagwörter"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
@@ -1701,12 +1687,8 @@ msgstr ""
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__next_assignation_date
-msgid ""
-"This is the date at which the car will be available, if not set it means "
-"available instantly"
-msgstr ""
-"Dies ist das Datum, an dem das Auto verfügbar sein wird. Wenn nicht anders "
-"angegeben, ist es sofort verfügbar."
+msgid "This is the date at which the car will be available, if not set it means available instantly"
+msgstr "Dies ist das Datum, an dem das Auto verfügbar sein wird. Wenn nicht anders angegeben, ist es sofort verfügbar."
 
 #. module: fleet
 #: model:fleet.vehicle.state,name:fleet.fleet_vehicle_state_to_order
@@ -1727,7 +1709,7 @@ msgstr "Heutige Aktivitäten"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
@@ -1963,9 +1945,7 @@ msgstr "Jährlich"
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_odometer_action
 msgid "You can add various odometer entries for all vehicles."
-msgstr ""
-"Sie können verschiedene Kilometerzähler-Einträge für alle Fahrzeuge "
-"hinzufügen."
+msgstr "Sie können verschiedene Kilometerzähler-Einträge für alle Fahrzeuge hinzufügen."
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_state_action
@@ -1979,9 +1959,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_action
 msgid "You can define several models (e.g. A3, A4) for each make (Audi)."
-msgstr ""
-"Sie können verschiedene Typen (z.B. A3, A4) für jede Marke (z.B. Audi) "
-"definieren."
+msgstr "Sie können verschiedene Typen (z.B. A3, A4) für jede Marke (z.B. Audi) definieren."
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_view_form
