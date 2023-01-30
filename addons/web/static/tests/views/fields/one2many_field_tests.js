@@ -2523,6 +2523,132 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "one2many in kanban: add a line custom control create editable",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles">
+                        <kanban>
+                            <control>
+                                <create string="Add food" context="" />
+                                <create string="Add pizza" context="{'default_display_name': 'pizza'}"/>
+                            </control>
+                            <control>
+                                <create string="Add pasta" context="{'default_display_name': 'pasta'}"/>
+                            </control>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <t t-esc="record.display_name.value"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            const createButtons = target.querySelectorAll(
+                ".o_x2m_control_panel .o_cp_buttons button"
+            );
+            assert.deepEqual(
+                [...createButtons].map((el) => el.textContent),
+                ["Add food", "Add pizza", "Add pasta"]
+            );
+
+            await click(createButtons[0]);
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".modal div[name=display_name] input").value,
+                ""
+            );
+
+            await click(target, ".modal .o_form_button_cancel");
+            await click(createButtons[1]);
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".modal div[name=display_name] input").value,
+                "pizza"
+            );
+
+            await click(target, ".modal .o_form_button_cancel");
+            await click(createButtons[2]);
+            assert.containsOnce(target, ".modal");
+            assert.strictEqual(
+                target.querySelector(".modal div[name=display_name] input").value,
+                "pasta"
+            );
+        }
+    );
+
+    QUnit.test(
+        "one2many in kanban: add a line custom control create editable",
+        async function (assert) {
+            serverData.views = {
+                "turtle,false,form": `
+                <form>
+                    <field name="display_name"/>
+                </form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="turtles">
+                        <kanban>
+                            <control>
+                                <create string="Create" context="{}" />
+                                <button string="Action Button" name="do_something" type="object" context="{'parent_id': parent.id}"/>
+                            </control>
+                            <field name="display_name"/>
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_global_click">
+                                        <t t-esc="record.display_name.value"/>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
+                </form>`,
+                resId: 2,
+                mockRPC(route, args) {
+                    if (args.method === "do_something") {
+                        assert.step("do_something");
+                        assert.strictEqual(args.kwargs.context.parent_id, 2);
+                        return true;
+                    }
+                },
+            });
+
+            const createButtons = target.querySelectorAll(
+                ".o_x2m_control_panel .o_cp_buttons button"
+            );
+            assert.deepEqual(
+                [...createButtons].map((el) => el.textContent),
+                ["Create", "Action Button"]
+            );
+
+            await click(createButtons[1]);
+            assert.verifySteps(["do_something"]);
+        }
+    );
+
     QUnit.test("add record in a one2many non editable list with context", async function (assert) {
         assert.expect(1);
 
@@ -9036,7 +9162,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "test_button") {
                     assert.step("test_button");
-                    assert.strictEqual(args.kwargs.context.parent_name, 'first record');
+                    assert.strictEqual(args.kwargs.context.parent_name, "first record");
                     return true;
                 }
             },
@@ -12492,13 +12618,21 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
         assert.containsOnce(target, ".o_dialog .o_form_view");
 
-        // Click on "Save & New" with an invalid form 
+        // Click on "Save & New" with an invalid form
         await click(target, ".o_dialog .o_form_button_save_new");
         assert.containsOnce(target, ".o_dialog .o_form_view");
 
         // Check that no buttons are disabled
-        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_save_new"), "disabled", undefined);
-        assert.hasAttrValue(target.querySelector(".o_dialog .o_form_button_cancel"), "disabled", undefined);
+        assert.hasAttrValue(
+            target.querySelector(".o_dialog .o_form_button_save_new"),
+            "disabled",
+            undefined
+        );
+        assert.hasAttrValue(
+            target.querySelector(".o_dialog .o_form_button_cancel"),
+            "disabled",
+            undefined
+        );
     });
 
     QUnit.test("field in list but not in fetched form", async function (assert) {
