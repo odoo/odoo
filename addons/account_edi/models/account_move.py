@@ -312,7 +312,7 @@ class AccountMove(models.Model):
 
                     existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
                     if existing_edi_document:
-                        existing_edi_document.write({
+                        existing_edi_document.sudo().write({
                             'state': 'to_send',
                             'attachment_id': False,
                         })
