@@ -189,6 +189,7 @@ export class PeerToPeer {
 
     removeClient(clientId) {
         if (debugShowLog) console.log(`%c REMOVE CLIENT ${clientId}`, 'background: chocolate;');
+        this._exponentialBackoffDepth = 0;
         this.notifySelf('ptp_remove', clientId);
         const clientInfos = this.clientsInfos[clientId];
         if (!clientInfos) return;
@@ -574,13 +575,12 @@ export class PeerToPeer {
         if (computedDelay >= 1000*60*60) {
             // We've reached a point where we have to wait a whole hour to
             // retry. It's time to stop trying.
-            if (clientInfos.fallbackTimeout) {
-                clientInfos.fallbackTimeout.clearTimeout();
-            }
+            this.removeClient(clientId);
             return;
         }
         clientInfos.fallbackTimeout = setTimeout(async () => {
             this._exponentialBackoffDepth++;
+            const depth = this._exponentialBackoffDepth;
             clientInfos.fallbackTimeout = undefined;
             const pc = clientInfos.peerConnection;
             if (!pc || pc.iceConnectionState === 'connected') {
@@ -596,6 +596,7 @@ export class PeerToPeer {
                     'background: darkorange; color: white;',
                 );
             this.removeClient(clientId);
+            this._exponentialBackoffDepth = depth; // removeClient resets it
             await this._createClient(clientId);
         }, computedDelay);
     }
