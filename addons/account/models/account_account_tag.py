@@ -22,4 +22,4 @@ class AccountAccountTag(models.Model):
         """
         escaped_tag_name = tag_name.replace('\\', '\\\\').replace('%', '\%').replace('_', '\_')
         domain = [('name', '=like', '_' + escaped_tag_name), ('country_id', '=', country_id), ('applicability', '=', 'taxes')]
-        return self.env['account.account.tag'].with_context(active_test=True).search(domain)
+        return self.env['account.account.tag'].with_context(active_test=False).search(domain)
