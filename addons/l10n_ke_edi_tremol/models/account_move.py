@@ -71,8 +71,8 @@ class AccountMove(models.Model):
                 if not line.tax_ids or len(line.tax_ids) > 1:
                     move_errors.append(_("On line %s, you must select one and only one tax.", line.name))
                 else:
-                    if line.tax_ids.amount == 0 and not (line.product_id and line.product_id.l10n_ke_hsn_code and line.product_id.l10n_ke_hsn_name):
-                        move_errors.append(_("On line %s, a product with a HS Code and HS Name must be selected, since the tax is 0%% or exempt.", line.name))
+                    if line.tax_ids.amount == 0 and not line.tax_ids[0].l10n_ke_item_code_id:
+                        move_errors.append(_("On line %s, a tax with a KRA item code must be selected, since the tax is 0%% or exempt.", line.name))
 
             for tax in move.invoice_line_ids.tax_ids:
                 if tax.amount not in (16, 8, 0):
@@ -162,36 +162,23 @@ class AccountMove(models.Model):
                     discount_dict[candidate.id] += rest_to_discount
                     break
 
-        vat_class = {16.0: 'A', 8.0: 'B'}
         msgs = []
         for line in self.invoice_line_ids.filtered(lambda l: l.display_type == 'product' and l.quantity and l.price_total > 0 and not discount_dict.get(l.id) >= 100):
             # Here we use the original discount of the line, since it the distributed discount has not been applied in the price_total
             price = round(line.price_total / abs(line.quantity) * 100 / (100 - line.discount), 2) * currency_rate
             percentage = line.tax_ids[0].amount
-
-            # Letter to classify tax, 0% taxes are handled conditionally, as the tax can be zero-rated or exempt
-            letter = ''
-            if percentage in vat_class:
-                letter = vat_class[percentage]
-            else:
-                report_line_ids = line.tax_ids.invoice_repartition_line_ids.tag_ids._get_related_tax_report_expressions().report_line_id.ids
-                try:
-                    exempt_report_line = self.env.ref('l10n_ke.tax_report_line_exempt_sales')
-                except ValueError:
-                    raise UserError(_("Tax exempt report line cannot be found, please update the l10n_ke module."))
-                letter = 'E' if exempt_report_line.id in report_line_ids else 'C'
+            item_code = line.tax_ids[0].l10n_ke_item_code_id
 
             uom = line.product_uom_id and line.product_uom_id.name or ''
-            hscode = re.sub('[^0-9.]+', '', line.product_id.l10n_ke_hsn_code)[:10].ljust(10).encode('cp1251') if letter not in ('A', 'B') else b''.ljust(10)
-            hsname = self._l10n_ke_fmt(line.product_id.l10n_ke_hsn_name, 20) if letter not in ('A', 'B') else b''.ljust(20)
+
             line_data = b';'.join([
-                self._l10n_ke_fmt(line.name, 36),               # 36 symbols for the article's name
-                self._l10n_ke_fmt(letter, 1),                   # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
-                str(price)[:13].encode('cp1251'),               # 1 to 13 symbols for article's price
-                self._l10n_ke_fmt(uom, 3),                      # 3 symbols for unit of measure
-                hscode,                                         # 10 symbols for HS code in the format xxxx.xx.xx (can be empty)
-                hsname,                                         # 20 symbols for the HS name (can be empty)
-                str(percentage).encode('cp1251')[:5]            # up to 5 symbols for vat rate
+                self._l10n_ke_fmt(line.name, 36),                       # 36 symbols for the article's name
+                self._l10n_ke_fmt(item_code.tax_rate or 'A', 1),        # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
+                str(price)[:13].encode('cp1251'),                       # 1 to 13 symbols for article's price
+                self._l10n_ke_fmt(uom, 3),                              # 3 symbols for unit of measure
+                (item_code.code or '').ljust(10).encode('cp1251'),      # 10 symbols for KRA item code in the format xxxx.xx.xx (can be empty)
+                self._l10n_ke_fmt(item_code.description or '', 20),     # 20 symbols for KRA item code description (can be empty)
+                str(percentage).encode('cp1251')[:5]                    # up to 5 symbols for vat rate
             ])
             # 1 to 10 symbols for quantity
             line_data += b'*' + str(abs(line.quantity)).encode('cp1251')[:10]

@@ -15,7 +15,6 @@
     'depends': ['l10n_ke'],
     'data': [
         'views/account_move_view.xml',
-        'views/product_view.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
         'views/res_partner_views.xml',
