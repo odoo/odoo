@@ -327,14 +327,14 @@ msgstr "Is een product milestone"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: sale_project
 #. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Load more"
-msgstr "Meer laden"
+msgstr "Laad meer"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_type
@@ -345,8 +345,8 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de handmatig ingevoerde hoeveelheid, zonder het aanmaken van een kostenplaats.\n"
-"Urenstaten op project: Factuur op basis van de gevolgde uren op gerelateerde urenstaten.\n"
-"Maak een taak aan en volg de uren ervan op: Een taak maken bij bevestiging van de verkooporder en de werkuren opvolgen."
+"Urenstaten op project: Factuur op basis van de geschreven uren op gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij e bevestiging van een verkooporder en de werkuren opvolgen."
 
 #. module: sale_project
 #. odoo-python
@@ -510,7 +510,7 @@ msgstr "Project gebruikt op deze verkooporder."
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
@@ -520,7 +520,7 @@ msgstr "Behaalde milestones"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr "Aantal verkooporders"
+msgstr "Totaal verkooporders"
 
 #. module: sale_project
 #. odoo-javascript
@@ -606,7 +606,7 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
-"Verkooporderregel dat standaard zal worden gekozen op de taken en urenstaten van dit project, behalve indien de op de urenstaten vastgelegde werknemer uitdrukkelijk gelinkd is aan een ander verkooporderregel op het project. \n"
+"Verkooporderregel dat standaard zal worden gekozen op de taken en urenstaten van dit project, behalve indien de op de urenstaten vastgelegde werknemer uitdrukkelijk gerelateerd is aan een ander verkooporderregel op het project. \n"
 "Dit kan individueel worden gewijzigd op elke taak en urenstaat indien nodig."
 
 #. module: sale_project
@@ -677,7 +677,7 @@ msgstr "Taak aangemaakt (%s): %s"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "Taakherhaling"
+msgstr "Taak herhaling"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count

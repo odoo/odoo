@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Jan Meyer, 2023
-# Felix Schubert <felix.schubert@go-erp.com>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
 # Martin Trigaux, 2023
 # 
@@ -277,8 +276,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"Ein Python Dictionary, das ausgewertet wird, wenn neue Datensätze für diesen"
-" Alias angelegt werden."
+"Ein Python-Dictionary, das Standardwerte zur Verfügung stellt, wenn neue "
+"Datensätze für diesen Alias angelegt werden."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
@@ -355,7 +354,7 @@ msgstr "Aktivitätsbeschreibung"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme-Dekoration"
+msgstr "Aktivität Ausnahme Dekoration"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_state
@@ -546,7 +545,7 @@ msgstr "Zugewiesen an"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr "Zuweisungdatum"
+msgstr "Zuweisung Datum"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
@@ -610,17 +609,17 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr "Schwarze Liste"
+msgstr "Sperrliste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr "Telefon auf der schwarzen Liste ist mobil"
+msgstr "Telefon auf der Sperrliste ist Mobiltelefon"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Telefon auf der schwarzen Liste ist Telefon"
+msgstr "Telefon auf der Sperrliste ist Festnetz"
 
 #. module: crm
 #. odoo-python
@@ -1218,7 +1217,8 @@ msgstr "Anzeigename"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Kein Zugriff, überspringen Sie diese Daten für die E-Mail des Benutzer"
+"Keine Zugriffsberechtigung, überspringen dieser Daten für die Digest E-Mail "
+"der Benutzer."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1572,12 +1572,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_icon
 msgid "Icon"
-msgstr "Symbol"
+msgstr "Icon"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
@@ -1636,8 +1636,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Wenn die bereinigte Rufnummer auf der schwarzen Liste steht, erhält der "
-"Kontakt keine Massen-SMS mehr, egal von welcher Liste"
+"Wenn die bereinigte Rufnummer auf der Sperrliste steht, erhält der Kontakt "
+"keine Massen-SMS mehr, egal von welcher Liste"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1674,10 +1674,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob eine bereinigte Telefonnummer auf der schwarzen Liste eine "
+"Zeigt an, ob eine bereinigte Telefonnummer auf der Speerliste eine "
 "Mobilfunknummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
-"schwarzen Liste steht, wenn es in einem Modell sowohl ein Handy- als auch "
-"ein Telefonfeld gibt."
+"Sperrliste steht, wenn es in einem Modell sowohl ein Handy- als auch ein "
+"Telefonfeld gibt."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1686,10 +1686,10 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
-"Zeigt an, ob es sich bei einer auf der schwarzen Liste stehenden bereinigten"
-" Telefonnummer um eine Telefonnummer handelt. Hilft bei der Unterscheidung, "
-"welche Nummer auf der schwarzen Liste steht, wenn es in einem Modell sowohl "
-"ein Handy- als auch ein Telefonfeld gibt."
+"Zeigt an, ob es sich bei einer auf der Sperrliste stehenden bereinigten "
+"Telefonnummer um eine Festnetznummer handelt. Hilft bei der Unterscheidung, "
+"welche Nummer auf der Sperrliste steht, wenn es in einem Modell sowohl ein "
+"Handy- als auch ein Festnetzfeld gibt."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1830,7 +1830,7 @@ msgstr "Verspätete Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_leads
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Lead"
-msgstr "Lead"
+msgstr "Interessent"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_enabled
@@ -1950,7 +1950,7 @@ msgstr "Lead/Chance erstellt"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #, python-format
 msgid "Leads"
-msgstr "Leads"
+msgstr "Interessenten"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
@@ -2211,7 +2211,7 @@ msgstr "Marketing:"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Medium"
-msgstr "Medium"
+msgstr "Mittel"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -2365,7 +2365,7 @@ msgstr "Neue Chancen"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr "Neue Verkaufschance"
+msgstr "Neue Chance"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_calendar_event_id
@@ -2684,7 +2684,7 @@ msgstr "Mir zugewiesene Chancen"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunity"
-msgstr "Verkaufschance"
+msgstr "Chance"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -2823,7 +2823,7 @@ msgstr "Telefon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Telefon auf der schwarzen Liste"
+msgstr "Telefon auf der Sperrliste"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
@@ -2898,7 +2898,7 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Richtlinie zum Posten einer Dokument-Nachricht über das E-Mail-Gateway.\n"
+"Richtlinie zum Posten einer Dokument-Mitteilung über das E-Mail-Gateway.\n"
 "- Jeder: jeder kann posten\n"
 "- Partner: nur bestätigte Partner\n"
 "- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
@@ -3005,7 +3005,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Aufzeichnung Diskussion ID"
+msgstr "Datensatz-Diskussions-ID"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
@@ -3160,7 +3160,7 @@ msgstr "Verkaufsteams"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
-msgstr "Sales-Mitarbeiter"
+msgstr "Verkäufer"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3316,7 +3316,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 #, python-format
 msgid "Stage"
-msgstr "Phase"
+msgstr "Stufe"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_stage
@@ -3423,14 +3423,14 @@ msgstr "Systemparameter"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Tag"
-msgstr "Tag"
+msgstr "Stichwort"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__tag_ids
 #: model:ir.model.fields,field_description:crm.field_crm_lead__tag_ids
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
-msgstr "Tags"
+msgstr "Stichwörter"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3568,7 +3568,7 @@ msgstr ""
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
 "Diese E-Mail-Adresse steht auf der Sperrliste für Massen-Mailings. Klicken, "
-"um von Sperrliste zu entfernen."
+"um sie von der Sperrliste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
@@ -3616,8 +3616,8 @@ msgstr ""
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
-"Diese Rufnummer steht auf der Blacklist für SMS-Marketing. Klicken Sie zum "
-"Aufheben der Sperrliste."
+"Diese Rufnummer steht auf der Sperrliste für SMS-Marketing. Klicken,  um sie"
+" von der Sperrliste zu entfernen."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold

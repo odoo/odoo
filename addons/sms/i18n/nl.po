@@ -3,7 +3,6 @@
 # 	* sms
 # 
 # Translators:
-# Dylan Kiss, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # Martin Trigaux, 2023
@@ -95,7 +94,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
 msgid "Action Needed"
-msgstr "Actie nodig"
+msgstr "Actie gevraagd"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -142,7 +141,7 @@ msgstr "Aantal bijlagen"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_blacklist
 msgid "Blacklisted"
-msgstr "Op blacklist"
+msgstr "Geblacklist"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
@@ -216,13 +215,13 @@ msgstr ""
 "Kies methode voor sms-verzending:\n"
 "SMS: massa-sms\n"
 "Post als bericht: log in document\n"
-"Post als Notitie: massa-sms met archieven"
+"Post als Opmerking: massa-sms met archieven"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
-msgstr "Afsluiten"
+msgstr "Sluiten"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
@@ -233,7 +232,7 @@ msgstr "Bewerkmodus"
 #: model:ir.model,name:sms.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 msgid "Contact"
-msgstr "Contacteer"
+msgstr "Contact"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -331,12 +330,12 @@ msgstr "Relaties wijzigen"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread
 msgid "Email Thread"
-msgstr "E-mailthread"
+msgstr "E-mail discussie"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__error
 msgid "Error"
-msgstr "Foutmelding"
+msgstr "Fout"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__failure_type
@@ -394,7 +393,7 @@ msgstr "Heeft onvoldoende krediet"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__has_message
 msgid "Has Message"
-msgstr "Heeft een bericht"
+msgstr "Heeft bericht"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
@@ -426,7 +425,7 @@ msgstr "ID"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
@@ -459,7 +458,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Ignore all"
-msgstr "Alles negeren"
+msgstr "Negeer alle"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__outgoing
@@ -498,7 +497,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_credit
 msgid "Insufficient Credit"
-msgstr "Onvoldoende kredieten"
+msgstr "Onvoldoende krediet"
 
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
@@ -509,7 +508,7 @@ msgstr "Ongeldig ontvangersnummer. Gelieve het te updaten."
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
 msgid "Is Follower"
-msgstr "Is volger"
+msgstr "Is een volger"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
@@ -585,12 +584,12 @@ msgstr "Bericht"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
 msgid "Message Delivery error"
-msgstr "Fout bij bezorging van bericht"
+msgstr "Bericht afleverfout"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
-msgstr "Bericht notificaties"
+msgstr "Berichten notificaties"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__message_type
@@ -641,7 +640,7 @@ msgstr "Type melding"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__number
 msgid "Number"
-msgstr "Aantal"
+msgstr "Nummer"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
@@ -661,12 +660,12 @@ msgstr "Aantal foutmeldingen"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Aantal berichten waarvoor een actie vereist is"
+msgstr "Aantal berichten die actie vereisen"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Aantal berichten met afleverfout"
+msgstr "Aantal berichten met leveringsfout"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
@@ -692,18 +691,18 @@ msgid ""
 msgstr ""
 "Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
 "e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
-"meestal een placeholder zijn die de juiste taal biedt, bijv. {{ "
+"meestal een placeholder expressie zijn die de juiste taal geeft, bijv. {{ "
 "object.partner_id.lang }}."
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
 msgid "Outgoing SMS"
-msgstr "Uitgaande sms"
+msgstr "Uitgaande SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Relatie"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
@@ -737,7 +736,7 @@ msgstr "Telefoon/mobiel"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
 msgid "Post as Message"
-msgstr "Posten als bericht"
+msgstr "Post als bericht"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
@@ -747,7 +746,7 @@ msgstr "Posten als notitie"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr "Posten op een document"
+msgstr "Post op een document"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -813,7 +812,7 @@ msgstr "Record referentie"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 msgid "Related Document Model"
-msgstr "Gerelateerd documentmodel"
+msgstr "Gerelateerde documentmodel"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -865,7 +864,7 @@ msgstr "Opnieuw proberen"
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, python-format
 msgid "SMS"
-msgstr "sms"
+msgstr "SMS"
 
 #. module: sms
 #. openerp-web
@@ -895,7 +894,7 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS leverfout"
+msgstr "SMS fout bij versturen"
 
 #. module: sms
 #. openerp-web
@@ -937,7 +936,7 @@ msgstr "SMS status"
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr "sms-sjabloon"
+msgstr "SMS sjabloon"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
@@ -1022,12 +1021,12 @@ msgstr "Verzend SMS (%s)"
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr "Verzend sms-tekstbericht"
+msgstr "Verzend SMS tekstbericht"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
-msgstr "Wizard sms verzenden"
+msgstr "Verzend SMS wizard"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
@@ -1218,12 +1217,12 @@ msgstr ""
 "Type serveractie. De volgende waarden zijn beschikbaar:\n"
 "- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
 "- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
-"- 'Een record bijwerken': werk de waarden van een record bij\n"
-"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
-"- 'E-mail verzenden': post een bericht, een notitie of stuur een e-mail (Chat)\n"
+"- 'Update a Record': update de waarden van een record\n"
+"- 'Voer meerdere acties uit': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail versturen': post een bericht, een notitie of stuur een e-mail (Chat)\n"
 "- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
 "- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
-"- 'SMS-tekstbericht verzenden': stuur sms, log in op documenten (SMS)"
+"- 'Stuur SMS-tekstbericht': stuur sms, log ze op documenten (SMS)"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
@@ -1255,12 +1254,12 @@ msgstr "Waarschuwing"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
 msgid "Website Messages"
-msgstr "Berichten website"
+msgstr "Websiteberichten"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
 msgid "Website communication history"
-msgstr "Website gespreksgeschiedenis"
+msgstr "Website communicatie geschiedenis"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1329,7 +1328,7 @@ msgstr "bijv.. en_US of {{ object.partner_id.lang }}"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "out of"
-msgstr "van"
+msgstr "uit"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

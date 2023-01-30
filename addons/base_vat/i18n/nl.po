@@ -27,6 +27,10 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Waardes die hier ingesteld "
+"staan zijn bedrijfsspecifiek.\" aria-label=\"Waardes die hier ingesteld "
+"staan zijn bedrijfsspecifiek.\" groups=\"base.group_multi_company\" "
+"role=\"img\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -41,12 +45,12 @@ msgstr "Configuratie instellingen"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
-msgstr "Contacteer"
+msgstr "Contact"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Fiscale positie"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -54,6 +58,9 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Als dit selectievakje is aangevinkt kun je geen contactpersoon meer opslaan "
+"als de BTW nummer niet geverifieerd kan worden door de Europese VIES "
+"service."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -62,6 +69,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Het nummer %(vat_label)s [%(wrong_vat)s] lijkt niet geldig. \n"
+"Opgelet: het verwachte formaat is %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -70,6 +79,9 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] either failed the VIES VAT "
 "validation check or did not respect the expected format %(expected_format)s."
 msgstr ""
+"Het nummer %(vat_label)s [%(wrong_vat)s] heeft ofwel de btw-"
+"validatiecontrole van VIES niet doorstaan of voldeed niet aan het verwachte "
+"formaat %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -78,6 +90,8 @@ msgid ""
 "The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"Het nummer %(vat_label)s [%(wrong_vat)s] voor %(record_label)s lijkt niet geldig. \n"
+"Opgelet: het verwachte formaat is %(expected_format)s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -87,6 +101,9 @@ msgid ""
 "the VIES VAT validation check or did not respect the expected format "
 "%(expected_format)s."
 msgstr ""
+"Het nummer %(vat_label)s [%(wrong_vat)s] voor %(record_label)s is ofwel niet"
+" geslaagd voor de VIES btw-validatiecontrole, ofwel voldeed niet aan het "
+"verwachte formaat %(expected_format)s."
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
@@ -95,26 +112,29 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Het gevonden land voor dit buitenlandse btw-nummer komt niet overeen met het"
+" land dat op deze fiscale positie is ingesteld."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Controleer BTW nummers"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
 msgstr ""
+"Controleer BTW nummers door gebruik te maken van de Europese VIES dienst"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "fiscale positie [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "relatie [%s]"
