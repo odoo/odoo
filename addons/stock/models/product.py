@@ -570,9 +570,12 @@ class Product(models.Model):
     def _get_rules_from_location(self, location, route_ids=False, seen_rules=False):
         if not seen_rules:
             seen_rules = self.env['stock.rule']
+        warehouse = location.warehouse_id
+        if not warehouse and seen_rules:
+            warehouse = seen_rules[-1].propagate_warehouse_id
         rule = self.env['procurement.group']._get_rule(self, location, {
             'route_ids': route_ids,
-            'warehouse_id': location.warehouse_id
+            'warehouse_id': warehouse,
         })
         if rule in seen_rules:
             raise UserError(_("Invalid rule's configuration, the following rule causes an endless loop: %s", rule.display_name))
