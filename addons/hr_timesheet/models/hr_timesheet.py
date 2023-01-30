@@ -145,12 +145,13 @@ class AccountAnalyticLine(models.Model):
                 continue
             if not vals.get('name'):
                 vals['name'] = '/'
-            employee_id = vals.get('employee_id')
-            user_id = vals.get('user_id', default_user_id)
+            employee_id = vals.get('employee_id', self._context.get('default_employee_id', False))
             if employee_id and employee_id not in employee_ids:
                 employee_ids.append(employee_id)
-            elif user_id not in user_ids:
-                user_ids.append(user_id)
+            else:
+                user_id = vals.get('user_id', default_user_id)
+                if user_id not in user_ids:
+                    user_ids.append(user_id)
 
         # 2/ Search all employees related to user_ids and employee_ids, in the selected companies
         employees = self.env['hr.employee'].sudo().search([
@@ -176,7 +177,7 @@ class AccountAnalyticLine(models.Model):
         for vals in vals_list:
             if not vals.get('project_id'):
                 continue
-            employee_in_id = vals.get('employee_id')
+            employee_in_id = vals.get('employee_id', self._context.get('default_employee_id', False))
             if employee_in_id:
                 if employee_in_id in valid_employee_per_id:
                     vals['user_id'] = valid_employee_per_id[employee_in_id].sudo().user_id.id   # (A) OK
