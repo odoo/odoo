@@ -21,6 +21,12 @@ class SaleReport(models.Model):
             ('invoiced', 'Invoiced')
         ],
     )
+    pos_order_id = fields.Many2one('pos.order', 'Pos order #', readonly=True)
+
+    def _select_additional_fields(self):
+        res = super()._select_additional_fields()
+        res['pos_order_id'] = "NULL"
+        return res
 
     def _select_pos(self):
         select_ = f"""
@@ -90,7 +96,9 @@ class SaleReport(models.Model):
         :param values: dictionary of values to fill
         :type values: dict
         """
-        return {x: 'NULL' for x in additional_fields}
+        values = {x: 'NULL' for x in additional_fields}
+        values['pos_order_id'] = 'pos.id'
+        return values
 
     def _from_pos(self):
         return """
@@ -131,6 +139,7 @@ class SaleReport(models.Model):
             pos.state,
             pos.company_id,
             pos.pricelist_id,
+            pos.id,
             p.product_tmpl_id,
             partner.country_id,
             partner.industry_id,
