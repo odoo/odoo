@@ -284,7 +284,10 @@ class TaxReportTest(AccountTestInvoicingCommon):
         check_tags_unlink('01', self.tax_report_line_1_1, False, "Unlinking one line sharing its tags with others should keep the tags")
         check_tags_unlink('100', self.tax_report_line_1_6 + self.tax_report_line_2_6, True, "Unlinkink all the lines sharing the same tags should also unlink them")
 
-    def test_unlink_report_line_tags_archive(self):
+    def test_unlink_report_line_tags_used_by_amls(self):
+        """
+        Deletion of a report line whose tags are still referenced by an aml should archive tags and not delete them.
+        """
         test_tax = self.env['account.tax'].create({
             'name': "Test tax",
             'amount_type': 'percent',
@@ -300,7 +303,7 @@ class TaxReportTest(AccountTestInvoicingCommon):
                 (0, 0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
-                    'tag_ids': [(6, 0, self.tax_report_line_1_55.tag_ids[0].ids)],
+                    'tag_ids': [(6, 0, self.tax_report_line_1_55.tag_ids.filtered(lambda tag: not tag.tax_negate).ids)],
                 }),
             ],
             'refund_repartition_line_ids': [
@@ -329,14 +332,47 @@ class TaxReportTest(AccountTestInvoicingCommon):
         })
         test_invoice.action_post()
 
-        self.assertTrue(any(line.tax_tag_ids == self.tax_report_line_1_55.tag_ids[0] for line in test_invoice.line_ids),
-                        "The test invoice should contain a tax line with tag 55")
         tag_name = self.tax_report_line_1_55.tag_name
-        tags_before = self._get_tax_tags(tag_name=tag_name, active_test=False)
-        tags_archived_before = tags_before.filtered(lambda tag: not tag.active)
         self.tax_report_line_1_55.unlink()
         tags_after = self._get_tax_tags(tag_name=tag_name, active_test=False)
+        # only the +tag_name should be kept (and archived), -tag_name should be unlinked
+        self.assertEqual(tags_after.mapped('tax_negate'), [False], "Unlinking a report line should keep the tag if it was used on move lines, and unlink it otherwise.")
+        self.assertEqual(tags_after.mapped('active'), [False], "Unlinking a report line should archive the tag if it was used on move lines, and unlink it otherwise.")
+        self.assertEqual(len(test_tax.invoice_repartition_line_ids.tag_ids), 0, "After a tag is archived it shouldn't be on tax repartition lines.")
+
+    def test_unlink_report_line_tags_used_by_other_report_line(self):
+        """
+        Deletion of a report line whose tags are still referenced in other report line should not delete nor archive tags.
+        """
+        tag_name = self.tax_report_line_1_1.tag_name  # tag "O1" is used in both line 1.1 and line 2.1
+        tags_before = self._get_tax_tags(tag_name=tag_name, active_test=False)
+        tags_archived_before = tags_before.filtered(lambda tag: not tag.active)
+        self.tax_report_line_1_1.unlink()
+        tags_after = self._get_tax_tags(tag_name=tag_name, active_test=False)
         tags_archived_after = tags_after.filtered(lambda tag: not tag.active)
-        # only the + tag will survive, - will be deleted as it's not on a move.line
-        self.assertEqual(len(tags_after), len(tags_before) - 1, "Unlinking a report line whose tags are used on move lines should not delete them.")
-        self.assertEqual(len(tags_archived_after), len(tags_archived_before) + 1, "Unlinking a report line whose tags are used on move lines should archive them.")
+        self.assertEqual(len(tags_after), len(tags_before), "Unlinking a report line whose tags are used by another line should not delete them.")
+        self.assertEqual(len(tags_archived_after), len(tags_archived_before), "Unlinking a report line whose tags are used by another line should not archive them.")
+
+    def test_tag_recreation_archived(self):
+        """
+        In a situation where we have only one of the two (+ and -) sign that exist
+        we want only the missing sign to be re-created if we try to reuse the same tag name.
+        (We can get into this state when only one of the signs was used by aml: then we archived it and deleted the complement.)
+        """
+        tag_name = self.tax_report_line_1_55.tag_name
+        tags_before = self._get_tax_tags(tag_name=tag_name, active_test=False)
+        tags_before[0].unlink()  # we unlink one and archive the other, doesn't matter which one
+        tags_before[1].active = False
+        self.env['account.tax.report.line'].create({
+            'name': "[55] Line 55 bis",
+            'tag_name': tag_name,
+            'report_id': self.tax_report_1.id,
+            'sequence': 9,
+        })
+        tags_after = self._get_tax_tags(tag_name=tag_name, active_test=False)
+        self.assertEqual(len(tags_after), 2, "When creating a tax report line with an archived tag and its complement doesn't exist, it should be re-created.")
+        self.assertEqual(
+            tags_after.mapped('name'), ['+' + tag_name, '-' + tag_name],
+            "After creating a tax report line with an archived tag and when its complement doesn't exist, both a negative and a positive tag should "
+            "exist (the missing one being recreated)."
+        )
