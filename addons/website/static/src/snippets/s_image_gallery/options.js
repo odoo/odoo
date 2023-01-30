@@ -456,7 +456,9 @@ options.registry.gallery = options.Class.extend({
      */
     _replaceContent: function ($content) {
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
-        $container.empty().append($content);
+        if (this._getImages().length) {
+            $container.empty().append($content);
+        }
         return $container;
     },
 });
