@@ -4,6 +4,7 @@ odoo.define('website.s_image_gallery_options', function (require) {
 var core = require('web.core');
 var weWidgets = require('wysiwyg.widgets');
 var options = require('web_editor.snippets.options');
+const {loadImage} = require('web_editor.image_processing');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -103,16 +104,19 @@ options.registry.gallery = options.Class.extend({
         var lastImage = _.last(this._getImages());
         var index = lastImage ? this._getIndex(lastImage) : -1;
         return new Promise(resolve => {
-            dialog.on('save', this, function (attachments) {
+            dialog.on('save', this, async function (attachments) {
                 for (var i = 0; i < attachments.length; i++) {
-                    $('<img/>', {
+                    const image = await loadImage(attachments[i].image_src);
+                    Object.entries({
                         class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: attachments[i].image_src,
-                        'data-index': ++index,
                         alt: attachments[i].description || '',
-                        'data-name': _t('Image'),
                         style: $images.length > 0 ? $images[0].style.cssText : '',
-                    }).appendTo($container);
+                        'data-name': _t('Image'),
+                        'data-index': ++index,
+                    }).forEach(([attr, value]) => {
+                        image.setAttribute(attr, value);
+                    });
+                    $container[0].appendChild(image);
                 }
                 if (attachments.length > 0) {
                     this.mode('reset', this.getMode());
