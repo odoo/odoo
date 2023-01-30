@@ -1529,6 +1529,10 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: function (ev) {
+        if (this.options.wysiwyg.isSaving()) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         ev.data.show = this._toggleVisibilityStatus(ev.data.show);
     },
     /**
@@ -3441,7 +3445,7 @@ var SnippetsMenu = Widget.extend({
      */
     _onClick(ev) {
         // Clicking in the page should be ignored on save
-        if (this.willDestroyEditors) {
+        if (this.options.wysiwyg.isSaving()) {
             return;
         }
 
@@ -3977,6 +3981,10 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
+        if (this.options.wysiwyg.isSaving()) {
+            // Do not update the option visibilities if we are destroying them.
+            return;
+        }
         if (!ev.data.show) {
             await this._activateSnippet(false);
         }
