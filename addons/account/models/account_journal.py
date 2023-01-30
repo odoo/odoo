@@ -719,7 +719,7 @@ class AccountJournal(models.Model):
                     if invoice:
                         break
                 if not invoice:
-                    invoice = self.env['account.move'].create({})
+                    invoice = self.env['account.move'].create({'journal_id': self.id})
                 invoice.with_context(no_new_invoice=True).message_post(attachment_ids=[attachment.id])
                 attachment.write({'res_model': 'account.move', 'res_id': invoice.id})
                 invoices += invoice
