@@ -21,7 +21,15 @@ async function closePopover(target) {
 }
 
 async function changeType(target, propertyType) {
-    const TYPES_INDEX = {"datetime": 6, "selection": 7, "tags": 8, "many2one": 9, "many2many": 10};
+    const TYPES_INDEX = {
+        "integer": 3,
+        "float": 4,
+        "datetime": 6,
+        "selection": 7,
+        "tags": 8,
+        "many2one": 9,
+        "many2many": 10,
+    };
     const propertyTypeIndex = TYPES_INDEX[propertyType];
     await click(target, ".o_field_property_definition_type input");
     await nextTick();
@@ -492,6 +500,71 @@ QUnit.module("Fields", (hooks) => {
             ["A", "C", "New option"],
             "Should have removed the second option"
         );
+    });
+
+    /**
+     * Test the float and the integer property.
+     */
+    QUnit.test("properties: float and integer", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+
+        const field = target.querySelector(".o_field_properties");
+        assert.ok(field, "The field must be in the view");
+
+        // change type to float
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await changeType(target, "float");
+        await closePopover(target);
+
+        const editValue = async (newValue, expected) => {
+            await editInput(
+                target,
+                ".o_property_field:nth-child(2) .o_field_property_input",
+                newValue,
+            );
+            // click away
+            await click(target, ".o_form_sheet_bg");
+            const input = target.querySelector(".o_property_field:nth-child(2) .o_field_property_input");
+            assert.strictEqual(input.value, expected);
+        }
+
+        await editValue("2", "2.00");
+        await editValue("2.11", "2.11");
+        await editValue("2.1234567", "2.12", "Decimal precision is 2");
+        await editValue("azerty", "", "Wrong float value should be interpreted as empty");
+        await editValue("1,2,3,4,5,6.1,2,3,5", "123456.12");
+
+        // change type to integer
+        await click(target, ".o_property_field:nth-child(2) .o_field_property_open_popover");
+        await changeType(target, "integer");
+        await closePopover(target);
+
+        await editValue("2", "2");
+        await editValue("2.11", "");
+        await editValue("azerty", "", "Wrong integer value should be interpreted as empty");
+        await editValue("1,2,3,4,5,6", "123456");
+        await editValue("1,2,3,4,5,6.1,2,3", "");
     });
 
     /**
