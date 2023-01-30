@@ -68,9 +68,6 @@ Featuring
     'installable': True,
     'application': True,
     'assets': {
-        'mail.assets_messaging': [
-            'website_slides/static/src/models/*.js',
-        ],
         'web.assets_backend': [
             'website_slides/static/src/backend/**/*',
             'website_slides/static/src/slide_category_one2many_field.js',
