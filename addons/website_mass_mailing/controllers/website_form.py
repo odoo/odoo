@@ -13,7 +13,7 @@ class WebsiteNewsletterForm(WebsiteForm):
     def _handle_website_form(self, model_name, **kwargs):
         if model_name == 'mailing.contact':
             list_ids = [int(x) for x in kwargs['list_ids'].split(',')]
-            private_list_ids = request.env['mailing.list'].search([
+            private_list_ids = request.env['mailing.list'].sudo().search([
                 ('id', 'in', list_ids), ('is_public', '=', False)])
             if private_list_ids:
                 return json.dumps({
