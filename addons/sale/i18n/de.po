@@ -1687,7 +1687,7 @@ msgstr "Bruttogewicht"
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr "Gruppieren nach"
+msgstr "Gruppieren"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
@@ -2016,8 +2016,16 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
+<<<<<<< HEAD
 msgid "Journal Entries"
 msgstr "Buchungssätze"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Journal Entry"
+msgstr "Journaleintrag"
+=======
+msgid "Journal Entry"
+msgstr "Buchungssatz"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -3182,7 +3190,7 @@ msgstr "Auftrag wurde bestätigt"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
-msgstr "Auftragselement"
+msgstr "Auftragsposition"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3560,7 +3568,27 @@ msgstr "Bestimmte E-Mail-Adresse"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Stage"
+<<<<<<< HEAD
 msgstr "Stufe"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Phase"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Start by checking your company's data."
+msgstr "Beginnen Sie mit der Überprüfung der Daten Ihres Unternehmens."
+=======
+msgstr "Stufe"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Start by checking your company's data."
+msgstr "Beginnen Sie mit der Überprüfung der Daten Ihres Unternehmens."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_order_confirmation_state
@@ -3618,6 +3646,52 @@ msgid "Subtotal"
 msgstr "Zwischensumme"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Total"
+msgstr "Gesamtsumme"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Untaxed Total"
+msgstr "Unversteuerte Summe"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sale.menu_tag_config
+msgid "Tags"
+msgstr "Tags"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
+msgid "Tax Country"
+msgstr "Steuerland"
+
+#. module: sale
+=======
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Total"
+msgstr "Gesamtsumme"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.sale_report_view_tree
+msgid "Sum of Untaxed Total"
+msgstr "Unversteuerte Summe"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__tag_ids
+#: model:ir.ui.menu,name:sale.menu_tag_config
+msgid "Tags"
+msgstr "Stichwörter"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__tax_country_id
+msgid "Tax Country"
+msgstr "Steuerland"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:sale.view_order_tree
 #: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
 msgid "Tax Total"
@@ -3964,7 +4038,7 @@ msgstr "Heutige Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -4334,8 +4408,26 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+<<<<<<< HEAD
 "Ihr Angebot enthält Produkte der Firma %s während Ihr Angebot zur Firma %s gehört. \n"
 " Bitte ändern Sie die Firma Ihres Angebots oder entfernen Sie die Produkte von anderen Firmen (%s)."
+||||||| parent of fc1dc2c963f (temp)
+"Ihr Angebot enthält Produkte der Firma %(product_company)s, während Ihr Angebot zur Firma %(quote_company)s gehört.\n"
+" Bitte ändern Sie die Firma Ihres Angebots oder entfernen Sie die Produkte anderer Firmen (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+msgid "automatic invoicing: send ready invoice"
+msgstr "automatische Rechnungsstellung: fertige Rechnungen versenden"
+=======
+"Ihr Angebot enthält Produkte der Firma %(product_company)s, während Ihr Angebot zur Firma %(quote_company)s gehört\n"
+" Bitte ändern Sie die Firma Ihres Angebots oder entfernen Sie die Produkte von anderen Firmen (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+msgid "automatic invoicing: send ready invoice"
+msgstr "automatische Rechnungsstellung: fertige Rechnungen versenden"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

@@ -35,12 +35,38 @@ msgstr "Evénement calendrier : Rappel"
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
 msgid "Event Alarm"
+<<<<<<< HEAD
 msgstr "Rappel d'évènement"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Rappel d'événement"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
 msgid "Event Alarm Manager"
+<<<<<<< HEAD
 msgstr "Gestionnaire de rappel d'évènements"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr ""
+=======
+msgstr "Gestionnaire de rappel d'événements"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "Rappel d'événement: %(name)s, %(time)s."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
@@ -48,14 +74,40 @@ msgid ""
 "Event reminder: ${object.name} on ${object.start_datetime or "
 "object.start_date}"
 msgstr ""
+<<<<<<< HEAD
 "Rappel d'évènement: ${object.name} on ${object.start_datetime or "
 "object.start_date}"
+||||||| parent of fc1dc2c963f (temp)
+=======
+"Rappel d'événement : {{ object.name }}, {{ "
+"object.get_display_time_tz(object.partner_id.tz) }}"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar_sms
+<<<<<<< HEAD
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
 msgid "Event reminder: %s on %s."
 msgstr "Rappel d'événement : %s le %s."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+msgid "SMS"
+msgstr "SMS"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "SMS Template"
+msgstr "Modèle de SMS"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
@@ -63,9 +115,69 @@ msgid "SMS Text Message"
 msgstr "SMS"
 
 #. module: calendar_sms
+<<<<<<< HEAD
 #: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Envoyer le SMS"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr ""
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+=======
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_tree_inherited
+msgid "Send SMS"
+msgstr "Envoi de SMS"
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "Send SMS Text Message"
+msgstr "Envoyer un SMS"
+
+#. module: calendar_sms
+#: model_terms:ir.ui.view,arch_db:calendar_sms.view_calendar_event_form_inherited
+>>>>>>> fc1dc2c963f (temp)
 msgid "Send SMS to attendees"
+<<<<<<< HEAD
 msgstr "Envoyer un SMS aux participants"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr ""
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr ""
+=======
+msgstr "Envoyer un SMS aux participants"
+
+#. module: calendar_sms
+#: model:ir.model.fields,help:calendar_sms.field_calendar_alarm__sms_template_id
+msgid "Template used to render SMS reminder content."
+msgstr "Modèle utilisé pour afficher le contenu des rappels SMS."
+
+#. module: calendar_sms
+#. odoo-python
+#: code:addons/calendar_sms/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr "Il n'y a pas de participants à ces événements"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar_sms
 #: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type

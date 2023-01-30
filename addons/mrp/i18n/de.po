@@ -1185,9 +1185,49 @@ msgid "Creates a new serial/lot number"
 msgstr "Legt eine neue Serien-/Losnummer an."
 
 #. module: mrp
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
 msgid "Current Production"
 msgstr "Aktuelle Produktion"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "Creation"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "Creation"
+msgstr "Erstellung"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__currency_id
+msgid "Currency"
+msgstr "Währung"
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_stock_move__product_qty_available
+msgid ""
+"Current quantity of products.\n"
+"In a context with a single Stock Location, this includes goods stored at this Location, or any of its children.\n"
+"In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
+"stored in the Stock Location of the Warehouse of this Shop, or any of its children.\n"
+"Otherwise, this includes goods stored in any Stock Location with 'internal' type."
+msgstr ""
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder__qty_producing
@@ -2002,7 +2042,13 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
+<<<<<<< HEAD
 msgstr "Lagerort"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Ort"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
@@ -2344,9 +2390,65 @@ msgid "Moves to Track"
 msgstr "Zu verfolgende Buchungen"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.actions.server,name:mrp.production_order_server_action
 msgid "Mrp: Plan Production Orders"
 msgstr "Material- und Ressourcenplanung: Planung von Fertigungsaufträgen"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
+msgid "Mrp Consumption Warning Line"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
+#: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_ids
+msgid "Mrp Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
+msgid "Mrp Production Count"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
+msgid "Multiple Lot Components Names"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr ""
+=======
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
+msgid "Mrp Consumption Warning Line"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_ids
+#: model:ir.model.fields,field_description:mrp.field_procurement_group__mrp_production_ids
+msgid "Mrp Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_count
+msgid "Mrp Production Count"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__multiple_lot_components_names
+msgid "Multiple Lot Components Names"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__my_activity_date_deadline
+#: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Deadline für meine Aktivitäten"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__name
@@ -2372,14 +2474,26 @@ msgstr "Neu"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_date_deadline
 msgid "Next Activity Deadline"
+<<<<<<< HEAD
 msgstr "Nächste Aktivitätsfrist"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Nächste Frist"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_summary
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_summary
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_summary
 msgid "Next Activity Summary"
+<<<<<<< HEAD
 msgstr "Zusammenfassung nächste Aktion"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Beschreibung"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_type_id
@@ -2928,7 +3042,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Product"
+<<<<<<< HEAD
 msgstr "Produkt"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Produkte"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -2968,7 +3088,13 @@ msgstr "Produktvorlage"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__product_uom_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__product_uom_id
 msgid "Product Unit of Measure"
+<<<<<<< HEAD
 msgstr "Produkteinheit"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Produktmaßeinheit"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__product_id
@@ -2979,7 +3105,55 @@ msgstr "Produktvarianten"
 #: model:ir.actions.act_window,name:mrp.mrp_product_variant_action
 #: model:ir.ui.menu,name:mrp.product_variant_mrp
 msgid "Product Variants"
+<<<<<<< HEAD
 msgstr "Produktvarianten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
+msgid "Product capacity should be unique for each workcenter."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Product to build..."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__production_id
+msgid "Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_capacity
+msgid "Production Capacity"
+msgstr ""
+=======
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.constraint,message:mrp.constraint_mrp_workcenter_capacity_unique_product
+msgid "Product capacity should be unique for each workcenter."
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "Product to build..."
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_stock_assign_serial__production_id
+msgid "Production"
+msgstr "Produktivbetrieb"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__production_capacity
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_capacity
+msgid "Production Capacity"
+msgstr ""
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__production_date
@@ -3254,6 +3428,7 @@ msgid "Reporting"
 msgstr "Berichtswesen"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__serial
 msgid "Requires Serial"
 msgstr "Seriennummer erforderlich"
@@ -3262,6 +3437,15 @@ msgstr "Seriennummer erforderlich"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+msgid "Reserve"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+msgid "Reserve"
+msgstr "Reservieren"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_reserved
@@ -3572,9 +3756,139 @@ msgid "Source Location"
 msgstr "Lagerort (Quelle)"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Specify cost of work center per hour."
 msgstr "Definieren Sie die Arbeitsplatzkosten pro Stunde."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Specific Capacities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
+msgid ""
+"Specific number of pieces that can be produced in parallel per product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_split
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+msgid "Split"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
+msgid "Split #"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
+msgid "Split Details"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_split_line
+msgid "Split Production Detail"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Productions"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split
+msgid "Split production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
+msgid "Split productions"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Starred"
+msgstr "Markiert"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Specific Capacities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
+msgid ""
+"Specific number of pieces that can be produced in parallel per product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_split
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+msgid "Split"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
+msgid "Split #"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
+msgid "Split Details"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_split_line
+msgid "Split Production Detail"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Productions"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split
+msgid "Split production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
+msgid "Split productions"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Starred"
+msgstr "Markiert"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start"
+msgstr "Start"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
@@ -3707,7 +4021,23 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "An Subunternehmer vergeben"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
+msgid "Tag"
+msgstr ""
+=======
+msgstr "An Subunternehmer vergeben"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
+msgid "Tag"
+msgstr "Stichwort"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_move__is_done
@@ -4135,7 +4465,13 @@ msgstr "Lieferung vornehmen"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "Transfers"
+<<<<<<< HEAD
 msgstr "Bewegungen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Überträge"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__type
@@ -4266,8 +4602,30 @@ msgid "Update"
 msgstr "Aktualisieren"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
+#: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
+#, python-format
+msgid "Upload"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+=======
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
+#: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
+#, python-format
+msgid "Upload"
+msgstr "Hochladen"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+>>>>>>> fc1dc2c963f (temp)
 msgid "Upload your PDF file."
 msgstr ""
 
@@ -4315,8 +4673,36 @@ msgstr ""
 "Fertigung auf Grundlage von Verkaufsprognosen."
 
 #. module: mrp
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/mrp/static/src/xml/mrp.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
+msgid "Valid"
+msgstr "Gültig"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
+msgid "Validate"
+msgstr ""
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
+=======
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
+msgid "Valid"
+msgstr "Gültig"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
+msgid "Validate"
+msgstr "Bestätigen"
+
+#. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/components/bom_overview_control_panel/mrp_bom_overview_control_panel.xml:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Variant:"
 msgstr "Variante:"
@@ -4466,7 +4852,13 @@ msgstr "Arbeitsplatzvorgänge"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
+<<<<<<< HEAD
 msgstr "Arbeitsplatz Auslastung"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Work-Center Auslastung"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_work_center_load_graph
@@ -4511,7 +4903,23 @@ msgstr "Arbeitsanweisung"
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__workorder_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Order"
+<<<<<<< HEAD
 msgstr "Arbeitsauftrag"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
+msgid "Work Order Dependencies"
+msgstr ""
+=======
+msgstr "Arbeitsauftrag"
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
+msgid "Work Order Dependencies"
+msgstr ""
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4912,7 +5320,23 @@ msgstr "Minuten"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
+<<<<<<< HEAD
 msgstr "von"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "on"
+msgstr ""
+=======
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "on"
+msgstr "am"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

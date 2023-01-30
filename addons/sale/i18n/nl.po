@@ -3,6 +3,7 @@
 # 	* sale
 # 
 # Translators:
+<<<<<<< HEAD
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # dpms <pieter.van.de.wygaert@telenet.be>, 2019
@@ -14,14 +15,34 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Dylan Kiss, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
+=======
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+=======
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,10 +61,24 @@ msgid "# of Sales Orders"
 msgstr "# Verkooporders"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "${(object.name or '').replace('/','_')}"
 msgstr "${(object.name or '').replace('/','_')}"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr "%(amount)s verschuldigd op %(date)s"
+=======
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr "%(amount)s verschuldigd %(date)s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -260,6 +295,68 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"<t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"Hallo,\n"
+"<br/><br/>\n"
+"Uw\n"
+"<t t-if=\"ctx.get('proforma')\">\n"
+"Pro forma factuur voor <t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"<t t-if=\"object.origin\">\n"
+"(met referentie: <t t-out=\"object.origin or ''\"/> )\n"
+"</t>\n"
+"voor het bedrag van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is beschikbaar.\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"<t t-if=\"object.origin\">\n"
+"(met referentie: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"</t>\n"
+"voor het bedrag van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
+"</t>\n"
+"<br/><br/>\n"
+"Aarzel niet om ons te contacteren indien u vragen heeft.\n"
+"<t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"<br/><br/>\n"
+"<t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"</t>\n"
+"<br/><br/>\n"
+"</p>\n"
+"</div>"
+=======
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"<p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"<t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"Hallo,\n"
+"<br/><br/>\n"
+"Je\n"
+"<t t-if=\"ctx.get('proforma')\">\n"
+"Pro forma factuur voor de <t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"<t t-if=\"object.origin\">\n"
+"(met referentie: <t t-out=\"object.origin or ''\"/> )\n"
+"</t>ten belope van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is beschikbaar.\n"
+"</t>\n"
+"<t t-else=\"\">\n"
+"<t t-out=\"doc_name or ''\">offerte</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+"<t t-if=\"object.origin\">\n"
+"(met referentie: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"</t>\n"
+"voor het bedrag van <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> is klaar voor beoordeling.\n"
+"</t>\n"
+"<br/><br/>\n"
+"Aarzel niet om ons te contacteren indien je vragen hebt.\n"
+"<t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"<br/><br/>\n"
+"<t t-out=\"object.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"</t>\n"
+"<br/><br/>\n"
+"</p>\n"
+"</div>\n"
+"            "
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -595,6 +692,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different currencies."
 msgstr ""
+<<<<<<< HEAD
 "Een transactie kan niet gekoppeld worden aan verkooporders met verschillende"
 " valuta's."
 
@@ -617,6 +715,15 @@ msgstr ""
 "Een typisch voorbeeld is de prepaid uren van diensten,\n"
 "wanneer u extra uren wilt verkopen omdat de initiële\n"
 "uren al verbruikt zijn."
+||||||| parent of fc1dc2c963f (temp)
+"Een voorraadproduct is een product waarvan je de voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een dienst is een immateriëel product dat je verkoopt."
+=======
+"Een voorraad product is een product waarvan je voorraad beheerd. De voorraad app moet geïnstalleerd worden.\n"
+"Een verbruiksproduct, is een product waarvoor geen voorraad wordt bijgehouden.\n"
+"Een dienst is een immateriëel product dat je verkoopt."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -701,18 +808,40 @@ msgstr "Activiteiten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activiteit Uitzondering Decoratie"
+msgstr "Activiteit uitzondering decoratie"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Activiteitsfase"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Activiteitsstatus"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitstype icoon"
+=======
+msgstr "Activiteitsfase"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitensoort icoon"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
 #: model:ir.ui.menu,name:sale.sale_menu_config_activity_type
 msgid "Activity Types"
+<<<<<<< HEAD
 msgstr "Activeiteitssoorten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Activiteitstypes"
+=======
+msgstr "Activiteitssoorten"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -895,10 +1024,22 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+<<<<<<< HEAD
 "Verhoog uw verkopen met twee soorten kortingsprogramma's: promoties en "
 "coupon codes. Specifieke condities kunnen worden ingesteld (producten, "
 "klanten, minimaal bestel bedrag, periode). Beloningen kunnen kortingen (% of"
 " bedrag) of gratis producten zijn."
+||||||| parent of fc1dc2c963f (temp)
+"Verhoog je verkoop met meerdere soorten programma's: kortingsbonnen, "
+"promoties, cadeaubonnen, klantenkaarten. Er kunnen specifieke voorwaarden "
+"worden gesteld (producten, klanten, minimum aankoopbedrag, periode). "
+"Beloningen kunnen kortingen (% of bedrag) of gratis producten zijn."
+=======
+"Verhoog je verkoop met meerdere soorten programma's: kortingsbonnen, "
+"promoties, cadeaubonnen, loyaliteit. Er kunnen specifieke voorwaarden worden"
+" gesteld (producten, klanten, minimum aankoopbedrag, periode). Beloningen "
+"kunnen kortingen (% of bedrag) of gratis producten zijn."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
@@ -1012,7 +1153,23 @@ msgstr "Bereken verzendkosten en verzend met Easypost"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
+<<<<<<< HEAD
 msgstr "Bereken verzendkosten en verstuur met FedEx"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verzendkosten berekenen en verzenden met FedEx"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Verzendkosten berekenen en verzenden met Sendcloud"
+=======
+msgstr "Bereken verzendkosten en verstuur met FedEx"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Verzendkosten berekenen en verzenden met Sendcloud"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1027,12 +1184,24 @@ msgstr "Bereken verzendkosten en verstuur met USPS"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
+<<<<<<< HEAD
 msgstr "Bereken verzendkosten en verstuur met bpost."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verzendkosten berekenen en verzenden met bpost."
+=======
+msgstr "Bereken verzendkosten en verstuur met bpost"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
+<<<<<<< HEAD
 msgstr "Bereken afleverkosten op orders"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verzendkosten berekenen op orders"
+=======
+msgstr "Bereken verzendkosten op orders"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1063,7 +1232,23 @@ msgstr "Connectors"
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
+<<<<<<< HEAD
 msgstr "Contact"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Contacteer"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
+msgid "Contents"
+msgstr "Inhoud"
+=======
+msgstr "Contact"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__body
+msgid "Contents"
+msgstr "Inhoud"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
@@ -1346,9 +1531,19 @@ msgid "Delivery Date"
 msgstr "Leverdatum"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr "Afleveradres voor de huidige factuur."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Leveringswijzes"
+=======
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Verzendwijzes"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__partner_shipping_id
@@ -1493,7 +1688,7 @@ msgstr "Concept offerte"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_easypost
 msgid "Easypost Connector"
-msgstr "Easypost Connector"
+msgstr "Easypost connector"
 
 #. module: sale
 #. openerp-web
@@ -1609,6 +1804,20 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon bijv. fa-tasks"
+
+#. module: sale
+=======
+#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
 msgstr "Ontbrekende verplichte velden op niet facturabele verkooporderregel."
@@ -1679,9 +1888,49 @@ msgid "Group By"
 msgstr "Groepeer op"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
 msgstr "HTML kleurindex"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
+msgid "Has Confirmed Order"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr "Is fiscale positie gewijzigd"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__has_message
+msgid "Has Message"
+msgstr "Heeft een bericht"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
+msgid "Has Pricelist Changed"
+msgstr "Heeft gewijzigde prijslijst"
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_mass_cancel_orders__has_confirmed_order
+msgid "Has Confirmed Order"
+msgstr ""
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
+msgid "Has Fiscal Position Changed"
+msgstr "Is fiscale positie gewijzigd"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
+msgid "Has Pricelist Changed"
+msgstr "Heeft gewijzigde prijslijst"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -1727,13 +1976,25 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread
 msgid "If checked, new messages require your attention."
+<<<<<<< HEAD
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+=======
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_error
 #: model:ir.model.fields,help:sale.field_sale_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+<<<<<<< HEAD
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
+=======
+msgstr "Indien aangevinkt hebben sommige leveringen een fout."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -1950,6 +2211,40 @@ msgid "Invoicing and Shipping Address:"
 msgstr "Factuur- en afleveradres:"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
+msgid "Is Downpayment"
+msgstr "Is aanbetaling"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Is bewerker"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
+msgid "Is Expired"
+msgstr "Is vervallen"
+
+#. module: sale
+=======
+#: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
+msgid "Is Downpayment"
+msgstr "Is aanbetaling"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Is editor"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
+msgid "Is Expired"
+msgstr "Is vervallen"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
 msgid "Is Follower"
 msgstr "Is een volger"
@@ -2003,13 +2298,21 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
+<<<<<<< HEAD
 msgid "Journal Entries"
 msgstr "Boekingen"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Journal Entry"
+msgstr "Dagboekpost"
+=======
+msgid "Journal Entry"
+msgstr "Boeking"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__just_done
@@ -2056,7 +2359,7 @@ msgstr "Te late activiteiten"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Doorlooptijd"
+msgstr "Levertijd"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2088,7 +2391,27 @@ msgstr "Bevestigde orders vastzetten"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
 msgid "Locked"
+<<<<<<< HEAD
 msgstr "Geblokkeerd"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Beveiligd"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Looks good. Let's continue."
+msgstr "Ziet er goed uit. Laten we verder gaan."
+=======
+msgstr "Geblokkeerd"
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Looks good. Let's continue."
+msgstr "Ziet er goed uit. Laten we verder gaan."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -2236,6 +2559,20 @@ msgid "New Quotation"
 msgstr "Nieuwe offerte"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteiten kalenderafspraak"
+
+#. module: sale
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Volgende activiteit deadline"
@@ -2303,6 +2640,36 @@ msgid "Nothing to Invoice"
 msgstr "Niets te factureren"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Now, we'll create a sample quote."
+msgstr "Laten we nu een voorbeeld offerte maken."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Number"
+msgstr "Aantal"
+
+#. module: sale
+=======
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid "Now, we'll create a sample quote."
+msgstr "Laten we nu een voorbeeld offerte maken."
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_tree
+#: model_terms:ir.ui.view,arch_db:sale.view_quotation_tree
+msgid "Number"
+msgstr "Nummer"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_needaction_counter
 msgid "Number of Actions"
 msgstr "Aantal acties"
@@ -2422,7 +2789,39 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
+<<<<<<< HEAD
 "Open de verkopen app om uw eerste offerte te verzenden in een paar klikken."
+||||||| parent of fc1dc2c963f (temp)
+"Open de verkopen app om je eerste offerte te verzenden in een paar klikken."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
+"e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
+"meestal een placeholder zijn die de juiste taal biedt, bijv. {{ "
+"object.partner_id.lang }}."
+=======
+"Open de verkopen app om je eerste offerte te verzenden in een paar klikken."
+
+#. module: sale
+#: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
+"e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
+"meestal een tijdelijke aanduiding zijn die de juiste taal biedt, bijv. {{ "
+"object.partner_id.lang }}."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2562,9 +2961,19 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__country_id
 msgid "Partner Country"
 msgstr "Land relatie"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr "Verpakking hoeveelheid"
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr "Verpakkingshoeveelheid"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2581,12 +2990,18 @@ msgstr "Betaal &amp; Bevestig"
 #: code:addons/sale/models/payment.py:0
 #, python-format
 msgid "Pay Now"
+<<<<<<< HEAD
 msgstr "Betaal nu"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay now"
 msgstr "Betaal nu"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Nu betalen"
+=======
+msgstr "Betaal nu"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2611,8 +3026,16 @@ msgstr "Betalingsprovider"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+<<<<<<< HEAD
 msgid "Payment Acquirers"
 msgstr "Betaalproviders"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Payment Providers"
+msgstr "Betaalproviders"
+=======
+msgid "Payment Providers"
+msgstr "Betalingsproviders"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
@@ -2640,9 +3063,19 @@ msgid "Payment Transaction"
 msgstr "Betalingstransactie"
 
 #. module: sale
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Payment method"
 msgstr "Betaalmethode"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Payment terms"
+msgstr "Betalingscondities"
+=======
+#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
+msgid "Payment terms"
+msgstr "Betalingstermijn"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2834,7 +3267,23 @@ msgstr "Hvh gefactureerd"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_uom_qty
 msgid "Qty Ordered"
+<<<<<<< HEAD
 msgstr "Bestelde Hvh"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Bestelde hvh"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr "Aantal te leveren"
+=======
+msgstr "Aantal besteld"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr "Aantal te leveren"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__qty_to_invoice
@@ -2851,7 +3300,7 @@ msgstr "Aantal te factureren vanuit verkooporders"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3070,7 +3519,13 @@ msgstr "Omzet gegenereerd via deze campagne"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
+<<<<<<< HEAD
 msgstr "SMS Fout bij versturen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "SMS leverfout"
+=======
+msgstr "SMS fout bij versturen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #. openerp-web
@@ -3162,6 +3617,20 @@ msgid "Sales Order"
 msgstr "Verkooporder"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:sale.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Verkooporder annuleren"
+
+#. module: sale
+=======
+#: model:ir.model,name:sale.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Annuleer verkooporder"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
@@ -3400,7 +3869,23 @@ msgstr "Verzenden via e-mail"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
+<<<<<<< HEAD
 msgstr "Verstuur voorbeeld"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verzend voorbeeld"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
+msgid "Sendcloud Connector"
+msgstr "Sendcloud Connector"
+=======
+msgstr "Verzend voorbeeld"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_sendcloud
+msgid "Sendcloud Connector"
+msgstr "Sendcloud connector"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3864,7 +4349,35 @@ msgid ""
 "of email list"
 msgstr ""
 "Dit is de bron van de link, bijv, zoekmachine, een ander domein, of een naam"
+<<<<<<< HEAD
 " of e-mail lijst"
+||||||| parent of fc1dc2c963f (temp)
+" of e-maillijst"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
+msgstr ""
+"Dit product is verpakt door %(pack_size).2f %(pack_name)s. Je kunt beter "
+"%(quantity).2f %(unit)s verkopen."
+=======
+" of e-mail lijst"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
+msgstr ""
+"Dit product is verpakt door %(pack_size).2f %(pack_name)s. Je kunt beter "
+"%(quantity).2f %(unit)s verkopen."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -3937,9 +4450,41 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+<<<<<<< HEAD
 "Om uitnodigingen in B2B modus te sturen, opent u een contact of selecteert u"
 " er meerdere in een lijstweergave. Klik dan op 'Portaal toegangsbeheer' "
 "optie in het actie menu."
+||||||| parent of fc1dc2c963f (temp)
+"Om uitnodigingen in B2B modus te sturen, open je een contact of selecteer je"
+" er meerdere in een lijstweergave. Klik dan op de optie 'Portaal "
+"toegangsbeheer' in het actie menu."
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid ""
+"To speed up order confirmation, we can activate electronic signatures or "
+"payments."
+msgstr ""
+"Om de orderbevestiging te versnellen, kunnen we elektronische handtekeningen"
+" of betalingen activeren."
+=======
+"Om uitnodigingen in B2B modus te sturen, open je een contact of selecteert "
+"je er meerdere in een lijstweergave. Klik dan op 'Portaal toegangsbeheer' "
+"optie in het actiemenu."
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid ""
+"To speed up order confirmation, we can activate electronic signatures or "
+"payments."
+msgstr ""
+"Om de orderbevestiging te versnellen, kunnen we elektronische handtekeningen"
+" of betalingen activeren."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -3986,6 +4531,20 @@ msgid "Track Service"
 msgstr "Dienst opvolgen"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tracking"
+msgstr "Tracking"
+
+#. module: sale
+=======
+#: model_terms:ir.ui.view,arch_db:sale.view_order_form
+msgid "Tracking"
+msgstr "Traceren"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sale.field_sale_order__transaction_ids
 msgid "Transactions"
 msgstr "Transacties"
@@ -3998,7 +4557,13 @@ msgstr "Type naam"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
+<<<<<<< HEAD
 msgstr "Type van activiteit uitzondering op dossier."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type activiteit uitzondering op record."
+=======
+msgstr "Type van activiteit uitzondering op record."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -4055,6 +4620,7 @@ msgstr "Maateenheid categorieën"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
 msgid "Unlock"
+<<<<<<< HEAD
 msgstr "Deblokkeer"
 
 #. module: sale
@@ -4066,6 +4632,11 @@ msgstr "Ongelezen berichten"
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Aantal ongelezen berichten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Ontgrendelen"
+=======
+msgstr "Ontgrendel"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_untaxed
@@ -4187,7 +4758,13 @@ msgstr "Waarschuw bij verkopen van dit product"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__website_message_ids
 msgid "Website Messages"
+<<<<<<< HEAD
 msgstr "Website berichten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Berichten website"
+=======
+msgstr "Websiteberichten"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
@@ -4322,6 +4899,26 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Je offerte bevat producten van het bedrijf %(product_company)s terwijl je "
+"offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
+" offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+msgid "automatic invoicing: send ready invoice"
+msgstr "automatische facturering: verzend factuur die gereed is"
+=======
+"Jouw offerte bevat producten van het bedrijf %(product_company)s terwijl je "
+"offerte bij het bedrijf %(quote_company)s behoort. Wijzig het bedrijf van je"
+" offerte of verwijder de producten van andere bedrijven (%(bad_products)s)."
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+msgid "automatic invoicing: send ready invoice"
+msgstr "automatische facturering: verzend factuur die gereed is"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

@@ -680,6 +680,36 @@ msgid "<span>Taxes</span>"
 msgstr "<span>税率</span>"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span>This entry has been generated through the Invoicing app, before "
+"installing Accounting. Its balance has been imported separately.</span>"
+msgstr "<span>此分录在安装记帐之前通过开票应用生成。其余额已单独导入。</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
+msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
+msgstr "<span>This is a preview of your Terms &amp; Conditionsd.</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+=======
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid ""
+"<span>This entry has been generated through the Invoicing app, before "
+"installing Accounting. Its balance has been imported separately.</span>"
+msgstr "<span>此分录在安装记帐之前通过开票应用生成。其余额已单独导入。</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
+msgid "<span>This is a preview of your Terms &amp; Conditions.</span>"
+msgstr "<span>这是条款&amp; 条件预览</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Unit Price</span>"
 msgstr "<span>单价</span>"
@@ -769,6 +799,7 @@ msgid "<strong>Invoice Date:</strong>"
 msgstr "<strong>发票日期:</strong>"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Journal:</strong>"
 msgstr "<strong>凭证：</strong>"
@@ -792,6 +823,15 @@ msgstr "<strong>付款日期: </strong>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Payment Method: </strong>"
 msgstr "<strong>付款方式: </strong>"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>收货日期：</strong>"
+=======
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Receipt Date:</strong>"
+msgstr "<strong>收据日期：</strong>"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1415,7 +1455,13 @@ msgstr "应计账户"
 #: model:ir.model.fields,field_description:account.field_account_move__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
+<<<<<<< HEAD
 msgstr "需要采取行动"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "需要采取动作"
+=======
+msgstr "需要动作"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -1461,7 +1507,13 @@ msgstr "活动"
 #: model:ir.model.fields,field_description:account.field_account_move__activity_exception_decoration
 #: model:ir.model.fields,field_description:account.field_account_payment__activity_exception_decoration
 msgid "Activity Exception Decoration"
+<<<<<<< HEAD
 msgstr "活动例外勋章"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "活动异常装饰"
+=======
+msgstr "活动异常勋章"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__activity_state
@@ -1561,7 +1613,13 @@ msgstr "将EPC QR码添加到您的发票中，以便您的客户可以立即使
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add an internal note..."
+<<<<<<< HEAD
 msgstr "添加内部备注"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "添加内部说明"
+=======
+msgstr "添加内部说明..."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -2173,9 +2231,99 @@ msgid "Automatic Currency Rates"
 msgstr "自动汇率"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Automatic Import"
 msgstr "自动导入"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.actions.server,name:account.action_automatic_entry
+msgid "Automatic Entries"
+msgstr "自动输入"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
+msgid "Automatic Entry Default Journal"
+msgstr "自动录入默认日记帐"
+
+#. module: account
+#: model:ir.model,name:account.model_sequence_mixin
+msgid "Automatic sequence"
+msgstr "自动序列"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__availability_condition
+msgid "Availability"
+msgstr "可用"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_journal_ids
+msgid "Available Journal"
+msgstr "可用日记帐"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+msgid "Available Partner Bank"
+msgstr "可用的业务伙伴银行"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__available_payment_method_ids
+msgid "Available Payment Method"
+msgstr "可用支付方法"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_line_ids
+msgid "Available Payment Method Line"
+msgstr "可用支付方式行"
+=======
+#: model:ir.actions.server,name:account.action_automatic_entry
+msgid "Automatic Entries"
+msgstr "自动输入"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
+msgid "Automatic Entry Default Journal"
+msgstr "自动录入默认日记帐"
+
+#. module: account
+#: model:ir.model,name:account.model_sequence_mixin
+msgid "Automatic sequence"
+msgstr "自动序列"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__availability_condition
+msgid "Availability"
+msgstr "可用量"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__available_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_payment__available_journal_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_journal_ids
+msgid "Available Journal"
+msgstr "可用日记帐"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_partner_bank_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_partner_bank_ids
+msgid "Available Partner Bank"
+msgstr "可用的业务伙伴银行"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__available_payment_method_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_method_line__available_payment_method_ids
+msgid "Available Payment Method"
+msgstr "可用支付方法"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__available_payment_method_line_ids
+#: model:ir.model.fields,field_description:account.field_account_payment_register__available_payment_method_line_ids
+msgid "Available Payment Method Line"
+msgstr "可用支付方式行"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__price_average
@@ -2455,7 +2603,51 @@ msgstr "基于付款"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Batch Payments"
+<<<<<<< HEAD
 msgstr "批量付款"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "批量支付"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
+#, python-format
+msgid "Before"
+msgstr "在之前"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "以下文字仅供参考，Odoo S.A.不承担责任。"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
+msgid "Bic"
+msgstr "Bic"
+=======
+msgstr "批量付款"
+
+#. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
+#, python-format
+msgid "Before"
+msgstr "在之前"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr "以下文字仅供参考，Odoo S.A.不承担责任。"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
+msgid "Bic"
+msgstr "Bic"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2957,7 +3149,13 @@ msgstr "勾选此项, 如果您想用户核销这科目的分录。"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Checks"
+<<<<<<< HEAD
 msgstr "质量检查单"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "检查"
+=======
+msgstr "支票"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__children_line_ids
@@ -3061,7 +3259,7 @@ msgstr "关闭在"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__new_journal_code
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__code
 msgid "Code"
-msgstr "代码"
+msgstr "代号"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_group__code_prefix
@@ -3170,7 +3368,33 @@ msgstr "公司币种"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
+<<<<<<< HEAD
 msgstr "公司文档布局"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "公司文件布局"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
+msgid "Company Fiscal Country Code"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
+msgid "Company Storno Accounting"
+msgstr "公司 Storno 会计"
+=======
+msgstr "公司文档布局"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_fiscal_position__fiscal_country_codes
+msgid "Company Fiscal Country Code"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__is_storno
+msgid "Company Storno Accounting"
+msgstr "公司 Storno 会计"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -3285,7 +3509,53 @@ msgstr "恭喜，大功告成了！"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_panel
 msgid "Congratulations! You are all set."
+<<<<<<< HEAD
 msgstr "恭喜！看来一切都准备好了。"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "恭喜恭喜！大吉大利，今晚吃鸡。"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Connect"
+msgstr "连接"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
+msgid "Connect your financial accounts in seconds."
+msgstr "在几秒钟内连接您的财务账户。"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
+msgid "Considers answers as new thread"
+msgstr "将答案视为新行程"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
+msgid "Consumable"
+msgstr "可消耗"
+=======
+msgstr "恭喜恭喜！大吉大利，今晚吃鸡。"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "Connect"
+msgstr "连接"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
+msgid "Connect your financial accounts in seconds."
+msgstr "在几秒钟内连接您的财务账户。"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to_force_new
+msgid "Considers answers as new thread"
+msgstr "将答案视为新行程"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_tax_template__tax_scope__consu
+msgid "Consumable"
+msgstr "能消耗"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model,name:account.model_res_partner
@@ -3393,9 +3663,19 @@ msgid "Create Accrual Entry for the expense/revenue recognition"
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Create Journal Entry"
 msgstr "创建会计分录"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
+msgid "Create Entry"
+msgstr "创建条目"
+=======
+#: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
+msgid "Create Entry"
+msgstr "创建分录"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form_multi
@@ -3669,7 +3949,13 @@ msgstr "创建时间"
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Credit"
+<<<<<<< HEAD
 msgstr "信用"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "收入"
+=======
+msgstr "贷方"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_credit_card
@@ -3995,7 +4281,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move_line__debit
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Debit"
+<<<<<<< HEAD
 msgstr "借方"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "支出"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
+msgid "Debit Amount Currency"
+msgstr "借方金额货币"
+=======
+msgstr "借方"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_amount_currency
+msgid "Debit Amount Currency"
+msgstr "借方金额货币"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__debit_move_id
@@ -4339,7 +4641,63 @@ msgstr "没有权限，用户EMail中忽略此数据"
 msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
+<<<<<<< HEAD
 msgstr "不要在文档通信历史中保存EMail副本（仅限群发邮件）"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "不要在单据通信历史中保存EMail副本（仅限群发邮件）"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
+msgid "Document Digitization"
+msgstr "文件数字化"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
+msgid "Document Type"
+msgstr "文档类型"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "域"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
+msgid "Domain Formula Shortcut"
+msgstr "域公式快捷方式"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "您的会计所属国家"
+=======
+msgstr "不要在单据通信历史中保存EMail副本（仅限群发邮件）"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_invoice_extract
+msgid "Document Digitization"
+msgstr "文件数字化"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__document_type
+msgid "Document Type"
+msgstr "文档类型"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_analytic_applicability__business_domain
+msgid "Domain"
+msgstr "域"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__domain_formula
+msgid "Domain Formula Shortcut"
+msgstr "域公式快捷方式"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Domestic country of your accounting"
+msgstr "您的会计所在国"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__account_dashboard_onboarding_state__done
@@ -4524,6 +4882,24 @@ msgid "Email"
 msgstr "EMail"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__email_add_signature
+msgid "Email Add Signature"
+msgstr "电子邮件添加签名"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__alias_id
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
+=======
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__email_add_signature
+msgid "Email Add Signature"
+msgstr "电子邮件添加签字"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__alias_id
+#: model:ir.model.fields,field_description:account.field_account_tour_upload_bill_email_confirm__email_alias
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Email Alias"
 msgstr "EMail别名"
@@ -4811,6 +5187,96 @@ msgstr "起始分录"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
 msgid "First Hash"
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "第一哈希"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__first_line_index
+msgid "First Line Index"
+msgstr "第一行索引"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
+msgid "First New Sequence"
+msgstr "第一个新序列"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
+msgid "First invoice sent!"
+msgstr "第一张结算单已送出！"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
+#: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
+#: model:ir.model.fields,field_description:account.field_account_payment__auto_post_origin_id
+msgid "First recurring entry"
+msgstr "第一个经常性条目"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Fiscal Country"
+msgstr "财政国家"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
+msgid "Fiscal Country Code"
+msgstr "会计国家代码"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_product_product__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_product_template__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_currency__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_partner__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_codes
+msgid "Fiscal Country Codes"
+=======
+msgstr "第一哈希"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__first_line_index
+msgid "First Line Index"
+msgstr "第一行索引"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__first_name
+msgid "First New Sequence"
+msgstr "第一个新序列"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
+msgid "First invoice sent!"
+msgstr "第一张结算单已送出！"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
+#: model:ir.model.fields,field_description:account.field_account_move__auto_post_origin_id
+#: model:ir.model.fields,field_description:account.field_account_payment__auto_post_origin_id
+msgid "First recurring entry"
+msgstr "第一个经常性条目"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__account_fiscal_country_id
+#: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
+msgid "Fiscal Country"
+msgstr "会计所在国"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__account_fiscal_country_id
+msgid "Fiscal Country Code"
+msgstr "会计国家代码"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_product_product__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_product_template__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_currency__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_partner__fiscal_country_codes
+#: model:ir.model.fields,field_description:account.field_res_users__fiscal_country_codes
+msgid "Fiscal Country Codes"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: account
@@ -5245,9 +5711,37 @@ msgid "Has Accounting Entries"
 msgstr "有会计分录"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:account.field_account_payment__has_invoices
 msgid "Has Invoices"
 msgstr "有发票"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_account__has_message
+#: model:ir.model.fields,field_description:account.field_account_account_template__has_message
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_message
+#: model:ir.model.fields,field_description:account.field_account_journal__has_message
+#: model:ir.model.fields,field_description:account.field_account_move__has_message
+#: model:ir.model.fields,field_description:account.field_account_payment__has_message
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__has_message
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_message
+#: model:ir.model.fields,field_description:account.field_res_company__has_message
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
+msgid "Has Message"
+msgstr "有消息"
+=======
+#: model:ir.model.fields,field_description:account.field_account_account__has_message
+#: model:ir.model.fields,field_description:account.field_account_account_template__has_message
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__has_message
+#: model:ir.model.fields,field_description:account.field_account_journal__has_message
+#: model:ir.model.fields,field_description:account.field_account_move__has_message
+#: model:ir.model.fields,field_description:account.field_account_payment__has_message
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__has_message
+#: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__has_message
+#: model:ir.model.fields,field_description:account.field_res_company__has_message
+#: model:ir.model.fields,field_description:account.field_res_partner_bank__has_message
+msgid "Has Message"
+msgstr "有信息"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__has_reconciled_entries
@@ -5727,7 +6221,13 @@ msgstr "库存计价的入库科目"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Insert your terms & conditions here..."
+<<<<<<< HEAD
 msgstr " 在这里插入你的条款和条件…"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "在这里插入你的条款和条件…"
+=======
+msgstr "在这里插入您的条款和条件…"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5766,7 +6266,23 @@ msgstr "内部备注"
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__transfer
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Internal Transfer"
+<<<<<<< HEAD
 msgstr "内部转账"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "内部调拨"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_id
+msgid "Internal Transfer Account"
+msgstr "内部转账账户"
+=======
+msgstr "内部转账"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__transfer_account_id
+msgid "Internal Transfer Account"
+msgstr "内部转账账户"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_payments_transfer
@@ -5966,8 +6482,16 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+<<<<<<< HEAD
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
+||||||| parent of fc1dc2c963f (temp)
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
+=======
+"结算单_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft' and"
+" '_draft' or '' }}"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -6056,7 +6580,39 @@ msgid "Is Between"
 msgstr "介于"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_is_follower
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
+msgid "Is Complete"
+msgstr "已经完成"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__is_mail_template_editor
+msgid "Is Editor"
+msgstr "编辑"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_is_follower
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_is_follower
+=======
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
+msgid "Is Complete"
+msgstr "已经完成"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_invoice_send__is_mail_template_editor
+msgid "Is Editor"
+msgstr "编辑器"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_account__message_is_follower
+#: model:ir.model.fields,field_description:account.field_account_account_template__message_is_follower
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_is_follower
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:account.field_account_journal__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_move__message_is_follower
 #: model:ir.model.fields,field_description:account.field_account_payment__message_is_follower
@@ -6395,7 +6951,13 @@ msgid ""
 "Keep this field empty to use the default value from the product category. If"
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
+<<<<<<< HEAD
 msgstr "保持此字段为空，以使用产品类别的默认值。如果配置有自动估价方法的盎格鲁-撒克逊会计，则将使用产品类别上的费用帐户。"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "保持此字段为空，以使用产品类别的默认值。如果配置有自动计价方法的盎格鲁-撒克逊会计，则将使用产品类别上的费用账户。"
+=======
+msgstr "保持此字段为空，以使用产品类别的默认值。如果配置有自动估价方法的盎格鲁-撒克逊会计，则将使用产品类别上的费用账户。"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -6683,9 +7245,21 @@ msgid "Liability"
 msgstr "负债"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__nbr_lines
 msgid "Line Count"
 msgstr "行数"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__line_ids
+msgid "Line"
+msgstr "明细行"
+=======
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model__line_ids
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__line_ids
+msgid "Line"
+msgstr "行"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
@@ -7072,12 +7646,12 @@ msgstr "从发票中监视产品利润"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__move_id
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Move"
-msgstr "移动"
+msgstr "凭证"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__move_line_ids
 msgid "Move Line"
-msgstr "移动行"
+msgstr "凭证行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__move_line_count
@@ -7333,6 +7907,7 @@ msgstr "请注意，创建供应商信用记录的最简单方法是直接从供
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_template__note
 #: model_terms:ir.ui.view,arch_db:account.view_account_template_form
 msgid "Notes"
+<<<<<<< HEAD
 msgstr "备注"
 
 #. module: account
@@ -7341,6 +7916,11 @@ msgstr "备注"
 #, python-format
 msgid "Nothing to do!"
 msgstr "无事可做！"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "笔记"
+=======
+msgstr "备注"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__notify
@@ -7609,12 +8189,20 @@ msgstr "操作模板"
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Operation not allowed. Since your statement line already received a number "
 "(%s), you cannot reconcile it entirely with existing journal entries "
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr "操作不允许，你的核销单明细已收到号码 (%s), 你无法核销存在的日记账分录，你可以取消它。."
+||||||| parent of fc1dc2c963f (temp)
+msgid "Operation not supported"
+msgstr "作业不支持"
+=======
+msgid "Operation not supported"
+msgstr "不支持该作业"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -7705,7 +8293,13 @@ msgstr "转出"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
 msgid "Outgoing mail server"
+<<<<<<< HEAD
 msgstr "邮件发送服务器"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "发送邮件服务器"
+=======
+msgstr "发信邮件服务器"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8351,7 +8945,13 @@ msgstr "预付账"
 #: model:ir.model,name:account.model_account_reconcile_model
 msgid ""
 "Preset to create journal entries during a invoices and payments matching"
+<<<<<<< HEAD
 msgstr "请在发票和付款匹配期间创建日记账分录"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "预设在结算单和支付匹配期间创建日记账分录"
+=======
+msgstr "预设在结算单和付款匹配期间创建会计凭证"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8554,7 +9154,7 @@ msgstr "入库"
 #: model:ir.model.fields.selection,name:account.selection__account_account_type__type__receivable
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Receivable"
-msgstr "应收"
+msgstr "‎应收"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_receivable_id
@@ -8763,12 +9363,24 @@ msgstr "常规科目"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__res_id
 msgid "Related Document ID"
+<<<<<<< HEAD
 msgstr "相关文档编号"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "相关单据 ID"
+=======
+msgstr "相关单据编号"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__model
 msgid "Related Document Model"
+<<<<<<< HEAD
 msgstr "相关的文档模型"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "相关单据模型"
+=======
+msgstr "相关的单据模型"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -9305,7 +9917,13 @@ msgstr "第二核销金额"
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Section"
+<<<<<<< HEAD
 msgstr "部分"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "章节"
+=======
+msgstr "节"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__secure_sequence_id
@@ -9382,8 +10000,16 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
+<<<<<<< HEAD
 "选择此“警告“选项，将通知用户此消息。\r\n"
 "选择“阻止消息“选项，将在流程受阻时将抛出一个消息，并阻止此流程。\r\n"
+||||||| parent of fc1dc2c963f (temp)
+"选择此“警告“选项，将通知用户此消息。\r\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\r\n"
+=======
+"选择此“警告“选项，将通知用户此消息。\n"
+"选择“阻塞消息“选项，将在流程阻塞时将抛出一个消息，并阻塞此流程。\n"
+>>>>>>> fc1dc2c963f (temp)
 "此消息将写入下一个字段。"
 
 #. module: account
@@ -9476,12 +10102,66 @@ msgid "Sequence"
 msgstr "单号规则"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
 msgid ""
 "Sequence determining the order of the lines in the report (smaller ones come"
 " first). This order is applied locally per section (so, children of the same"
 " line are always rendered one after the other)."
 msgstr "序列确定报告中的行的顺序（较小的行首先出现）。 此顺序在每个部分本地应用（因此，同一行的子项始终一个接一个地呈现）。"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
+msgid "Sequence Number"
+msgstr "序列号码"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
+msgid "Sequence Number Reset"
+msgstr "序列号重置"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
+msgid "Sequence Override Regex"
+msgstr "序列替代正则表达式"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Sequence Prefix"
+msgstr "序号前缀"
+=======
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
+msgid "Sequence Number"
+msgstr "序列号码"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
+msgid "Sequence Number Reset"
+msgstr "序列号重置"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
+msgid "Sequence Override Regex"
+msgstr "序列替代正则表达式"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_prefix
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_prefix
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Sequence Prefix"
+msgstr "序列前缀"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__secure_sequence_id
@@ -9671,6 +10351,7 @@ msgid ""
 msgstr "指定使用哪一种方式用于发票的四舍五入"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__start_bank_stmt_ids
 msgid "Start Bank Stmt"
 msgstr "启动银行账单"
@@ -9687,6 +10368,19 @@ msgstr "开始日期"
 #: model:ir.model.fields,help:account.field_account_fiscal_year__date_from
 msgid "Start Date, included in the fiscal year."
 msgstr "开始日期，包含在会计年度中"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+#, python-format
+msgid "Start by checking your company's data."
+msgstr "从检查你公司的数据开始。"
+=======
+#. odoo-javascript
+#: code:addons/account/static/src/js/tours/account.js:0
+#, python-format
+msgid "Start by checking your company's data."
+msgstr "从检查您公司的数据开始。"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -10232,7 +10926,7 @@ msgstr "含税"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "TaxCloud"
-msgstr "TaxCloud"
+msgstr "税务云"
 
 #. module: account
 #. openerp-web
@@ -11011,9 +11705,75 @@ msgid ""
 msgstr "核销模型只能可见于选择的日记账."
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
 msgid "The report line to make an adjustment for."
 msgstr "报告行进行调整。"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "The recurrence will end on"
+msgstr "重复将结束于"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+#, python-format
+msgid "The regex is not valid"
+msgstr "正则表达式无效"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid ""
+"The register payment wizard should only be called on account.move or "
+"account.move.line records."
+msgstr "应仅对记录或记录调用account.move登记account.move.line。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report__root_report_id
+msgid "The report this report is a variant of."
+msgstr "此报表是该报表的变体."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/terms.py:0
+#, python-format
+msgid "The requested page is invalid, or doesn't exist anymore."
+msgstr "请求的页面无效，或不存在."
+=======
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "The recurrence will end on"
+msgstr "重复将结束于"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_reconcile_model.py:0
+#, python-format
+msgid "The regex is not valid"
+msgstr "正则表达式无效"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_payment_register.py:0
+#, python-format
+msgid ""
+"The register payment wizard should only be called on account.move or "
+"account.move.line records."
+msgstr "应仅对记录或记录调用account.move登记account.move.line。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report__root_report_id
+msgid "The report this report is a variant of."
+msgstr "此报表是该报表的变体."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/controllers/terms.py:0
+#, python-format
+msgid "The requested page is invalid, or doesn't exist anymore."
+msgstr "请求的页面无效，或已不存在。"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__amount_residual_currency
@@ -11619,7 +12379,7 @@ msgstr "单价:"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_uom_id
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_id
 msgid "Unit of Measure"
-msgstr "单位"
+msgstr "计量单位"
 
 #. module: account
 #: code:addons/account/report/account_aged_partner_balance.py:0
@@ -11860,7 +12620,61 @@ msgstr "已验证"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__value_amount
 msgid "Value"
+<<<<<<< HEAD
 msgstr "值"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "价值"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
+msgid ""
+"Value for the amount of the writeoff line\n"
+"    * Percentage: Percentage of the balance, between 0 and 100.\n"
+"    * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.\n"
+"    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"You could enter\n"
+"BRT: ([\\d,]+)"
+msgstr ""
+"核笔行金额的值\n"
+"    * 百分比：余额的百分比，介于 0 和 100 之间。\n"
+"    * 固定：核减的固定值。如果该金额为负值，则该金额将算作借方，如果为正，则作为贷方计数为借方。\n"
+"    * 从标签：不需要正则表达式分隔符，只需要正则表达式。例如，如果您要从\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"您可以输入\n"
+"BRT: ([\\d,]+)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
+msgid "Variants"
+msgstr "变体"
+=======
+msgstr "值"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_reconcile_model_line__amount_string
+msgid ""
+"Value for the amount of the writeoff line\n"
+"    * Percentage: Percentage of the balance, between 0 and 100.\n"
+"    * Fixed: The fixed value of the writeoff. The amount will count as a debit if it is negative, as a credit if it is positive.\n"
+"    * From Label: There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"You could enter\n"
+"BRT: ([\\d,]+)"
+msgstr ""
+"核笔行金额的值\n"
+"    * 百分比：余额的百分比，介于 0 和 100 之间。\n"
+"    * 固定：核减的固定值。如果该金额为负值，则该金额将算作借方，如果为正，则作为贷方计数为借方。\n"
+"    * 从标签：不需要正则表达式分隔符，只需要正则表达式。例如，如果您要从\n"
+"R:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\n"
+"您可以输入\n"
+"BRT: ([\\d,]+)"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__variant_report_ids
+msgid "Variants"
+msgstr "变体"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__supplier
@@ -11879,6 +12693,22 @@ msgid "Vendor Bill"
 msgstr "供应商账单"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
+msgid "Vendor Bill Count"
+msgstr "供应商帐单数"
+
+#. module: account
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:account.field_account_analytic_account__vendor_bill_count
+msgid "Vendor Bill Count"
+msgstr "供应商应付帐单数"
+
+#. module: account
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
@@ -11938,8 +12768,16 @@ msgstr "供应商"
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
+<<<<<<< HEAD
 msgid "Verify"
 msgstr "验证"
+||||||| parent of fc1dc2c963f (temp)
+msgid "View"
+msgstr "查看"
+=======
+msgid "View"
+msgstr "视图"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #. openerp-web
@@ -12006,7 +12844,65 @@ msgstr "网站消息"
 #: model:ir.model.fields,help:account.field_account_move__website_message_ids
 #: model:ir.model.fields,help:account.field_account_payment__website_message_ids
 msgid "Website communication history"
+<<<<<<< HEAD
 msgstr "网上沟通记录"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "网站沟通记录"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__paired_internal_transfer_payment_id
+msgid ""
+"When an internal transfer is posted, a paired payment is created. They are "
+"cross referenced through this field"
+msgstr "过帐内部转账时，会创建配对支付。它们通过此字段进行交叉引用"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
+msgid ""
+"When checked this line and everything after it will be printed on a new "
+"page."
+msgstr "勾选的该明细行及其他行将被打印到一个新的页面。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_column__blank_if_zero
+msgid "When checked, 0 values will not show in this column."
+msgstr "请检查，明细行不能为0"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
+msgid ""
+"When checked, 0 values will not show when displaying this expression's "
+"value."
+msgstr "选中后，显示此表达式的值时将不显示 0 值。"
+=======
+msgstr "网上沟通记录"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_payment__paired_internal_transfer_payment_id
+msgid ""
+"When an internal transfer is posted, a paired payment is created. They are "
+"cross referenced through this field"
+msgstr "过帐内部转账时，会创建配对支付。它们通过此字段进行交叉引用"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_line__print_on_new_page
+msgid ""
+"When checked this line and everything after it will be printed on a new "
+"page."
+msgstr "勾选的该明细行及其他行将被打印到一个新的页面。"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_column__blank_if_zero
+msgid "When checked, 0 values will not show in this column."
+msgstr "请检查，明细行不能为0"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_report_expression__blank_if_zero
+msgid ""
+"When checked, 0 values will not show when displaying this expression's "
+"value."
+msgstr "选中后，显示此表达式的值时将不显示 0 值。"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_receipt_type
@@ -12685,6 +13581,66 @@ msgid "vendor bills"
 msgstr "供应商账单"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 msgid "→ Count"
 msgstr "→ 计数"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "{percent:0.2f}% to recognize on {new_date}"
+msgstr "{percent:0.2f}% 确认于 {new_date} "
+
+#. module: account
+#: model:mail.template,report_name:account.mail_template_data_payment_receipt
+msgid "{{ (object.name or '').replace('/','-') }}"
+msgstr "{{ (object.name or '').replace('/','-') }}"
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_credit_note
+msgid ""
+"{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 信用证 (Ref {{ object.name or 'n/a' }})"
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_invoice
+msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 应收结算单 (参照 {{ object.name or 'n/a' }})"
+
+#. module: account
+#: model:mail.template,subject:account.mail_template_data_payment_receipt
+msgid ""
+"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
+"}})"
+msgstr "{{ object.company_id.name }} 支付收据 (Ref {{ object.name or 'n/a' }})"
+=======
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "{percent:0.2f}% to recognize on {new_date}"
+msgstr "{percent:0.2f}% 确认于 {new_date} "
+
+#. module: account
+#: model:mail.template,report_name:account.mail_template_data_payment_receipt
+msgid "{{ (object.name or '').replace('/','-') }}"
+msgstr "{{ (object.name or '').replace('/','-') }}"
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_credit_note
+msgid ""
+"{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 信用证 (Ref {{ object.name or 'n/a' }})"
+
+#. module: account
+#: model:mail.template,subject:account.email_template_edi_invoice
+msgid "{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})"
+msgstr "{{ object.company_id.name }} 结算单 (Ref {{ object.name or 'n/a' }})"
+
+#. module: account
+#: model:mail.template,subject:account.mail_template_data_payment_receipt
+msgid ""
+"{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
+"}})"
+msgstr "{{ object.company_id.name }} 支付收据 (Ref {{ object.name or 'n/a' }})"
+>>>>>>> fc1dc2c963f (temp)

@@ -3,11 +3,22 @@
 # 	* sms
 # 
 # Translators:
+<<<<<<< HEAD
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Thijs van Oers <thijsvanoers@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Dylan Kiss, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -80,6 +91,52 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible':[('resource_ref','!=', "
 "False)]}\">No records</span>"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Geen records</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "<span> or to specify the country code.</span>"
+msgstr "<span> of bepaal de landcode.</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"<strong>Invalid number:</strong>\n"
+"                        <span> make sure to set a country on the </span>"
+msgstr ""
+"<strong>Ongeldig nummer:</strong>\n"
+"                        <span> zorg ervoor dat een land is ingesteld op de </span>"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
+msgid "Action Needed"
+msgstr "Actie nodig"
+=======
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Geen records</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "<span> or to specify the country code.</span>"
+msgstr "<span> of bepaal de landcode.</span>"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"<strong>Invalid number:</strong>\n"
+"                        <span> make sure to set a country on the </span>"
+msgstr ""
+"<strong>Ongeldig nummer:</strong>\n"
+"                        <span> zorg ervoor dat een land is ingesteld op de </span>"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
+msgid "Action Needed"
+msgstr "Actie gevraagd"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__state
@@ -134,7 +191,33 @@ msgstr "Wachten op verzending"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
+<<<<<<< HEAD
 msgstr "Geblacklist"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Op blacklist"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefoon op blacklist is een mobiel nummer"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefoon op blacklist is een vaste lijn"
+=======
+msgstr "Geblacklist"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefoon op blacklist is een mobiel nummer"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefoon op blacklist is een vaste lijn"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -184,6 +267,40 @@ msgid "Choose an example"
 msgstr "Kies een voorbeeld"
 
 #. module: sms
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:sms.field_ir_actions_server__sms_method
+#: model:ir.model.fields,help:sms.field_ir_cron__sms_method
+msgid ""
+"Choose method for SMS sending:\n"
+"SMS: mass SMS\n"
+"Post as Message: log on document\n"
+"Post as Note: mass SMS with archives"
+msgstr ""
+"Kies methode voor sms-verzending:\n"
+"SMS: massa-sms\n"
+"Post als bericht: log in document\n"
+"Post als Notitie: massa-sms met archieven"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+=======
+#: model:ir.model.fields,help:sms.field_ir_actions_server__sms_method
+#: model:ir.model.fields,help:sms.field_ir_cron__sms_method
+msgid ""
+"Choose method for SMS sending:\n"
+"SMS: mass SMS\n"
+"Post as Message: log on document\n"
+"Post as Note: mass SMS with archives"
+msgstr ""
+"Kies methode voor sms-verzending:\n"
+"SMS: massa-sms\n"
+"Post als bericht: log in document\n"
+"Post als Opmerking: massa-sms met archieven"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Close"
 msgstr "Sluiten"
@@ -365,6 +482,20 @@ msgid "Has Insufficient Credit"
 msgstr "Heeft onvoldoende krediet"
 
 #. module: sms
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_res_partner__has_message
+msgid "Has Message"
+msgstr "Heeft een bericht"
+
+#. module: sms
+=======
+#: model:ir.model.fields,field_description:sms.field_res_partner__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: sms
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
@@ -394,7 +525,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sms.field_account_analytic_account__message_has_sms_error
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+
+#. module: sms
+=======
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+
+#. module: sms
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:sms.field_calendar_event__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_crm_team__message_has_sms_error
 #: model:ir.model.fields,help:sms.field_fleet_vehicle__message_has_sms_error
@@ -452,8 +597,36 @@ msgstr "Onvoldoende krediet"
 #. module: sms
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "Invalid number"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgid "Invalid recipient number. Please update it."
+msgstr "Ongeldig ontvangersnummer. Gelieve het te updaten."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
+msgid "Is Follower"
+msgstr "Is volger"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
+msgid "Is valid"
+msgstr "Is geldig"
+=======
+msgid "Invalid recipient number. Please update it."
+msgstr "Ongeldig ontvangersnummer. Gelieve het te updaten."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
+msgid "Is Follower"
+msgstr "Is een volger"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
+msgid "Is valid"
+msgstr "Is geldig"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
@@ -522,6 +695,20 @@ msgid "Message"
 msgstr "Bericht"
 
 #. module: sms
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
+msgid "Message Delivery error"
+msgstr "Fout bij bezorging van bericht"
+
+#. module: sms
+=======
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error
+msgid "Message Delivery error"
+msgstr "Bericht afleverfout"
+
+#. module: sms
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model,name:sms.model_mail_notification
 msgid "Message Notifications"
 msgstr "Berichten notificaties"
@@ -581,10 +768,114 @@ msgid "Number"
 msgstr "Nummer"
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
 #: model:ir.model.fields,help:sms.field_sms_template_preview__null_value
 msgid "Optional value to use if the target field is empty"
 msgstr "Optioneel veld om te gebruiken als het doel veld leeg is"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr "Nummerveld"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal foutmeldingen"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten waarvoor een actie vereist is"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met afleverfout"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Aantal ontvangers dat de sms ontvangt als deze in massamodus wordt "
+"verzonden, zonder de waarde van actief domein toe te passen."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "Afgemeld"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
+"e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
+"meestal een placeholder zijn die de juiste taal biedt, bijv. {{ "
+"object.partner_id.lang }}."
+=======
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr "Nummerveld"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Aantal acties"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Aantal foutmeldingen"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Aantal berichten die actie vereisen"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Aantal berichten met leveringsfout"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Aantal ontvangers dat de sms ontvangt als deze in massamodus wordt "
+"verzonden, zonder de waarde van actief domein toe te passen."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "Afgemeld"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Optionele vertaaltaal (ISO-code) om te selecteren bij het verzenden van een "
+"e-mail. Indien niet ingesteld, wordt de Engelse versie gebruikt. Dit moet "
+"meestal een placeholder expressie zijn die de juiste taal geeft, bijv. {{ "
+"object.partner_id.lang }}."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -603,15 +894,89 @@ msgid "Phone Blacklist Mixin"
 msgstr "Telefoon blacklist Mixin"
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__copyvalue
 msgid "Placeholder Expression"
 msgstr "Tijdelijke aanduiding expressie"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefoon geblacklist"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
+msgid "Phone Number"
+msgstr "Telefoonnummer"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
+msgid ""
+"Phone number of the recipient. If changed, it will be recorded on "
+"recipient's profile."
+msgstr ""
+"Telefoonnummer van de ontvanger. Indien dit wordt gewijzigd, zal het "
+"opgenomen worden op het profiel van de ontvanger."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Telefoon/mobiel"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "Post as Message"
+msgstr "Posten als bericht"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Post as Note"
+msgstr "Posten als notitie"
+=======
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefoon geblacklist"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
+msgid "Phone Number"
+msgstr "Telefoonnummer"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf
+msgid ""
+"Phone number of the recipient. If changed, it will be recorded on "
+"recipient's profile."
+msgstr ""
+"Telefoonnummer van de ontvanger. Indien dit wordt gewijzigd, zal het "
+"opgenomen worden op het profiel van de ontvanger."
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Telefoon/mobiel"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "Post as Message"
+msgstr "Post als bericht"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Post as Note"
+msgstr "Posten als notitie"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
+<<<<<<< HEAD
 msgstr "Plaats een document"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Posten op een document"
+=======
+msgstr "Post op een document"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -669,7 +1034,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model
 msgid "Related Document Model"
+<<<<<<< HEAD
 msgstr "Gerelateerde document model"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Gerelateerd documentmodel"
+=======
+msgstr "Gerelateerde documentmodel"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -698,7 +1069,27 @@ msgstr "Notificatie opnieuw verzenden"
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, python-format
 msgid "SMS"
+<<<<<<< HEAD
 msgstr "SMS"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "sms"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "SMS ("
+msgstr "SMS ("
+=======
+msgstr "SMS"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "SMS ("
+msgstr "SMS ("
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -735,7 +1126,13 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
+<<<<<<< HEAD
 msgstr "SMS Fout bij versturen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "SMS leverfout"
+=======
+msgstr "SMS fout bij versturen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #. openerp-web
@@ -852,12 +1249,24 @@ msgstr "Verstuur SMS (%s)"
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
+<<<<<<< HEAD
 msgstr "Verstuur SMS tekstbericht"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verzend sms-tekstbericht"
+=======
+msgstr "Verzend SMS tekstbericht"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
 msgid "Send SMS Wizard"
+<<<<<<< HEAD
 msgstr "Verstuur SMS wizar"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Wizard sms verzenden"
+=======
+msgstr "Verzend SMS wizard"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
@@ -986,6 +1395,28 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
+"- 'Een record bijwerken': werk de waarden van een record bij\n"
+"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail verzenden': post een bericht, een notitie of stuur een e-mail (Chat)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
+"- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
+"- 'SMS-tekstbericht verzenden': stuur sms, log in op documenten (SMS)"
+=======
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
+"- 'Update a Record': update de waarden van een record\n"
+"- 'Voer meerdere acties uit': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail versturen': post een bericht, een notitie of stuur een e-mail (Chat)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
+"- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
+"- 'Stuur SMS-tekstbericht': stuur sms, log ze op documenten (SMS)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -1040,6 +1471,7 @@ msgstr ""
 "doelveld selecteren binnen de bestemming document model (sub-model)."
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object
 #: model:ir.model.fields,help:sms.field_sms_template_preview__sub_object
 msgid ""
@@ -1048,6 +1480,25 @@ msgid ""
 msgstr ""
 "Wanneer een relatieveld wordt gekozen als eerste veld, dan toont dit veld "
 "het document-model van het relatieveld waar het heen gaat."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
+msgid "Website Messages"
+msgstr "Berichten website"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
+msgid "Website communication history"
+msgstr "Website gespreksgeschiedenis"
+=======
+#: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
+msgid "Website Messages"
+msgstr "Websiteberichten"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__website_message_ids
+msgid "Website communication history"
+msgstr "Website communicatie geschiedenis"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
@@ -1064,6 +1515,128 @@ msgstr "Fout nummer formaat"
 #: code:addons/sms/wizard/sms_resend.py:0
 #, python-format
 msgid "You do not have access to the message and/or related document."
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Je hebt geen toegang tot dit bericht en/of het gerelateerde document."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have an eligible IAP account."
+msgstr "Je hebt geen in aanmerking komend IAP-account."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have enough credits on your IAP account."
+msgstr "Je hebt niet genoeg kredieten op je IAP-account."
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"Your SMS Text Message must include at least one non-whitespace character"
+msgstr "Je sms-bericht moet ten minste één niet-whitespace karakter bevatten"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "characters, fits in"
+msgstr "karakters, past in"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "e.g. +1 415 555 0100"
+msgstr "bijv. +1 415 555 0100"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Calendar Reminder"
+msgstr "bijv. Agendaherinnering"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Contact"
+msgstr "bijv. Contact"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "bijv.. en_US of {{ object.partner_id.lang }}"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "out of"
+msgstr "van"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"recipients have an invalid phone number and will not receive this text "
+"message."
+=======
+msgstr "Je hebt geen toegang tot dit bericht en/of het gerelateerde document."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have an eligible IAP account."
+msgstr "Je hebt geen in aanmerking komend IAP-account."
+
+#. module: sms
+#: code:addons/sms/models/sms_api.py:0
+#, python-format
+msgid "You don't have enough credits on your IAP account."
+msgstr "Je hebt niet genoeg kredieten op je IAP-account."
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.js:0
+#, python-format
+msgid ""
+"Your SMS Text Message must include at least one non-whitespace character"
+msgstr "Je sms-bericht moet ten minste één niet-whitespace karakter bevatten"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
+#, python-format
+msgid "characters, fits in"
+msgstr "karakters, past in"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "e.g. +1 415 555 0100"
+msgstr "bijv. +1 415 555 0100"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Calendar Reminder"
+msgstr "bijv. Agendaherinnering"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Contact"
+msgstr "bijv. Contact"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "bijv.. en_US of {{ object.partner_id.lang }}"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "out of"
+msgstr "uit"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid ""
+"recipients have an invalid phone number and will not receive this text "
+"message."
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: sms

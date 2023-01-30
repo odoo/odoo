@@ -3,6 +3,7 @@
 # 	* utm
 # 
 # Translators:
+<<<<<<< HEAD
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Ermin Trevisan <trevi@twanda.com>, 2019
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2019
@@ -12,6 +13,15 @@
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Martin Trigaux, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
+# Jolien De Paepe, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+=======
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -358,7 +368,71 @@ msgstr "Stichwort existiert bereits!"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids
 msgid "Tags"
+<<<<<<< HEAD
 msgstr "Stichwörter"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Tags"
+
+#. module: utm
+#: code:addons/utm/models/utm_medium.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr ""
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
+msgid "The name must be unique"
+msgstr "Der Name muss eindeutig sein"
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Month"
+msgstr "Dieser Monat"
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Week"
+msgstr "Diese Woche"
+=======
+msgstr "Stichwörter"
+
+#. module: utm
+#: code:addons/utm/models/utm_medium.py:0
+#, python-format
+msgid ""
+"The UTM medium '%s' cannot be deleted as it is used in some main functional "
+"flows, such as the recruitment and the mass mailing."
+msgstr ""
+
+#. module: utm
+#: model:ir.model.constraint,message:utm.constraint_utm_campaign_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_medium_unique_name
+#: model:ir.model.constraint,message:utm.constraint_utm_source_unique_name
+msgid "The name must be unique"
+msgstr "Der Name muss eindeutig sein"
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Month"
+msgstr "Dieser Monat"
+
+#. module: utm
+#. openerp-web
+#: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
+#, python-format
+msgid "This Week"
+msgstr "Diese Woche"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__campaign_id

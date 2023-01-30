@@ -3,6 +3,7 @@
 # 	* point_of_sale
 # 
 # Translators:
+<<<<<<< HEAD
 # Rudolf Schnapka <rs@techno-flex.de>, 2019
 # Philipp Hug <philipp@hug.cx>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
@@ -19,6 +20,14 @@
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Martin Trigaux, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Robert Förster <hello@suppliot.eu>, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+=======
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -969,7 +978,49 @@ msgstr "Warnung zum Kundenbildschirm"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
+<<<<<<< HEAD
 msgstr "Abschliessen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Abschließen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
+msgid "Close Session"
+msgstr "Sitzung schließen"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Close Session & Post Entries"
+msgstr "Sitzung schließen & Einträge buchen"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
+msgid "Close Session Wizard"
+msgstr "Assistent zum Schließen der Sitzung"
+=======
+msgstr "Schließen"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
+msgid "Close Session"
+msgstr "Sitzung schließen"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Close Session & Post Entries"
+msgstr "Sitzung schließen & Einträge buchen"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
+msgid "Close Session Wizard"
+msgstr "Assistent zum Schließen der Sitzung"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1906,7 +1957,23 @@ msgstr "Icon"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
+<<<<<<< HEAD
 msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
+msgid "Identify Customer"
+msgstr "Kunden identifizieren"
+=======
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
+msgid "Identify Customer"
+msgstr "Kunden identifizieren"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__message_needaction
@@ -2372,7 +2439,7 @@ msgstr "Nicht verfügbar"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 #, python-format
 msgid "Name"
-msgstr "Name"
+msgstr "Art"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__draft
@@ -2554,8 +2621,84 @@ msgstr "Ok"
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/screens.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "One or more product(s) required serial/lot number."
 msgstr "Ein oder mehrere Produkt(e) erfordern eine Serien- / Losnummer."
+||||||| parent of fc1dc2c963f (temp)
+msgid "Ongoing"
+msgstr "Fortlaufend"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid ""
+"Only a negative quantity is allowed for this refund line. Click on +/- to "
+"modify the quantity to be refunded."
+msgstr ""
+"Für diese Erstattungszeile ist nur eine negative Menge zulässig. Klicken Sie"
+" auf +/-, um die zu erstattende Menge zu ändern."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
+msgid "Only apply rounding on cash"
+msgstr "Rundung nur bei Bargeld anwenden"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only load a limited number of customers at the opening of the PoS."
+msgstr ""
+"Laden Sie bei Öffnung des Kassensystems nur eine begrenzte Anzahl Kunden."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only load most common products at the opening of the PoS."
+msgstr ""
+"Laden Sie nur die gängigsten Produkte bei der Öffnung des Kassensystems."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only on cash methods"
+msgstr "Nur für Barzahlungen"
+=======
+msgid "Ongoing"
+msgstr "Laufend"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid ""
+"Only a negative quantity is allowed for this refund line. Click on +/- to "
+"modify the quantity to be refunded."
+msgstr ""
+"Für diese Erstattungszeile ist nur eine negative Menge zulässig. Klicken Sie"
+" auf +/-, um die zu erstattende Menge zu ändern."
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__only_round_cash_method
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_only_round_cash_method
+msgid "Only apply rounding on cash"
+msgstr "Rundung nur bei Bargeld anwenden"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only load a limited number of customers at the opening of the PoS."
+msgstr ""
+"Laden Sie bei Öffnung des Kassensystems nur eine begrenzte Anzahl Kunden."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only load most common products at the opening of the PoS."
+msgstr ""
+"Laden Sie nur die gängigsten Produkte bei der Öffnung des Kassensystems."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Only on cash methods"
+msgstr "Nur für Barzahlungen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -3442,7 +3585,7 @@ msgstr "Produktvorlage"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_uom
 msgid "Product Unit of Measure"
-msgstr "Produkteinheit"
+msgstr "Produktmaßeinheit"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__product_uom_id
@@ -3452,7 +3595,7 @@ msgstr "Produkt Einheit"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_uom_category
 msgid "Product UoM Categories"
-msgstr "Kategorien für Maßeinheiten von Produkten"
+msgstr "Kategorien für Produktmaßeinheiten"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
@@ -3536,7 +3679,55 @@ msgstr "Waage ablesen"
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Bereit, Ihr <b>Point-of-Sale</b> zu starten?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
+#, python-format
+msgid "Reason"
+msgstr "Begründung"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Anlieferungen"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr "Kassenbon %s"
+=======
+msgstr "Bereit, Ihr <b>Point-of-Sale</b> zu starten?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
+#, python-format
+msgid "Reason"
+msgstr "Begründung"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Wareneingang"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr "Kassenbon %s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -4176,12 +4367,18 @@ msgstr "Anzeige der Steuer"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Tax ID"
+<<<<<<< HEAD
 msgstr "USt-IdNr."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime
 msgid "Tax Regime"
 msgstr "Steuersystem"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "USt-IdNr"
+=======
+msgstr "USt-IdNr."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
@@ -4736,7 +4933,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__amount_total
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_total_entry_encoding
@@ -5014,7 +5211,7 @@ msgstr "Website-Nachrichten"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__website_message_ids
 msgid "Website communication history"
-msgstr "Website-Kommunikationshistorie"
+msgstr "Website-Kommunikationsverlauf"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5224,7 +5421,7 @@ msgstr "PLZ"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "at"
-msgstr "bei"
+msgstr "zu"
 
 #. module: point_of_sale
 #. openerp-web

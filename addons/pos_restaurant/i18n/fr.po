@@ -67,10 +67,22 @@ msgstr ""
 "définir la position des tables."
 
 #. module: pos_restaurant
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
 "Accepter les pourboires des clients ou convertir leur monnaie en pourboire"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
+msgid "Active"
+msgstr "Actif"
+=======
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
+#: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
+msgid "Active"
+msgstr "Active"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
@@ -222,8 +234,16 @@ msgstr "ANNULÉ"
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/floors.js:0
 #, python-format
+<<<<<<< HEAD
 msgid "Changes could not be saved"
 msgstr "Les changements n'ont pas pu être sauvegardés"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Close"
+msgstr "Clôturer"
+=======
+msgid "Close"
+msgstr "Fermer"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: pos_restaurant
 #. openerp-web
@@ -239,6 +259,20 @@ msgid "Color"
 msgstr "Couleur"
 
 #. module: pos_restaurant
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:pos_restaurant.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de configuration"
+
+#. module: pos_restaurant
+=======
+#: model:ir.model,name:pos_restaurant.model_res_config_settings
+msgid "Config Settings"
+msgstr "Paramètres de config"
+
+#. module: pos_restaurant
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
@@ -563,8 +597,96 @@ msgid "Point of Sale Orders"
 msgstr "Commandes du point de vente"
 
 #. module: pos_restaurant
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:pos_restaurant.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Paiements du point de vente"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Session du point de vente"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
+msgid "Pos Iface Orderline Notes"
+msgstr "Notes de commandes Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
+msgid "Pos Iface Printbill"
+msgstr "Impression de facture Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
+msgid "Pos Iface Splitbill"
+msgstr "Division de facture Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
+msgid "Pos Is Order Printer"
+msgstr "PdV est une imprimante de commande"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
+msgid "Pos Is Table Management"
+msgstr "PdV est une gestion des tables"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
+msgid "Pos Set Tip After Payment"
+msgstr "PdV Définir le pourboire après le paiement"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
+=======
+#: model:ir.model,name:pos_restaurant.model_pos_payment
+msgid "Point of Sale Payments"
+msgstr "Paiements au point de vente"
+
+#. module: pos_restaurant
+#: model:ir.model,name:pos_restaurant.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Session du point de vente"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
+msgid "Pos Iface Orderline Notes"
+msgstr "Notes de commandes Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
+msgid "Pos Iface Printbill"
+msgstr "Impression de facture Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
+msgid "Pos Iface Splitbill"
+msgstr "Division de facture Iface PdV"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
+msgid "Pos Is Order Printer"
+msgstr "PdV est une imprimante de commande"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
+msgid "Pos Is Table Management"
+msgstr "PdV est une gestion des tables"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
+msgid "Pos Set Tip After Payment"
+msgstr "PdV Définir le pourboire après le paiement"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/BillScreen.xml:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Print"
 msgstr "Imprimer"
@@ -595,6 +717,64 @@ msgid "Printers"
 msgstr "Imprimantes"
 
 #. module: pos_restaurant
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
+#, python-format
+msgid "Printing failed"
+msgstr "Impression échouée "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Printing is not supported on some browsers"
+msgstr "L'impression n'est pas prise en charge par certains navigateurs"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid ""
+"Printing is not supported on some browsers due to no default printing "
+"protocol is available. It is possible to print your tickets by making use of"
+" an IoT Box."
+msgstr ""
+"L'impression n'est pas prise en charge par certains navigateurs en raison de"
+" l'absence de protocole d'impression par défaut disponible. Il est possible "
+"d'imprimer vos tickets à l'aide de l'IoT Box."
+
+#. module: pos_restaurant
+=======
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/SubmitOrderButton.js:0
+#, python-format
+msgid "Printing failed"
+msgstr "Impression échouée "
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Printing is not supported on some browsers"
+msgstr "L'impression n'est pas supportée sur certains navigateurs"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid ""
+"Printing is not supported on some browsers due to no default printing "
+"protocol is available. It is possible to print your tickets by making use of"
+" an IoT Box."
+msgstr ""
+"L'impression n'est pas supportée sur certains navigateurs en raison de "
+"l'absence de protocole d'impression par défaut disponible. Il est possible "
+"d'imprimer vos tickets à l'aide du boîtier IoT."
+
+#. module: pos_restaurant
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__proxy_ip
 msgid "Proxy IP Address"
 msgstr "adresse IP du proxy"
@@ -740,12 +920,18 @@ msgstr "SOMME"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
+<<<<<<< HEAD
 msgstr "Table"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__is_table_management
 msgid "Table Management"
 msgstr "Gestion des tables"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Tableau"
+=======
+msgstr "Table"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__name
@@ -874,8 +1060,44 @@ msgid "Tips"
 msgstr "Pourboires"
 
 #. module: pos_restaurant
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Tipping"
+msgstr "Donner un pourboire"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Total:"
+msgstr "Total :"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml:0
+=======
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TicketScreen.js:0
+#, python-format
+msgid "Tipping"
+msgstr "Donner un pourboire"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "Total:"
+msgstr "Total:"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Transfer"
 msgstr "Transfert"
@@ -889,9 +1111,47 @@ msgid "Turquoise"
 msgstr "Turquoise"
 
 #. module: pos_restaurant
+<<<<<<< HEAD
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
 msgid "Used to sort Floors"
 msgstr "Utilisé pour trier les étages."
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Commande non synchronisée"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
+msgid "Uuid"
+msgstr "Uuid"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "VAT:"
+msgstr "TVA :"
+=======
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/js/Screens/TipScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Commande non synchronisée"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__uuid
+msgid "Uuid"
+msgstr "UUID"
+
+#. module: pos_restaurant
+#. odoo-javascript
+#: code:addons/pos_restaurant/static/src/xml/TipReceipt.xml:0
+#, python-format
+msgid "VAT:"
+msgstr "TVA :"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v

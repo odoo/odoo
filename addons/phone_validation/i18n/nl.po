@@ -3,11 +3,22 @@
 # 	* phone_validation
 # 
 # Translators:
+<<<<<<< HEAD
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Cas Vissers <casvissers@brahoo.nl>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Dylan Kiss, 2023
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
+=======
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -56,11 +67,63 @@ msgid "Blacklist Date"
 msgstr "Blacklist datum"
 
 #. module: phone_validation
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefoon op blacklist is een mobiel nummer"
+
+#. module: phone_validation
+#: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
+msgid "Blacklisted Phone Numbers"
+msgstr "Op de blacklist geplaatste telefoonnummers"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefoon op blacklist is een vaste lijn"
+
+#. module: phone_validation
+=======
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefoon op blacklist is een mobiel nummer"
+
+#. module: phone_validation
+#: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
+msgid "Blacklisted Phone Numbers"
+msgstr "Op de blacklist geplaatste telefoonnummers"
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefoon op blacklist Is een vaste lijn"
+
+#. module: phone_validation
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid ""
 "Blacklisted phone numbers means that the recipient won't receive SMS "
 "Marketing anymore."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Geblokkeerd door verwijdering van portaalaccount %(portal_user_name)s door "
+"%(user_name)s (#%(user_id)s)"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Confirm"
+msgstr "Bevestigen"
+=======
+"Geblokkeerd door verwijdering van portalaccount %(portal_user_name)s door "
+"%(user_name)s (#%(user_id)s)"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Confirm"
+msgstr "Bevestigen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_partner
@@ -90,6 +153,14 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Veld voor het opslaan van een opgeschoond telefoonnummer. Helpt het zoeken "
+"en vergelijken te versnellen."
+=======
+"Veld gebruikt om opgeschoond telefoonnummer in te bewaren. Helpt bij het "
+"versnellen van zoekopdrachten en vergelijkingen."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_follower_ids
@@ -110,7 +181,23 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: phone_validation
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__id
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
+msgid "Has Message"
+msgstr "Heeft een bericht"
+
+#. module: phone_validation
+=======
+#: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__has_message
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+
+#. module: phone_validation
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__id
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin__id
 msgid "ID"
@@ -122,13 +209,79 @@ msgstr "ID"
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_needaction
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_unread
 msgid "If checked, new messages require your attention."
+<<<<<<< HEAD
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+=======
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
+<<<<<<< HEAD
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Als het opgeschoonde telefoonnummer op de blacklist staat, ontvangt de "
+"contactpersoon geen mass-sms meer van welke lijst dan ook"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "Onmogelijk nummer %s: waarschijnlijk ongeldig aantal cijfers."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Geeft aan of een op de blacklist geplaatst opgeschoond telefoonnummer een "
+"mobiel nummer is. Helpt te onderscheiden welk nummer op de blacklist staat "
+"wanneer een model zowel een mobiel als een telefoonveld bevat."
+=======
+msgstr "indien aangevinkt hebben sommige leveringen een fout."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Als het telefoonnummer op de blacklist staat, ontvangt de contactpersoon "
+"geen mass-sms meer van welke lijst dan ook"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "Onmogelijk nummer %s: waarschijnlijk ongeldig aantal cijfers."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Geeft aan of een op de blacklist geplaatst telefoonnummer een mobiel nummer "
+"is. Helpt bij het onderscheiden welk nummer op de blacklist staat als het "
+"model zowel een mobiel als een telefoon veld bevat."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -136,8 +289,18 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
+<<<<<<< HEAD
 "Als het e-mail adres op de blacklist staat, zal het contact geen "
 "bulkmailingen ontvangen, van geen enkele lijst."
+||||||| parent of fc1dc2c963f (temp)
+"Geeft aan of een op de blacklist geplaatst opgeschoond telefoon nummer een "
+"telefoonnummer is. Helpt te onderscheiden welk nummer op de blacklist staat "
+"wanneer een model zowel een mobiel als een telefoonveld bevat."
+=======
+"Geeft aan of een op de blacklist geplaatst nummer een telefoonnummer is. "
+"Helpt bij het onderscheiden welk nummer op de blacklist staat als een model "
+"zowel een mobiel als een telefoon veld bevat."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -169,6 +332,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_is_follower
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_is_follower
 msgid "Is Follower"
+<<<<<<< HEAD
 msgstr "Is een volger"
 
 #. module: phone_validation
@@ -177,6 +341,11 @@ msgstr "Is een volger"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_validation_mixin____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Is volger"
+=======
+msgstr "Is een volger"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__write_uid
@@ -233,6 +402,7 @@ msgstr "Aantal berichten die actie vereisen"
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error_counter
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error_counter
 msgid "Number of messages with delivery error"
+<<<<<<< HEAD
 msgstr "Aantal berichten met leveringsfout"
 
 #. module: phone_validation
@@ -240,6 +410,11 @@ msgstr "Aantal berichten met leveringsfout"
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Aantal ongelezen berichten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Aantal berichten met afleverfout"
+=======
+msgstr "Aantal berichten met leveringsfout"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__number
@@ -268,7 +443,13 @@ msgstr "Telefoon blacklist Mixin"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Phone Blacklisted"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Telefoon geblacklist"
+=======
+msgstr "Telefoon blacklist"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
@@ -288,9 +469,39 @@ msgstr "Opgeschoond nummer"
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
+<<<<<<< HEAD
 msgid ""
 "Unable to format %s:\n"
 "%s"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Unable to parse %(phone)s: %(error)s"
+msgstr "Onmogelijk om te zetten %(phone)s:%(error)s"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Unblacklist"
+msgstr "Verwijderen uit blacklist"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
+#, python-format
+msgid "Unblock Reason: %(reason)s"
+=======
+msgid "Unable to parse %(phone)s: %(error)s"
+msgstr "Onmogelijk om te zetten %(phone)s:%(error)s"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Unblacklist"
+msgstr "Verwijder uit blacklist"
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/wizard/phone_blacklist_remove.py:0
+#, python-format
+msgid "Unblock Reason: %(reason)s"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 "Onmogelijk om te formatteren %s:\n"
 "%s"

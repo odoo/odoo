@@ -635,9 +635,21 @@ msgid "Calendar Attendee Information"
 msgstr "Informationen für Kalender-Teilnehmer"
 
 #. module: calendar
+<<<<<<< HEAD
 #: model:ir.model,name:calendar.model_calendar_contacts
 msgid "Calendar Contacts"
 msgstr "Kalender Kontakte"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:calendar.model_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
+msgid "Calendar Event"
+msgstr "Calendar Event"
+=======
+#: model:ir.model,name:calendar.model_calendar_event
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
+msgid "Calendar Event"
+msgstr "Kalender Veranstaltung"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
@@ -1077,7 +1089,7 @@ msgstr "Termin wird automatisch in diesem Abstand wiederholt"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__location
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Ort"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__location
@@ -1457,12 +1469,18 @@ msgstr "Start"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
+<<<<<<< HEAD
 msgstr "Startdatum"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_datetime
 msgid "Start DateTime"
 msgstr "Anfangszeit"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Startdatum"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
@@ -1489,7 +1507,7 @@ msgstr "Status Teilnahme"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop
@@ -1514,7 +1532,47 @@ msgstr "So"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__week_list__su
 msgid "Sunday"
+<<<<<<< HEAD
 msgstr "Sonntag"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#, python-format
+msgid "Synchronize with:"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Synchronize your calendar with Outlook"
+msgstr ""
+=======
+msgstr "Sonntag"
+
+#. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#, python-format
+msgid "Synchronize with:"
+msgstr "Synchronisieren mit:"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Synchronize your calendar with Google Calendar"
+msgstr "Synchronisieren Sie Ihren Kalender mit Google"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
+msgid "Synchronize your calendar with Outlook"
+msgstr "Synchronisieren Sie Ihren Kalender mit Outlook"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
@@ -1524,7 +1582,33 @@ msgstr "Stichwort existiert bereits!"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
+<<<<<<< HEAD
 msgstr "Stichwörter"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
+msgid "Template used to render mail reminder content."
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Tentative"
+msgstr ""
+=======
+msgstr "Stichwörter"
+
+#. module: calendar
+#: model:ir.model.fields,help:calendar.field_calendar_alarm__mail_template_id
+msgid "Template used to render mail reminder content."
+msgstr "Vorlage für die Darstellung des Inhalts von Erinnerungsmails."
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
+msgid "Tentative"
+msgstr "Verläufig"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1539,8 +1623,14 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed ?"
 msgstr ""
+<<<<<<< HEAD
 "Die Aktivität ist mit einer Besprechung verknüpft. Wenn Sie es löschen, wird"
 " auch die Besprechung gelöscht. Wollen Sie fortfahren?"
+||||||| parent of fc1dc2c963f (temp)
+=======
+"Die Aktivität ist mit einer Besprechung verknüpft. Wenn Sie sie löschen, "
+"wird auch die Besprechung entfernt. Möchten Sie fortfahren?"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -1553,7 +1643,25 @@ msgstr ""
 "andere Anwendungen, wie z.B. der Austritt des Mitarbeiters oder andere geschäftliche Ereignisse."
 
 #. module: calendar
+<<<<<<< HEAD
 #: code:addons/calendar/models/calendar.py:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+msgid "The day must be between 1 and 31"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+=======
+#: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
+msgid "The day must be between 1 and 31"
+msgstr "Der Tag muss zwischen 1 und 31 liegen"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid ""
 "The ending date and time cannot be earlier than the starting date and time."
@@ -1576,8 +1684,30 @@ msgstr "Das Intervall kann nicht negativ sein."
 #. module: calendar
 #: code:addons/calendar/models/calendar.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "The number of repetitions  cannot be negative."
 msgstr "Die Summe an Wiederholungen darf nicht negativ sein."
+||||||| parent of fc1dc2c963f (temp)
+msgid "The number of repetitions cannot be negative."
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr ""
+=======
+msgid "The number of repetitions cannot be negative."
+msgstr "Die Summe an Wiederholungen darf nicht negativ sein."
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "There are no attendees on these events"
+msgstr "Für diese Events gibt es keine Teilnehmer"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__3
@@ -1585,13 +1715,53 @@ msgid "Third"
 msgstr "Dritter"
 
 #. module: calendar
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "This event is linked to a recurrence...<br/>"
 msgstr ""
 "Dieses Ereignis ist mit einem wiederkehrenden Ereignis verbunden...<br/>"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#, python-format
+msgid "This and following events"
+msgstr ""
+=======
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
+#, python-format
+msgid "This and following events"
+msgstr "Dieses und darauffolgende Ereignisse"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#, python-format
+msgid "This event"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
+=======
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
+#, python-format
+msgid "This event"
+msgstr "Dieses Ereignis"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__thu
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__thu
+>>>>>>> fc1dc2c963f (temp)
 msgid "Thu"
 msgstr "Do"
 
@@ -1606,6 +1776,24 @@ msgid "Timezone"
 msgstr "Zeitzone"
 
 #. module: calendar
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
+msgid "Timezone used for displaying time in the mail template"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+=======
+#: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
+msgid "Timezone used for displaying time in the mail template"
+msgstr ""
+"Zeitzone, die für die Anzeige der Uhrzeit in der E-Mail-Vorlage verwendet "
+"wird"
+
+#. module: calendar
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
@@ -1634,16 +1822,23 @@ msgstr "Typ"
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
 msgid "Uncertain"
+<<<<<<< HEAD
 msgstr "Unklar"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__state__draft
 msgid "Unconfirmed"
 msgstr "Nicht bestätigte Anmeldungen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Unklar"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
+<<<<<<< HEAD
 msgstr "Einheit"
 
 #. module: calendar
@@ -1655,6 +1850,11 @@ msgstr "Ungelesene Nachrichten"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Anzahl ungelesener Nachrichten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "Einheit"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -1672,7 +1872,35 @@ msgid "Users"
 msgstr "Benutzer"
 
 #. module: calendar
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__we
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
+msgid "Videocall Source"
+msgstr ""
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Videocall URL"
+msgstr ""
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__wed
+=======
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
+msgid "Videocall Source"
+msgstr "Videoanruf Quelle"
+
+#. module: calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Videocall URL"
+msgstr "Videoanruf URL"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
+#: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__wed
+>>>>>>> fc1dc2c963f (temp)
 msgid "Wed"
 msgstr "Mi"
 
@@ -1702,12 +1930,160 @@ msgid "Yes I'm going."
 msgstr "Ich werde teilnehmen."
 
 #. module: calendar
+<<<<<<< HEAD
 #: code:addons/calendar/models/calendar.py:0
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "You can't update a recurrence without base event."
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_attendee.py:0
+=======
+#. odoo-python
+#: code:addons/calendar/models/calendar_event.py:0
+#, python-format
+msgid "You can't update a recurrence without base event."
+msgstr "Ohne Basisereignis können Sie keine Wiederholung einrichten."
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_attendee.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
+<<<<<<< HEAD
 msgstr "Sie können einen Teilnehmer nicht duplizieren"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "You have to choose at least one day in the week"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "day %s"
+msgstr ""
+=======
+msgstr "Sie können einen Teilnehmer nicht duplizieren"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "You have to choose at least one day in the week"
+msgstr "Sie müssen mindestens einen Tag der Woche auswählen."
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "day %s"
+msgstr "Tag %s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
+<<<<<<< HEAD
 msgstr "evtl. Geschäftsessen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "for %s events"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on %s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on the %(position)s %(weekday)s"
+msgstr ""
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "until %s"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_reminder
+msgid "{{ object.event_id.name }} - Reminder"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_changedate
+msgid "{{ object.event_id.name }}: Date updated"
+msgstr ""
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_update
+msgid "{{object.name}}: Event update"
+msgstr ""
+=======
+msgstr "evtl. Geschäftsessen"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "for %s events"
+msgstr "für %s Ereignisse"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on %s"
+msgstr "am %s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "on the %(position)s %(weekday)s"
+msgstr "am %(position)s %(weekday)s"
+
+#. module: calendar
+#. odoo-python
+#: code:addons/calendar/models/calendar_recurrence.py:0
+#, python-format
+msgid "until %s"
+msgstr "bis %s"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_reminder
+msgid "{{ object.event_id.name }} - Reminder"
+msgstr "{{ object.event_id.name }} - Erinnerung"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_changedate
+msgid "{{ object.event_id.name }}: Date updated"
+msgstr "{{ object.event_id.name }}: Aktualisierung am"
+
+#. module: calendar
+#: model:mail.template,subject:calendar.calendar_template_meeting_update
+msgid "{{object.name}}: Event update"
+msgstr "{{object.name}}: Update der Veranstaltung"
+>>>>>>> fc1dc2c963f (temp)

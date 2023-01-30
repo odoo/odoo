@@ -828,9 +828,23 @@ msgid "<strong>Type: </strong>"
 msgstr "<strong>Tipo: </strong>"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<strong>Vendor: </strong>"
 msgstr "<strong>Fornitore: </strong>"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "@From: %(email)s"
+msgstr "@Da: %(email)s"
+=======
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "@From: %(email)s"
+msgstr "@Di: %(email)s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1682,8 +1696,16 @@ msgstr "Tutte le registrazioni generate"
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "All accounts on the lines must be from the same type."
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgid "All"
+msgstr "tutte"
+=======
+msgid "All"
+msgstr "Tutti"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -2498,7 +2520,23 @@ msgstr "Pagamenti raggruppati"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bill"
+<<<<<<< HEAD
 msgstr "Fattura"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Conto"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_in_invoice_bill_tree
+msgid "Bill Currency"
+msgstr "Valuta Fattura"
+=======
+msgstr "Fattura"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_in_invoice_bill_tree
+msgid "Bill Currency"
+msgstr "Valuta Fattura"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
@@ -3669,6 +3707,7 @@ msgstr "Crea il primo arrotondamento di cassa"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__create_uid
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_uid
 msgid "Created by"
+<<<<<<< HEAD
 msgstr "Creata da"
 
 #. module: account
@@ -3676,6 +3715,11 @@ msgstr "Creata da"
 #, python-format
 msgid "Created by: %s"
 msgstr "Creato da: %s"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Creato da"
+=======
+msgstr "Creata da"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -3730,7 +3774,13 @@ msgstr "Creato da: %s"
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__create_date
 #: model:ir.model.fields,field_description:account.field_validate_account_move__create_date
 msgid "Created on"
+<<<<<<< HEAD
 msgstr "Creata il"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Creato da"
+=======
+msgstr "Data creazione"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__credit
@@ -4019,8 +4069,62 @@ msgstr "Data"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__account_opening_date
 msgid ""
+<<<<<<< HEAD
 "Date at which the opening entry of this company's accounting has been "
 "posted."
+||||||| parent of fc1dc2c963f (temp)
+"Date (inclusive) to which the numbers are resequenced. If not set, all "
+"Journal Entries up to the end of the period are resequenced."
+msgstr ""
+"Data (inclusa) fino alla quale i numeri vengono riordinati in sequenza. Se "
+"non impostata, vengono riordinate tutte le registrazioni fino alla fine del "
+"periodo."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
+msgid "Date Mode"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
+msgid "Date Range"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
+msgid "Date Scope"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term__example_date
+msgid "Date example"
+=======
+"Date (inclusive) to which the numbers are resequenced. If not set, all "
+"Journal Entries up to the end of the period are resequenced."
+msgstr ""
+"Data (inclusa) fino alla quale i numeri vengono riordinati in sequenza. Se "
+"non impostata, vengono riordinate tutte le registrazioni fino alla fine del "
+"periodo."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_reversal__date_mode
+msgid "Date Mode"
+msgstr "Modalità data"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report__filter_date_range
+msgid "Date Range"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_expression__date_scope
+msgid "Date Scope"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term__example_date
+msgid "Date example"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 "Data nella quale è stata generata la registrazione di apertura della "
 "contabilità aziendale."
@@ -4329,6 +4433,34 @@ msgid "Disc.%"
 msgstr "Sconto %"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
+#: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
+msgid "Discard"
+msgstr "Scarta"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__discount_percentage
+msgid "Discount %"
+msgstr "Sconto %"
+
+#. module: account
+=======
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
+#: model_terms:ir.ui.view,arch_db:account.res_company_view_form_terms
+msgid "Discard"
+msgstr "Abbandona"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment_term_line__discount_percentage
+msgid "Discount %"
+msgstr "Sconto %"
+
+#. module: account
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:account.field_account_move_line__discount
 msgid "Discount (%)"
 msgstr "Sconto (%)"
@@ -4782,7 +4914,13 @@ msgstr "Atteso un piano dei conti"
 #: model:ir.model.fields.selection,name:account.selection__account_accrual_accounting_wizard__account_type__expense
 #, python-format
 msgid "Expense"
+<<<<<<< HEAD
 msgstr "Nota spese"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Spesa"
+=======
+msgstr "Costi"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -5282,6 +5420,7 @@ msgstr "Apri estratti conto"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Go to the configuration panel"
+<<<<<<< HEAD
 msgstr "Apri pannello di configurazione"
 
 #. module: account
@@ -5289,6 +5428,11 @@ msgstr "Apri pannello di configurazione"
 #, python-format
 msgid "Go to the journal configuration"
 msgstr "Apri configurazione registro"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Vai al pannello di configurazione"
+=======
+msgstr "Apri pannello di configurazione"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_partner__trust__good
@@ -5754,7 +5898,23 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__inbound
 msgid "Inbound"
+<<<<<<< HEAD
 msgstr "In ingresso"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "In entrata"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
+msgid "Inbound Payment Methods"
+msgstr "Metodi di pagamento in entrata"
+=======
+msgstr "In ingresso"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__inbound_payment_method_line_ids
+msgid "Inbound Payment Methods"
+msgstr "Metodi di pagamento in entrata"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__analytic
@@ -7788,6 +7948,7 @@ msgstr ""
 "cancellare la riga."
 
 #. module: account
+<<<<<<< HEAD
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Operation not supported"
@@ -7797,6 +7958,15 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Operations"
 msgstr "Operazioni"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__optional
+msgid "Optional"
+msgstr "Facoltativo"
+=======
+#: model:ir.model.fields.selection,name:account.selection__account_report__filter_hierarchy__optional
+msgid "Optional"
+msgstr "Opzionale"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__nocreate
@@ -7871,7 +8041,51 @@ msgstr "Altre informazioni"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment_method__payment_type__outbound
 msgid "Outbound"
+<<<<<<< HEAD
 msgstr "Dall'esterno"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "In uscita"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
+msgid "Outbound Payment Methods"
+msgstr "Metodi di pagamento in uscita"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Outgoing Payments"
+msgstr "Pagamenti in uscita"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
+msgid ""
+"Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
+msgstr ""
+"I pagamenti in uscita sono registrati su un conto dei pagamenti in sospeso. Nel widget di riconciliazione bancaria, essi appaiono come linee blu.\n"
+"Le transazioni bancarie sono quindi riconciliate sul conto dei pagamenti in uscita piuttosto che sul conto dei pagamenti."
+=======
+msgstr "Dall'esterno"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__outbound_payment_method_line_ids
+msgid "Outbound Payment Methods"
+msgstr "Metodi di pagamento in uscita"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
+msgid "Outgoing Payments"
+msgstr "Pagamenti in uscita"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_res_config_settings__account_journal_payment_credit_account_id
+msgid ""
+"Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
+"Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
+msgstr ""
+"I pagamenti in uscita sono registrati su un conto dei pagamenti in sospeso. Nel widget di riconciliazione bancaria, essi appaiono come linee blu.\n"
+"Le transazioni bancarie sono quindi riconciliate sul conto dei pagamenti in uscita piuttosto che sul conto dei pagamenti."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -7962,7 +8176,33 @@ msgstr "Messaggio principale"
 #: model:ir.model.fields,field_description:account.field_account_group__parent_path
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__parent_path
 msgid "Parent Path"
+<<<<<<< HEAD
 msgstr "Percorso padre"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Percorso primario"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__report_id
+msgid "Parent Report"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Partial"
+msgstr "Parziale"
+=======
+msgstr "Percorso padre"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_report_line__report_id
+msgid "Parent Report"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Partial"
+msgstr "Parziale"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model,name:account.model_account_partial_reconcile
@@ -8015,8 +8255,28 @@ msgid "Partner Is Set"
 msgstr "Partner è impostato"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
 msgid "Partner Is Set & Matches"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
+msgid "Partner Ledger"
+msgstr "Libro partner"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
+msgid "Partner Limit"
+=======
+#: model:ir.actions.act_window,name:account.action_account_moves_ledger_partner
+msgid "Partner Ledger"
+msgstr "Estratto conto cliente - fornitore"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_partner__use_partner_credit_limit
+#: model:ir.model.fields,field_description:account.field_res_users__use_partner_credit_limit
+msgid "Partner Limit"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: account
@@ -8471,7 +8731,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Posted"
+<<<<<<< HEAD
 msgstr "Registrata"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Confermato"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
+#: model:ir.model.fields,field_description:account.field_account_move__posted_before
+#: model:ir.model.fields,field_description:account.field_account_payment__posted_before
+msgid "Posted Before"
+msgstr "Inviato prima di"
+=======
+msgstr "Registrata"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__posted_before
+#: model:ir.model.fields,field_description:account.field_account_move__posted_before
+#: model:ir.model.fields,field_description:account.field_account_payment__posted_before
+msgid "Posted Before"
+msgstr "Inviato prima di"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -8730,7 +9010,7 @@ msgstr "Motivo..."
 #: model:ir.ui.menu,name:account.menu_action_move_in_receipt_type
 #: model:ir.ui.menu,name:account.menu_action_move_out_receipt_type
 msgid "Receipts"
-msgstr "Ricezioni"
+msgstr "Ricevute"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_receivable
@@ -8913,7 +9193,27 @@ msgid "Refund Tax"
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
 #: code:addons/account/models/account_payment.py:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.actions.act_window,name:account.action_move_in_refund_type
+#: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
+msgid "Refunds"
+msgstr "Rimborsi"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+=======
+#: model:ir.actions.act_window,name:account.action_move_in_refund_type
+#: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
+msgid "Refunds"
+msgstr "Note di credito"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.actions.server,name:account.action_account_invoice_from_list
 #: model:ir.model,name:account.model_account_payment_register
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -9000,9 +9300,19 @@ msgstr ""
 "automatica del thread."
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__reply_to
 msgid "Reply-To"
 msgstr "Rispondi a"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_report_column__report_id
+msgid "Report"
+msgstr "Report"
+=======
+#: model:ir.model.fields,field_description:account.field_account_report_column__report_id
+msgid "Report"
+msgstr "Resoconto"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model,name:account.model_ir_actions_report
@@ -9259,7 +9569,25 @@ msgstr "Errore di invio SMS"
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_search
 msgid "Sale"
+<<<<<<< HEAD
 msgstr "Vendita"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Vendite"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
+#: model:res.groups,name:account.group_sale_receipts
+msgid "Sale Receipt"
+msgstr "Ricevuta di vendita"
+=======
+msgstr "Vendita"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_config_settings__group_show_sale_receipts
+#: model:res.groups,name:account.group_sale_receipts
+msgid "Sale Receipt"
+msgstr "Ricevuta di vendita"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_moves_journal_sales
@@ -9323,6 +9651,7 @@ msgstr "Fattura campione"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Sample data"
+<<<<<<< HEAD
 msgstr "Dati campione"
 
 #. module: account
@@ -9347,6 +9676,11 @@ msgstr "Nome riga fattura campione 2"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sample_invoice_step
 msgid "Sample invoice sent!"
 msgstr "Fattura campione inviata."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Dati d'esempio"
+=======
+msgstr "Dati campione"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__sanitized_acc_number
@@ -9668,11 +10002,35 @@ msgid "Sequence"
 msgstr "Sequenza"
 
 #. module: account
+<<<<<<< HEAD
 #: model:ir.model.fields,help:account.field_account_tax_report_line__sequence
 msgid ""
 "Sequence determining the order of the lines in the report (smaller ones come"
 " first). This order is applied locally per section (so, children of the same"
 " line are always rendered one after the other)."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
+msgid "Sequence Number"
+msgstr "Numero progressivo"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
+msgid "Sequence Number Reset"
+=======
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_move__sequence_number
+#: model:ir.model.fields,field_description:account.field_account_payment__sequence_number
+#: model:ir.model.fields,field_description:account.field_sequence_mixin__sequence_number
+msgid "Sequence Number"
+msgstr "Numero sequenza"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
+msgid "Sequence Number Reset"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: account
@@ -10682,7 +11040,23 @@ msgstr "Modello"
 #. module: account
 #: model:ir.model,name:account.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
+<<<<<<< HEAD
 msgstr "Modello per la posizione fiscale"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Modello per posizione fiscale"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
+msgid "Templates Found"
+msgstr "Modelli trovati"
+=======
+msgstr "Modello per la posizione fiscale"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_fiscal_position__foreign_vat_header_mode__templates_found
+msgid "Templates Found"
+msgstr "Modelli trovati"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -10882,6 +11256,36 @@ msgid "The company this repartition line belongs to."
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:account.field_account_chart_template__country_id
+msgid "The country this chart of accounts belongs to. None if it's generic."
+msgstr ""
+"Il paese a cui appartiene questo piano contabile. Vuoto se è generico."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
+#: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
+#: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
+msgid "The country to use the tax reports from for this company"
+msgstr "La nazione di cui utilizzare i resoconti fiscali per l'azienda"
+
+#. module: account
+=======
+#: model:ir.model.fields,help:account.field_account_chart_template__country_id
+msgid "The country this chart of accounts belongs to. None if it's generic."
+msgstr ""
+"Il paese a cui appartiene questo piano contabile. Vuoto se è generico."
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_fiscal_position__company_country_id
+#: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
+#: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
+msgid "The country to use the tax reports from for this company"
+msgstr "Il paese da cui utilizzare i rapporti fiscali per questa azienda"
+
+#. module: account
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "The credit note is auto-validated and reconciled with the invoice."
 msgstr ""
@@ -11700,8 +12104,38 @@ msgid ""
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:digest.tip,name:account.digest_tip_account_0
+#: model_terms:digest.tip,tip_description:account.digest_tip_account_0
+msgid "Tip: No need to print, put in an envelop and post your invoices"
+msgstr ""
+"Consiglio: non serve stampare, metti le fatture in una busta e spediscile"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
+msgid "To"
+msgstr "fino al"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
+=======
+#: model:digest.tip,name:account.digest_tip_account_0
+#: model_terms:digest.tip,tip_description:account.digest_tip_account_0
+msgid "Tip: No need to print, put in an envelop and post your invoices"
+msgstr ""
+"Consiglio: non serve stampare, metti le fatture in una busta e spediscile"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
+msgid "To"
+msgstr "a"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement_line__to_check
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:account.field_account_move__to_check
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__to_check
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__to_check
@@ -11836,6 +12270,48 @@ msgstr "Tipo di transazione"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_transaction_type_param
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_transaction_type_param
 msgid "Transaction Type Parameter"
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Parametro Tipo di transazione"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Transfer"
+msgstr "Trasferimento"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
+msgid "Transfer Date"
+msgstr "Data di trasferimento"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Transfer counterpart"
+=======
+msgstr "Parametro Tipo di transazione"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Transfer"
+msgstr "Trasferimento"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
+msgid "Transfer Date"
+msgstr "Data trasferimento"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Transfer counterpart"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: account
@@ -11936,10 +12412,30 @@ msgid "Unit of Measure"
 msgstr "Unità di misura"
 
 #. module: account
+<<<<<<< HEAD
 #: code:addons/account/report/account_aged_partner_balance.py:0
 #, python-format
 msgid "Unknown Partner"
 msgstr "Partner sconosciuto"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Unmark as Sent"
+msgstr "Deseleziona inviato"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Unpaid"
+msgstr "Non retribuite"
+=======
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "Unmark as Sent"
+msgstr "Deseleziona inviato"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
+msgid "Unpaid"
+msgstr "Non pagato"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -12965,6 +13461,30 @@ msgstr "nome"
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line__repartition_type__tax
 #: model:ir.model.fields.selection,name:account.selection__account_tax_repartition_line_template__repartition_type__tax
 msgid "of tax"
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "dell'imposta"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
+msgid "on"
+msgstr "-"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "one of those bills"
+=======
+msgstr "dell'imposta"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.tax_groups_totals
+msgid "on"
+msgstr "su"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "one of those bills"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: account

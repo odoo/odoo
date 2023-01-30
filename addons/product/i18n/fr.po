@@ -3,6 +3,7 @@
 # 	* product
 # 
 # Translators:
+<<<<<<< HEAD
 # Loic <loic.richard2@gmail.com>, 2019
 # Nathan Noël <nathan070@me.com>, 2019
 # Pierrick Brun <brun.pierrick@protonmail.com>, 2019
@@ -20,6 +21,16 @@
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Moka Tourisme <hello@mokatourisme.fr>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -118,6 +129,22 @@ msgid ""
 "                              <span attrs=\"{'invisible':[('base', '!=', 'standard_price')]}\">Cost  -  </span>\n"
 "                              <span attrs=\"{'invisible':[('base', '!=', 'pricelist')]}\">Other Pricelist  -  </span>"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"<span attrs=\"{'invisible': [('pricelist_item_count', '>', 1)]}\">\n"
+"                                        Règle de prix\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '<=', 1)]}\">\n"
+"                                        Règles de prix\n"
+"                                    </span>"
+=======
+"<span attrs=\"{'invisible': [('pricelist_item_count', '=', 1)]}\">\n"
+"                                        Prix supplémentaires\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible': [('pricelist_item_count', '!=', 1)]}\">\n"
+"                                        Prix supplémentaire\n"
+"                                    </span>"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_category_form_view
@@ -176,7 +203,19 @@ msgid ""
 "<strong>Warning</strong>: adding or deleting attributes\n"
 "                        will delete and recreate existing variants and lead\n"
 "                        to the loss of their possible customizations."
+<<<<<<< HEAD
 msgstr "<strong/>"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+"<strong>Avertissement</strong>: l'ajout ou la suppression des attributs\n"
+"                        supprimeront et recréeront des variantes existantes et entraîneront \n"
+"la perte de leurs éventuelles personnalisations."
+=======
+msgstr ""
+"<strong>Avertissement</strong>: l'ajout ou la suppression des attributs\n"
+"                        supprimeront ou recréeront des variantes existantes et entraîneront \n"
+"la perte de leurs éventuelles personnalisations."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_product_barcode_uniq
@@ -230,7 +269,23 @@ msgstr "Nécessite une action"
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
 msgid "Active"
+<<<<<<< HEAD
 msgstr "Active"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Actif"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Active Products"
+msgstr "Produits actifs"
+=======
+msgstr "Active"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
+msgid "Active Products"
+msgstr "Produits actifs"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -248,7 +303,49 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
 #: model:ir.model.fields,field_description:product.field_product_template__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Status de l'activité"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Statut de l'activité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Add a quantity"
+msgstr "Ajouter une quantité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
+msgid "Additional Product Tag"
+msgstr "Étiquette de produit additionnelle"
+=======
+msgstr "Status de l'activité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,field_description:product.field_product_template__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Add a quantity"
+msgstr "Ajouter une quantité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
+msgid "Additional Product Tag"
+msgstr "Étiquette de produit additionnelle"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -720,7 +817,51 @@ msgstr "Remises"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_name
 #: model:ir.model.fields,field_description:product.field_report_product_report_pricelist__display_name
 msgid "Display Name"
+<<<<<<< HEAD
 msgstr "Afficher Nom"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Afficher le nom"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Display Pricelist"
+msgstr "Afficher la liste de prix"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
+msgid "Display Type"
+msgstr "Type d'affichage"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
+msgid "Dymo"
+msgstr "Dymo"
+=======
+msgstr "Afficher Nom"
+
+#. module: product
+#. odoo-javascript
+#: code:addons/product/static/src/xml/pricelist_report.xml:0
+#, python-format
+msgid "Display Pricelist"
+msgstr "Afficher la liste de prix"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__display_type
+#: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
+#: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
+msgid "Display Type"
+msgstr "Type d'affichage"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
+msgid "Dymo"
+msgstr "Dymo"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__create_variant__dynamic
@@ -770,6 +911,38 @@ msgid ""
 "Extra price for the variant with this attribute value on sale price. eg. 200"
 " price extra, 1000 + 200 = 1200."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Prix supplémentaire pour la variante avec cette valeur d'attribut sur le "
+"prix de vente. par exemple. 200 prix supplémentaire, 1000 + 200 = 1200."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__priority
+#: model:ir.model.fields,field_description:product.field_product_template__priority
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
+msgid "Favorite"
+msgstr "Favoris"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Favorites"
+msgstr "Favoris"
+=======
+"Prix supplémentaire pour la variante avec cette valeur d'attribut sur le "
+"prix de vente. par exemple. 200 prix supplémentaire, 1000 + 200 = 1200."
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__priority
+#: model:ir.model.fields,field_description:product.field_product_template__priority
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__1
+msgid "Favorite"
+msgstr "Favori"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_template_search_view
+msgid "Favorites"
+msgstr "Favoris"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__fixed_price
@@ -796,6 +969,22 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: product
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: product
+=======
+#: model:ir.model.fields,help:product.field_product_product__activity_type_icon
+#: model:ir.model.fields,help:product.field_product_template__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+
+#. module: product
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
 msgid ""
 "For the rule to apply, bought/sold quantity must be greater than or equal to the minimum quantity specified in this field.\n"
@@ -951,7 +1140,13 @@ msgstr ""
 #: code:addons/product/models/product_template.py:0
 #, python-format
 msgid "Import Template for Products"
+<<<<<<< HEAD
 msgstr "Import du template pour les articles"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Import du modèle pour les produits"
+=======
+msgstr "Import du template pour les produits"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -1187,6 +1382,24 @@ msgid ""
 msgstr ""
 
 #. module: product
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+=======
+#: model:ir.model.fields,field_description:product.field_product_product__my_activity_date_deadline
+#: model:ir.model.fields,field_description:product.field_product_template__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__name
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:product.field_product_category__name
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__name
 #: model:ir.model.fields,field_description:product.field_product_product__name
@@ -1200,9 +1413,21 @@ msgid "Never"
 msgstr "Jamais"
 
 #. module: product
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_item_form_view
 msgid "New Price ="
 msgstr "Nouveau prix ="
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante calendrier événement"
+=======
+#: model:ir.model.fields,field_description:product.field_product_product__activity_calendar_event_id
+#: model:ir.model.fields,field_description:product.field_product_template__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
@@ -1220,7 +1445,81 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
+<<<<<<< HEAD
 msgstr "Type d'activités à venir"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type d'activité à venir"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Aucun produit à imprimer, si le produit est archivé merci de le désarchiver "
+"avant d'imprimer son étiquette."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+msgid "No vendor pricelist found"
+msgstr "Aucune liste de prix fournisseur trouvée"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
+msgid "Normal"
+msgstr "Normal"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Note:"
+msgstr "Note:"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
+msgid "Number Related Products"
+msgstr "Nombre de produits liés"
+=======
+msgstr "Type d'activités à venir"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"Aucun produit à imprimer, si le produit est archivé merci de le désarchiver "
+"avant d'imprimer son étiquette."
+
+#. module: product
+#: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
+msgid "No vendor pricelist found"
+msgstr "Aucune liste de prix fournisseur trouvée"
+
+#. module: product
+#: model:ir.model.fields.selection,name:product.selection__product_template__priority__0
+msgid "Normal"
+msgstr "Normale"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_product.py:0
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid "Note:"
+msgstr "Note:"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_attribute__number_related_products
+msgid "Number Related Products"
+msgstr "Nombre de produits liés"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1550,7 +1849,25 @@ msgstr ""
 #: model:ir.actions.report,name:product.report_product_label
 #: model:ir.actions.report,name:product.report_product_template_label
 msgid "Product Label (PDF)"
+<<<<<<< HEAD
 msgstr "Etiquette d'Articles (PDF)"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Etiquette de produits (PDF)"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
+msgid "Product Label Report"
+msgstr "Rapport d'Etiquettes de produit"
+=======
+msgstr "Etiquette de produits (PDF)"
+
+#. module: product
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel
+#: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
+msgid "Product Label Report"
+msgstr "Rapport d'Etiquettes produit"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1619,8 +1936,48 @@ msgid "Product Template Attribute Value"
 msgstr "Valeur caratéristique du modèle produit"
 
 #. module: product
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:product.field_product_product__type
 #: model:ir.model.fields,field_description:product.field_product_template__type
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Product Template Tags"
+msgstr "Étiquettes de modèle de produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
+msgid "Product Tmpl"
+msgstr "Modèle du produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
+#: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
+msgid "Product Tooltip"
+msgstr "Infobulle produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:product.field_product_template__detailed_type
+=======
+#: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
+msgid "Product Template Tags"
+msgstr "Étiquettes de modèle de produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
+msgid "Product Tmpl"
+msgstr "Template du produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__product_tooltip
+#: model:ir.model.fields,field_description:product.field_product_template__product_tooltip
+msgid "Product Tooltip"
+msgstr "Infobulle produit"
+
+#. module: product
+#: model:ir.model.fields,field_description:product.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:product.field_product_template__detailed_type
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Product Type"
 msgstr "Type d'article"
@@ -1648,7 +2005,30 @@ msgid "Product Variants"
 msgstr "Variantes d'article"
 
 #. module: product
+<<<<<<< HEAD
 #: code:addons/product/models/product_pricelist.py:0
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/product/report/product_label_report.py:0
+#, python-format
+msgid "Product model not defined, Please contact your administrator."
+msgstr ""
+"Modèle de produit non défini, veuillez contacter votre administrateur."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+=======
+#. odoo-python
+#: code:addons/product/report/product_label_report.py:0
+#, python-format
+msgid "Product model not defined, Please contact your administrator."
+msgstr "Modèle de produit non défini, veuillez contacter votre administrateur"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Product: %s"
 msgstr ""
@@ -2128,7 +2508,37 @@ msgstr "Activités du jour"
 #: model:ir.model.fields,help:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,help:product.field_product_template__activity_exception_decoration
 msgid "Type of the exception activity on record."
+<<<<<<< HEAD
 msgstr "Type d'activité d'exception enregistrée"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type d'activité d'exception enregistrée."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid "Unable to find report template for %s format"
+msgstr "Impossible de trouver le modèle de rapport pour le format %s"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Unit Price"
+msgstr "Prix unitaire"
+=======
+msgstr "Type d'activité d'exception enregistrée"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid "Unable to find report template for %s format"
+msgstr "Impossible de trouver le modèle de rapport pour le format %s"
+
+#. module: product
+#: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
+msgid "Unit Price"
+msgstr "Prix unitaire"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id

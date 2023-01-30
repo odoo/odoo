@@ -3,6 +3,7 @@
 # 	* fleet
 # 
 # Translators:
+<<<<<<< HEAD
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2019
 # bb76cd9ac0cb7e20167a14728edb858b, 2019
 # Martin Trigaux, 2019
@@ -13,14 +14,34 @@
 # Olivier de W. <odw@taktik.com>, 2019
 # Celia Tydgat <cty@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Alexandra Jubert, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
+=======
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:19+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+=======
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +107,27 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_state
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Status de l'activité"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Statut de l'activité"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+=======
+msgstr "Status de l'activité"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
@@ -195,10 +236,62 @@ msgid "CO2 emissions of the vehicle"
 msgstr "Taux d'emissions de CO2 du véhicule"
 
 #. module: fleet
+<<<<<<< HEAD
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_model_brand_action
 #: model:ir.ui.menu,name:fleet.fleet_vehicle_model_brand_menu
 msgid "Car Manufacturers"
 msgstr "Constructeurs automobiles"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
+msgid "Cancellation Date"
+msgstr "Date d'annulation"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__car
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__car
+msgid "Car"
+msgstr "Voiture"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Cars"
+msgstr "Véhicules"
+=======
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__write_off_date
+msgid "Cancellation Date"
+msgstr "Date d'annulation"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__cancelled
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost_report__vehicle_type__car
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_model__vehicle_type__car
+msgid "Car"
+msgstr "Voiture"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
+msgid "Cars"
+msgstr "Voitures"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__car_value
@@ -249,7 +342,25 @@ msgstr "Fermer le contrat"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__state__closed
 msgid "Closed"
+<<<<<<< HEAD
 msgstr "Fermé"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Clôturés"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
+msgid "Co2 Standard"
+msgstr "Norme Co2"
+=======
+msgstr "Fermé"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__co2_standard
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__co2_standard
+msgid "Co2 Standard"
+msgstr "Norme Co2"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__color
@@ -451,6 +562,7 @@ msgstr ""
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_contract_action
 msgid "Create a new contract"
+<<<<<<< HEAD
 msgstr "Créez un nouveau contrat"
 
 #. module: fleet
@@ -472,6 +584,11 @@ msgstr "Créez un nouveau coût"
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_log_fuel_action
 msgid "Create a new fuel log"
 msgstr "Créez une nouvelle entrée de carburant"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Créer un nouveau contrat"
+=======
+msgstr "Créez un nouveau contrat"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model_terms:ir.actions.act_window,help:fleet.fleet_vehicle_model_brand_action
@@ -633,7 +750,23 @@ msgstr "Diesel"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_state__display_name
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__display_name
 msgid "Display Name"
+<<<<<<< HEAD
 msgstr "Afficher Nom"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Afficher le nom"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
+msgid "Done"
+msgstr "Fait"
+=======
+msgstr "Afficher Nom"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__done
+msgid "Done"
+msgstr "Fait"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__doors
@@ -739,7 +872,23 @@ msgstr "Expire bientôt"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
 msgid "First Contract Date"
+<<<<<<< HEAD
 msgstr "Première Date de Contrat"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Première date de contrat"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Fiscality"
+msgstr "Fiscalité"
+=======
+msgstr "Première Date de Contrat"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Fiscality"
+msgstr "Fiscalité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -791,12 +940,26 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: fleet
+<<<<<<< HEAD
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_cost__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_fuel__cost_type
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__cost_type
 msgid "For internal purpose only"
 msgstr "Pour usage interne seulement"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+=======
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_frequency
@@ -1096,7 +1259,7 @@ msgstr "Activités en retard"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__license_plate
 msgid "License Plate"
-msgstr "Plaque d'immatriculatin"
+msgstr "Plaque d'immatriculation"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__license_plate
@@ -1243,7 +1406,27 @@ msgstr "Modèles"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__monthly
 msgid "Monthly"
+<<<<<<< HEAD
 msgstr "Mensuel"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Chaque mois"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+=======
+msgstr "Mensuel"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__my_activity_date_deadline
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_service_type__name
@@ -1273,6 +1456,24 @@ msgid "New Request"
 msgstr "Nouvelle demande"
 
 #. module: fleet
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante calendrier événement"
+
+#. module: fleet
+=======
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_calendar_event_id
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: fleet
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_date_deadline
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1313,7 +1514,45 @@ msgid "No data for analysis"
 msgstr "Pas de données pour l'analyse"
 
 #. module: fleet
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_fuel__notes
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "No plate"
+msgstr "Pas de plaque"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
+msgid "None"
+msgstr "Aucune"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Note"
+msgstr "Note"
+
+#. module: fleet
+=======
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "No plate"
+msgstr "Pas de plaque"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__service_activity__none
+msgid "None"
+msgstr "Aucun"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Note"
+msgstr "Note"
+
+#. module: fleet
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__notes
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_form
 msgid "Notes"
@@ -1556,7 +1795,23 @@ msgstr "Responsable"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
 msgid "Responsible User"
+<<<<<<< HEAD
 msgstr "Responsable"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Utilisateur responsable"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
+msgid "Running"
+msgstr "En cours"
+=======
+msgstr "Responsable"
+
+#. module: fleet
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
+msgid "Running"
+msgstr "En cours"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
@@ -1669,9 +1924,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Statut basé sur les activités\n"
-"En retard : la date d'échéance est déjà dépassée\n"
-"Aujourd'hui : la date d'activité est aujourd'hui\n"
-"Planifiée : activités futures"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date d'activité est aujourd'hui\n"
+"Planifiée : activités futures"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
@@ -1768,7 +2023,25 @@ msgstr "Type"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__activity_exception_decoration
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
+<<<<<<< HEAD
 msgstr "Type d'activité d'exception enregistrée"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type d'activité d'exception enregistrée."
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
+msgid "Types"
+msgstr "Types"
+=======
+msgstr "Type d'activité d'exception enregistrée"
+
+#. module: fleet
+#: model:ir.actions.act_window,name:fleet.fleet_vehicle_service_types_action
+#: model:ir.ui.menu,name:fleet.fleet_vehicle_service_types_menu
+msgid "Types"
+msgstr "Types"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__vin_sn
@@ -1982,7 +2255,23 @@ msgstr "Attention: renouvellement dû bientôt"
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_contract__cost_frequency__weekly
 msgid "Weekly"
+<<<<<<< HEAD
 msgstr "Hebdomadaire"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Chaque semaine"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+msgid "With Models"
+msgstr "Avec les modèles"
+=======
+msgstr "Hebdomadaire"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_model_brand_view_search
+msgid "With Models"
+msgstr "Avec les modèles"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form

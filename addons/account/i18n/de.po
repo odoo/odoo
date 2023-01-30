@@ -3,6 +3,7 @@
 # 	* account
 # 
 # Translators:
+<<<<<<< HEAD
 # AppleMentalist <felix.schnatbaum@gmail.com>, 2019
 # Maik Steinfeld <info@streward.de>, 2019
 # Stephan Schulze <stephan.schulze@bmfgroup.de>, 2019
@@ -37,6 +38,29 @@
 # Martin Trigaux, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Jordan D. (Joda), 2023
+# Jinjiu Liu, 2023
+# Johannes Croe <jcr@odoo.com>, 2023
+# Niyas Raphy, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
+# Leon Grill <leg@odoo.com>, 2023
+# Alexander Bigga, 2023
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2023
+# Thomas, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+=======
+# Jinjiu Liu, 2023
+# Johannes Croe <jcr@odoo.com>, 2023
+# Niyas Raphy, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
+# Leon Grill <leg@odoo.com>, 2023
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2023
+# Thomas, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -67,6 +91,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
+<<<<<<< HEAD
 "- Steuergruppe: Die Steuer setzt sich aus einer Reihe von Nebensteuern zusammen.\n"
 "- Fix: Der Steuerbetrag bleibt gleich, unabhängig vom Preis.\n"
 "- Prozentsatz des Preises: Der Steuerbetrag ist ein % des Preises:\n"
@@ -75,6 +100,69 @@ msgstr ""
 "Prozentsatz der enthaltenen Preissteuer: Der Steuerbetrag stellt sich aus der Aufteilung des Preises zusammen:\n"
 "Beispiel: 180 / (1 - 10%) = 200 (nicht im Preis inbegriffen)\n"
 "Beispiel: 200 * (1-10%) = 180 (im Preis inbegriffen)"
+||||||| parent of fc1dc2c963f (temp)
+"- Gruppe von Steuern: Die Steuer ist eine Gruppe von Untersteuern.\n"
+"- Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
+"- Prozentsatz des Preises: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
+"   z.B. 100 * (1 + 10%) = 110 (ohne Preis)\n"
+"   z. B. 110 / (1 + 10%) = 100 (im Preis enthalten)\n"
+"- Prozentsatz des Preises mit eingeschlossener Steuer: Der Steuerbetrag ist eine Division des Preises:\n"
+"   z. B. 180 / (1 - 10%) = 200 (nicht im Preis enthalten)\n"
+"   z. B. 200 * (1 - 10%) = 180 (im Preis enthalten)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr "Das %(lock_type)s Sperrdatum ist festgelegt am %(lock_date)s."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
+msgid "# Reconciled Bills"
+msgstr "# Abgestimmte Rechnungen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
+msgid "# Reconciled Invoices"
+msgstr "# Abgestimmte Rechnungen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Statement Lines"
+msgstr "# Abgestimmte Bankauszugszeilen"
+=======
+"- Steuergruppen: Die Steuer ist eine Gruppe von Untersteuern.\n"
+"- Fest: Der Steuerbetrag bleibt unabhängig vom Preis gleich.\n"
+"- Prozentsatz des Preises: Der Steuerbetrag ist ein Prozentsatz des Preises:\n"
+"   z.B. 100 * (1 + 10%) = 110 (ohne Preis)\n"
+"   z. B. 110 / (1 + 10%) = 100 (im Preis enthalten)\n"
+"- Prozentsatz des Preises mit eingeschlossener Steuer: Der Steuerbetrag ist eine Division des Preises:\n"
+"   z. B. 180 / (1 - 10%) = 200 (nicht im Preis enthalten)\n"
+"   z. B. 200 * (1 - 10%) = 180 (im Preis enthalten)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid " The %(lock_type)s lock date is set on %(lock_date)s."
+msgstr "Das %(lock_type)s Sperrdatum ist festgelegt am %(lock_date)s."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
+msgid "# Reconciled Bills"
+msgstr "# Abgestimmte Rechnungen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
+msgid "# Reconciled Invoices"
+msgstr "# Abgestimmte Rechnungen"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_payment__reconciled_statement_lines_count
+msgid "# Reconciled Statement Lines"
+msgstr "# Abgestimmte Bankauszugszeilen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -92,9 +180,23 @@ msgid "${(object.name or '').replace('/','-')}"
 msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
+<<<<<<< HEAD
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
 msgstr "${object.company_id.name} Rechnung (Ref ${object.name or 'n/a'})"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr "%(amount)s gültig bis %(date)s"
+=======
+#. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr "%(amount)s fällig %(date)s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -263,7 +365,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr "Download"
+msgstr "Herunterladen"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -490,8 +592,90 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+<<<<<<< HEAD
 "<span class=\"text-muted\">Es werden nur Journale vorgeschlagen, die noch "
 "nicht mit einem Bankkonto verknüpft sind</span>"
+||||||| parent of fc1dc2c963f (temp)
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"Option leer lassen, um ein neues Journal für dieses Bankkonto zu erstellen, oder ein Journal auswählen, um es mit dem Bankkonto zu verknüpfen.\n"
+"</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">11,750.00</span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">11.750,00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">EUR <span "
+"class=\"oe_currency_value\">19.250,00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr "<span class=\"text-nowrap\">1,500.00</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
+=======
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"Option leer lassen, um ein neues Journal für dieses Bankkonto zu erstellen, oder ein Journal auswählen, um es mit dem Bankkonto zu verknüpfen.\n"
+"</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">11,750.00</span></span>"
+msgstr "</span>$ <span class=\"oe_currency_value\">11.750,00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">EUR <span "
+"class=\"oe_currency_value\">19.250,00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
+msgstr ""
+"<span class=\"text-nowrap\">$ <span "
+"class=\"oe_currency_value\">7,500.00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span class=\"text-nowrap\">1,500.00</span>"
+msgstr "<span class=\"text-nowrap\">1,500.00</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span class=\"text-nowrap\">2,350.00</span>"
+msgstr "<span class=\"text-nowrap\">2.350,00</span>"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -543,9 +727,49 @@ msgid "<span> To </span>"
 msgstr "<span> Bis </span>"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Amount Paid</span>"
 msgstr "<span>bezahlter Betrag</span>"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span> Transaction</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span> due on </span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span>5.00</span>"
+msgstr "<span>5,00</span>"
+=======
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
+msgid "<span> Transaction</span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<span> due on </span>"
+msgstr ""
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
+msgstr "<span>EUR <span class=\"oe_currency_value\">19.250,00</span></span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.bill_preview
+msgid "<span>5.00</span>"
+msgstr "<span>5,00</span>"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -676,9 +900,19 @@ msgid "<strong>Amount Due</strong>"
 msgstr "<strong>Fälliger Betrag</strong>"
 
 #. module: account
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Company:</strong>"
 msgstr "<strong>Unternehmen:</strong>"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "<strong>Gutschriftsdatum</strong>"
+=======
+#: model_terms:ir.ui.view,arch_db:account.report_invoice_document
+msgid "<strong>Credit Note Date:</strong>"
+msgstr "Gutschriftsdatum"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1005,7 +1239,7 @@ msgstr "Kontoinhaber"
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_send
 msgid "Account Invoice Send"
-msgstr "Konto-Rechnung senden"
+msgstr "Rechnung senden"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__journal_id
@@ -1091,7 +1325,7 @@ msgstr "Statistische Auswertungen"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Konto-Schlagwort"
+msgstr "Konten Tag"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
@@ -1634,6 +1868,36 @@ msgid "All accounts on the lines must be from the same type."
 msgstr ""
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
+msgid "All Users Lock Date"
+msgstr "Sperrdatum für alle Benutzer "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "All accounts on the lines must be of the same type."
+msgstr "Alle Konten in den Zeilen müssen vom gleichen Typ sein."
+
+#. module: account
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:account.field_res_company__fiscalyear_lock_date
+msgid "All Users Lock Date"
+msgstr "Alle Benutzer Sperrdatum"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "All accounts on the lines must be of the same type."
+msgstr "Alle Konten in den Zeilen müssen vom gleichen Typ sein."
+
+#. module: account
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
@@ -3099,6 +3363,7 @@ msgstr "Farbkennzeichnung"
 #: model:ir.model.fields,field_description:account.field_account_move__commercial_partner_id
 #: model:ir.model.fields,help:account.field_account_invoice_report__commercial_partner_id
 msgid "Commercial Entity"
+<<<<<<< HEAD
 msgstr "Handelsgesellschaft"
 
 #. module: account
@@ -3110,6 +3375,11 @@ msgstr "Allgemeine Auswertung"
 #: model:ir.actions.act_window,name:account.action_account_common_menu
 msgid "Common Report"
 msgstr "Allgemeine Auswertung"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Gewerbliche Einheit"
+=======
+msgstr "Handelsgesellschaft"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__invoice_reference_model
@@ -3315,11 +3585,52 @@ msgid "Contents"
 msgstr "Inhalte"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
+msgid "Continue"
+msgstr "Weitermachen"
+
+#. module: account
+=======
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
+#: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
+msgid "Continue"
+msgstr "Weiter"
+
+#. module: account
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Control-Access"
 msgstr "Kontrollzugriff"
 
 #. module: account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:account.field_account_move_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
+"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
+"Kennzahlen."
+
+#. module: account
+#. odoo-python
+=======
+#: model:ir.model.fields,help:account.field_account_move_line__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Umwandlungen von Maßeinheiten können nur innerhalb derselben Kategorie "
+"erfolgen. Die Konversion erfolgt basierend auf dem Umwandlungsfaktor."
+
+#. module: account
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Corrupted data on journal entry with id %s."
@@ -6059,8 +6370,16 @@ msgid ""
 "Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
+<<<<<<< HEAD
 "Rechnung_${(object.name or '').replace('/','_')}${object.state == 'draft' "
 "and '_draft' or ''}"
+||||||| parent of fc1dc2c963f (temp)
+"Rechnung_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
+=======
+"Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
+" and '_draft' or '' }}"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -8640,7 +8959,23 @@ msgstr "Einkauf Bestätigung"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Purchase Receipt Created"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Kaufquittung erstellt"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Purchase Representative"
+msgstr "Einkäufer"
+=======
+msgstr "Kaufquittung erstellt"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
+msgid "Purchase Representative"
+msgstr "Einkaufsbeauftragter"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -8727,6 +9062,20 @@ msgstr "Forderungen"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__payment_type__inbound
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgid "Receive"
+msgstr "Wareneingang"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
+=======
+msgid "Receive"
+msgstr "Eingehend"
+
+#. module: account
+#: model:ir.model.fields.selection,name:account.selection__account_payment_register__payment_type__inbound
+>>>>>>> fc1dc2c963f (temp)
 msgid "Receive Money"
 msgstr "Geld erhalten"
 
@@ -9128,7 +9477,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Reverse"
+<<<<<<< HEAD
 msgstr "Rücklieferung"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Stornieren"
+=======
+msgstr "Gutschrift erstellen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9160,7 +9515,7 @@ msgstr "Abstimmung rückgängig machen "
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
 msgid "Review"
-msgstr "Beurteilung"
+msgstr "Konfigurieren"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
@@ -9554,7 +9909,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Send"
-msgstr "Senden"
+msgstr "Ausgehend"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -11689,7 +12044,7 @@ msgstr "Heutige Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__total_amount
@@ -12158,7 +12513,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #, python-format
 msgid "Vendor Bills"
-msgstr "Eingangsrechnungen"
+msgstr "Lieferantenrechnungen"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0

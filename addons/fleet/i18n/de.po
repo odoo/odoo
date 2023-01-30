@@ -91,6 +91,24 @@ msgid "Activity State"
 msgstr "Status der Aktivität"
 
 #. module: fleet
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivitäts-Typ-Icon"
+
+#. module: fleet
+=======
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_type_icon
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Aktivitäts-Typ-Symbol"
+
+#. module: fleet
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.actions.act_window,name:fleet.mail_activity_type_action_config_fleet
 #: model:ir.ui.menu,name:fleet.fleet_menu_config_activity_type
 msgid "Activity Types"
@@ -301,7 +319,7 @@ msgstr "Kontakt"
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_cost__cost_type__contract
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
 msgid "Contract"
-msgstr "Arbeitsvertrag"
+msgstr "Vertrag"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_graph
@@ -742,7 +760,23 @@ msgstr "Läuft bald ab"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__first_contract_date
 msgid "First Contract Date"
+<<<<<<< HEAD
 msgstr "Erstes Vertragsdatum"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Eintrittsdatum"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Fiscality"
+msgstr "Steuern"
+=======
+msgstr "Erstes Vertragsdatum"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Fiscality"
+msgstr "Steuern"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.module.category,name:fleet.module_fleet_category
@@ -1114,7 +1148,7 @@ msgstr "Liter"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__location
 msgid "Location"
-msgstr "Lagerort"
+msgstr "Standort"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__location
@@ -1171,7 +1205,7 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle__transmission__manual
 msgid "Manual"
-msgstr "Manuell"
+msgstr "Handschaltung"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_model__brand_id
@@ -1403,12 +1437,18 @@ msgstr "Tachostand nach Fahrzeug"
 #. module: fleet
 #: model:ir.model,name:fleet.model_fleet_vehicle_odometer
 msgid "Odometer log for a vehicle"
+<<<<<<< HEAD
 msgstr "Fahrtenbuch für ein Fahrzeug"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__odometer
 msgid "Odometer measure of the vehicle at the moment of the contract creation"
 msgstr "Kilometerstand des Fahrzeuges zum Zeitpunkt der Vertragserstellung"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Tachostände für ein Fahrzeug"
+=======
+msgstr "Fahrtenbuch für ein Fahrzeug"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__odometer
@@ -1557,9 +1597,23 @@ msgstr "Verantwortlich"
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__activity_user_id
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: fleet
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
+msgid "Running"
+msgstr "Laufend"
+
+#. module: fleet
+=======
+#: model:ir.model.fields.selection,name:fleet.selection__fleet_vehicle_log_services__state__running
+msgid "Running"
+msgstr "Läuft"
+
+#. module: fleet
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__seats
 msgid "Seats Number"
 msgstr "Sitzanzahl"
@@ -1637,6 +1691,44 @@ msgid "Show all records which has next action date is before today"
 msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 
 #. module: fleet
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "Specify the End date of %s"
+msgstr "Bestimmen Sie das Ende von %s"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
+msgid "Stage"
+msgstr "Phase"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Start Contract"
+msgstr "Beginn des Vertrags"
+
+#. module: fleet
+=======
+#. odoo-python
+#: code:addons/fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "Specify the End date of %s"
+msgstr "Bestimmen Sie das Ende von %s"
+
+#. module: fleet
+#: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_services__state
+msgid "Stage"
+msgstr "Stufe"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
+msgid "Start Contract"
+msgstr "Beginn des Vertrags"
+
+#. module: fleet
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
 msgid "Start Date"
 msgstr "Startdatum"
@@ -1675,17 +1767,33 @@ msgstr ""
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_tag__name
 msgid "Tag Name"
-msgstr "Tag Bezeichnung"
+msgstr "Schlagwort"
 
 #. module: fleet
 #: model:ir.model.constraint,message:fleet.constraint_fleet_vehicle_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Stichwort existiert bereits!"
+msgstr "Schlagwort existiert bereits!"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__tag_ids
 msgid "Tags"
+<<<<<<< HEAD
 msgstr "Stichwörter"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Tags"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Tax Info"
+msgstr "Steuerinfo"
+=======
+msgstr "Schlagwörter"
+
+#. module: fleet
+#: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_form
+msgid "Tax Info"
+msgstr "Steuerinfo"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_log_contract__notes
@@ -1719,7 +1827,7 @@ msgstr "Heutige Aktivitäten"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_services_view_tree
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_cost__amount

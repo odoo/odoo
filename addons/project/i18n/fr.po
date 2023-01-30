@@ -3,6 +3,7 @@
 # 	* project
 # 
 # Translators:
+<<<<<<< HEAD
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
 # a270031086f2a0d3514bc0cb507b48f6, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
@@ -18,6 +19,18 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Martin Trigaux, 2019
+||||||| parent of fc1dc2c963f (temp)
+# snipe2004 <snipe2004@hotmail.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Alexandra Jubert, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Cécile Collart <cco@odoo.com>, 2023
+# Alexandra Jubert, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -403,7 +416,89 @@ msgid ""
 "creating new records for this alias."
 msgstr ""
 "Un dictionnaire Python qui sera interprété pour fournir les valeurs par "
+<<<<<<< HEAD
 "défaut lors de la création des nouveaux enregistrements pour cet alias."
+||||||| parent of fc1dc2c963f (temp)
+"défaut lors de la création de nouveaux enregistrements pour cet alias."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
+msgid ""
+"A collaborator cannot be selected more than once in the project sharing "
+"access. Please remove duplicate(s) and try again."
+msgstr ""
+"Un collaborateur ne peut pas être sélectionné plus d'une fois dans les accès"
+" de partage du projet. Veuillez supprimer les doublons et réessayer."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "A new task will be created on the following dates:"
+msgstr "Une nouvelle tâche sera créée aux dates suivantes :"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Une étape personnelle ne peut pas être liée à un projet car elle n'est "
+"visible que par son utilisateur correspondant."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "Une étiquette avec le même nom existe déjà."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
+msgid "A task can only have a single personal stage per user."
+msgstr ""
+"Une tâche peut uniquement avoir une seule étape personnelle par utilisateur."
+=======
+"défaut lors de la création des nouveaux enregistrements pour cet alias."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_collaborator_unique_collaborator
+msgid ""
+"A collaborator cannot be selected more than once in the project sharing "
+"access. Please remove duplicate(s) and try again."
+msgstr ""
+"Un collaborateur ne peut pas être sélectionné plus d'une fois dans les accès"
+" de partage du projet. Veuillez supprimer les doublons et réessayer."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "A new task will be created on the following dates:"
+msgstr "Une nouvelle tâche sera créée aux dates suivantes :"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid ""
+"A personal stage cannot be linked to a project because it is only visible to"
+" its corresponding user."
+msgstr ""
+"Une étape personnelle ne peut pas être liée à un projet car elle n'est "
+"visible que par son utilisateur correspondant."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
+msgid "A tag with the same name already exists."
+msgstr "Une étiquette avec le même nom existe déjà."
+
+#. module: project
+#: model:ir.model.constraint,message:project.constraint_project_task_user_rel_project_personal_stage_unique
+msgid "A task can only have a single personal stage per user."
+msgstr ""
+"Une tâche peut uniquement avoir une seule étape personnelle par utilisateur."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -441,7 +536,27 @@ msgstr "Activité d'exception de décoration"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Status de l'activité"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Statut de l'activité"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
+#: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
+#: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+=======
+msgstr "Status de l'activité"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_type_icon
+#: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
+#: model:ir.model.fields,field_description:project.field_project_update__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -525,11 +640,51 @@ msgid "All employees"
 msgstr ""
 
 #. module: project
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Analysis"
 msgstr "Analyses"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
+msgid "All tasks"
+msgstr "Toutes les tâches"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__planned_hours
+msgid "Allocated Hours"
+msgstr "Heures allouées"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allow_rating
+msgid "Allow Customer Ratings"
+msgstr "Autoriser les évaluations des clients"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
+msgstr "Autoriser les sous-tâches"
+=======
+#: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__all
+msgid "All tasks"
+msgstr "Toutes les tâches"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__planned_hours
+msgid "Allocated Hours"
+msgstr "Heures Allouées"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__allow_rating
+msgid "Allow Customer Ratings"
+msgstr "Autoriser les évaluations des clients"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__allow_subtasks
+msgid "Allow Sub-tasks"
+msgstr "Autoriser les sous-tâches"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model,name:project.model_account_analytic_account
@@ -543,9 +698,21 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+<<<<<<< HEAD
 "Compte analytique auquel votre projet est lié pour la gestion financière. "
 "Utilisez un compte analytique pour enregistrer les coûts et revenus de votre"
 " projet."
+||||||| parent of fc1dc2c963f (temp)
+"Compte analytique auquel sont liés ce projet, ses tâches et ses feuilles de temps.\n"
+"Suivez les coûts et les revenus de votre projet en paramétrant ce compte analytique sur vos documents associés (par exemple commandes clients, factures, bons de commande, factures fournisseurs, notes de frais, etc.).\n"
+"Ce compte analytique peut être modifié sur chaque tâche individuellement si nécessaire.\n"
+"Un compte analytique est requis pour utiliser les feuilles de temps."
+=======
+"Compte analytique auquel sont liés ce projet, ses tâches et ses feuilles de temps.\n"
+"Suivez les coûts et les revenus de votre projet en paramétrant ce compte analytique sur vos documents associés (par exemple, commandes clients, factures, bons de commande, factures fournisseurs, notes de frais, etc.).\n"
+"Ce compte analytique peut être modifié sur chaque tâche individuellement si nécessaire.\n"
+"Un compte analytique est requis pour utiliser les feuilles de temps."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -586,7 +753,51 @@ msgstr "Assigné à"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Assigned to"
+<<<<<<< HEAD
 msgstr "Assigné à"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Attribué à"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+#, python-format
+msgid "Assignees"
+msgstr "Assignés"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+msgid "Assignement Date"
+msgstr ""
+=======
+msgstr "Assigné à"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:project.field_project_task__user_ids
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__user_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__user_ids
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_tree
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+#, python-format
+msgid "Assignees"
+msgstr "Assignés"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+msgid "Assignement Date"
+msgstr ""
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -650,9 +861,19 @@ msgid "Backlog"
 msgstr "Arriéré"
 
 #. module: project
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
 msgid "Bad"
 msgstr "Mauvais"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
+msgid "Balance"
+msgstr "Solde"
+=======
+#: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
+msgid "Balance"
+msgstr "Balance"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_1
@@ -660,6 +881,24 @@ msgid "Basic"
 msgstr "Basique"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
+msgid "Block"
+msgstr "Bloc"
+
+#. module: project
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:project.field_project_task__dependent_ids
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__dependent_ids
+msgid "Block"
+msgstr "Bloquer"
+
+#. module: project
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
 #: model:project.task,legend_blocked:project.project_task_data_0
@@ -694,7 +933,75 @@ msgid "By Responsible"
 msgstr "Par responsable"
 
 #. module: project
+<<<<<<< HEAD
 #. openerp-web
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
+msgid "Can Be Marked As Done"
+msgstr "Peut être marqué comme terminé"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#: model:project.project.stage,name:project.project_project_stage_3
+#, python-format
+msgid "Canceled"
+msgstr "Annulée"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Cannot aggregate field %r."
+msgstr "Impossible d'agréger le champ %r."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__partner_is_company
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+"Cochez si ce contact est une société, sinon il s'agit d'un particulier"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__child_text
+msgid "Child Text"
+msgstr "Texte enfant"
+
+#. module: project
+#. odoo-javascript
+=======
+#: model:ir.model.fields,field_description:project.field_project_milestone__can_be_marked_as_done
+msgid "Can Be Marked As Done"
+msgstr "Peut être marqué comme terminé"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#: model:project.project.stage,name:project.project_project_stage_3
+#, python-format
+msgid "Canceled"
+msgstr "Annulé"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Cannot aggregate field %r."
+msgstr "Impossible d'agréger le champ %r."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task__partner_is_company
+msgid "Check if the contact is a company, otherwise it is a person"
+msgstr ""
+"Cochez si ce contact est une société, sinon il s'agit d'un particulier"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__child_text
+msgid "Child Text"
+msgstr "Texte enfant"
+
+#. module: project
+#. odoo-javascript
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid ""
@@ -762,10 +1069,28 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+<<<<<<< HEAD
 "Communiquez avec les clients sur la tâche en utilisant la passerelle de "
 "messagerie. Joignez des designs de logo à la tâche afin que l'information "
 "circule des designers jusqu'aux travailleurs qui impriment le t-shirt. "
 "Organiser les priorités parmi les commandes %s en utilisant l'icône."
+||||||| parent of fc1dc2c963f (temp)
+"Communiquez avec les clients sur la tâche à l'aide de la passerelle de messagerie. Joignez des conceptions de logo à la tâche, de sorte que les informations circulent des\n"
+" concepteurs aux travailleurs qui impriment le t-shirt. Organisez les priorités entre les commandes en utilisant"
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
+msgstr "Entreprises"
+=======
+"Communiquez avec les clients sur la tâche à l'aide de la passerelle de messagerie. Joignez des conceptions de logo à la tâche, de sorte que les informations circulent des\n"
+" concepteurs aux travailleurs qui impriment le t-shirt. Organisez les priorités entre les commandes en utilisant"
+
+#. module: project
+#: model:ir.model,name:project.model_res_company
+msgid "Companies"
+msgstr "Sociétés"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -820,6 +1145,24 @@ msgid "Copywriting"
 msgstr "Rédaction"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
+#, python-format
+msgid "Costs"
+msgstr "Frais"
+
+#. module: project
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
+#, python-format
+msgid "Costs"
+msgstr "Coûts"
+
+#. module: project
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
 msgstr "Image de couverture"
@@ -901,6 +1244,68 @@ msgid "Current stage of this task"
 msgstr "Statut actuel de la tâche"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+"Actuellement disponible pour tous ceux qui consultent ce document, cliquez "
+"pour limiter aux employés internes."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+"Actuellement réservé aux employés internes, cliquez pour le rendre "
+"accessible à tous ceux qui consultent ce document."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Message de rejet personnalisé"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid ""
+"Currently available to everyone viewing this document, click to restrict to "
+"internal employees."
+msgstr ""
+"Actuellement disponible pour tous ceux qui consultent ce document, cliquez "
+"pour limiter aux employés internes."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid ""
+"Currently restricted to internal employees, click to make it available to "
+"everyone viewing this document."
+msgstr ""
+"Actuellement réservé aux employés internes, cliquez pour le rendre "
+"accessible à tous ceux qui consultent ce document."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
+msgid "Custom Bounced Message"
+msgstr "Message personnalisé"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields,field_description:project.field_project_project__partner_id
 #: model:ir.model.fields,field_description:project.field_project_task__partner_id
@@ -939,6 +1344,7 @@ msgstr "URL du portail client"
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "Customer Ratings"
+<<<<<<< HEAD
 msgstr "Évaluations de la Clientèle"
 
 #. module: project
@@ -950,6 +1356,11 @@ msgid ""
 msgstr ""
 "Évaluations des clients sur les tâches. Si elles ne sont pas disponibles, "
 "modifiez la configuration de votre projet pour les activer."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Évaluations du client"
+=======
+msgstr "Évaluations de la Clientèle"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
@@ -1076,12 +1487,58 @@ msgid "Display Name"
 msgstr "Afficher Nom"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
+msgid "Display Parent Task Button"
+msgstr "Afficher le bouton Tâche Parente"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__display_project_id
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_project_id
+msgid "Display Project"
+msgstr "Afficher le projet"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ko
+msgid "Dissatisfied"
+msgstr "Mécontent"
+
+#. module: project
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:project.field_project_task__display_parent_task_button
+msgid "Display Parent Task Button"
+msgstr "Afficher le bouton Tâche Parente"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__display_project_id
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__display_project_id
+msgid "Display Project"
+msgstr "Afficher le projet"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__report_project_task_user__rating_last_text__ko
+msgid "Dissatisfied"
+msgstr "Insatisfait"
+
+#. module: project
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
+<<<<<<< HEAD
 "Accès non disponible, ne pas tenir compte de cette donnée dans l'email "
 "digest de l'utilisateur"
+||||||| parent of fc1dc2c963f (temp)
+"N'ont pas accès, ignorez ces données pour le digest d'emails de "
+"l'utilisateur"
+=======
+"Accès non disponible, ne pas tenir compte de cette donnée dans le digest "
+"d'emails de l'utilisateur"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1216,8 +1673,50 @@ msgid "Extra Info"
 msgstr "Info supplémentaires"
 
 #. module: project
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:project.view_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_calendar
+msgid "Favorite"
+msgstr "Favoris"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+msgid "Favorite Projects"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__february
+msgid "February"
+msgstr "Février"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+=======
+#: model_terms:ir.ui.view,arch_db:project.view_project
+#: model_terms:ir.ui.view,arch_db:project.view_project_calendar
+msgid "Favorite"
+msgstr "Favori"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+msgid "Favorite Projects"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__february
+msgid "February"
+msgstr "Février"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid ""
 "Fill your Inbox easily with the email gateway. Periodically review your "
@@ -1282,9 +1781,23 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
 msgid "Forecasts"
 msgstr "Prévisions"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:project.field_project_project__activity_type_icon
+#: model:ir.model.fields,help:project.field_project_task__activity_type_icon
+#: model:ir.model.fields,help:project.field_project_update__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+=======
+#: model:ir.model.fields,help:project.field_project_project__activity_type_icon
+#: model:ir.model.fields,help:project.field_project_task__activity_type_icon
+#: model:ir.model.fields,help:project.field_project_update__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -1447,7 +1960,89 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:project.field_project_task__message_has_error
 #: model:ir.model.fields,help:project.field_project_task__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+<<<<<<< HEAD
 msgstr "Si actif, certains messages ont une erreur de livraison."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your projects. Projects in a folded stage are considered as closed."
+msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" projets. Les projets dans une étape repliée sont considérés comme fermés."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your tasks. Tasks in a folded stage are considered as closed."
+msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" tâches. Les tâches dans une étape repliée sont considérées comme fermées."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
+msgid ""
+"If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
+"Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
+"To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
+msgstr ""
+"Si défini, une demande d'évaluation sera automatiquement envoyée par email au client lorsque la tâche atteindra ce stade.\n"
+"Alternativement, il sera envoyé à intervalles réguliers tant que la tâche reste à ce stade, selon la configuration de votre projet.\n"
+"Pour utiliser cette fonctionnalité, assurez-vous que l'option \"Évaluations des clients\" est activée sur votre projet."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
+msgid ""
+"If set, an email will be automatically sent to the customer when the project"
+" reaches this stage."
+msgstr ""
+"Si défini, un email sera automatiquement envoyé au client lorsque le projet "
+"atteindra cette étape."
+=======
+msgstr "Si actif, certains messages ont une erreur de livraison."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your projects. Projects in a folded stage are considered as closed."
+msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" projets. Les projets dans une étape repliée sont considérés comme fermés."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__fold
+msgid ""
+"If enabled, this stage will be displayed as folded in the Kanban view of "
+"your tasks. Tasks in a folded stage are considered as closed."
+msgstr ""
+"Si activé, cette étape sera affichée comme repliée dans la vue kanban de vos"
+" tâches. Les tâches dans une étape repliée sont considérées comme fermées."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
+msgid ""
+"If set, a rating request will automatically be sent by email to the customer when the task reaches this stage. \n"
+"Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
+"To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
+msgstr ""
+"Si défini, une demande d'évaluation sera automatiquement envoyée par email au client lorsque la tâche atteindra ce stade.\n"
+"Alternativement, il sera envoyé à intervalles réguliers tant que la tâche reste à ce stade, selon la configuration de votre projet.\n"
+"Pour utiliser cette fonctionnalité, assurez-vous que l'option \"Évaluations des clients\" est activée sur votre projet."
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
+msgid ""
+"If set, an email will be automatically sent to the customer when the project"
+" reaches this stage."
+msgstr ""
+"Si défini, un email sera automatiquement envoyé au client lorsque le projet "
+"atteindra cette étape."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
@@ -1465,9 +2060,17 @@ msgid ""
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
 msgstr ""
+<<<<<<< HEAD
 "Si vous choisissez cette option et si le projet est configuré pour une « "
 "Évaluation lors d'un changement d'étape », un e-mail sera envoyé au client "
 "lorsque la tâche atteindra cette étape."
+||||||| parent of fc1dc2c963f (temp)
+"Si défini, ce contenu sera automatiquement envoyé à tous les utilisateurs "
+"non autorisés à la place du message par défaut."
+=======
+"Si défini, ce contenu sera automatiquement envoyé à tous les utilisateurs "
+"non-autorisés à la place du message par défaut."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -1534,6 +2137,108 @@ msgstr ""
 "incidents si le module Suivi des Incidents est installé)."
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
+"Les notes internes sont uniquement affichées aux utilisateurs internes."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid aggregation function %r."
+msgstr "Fonction d'aggrégation non valide %r."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field %r on model %r"
+msgstr "Champ non valide %r sur le modèle %r"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field specification %r."
+msgstr "Spécification de champ non valide %r."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr "Opérateur invalide : %s"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr "Valeur invalide : %s"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Invite People"
+msgstr "Inviter des gens"
+
+#. module: project
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_messages.xml:0
+#, python-format
+msgid "Internal notes are only displayed to internal users."
+msgstr ""
+"Les notes internes sont uniquement affichées aux utilisateurs internes."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid aggregation function %r."
+msgstr "Fonction d'aggrégation non valide %r."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field %r on model %r"
+msgstr "Champ non valide %r sur le modèle %r"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/report/project_task_burndown_chart_report.py:0
+#, python-format
+msgid "Invalid field specification %r."
+msgstr "Spécification de champ non valide %r."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid operator: %s"
+msgstr "Opérateur non valide: %s"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Invalid value: %s"
+msgstr "Valeur invalide: %s"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+msgid "Invite People"
+msgstr "Inviter des gens"
+
+#. module: project
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
 msgstr ""
@@ -1555,9 +2260,89 @@ msgid ""
 "It is the time planned to achieve the task. If this document has sub-tasks, "
 "it means the time needed to achieve this tasks and its childs."
 msgstr ""
+<<<<<<< HEAD
 "Il s'agit du temps prévu pour accomplir la tâche. Si ce document comporte "
 "des sous-tâches, il s'agit du temps nécessaire pour accomplir cette tâche et"
 " ses enfants."
+||||||| parent of fc1dc2c963f (temp)
+"Il semblerait que certaines tâches fassent partie d'une récurrence. Au moins"
+" l'une d'entre elles doit être gardée comme modèle pour créer les prochaines"
+" occurrences."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/services/project_task_recurrence.js:0
+#, python-format
+msgid "It seems that this task is part of a recurrence."
+msgstr "Il semblerait que cette tâche fasse partie d'une récurrence."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/services/project_task_recurrence.js:0
+#, python-format
+msgid ""
+"It seems that this task is recurrent. Would you like to stop its recurrence?"
+msgstr ""
+"Il semble que cette tâche soit récurrente. Souhaitez-vous arrêter sa "
+"récurrence ?"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__january
+msgid "January"
+msgstr "janvier"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__july
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__july
+msgid "July"
+msgstr "juillet"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__june
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__june
+msgid "June"
+msgstr "juin"
+=======
+"Il semblerait que certaines tâches fassent partie d'une récurrence. Au moins"
+" l'une d'entre elles doit être gardée comme modèle pour créer les prochaines"
+" occurrences."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/services/project_task_recurrence.js:0
+#, python-format
+msgid "It seems that this task is part of a recurrence."
+msgstr "Il semblerait que cette tâche fasse partie d'une récurrence."
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/services/project_task_recurrence.js:0
+#, python-format
+msgid ""
+"It seems that this task is recurrent. Would you like to stop its recurrence?"
+msgstr ""
+"Il semble que cette tâche soit récurrente. Souhaitez-vous arrêter sa "
+"récurrence ?"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__january
+msgid "January"
+msgstr "Janvier"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__july
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__july
+msgid "July"
+msgstr "Juillet"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__june
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__june
+msgid "June"
+msgstr "Juin"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_blocked
@@ -1596,6 +2381,7 @@ msgid "Label used for the tasks of the project."
 msgstr "Intitulé utilisé pour les tâches du projet."
 
 #. module: project
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
 msgid "Last 3 months"
 msgstr "Les 3 derniers mois"
@@ -1623,6 +2409,15 @@ msgstr "Les 7 derniers jours"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+msgid "Last Month"
+msgstr "Le mois dernier"
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_task_burndown_chart_report_view_search
+msgid "Last Month"
+msgstr "Mois dernier"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -1751,9 +2546,103 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+<<<<<<< HEAD
 "Gérer le cycle de vie de votre projet en utilisant la vue Kanban. Ajoutez un"
 " projet récemment acquis, attribuer les et utilisez les %s et %s pour "
 "définir si le projet est prêt pour l'étape suivante."
+||||||| parent of fc1dc2c963f (temp)
+"Gérez le cycle de vie de votre projet en utilisant la vue kanban. Ajoutez de nouveaux projets acquis,\n"
+"      allouez-les et utilisez les boutons"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Manufacturing"
+msgstr "Fabrication"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__march
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__march
+msgid "March"
+msgstr "mars"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
+#, python-format
+msgid "Margin"
+msgstr "Marge"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Material Sourcing"
+msgstr "Achat matériel"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__may
+msgid "May"
+msgstr "Mai"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
+msgid ""
+"Measure your customer satisfaction by sending rating requests when your "
+"tasks reach a certain stage."
+msgstr ""
+"Mesurez la satisfaction client en envoyeant des demandes d'évaluation "
+"lorsque vos tâches atteignent une certaine étape."
+=======
+"Gérez le cycle de vie de votre projet en utilisant la vue kanban. Ajoutez de nouveaux projets acquis,\n"
+"      allouez-les et utilisez les boutons"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Manufacturing"
+msgstr "Production"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__march
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__march
+msgid "March"
+msgstr "Mars"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
+#, python-format
+msgid "Margin"
+msgstr "Marge"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Material Sourcing"
+msgstr "Achat matériel"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__may
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__may
+msgid "May"
+msgstr "Mai"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
+msgid ""
+"Measure your customer satisfaction by sending rating requests when your "
+"tasks reach a certain stage."
+msgstr ""
+"Mesurez la satisfaction client en envoyeant des demandes d'évaluation "
+"lorsque vos tâches atteignent une certaine étape."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -1773,6 +2662,160 @@ msgid "Messages"
 msgstr "Messages"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#. odoo-javascript
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
+#: model:ir.model.fields,field_description:project.field_project_task__milestone_id
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__milestone_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__milestone_id
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+#, python-format
+msgid "Milestone"
+msgstr "Jalon"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_count
+msgid "Milestone Count"
+msgstr "Nombre de Jalons"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_count_reached
+msgid "Milestone Count Reached"
+msgstr "Nombre de jalons atteint"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#: model:ir.model.fields,field_description:project.field_project_project__allow_milestones
+#: model:ir.model.fields,field_description:project.field_project_task__allow_milestones
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_milestone
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#, python-format
+msgid "Milestones"
+msgstr "Jalons"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Mixing"
+msgstr "Mixing"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__mon
+#: model:ir.model.fields,field_description:project.field_project_task_recurrence__mon
+msgid "Mon"
+msgstr "Lun."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__mon
+msgid "Monday"
+msgstr "Lundi"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
+msgid "Months"
+msgstr "Mois"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__my_activity_date_deadline
+#: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
+#: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
+msgid "My Deadline"
+msgstr "Mon Échéance"
+
+#. module: project
+=======
+#. odoo-python
+#. odoo-javascript
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/controllers/portal.py:0
+#: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_ids
+#: model:ir.model.fields,field_description:project.field_project_task__milestone_id
+#: model:ir.model.fields,field_description:project.field_project_task_burndown_chart_report__milestone_id
+#: model:ir.model.fields,field_description:project.field_report_project_task_user__milestone_id
+#: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
+#: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
+#, python-format
+msgid "Milestone"
+msgstr "Jalon"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_count
+msgid "Milestone Count"
+msgstr "Nombre de Jalons"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__milestone_count_reached
+msgid "Milestone Count Reached"
+msgstr "Nombre de jalons atteint"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#: model:ir.model.fields,field_description:project.field_project_project__allow_milestones
+#: model:ir.model.fields,field_description:project.field_project_task__allow_milestones
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_milestone
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+#, python-format
+msgid "Milestones"
+msgstr "Jalons"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/js/project_task_kanban_examples.js:0
+#, python-format
+msgid "Mixing"
+msgstr "Mixing"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__mon
+#: model:ir.model.fields,field_description:project.field_project_task_recurrence__mon
+msgid "Mon"
+msgstr "Lun."
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__mon
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__mon
+msgid "Monday"
+msgstr "Lundi"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__month
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__month
+msgid "Months"
+msgstr "Mois"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__my_activity_date_deadline
+#: model:ir.model.fields,field_description:project.field_project_task__my_activity_date_deadline
+#: model:ir.model.fields,field_description:project.field_project_update__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
+msgid "My Deadline"
+msgstr "Mon Échéance"
+
+#. module: project
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "My Favorites"
 msgstr "Mes favoris"
@@ -1847,6 +2890,38 @@ msgid "Next Activities"
 msgstr "Activités suivantes"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "Next Activity"
+msgstr "Activité suivante"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante calendrier événement"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
+=======
+#: model_terms:ir.ui.view,arch_db:project.project_task_view_tree_base
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "Next Activity"
+msgstr "Activité suivante"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_task__activity_calendar_event_id
+#: model:ir.model.fields,field_description:project.field_project_update__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__activity_date_deadline
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité à venir"
@@ -1874,16 +2949,106 @@ msgid "No customer ratings yet"
 msgstr "Pas encore d'évaluations de clients "
 
 #. module: project
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:project.rating_index
 msgid "No project rating published for now."
 msgstr "Aucune évaluation de projet publiée."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
+#: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid "No data yet!"
+msgstr "Pas encore de données !"
+=======
+#: model_terms:ir.actions.act_window,help:project.action_project_task_burndown_chart_report
+#: model_terms:ir.actions.act_window,help:project.action_project_task_user_tree
+msgid "No data yet!"
+msgstr "Pas de données"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__no
 msgid "No rating"
 msgstr "Pas d'évaluation"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
+msgid "No projects found. Let's create one!"
+msgstr "Aucun projet trouvé. Créons-en un !"
+=======
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_config
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_config_group_stage
+#: model_terms:ir.actions.act_window,help:project.open_view_project_all_group_stage
+msgid "No projects found. Let's create one!"
+msgstr "Aucuns projets trouvés. Créons-en un !"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.actions.act_window,help:project.open_task_type_form
+#: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
+msgid "No stages found. Let's create one!"
+msgstr "Aucune étape trouvée. Créons-en une !"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_tags_action
+msgid "No tags found. Let's create one!"
+msgstr "Aucunes étiquettes trouvées. Créons-en une!"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+#: model_terms:ir.actions.act_window,help:project.action_view_all_task
+#: model_terms:ir.actions.act_window,help:project.action_view_my_task
+#: model_terms:ir.actions.act_window,help:project.action_view_task
+#: model_terms:ir.actions.act_window,help:project.action_view_task_from_milestone
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
+#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
+msgid "No tasks found. Let's create one!"
+msgstr "Aucune tâche trouvée. Créons-en une !"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_update_all_action
+msgid "No updates found. Let's create one!"
+msgstr "Pas de mises à jour trouvées. Créons-en une!"
+
+#. module: project
+#. odoo-python
+=======
+#: model_terms:ir.actions.act_window,help:project.open_task_type_form
+#: model_terms:ir.actions.act_window,help:project.project_project_stage_configure
+msgid "No stages found. Let's create one!"
+msgstr "Pas d'étapes trouvées. Créons-en une !"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_tags_action
+msgid "No tags found. Let's create one!"
+msgstr "Aucunes étiquettes trouvées. Créons-en une!"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
+#: model_terms:ir.actions.act_window,help:project.action_view_all_task
+#: model_terms:ir.actions.act_window,help:project.action_view_my_task
+#: model_terms:ir.actions.act_window,help:project.action_view_task
+#: model_terms:ir.actions.act_window,help:project.action_view_task_from_milestone
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action
+#: model_terms:ir.actions.act_window,help:project.project_sharing_project_task_action_sub_task
+#: model_terms:ir.actions.act_window,help:project.project_task_action_sub_task
+msgid "No tasks found. Let's create one!"
+msgstr "Aucunes tâches trouvées. Créons-en une !"
+
+#. module: project
+#: model_terms:ir.actions.act_window,help:project.project_update_all_action
+msgid "No updates found. Let's create one!"
+msgstr "Pas de mises à jour trouvées. Créons-en une!"
+
+#. module: project
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "None"
@@ -1896,6 +3061,48 @@ msgid "Normal"
 msgstr "Normale"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Not Implemented."
+msgstr "Non implémenté."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__note
+msgid "Note"
+msgstr "Note"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__november
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__november
+msgid "November"
+msgstr "novembre"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction_counter
+=======
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Not Implemented."
+msgstr "Non implémenté."
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_share_wizard__note
+msgid "Note"
+msgstr "Note"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__november
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__november
+msgid "November"
+msgstr "Novembre"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_milestone__message_needaction_counter
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:project.field_project_project__message_needaction_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_needaction_counter
 msgid "Number of Actions"
@@ -1935,10 +3142,22 @@ msgid "Number of messages with delivery error"
 msgstr "Nombre de messages avec des erreurs d'envoi"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,help:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,help:project.field_project_task__message_unread_counter
 msgid "Number of unread messages"
 msgstr "Nombre de messages non lus"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__october
+msgid "October"
+msgstr "octobre"
+=======
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__october
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__october
+msgid "October"
+msgstr "Octobre"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -2152,6 +3371,96 @@ msgid "Priority"
 msgstr "Priorité"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
+msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
+msgstr "Priorité: {{'Important' if task.priority == '1' else 'Normal'}}"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
+msgid "Privacy Visibility Warning"
+msgstr "Avertissement de visibilité vie privée"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
+#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
+#: code:addons/project/static/src/xml/project_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+#, python-format
+msgid "Private"
+msgstr "Privé"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid "Profitability"
+msgstr "Rentabilité"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__progress
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_tree
+msgid "Progress"
+msgstr "Progrès"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__progress_percentage
+msgid "Progress Percentage"
+msgstr "Pourcentage de progression"
+
+#. module: project
+#. odoo-python
+#. odoo-javascript
+=======
+#: model_terms:ir.ui.view,arch_db:project.portal_my_tasks_priority_widget_template
+msgid "Priority: {{'Important' if task.priority == '1' else 'Normal'}}"
+msgstr "Priorité: {{'Important' if task.priority == '1' else 'Normal'}}"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility_warning
+msgid "Privacy Visibility Warning"
+msgstr "Avertissement de visibilité vie privée"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
+#: code:addons/project/static/src/components/project_private_task_many2one_field/project_private_task_many2one_field.xml:0
+#: code:addons/project/static/src/xml/project_templates.xml:0
+#: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+#, python-format
+msgid "Private"
+msgstr "Privé"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.js:0
+#: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
+#, python-format
+msgid "Profitability"
+msgstr "Rentabilité"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__progress
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_kanban
+#: model_terms:ir.ui.view,arch_db:project.project_update_view_tree
+msgid "Progress"
+msgstr "Avancement"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_update__progress_percentage
+msgid "Progress Percentage"
+msgstr "Pourcentage de progression"
+
+#. module: project
+#. odoo-python
+#. odoo-javascript
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/controllers/portal.py:0
 #: model:ir.model,name:project.model_project_project
 #: model:ir.model.fields,field_description:project.field_project_task__project_id
@@ -2494,6 +3803,68 @@ msgid "Search in Messages"
 msgstr "Rechercher dans Messages"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Milestone"
+msgstr "Rechercher dans les jalons"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Priority"
+msgstr "Rechercher dans la Priorité"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Project"
+msgstr "Chercher dans projet"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Ref"
+msgstr "Rechercher dans la Référence"
+
+#. module: project
+#. odoo-python
+=======
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Milestone"
+msgstr "Rechercher dans les jalons"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Priority"
+msgstr "Rechercher dans la Priorité"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Project"
+msgstr "Chercher dans Projet"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/controllers/portal.py:0
+#, python-format
+msgid "Search in Ref"
+msgstr "Rechercher dans la Référence"
+
+#. module: project
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
@@ -2506,6 +3877,50 @@ msgid "Security Token"
 msgstr "Jeton de sécurité"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+#, python-format
+msgid "Send"
+msgstr "Envoyer"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_send_mail_project_project
+#: model:ir.actions.act_window,name:project.action_send_mail_project_task
+msgid "Send Email"
+msgstr "Envoyer un email"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__september
+msgid "September"
+msgstr "septembre"
+
+#. module: project
+=======
+#. odoo-javascript
+#: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
+#: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
+#, python-format
+msgid "Send"
+msgstr "Envoyer"
+
+#. module: project
+#: model:ir.actions.act_window,name:project.action_send_mail_project_project
+#: model:ir.actions.act_window,name:project.action_send_mail_project_task
+msgid "Send Email"
+msgstr "Envoyer un email"
+
+#. module: project
+#: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__september
+#: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_month__september
+msgid "September"
+msgstr "Septembre"
+
+#. module: project
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:project.field_project_project__sequence
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
@@ -2515,9 +3930,17 @@ msgstr "Séquence"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Set Cover Image"
+<<<<<<< HEAD
 msgstr ""
 "Ajouter l'image\n"
 "de couverture"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Ajouter l'image de couverture"
+=======
+msgstr ""
+"Ajouter une image\n"
+"de couverture"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_0
@@ -2722,6 +4145,36 @@ msgid "Task Created"
 msgstr "Tâche créée"
 
 #. module: project
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
+msgid "Task Dependencies"
+msgstr "Dépendances de tâches"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_dependency_change
+#: model:mail.message.subtype,name:project.mt_task_dependency_change
+msgid "Task Dependency Changes"
+msgstr "Changements des dépendances de tâches"
+
+#. module: project
+=======
+#: model:ir.model.fields,field_description:project.field_project_project__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_project_task__allow_task_dependencies
+#: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_task_dependencies
+msgid "Task Dependencies"
+msgstr "Dépendances de Tâches"
+
+#. module: project
+#: model:mail.message.subtype,name:project.mt_project_task_dependency_change
+#: model:mail.message.subtype,name:project.mt_task_dependency_change
+msgid "Task Dependency Changes"
+msgstr "Changements des dépendances de tâches"
+
+#. module: project
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
 msgid "Task Logs"
 msgstr "Feuilles de temps sur les tâches"
@@ -2846,9 +4299,19 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+<<<<<<< HEAD
 "Le modèle (sorte de document Odoo) auquel correspond cet alias. Tout les "
 "e-mail entrant ne correspondant pas à un enregistrement existant entraînera "
 "la création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
+||||||| parent of fc1dc2c963f (temp)
+"Le modèle (type de document Odoo) auquel correspond cet alias. Chaque email "
+"entrant ne correspondant pas à un enregistrement existant entraînera la "
+"création d'un nouvel enregistrement de ce modèle (par ex. une tâche d'un "
+=======
+"Le modèle (sorte de document Odoo) auquel correspond cet alias. Chaque email"
+" entrant ne correspondant pas à un enregistrement existant entraînera la "
+"création d'un nouvel enregistrement de ce modèle (Ex. : une tâche d'un "
+>>>>>>> fc1dc2c963f (temp)
 "projet)"
 
 #. module: project
@@ -2857,8 +4320,16 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+<<<<<<< HEAD
 "Le nom de l'alias de messagerie, par exemple 'carrieres' pour relever les "
 "e-mails de <carrieres@example.odoo.com>"
+||||||| parent of fc1dc2c963f (temp)
+"Le nom de l'alias de l'email, par exemple 'carrières' pour relever les "
+"emails de <carrières@example.odoo.com>"
+=======
+"Le nom de l'alias de messagerie, par exemple 'carrières' pour relever les "
+"emails de <jobs@example.odoo.com>"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_user_id
@@ -3044,7 +4515,7 @@ msgstr "Type d'activité d'exception enregistrée"
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
-msgstr "Non assigné"
+msgstr "Non attribué"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -3061,10 +4532,80 @@ msgid "Unread Messages"
 msgstr "Messages non lus"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
 msgstr "Compteur de messages non lus"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:project.field_project_task__repeat_type
+#: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_type
+msgid "Until"
+msgstr "Jusqu'àu"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__update_ids
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_update_create
+#: model:mail.message.subtype,name:project.mt_project_update_create
+#: model:mail.message.subtype,name:project.mt_update_create
+msgid "Update Created"
+msgstr "Mise à jour créée"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
+#, python-format
+msgid "Use"
+msgstr "Utilisez"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
+msgid "Use Email Alias"
+msgstr "Utiliser l'alias d'email"
+
+#. module: project
+#: model:res.groups,name:project.group_project_milestone
+msgid "Use Milestones"
+msgstr "Utiliser les jalons"
+=======
+#: model:ir.model.fields,field_description:project.field_project_task__repeat_type
+#: model:ir.model.fields,field_description:project.field_project_task_recurrence__repeat_type
+msgid "Until"
+msgstr "Jusqu'à"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__update_ids
+msgid "Update"
+msgstr "Mettre à jour"
+
+#. module: project
+#: model:mail.message.subtype,description:project.mt_update_create
+#: model:mail.message.subtype,name:project.mt_project_update_create
+#: model:mail.message.subtype,name:project.mt_update_create
+msgid "Update Created"
+msgstr "Mise à jour créée"
+
+#. module: project
+#. odoo-javascript
+#: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
+#, python-format
+msgid "Use"
+msgstr "Utilisez"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
+msgid "Use Email Alias"
+msgstr "Utiliser l'alias d'email"
+
+#. module: project
+#: model:res.groups,name:project.group_project_milestone
+msgid "Use Milestones"
+msgstr "Utiliser les jalons"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
@@ -3102,9 +4643,57 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: project
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:project.field_project_task__user_email
 msgid "User Email"
 msgstr "Courriel de l'utilisateur"
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Value should be True or False (not %s)"
+msgstr "Les valeurs doivent être Vrai ou Faux (pas %s)"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "View"
+msgstr "Afficher"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "View Task"
+msgstr "Voir la tâche"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
+#: model_terms:ir.ui.view,arch_db:project.view_project
+msgid "View Tasks"
+msgstr "Voir les tâches"
+=======
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Value should be True or False (not %s)"
+msgstr "Les valeurs doivent être Vrai ou Faux (pas %s)"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_kanban
+msgid "View"
+msgstr "Vue"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:project.view_task_form2
+msgid "View Task"
+msgstr "Voir la tâche"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
+#: model_terms:ir.ui.view,arch_db:project.view_project
+msgid "View Tasks"
+msgstr "Voir les tâches"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility

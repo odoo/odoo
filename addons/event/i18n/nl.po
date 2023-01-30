@@ -3,20 +3,43 @@
 # 	* event
 # 
 # Translators:
+<<<<<<< HEAD
 # Eric Geens <ericgeens@yahoo.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # Charles Vervaecke <cvk@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Dylan Kiss, 2023
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+=======
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-30 09:41+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
 "Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+=======
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -49,8 +72,125 @@ msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Periode\" role=\"img\" title=\
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid ""
+<<<<<<< HEAD
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
+||||||| parent of fc1dc2c963f (temp)
+"'Foldable Badge - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+msgstr ""
+"'Opvouwbare badge - %s - %s' % ((object.event_id.name or "
+"'Evenement').replace('/',''), (object.name or '').replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
+msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
+msgstr "'Opvouwbare badge - %s' % (object.name or 'Event').replace('/','')"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
+msgid ""
+"'Full Page Ticket - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+msgstr ""
+"'Volledige pagina ticket- %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
+msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
+msgstr ""
+"'Volledige pagina ticket - %s' % (object.name or 'Event').replace('/','')"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
+msgstr "- \"%(event_name)s\": %(nb_too_many)i stoelen ontbreken."
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid ""
+"- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
+"seats."
+msgstr ""
+"- het ticket \"%(ticket_name)s\" (%(event_name)s): %(nb_too_many)i stoelen "
+"ontbreken."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
+=======
+"'Foldable Badge - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+msgstr ""
+"'Opvouwbare badge - %s - %s' % ((object.event_id.name or "
+"'Evenement').replace('/',''), (object.name or '').replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
+msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
+msgstr ""
+"'Opvouwbare badge - %s' % (object.name or 'Evenement').replace('/','')"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_registration_full_page_ticket
+msgid ""
+"'Full Page Ticket - %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+msgstr ""
+"'Volledige pagina ticket- %s - %s' % ((object.event_id.name or "
+"'Event').replace('/',''), (object.name or '').replace('/',''))"
+
+#. module: event
+#: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
+msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
+msgstr ""
+"'Volledige pagina ticket - %s' % (object.name or 'Event').replace('/','')"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
+msgstr "- \"%(event_name)s\": %(nb_too_many)i stoelen ontbreken."
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid ""
+"- the ticket \"%(ticket_name)s\" (%(event_name)s): Missing %(nb_too_many)i "
+"seats."
+msgstr ""
+"- het ticket \"%(ticket_name)s\" (%(event_name)s): %(nb_too_many)i stoelen "
+"ontbreken."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Air your tracks online through a Youtube integration</span>"
+msgstr ""
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid ""
+"<br/>\n"
+"                                        <span class=\"text-muted\">Share a quiz to your attendees once a track is over</span>"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        Tot</b>"
@@ -555,7 +695,35 @@ msgstr "Activiteit uitzondering decoratie"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_state
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Activiteitsfase"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Activiteitsstatus"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitstype icoon"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Add a description..."
+msgstr "Een omschrijving toevoegen..."
+=======
+msgstr "Activiteitsfase"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Activiteitensoort icoon"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Add a description..."
+msgstr "Voeg een omschrijving toe..."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -880,7 +1048,23 @@ msgstr "Omschrijving"
 #: model:ir.model.fields,field_description:event.field_event_type__display_name
 #: model:ir.model.fields,field_description:event.field_event_type_mail__display_name
 msgid "Display Name"
+<<<<<<< HEAD
 msgstr "Schermnaam"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Weergavenaam"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Display Sponsors and Exhibitors on your event pages"
+msgstr "Toon sponsors en exposanten op de evenementpagina's"
+=======
+msgstr "Schermnaam"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
+msgid "Display Sponsors and Exhibitors on your event pages"
+msgstr "Toon sponsors en exposanten op de evenementpagina's"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__sequence
@@ -903,10 +1087,20 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_mail__template_id
 #: model:ir.model.fields,field_description:event.field_event_type_mail__template_id
 msgid "Email Template"
 msgstr "E-mailsjabloon"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:event.model_mail_template
+msgid "Email Templates"
+msgstr "E-mailsjablonen"
+=======
+#: model:ir.model,name:event.model_mail_template
+msgid "Email Templates"
+msgstr "E-mail-sjablonen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_end
@@ -1042,6 +1236,142 @@ msgid "Event Start Date"
 msgstr "Startdatum evenement"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:event.model_event_tag
+msgid "Event Tag"
+msgstr "Evenementlabel"
+
+#. module: event
+#: model:ir.model,name:event.model_event_tag_category
+msgid "Event Tag Category"
+msgstr "Evenement Label Categorie"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.event_tag_category_action_tree
+#: model:ir.ui.menu,name:event.menu_event_category
+#: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
+msgid "Event Tags Categories"
+msgstr "Evenementlabelcategorieën"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type
+#: model:ir.model.fields,field_description:event.field_event_type__name
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
+msgid "Event Template"
+msgstr "Evenementsjabloon"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type_ticket
+#: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
+msgid "Event Template Ticket"
+msgstr "Evenement sjabloonticket"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
+msgid "Event Template Tickets"
+msgstr "Evenement sjabloontickets"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#: model:ir.ui.menu,name:event.menu_event_type
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
+msgid "Event Templates"
+msgstr "Evenementsjablonen"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.action_event_type
+msgid ""
+"Event Templates combine configurations you use often and are\n"
+"                usually based on the types of events you organize (e.g. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", etc)."
+msgstr ""
+"Event Templates combineren configuraties die je vaak gebruikt en zijn\n"
+"                meestal gebaseerd op het soort evenementen dat je organiseert (bijv. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", enz.)."
+
+#. module: event
+#: model:ir.model,name:event.model_event_event_ticket
+#: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
+msgid "Event Ticket"
+msgstr "Evenement ticket"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+msgid "Event Ticket For"
+msgstr "Evenementticket voor"
+
+#. module: event
+=======
+#: model:ir.model,name:event.model_event_tag
+msgid "Event Tag"
+msgstr "Evenementlabel"
+
+#. module: event
+#: model:ir.model,name:event.model_event_tag_category
+msgid "Event Tag Category"
+msgstr "Gebeurtenistagcategorie"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.event_tag_category_action_tree
+#: model:ir.ui.menu,name:event.menu_event_category
+#: model_terms:ir.ui.view,arch_db:event.event_tag_view_tree
+msgid "Event Tags Categories"
+msgstr "Evenementlabelcategorieën"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type
+#: model:ir.model.fields,field_description:event.field_event_type__name
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_tree
+msgid "Event Template"
+msgstr "Evenementsjabloon"
+
+#. module: event
+#: model:ir.model,name:event.model_event_type_ticket
+#: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_form_from_type
+msgid "Event Template Ticket"
+msgstr "Evenement sjabloonticket"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_type_ticket_view_tree_from_type
+msgid "Event Template Tickets"
+msgstr "Evenement sjabloontickets"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.action_event_type
+#: model:ir.ui.menu,name:event.menu_event_type
+#: model_terms:ir.ui.view,arch_db:event.event_type_view_search
+msgid "Event Templates"
+msgstr "Evenementsjablonen"
+
+#. module: event
+#: model_terms:ir.actions.act_window,help:event.action_event_type
+msgid ""
+"Event Templates combine configurations you use often and are\n"
+"                usually based on the types of events you organize (e.g. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", etc)."
+msgstr ""
+"Event Templates combineren configuraties die je vaak gebruikt en zijn\n"
+"                meestal gebaseerd op het soort evenementen dat je organiseert (bijv. \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", enz.)."
+
+#. module: event
+#: model:ir.model,name:event.model_event_event_ticket
+#: model:ir.model.fields,field_description:event.field_event_event__event_ticket_ids
+#: model:ir.model.fields,field_description:event.field_event_registration__event_ticket_id
+msgid "Event Ticket"
+msgstr "Evenementticket"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_report_template_full_page_ticket
+msgid "Event Ticket For"
+msgstr "Evenementticket voor"
+
+#. module: event
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:event.field_event_type_mail__event_type_id
 msgid "Event Type"
 msgstr "Soort evenement"
@@ -1141,6 +1471,22 @@ msgid "Followers (Partners)"
 msgstr "Volgers (Relaties)"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon bijv. fa-tasks"
+
+#. module: event
+=======
+#: model:ir.model.fields,help:event.field_event_event__activity_type_icon
+#: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icoon bijv. fa-tasks"
+
+#. module: event
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:event.field_event_event__seats_max
 msgid ""
 "For each event you can define a maximum registration of seats(number of "
@@ -1172,7 +1518,25 @@ msgstr "Toekomstige activiteiten"
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
 msgid "Group By"
+<<<<<<< HEAD
 msgstr "Groepeer op"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Groeperen op"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__has_message
+#: model:ir.model.fields,field_description:event.field_event_registration__has_message
+msgid "Has Message"
+msgstr "Heeft een bericht"
+=======
+msgstr "Groepeer op"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__has_message
+#: model:ir.model.fields,field_description:event.field_event_registration__has_message
+msgid "Has Message"
+msgstr "Heeft bericht"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__hours
@@ -1209,7 +1573,13 @@ msgstr "Icoon om uitzondering op activiteit aan te geven."
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_unread
 msgid "If checked, new messages require your attention."
+<<<<<<< HEAD
 msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
+=======
+msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
@@ -1217,7 +1587,13 @@ msgstr "Indien aangevinkt vragen nieuwe berichten uw aandacht."
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
+<<<<<<< HEAD
 msgstr "indien aangevinkt hebben sommige leveringen een fout."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
+=======
+msgstr "Indien aangevinkt hebben sommige leveringen een fout."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__state
@@ -1239,6 +1615,36 @@ msgid "Immediately"
 msgstr "Direct"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/event/models/event_stage.py:0
+#: model:event.stage,legend_normal:event.event_stage_announced
+#: model:event.stage,legend_normal:event.event_stage_booked
+#: model:event.stage,legend_normal:event.event_stage_cancelled
+#: model:event.stage,legend_normal:event.event_stage_done
+#: model:event.stage,legend_normal:event.event_stage_new
+#: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__normal
+#, python-format
+msgid "In Progress"
+msgstr "In uitvoering"
+
+#. module: event
+=======
+#. odoo-python
+#: code:addons/event/models/event_stage.py:0
+#: model:event.stage,legend_normal:event.event_stage_announced
+#: model:event.stage,legend_normal:event.event_stage_booked
+#: model:event.stage,legend_normal:event.event_stage_cancelled
+#: model:event.stage,legend_normal:event.event_stage_done
+#: model:event.stage,legend_normal:event.event_stage_new
+#: model:ir.model.fields.selection,name:event.selection__event_event__kanban_state__normal
+#, python-format
+msgid "In Progress"
+msgstr "In behandeling"
+
+#. module: event
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:event.field_event_mail__interval_nbr
 #: model:ir.model.fields,field_description:event.field_event_type_mail__interval_nbr
 msgid "Interval"
@@ -1275,6 +1681,7 @@ msgid "Kanban Color Index"
 msgstr "Kanban kleurindex"
 
 #. module: event
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:event.field_event_confirm____last_update
 #: model:ir.model.fields,field_description:event.field_event_event____last_update
 #: model:ir.model.fields,field_description:event.field_event_mail____last_update
@@ -1284,6 +1691,55 @@ msgstr "Kanban kleurindex"
 #: model:ir.model.fields,field_description:event.field_event_type_mail____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:event.field_event_event__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Kanban lopende uitleg"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__kanban_state
+msgid "Kanban State"
+msgstr "Kanban status"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
+msgid "Kanban State Label"
+msgstr "Kanban status label"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Kanban geldige uitleg"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Last 30 days"
+msgstr "Laatste 30 dagen"
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__legend_normal
+msgid "Kanban Ongoing Explanation"
+msgstr "Kanban lopende uitleg"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__kanban_state
+msgid "Kanban State"
+msgstr "Kanban status"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__kanban_state_label
+msgid "Kanban State Label"
+msgstr "Kanban status label"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__legend_done
+msgid "Kanban Valid Explanation"
+msgstr "Kanban valide uitleg"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Last 30 days"
+msgstr "Laatste 30 dagen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__write_uid
@@ -1450,6 +1906,48 @@ msgid "My Events"
 msgstr "Mijn evenementen"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event.field_event_tag__name
+#: model:ir.model.fields,field_description:event.field_event_tag_category__name
+#: model:ir.model.fields,field_description:event.field_event_type_ticket__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: event
+#: model:event.stage,name:event.event_stage_new
+msgid "New"
+msgstr "Nieuw"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteiten kalenderafspraak"
+
+#. module: event
+=======
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__name
+#: model:ir.model.fields,field_description:event.field_event_tag__name
+#: model:ir.model.fields,field_description:event.field_event_tag_category__name
+#: model:ir.model.fields,field_description:event.field_event_type_ticket__name
+msgid "Name"
+msgstr "Naam"
+
+#. module: event
+#: model:event.stage,name:event.event_stage_new
+msgid "New"
+msgstr "Nieuw"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__activity_calendar_event_id
+#: model:ir.model.fields,field_description:event.field_event_registration__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Volgende activiteitenafspraak"
+
+#. module: event
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:event.field_event_event__activity_date_deadline
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -1499,6 +1997,7 @@ msgstr "Aantal deelnemers"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error_counter
 msgid "Number of errors"
+<<<<<<< HEAD
 msgstr "Aantal fouten"
 
 #. module: event
@@ -1506,6 +2005,11 @@ msgstr "Aantal fouten"
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
 msgstr "Aantal evenementen waar de relatie aan heeft deelgenomen."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Aantal foutmeldingen"
+=======
+msgstr "Aantal fouten"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
@@ -1600,9 +2104,19 @@ msgstr ""
 "bijvoorbeeld een verkooporder"
 
 #. module: event
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
 msgid "Register with this event"
 msgstr "Registreer voor dit evenement"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "Rood kanbanlabel"
+=======
+#: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
+msgid "Red Kanban Label"
+msgstr "Rood kanban label"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1650,6 +2164,76 @@ msgid "Registration mail"
 msgstr "Inschrijvingsmail"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
+msgid "Registration open"
+msgstr "Registratie open"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
+msgid "Registration statistics"
+msgstr "Registratiestatistieken"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
+msgid "Registrations"
+msgstr "Registraties"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_open
+msgid ""
+"Registrations are open if:\n"
+"- the event is not ended\n"
+"- there are seats available on event\n"
+"- the tickets are sellable (if ticketing is used)"
+msgstr ""
+"Inschrijvingen zijn open als:\n"
+"- het evenement niet beëindigd is\n"
+"- er plaatsen beschikbaar zijn op het evenement\n"
+"- de tickets verkoopbaar zijn (als er gebruik wordt gemaakt van ticketing)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
+msgid "Registrations started"
+msgstr "Inschrijvingen gestart"
+
+#. module: event
+=======
+#: model:ir.model.fields,field_description:event.field_event_event__event_registrations_open
+msgid "Registration open"
+msgstr "Registratie open"
+
+#. module: event
+#: model:ir.actions.act_window,name:event.event_registration_action_stats_from_event
+msgid "Registration statistics"
+msgstr "Registratiestatistieken"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event_ticket__registration_ids
+msgid "Registrations"
+msgstr "Inschrijvingen"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__event_registrations_open
+msgid ""
+"Registrations are open if:\n"
+"- the event is not ended\n"
+"- there are seats available on event\n"
+"- the tickets are sellable (if ticketing is used)"
+msgstr ""
+"Inschrijvingen zijn open als:\n"
+"- het evenement niet beëindigd is\n"
+"- er plaatsen beschikbaar zijn op het evenement\n"
+"- de tickets verkoopbaar zijn (als er gebruik wordt gemaakt van ticketing)"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_registrations_started
+msgid "Registrations started"
+msgstr "Inschrijvingen gestart"
+
+#. module: event
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.ui.menu,name:event.menu_reporting_events
 msgid "Reporting"
 msgstr "Rapportages"
@@ -1675,7 +2259,13 @@ msgstr "Verantwoordelijke gebruiker"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_sms_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_sms_error
 msgid "SMS Delivery error"
+<<<<<<< HEAD
 msgstr "SMS afleverfout"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "SMS leverfout"
+=======
+msgstr "SMS fout bij versturen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -1798,7 +2388,100 @@ msgstr ""
 "Gepland: Toekomstige activiteiten."
 
 #. module: event
+<<<<<<< HEAD
 #: code:addons/event/models/event.py:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:event.field_event_tag__color
+msgid ""
+"Tag color. No color means no display in kanban or front-end, to distinguish "
+"internal tags from public categorization tags."
+msgstr ""
+"Labekleur. Geen kleur betekent geen weergave in kanban of front-end, om "
+"interne labels te onderscheiden van openbare categorisatielabels."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_tag_category__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
+msgid "Tags"
+msgstr "Labels"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "Taak in uitvoering. Klik om te blokkeren of markeer als gereed."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr "Taak is geblokkeerd. Klik om te deblokkeren of markeer als gereed."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_type_id
+#: model:ir.model.fields,field_description:event.field_event_mail__template_ref
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_ref
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+msgid "Template"
+msgstr "Sjabloon"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
+msgid "Template Model"
+msgstr "Sjabloonmodel"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+=======
+#: model:ir.model.fields,help:event.field_event_tag__color
+msgid ""
+"Tag color. No color means no display in kanban or front-end, to distinguish "
+"internal tags from public categorization tags."
+msgstr ""
+"Labekleur. Geen kleur betekent geen weergave in kanban of front-end, om "
+"interne labels te onderscheiden van openbare categorisatielabels."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_tag_category__tag_ids
+#: model:ir.model.fields,field_description:event.field_event_type__tag_ids
+#: model_terms:ir.ui.view,arch_db:event.event_tag_category_view_form
+msgid "Tags"
+msgstr "Labels"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task in progress. Click to block or set as done."
+msgstr "Taak in bewerking. Klik op blokkeer of zet op gereed."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "Task is blocked. Click to unblock or set as done."
+msgstr ""
+"Taak is geblokkeerd. Klik om blokkering ongedaan te maken of zet op gereed."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__event_type_id
+#: model:ir.model.fields,field_description:event.field_event_mail__template_ref
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_ref
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_search
+msgid "Template"
+msgstr "Sjabloon"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_mail__template_model_id
+#: model:ir.model.fields,field_description:event.field_event_type_mail__template_model_id
+msgid "Template Model"
+msgstr "Sjabloonmodel"
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
 msgstr "De einddatum kan niet voor de begindatum vallen."
@@ -1822,6 +2505,140 @@ msgstr ""
 "Dit veld bevat het sjabloon van de e-mail dat automatisch verzonden wordt"
 
 #. module: event
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid "There are not enough seats available for:"
+msgstr "Er zijn niet genoeg plaatsen beschikbaar voor:"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,help:event.field_event_type__ticket_instructions
+msgid "This information will be printed on your tickets."
+msgstr "Deze informatie wordt op de tickets afgedrukt."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "This is the <b>name</b> your guests will see when registering."
+msgstr "Dit is de <b>naam</b> die je gasten zien bij het registreren."
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Deze operator wordt niet ondersteund"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "Deze stap is gedaan. Klik om te blokkeren of markeer als gereed."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+msgid "Ticket"
+msgstr "Ticket"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Ticket Instructions"
+msgstr "Ticket instructies"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Ticket Type"
+msgstr "Ticketsoort"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid ""
+"Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
+"new one."
+msgstr ""
+"Met tickettypen kun je je bezoekers onderscheiden. Laten we een nieuwe "
+"<b>maken</b>."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
+=======
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#: code:addons/event/models/event_ticket.py:0
+#, python-format
+msgid "There are not enough seats available for:"
+msgstr "Er zijn niet genoeg plaatsen beschikbaar voor:"
+
+#. module: event
+#: model:ir.model.fields,help:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,help:event.field_event_type__ticket_instructions
+msgid "This information will be printed on your tickets."
+msgstr "Deze informatie wordt op de tickets afgedrukt."
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid "This is the <b>name</b> your guests will see when registering."
+msgstr "Dit is de <b>naam</b> die je gasten zien bij het registreren."
+
+#. module: event
+#. odoo-python
+#: code:addons/event/models/event_event.py:0
+#: code:addons/event/models/event_event.py:0
+#, python-format
+msgid "This operator is not supported"
+msgstr "Deze operator is niet ondersteund"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_stage_view_form
+msgid "This step is done. Click to block or set in progress."
+msgstr "Deze stap is gedaan. Klik op blokkeer of zet op gereed."
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_view_form_from_event
+msgid "Ticket"
+msgstr "Ticket"
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_event__ticket_instructions
+#: model:ir.model.fields,field_description:event.field_event_type__ticket_instructions
+#: model_terms:ir.ui.view,arch_db:event.view_event_form
+#: model_terms:ir.ui.view,arch_db:event.view_event_type_form
+msgid "Ticket Instructions"
+msgstr "Ticket instructies"
+
+#. module: event
+#: model_terms:ir.ui.view,arch_db:event.event_event_ticket_form_view
+#: model_terms:ir.ui.view,arch_db:event.view_registration_search
+msgid "Ticket Type"
+msgstr "Ticketsoort"
+
+#. module: event
+#. odoo-javascript
+#: code:addons/event/static/src/js/tours/event_tour.js:0
+#, python-format
+msgid ""
+"Ticket types allow you to distinguish your attendees. Let's <b>create</b> a "
+"new one."
+msgstr ""
+"Met tickettypen kun je je bezoekers onderscheiden. Laten we een nieuwe "
+"<b>maken</b>."
+
+#. module: event
+#: model:ir.model.fields,field_description:event.field_event_type__event_type_ticket_ids
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets"
 msgstr "Tickets"
@@ -1868,7 +2685,13 @@ msgstr "Twitter Hashtag"
 #: model:ir.model.fields,help:event.field_event_event__activity_exception_decoration
 #: model:ir.model.fields,help:event.field_event_registration__activity_exception_decoration
 msgid "Type of the exception activity on record."
+<<<<<<< HEAD
 msgstr "Type van activiteit uitzondering op dossier."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type activiteit uitzondering op record."
+=======
+msgstr "Type van activiteit uitzondering op record."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_event__state__draft
@@ -1948,7 +2771,13 @@ msgstr "WAARSCHUWING: Evenement plannerfout voor evenement: %s"
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
+<<<<<<< HEAD
 msgstr "Website berichten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Berichten website"
+=======
+msgstr "Websiteberichten"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__website_message_ids

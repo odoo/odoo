@@ -123,7 +123,23 @@ msgstr ""
 "- Handmatig: het aantal wordt handmatig op de regel ingesteld\n"
 "- Kostenplaats van declaratie: de hoeveelheid is de som van de geboekte declaraties\n"
 "- Urenstaat: de hoeveelheid is de som van de uren die zijn vastgelegd voor taken die aan deze verkoopregel zijn gekoppeld\n"
+<<<<<<< HEAD
 "- Voorraadmutaties: de hoeveelheid komt van bevestigde pickings\n"
+||||||| parent of fc1dc2c963f (temp)
+"- Voorraadverplaatsingen: de hoeveelheid komt van bevestigde pickings\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
+msgid "Allocated Hours"
+msgstr "Geplande tijd"
+=======
+"- Voorraadverplaatsingen: de hoeveelheid komt van bevestigde pickings\n"
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allocated_hours
+msgid "Allocated Hours"
+msgstr "Toegewezen tijd"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__amount_to_invoice
@@ -519,13 +535,21 @@ msgstr "Is een dienst"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
+<<<<<<< HEAD
 msgid "Journal Entries"
 msgstr "Boekingen"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Journal Entry"
+msgstr "Dagboekpost"
+=======
+msgid "Journal Entry"
+msgstr "Boeking"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
@@ -566,8 +590,42 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Bepaal handmatig de hoeveelheden voor de order: Factuur op basis van de handmatig ingevoerde hoeveelheid, zonder het aanmaken van een kostenplaats.\n"
+<<<<<<< HEAD
 "Urenstaten op project: Factuur op basis van de geschreven uren op gerelateerde urenstaten.\n"
 "Maak een taak aan en volg de uren ervan op: Een taak maken bij verkoop order bevestiging en volg werkuren via taken."
+||||||| parent of fc1dc2c963f (temp)
+"Urenstaten op project: Factuur op basis van de gevolgde uren op gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij bevestiging van de verkooporder en de werkuren opvolgen."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
+msgid "Margin"
+msgstr "Marge"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Materials"
+msgstr "Materialen"
+=======
+"Urenstaten op project: Factuur op basis van de geschreven uren op gerelateerde urenstaten.\n"
+"Maak een taak aan en volg de uren ervan op: Een taak maken bij e bevestiging van een verkooporder en de werkuren opvolgen."
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
+msgid "Margin"
+msgstr "Marge"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Materials"
+msgstr "Materialen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -966,7 +1024,51 @@ msgid "Task"
 msgstr "Taak"
 
 #. module: sale_timesheet
+<<<<<<< HEAD
 #: code:addons/sale_timesheet/models/sale_order.py:0
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:sale_timesheet.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Taakherhaling"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
+msgid "Task rate"
+msgstr "Taaksnelheid"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Takenanalyse"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+=======
+#: model:ir.model,name:sale_timesheet.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Taak herhaling"
+
+#. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__task_rate
+msgid "Task rate"
+msgstr "Taaksnelheid"
+
+#. module: sale_timesheet
+#: model:ir.model,name:sale_timesheet.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Takenanalyse"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+#: code:addons/sale_timesheet/models/product.py:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid ""
 "Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"

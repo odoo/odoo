@@ -3,6 +3,7 @@
 # 	* sms
 # 
 # Translators:
+<<<<<<< HEAD
 # e2f <projects@e2f.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Laura Piraux <lap@odoo.com>, 2019
@@ -11,6 +12,17 @@
 # Martin Trigaux, 2019
 # Fred Gilson <fgi@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Camille Dantinne <cmd@odoo.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Camille Dantinne <cmd@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -139,7 +151,33 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_blacklist
 msgid "Blacklisted"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Inscrit sur liste noire"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Le téléphone sur la liste noire est mobile"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Le téléphone sur la liste noire est mobile"
+=======
+msgstr "Inscris sur Liste Noire"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Le téléphone sur la liste noire est mobile"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Le téléphone sur la liste noire est mobile"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -171,12 +209,18 @@ msgstr "Annuler les notifications en échec"
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__canceled
 #, python-format
 msgid "Canceled"
+<<<<<<< HEAD
 msgstr "Annulé"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Check"
 msgstr "Chèque"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Annulée"
+=======
+msgstr "Annulé"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -578,7 +622,13 @@ msgstr "Notification"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type de notification"
+=======
+msgstr "Type de Notification"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -587,10 +637,114 @@ msgid "Number"
 msgstr "Numéro"
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sms.field_sms_template__null_value
 #: model:ir.model.fields,help:sms.field_sms_template_preview__null_value
 msgid "Optional value to use if the target field is empty"
 msgstr "Valeur facultative à utiliser si le champ cible est vide"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr "Champ numéro"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'erreurs"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Nombre de messages nécessitant une action"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Nombre de destinataires qui vont recevoir le SMS si envoyé en mode en masse,"
+" sans l'application d'une valeur de domaine actif."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "Désabonné"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. Si elle n'est pas définie, la version anglaise sera utilisée. Il"
+" doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
+=======
+#: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
+msgid "Number Field"
+msgstr "Champ numéro"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: sms
+#: model:ir.model.fields,field_description:sms.field_res_partner__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'erreurs"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Nombre de messages exigeant une action"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_res_partner__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
+msgid ""
+"Number of recipients that will receive the SMS if sent in mass mode, without"
+" applying the Active Domain value"
+msgstr ""
+"Nombre de destinataires qui vont recevoir le SMS si envoyé en mode en masse,"
+" sans l'application d'une valeur de domaine actif."
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_optout
+msgid "Opted Out"
+msgstr "Désabonné"
+
+#. module: sms
+#: model:ir.model.fields,help:sms.field_sms_template__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_sms
@@ -609,15 +763,51 @@ msgid "Phone Blacklist Mixin"
 msgstr ""
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__copyvalue
 msgid "Placeholder Expression"
 msgstr "Expression fictive"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Téléphone/Mobile"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "Post as Message"
+msgstr "Publier en tant que message"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Post as Note"
+msgstr "Publier en tant que note"
+=======
+#: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
+msgid "Phone/Mobile"
+msgstr "Téléphone/Mobile"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__comment
+msgid "Post as Message"
+msgstr "Poster comme message"
+
+#. module: sms
+#: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__sms_method__note
+msgid "Post as Note"
+msgstr "Poster comme note"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Publier dans un document"
+=======
+msgstr "Poster sur un document"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -913,7 +1103,23 @@ msgstr "Action du serveur"
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_server
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_server
 msgid "Server Error"
+<<<<<<< HEAD
 msgstr "Erreur de serveu"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Erreur de serveur"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Set up an account"
+msgstr "Créer un compte"
+=======
+msgstr "Erreur de serveu"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
+msgid "Set up an account"
+msgstr "Créer un compte"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -994,6 +1200,7 @@ msgid ""
 msgstr ""
 
 #. module: sms
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid ""
 "UX field computing the number of recipients in mass mode based on given "
@@ -1006,6 +1213,17 @@ msgid ""
 "UX field computing the number of recipients in mass mode without active "
 "domain"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
+msgid "Unregistered Account"
+msgstr "Compte non enregistré"
+=======
+#: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc
+#: model:ir.model.fields.selection,name:sms.selection__sms_sms__failure_type__sms_acc
+msgid "Unregistered Account"
+msgstr "Compte non-enregistré"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
@@ -1083,8 +1301,46 @@ msgstr ""
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+<<<<<<< HEAD
 msgid "e.g. en_US or ${object.partner_id.lang}"
 msgstr "Par ex: en_US ou ${object.partner_id.lang}"
+||||||| parent of fc1dc2c963f (temp)
+msgid "e.g. Calendar Reminder"
+msgstr "par ex. rappel calendrier"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Contact"
+msgstr "par ex. Contact"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "par ex. en_US ou {{ object.partner_id.lang }}"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "out of"
+msgstr "depuis"
+=======
+msgid "e.g. Calendar Reminder"
+msgstr "par ex. rappel calendrier"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. Contact"
+msgstr "Par ex. Contact"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
+msgid "e.g. en_US or {{ object.partner_id.lang }}"
+msgstr "par ex. en_US ou {{ object.partner_id.lang }}"
+
+#. module: sms
+#: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
+msgid "out of"
+msgstr "depuis"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form

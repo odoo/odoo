@@ -3,17 +3,37 @@
 # 	* product_expiry
 # 
 # Translators:
+<<<<<<< HEAD
 # Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Martin Trigaux, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Michael Hofer, 2023
+# Martin Trigaux, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+=======
+# Michael Hofer, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-09-09 12:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Martin Trigaux, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Friederike Fasterling-Nesselbosch, 2023\n"
+=======
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +71,87 @@ msgid "Best before Date"
 msgstr "Mindestens haltbar bis"
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__alert_date
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Best before:"
+msgstr "Mindestens haltbar bis:"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfigurationseinstellungen"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "Ablauf bestätigen"
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
+=======
+#: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
+msgid "Best before:"
+msgstr "Mindestens haltbar bis:"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguration "
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Confirm"
+msgstr "Bestätigen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
+msgid "Confirm Expiry"
+msgstr "Ablauf bestätigen"
+
+#. module: product_expiry
+#: code:addons/product_expiry/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+#, python-format
+msgid "Confirmation"
+msgstr "Bestätigung"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
+msgid "Created by"
+msgstr "Erstellt von"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_date
+msgid "Created on"
+msgstr "Erstellt am"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__alert_date
+>>>>>>> fc1dc2c963f (temp)
 msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
@@ -81,7 +181,73 @@ msgid "Expiry has been reminded"
 msgstr ""
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model,name:product_expiry.model_stock_production_lot
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr "Include expiration dates on delivery slip"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+msgid "Last Modified on"
+msgstr "Letzte Änderung am"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert von"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Fertigungslos"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_lot
+=======
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr "Include expiration dates on delivery slip"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+msgid "Last Modified on"
+msgstr "Zuletzt geändert am"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_uid
+msgid "Last Updated by"
+msgstr "Zuletzt aktualisiert durch"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__write_date
+msgid "Last Updated on"
+msgstr "Zuletzt aktualisiert am"
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
+msgid "Lot"
+msgstr "Los"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_lot
+>>>>>>> fc1dc2c963f (temp)
 msgid "Lot/Serial"
 msgstr "Los/Serie"
 
@@ -121,8 +287,38 @@ msgid ""
 "Number of days before the goods starts deteriorating, without being "
 "dangerous yet. It will be computed using the lot/serial number."
 msgstr ""
+<<<<<<< HEAD
 "Anzahl der Tage, bevor sich die Ware zu verschlechtern beginnt, ohne noch "
 "gefährlich zu sein. Es wird anhand der Los- / Seriennummer berechnet."
+||||||| parent of fc1dc2c963f (temp)
+"Anzahl der Tage vor dem Verfallsdatum, nach denen die Ware zu verderben "
+"beginnt, ohne jedoch gefährlich zu sein. Wird anhand der "
+"Chargen-/Seriennummer errechnet."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Liefervorgang"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+msgstr "Fortfahren außer für abgelaufene Produkte"
+=======
+"Anzahl der Tage vor dem Verfallsdatum, nach denen die Ware zu verderben "
+"beginnt, ohne jedoch gefährlich zu sein. Wird anhand der "
+"Chargen-/Seriennummer errechnet."
+
+#. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
+msgid "Picking"
+msgstr "Kommissionierung"
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
+msgid "Proceed except for expired one"
+msgstr "Fortfahren außer für abgelaufene Produkte"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
@@ -175,9 +371,41 @@ msgid "Removal Date"
 msgstr "Datum der Vernichtung"
 
 #. module: product_expiry
+<<<<<<< HEAD
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__product_expiry_alert
 msgid "The Alert Date has been reached."
 msgstr "Das Alarmdatum wurde erreicht."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "Mengen anzeigen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
+msgid "The Expiration Date has been reached."
+msgstr "Das Ablaufdatum wurde erreicht."
+=======
+#: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
+msgid "Show Lots"
+msgstr "Mengen anzeigen"
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbewegung"
+
+#. module: product_expiry
+#: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
+#: model:ir.model.fields,help:product_expiry.field_stock_move_line__is_expired
+msgid "The Expiration Date has been reached."
+msgstr "Das Ablaufdatum wurde erreicht."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: product_expiry
 #: code:addons/product_expiry/models/production_lot.py:0

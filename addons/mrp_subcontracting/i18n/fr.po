@@ -54,6 +54,74 @@ msgid "BoM Type"
 msgstr "Type de nomenclature"
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
+msgid "BoMs for which the Partner is one of the subcontractors"
+msgstr "Nomenclatures pour laquelle le Partenaire est l'un des sous-traitants"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
+msgid "Bom Product"
+msgstr "Produit nomenclature"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
+msgid "Can be Subcontracted"
+msgstr "Peut être sous-traité "
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_change_production_qty
+msgid "Change Production Qty"
+msgstr "Changer la Qté de Fabrication"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Cochez cette case pour créer un nouvel emplacement de sous-traitance dédié "
+"pour cette entreprise. Notez que les routes de sous-traitance standard "
+"seront adaptées afin de les prendre automatiquement en considération."
+
+#. module: mrp_subcontracting
+=======
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__bom_ids
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__bom_ids
+msgid "BoMs for which the Partner is one of the subcontractors"
+msgstr "Nomenclatures pour laquelle le Partenaire est l'un des sous-traitants"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__bom_product_ids
+msgid "Bom Product"
+msgstr "Produit BOM"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
+msgid "Can be Subcontracted"
+msgstr "Peut être sous-traité "
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_change_production_qty
+msgid "Change Production Qty"
+msgstr "Changer la Qté de Fabrication"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_stock_location__is_subcontracting_location
+msgid ""
+"Check this box to create a new dedicated subcontracting location for this "
+"company. Note that standard subcontracting routes will be adapted so as to "
+"take these into account automatically."
+msgstr ""
+"Cochez cette case pour créer un nouvel emplacement de sous-traitance dédié "
+"pour cette entreprise. Notez que les routes de sous-traitance standard "
+"seront adaptées afin de les prendre automatiquement en considération."
+
+#. module: mrp_subcontracting
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid ""
 "Choose a vendor of type subcontractor if you want to subcontract the product"
@@ -62,7 +130,23 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_company
 msgid "Companies"
+<<<<<<< HEAD
 msgstr "Sociétés"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Entreprises"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+msgid "Consumed"
+msgstr "Consommé"
+=======
+msgstr "Sociétés"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
+msgid "Consumed"
+msgstr "Consommé"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
@@ -72,6 +156,74 @@ msgstr "Contact"
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Montrer l'action \"Enregistrer les composants\""
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, python-format
+msgid "Done"
+msgstr "Fait"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
+msgid "Facultative"
+msgstr "Facultatif"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
+msgid "Has been recorded?"
+msgstr "A été enregistré ?"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
+msgid "Hide"
+msgstr "Masquer"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, python-format
+msgid ""
+"In order to manage stock accurately, subcontracting locations must be type "
+"Internal, linked to the appropriate company and not specific to a warehouse."
+=======
+msgstr "Montrer l'action \"Enregistrer les composants\""
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
+#, python-format
+msgid "Done"
+msgstr "Fait"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__facultative
+msgid "Facultative"
+msgstr "Facultatif"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__subcontracting_has_been_recorded
+msgid "Has been recorded?"
+msgstr "A été enregistré ?"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields.selection,name:mrp_subcontracting.selection__stock_picking__display_action_record_components__hide
+msgid "Hide"
+msgstr "Cacher"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_location.py:0
+#, python-format
+msgid ""
+"In order to manage stock accurately, subcontracting locations must be type "
+"Internal, linked to the appropriate company and not specific to a warehouse."
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -83,9 +235,65 @@ msgstr "Approvisionner à la commande"
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+<<<<<<< HEAD
 msgstr "Mouvements d'article (Ligne de mouvement de stock)"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Mouvements de produit (Ligne de mouvement de stock)"
+=======
+msgstr "Mouvements de produits (Ligne de mouvement de stock)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp_subcontracting
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product Variant"
+msgstr "Variante de produit"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production
+msgid "Production Order"
+msgstr "Ordre de production"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+msgid "Productions"
+msgstr "Productions"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_quant
+msgid "Quants"
+msgstr "Qtés"
+
+#. module: mrp_subcontracting
+#. odoo-python
+=======
+#: model:ir.model,name:mrp_subcontracting.model_product_product
+msgid "Product Variant"
+msgstr "Variante de produit"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_mrp_production
+msgid "Production Order"
+msgstr "Ordre de fabrication"
+
+#. module: mrp_subcontracting
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_menu_production
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_home_productions
+#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.portal_my_productions
+msgid "Productions"
+msgstr "Productions"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_quant
+msgid "Quants"
+msgstr "Quants"
+
+#. module: mrp_subcontracting
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
@@ -149,7 +357,59 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_move
 msgid "Stock Move"
+<<<<<<< HEAD
 msgstr "Stock déplacer"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Mouvement de stock"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
+msgid "Stock Pickings for which the Partner is the subcontractor"
+msgstr "Transferts de stock pour lesquels le partenaire est le sous-traitant"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Règle de stock"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Subcontract"
+msgstr "Sous-traitez"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
+msgid "Subcontract Location"
+msgstr "Emplacement de sous-traitance"
+=======
+msgstr "Stock déplacer"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__picking_ids
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__picking_ids
+msgid "Stock Pickings for which the Partner is the subcontractor"
+msgstr "Transferts de stock pour lesquels le partenaire est le sous-traitant"
+
+#. module: mrp_subcontracting
+#: model:ir.model,name:mrp_subcontracting.model_stock_rule
+msgid "Stock Rule"
+msgstr "Règle de stock minimum"
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid "Subcontract"
+msgstr "Sous-traitez"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
+msgid "Subcontract Location"
+msgstr "Emplacement de sous-traitance"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -221,7 +481,27 @@ msgstr ""
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 msgid "Transfer"
+<<<<<<< HEAD
 msgstr "Transfert"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Virement"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
+msgid "Used to restrict access to the portal user through Record Rules"
+msgstr ""
+"Utilisé pour restreindre l'accès à l'utilisateur du portail via les règles "
+"d'enregistrement"
+=======
+msgstr "Transfert"
+
+#. module: mrp_subcontracting
+#: model:ir.model.fields,help:mrp_subcontracting.field_mrp_production__subcontractor_id
+msgid "Used to restrict access to the portal user through Record Rules"
+msgstr ""
+"Utilisé pour restreindre l'accès à l'utilisateur du portail via les règles "
+"d'enregistrement"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_warehouse

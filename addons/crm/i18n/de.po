@@ -3,6 +3,7 @@
 # 	* crm
 # 
 # Translators:
+<<<<<<< HEAD
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
 # Ralf Hilgenstock <rh@dialoge.info>, 2019
 # Wolfgang Taferner, 2019
@@ -18,6 +19,16 @@
 # Sebastian <shu@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Jan Meyer, 2023
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+=======
+# Jan Meyer, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -226,6 +237,142 @@ msgid "<span class=\"oe_grey p-2\"> at </span>"
 msgstr "<span class=\"oe_grey p-2\"> bei </span>"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"oe_grey\"> %</span>"
+msgstr "<span class=\"oe_grey\"> %</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
+msgid "<span class=\"oe_inline\"> (max) </span>"
+msgstr "<span class=\"oe_inline\"> (max) </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
+msgid "<span class=\"oe_inline\"> / </span>"
+msgstr "<span class=\"oe_inline\"> / </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>Expected Revenues:</span>"
+msgstr "<span>Erwarteter Umsatz:</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>Merged the Lead/Opportunity</span>"
+msgstr "<span>Lead/Verkaufschance zusammengeführt</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"<span>Periodically assign leads based on rules</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    All sales teams will use this setting by default unless\n"
+"                                    specified otherwise.\n"
+"                                </span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>into this one.</span>"
+msgstr "<span>in diese.</span>"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Ein Python Dictionary, das ausgewertet wird, wenn neue Datensätze für diesen"
+" Alias angelegt werden."
+
+#. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
+msgid ""
+"A great tip to boost sales efficiency is to always define a next step on "
+"each opportunity. To manage ongoing activities, click on any status of the "
+"progress bar to filter opportunities based on their next activities' status."
+" Click on the grey area of the progress bar to see all opportunities that "
+"have no next activity."
+msgstr ""
+"Ein guter Tipp zur Steigerung der Vertriebseffizienz ist es, für jede "
+"Verkaufschance immer einen nächsten Schritt zu definieren. Um laufende "
+"Aktivitäten zu verwalten, klicken Sie auf einen beliebigen Status des "
+"Fortschrittsbalkens, um Verkaufschancen basierend auf dem Status ihrer "
+"nächsten Aktivitäten zu filtern. Klicken Sie auf den grauen Bereich des "
+"Fortschrittsbalkens, um alle Opportunities zu sehen, die keine nächste "
+"Aktivität haben."
+
+#. module: crm
+=======
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "<span class=\"oe_grey\"> %</span>"
+msgstr "<span class=\"oe_grey\"> %</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
+msgid "<span class=\"oe_inline\"> (max) </span>"
+msgstr "<span class=\"oe_inline\"> (max) </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
+msgid "<span class=\"oe_inline\"> / </span>"
+msgstr "<span class=\"oe_inline\"> / </span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>Expected Revenues:</span>"
+msgstr "<span>Erwarteter Umsatz:</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>Merged the Lead/Opportunity</span>"
+msgstr "<span>Lead/Verkaufschance zusammengeführt</span>"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"<span>Periodically assign leads based on rules</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    All sales teams will use this setting by default unless\n"
+"                                    specified otherwise.\n"
+"                                </span>"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "<span>into this one.</span>"
+msgstr "<span>in diese.</span>"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
+msgid ""
+"A Python dictionary that will be evaluated to provide default values when "
+"creating new records for this alias."
+msgstr ""
+"Ein Python-Dictionary, das Standardwerte zur Verfügung stellt, wenn neue "
+"Datensätze für diesen Alias angelegt werden."
+
+#. module: crm
+#: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
+msgid ""
+"A great tip to boost sales efficiency is to always define a next step on "
+"each opportunity. To manage ongoing activities, click on any status of the "
+"progress bar to filter opportunities based on their next activities' status."
+" Click on the grey area of the progress bar to see all opportunities that "
+"have no next activity."
+msgstr ""
+"Ein guter Tipp zur Steigerung der Vertriebseffizienz ist es, für jede "
+"Verkaufschance immer einen nächsten Schritt zu definieren. Um laufende "
+"Aktivitäten zu verwalten, klicken Sie auf einen beliebigen Status des "
+"Fortschrittsbalkens, um Verkaufschancen basierend auf dem Status ihrer "
+"nächsten Aktivitäten zu filtern. Klicken Sie auf den grauen Bereich des "
+"Fortschrittsbalkens, um alle Opportunities zu sehen, die keine nächste "
+"Aktivität haben."
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Accept Emails From"
 msgstr "E-Mails annehmen von"
@@ -363,6 +510,68 @@ msgid "Assigned To"
 msgstr "Zugewiesen an"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
+msgid "Assignment Date"
+msgstr "Zuweisungdatum"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
+msgid "Assignment Domain"
+msgstr "Zuweisungs-Domain"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+msgid "Assignment Rules"
+msgstr "Zuweisungsregeln"
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid "Assignment domain for team %(team)s is incorrectly formatted"
+msgstr "Zuweisungsbereich für Team %(team)s ist falsch formatiert"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_id
+msgid "Associated Lead"
+msgstr "Verbundenes Lead"
+
+#. module: crm
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
+msgid "Assignment Date"
+msgstr "Zuweisung Datum"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
+msgid "Assignment Domain"
+msgstr "Zuweisungs-Domain"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
+msgid "Assignment Rules"
+msgstr "Zuweisungsregeln"
+
+#. module: crm
+#. odoo-python
+#: code:addons/crm/models/crm_team.py:0
+#, python-format
+msgid "Assignment domain for team %(team)s is incorrectly formatted"
+msgstr "Zuweisungsbereich für Team %(team)s ist falsch formatiert"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_id
+msgid "Associated Lead"
+msgstr "Verbundenes Lead"
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_attachment_count
 msgid "Attachment Count"
 msgstr "# Anhänge"
@@ -380,9 +589,35 @@ msgstr "Mittlere Wahrscheinlichkeit"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
 msgid "Blacklist"
-msgstr "Schwarze Liste"
+msgstr "Sperrliste"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefon auf der schwarzen Liste ist mobil"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefon auf der schwarzen Liste ist Telefon"
+
+#. module: crm
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
+msgid "Blacklisted Phone Is Mobile"
+msgstr "Telefon auf der Sperrliste ist Mobiltelefon"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
+msgid "Blacklisted Phone is Phone"
+msgstr "Telefon auf der Sperrliste ist Festnetz"
+
+#. module: crm
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Boom! Team record for the past 30 days."
@@ -1190,7 +1425,35 @@ msgstr "Icon"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_exception_icon
 msgid "Icon to indicate an exception activity."
+<<<<<<< HEAD
 msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
+#: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignment
+msgid ""
+"If checked, forces salesman to be updated on updated opportunities even if "
+"already set."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird der Verkäufer gezwungen, bei "
+"aktualisierten Opportunities aktualisiert zu werden, auch wenn diese bereits"
+" eingestellt sind."
+=======
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner__force_assignment
+#: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignment
+msgid ""
+"If checked, forces salesman to be updated on updated opportunities even if "
+"already set."
+msgstr ""
+"Wenn diese Option aktiviert ist, wird der Verkäufer gezwungen, bei "
+"aktualisierten Opportunities aktualisiert zu werden, auch wenn diese bereits"
+" eingestellt sind."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1225,9 +1488,27 @@ msgstr ""
 "Massen-mails mehr."
 
 #. module: crm
+<<<<<<< HEAD
 #: model:ir.model.fields,help:crm.field_crm_lead2opportunity_partner_mass__force_assignation
 msgid "If unchecked, this will leave the salesman of duplicated opportunities"
 msgstr "Ungewählt werden dem Verkäufer duplizierte Chancen belassen"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Wenn die bereinigte Rufnummer auf der schwarzen Liste steht, erhält der "
+"Kontakt keine Massen-SMS mehr, egal von welcher Liste"
+=======
+#: model:ir.model.fields,help:crm.field_crm_lead__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Wenn die bereinigte Rufnummer auf der Sperrliste steht, erhält der Kontakt "
+"keine Massen-SMS mehr, egal von welcher Liste"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1257,6 +1538,58 @@ msgid "Incorrect"
 msgstr "Falsch"
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:crm.field_crm_lead__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Zeigt an, ob eine bereinigte Telefonnummer auf der schwarzen Liste eine "
+"Mobilfunknummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
+"schwarzen Liste steht, wenn es in einem Modell sowohl ein Handy- als auch "
+"ein Telefonfeld gibt."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Zeigt an, ob es sich bei einer auf der schwarzen Liste stehenden bereinigten"
+" Telefonnummer um eine Telefonnummer handelt. Hilft bei der Unterscheidung, "
+"welche Nummer auf der schwarzen Liste steht, wenn es in einem Modell sowohl "
+"ein Handy- als auch ein Telefonfeld gibt."
+
+#. module: crm
+=======
+#: model:ir.model.fields,help:crm.field_crm_lead__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Zeigt an, ob eine bereinigte Telefonnummer auf der Speerliste eine "
+"Mobilfunknummer ist. Hilft bei der Unterscheidung, welche Nummer auf der "
+"Sperrliste steht, wenn es in einem Modell sowohl ein Handy- als auch ein "
+"Telefonfeld gibt."
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a phone number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Zeigt an, ob es sich bei einer auf der Sperrliste stehenden bereinigten "
+"Telefonnummer um eine Festnetznummer handelt. Hilft bei der Unterscheidung, "
+"welche Nummer auf der Sperrliste steht, wenn es in einem Modell sowohl ein "
+"Handy- als auch ein Festnetzfeld gibt."
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "Internal Notes"
 msgstr "Interne Notizen"
@@ -1459,7 +1792,23 @@ msgstr "Interessent / Chance"
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 #: model_terms:ir.ui.view,arch_db:crm.utm_campaign_view_form
 msgid "Leads"
+<<<<<<< HEAD
 msgstr "Interessenten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Leads"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
+msgid "Leads (30 days)"
+msgstr "Leads (30 Tage)"
+=======
+msgstr "Interessenten"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team_member__lead_month_count
+msgid "Leads (30 days)"
+msgstr "Leads (30 Tage)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_lead_salesteam
@@ -1944,12 +2293,18 @@ msgstr "Mir zugewiesene Chancen"
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Opportunity"
+<<<<<<< HEAD
 msgstr "Chance"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__opportunity_count
 msgid "Opportunity Count"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Verkaufschance"
+=======
+msgstr "Chance"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_lead_create
@@ -2053,7 +2408,21 @@ msgid "Phone"
 msgstr "Telefon"
 
 #. module: crm
+<<<<<<< HEAD
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_phone_state
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefon auf der schwarzen Liste"
+
+#. module: crm
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
+msgid "Phone Blacklisted"
+msgstr "Telefon auf der Sperrliste"
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
 msgid "Phone Quality"
 msgstr ""
@@ -2108,6 +2477,96 @@ msgstr ""
 "Bitte wählen Sie mind. ein Element (Interessent oder Kontakt) aus der Liste."
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
+msgid "Pls Fields"
+msgstr "Pls Felder"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
+msgid "Pls Start Date"
+msgstr "Pls Startdatum"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Richtlinie zum Posten einer Dokument-Nachricht über das E-Mail-Gateway.\n"
+"- Jeder: jeder kann posten\n"
+"- Partner: nur bestätigte Partner\n"
+"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
+msgid "Potential Duplicate Lead"
+msgstr "Potenzieller doppelter Lead"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
+msgid "Potential Duplicate Lead Count"
+msgstr "Anzahl potenzieller doppelter Leads"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Predictive Lead Scoring"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
+msgid "Predictive Lead Scoring Field Labels"
+msgstr ""
+
+#. module: crm
+=======
+#: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
+msgid "Pls Fields"
+msgstr "Pls Felder"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
+msgid "Pls Start Date"
+msgstr "Pls Startdatum"
+
+#. module: crm
+#: model:ir.model.fields,help:crm.field_crm_team__alias_contact
+msgid ""
+"Policy to post a message on the document using the mailgateway.\n"
+"- everyone: everyone can post\n"
+"- partners: only authenticated partners\n"
+"- followers: only followers of the related document or members of following channels\n"
+msgstr ""
+"Richtlinie zum Posten einer Dokument-Mitteilung über das E-Mail-Gateway.\n"
+"- Jeder: jeder kann posten\n"
+"- Partner: nur bestätigte Partner\n"
+"- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
+msgid "Potential Duplicate Lead"
+msgstr "Potenzieller doppelter Lead"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
+msgid "Potential Duplicate Lead Count"
+msgstr "Anzahl potenzieller doppelter Leads"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Predictive Lead Scoring"
+msgstr ""
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
+msgid "Predictive Lead Scoring Field Labels"
+msgstr ""
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
@@ -2148,8 +2607,70 @@ msgid ""
 "Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the"
 " <b>CRM</b> app."
 msgstr ""
+<<<<<<< HEAD
 "Bereit, Ihren Vertrieb anzukurbeln? Ihre <b>Pipeline</b> finden Sie hier in "
 "der <b>CRM</b>-App."
+||||||| parent of fc1dc2c963f (temp)
+"Sind Sie bereit, Ihren Umsatz zu steigern? Lassen Sie uns einen Blick auf "
+"Ihre <b>Pipeline</b> werfen."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "Aufzeichnung Diskussion ID"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
+msgid "Recurring Plan"
+msgstr "Wiederkehrender Plan"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
+#: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
+msgid "Recurring Plans"
+msgstr "Wiederkehrende Pläne"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+msgid "Recurring Revenue"
+msgstr "Wiederkehrende Umsätze"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_recurring_revenues
+msgid "Recurring Revenues"
+msgstr "Wiederkehrende Umsatzerlöse"
+=======
+"Sind Sie bereit, Ihren Umsatz zu steigern? Lassen Sie uns einen Blick auf "
+"Ihre <b>Pipeline</b> werfen."
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
+msgid "Record Thread ID"
+msgstr "Datensatz-Diskussions-ID"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
+msgid "Recurring Plan"
+msgstr "Wiederkehrender Plan"
+
+#. module: crm
+#: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
+#: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
+msgid "Recurring Plans"
+msgstr "Wiederkehrende Pläne"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
+msgid "Recurring Revenue"
+msgstr "Wiederkehrende Umsätze"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
+#: model:ir.model.fields,field_description:crm.field_res_config_settings__group_use_recurring_revenues
+msgid "Recurring Revenues"
+msgstr "Wiederkehrende Umsatzerlöse"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__referred
@@ -2244,7 +2765,57 @@ msgstr "Verkäufer"
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_opportunities_filter
 msgid "Salesperson"
+<<<<<<< HEAD
 msgstr "Verkäufer"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Sales-Mitarbeiter"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Salesperson:"
+msgstr "Sales-Mitarbeiter"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
+msgid "Salespersons"
+msgstr "Vertriebsmitarbeiter"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
+msgid "Sanitized Number"
+msgstr "Desinfiziert Nummer"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
+msgid "Schedule activities to keep track of everything you have to do."
+msgstr ""
+"Planen Sie Aktivitäten, um den Überblick über alles zu behalten, was Sie zu "
+"tun haben."
+=======
+msgstr "Verkäufer"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Salesperson:"
+msgstr "Sales-Mitarbeiter"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
+msgid "Salespersons"
+msgstr "Vertriebsmitarbeiter"
+
+#. module: crm
+#: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
+msgid "Sanitized Number"
+msgstr "Desinfiziert Nummer"
+
+#. module: crm
+#: model_terms:ir.actions.act_window,help:crm.crm_lead_action_my_activities
+msgid "Schedule activities to keep track of everything you have to do."
+msgstr ""
+"Planen Sie Aktivitäten, um den Überblick über alles zu behalten, was Sie zu "
+"tun haben."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2450,7 +3021,23 @@ msgstr "Stichwort existiert bereits!"
 #: model:ir.model.fields,field_description:crm.field_crm_lead__tag_ids
 #: model:ir.ui.menu,name:crm.menu_crm_lead_categ
 msgid "Tags"
+<<<<<<< HEAD
 msgstr "Stichwörter"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Tags"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Tags:"
+msgstr "Stichwörter:"
+=======
+msgstr "Stichwörter"
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
+msgid "Tags:"
+msgstr "Stichwörter:"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.sales_team_menu_team_pipeline
@@ -2512,6 +3099,24 @@ msgstr ""
 "berechnen, einen Interessenten zu gewinnen."
 
 #. module: crm
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "This email is blacklisted for mass mailings. Click to unblacklist."
+msgstr ""
+"Diese E-Mail-Adresse steht auf der Sperrliste für Massen-Mailings. Klicken, "
+"um von Sperrliste zu entfernen."
+
+#. module: crm
+=======
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid "This email is blacklisted for mass mailings. Click to unblacklist."
+msgstr ""
+"Diese E-Mail-Adresse steht auf der Sperrliste für Massen-Mailings. Klicken, "
+"um sie von der Sperrliste zu entfernen."
+
+#. module: crm
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:crm.field_crm_lead__email_normalized
 msgid ""
 "This field is used to search on email address as the primary email field can"
@@ -2546,6 +3151,7 @@ msgstr ""
 "oder Name der E-Mail-Liste"
 
 #. module: crm
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
@@ -2556,6 +3162,21 @@ msgstr "Für diese Chance ist <b>keine Aktivität geplant</b>."
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This report analyses the source of your leads."
 msgstr "Dieser Bericht analysiert die Herkunft Ihrer Interessenten."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+"Diese Rufnummer steht auf der Blacklist für SMS-Marketing. Klicken Sie zum "
+"Aufheben der Sperrliste."
+=======
+#: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
+msgid ""
+"This phone number is blacklisted for SMS Marketing. Click to unblacklist."
+msgstr ""
+"Diese Rufnummer steht auf der Sperrliste für SMS-Marketing. Klicken,  um sie"
+" von der Sperrliste zu entfernen."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold

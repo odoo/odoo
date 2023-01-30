@@ -26,6 +26,308 @@ msgid "Payment Acquirer"
 msgstr "Betalingsprovider"
 
 #. module: website_payment
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:website_payment.field_payment_acquirer__website_id
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransactie"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+#, python-format
+msgid "Payment received from donation with following details:"
+msgstr "Betaling ontvangen van donatie met de volgende details:"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_account_payment
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__module_payment_paypal
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Paypal - Express Checkout"
+msgstr "Paypal - Snel afrekenen"
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
+msgid "Paypal Only"
+msgstr "Enkel Paypal"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "Please select or enter an amount"
+msgstr "Selecteer of vul een bedrag in"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Pre-filled Options"
+msgstr "Vooraf ingevulde opties"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
+msgid "Providers State"
+msgstr "Providers status"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Recipient Email"
+msgstr "Ontvanger e-mail"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Server Error"
+msgstr "Server foutmelding"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Shop - Payment"
+msgstr "Winkel - Betaling"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Slider"
+msgstr "Schuif"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Small or large, your contribution is essential."
+msgstr "Klein of groot, je bijdrage is essentieel."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Some information is missing to process your payment."
+msgstr "Er ontbreken enkele gegevens om je betaling te verwerken."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Step"
+msgstr "Stap"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect is niet beschikbaar in jouw land. Gebruik een andere "
+"betalingsprovider."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Support most credit & debit cards like Visa, Mastercard, Maestro, etc."
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"Ondersteunt de meeste betalingsmethoden; Visa, Mastercard, Maestro, Google "
+"Pay, Apple Pay, enz., evenals terugkerende lasten."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Thank you for your donation of"
+msgstr "Bedankt voor je donatie van"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "The minimum donation amount is %s%s%s"
+msgstr "Het minimale donatiebedrag is %s%s%s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "There is nothing to pay."
+msgstr "Er valt niets te betalen."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Bevestigingsfoutmelding"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View Alternatives"
+msgstr "Toon alternatieven"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View other providers"
+msgstr "Toon de andere providers"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "We could not obtain payment fees."
+msgstr "We konden geen betalingskosten krijgen."
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
+=======
+#: model:ir.model,name:website_payment.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Betalingstransactie"
+
+#. module: website_payment
+#. odoo-python
+#: code:addons/website_payment/models/payment_transaction.py:0
+#, python-format
+msgid "Payment received from donation with following details:"
+msgstr "Betaling ontvangen van donatie met de volgende details:"
+
+#. module: website_payment
+#: model:ir.model,name:website_payment.model_account_payment
+msgid "Payments"
+msgstr "Betalingen"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__module_payment_paypal
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Paypal - Express Checkout"
+msgstr "Paypal - Snel afrekenen"
+
+#. module: website_payment
+#: model:ir.model.fields.selection,name:website_payment.selection__res_config_settings__providers_state__paypal_only
+msgid "Paypal Only"
+msgstr "Enkel Paypal"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "Please select or enter an amount"
+msgstr "Selecteer of vul een bedrag in"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Pre-filled Options"
+msgstr "Vooraf ingevulde opties"
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_res_config_settings__providers_state
+msgid "Providers State"
+msgstr "Providers status"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Recipient Email"
+msgstr "E-mail ontvanger"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Server Error"
+msgstr "Server Error"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Shop - Payment"
+msgstr "Winkel - Betaling"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Slider"
+msgstr "Schuif"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation
+msgid "Small or large, your contribution is essential."
+msgstr "Klein of groot, je bijdrage is essentieel."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Some information is missing to process your payment."
+msgstr "Er ontbreken enkele gegevens om je betaling te verwerken."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.s_donation_options
+msgid "Step"
+msgstr "Stap"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Stripe Connect is not available in your country, please use another payment "
+"provider."
+msgstr ""
+"Stripe Connect is niet beschikbaar in jouw land. Gebruik een andere "
+"betalingsprovider."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "Support most credit & debit cards like Visa, Mastercard, Maestro, etc."
+msgstr ""
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid ""
+"Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple "
+"Pay, etc. as well as recurring charges."
+msgstr ""
+"Ondersteunt de meeste betalingsmethoden; Visa, Mastercard, Maestro, Google "
+"Pay, Apple Pay, enz., evenals terugkerende lasten."
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_mail_body
+msgid "Thank you for your donation of"
+msgstr "Bedankt voor je donatie van"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/snippets/s_donation/000.js:0
+#, python-format
+msgid "The minimum donation amount is %s%s%s"
+msgstr "Het minimale donatiebedrag is %s%s%s"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.donation_pay
+msgid "There is nothing to pay."
+msgstr "Er valt niets te betalen."
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "Validation Error"
+msgstr "Bevestigingsfoutmelding"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View Alternatives"
+msgstr "Toon alternatieven"
+
+#. module: website_payment
+#: model_terms:ir.ui.view,arch_db:website_payment.res_config_settings_view_form
+msgid "View other providers"
+msgstr "Toon de andere providers"
+
+#. module: website_payment
+#. odoo-javascript
+#: code:addons/website_payment/static/src/js/website_payment_form.js:0
+#, python-format
+msgid "We could not obtain payment fees."
+msgstr "We konden geen betalingskosten krijgen."
+
+#. module: website_payment
+#: model:ir.model.fields,field_description:website_payment.field_payment_provider__website_id
+>>>>>>> fc1dc2c963f (temp)
 msgid "Website"
 msgstr "Website"

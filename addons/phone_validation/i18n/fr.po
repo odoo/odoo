@@ -50,7 +50,23 @@ msgstr "Archivé"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
 msgid "Attachment Count"
+<<<<<<< HEAD
 msgstr "Compte des pièces jointes"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Nombre de pièces jointes"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Blacklist"
+msgstr "Liste noire"
+=======
+msgstr "Compte des pièces jointes"
+
+#. module: phone_validation
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
+msgid "Blacklist"
+msgstr "Liste de blocage"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
@@ -132,7 +148,67 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
+<<<<<<< HEAD
 msgstr "Si actif, certains messages ont une erreur de livraison."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Si le numéro de téléphone nettoyé est sur la liste noire, le contact ne "
+"recevra plus de campagnes de mail, d'aucunes listes."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "Numéro incorrect %s: probablement un nombre incorrect de chiffres."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
+=======
+msgstr "Si actif, certains messages ont une erreur de livraison."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
+msgid ""
+"If the sanitized phone number is on the blacklist, the contact won't receive"
+" mass mailing sms anymore, from any list"
+msgstr ""
+"Si le numéro de téléphone nettoyé est sur la liste noire, le contact ne "
+"recevra plus de campagnes de mail, d'aucunes listes."
+
+#. module: phone_validation
+#. odoo-python
+#: code:addons/phone_validation/tools/phone_validation.py:0
+#, python-format
+msgid "Impossible number %s: probably invalid number of digits."
+msgstr "Numéro incorrect %s: probablement un nombre incorrect de chiffres."
+
+#. module: phone_validation
+#: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__mobile_blacklisted
+msgid ""
+"Indicates if a blacklisted sanitized phone number is a mobile number. Helps "
+"distinguish which number is blacklisted             when there is both a "
+"mobile and phone field in a model."
+msgstr ""
+"Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
+"de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
+"quand il y a et un champ portable et un champ téléphone dans un modèle."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -284,6 +360,36 @@ msgstr "Numéro de téléphone"
 #: model:ir.model,name:phone_validation.model_phone_validation_mixin
 msgid "Phone Validation Mixin"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Veuillez saisir au moins 3 caractères pour chercher par numéro de "
+"téléphone/mobile."
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Reason"
+msgstr "Raison"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+msgid "Remove phone from blacklist"
+msgstr "Supprimer le numéro de téléphone de la liste noire"
+=======
+"Veuillez saisir au moins 3 caractères pour chercher par numéro de "
+"téléphone/mobile."
+
+#. module: phone_validation
+#: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__reason
+#: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_remove_view_form
+msgid "Reason"
+msgstr "Motif"
+
+#. module: phone_validation
+#: model:ir.model,name:phone_validation.model_phone_blacklist_remove
+msgid "Remove phone from blacklist"
+msgstr "Supprimer le numéro de téléphone de la liste noire"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized

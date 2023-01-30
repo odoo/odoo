@@ -3,6 +3,7 @@
 # 	* point_of_sale
 # 
 # Translators:
+<<<<<<< HEAD
 # Ayoub Zahid <azahid@agilorg.com>, 2019
 # Fabien Pinckaers <fp@openerp.com>, 2019
 # Rémi CAZENAVE <remi@le-filament.com>, 2019
@@ -28,6 +29,20 @@
 # Cécile Collart <cco@odoo.com>, 2019
 # gdp Odoo <gdp@odoo.com>, 2019
 # Martin Trigaux, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Logan Gônet <logan.gonet.perso@outlook.com>, 2023
+# Pierre Delacroix <pde@odoo.com>, 2023
+# snipe2004 <snipe2004@hotmail.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Logan Gônet <logan.gonet.perso@outlook.com>, 2023
+# Pierre Delacroix <pde@odoo.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -801,9 +816,97 @@ msgid "Cash Statements"
 msgstr "Relevés de caisse"
 
 #. module: point_of_sale
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
 msgstr "Solde de la caisse"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
+msgid "Cash Rounding (PoS)"
+msgstr "Arrondi des paiements en espèces (PdV)"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Cash Roundings"
+msgstr "Arrondis des paiements en espèces"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Loss)"
+msgstr "Écart d'espèces observé lors du comptage (Perte)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Profit)"
+msgstr "Écart d'espèces observé lors du comptage (Gain)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
+#, python-format
+msgid "Cash in/out of %s is ignored."
+msgstr "Cash entrant/sortant de %s a été ignoré."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash register"
+msgstr "Caisse"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_rounding_method
+msgid "Cash rounding"
+msgstr "Arrondi des paiements en espèces"
+=======
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_cash_rounding
+msgid "Cash Rounding (PoS)"
+msgstr "Arrondi des paiements en espèces (PdV)"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Cash Roundings"
+msgstr "Arrondi des paiements en espèces"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Loss)"
+msgstr "Écart d'espèces observé lors du comptage (Perte)"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash difference observed during the counting (Profit)"
+msgstr "Écart d'espèces observé lors du comptage (Gain)"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
+#, python-format
+msgid "Cash in/out of %s is ignored."
+msgstr "Cash entrant/sortant de %s a été ignoré."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Cash register"
+msgstr "Caisse"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__rounding_method
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_rounding_method
+msgid "Cash rounding"
+msgstr "Arrondi des paiements en espèces"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
@@ -988,7 +1091,49 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 #, python-format
 msgid "Close"
+<<<<<<< HEAD
 msgstr "Fermer"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Clôturer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
+msgid "Close Session"
+msgstr "Fermer la session"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Close Session & Post Entries"
+msgstr "Valider la fermeture & Comptabiliser les écritures"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
+msgid "Close Session Wizard"
+msgstr "Assistant de fermeture de session"
+=======
+msgstr "Fermer"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
+#, python-format
+msgid "Close Session"
+msgstr "Fermer la session"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+msgid "Close Session & Post Entries"
+msgstr "Valider la fermeture & Comptabiliser les écritures"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_pos_close_session_wizard
+msgid "Close Session Wizard"
+msgstr "Assistant de fermeture de session"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_session__state__closed
@@ -1301,16 +1446,62 @@ msgid "Date"
 msgstr "Date"
 
 #. module: point_of_sale
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
+#, python-format
+msgid "DatePicker"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
+#, python-format
+msgid "Days"
+msgstr "jours"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
+=======
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
+#, python-format
+msgid "DatePicker"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
+#, python-format
+msgid "Days"
+msgstr "Jours"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Debug Window"
 msgstr "Fenêtre de débogage"
 
 #. module: point_of_sale
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_cashbox_id
 msgid "Default Balance"
 msgstr "Fond de caisse par défaut"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default"
+msgstr "Défaut"
+=======
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default"
+msgstr "Par défaut"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_bank_statement__account_id
@@ -2357,18 +2548,114 @@ msgstr "Messages"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Method"
+<<<<<<< HEAD
 msgstr "Méthode"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Nom du mode"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#, python-format
+msgid "Missing barcode nomenclature"
+msgstr "Nomenclature des codes-barres manquante"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
+#, python-format
+msgid "Mobile"
+msgstr "Téléphone portable"
+=======
+msgstr "Nom du mode"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#, python-format
+msgid "Missing barcode nomenclature"
+msgstr "Nomenclature des codes-barres manquante"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
+#, python-format
+msgid "Mobile"
+msgstr "Mobile"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__module_pos_hr
 msgid "Module Pos Hr"
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Module PdV RH"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#, python-format
+msgid "More info"
+msgstr "Plus d'informations"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "More settings:"
+msgstr "Plus de paramètres :"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
+#, python-format
+msgid "More..."
+msgstr "Plus..."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Multi Employees per Session"
+=======
+msgstr "Module PdV RH"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#, python-format
+msgid "More info"
+msgstr "Plus d'infos"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid "More settings:"
+msgstr "Plus de paramètres :"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
+#, python-format
+msgid "More..."
+msgstr "Plus..."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Multi Employees per Session"
+>>>>>>> fc1dc2c963f (temp)
 msgstr ""
 
 #. module: point_of_sale
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "Monitor Stand"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+=======
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
@@ -3513,8 +3800,38 @@ msgid "Products"
 msgstr "Articles"
 
 #. module: point_of_sale
+<<<<<<< HEAD
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "Products:"
+msgstr "Produits :"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Promotions, Coupons, Gift Card & Loyalty Program"
+msgstr "Promotions, coupons, carte-cadeau et programmes de fidélité"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
+=======
+#: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
+msgid "Products:"
+msgstr "Produits :"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Promotions, Coupons, Gift Card & Loyalty Program"
+msgstr "Promotions, coupons, cartes-cadeaux et programmes de fidélité"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
+#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/ProxyStatus.xml:0
+>>>>>>> fc1dc2c963f (temp)
 #, python-format
 msgid "Proxy Connected"
 msgstr "Proxy Connecté"
@@ -3561,7 +3878,55 @@ msgstr "Lecture du poids sur la balance"
 #: code:addons/point_of_sale/static/src/js/tours/point_of_sale.js:0
 #, python-format
 msgid "Ready to launch your <b>point of sale</b>?"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Prêt à lancer votre <b>point de vente</b>?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
+#, python-format
+msgid "Reason"
+msgstr "Raison"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Reçu"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr "Reçu %s"
+=======
+msgstr "Prêt à lancer votre <b>point de vente</b>?"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
+#, python-format
+msgid "Reason"
+msgstr "Motif"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
+#, python-format
+msgid "Receipt"
+msgstr "Reçu"
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Receipt %s"
+msgstr "Reçu %s"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__receipt_footer
@@ -4837,6 +5202,20 @@ msgid "Transaction cancelled"
 msgstr "Transaction annulée"
 
 #. module: point_of_sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Virement"
+
+#. module: point_of_sale
+=======
+#: model:ir.model,name:point_of_sale.model_stock_picking
+msgid "Transfer"
+msgstr "Transfert"
+
+#. module: point_of_sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:point_of_sale.field_barcode_rule__type
 msgid "Type"
 msgstr "Type"
@@ -5077,7 +5456,7 @@ msgstr "Marqueur pour Tableau Blanc"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "With a"
-msgstr "Avec un(e)"
+msgstr "Avec"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5294,7 +5673,7 @@ msgstr "supprimer"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "discount"
-msgstr "remise"
+msgstr "de remise"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5351,7 +5730,13 @@ msgstr "commandes payées"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "return"
+<<<<<<< HEAD
 msgstr "retour"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "impayé"
+=======
+msgstr "rendu monnaie"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: point_of_sale
 #. openerp-web

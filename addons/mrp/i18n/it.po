@@ -3,6 +3,7 @@
 # 	* mrp
 # 
 # Translators:
+<<<<<<< HEAD
 # nomorality <mauro.deluca@me.com>, 2019
 # Matteo Boscolo <matteo.boscolo.76@gmail.com>, 2019
 # Christian <chris@effeci.info>, 2019
@@ -27,14 +28,33 @@
 # mymage <stefano.consolaro@mymage.it>, 2019
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # Sergio Zanchetta <primes2h@gmail.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2023
+# Martin Trigaux, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+=======
+# Stefano Consolaro <stefano.consolaro@mymage.it>, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-10-01 12:08+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+=======
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1410,6 +1430,64 @@ msgid "Exception(s):"
 msgstr "Eccezioni:"
 
 #. module: mrp
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
+#, python-format
+msgid "Existing Serial Numbers (%s)"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Exp %s"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
+msgid "Expected"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/report/mrp_report_bom_structure.py:0
+#, python-format
+msgid "Expected %s"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__production_duration_expected
+=======
+#. odoo-python
+#: code:addons/mrp/wizard/stock_assign_serial_numbers.py:0
+#, python-format
+msgid "Existing Serial Numbers (%s)"
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid "Exp %s"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields.selection,name:mrp.selection__mrp_production__components_availability_state__expected
+msgid "Expected"
+msgstr "Atteso"
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/report/mrp_report_bom_structure.py:0
+#, python-format
+msgid "Expected %s"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production__production_duration_expected
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__duration_expected
 msgid "Expected Duration"
 msgstr "Durata prevista"
@@ -2292,7 +2370,13 @@ msgstr "Tipo MIME"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "Minutes"
+<<<<<<< HEAD
 msgstr "Minuti"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+=======
+msgstr "minuti"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3542,9 +3626,139 @@ msgid "Source Location"
 msgstr "Ubicazione di origine"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__costs_hour
 msgid "Specify cost of work center per hour."
 msgstr "Specificare il costo orario del posto di lavoro."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Specific Capacities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
+msgid ""
+"Specific number of pieces that can be produced in parallel per product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_split
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+msgid "Split"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
+msgid "Split #"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
+msgid "Split Details"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_split_line
+msgid "Split Production Detail"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Productions"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split
+msgid "Split production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
+msgid "Split productions"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Starred"
+msgstr "Preferiti"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start"
+msgstr ""
+=======
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
+msgid "Specific Capacities"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,help:mrp.field_mrp_workcenter__capacity_ids
+msgid ""
+"Specific number of pieces that can be produced in parallel per product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.server,name:mrp.action_production_order_split
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+msgid "Split"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
+msgid "Split #"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
+msgid "Split Details"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split_line__mrp_production_split_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_production_split_line
+msgid "Split Production Detail"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
+msgid "Split Productions"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split
+msgid "Split production"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
+msgid "Split productions"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Starred"
+msgstr "Preferiti"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
+msgid "Start"
+msgstr "Avvio"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_start
@@ -4223,8 +4437,30 @@ msgid "Update"
 msgstr "Aggiorna"
 
 #. module: mrp
+<<<<<<< HEAD
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
+#: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
+#, python-format
+msgid "Upload"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+=======
+#. odoo-javascript
+#: code:addons/mrp/static/src/views/mrp_documents_kanban/mrp_documents_kanban_controller.xml:0
+#: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
+#, python-format
+msgid "Upload"
+msgstr "Carica"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
+>>>>>>> fc1dc2c963f (temp)
 msgid "Upload your PDF file."
 msgstr ""
 
@@ -4858,7 +5094,23 @@ msgstr "minuti"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
+<<<<<<< HEAD
 msgstr "di"
+||||||| parent of fc1dc2c963f (temp)
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "on"
+msgstr ""
+=======
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_document_form
+msgid "on"
+msgstr "sul"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

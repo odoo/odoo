@@ -34,7 +34,13 @@ msgstr "%s heeft kostprijs gewijzigd van %s naar %s - %s"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
+<<<<<<< HEAD
 msgstr "Rekeningstelsel sjabloon"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Rekeningenstelsel sjabloon"
+=======
+msgstr "Grootboekschema sjabloon"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -267,9 +273,29 @@ msgid "First In First Out (FIFO)"
 msgstr "First In First Out (FIFO)"
 
 #. module: stock_account
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
 msgid "Has Account Moves"
 msgstr "Heeft boekingen"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Groeperen op..."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Has Remaining Qty"
+msgstr "Heeft overgebleven hoeveelheid"
+=======
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Group by..."
+msgstr "Groepeer op..."
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
+msgid "Has Remaining Qty"
+msgstr "Heeft overgebleven hoeveelheid"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_change_standard_price__id
@@ -329,7 +355,7 @@ msgstr "Boeking"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -410,7 +436,13 @@ msgstr "Productcategorie"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
+<<<<<<< HEAD
 msgstr "Productmutaties (voorraadmutatieregels)"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
+=======
+msgstr "Productverplaatsingen (voorraadverplaatsingsregels)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_product_template
@@ -427,7 +459,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__quantity
 msgid "Quantity"
-msgstr "Hoeveelheid"
+msgstr "Aantal"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
@@ -437,7 +469,53 @@ msgstr "Hoeveelheid Svl"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
+<<<<<<< HEAD
 msgstr "Aantallen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Hoeveelheden"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason"
+msgstr "Reden"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason of the revaluation"
+msgstr "Reden van herwaardering"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
+msgid "Related product"
+msgstr "Gerelateerd product"
+=======
+msgstr "Aantallen"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason"
+msgstr "Reden"
+
+#. module: stock_account
+#: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
+msgid "Reason of the revaluation"
+msgstr "Reden van herwaardering"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__reference
+msgid "Reference"
+msgstr "Referentie"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__product_id
+msgid "Related product"
+msgstr "Gerelateerd product"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__remaining_qty
@@ -452,7 +530,37 @@ msgstr "Retour boeken"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
+<<<<<<< HEAD
 msgstr "Retour pickingregel"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Retour pickingsregel"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Revaluation of %s"
+msgstr "Herwaardering van %s"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Revalue"
+msgstr "Herwaardering"
+=======
+msgstr "Retour pickingregel"
+
+#. module: stock_account
+#. odoo-python
+#: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
+#, python-format
+msgid "Revaluation of %s"
+msgstr "Herwaardering van %s"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
+msgid "Revalue"
+msgstr "Herwaardering"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -502,6 +610,34 @@ msgid "Stock Quantity History"
 msgstr "Voorraadhoeveelheid geschiedenis"
 
 #. module: stock_account
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Voorraadaanvulling rapport"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr "Een voorraadtelling aanvragen"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
+=======
+#: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Voorraadaanvullen rapportage"
+
+#. module: stock_account
+#: model:ir.model,name:stock_account.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr "Voorraad Een voorraadtelling aanvragen"
+
+#. module: stock_account
+#. odoo-javascript
+#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 msgid "Stock Valuation"
 msgstr "Voorraadwaarde"
@@ -542,8 +678,16 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same than the Stock "
 "Valuation account."
 msgstr ""
+<<<<<<< HEAD
 "De input en output accounts kunnen niet hetzelfde zijn als de stockwaarde "
 "account."
+||||||| parent of fc1dc2c963f (temp)
+"De voorraadtoename- en/of voorraadafnamerekening kunnen niet hetzelfde zijn "
+"als de voorraadwaarderingsrekening."
+=======
+"The Stock Input and/or Output accounts cannot be the same as the Stock "
+"Valuation account."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0

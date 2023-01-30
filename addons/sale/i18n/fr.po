@@ -3,6 +3,7 @@
 # 	* sale
 # 
 # Translators:
+<<<<<<< HEAD
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2019
@@ -41,14 +42,40 @@
 # Fred Gilson <fgi@odoo.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Rémi CAZENAVE, 2023
+# Alexandra Jubert, 2023
+# Camille Dantinne <cmd@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jinjiu Liu, 2023
+=======
+# Rémi CAZENAVE, 2023
+# Camille Dantinne <cmd@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jinjiu Liu, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-10-01 12:10+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
 "Last-Translator: Eloïse Stilmant <est@odoo.com>, 2019\n"
+||||||| parent of fc1dc2c963f (temp)
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Jinjiu Liu, 2023\n"
+=======
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+>>>>>>> fc1dc2c963f (temp)
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -622,6 +649,7 @@ msgstr "Un journal doit être spécifié pour l'intermédiaire %s."
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
 msgstr ""
+<<<<<<< HEAD
 "Un intermédiaire de paiement est nécessaire pour exécuter une transaction"
 
 #. module: sale
@@ -663,6 +691,15 @@ msgstr ""
 "Un exemple typique est les heures de service prépayées,\n"
 "                lorsque vous voulez vendre des heures supplémentaires parce que le nombre initial d'heures\n"
 "                 heures ont déjà été utilisées."
+||||||| parent of fc1dc2c963f (temp)
+"Un produit stockable est un produit pour lequel vous gérez un stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable est un produit pour lequel vous ne gérez pas de stock.\n"
+"Un service est un produit immatériel que vous fournissez."
+=======
+"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un service est un produit immatériel que vous fournissez."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:res.groups,name:sale.group_warning_sale
@@ -752,7 +789,23 @@ msgstr "Activité d'exception de décoration"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Status de l'activité"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Statut de l'activité"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+=======
+msgstr "Status de l'activité"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.mail_activity_type_action_config_sale
@@ -943,10 +996,22 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+<<<<<<< HEAD
 "Renforcez vos ventes avec deux sortes de programmes de réduction: les "
 "promotions et les coupons. Des conditions spécifiques peuvent être mises en "
 "place (produits, clients, montant d'achat minimum, période...). La "
 "récompense peut être une réduction (% ou montant) ou des produits gratuits."
+||||||| parent of fc1dc2c963f (temp)
+"Boostez vos ventes avec plusieurs types de programmes : Coupons, Promotions,"
+" Cartes-cadeau, Fidélité. Des conditions spécifiques peuvent être fixées "
+"(produits, clients, montant minimum d'achat, période). Les récompenses "
+"peuvent être des remises (% ou montant) ou des produits gratuits."
+=======
+"Boostez vos ventes avec plusieurs types de programmes : Coupons, Promotions,"
+" Carte Cadeau, Fidélité. Des conditions spécifiques peuvent être fixées "
+"(produits, clients, montant minimum d'achat, période). Les récompenses "
+"peuvent être des remises (% ou montant) ou des produits gratuits."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
@@ -1062,7 +1127,23 @@ msgstr "Calculer les frais de port et expédier avec Easypost"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
+<<<<<<< HEAD
 msgstr "Calculer les frais de port et expédier avec FedEx"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
+=======
+msgstr "Calculer les frais de port et expédier avec FedEx"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1200,9 +1281,19 @@ msgstr ""
 "Date de confirmation des commandes confirmées."
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
 msgstr "Carte de crédit (via Stripe)"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
+msgid "Credit & Debit card (via Stripe)"
+msgstr "Carte de crédit & de débit (via Stripe)"
+=======
+#: model:ir.model.fields.selection,name:sale.selection__sale_payment_provider_onboarding_wizard__payment_method__stripe
+msgid "Credit & Debit card (via Stripe)"
+msgstr "Carte de crédit et de débit (via Stripe)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1215,12 +1306,18 @@ msgstr "Devise"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
 msgid "Currency Rate"
+<<<<<<< HEAD
 msgstr "Taux de la devise"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__custom_value
 msgid "Custom Value"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Taux de change"
+=======
+msgstr "Taux de la devise"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_custom_attribute_value_ids
@@ -1399,9 +1496,19 @@ msgid "Delivery Date"
 msgstr "Date de livraison"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 msgid "Delivery address for current invoice."
 msgstr "Adresse de livraison pour la facture en cours."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Modes de livraison"
+=======
+#: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Méthodes de livraison"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__partner_shipping_id
@@ -1668,14 +1775,38 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: sale
+=======
+#: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
 msgstr "Valeurs interdites sur la ligne de commande de vente non-comptable"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
 msgstr "Inscription gratuite"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__email_from
+msgid "From"
+msgstr "Du"
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__email_from
+msgid "From"
+msgstr "De"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2010,7 +2141,43 @@ msgstr "Objectif de facturation"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing and Shipping Address:"
+<<<<<<< HEAD
 msgstr "Adresse de facturation et d'expédition:"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Adresse de facturation et d'expédition :"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
+msgid "Is Downpayment"
+msgstr "Est un acompte "
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Est éditeur"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
+msgid "Is Expired"
+msgstr "A expiré"
+=======
+msgstr "Adresse de facturation et d'expédition :"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_account_move_line__is_downpayment
+msgid "Is Downpayment"
+msgstr "Est un acompte "
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_cancel__is_mail_template_editor
+msgid "Is Editor"
+msgstr "Est Editeur"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order__is_expired
+msgid "Is Expired"
+msgstr "A expiré"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_is_follower
@@ -2065,8 +2232,16 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
+<<<<<<< HEAD
 msgid "Journal Entries"
 msgstr "Pièces comptables"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Journal Entry"
+msgstr "Écriture comptable"
+=======
+msgid "Journal Entry"
+msgstr "Pièce comptable"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move_line
@@ -2262,6 +2437,20 @@ msgid "Missing required fields on accountable sale order line."
 msgstr "Champs manquants sur la ligne de commande de vente comptabilisée."
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+
+#. module: sale
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "My Orders"
 msgstr "Mes commandes"
@@ -2299,6 +2488,20 @@ msgid "New Quotation"
 msgstr "Nouveau devis"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante calendrier événement"
+
+#. module: sale
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Date limite de l'activité à venir"
@@ -2489,6 +2692,36 @@ msgstr ""
 "clics."
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. Si elle n'est pas définie, la version anglaise sera utilisée. Il"
+" doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
+
+#. module: sale
+=======
+#: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
+msgid ""
+"Optional translation language (ISO code) to select when sending out an "
+"email. If not set, the english version will be used. This should usually be "
+"a placeholder expression that provides the appropriate language, e.g. {{ "
+"object.partner_id.lang }}."
+msgstr ""
+"Langue de traduction facultative (code ISO) à sélectionner lors de l'envoi "
+"d'un email. S'il n'est pas défini, la version anglaise sera utilisée. Il "
+"doit généralement s'agir d'une expression d'espace réservé qui fournit le "
+"langage approprié, par ex. {{ object.partner_id.lang }}."
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Order"
@@ -2626,9 +2859,19 @@ msgid "Partner"
 msgstr "Partenaire"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__country_id
 msgid "Partner Country"
 msgstr "Pays du partenaire"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr "Quantité de colis"
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__product_packaging_qty
+msgid "Packaging Quantity"
+msgstr "Qté de Conditionnements"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2701,12 +2944,18 @@ msgstr "Conditions de paiement"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_transaction
 msgid "Payment Transaction"
+<<<<<<< HEAD
 msgstr "Transaction"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
 msgid "Payment method"
 msgstr "Méthode de paiement"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Transaction de paiement"
+=======
+msgstr "Transaction"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -2835,9 +3084,19 @@ msgid "Product Category"
 msgstr "Catégorie d'article"
 
 #. module: sale
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__product_qty
 msgid "Product Quantity"
 msgstr "Quantité d'articles"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:sale.model_product_packaging
+msgid "Product Packaging"
+msgstr "Conditionnement des produits"
+=======
+#: model:ir.model,name:sale.model_product_packaging
+msgid "Product Packaging"
+msgstr "Emballage des produits"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_template
@@ -3226,6 +3485,20 @@ msgid "Sales Order"
 msgstr "Bon de commande"
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:sale.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Annulation Commande"
+
+#. module: sale
+=======
+#: model:ir.model,name:sale.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Annulation Bon de commande"
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model:mail.message.subtype,name:sale.mt_order_confirmed
 #: model:mail.message.subtype,name:sale.mt_salesteam_order_confirmed
 msgid "Sales Order Confirmed"
@@ -3235,7 +3508,13 @@ msgstr "Commande de vente confirmée"
 #: model:ir.model.fields,field_description:sale.field_account_analytic_line__so_line
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_line_view_form_readonly
 msgid "Sales Order Item"
+<<<<<<< HEAD
 msgstr "Ligne de vente"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Article du bon de commande"
+=======
+msgstr "Article de la commande"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line
@@ -3498,7 +3777,13 @@ msgstr "Paramétrez une facturation cible :"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
+<<<<<<< HEAD
 msgstr "Un article peut avoir plusieurs prix, réductions automatiques, etc."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Un produit peut avoir plusieurs prix, remises automatisées, etc."
+=======
+msgstr "Un produit peut avoir plusieurs prix, réductions automatiques, etc."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
@@ -3713,6 +3998,34 @@ msgstr ""
 " services."
 
 #. module: sale
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
+msgid "Terms & Conditions format"
+msgstr "Format des conditions générales"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Terms & Conditions: %s"
+msgstr "Conditions générales : %s"
+
+#. module: sale
+=======
+#: model:ir.model.fields,field_description:sale.field_sale_order__terms_type
+msgid "Terms & Conditions format"
+msgstr "Format des conditions générales"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Terms & Conditions: %s"
+msgstr "Conditions générales : %s "
+
+#. module: sale
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Terms &amp; Conditions"
 msgstr "Conditions générales"
@@ -3720,7 +4033,7 @@ msgstr "Conditions générales"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__note
 msgid "Terms and conditions"
-msgstr "Conditions de vente"
+msgstr "Conditions générales"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3916,7 +4229,13 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+<<<<<<< HEAD
 "Le mode de livraison, p. ex. carte postale, e-mail ou bannière publicitaire"
+||||||| parent of fc1dc2c963f (temp)
+"Le mode de livraison, par ex. carte postale, email ou bannière publicitaire"
+=======
+"Le mode de livraison, p. ex. carte postale, email ou bannière publicitaire"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
@@ -3924,8 +4243,38 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+<<<<<<< HEAD
 "La source du lien, p. ex. moteur de recherche, domaine externe ou nom de la "
 "liste d'adresses e-mail"
+||||||| parent of fc1dc2c963f (temp)
+"La source du lien, par ex. moteur de recherche, domaine externe ou nom de la"
+" liste d'adresses email"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
+msgstr ""
+"Le produit est emballé par %(pack_size).2f%(pack_name)s. Vous devriez vendre"
+" %(quantity).2f%(unit)s."
+=======
+"La source du lien, p. ex. moteur de recherche, domaine externe ou nom de la "
+"liste d'adresses email"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order_line.py:0
+#, python-format
+msgid ""
+"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
+"%(quantity).2f %(unit)s."
+msgstr ""
+"Le produit est emballé par %(pack_size).2f%(pack_name)s. Vous devriez vendre"
+" %(quantity).2f%(unit)s."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4000,6 +4349,38 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Pour envoyer des invitations en mode B2B, ouvrez un contact ou sélectionnez-"
+"en plusieurs dans la liste et cliquez sur l'option 'Portal Access "
+"Management' dans le menu déroulant *Action*."
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid ""
+"To speed up order confirmation, we can activate electronic signatures or "
+"payments."
+msgstr ""
+"Pour accélérer la confirmation des bons de commande, nous pouvons activer "
+"les signatures électroniques ou les paiements."
+=======
+"Pour envoyer des invitations en mode B2B, ouvrez un contact ou sélectionnez-"
+"en plusieurs dans la liste et cliquez sur l'option 'Portal Access "
+"Management' dans le menu déroulant * Action *."
+
+#. module: sale
+#. odoo-javascript
+#: code:addons/sale/static/src/js/tours/sale.js:0
+#, python-format
+msgid ""
+"To speed up order confirmation, we can activate electronic signatures or "
+"payments."
+msgstr ""
+"Pour accélérer la confirmation des bons de commande, nous pouvons activer "
+"les signatures électroniques ou les paiements."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4170,7 +4551,13 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 msgid "Upselling Opportunity"
+<<<<<<< HEAD
 msgstr "Opportunité de montée en gamme"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Opportunité de vente incitative"
+=======
+msgstr "Opportunité de vente additionnelle"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: sale
 #. openerp-web

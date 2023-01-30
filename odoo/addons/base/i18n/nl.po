@@ -5557,6 +5557,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
+<<<<<<< HEAD
 "Toont uw bedrijfsadres / relatie adres op Google Maps. Configureer een API sleutel in de website instellingen."
 
 #. module: base
@@ -5573,6 +5574,11 @@ msgstr ""
 "\n"
 "Biedt uw klanten de mogelijkheid om eenvoudig documenten te ondertekenen.\n"
 "    "
+||||||| parent of fc1dc2c963f (temp)
+"Toont je bedrijfsadres / relatie adres op Google Maps. Configureer een API key in de website instellingen."
+=======
+"Toont je bedrijfsadres / partneradres op Google Maps. Configureer een API key in de website instellingen."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg
@@ -5837,7 +5843,13 @@ msgstr ""
 "\n"
 "Boven een volledige maaltijd en leverancier beheer biedt deze module de mogelijkheid om waarschuwingen te tonen en bied snelle order selectie gebaseerd op de werknemer zijn voorkeuren.\n"
 "\n"
+<<<<<<< HEAD
 "Als u uw werknemer zijn tijd wilt bewaren en om te vermeiden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
+||||||| parent of fc1dc2c963f (temp)
+"Als u uw werknemer zijn tijd wilt bewaren en om te vermijden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
+=======
+"Als je je werknemer zijn tijd wilt bewaren en om te vermijden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -7841,6 +7853,20 @@ msgid "%y - Year without century [00,99].\""
 msgstr "%y - Jaar zonder eeuw [00,99].\""
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
+msgid "&amp; Close"
+msgstr "&amp; Sluiten"
+
+#. module: base
+=======
+#: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
+msgid "&amp; Close"
+msgstr "&amp; Afsluiten"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
 msgid "&amp;nbsp;"
 msgstr "&amp;nbsp;"
@@ -7913,8 +7939,70 @@ msgid ""
 "- Create/update: a mandatory field is not set.\n"
 "- Delete: another model requires the record being deleted. If possible, archive it instead."
 msgstr ""
+<<<<<<< HEAD
 "- Aanmaken/update: een verplicht veld is niet ingesteld.\n"
 "- Verwijderen: een ander model heeft het verwijderde record nodig. Archiveer dit record indien mogelijk."
+||||||| parent of fc1dc2c963f (temp)
+"- %(record)r horen bij bedrijf %(company)r en %(field)r (%(fname)s: "
+"%(values)s) horen bij een ander bedrijf."
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner__type
+#: model:ir.model.fields,help:base.field_res_users__type
+msgid ""
+"- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+"- Invoice Address : Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+"- Delivery Address : Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+"- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+"- Other: Other address for the company (e.g. subsidiary, ...)"
+msgstr ""
+"- Contact: Gebruik dit om de contactgegevens van werknemers van een bepaald bedrijf te organiseren (vb. CEO, CFO, ...).\n"
+"- Factuuradres : Voorkeursadres voor alle facturen. Standaard geselecteerd wanneer je een bestelling factureert die bij dit bedrijf hoort.\n"
+"- Afleveradres : Voorkeursadres voor alle leveringen. Standaard geselecteerd wanneer je een bestelling aflevert die bij dit bedrijf hoort.\n"
+"- Privé: Privé-adressen zijn alleen zichtbaar voor geautoriseerde gebruikers en bevatten gevoelige gegevens (thuisadressen van werknemers, ...).\n"
+"- Andere: Ander adres van het bedrijf (bv. dochteronderneming, ...)"
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
+"belongs to another company."
+msgstr ""
+"- Record is bedrijf %(company)r en %(field)r (%(fname)s: %(values)s) horen "
+"bij een ander bedrijf."
+=======
+"- %(record)r horen bij bedrijf %(company)r en %(field)r (%(fname)s: "
+"%(values)s) horen bij een ander bedrijf."
+
+#. module: base
+#: model:ir.model.fields,help:base.field_res_partner__type
+#: model:ir.model.fields,help:base.field_res_users__type
+msgid ""
+"- Contact: Use this to organize the contact details of employees of a given company (e.g. CEO, CFO, ...).\n"
+"- Invoice Address : Preferred address for all invoices. Selected by default when you invoice an order that belongs to this company.\n"
+"- Delivery Address : Preferred address for all deliveries. Selected by default when you deliver an order that belongs to this company.\n"
+"- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
+"- Other: Other address for the company (e.g. subsidiary, ...)"
+msgstr ""
+"- Contact: Gebruik dit om de contactgegevens van werknemers van een bepaald bedrijf te organiseren (bijv. CEO, CFO, ...).\n"
+"- Factuuradres : Voorkeursadres voor alle facturen. Standaard geselecteerd wanneer je een bestelling factureert die bij dit bedrijf hoort.\n"
+"- Afleveradres : Voorkeursadres voor alle leveringen. Standaard geselecteerd wanneer je een bestelling aflevert die bij dit bedrijf hoort.\n"
+"- Privé: Privé-adressen zijn alleen zichtbaar voor geautoriseerde gebruikers en bevatten gevoelige gegevens (thuisadressen van werknemers, ...).\n"
+"- Andere: Ander adres van het bedrijf (bv. dochteronderneming, ...)"
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
+"belongs to another company."
+msgstr ""
+"- Record is bedrijf %(company)r en %(field)r (%(fname)s: %(values)s) horen "
+"bij een ander bedrijf."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -8809,6 +8897,72 @@ msgid "ABA Credit Transfer"
 msgstr "ABA overschrijving"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:base.model_res_users_apikeys_description
+msgid "API Key Description"
+msgstr "Omschrijving API Key"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_users_keys_description
+msgid "API Key: description input wizard"
+msgstr "API Key: wizard voor het invoeren van beschrijvingen"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "API Keys"
+msgstr "API Keys"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_apikeys_admin
+msgid "API Keys Listing"
+msgstr "API Keys lijst"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
+"API Keys worden gebruikt om verbinding te maken met Odoo vanuit externe "
+"tools zonder dat een wachtwoord of Two-factor Authentication nodig is."
+
+#. module: base
+#. odoo-python
+=======
+#: model:ir.model,name:base.model_res_users_apikeys_description
+msgid "API Key Description"
+msgstr "Omschrijving API Key"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_res_users_keys_description
+msgid "API Key: description input wizard"
+msgstr "API key: wizard voor het invoeren van beschrijvingen"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "API Keys"
+msgstr "API keys"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_apikeys_admin
+msgid "API Keys Listing"
+msgstr "API keys lijst"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid ""
+"API Keys are used to connect to Odoo from external tools without the need "
+"for a password or Two-factor Authentication."
+msgstr ""
+"API Keys worden gebruikt om verbinding te maken met Odoo vanuit externe "
+"tools zonder dat een wachtwoord of Two-factor Authentication nodig is."
+
+#. module: base
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/fields.py:0
 #, python-format
 msgid "ASCII characters are required for %s in %s"
@@ -9637,7 +9791,13 @@ msgstr "Sta push berichten naar toestellen toe"
 #: model:ir.module.module,summary:base.module_website_sale_comparison
 msgid "Allow shoppers to compare products based on their attributes"
 msgstr ""
+<<<<<<< HEAD
 "Laat winkelaars toe om producten te vergelijken gebaseerd op hun attributen."
+||||||| parent of fc1dc2c963f (temp)
+"Laat shoppers toe om producten te vergelijken gebaseerd op hun kenmerken."
+=======
+"Laat winkelaars toe om producten te vergelijken gebaseerd op hun kenmerken."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_wishlist
@@ -9766,6 +9926,66 @@ msgstr ""
 "afhankelijkheden heeft, wordt de module altijd geïnstalleerd."
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/base/models/res_partner.py:0
+#, python-format
+msgid "An email is required for find_or_create to work"
+msgstr "Een email is vereist om find_or_create te laten functioneren"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+"Een optie wordt niet ondersteund door de server:\n"
+" %s"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_asiapay
+msgid "An payment provider based in Hong Kong covering most Asian countries."
+msgstr "Een betaalprovider in Hong Kong die de meeste Aziatische landen dekt."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_authorize
+msgid "An payment provider covering the US, Australia, and Canada."
+msgstr "Een betaalprovider die de VS, Australië en Canada dekt."
+
+#. module: base
+=======
+#. odoo-python
+#: code:addons/base/models/res_partner.py:0
+#, python-format
+msgid "An email is required for find_or_create to work"
+msgstr "Een email is vereist om zoek_of_creëer te laten functioneren"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"An option is not supported by the server:\n"
+" %s"
+msgstr ""
+"Een optie wordt niet ondersteund door de server:\n"
+" %s"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_asiapay
+msgid "An payment provider based in Hong Kong covering most Asian countries."
+msgstr "Een betaalprovider in Hong Kong die de meeste Aziatische landen dekt."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_payment_authorize
+msgid "An payment provider covering the US, Australia, and Canada."
+msgstr "Een betaalprovider die de VS, Australië en Canada dekt."
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,shortdesc:base.module_analytic
 msgid "Analytic Accounting"
 msgstr "Kostenplaatsen"
@@ -10001,9 +10221,69 @@ msgid "Assess your employees"
 msgstr "Beoordeel uw werknemers"
 
 #. module: base
+<<<<<<< HEAD
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
 msgstr "Beheer van activa"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model,name:base.model_ir_asset
+msgid "Asset"
+msgstr "Component"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_asset
+#: model:ir.ui.menu,name:base.menu_action_asset
+#: model_terms:ir.ui.view,arch_db:base.asset_view_form
+#: model_terms:ir.ui.view,arch_db:base.asset_view_search
+#: model_terms:ir.ui.view,arch_db:base.asset_view_tree
+msgid "Assets"
+msgstr "Middelen"
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_partner_category_form
+msgid "Assign tags to your contacts to organize, filter and track them."
+msgstr ""
+"Wijs tags toe aan je contacten om ze te ordenen, te filteren en te volgen."
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_autocomplete
+#: model:ir.module.module,summary:base.module_website_sale_autocomplete
+msgid ""
+"Assist your users with automatic completion & suggestions when filling their"
+" address during checkout"
+msgstr ""
+"Help je gebruikers met automatische aanvulling en suggesties bij het "
+"invullen van hun adres tijdens het afrekenen"
+=======
+#: model:ir.model,name:base.model_ir_asset
+msgid "Asset"
+msgstr "Asset"
+
+#. module: base
+#: model:ir.actions.act_window,name:base.action_asset
+#: model:ir.ui.menu,name:base.menu_action_asset
+#: model_terms:ir.ui.view,arch_db:base.asset_view_form
+#: model_terms:ir.ui.view,arch_db:base.asset_view_search
+#: model_terms:ir.ui.view,arch_db:base.asset_view_tree
+msgid "Assets"
+msgstr "Assets"
+
+#. module: base
+#: model_terms:ir.actions.act_window,help:base.action_partner_category_form
+msgid "Assign tags to your contacts to organize, filter and track them."
+msgstr ""
+"Wijs tags toe aan je contacten om ze te ordenen, te filteren en te volgen."
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_sale_autocomplete
+#: model:ir.module.module,summary:base.module_website_sale_autocomplete
+msgid ""
+"Assist your users with automatic completion & suggestions when filling their"
+" address during checkout"
+msgstr ""
+"Help je gebruikers met automatische aanvulling en suggesties bij het "
+"invullen van hun adres tijdens het afrekenen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
@@ -10561,6 +10841,28 @@ msgid "Belize"
 msgstr "Belize"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Onderstaande tekst dient als suggestie en houdt Odoo S.A. niet "
+"aansprakelijk."
+
+#. module: base
+=======
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid ""
+"Below text serves as a suggestion and doesn’t engage Odoo S.A. "
+"responsibility."
+msgstr ""
+"Onderstaande tekst dient als suggestie en geeft Odoo S.A. geen "
+"verantwoordelijkheid."
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:res.country,name:base.bj
 msgid "Benin"
 msgstr "Benin"
@@ -11236,12 +11538,18 @@ msgstr "Christmaseiland"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_short_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "City"
+<<<<<<< HEAD
 msgstr "Plaats"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_address_city
 msgid "City Addresses"
 msgstr "Adressen van plaatsen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Stad"
+=======
+msgstr "Plaats"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_logging__type__client
@@ -11265,7 +11573,23 @@ msgstr "Client actie tag"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
+<<<<<<< HEAD
 msgstr "Sluiten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Afsluiten"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "Close the onboarding panel"
+msgstr "Sluit het onboarding-paneel"
+=======
+msgstr "Sluiten"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.onboarding_container
+msgid "Close the onboarding panel"
+msgstr "Sluit het onboarding-paneel"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -11387,12 +11711,18 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
 msgid "Comment"
+<<<<<<< HEAD
 msgstr "Opmerking"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_form
 msgid "Comments"
 msgstr "Opmerkingen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Reactie"
+=======
+msgstr "Opmerking"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__commercial_partner_id
@@ -11546,6 +11876,7 @@ msgstr "Volledige naam"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
+<<<<<<< HEAD
 msgstr "Bereken"
 
 #. module: base
@@ -11562,6 +11893,11 @@ msgstr "Bereken BTW met Taxcloud na de online levering berekening."
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
 msgid "Compute taxes with TaxCloud after online delivery computation."
 msgstr "Bereken BTW met TaxCloud na de online levering berekening."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Berekenen"
+=======
+msgstr "Bereken"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -11652,6 +11988,20 @@ msgid "Confirm"
 msgstr "Bevestigen"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
+msgid "Confirm Password"
+msgstr "Wachtwoord bevestigen"
+
+#. module: base
+=======
+#: model_terms:ir.ui.view,arch_db:base.identity_check_wizard
+msgid "Confirm Password"
+msgstr "Bevestig wachtwoord"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:res.country,name:base.cg
 msgid "Congo"
 msgstr "Congo"
@@ -12265,7 +12615,13 @@ msgstr "Aangemaakt op"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
 msgid "Creation"
+<<<<<<< HEAD
 msgstr "Aanmaken"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Creatie"
+=======
+msgstr "Aangemaakt"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_search_view
@@ -12363,6 +12719,7 @@ msgid "Currency Unit"
 msgstr "Valuta eenheid"
 
 #. module: base
+<<<<<<< HEAD
 #: model:ir.model.fields,help:base.field_res_currency__currency_unit_label
 msgid "Currency Unit Name"
 msgstr "Valuta eenheid naam"
@@ -12371,6 +12728,15 @@ msgstr "Valuta eenheid naam"
 #: model:ir.model.fields,help:base.field_res_currency__symbol
 msgid "Currency sign, to be used when printing amounts."
 msgstr "Valutateken, welke wordt gebruikt wanneer bedragen worden afgedrukt."
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:base.field_res_currency__symbol
+msgid "Currency sign, to be used when printing amounts."
+msgstr "Valutateken, dat wordt gebruikt wanneer bedragen worden afgedrukt."
+=======
+#: model:ir.model.fields,help:base.field_res_currency__symbol
+msgid "Currency sign, to be used when printing amounts."
+msgstr "Valutateken, welke wordt gebruikt wanneer bedragen worden afgedrukt."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -12399,12 +12765,18 @@ msgstr "Huidig venster"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 #: model_terms:ir.ui.view,arch_db:base.view_model_search
 msgid "Custom"
+<<<<<<< HEAD
 msgstr "Aangepast"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_document_layout__custom_colors
 msgid "Custom Colors"
 msgstr "Aangepaste kleuren"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Op maat"
+=======
+msgstr "Aangepast"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__manual
@@ -12460,6 +12832,20 @@ msgid "Customers"
 msgstr "Klanten"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.module.category,name:base.module_category_customizations
+msgid "Customizations"
+msgstr "Aanpassingen"
+
+#. module: base
+=======
+#: model:ir.module.category,name:base.module_category_customizations
+msgid "Customizations"
+msgstr "Wijzigingen"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.actions.act_window,name:base.action_ui_view_custom
 #: model:ir.ui.menu,name:base.menu_action_ui_view_custom
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_form
@@ -12515,6 +12901,30 @@ msgid "Dashboards"
 msgstr "Dashboards"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.module.category,name:base.module_category_productivity_data_cleaning
+msgid "Data Cleaning"
+msgstr "Opschonen"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_data_recycle
+msgid "Data Recycle"
+msgstr "Gegevens recyclen"
+
+#. module: base
+=======
+#: model:ir.module.category,name:base.module_category_productivity_data_cleaning
+msgid "Data Cleaning"
+msgstr "Gegevens opschonen"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_data_recycle
+msgid "Data Recycle"
+msgstr "Gegevens recyclen"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,description:base.module_test_convert
 msgid "Data for xml conversion tests"
 msgstr "Data voor xml conversie tests"
@@ -12929,6 +13339,42 @@ msgid "Direction"
 msgstr "Richting"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_asset__directive
+msgid "Directive"
+msgstr "Richtlijn"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_lang_tree
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
+msgid "Disable smart shrinking"
+msgstr "Slim verkleinen uitschakelen"
+
+#. module: base
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:base.field_ir_asset__directive
+msgid "Directive"
+msgstr "Directive"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_lang_tree
+msgid "Disable"
+msgstr "Uitschakelen"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_report_paperformat__disable_shrinking
+msgid "Disable smart shrinking"
+msgstr "Slim verkleinen uitschakelen"
+
+#. module: base
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid ""
@@ -13061,12 +13507,18 @@ msgstr "Tonen"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__display_name
 #: model:ir.model.fields,field_description:base.field_wizard_ir_model_menu_create__display_name
 msgid "Display Name"
+<<<<<<< HEAD
 msgstr "Schermnaam"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_studio
 msgid "Display Website Elements in Studio"
 msgstr "Toon website elementen in studio"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Weergavenaam"
+=======
+msgstr "Schermnaam"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_line
@@ -13569,9 +14021,31 @@ msgid "Employee Contracts"
 msgstr "Werknemer contracten"
 
 #. module: base
+<<<<<<< HEAD
 #: model:ir.module.module,shortdesc:base.module_hr_contract_reports
 msgid "Employee Contracts Reporting"
 msgstr "Arbeidsovereenkomsten Rapporten"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
+msgid "Employee Hourly Cost"
+msgstr "Uurloon werknemer"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
+#: model:ir.module.module,summary:base.module_hr_hourly_cost
+msgid "Employee Hourly Wage"
+msgstr "Uurloon werknemer"
+=======
+#: model:ir.module.category,name:base.module_category_services_employee_hourly_cost
+msgid "Employee Hourly Cost"
+msgstr "Uurkosten werknemer"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_hourly_cost
+#: model:ir.module.module,summary:base.module_hr_hourly_cost
+msgid "Employee Hourly Wage"
+msgstr "Uurloon werknemer"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_presence
@@ -13683,6 +14157,7 @@ msgstr "Eritrea"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure__error
 msgid "Error"
+<<<<<<< HEAD
 msgstr "Fout"
 
 #. module: base
@@ -13694,6 +14169,11 @@ msgid ""
 msgstr ""
 "Fout context:\n"
 "Weergave`%(view_name)s`"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Foutmelding"
+=======
+msgstr "Fout"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__message
@@ -13862,12 +14342,18 @@ msgstr "Executive 4   7.5 x 10 inch, 190.5 x 254 mm"
 #: model:ir.module.category,name:base.module_category_accounting_expenses
 #: model:ir.module.module,shortdesc:base.module_hr_expense
 msgid "Expenses"
+<<<<<<< HEAD
 msgstr "Declaraties"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_expense
 msgid "Expenses in Payslips"
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Onkosten"
+=======
+msgstr "Declaraties"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,help:base.field_report_paperformat__report_ids
@@ -14387,8 +14873,26 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+<<<<<<< HEAD
 "Bestand van waaruit de weergave komt.\n"
 "Handig om kapotte weergaves te herstellen (hard) of om de arch te lezen vanuit het bestand wanneer u zich in de dev-xml modus vind."
+||||||| parent of fc1dc2c963f (temp)
+"Bestand waar de weergave vandaag komt.\n"
+"Handig om gebroken weergaves (hard) te resetten of om in dev-xml modus arch uit bestand te lezen."
+
+#. module: base
+#: model:ir.model,name:base.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr "Helpermodel voor bestandsstreaming voor controllers"
+=======
+"Bestand van waaruit de weergave komt.\n"
+"Handig om kapotte weergaves te herstellen (hard) of om de arch te lezen vanuit het bestand wanneer je je in de dev-xml modus vind."
+
+#. module: base
+#: model:ir.model,name:base.model_ir_binary
+msgid "File streaming helper model for controllers"
+msgstr "Helpermodel voor bestandsstreaming voor controllers"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -14600,6 +15104,24 @@ msgid "Form"
 msgstr "Formulier"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#. odoo-python
+#: code:addons/base/models/ir_qweb_fields.py:0
+#, python-format
+msgid "Format"
+msgstr "Formatteren"
+
+#. module: base
+=======
+#. odoo-python
+#: code:addons/base/models/ir_qweb_fields.py:0
+#, python-format
+msgid "Format"
+msgstr "Formatteer"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,help:base.field_res_partner__email_formatted
 #: model:ir.model.fields,help:base.field_res_users__email_formatted
 msgid "Format email address \"Name <email@domain>\""
@@ -14838,7 +15360,7 @@ msgstr "Algemene informatie"
 #: model:ir.ui.menu,name:base.menu_config
 #: model_terms:ir.ui.view,arch_db:base.view_window_action_form
 msgid "General Settings"
-msgstr "Algemene instellingen"
+msgstr "Algemeen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_wizard_update_translations
@@ -15812,6 +16334,20 @@ msgid "ID of the view defined in xml file"
 msgstr "ID van de weergave zoals gedefinieerd in het xml bestand"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:base.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "ID gebruikt voor werknemer identificatie."
+
+#. module: base
+=======
+#: model:ir.model.fields,help:base.field_res_users__barcode
+msgid "ID used for employee identification."
+msgstr "ID gebruikt voor werknemer identificatie. "
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,shortdesc:base.module_bus
 msgid "IM Bus"
 msgstr "IM Bus"
@@ -17298,9 +17834,19 @@ msgid "Launch Configuration Wizard"
 msgstr "Start configuratie wizard"
 
 #. module: base
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "Layout"
 msgstr "Layout"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_res_company__layout_background
+msgid "Layout Background"
+msgstr "Achtergrond layout"
+=======
+#: model:ir.model.fields,field_description:base.field_res_company__layout_background
+msgid "Layout Background"
+msgstr "Achtergrond lay-out"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__address_format
@@ -17315,7 +17861,7 @@ msgstr "Lead verrijking"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead
 msgid "Lead Generation"
-msgstr "Lead generatie"
+msgstr "Leadgeneratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_iap_lead_website
@@ -17474,12 +18020,18 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_link_tracker
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
+<<<<<<< HEAD
 msgstr "Opvolging links"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_voip_crm
 msgid "Link between voip and crm"
 msgstr "Link tussen voip en crm"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Link Tracker"
+=======
+msgstr "Opvolging links"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr
@@ -17599,6 +18151,7 @@ msgstr "Logging details"
 #: model:ir.model.fields,field_description:base.field_res_users__login
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "Login"
+<<<<<<< HEAD
 msgstr "Login"
 
 #. module: base
@@ -17615,6 +18168,11 @@ msgstr "Primaire kleur logo"
 #: model:ir.model.fields,field_description:base.field_base_document_layout__logo_secondary_color
 msgid "Logo Secondary Color"
 msgstr "Secundaire kleur logo"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Inloggen"
+=======
+msgstr "Login"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo_web
@@ -18875,6 +19433,7 @@ msgid "Netherlands - Accounting"
 msgstr "Nederland - Boekhouding"
 
 #. module: base
+<<<<<<< HEAD
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_reports
 msgid "Netherlands - Accounting Reports"
 msgstr "Nederland - Boekhoudkundige rapporten"
@@ -18883,6 +19442,15 @@ msgstr "Nederland - Boekhoudkundige rapporten"
 #: model:ir.module.module,shortdesc:base.module_l10n_nl_intrastat
 msgid "Netherlands Intrastat Declaration"
 msgstr "Nederlandse Intrastat declaratie"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "New API Key"
+msgstr "Nieuwe API Key"
+=======
+#: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
+msgid "New API Key"
+msgstr "Nieuwe API key"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -21176,9 +21744,39 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+<<<<<<< HEAD
 "Alleen van toepassing als de weergave overerft van een andere (inherit_id is niet Onwaar/Null). \n"
 "* Indien extensie (standaard), als deze weergave wordt aangevraagd wordt de dichtste primaire weergave gezocht (via inherit_id), vervolgens worden alle weergaven die hier van overerven toegepast\n"
 "* Indien primair, de dichtstbijzijnde weergave wordt volledig opgelost (zelfs als het een andere model dan deze gebruikt), vervolgens worden de weergave zijn overerving specificaties (<xpath/>) toegepast, en het resultaat wordt gebruikt als deze weergave zijn arch.\n"
+||||||| parent of fc1dc2c963f (temp)
+"Alleen van toepassing als de weergave overerft van een andere (inherit_id is niet False/Null). \n"
+"\n"
+"* Indien uitbreiding (standaard), als deze weergave wordt opgevraagd wordt de dichtstbijzijnde primaire weergave\n"
+"gezocht (via inherit_id), dan worden alle weergaven die daarvan \n"
+"erven met dit model toegepast\n"
+"* Indien primair, de dichtstbijzijnde primaire weergave wordt volledig opgelost (zelfs als het een \n"
+"andere model dan deze gebruikt), dan worden de overervingsspecificaties van deze weergave\n"
+" (<xpath/>) toegepast, en het resultaat wordt gebruikt als de werkelijke arch van \n"
+"deze weergave.\n"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "Only internal users can create API keys"
+msgstr "Alleen interne gebruikers kunnen API keys maken"
+=======
+"Alleen van toepassing als de weergave overerft van een andere (inherit_id is niet Onwaar/Null). \n"
+"* Indien extensie (standaard), als deze weergave wordt aangevraagd wordt de dichtste primaire weergave gezocht (via inherit_id), vervolgens worden alle weergaven die hier van overerven toegepast\n"
+"* Indien primair, de dichtstbijzijnde weergave wordt volledig opgelost (zelfs als het een andere model dan deze gebruikt), vervolgens worden de weergave zijn overerving specificaties (<xpath/>) toegepast, en het resultaat wordt gebruikt als deze weergave zijn arch.\n"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "Only internal users can create API keys"
+msgstr "Alleen interne gebruikers kunnen API keys maken"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -21208,6 +21806,20 @@ msgid "Oops, no!"
 msgstr "Oeps, nee!"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_profile__speedscope_url
+msgid "Open"
+msgstr "Openen"
+
+#. module: base
+=======
+#: model:ir.model.fields,field_description:base.field_ir_profile__speedscope_url
+msgid "Open"
+msgstr "Open"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Open Apps"
 msgstr "Open apps"
@@ -21299,6 +21911,20 @@ msgid "Options"
 msgstr "Opties"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_model__order
+msgid "Order"
+msgstr "Bestelling"
+
+#. module: base
+=======
+#: model:ir.model.fields,field_description:base.field_ir_model__order
+msgid "Order"
+msgstr "Order"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,description:base.module_website_event_track
 msgid ""
 "Organize Events, Trainings & Webinars\n"
@@ -22110,12 +22736,18 @@ msgstr "Paypal betaalprovider"
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
+<<<<<<< HEAD
 msgstr "Loonstrook"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
 msgstr "Loonadministratie"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Salarisadministratie"
+=======
+msgstr "Loonstrook"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
@@ -22358,6 +22990,7 @@ msgid "Prefix value of the record for the sequence"
 msgstr "Voorvoegsel voor het record voor de reeks"
 
 #. module: base
+<<<<<<< HEAD
 #: model:ir.module.module,summary:base.module_website_twitter_wall
 msgid "Pretty Way to Display Tweets for Event"
 msgstr "Mooie manier om Tweets te tonen voor een evenement"
@@ -22366,6 +22999,15 @@ msgstr "Mooie manier om Tweets te tonen voor een evenement"
 #: model:ir.model.fields,field_description:base.field_base_document_layout__preview
 msgid "Preview"
 msgstr "Voorbeeld"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
+msgid "Prepend"
+msgstr "Voorvoegen"
+=======
+#: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
+msgid "Prepend"
+msgstr "Prepend"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_layout__image
@@ -22469,7 +23111,25 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_stock
 msgid "Product Availability"
+<<<<<<< HEAD
 msgstr "Product beschikbaarheid"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Productbeschikbaarheid"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_comparison_wishlist
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock_wishlist
+msgid "Product Availability Notifications"
+msgstr "Productbeschikbaarheidsmeldingen"
+=======
+msgstr "Product beschikbaarheid"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_sale_comparison_wishlist
+#: model:ir.module.module,shortdesc:base.module_website_sale_stock_wishlist
+msgid "Product Availability Notifications"
+msgstr "Productbeschikbaarheidsmeldingen"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_comparison
@@ -22482,6 +23142,20 @@ msgid "Product Email Template"
 msgstr "Product e-mailsjabloon"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.module.module,shortdesc:base.module_product_images
+msgid "Product Images"
+msgstr "Afbeeldingen product"
+
+#. module: base
+=======
+#: model:ir.module.module,shortdesc:base.module_product_images
+msgid "Product Images"
+msgstr "Productafbeeldingen"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,shortdesc:base.module_mrp_plm
 msgid "Product Lifecycle Management (PLM)"
 msgstr "Product Lifecycle Management (PLM)"
@@ -24434,12 +25108,18 @@ msgstr "Sierra Leone"
 #: model:ir.module.category,name:base.module_category_sales_sign
 #: model:ir.module.module,shortdesc:base.module_sign
 msgid "Sign"
+<<<<<<< HEAD
 msgstr "E-sign"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_sign
 msgid "Signature templates from Documents"
 msgstr "Handtekening sjablonen voor documenten"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Ondertekenen"
+=======
+msgstr "E-sign"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_signup
@@ -24814,7 +25494,7 @@ msgstr "Status van de onboarding bedrijf stap"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__state_ids
 msgid "States"
-msgstr "Status"
+msgstr "Staten / Provincies"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_install__state
@@ -25194,10 +25874,44 @@ msgid "Tanzania"
 msgstr "Tanzania"
 
 #. module: base
-#: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name
-#: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_name
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_asset__target
+msgid "Target"
+msgstr "Doelstelling"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
+#: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
 msgid "Target Model"
 msgstr "Doelmodel"
+
+#. module: base
+=======
+#: model:ir.model.fields,field_description:base.field_ir_asset__target
+msgid "Target"
+msgstr "Doel"
+
+#. module: base
+#: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_id
+#: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_id
+msgid "Target Model"
+msgstr "Doelmodel"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_actions_server__crud_model_name
+#: model:ir.model.fields,field_description:base.field_ir_cron__crud_model_name
+<<<<<<< HEAD
+msgid "Target Model"
+msgstr "Doelmodel"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Target Model Name"
+msgstr "Naam doelmodel"
+=======
+msgid "Target Model Name"
+msgstr "Doel model naam"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__target
@@ -25215,6 +25929,7 @@ msgstr "Taak logs"
 #: model:ir.model.fields,field_description:base.field_res_partner__vat
 #: model:ir.model.fields,field_description:base.field_res_users__vat
 msgid "Tax ID"
+<<<<<<< HEAD
 msgstr "BTW Nr."
 
 #. module: base
@@ -25232,6 +25947,11 @@ msgstr "TaxCloud en Abonnementen"
 msgid "TaxCloud make it easy for business to comply with sales tax law"
 msgstr ""
 "Taxcloud maakt het eenvoudig voor bedrijven om te voldoen aan de BTW regels."
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Btw nr."
+=======
+msgstr "BTW Nr."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_custom
@@ -25344,6 +26064,20 @@ msgid "Tests"
 msgstr "Testen"
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.module.module,shortdesc:base.module_test_apikeys
+msgid "Tests flow of API keys"
+msgstr "Test API Keys"
+
+#. module: base
+=======
+#: model:ir.module.module,shortdesc:base.module_test_apikeys
+msgid "Tests flow of API keys"
+msgstr "Test API keys"
+
+#. module: base
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.module.module,description:base.module_test_read_group
 msgid "Tests for read_group"
 msgstr "Tests voor read_group"
@@ -25459,8 +26193,42 @@ msgstr ""
 #. module: base
 #: code:addons/base/models/res_users.py:0
 #, python-format
+<<<<<<< HEAD
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
+||||||| parent of fc1dc2c963f (temp)
+msgid "The attachment collides with an existing file."
+msgstr "De bijlage botst met een bestaand bestand."
+
+#. module: base
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"De klant doet uitdrukkelijk afstand van zijn eigen standaard algemene "
+"voorwaarden, ook indien deze zijn opgesteld na deze algemene "
+"verkoopvoorwaarden. Om geldig te zijn, moet elke afwijking vooraf "
+"uitdrukkelijk schriftelijk worden overeengekomen."
+=======
+msgid "The attachment collides with an existing file."
+msgstr "De bijlage botst met een bestaand bestand."
+
+#. module: base
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid ""
+"The client explicitly waives its own standard terms and conditions, even if "
+"these were drawn up after these standard terms and conditions of sale. In "
+"order to be valid, any derogation must be expressly agreed to in advance in "
+"writing."
+msgstr ""
+"De opdrachtgever doet uitdrukkelijk afstand van zijn eigen "
+"standaardvoorwaarden, ook indien deze zijn opgesteld na deze algemene "
+"verkoopvoorwaarden. Om geldig te zijn, moet elke afwijking vooraf "
+"uitdrukkelijk schriftelijk worden overeengekomen."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -25996,7 +26764,13 @@ msgid ""
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
 "Dit veld zou gebruikt moeten worden wanneer de arch weergave gebruikt wordt. Het gebruikt de vertaling.\n"
+<<<<<<< HEAD
 "Merk op dat het de 'arch_db' of 'arch_fs' leest indien u zich in dev-xml modus bevind."
+||||||| parent of fc1dc2c963f (temp)
+"Merk op dat het de 'arch_db' of 'arch_fs' leest in dev-xml modus."
+=======
+"Merk op dat het de 'arch_db' of 'arch_fs' leest als je je in dev-xml modus bevind."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
@@ -26460,6 +27234,7 @@ msgstr "Vertaalbaar"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Translate"
+<<<<<<< HEAD
 msgstr "Vertaal"
 
 #. module: base
@@ -26522,6 +27297,11 @@ msgid ""
 msgstr ""
 "Vertaling is niet geldig:\n"
 "%s"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Vertalen"
+=======
+msgstr "Vertaal"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_translation
@@ -26628,6 +27408,28 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
+"- 'Een record bijwerken': werk de waarden van een record bij\n"
+"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'E-mail verzenden': post een bericht, een notitie of stuur een e-mail (Chat)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
+"- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
+"- 'SMS-tekstbericht verzenden': stuur sms, log in op documenten (SMS)"
+=======
+"Type serveractie. De volgende waarden zijn beschikbaar:\n"
+"- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
+"- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
+"- 'Update a Record': update de waarden van een record\n"
+"- 'Voer meerdere acties uit': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'Stuur E-mail': plaats een bericht, een notitie of stuur een e-mail (Bespreek)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Discussiëren)\n"
+"- 'Create Next Activity': maak een activiteit aan (Bespreek)\n"
+"- 'Stuur SMS-tekstbericht': stuur sms, log in op documenten (SMS)"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type
@@ -27394,7 +28196,41 @@ msgstr "Vietnam - Boekhouding"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
+<<<<<<< HEAD
 msgstr "Bekijk"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Bekijken"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr "Weergave '%(name)s' alleen toegankelijk voor groepen %(groups)s "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr "Weergave '%(name)s' is privé"
+=======
+msgstr "Weergave"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%(name)s' accessible only to groups %(groups)s "
+msgstr "Weergave '%(name)s' alleen toegankelijk voor groepen %(groups)s "
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid "View '%(name)s' is private"
+msgstr "Weergave '%(name)s' is privé"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch
@@ -27403,12 +28239,18 @@ msgstr "Bekijk"
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View Architecture"
+<<<<<<< HEAD
 msgstr "Hiërarchie bekijken"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search
 msgid "View ID"
 msgstr "Weergave ID"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Hiërarchie weergeven"
+=======
+msgstr "Hiërarchie bekijken"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
@@ -27731,8 +28573,16 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
+<<<<<<< HEAD
 "Wanneer u meerdere acties heeft zal de volgorde van uitvoering bepaald "
 "worden aan de hand van de sequentie. Een laag nummer betekent een hoge "
+||||||| parent of fc1dc2c963f (temp)
+"Wanneer je meerdere acties hebt, zal de volgorde van uitvoering bepaald "
+"worden aan de hand van de reeks. Een laag nummer betekent een hoge "
+=======
+"Wanneer je meerdere acties heeft zal de volgorde van uitvoering bepaald "
+"worden aan de hand van de sequentie. Een laag nummer betekent een hoge "
+>>>>>>> fc1dc2c963f (temp)
 "prioriteit."
 
 #. module: base
@@ -27853,7 +28703,23 @@ msgstr "Fout in Wkhtmltopdf (fout code: %s). Bericht: %s"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
+<<<<<<< HEAD
 msgstr "Werk boekingen"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Werkboekingen"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
+msgid "Work Entries - Contract"
+msgstr "Werkinvoer - Contract"
+=======
+msgstr "Werk boekingen"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract
+msgid "Work Entries - Contract"
+msgstr "Werkinvoer - Contract"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
@@ -27946,6 +28812,7 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
+<<<<<<< HEAD
 "U kan een bestand van uw computer uploaden of een internet link "
 "kopiëren/plakken die linkt naar uw bestand."
 
@@ -27957,6 +28824,13 @@ msgid ""
 msgstr ""
 "Van hieruit kan u de verschillende federale staten waar u werkt beheren. "
 "Elke staat is gekoppeld met een land."
+||||||| parent of fc1dc2c963f (temp)
+"Je kunt een bestand van je computer uploaden of een internetlink naar je "
+"bestand kopiëren/plakken."
+=======
+"Je kunt een bestand van je computer uploaden of een internet link "
+"kopiëren/plakken die linkt naar je bestand."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -28083,6 +28957,23 @@ msgid "You should try other search criteria."
 msgstr "U zou andere zoekcriteria moeten proberen."
 
 #. module: base
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid "You should update this document to reflect your T&amp;C."
+msgstr ""
+"Je moet dit document bijwerken om je algemene voorwaarden weer te geven."
+
+#. module: base
+#. odoo-python
+=======
+#: model_terms:res.company,invoice_terms_html:base.main_company
+msgid "You should update this document to reflect your T&amp;C."
+msgstr "Je moet dit document bijwerken om je T&C weer te geven."
+
+#. module: base
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid ""
@@ -28172,6 +29063,7 @@ msgid "[SKU002] Computer"
 msgstr "[SKU002] Computer"
 
 #. module: base
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
 msgid "_Import"
 msgstr "_Importeren"
@@ -28190,6 +29082,15 @@ msgstr "account_plaid"
 #: model:ir.module.module,shortdesc:base.module_account_ponto
 msgid "account_ponto"
 msgstr "account_ponto"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:base.field_ir_asset__active
+msgid "active"
+msgstr "actief"
+=======
+#: model:ir.model.fields,field_description:base.field_ir_asset__active
+msgid "active"
+msgstr "Actief"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: code:addons/models.py:0
@@ -28206,7 +29107,13 @@ msgstr "en"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "at"
+<<<<<<< HEAD
 msgstr "op"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "met"
+=======
+msgstr "bij"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__binary
@@ -28272,9 +29179,53 @@ msgid "e.g. English"
 msgstr "Bijv. Engels"
 
 #. module: base
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:base.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "Bijv. Global Business Solutions"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:base.view_country_group_form
+msgid "e.g. Europe"
+msgstr "bijv. Europa"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_lang_form
+msgid "e.g. French"
+msgstr "bijv. Frans"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form
+#: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
+msgid "e.g. John Doe"
+msgstr "bijv. John Doe"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
+msgid "e.g. Lumber Inc"
+msgstr "bijv. Lumber Inc"
+=======
+#: model_terms:ir.ui.view,arch_db:base.view_country_group_form
+msgid "e.g. Europe"
+msgstr "bijv. Europa"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.res_lang_form
+msgid "e.g. French"
+msgstr "bijv. Frans"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_users_form
+#: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
+msgid "e.g. John Doe"
+msgstr "b.v. John Doe"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
+msgid "e.g. Lumber Inc"
+msgstr "bijv. Lumber Inc"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form

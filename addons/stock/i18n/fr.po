@@ -3,6 +3,7 @@
 # 	* stock
 # 
 # Translators:
+<<<<<<< HEAD
 # zoe <yann.hoareau@migs.re>, 2019
 # Lucas Deliege <lud@odoo.com>, 2019
 # Micky Jault <micky037@hotmail.fr>, 2019
@@ -46,6 +47,21 @@
 # Bertrand LATOUR <divoir@gmail.com>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Oriane Malburny <oma@odoo.com>, 2019
+||||||| parent of fc1dc2c963f (temp)
+# Maruan Aguerdouh, 2023
+# snipe2004 <snipe2004@hotmail.com>, 2023
+# Thomas Deleval <thd@odoo.com>, 2023
+# Alexandra Jubert, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+=======
+# Maruan Aguerdouh, 2023
+# Thomas Deleval <thd@odoo.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+>>>>>>> fc1dc2c963f (temp)
 # 
 msgid ""
 msgstr ""
@@ -579,8 +595,16 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+<<<<<<< HEAD
 "Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
 "Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+||||||| parent of fc1dc2c963f (temp)
+"Un produit stockable est un produit pour lequel vous gérez un stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable est un produit pour lequel vous ne gérez pas de stock.\n"
+=======
+"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable, par contre, est un produit pour lequel le stock n'est pas géré.\n"
+>>>>>>> fc1dc2c963f (temp)
 "Un service est un produit immatériel que vous fournissez."
 
 #. module: stock
@@ -626,7 +650,35 @@ msgstr "Activité d'exception de décoration"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_state
 msgid "Activity State"
+<<<<<<< HEAD
 msgstr "Status de l'activité"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Statut de l'activité"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Add a Product"
+msgstr "Ajouter un produit"
+=======
+msgstr "Status de l'activité"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Add a Product"
+msgstr "Ajouter un produit"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -747,6 +799,7 @@ msgid "All returned moves"
 msgstr "Tous les mouvements de retour"
 
 #. module: stock
+<<<<<<< HEAD
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid ""
@@ -755,6 +808,35 @@ msgid ""
 msgstr ""
 "Tous les articles réservés dans ce transfert ont déjà été mis en boite. "
 "Veuillez ajouter des articles au transfert pour créer une nouvelle boite."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Allocation"
+msgstr "Allocation"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
+msgid "Allow New Product"
+msgstr "Autoriser un nouveau produit"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
+msgid "Allow mixed products"
+msgstr "Autoriser les produits différents"
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Allocation"
+msgstr "Attribution"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__allow_new_product
+msgid "Allow New Product"
+msgstr "Autoriser un nouveau produit"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__stock_storage_category__allow_new_product__mixed
+msgid "Allow mixed products"
+msgstr "Autoriser les produits différents"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__allowed_location_ids
@@ -1200,9 +1282,59 @@ msgid "Choose your date"
 msgstr "Choisir la date"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__sequence_code
 msgid "Code"
 msgstr "Code"
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+msgid "Clear"
+msgstr "Effacer"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "Clear Lines"
+msgstr "Effacer les lignes"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Clear quantities"
+msgstr "Effacer les quantités"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, python-format
+msgid "Close"
+msgstr "Clôturer"
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
+msgid "Clear"
+msgstr "Effacer"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+msgid "Clear Lines"
+msgstr "Effacer les lignes"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_form
+msgid "Clear quantities"
+msgstr "Effacer les quantités"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/xml/stock_traceability_report_backend.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.duplicated_sn_warning
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
+#: model_terms:ir.ui.view,arch_db:stock.view_stock_replenishment_info
+#, python-format
+msgid "Close"
+msgstr "Fermer"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__color
@@ -1257,7 +1389,23 @@ msgstr "Calculer les frais de port et expédier avec Easypost"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with FedEx"
+<<<<<<< HEAD
 msgstr "Calculer les frais de port et expédier avec FedEx"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Calculer les frais d'expédition et expédier avec FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
+=======
+msgstr "Calculer les frais de port et expédier avec FedEx"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Compute shipping costs and ship with Sendcloud"
+msgstr "Calculer les frais d'expédition et expédier avec Sendcloud"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -1272,7 +1420,23 @@ msgstr "Calculer les frais de port et expédier avec USPS"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Compute shipping costs and ship with bpost"
+<<<<<<< HEAD
 msgstr "Calculer les frais de port et expédier avec bpost"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Calculer les frais d'expédition et expédier avec bpost"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__reservation_date
+msgid "Computes when a move should be reserved"
+msgstr "Calcule quand un mouvement doit être réservé"
+=======
+msgstr "Calculer les frais de port et expédier avec bpost"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_move__reservation_date
+msgid "Computes when a move should be reserved"
+msgstr "Calcule quand un mouvement doit être réservé"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1360,6 +1524,20 @@ msgstr ""
 "'Marquer comme à faire' pour gérer la réservation manuellement."
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
+msgid "Count"
+msgstr "Nombre"
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_request_count__set_count
+msgid "Count"
+msgstr "Compte"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
 msgstr "Nombre de préparations"
@@ -1680,9 +1858,137 @@ msgid "Days to get the products"
 msgstr "Jours pour recevoir les articles"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse_orderpoint__lead_type__supplier
 msgid "Days to purchase"
 msgstr "Jours pour acheter"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
+msgid "Date to Reserve"
+msgstr "Date de Réservation"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Day and month that annual inventory counts should occur."
+msgstr "Jour et mois auxquels l'inventaire annuel doit être fait."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__annual_inventory_day
+msgid "Day of the month"
+msgstr "Jour du mois"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_company__annual_inventory_day
+#: model:ir.model.fields,help:stock.field_res_config_settings__annual_inventory_day
+msgid ""
+"Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
+"        If greater than the last day of a month, then the last day of the month will be selected instead."
+msgstr ""
+"Jour du mois de la date d'inventaire annuel. Si zéro ou négatif, alors le premier jour du mois sera sélectionné à la place.\n"
+"Si plus grand que le dernier jour du mois, alors le dernier jour du mois sera sélectionné."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
+msgid "Days"
+msgstr "jours"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Days To Order"
+msgstr "Jours pour commander"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
+msgid "Days when starred"
+msgstr "Jours quand prioritaire"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__date_deadline
+msgid "Deadline"
+msgstr "Date limite"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Deadline exceed or/and by the scheduled"
+msgstr "L'échéance est dépassée par la date prévue"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Deadline updated due to delay on %s"
+msgstr "Echéance mise à jour suite à retard sur %s"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
+msgid "December"
+msgstr "Décembre"
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
+msgid "Date to Reserve"
+msgstr "Date de Réservation"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
+msgid "Day and month that annual inventory counts should occur."
+msgstr "Jour et mois auxquels l'inventaire annuel doit être fait."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__annual_inventory_day
+msgid "Day of the month"
+msgstr "Jour du mois"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_res_company__annual_inventory_day
+#: model:ir.model.fields,help:stock.field_res_config_settings__annual_inventory_day
+msgid ""
+"Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
+"        If greater than the last day of a month, then the last day of the month will be selected instead."
+msgstr ""
+"Jour du mois de la date d'inventaire annuel. Si zéro ou négatif, alors le premier jour du mois sera sélectionné à la place.\n"
+"Si plus grand que le dernier jour du mois, alors le dernier jour du mois sera sélectionné."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
+msgid "Days"
+msgstr "Jours"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Days To Order"
+msgstr "Jours pour commander"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before_priority
+msgid "Days when starred"
+msgstr "Jours quand prioritaire"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_move__date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__date_deadline
+msgid "Deadline"
+msgstr "Echéance"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Deadline exceed or/and by the scheduled"
+msgstr "L'échéance est dépassée par la date prévue"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "Deadline updated due to delay on %s"
+msgstr "Echéance mise à jour suite à retard sur %s"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__12
+msgid "December"
+msgstr "Décembre"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__default_location_dest_id
@@ -1822,6 +2128,22 @@ msgid "Delivery Address"
 msgstr "Adresse de livraison"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Modes de livraison"
+
+#. module: stock
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery
+msgid "Delivery Methods"
+msgstr "Méthodes de livraison"
+
+#. module: stock
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_out
 #, python-format
@@ -1989,12 +2311,18 @@ msgstr "Détails visibles"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__difference_qty
 msgid "Difference"
+<<<<<<< HEAD
 msgstr "Différence"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Difference different than zero"
 msgstr "Différence différente de zéro"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Écart"
+=======
+msgstr "Différence"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_destination_form_view
@@ -2230,6 +2558,30 @@ msgid "FIFO, LIFO..."
 msgstr "FIFO, LIFO..."
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_quant__priority
+msgid "Favorite"
+msgstr "Favoris"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__2
+msgid "February"
+msgstr "Février"
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_quant__priority
+msgid "Favorite"
+msgstr "Favori"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__2
+msgid "February"
+msgstr "Février"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_fedex
 msgid "FedEx Connector"
 msgstr "Connecteur FedEx"
@@ -2290,6 +2642,22 @@ msgid "Followers (Partners)"
 msgstr "Abonnés (Partenaires)"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: stock
+=======
+#: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
+#: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome e.g. fa-tasks"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
 msgstr "Forcer la stratégie d'enlèvement"
@@ -2979,7 +3347,7 @@ msgstr "Routes logistiques"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "Valorisation de l'inventaire"
+msgstr "Valorisation du stock"
 
 #. module: stock
 #. openerp-web
@@ -3060,6 +3428,136 @@ msgstr ""
 "seule fois."
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
+msgid "JSON data for the popover widget"
+msgstr "Données JSON pour le widget popover"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__1
+msgid "January"
+msgstr "janvier"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
+msgid "Json Lead Days"
+msgstr "Json Lead Days"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.js:0
+#, python-format
+msgid "Json Popup"
+msgstr "Popup Json"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
+msgid "Json Replenishment History"
+msgstr "Historique de réassort Json"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
+msgid "July"
+msgstr "juillet"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__6
+msgid "June"
+msgstr "juin"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid "Keep Counted Quantity"
+msgstr "Garder la quantité comptée"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid "Keep Difference"
+msgstr "Garder la différence"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid ""
+"Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
+msgstr ""
+"Garder la <strong>quantité comptée</strong>(la différence sera mise à jour)"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid ""
+"Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
+"to reflect the same difference as when you counted)"
+msgstr ""
+"Garder la <strong>Différence</strong> (la quantité comptée sera mise à jour "
+"pour refléter la différence constatée lors du compte)"
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
+msgid "JSON data for the popover widget"
+msgstr "Données JSON pour le widget popover"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__1
+msgid "January"
+msgstr "Janvier"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_lead_days
+msgid "Json Lead Days"
+msgstr "Json Lead Days"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.js:0
+#, python-format
+msgid "Json Popup"
+msgstr "Popup Json"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_replenishment_info__json_replenishment_history
+msgid "Json Replenishment History"
+msgstr "Historique de réassort Json"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__7
+msgid "July"
+msgstr "Juillet"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__6
+msgid "June"
+msgstr "Juin"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid "Keep Counted Quantity"
+msgstr "Garder la quantité comptée"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid "Keep Difference"
+msgstr "Garder la différence"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid ""
+"Keep the <strong>Counted Quantity</strong> (the Difference will be updated)"
+msgstr ""
+"Garder la <strong>quantité comptée</strong>(la différence sera mise à jour)"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
+msgid ""
+"Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
+"to reflect the same difference as when you counted)"
+msgstr ""
+"Garder la <strong>Différence</strong> (la quantité comptée sera mise à jour "
+"pour refléter la différence constatée lors du compte)"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
 msgid "LN/SN:"
 msgstr "NL/NS:"
@@ -3510,14 +4008,34 @@ msgid "Manufacturing"
 msgstr "Fabrication"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
+msgid "March"
+msgstr "mars"
+
+#. module: stock
+=======
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__3
+msgid "March"
+msgstr "Mars"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Mark as Todo"
+<<<<<<< HEAD
 msgstr "Marquer \"À faire\""
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_inventory_control
 msgid "Master Data"
 msgstr "Données de base"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Marquer comme \"À faire\""
+=======
+msgstr "Marquer \"À faire\""
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_max_qty
@@ -3547,7 +4065,23 @@ msgstr "Messages"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_removal__method
 msgid "Method"
+<<<<<<< HEAD
 msgstr "Méthode"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Nom du mode"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid "Min Quantity"
+msgstr "Quantité Min"
+=======
+msgstr "Méthode"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
+msgid "Min Quantity"
+msgstr "Quantité Min"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
@@ -3645,9 +4179,61 @@ msgid "Multi-Step Routes"
 msgstr "Routes en plusieurs étapes"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_warehouses
 msgid "Multi-Warehouses"
 msgstr "Multi-Entrepôts"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
+msgid "Multiple Quantity"
+msgstr "Quantité Multiple de"
+
+#. module: stock
+#: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
+msgid "Multiple capacity rules for one package type."
+msgstr "Règles de capacité multiples pour un type de colis"
+
+#. module: stock
+#: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_product
+msgid "Multiple capacity rules for one product."
+msgstr "Règles de capacité multiples pour un produit."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Date limite de mon activité"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "My Counts"
+msgstr "Mes Comptes"
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_multiple
+msgid "Multiple Quantity"
+msgstr "Quantité Multiple de"
+
+#. module: stock
+#: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_package_type
+msgid "Multiple capacity rules for one package type."
+msgstr "Règles de capacité multiples pour un type de colis"
+
+#. module: stock
+#: model:ir.model.constraint,message:stock.constraint_stock_storage_category_capacity_unique_product
+msgid "Multiple capacity rules for one product."
+msgstr "Règles de capacité multiples pour un produit."
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
+#: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "My Counts"
+msgstr "Mes Comptes"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -3699,6 +4285,24 @@ msgid "New Transfer"
 msgstr "Nouveau transfert"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante calendrier événement"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_calendar_event_id
+#: model:ir.model.fields,field_description:stock.field_stock_picking__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__activity_date_deadline
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_date_deadline
 msgid "Next Activity Deadline"
@@ -3714,7 +4318,33 @@ msgstr "Résumé d'activité suivant"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_id
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_id
 msgid "Next Activity Type"
+<<<<<<< HEAD
 msgstr "Type d'activités à venir"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type d'activité à venir"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
+msgid "Next Expected Inventory"
+msgstr "Prochain Inventaire"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
+msgid "Next date the On Hand Quantity should be counted."
+msgstr "Prochaine date à laquelle la Quantité en Stock doit être comptée"
+=======
+msgstr "Type d'activités à venir"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
+msgid "Next Expected Inventory"
+msgstr "Prochain Inventaire"
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
+msgid "Next date the On Hand Quantity should be counted."
+msgstr "Prochaine date à laquelle la Quantité en Stock doit être comptée"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -3782,8 +4412,46 @@ msgstr "Normale"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__0
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__0
+<<<<<<< HEAD
 msgid "Not urgent"
 msgstr "Non urgent"
+||||||| parent of fc1dc2c963f (temp)
+msgid "Normal"
+msgstr "Normal"
+
+#. module: stock
+#. odoo-python
+#. odoo-javascript
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
+msgid "Not Available"
+msgstr "Pas disponible"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "Not Snoozed"
+msgstr "Non Reporté"
+=======
+msgid "Normal"
+msgstr "Normale"
+
+#. module: stock
+#. odoo-python
+#. odoo-javascript
+#: code:addons/stock/models/stock_picking.py:0
+#: code:addons/stock/static/src/widgets/forecast_widget.xml:0
+#: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
+#, python-format
+msgid "Not Available"
+msgstr "Pas disponible"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "Not Snoozed"
+msgstr "Non Reporté"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -3803,6 +4471,22 @@ msgid "Nothing to check the availability for."
 msgstr "Pas de vérification de disponibilité à effectuer"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
+msgid "November"
+msgstr "novembre"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction_counter
+=======
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__11
+msgid "November"
+msgstr "Novembre"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_lot__message_needaction_counter
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_needaction_counter
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_needaction_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_needaction_counter
@@ -3853,7 +4537,45 @@ msgid "Number of unread messages"
 msgstr "Nombre de messages non lus"
 
 #. module: stock
+<<<<<<< HEAD
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Numbers of days  in advance that replenishments demands are created."
+msgstr ""
+"Nombre de jours à l'avance pendant lesquels les demandes de réassort sont "
+"créées."
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__10
+msgid "October"
+msgstr "octobre"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+=======
+#: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__days_to_order
+msgid "Numbers of days  in advance that replenishments demands are created."
+msgstr ""
+"Nombre de jours à l'avance pendant lesquels les demandes de réassort sont "
+"créées."
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__10
+msgid "October"
+msgstr "Octobre"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_quant__on_hand
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__qty_on_hand
+#: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+#: model_terms:ir.ui.view,arch_db:stock.report_replenishment_header
+>>>>>>> fc1dc2c963f (temp)
 msgid "On Hand"
 msgstr "En stock"
 
@@ -4295,7 +5017,23 @@ msgstr "Bon de préparation avec code barre"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
+<<<<<<< HEAD
 msgstr "Type de préparation"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Type de picking"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
+msgid "Picking Type Code Domain"
+msgstr "Domaine de codes de types de transferts"
+=======
+msgstr "Type de préparation"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
+msgid "Picking Type Code Domain"
+msgstr "Domaine de codes de types de transferts"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
@@ -5483,6 +6221,48 @@ msgstr ""
 "étapes)"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
+msgid "Sendcloud Connector"
+msgstr "Connecteur SendCloud"
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_delivery_confirmation
+msgid ""
+"Sent to the customers when orders are delivered, if the setting is enabled"
+msgstr ""
+"Envoyé aux clients lors de la livraison des commandes, si le paramètre est "
+"activé"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
+msgid "September"
+msgstr "septembre"
+
+#. module: stock
+#. odoo-python
+=======
+#: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_sendcloud
+msgid "Sendcloud Connector"
+msgstr "Connecteur SendCloud"
+
+#. module: stock
+#: model:mail.template,description:stock.mail_template_data_delivery_confirmation
+msgid ""
+"Sent to the customers when orders are delivered, if the setting is enabled"
+msgstr ""
+"Envoyé aux clients lors de la livraison des commandes, si le paramètre est "
+"activé"
+
+#. module: stock
+#: model:ir.model.fields.selection,name:stock.selection__res_company__annual_inventory_month__9
+msgid "September"
+msgstr "Septembre"
+
+#. module: stock
+#. odoo-python
+>>>>>>> fc1dc2c963f (temp)
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/models/stock_picking.py:0
@@ -5744,10 +6524,20 @@ msgid "Source Package :"
 msgstr "Colis d'origine :"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields,help:stock.field_stock_inventory__product_ids
 msgid "Specify Products to focus your inventory on particular Products."
 msgstr ""
 "Spécifier des articles pour limiter votre inventaire à certains articles."
+||||||| parent of fc1dc2c963f (temp)
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Starred"
+msgstr "Priorité élevée"
+=======
+#: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
+msgid "Starred"
+msgstr "Favoris"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
@@ -5883,7 +6673,45 @@ msgstr "Historique des quantités en stock"
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_quantity
 msgid "Stock Quantity Report"
+<<<<<<< HEAD
 msgstr ""
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Rapport de quantité en stock"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_report_reception
+msgid "Stock Reception Report"
+msgstr "Stock Rapport de Réception"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
+#: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Rapport de Réassorts de Stock"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr "Stock Demander un Compte"
+=======
+msgstr "Rapport de quantité en stock"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_report_reception
+msgid "Stock Reception Report"
+msgstr "Stock Rapport de Réception"
+
+#. module: stock
+#: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
+#: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
+msgid "Stock Replenishment Report"
+msgstr "Rapport de Réassorts de Stock"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_request_count
+msgid "Stock Request an Inventory Count"
+msgstr "Le Stock requière un inventaire"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -5929,7 +6757,23 @@ msgstr "Mouvements de stock confirmés, disponible ou en attente"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Stock moves that have been processed"
+<<<<<<< HEAD
 msgstr "Mouvements de stocks ayant été traités"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Mouvements de stock ayant été traités"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_package_type
+msgid "Stock package type"
+msgstr "Type de colis du stock"
+=======
+msgstr "Mouvements de stock ayant été traités"
+
+#. module: stock
+#: model:ir.model,name:stock.model_stock_package_type
+msgid "Stock package type"
+msgstr "Stock package type"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -6444,9 +7288,19 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
+<<<<<<< HEAD
 "Ce menu vous donne la traçabilité complète des opérations d'inventaire pour "
 "en produit donné. Vous pouvez filtrer sur le produit pour voir tous les "
 "mouvements passés et futurs de ce produit."
+||||||| parent of fc1dc2c963f (temp)
+"Ce menu vous donne la traçabilité complète des opérations\n"
+" d'inventaire pour un produit donné. Vous pouvez filtrer sur le produit\n"
+" pour voir tous les mouvements passés et futurs de ce produit."
+=======
+"Ce menu vous donne la traçabilité complète des opérations d'inventaire pour "
+"un produit donné. Vous pouvez filtrer sur le produit pour voir tous les "
+"mouvements passés et futurs de ce produit."
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -6547,7 +7401,43 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
+<<<<<<< HEAD
 msgstr "Vers"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "Au"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "To Apply"
+msgstr "À appliquer"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
+msgid "To Backorder"
+msgstr "A mettre dans un reliquat"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "To Count"
+msgstr "A compter"
+=======
+msgstr "Vers"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "To Apply"
+msgstr "À appliquer"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
+msgid "To Backorder"
+msgstr "A mettre dans un reliquat"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
+msgid "To Count"
+msgstr "A compter"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6559,7 +7449,37 @@ msgstr "À faire"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "To Process"
+<<<<<<< HEAD
 msgstr "A traiter"
+||||||| parent of fc1dc2c963f (temp)
+msgstr "À traiter"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "To Reorder"
+msgstr "A réàpprovisionner"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, python-format
+msgid "Today"
+msgstr "Aujourd'hui"
+=======
+msgstr "A traiter"
+
+#. module: stock
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "To Reorder"
+msgstr "A réàpprovisionner"
+
+#. module: stock
+#. odoo-javascript
+#: code:addons/stock/static/src/widgets/json_widget.xml:0
+#, python-format
+msgid "Today"
+msgstr "Aujourd'hui"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -6716,6 +7636,22 @@ msgid "Transit Locations"
 msgstr "Emplacements de transit"
 
 #. module: stock
+<<<<<<< HEAD
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "Trigger"
+msgstr "Déclencher"
+
+#. module: stock
+=======
+#: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__trigger
+#: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
+msgid "Trigger"
+msgstr "Déclencheur"
+
+#. module: stock
+>>>>>>> fc1dc2c963f (temp)
 #: model:ir.model.fields.selection,name:stock.selection__stock_rule__procure_method__make_to_order
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Trigger Another Rule"
@@ -6957,10 +7893,22 @@ msgid "Vendor Locations"
 msgstr "Adresses du vendeur"
 
 #. module: stock
+<<<<<<< HEAD
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__priority__3
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__priority__3
 msgid "Very Urgent"
 msgstr "Très urgent"
+||||||| parent of fc1dc2c963f (temp)
+#: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "View"
+msgstr "Afficher"
+=======
+#: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
+#: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
+msgid "View"
+msgstr "Vue"
+>>>>>>> fc1dc2c963f (temp)
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__view
