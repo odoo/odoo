@@ -26,6 +26,9 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -45,7 +48,7 @@ msgstr "Kontakt"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Steuerzuordnung"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -53,6 +56,10 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Wenn dieses Kontrollkästchen angekreuzt ist, können Sie einen Kontakt nur "
+"dann speichern, wenn die MwSt-Nummer über das MwSt-"
+"Informationsaustauschsystem der Europäischen Kommission überprüft werden "
+"kann."
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -94,26 +101,28 @@ msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
 msgstr ""
+"Das für diese ausländische MwSt.-Nummer ermittelte Land stimmt nicht mit dem"
+" Land überein, das in dieser Steuerposition angegeben ist."
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "MwSt-Identifikationsnr. überprüfen"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "MwSt-Identifikationsnr. mit dem europäischen VIES-Service überprüfen"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "Steuerzuordnung [%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "Kontakt [%s]"

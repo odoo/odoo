@@ -3,9 +3,9 @@
 # 	* base_automation
 # 
 # Translators:
+# Jolien De Paepe, 2023
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
@@ -43,8 +43,8 @@ msgid ""
 msgstr ""
 "Een code server actie kan worden uitgevoerd vanaf de website, met behulp van"
 " een speciale controller. Het adres is <base>/website/action/<website_path>."
-" Stel dit veld in als True om gebruikers in staat te stellen om deze actie "
-"uit te voeren. Als deze is ingesteld op False kan de actie niet worden "
+" Stel dit veld in als Waar om gebruikers in staat te stellen om deze actie "
+"uit te voeren. Als deze is ingesteld op Onwaar kan de de actie niet worden "
 "uitgevoerd via de website."
 
 #. module: base_automation
@@ -149,7 +149,7 @@ msgstr "Bindend model"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
 msgid "Binding Type"
-msgstr "Binding soort"
+msgstr "Soort binding"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
@@ -167,8 +167,8 @@ msgid ""
 "Child server actions that will be executed. Note that the last return "
 "returned action value will be used as global return value."
 msgstr ""
-"Onderliggende server acties die worden uitgevoerd. Let op dat de laatste "
-"geretourneerde actiewaarde wordt gebruikt als globale returnwaarde."
+"Onderliggende server acties welke worden uitgevoerd. Let op dat de laatste "
+"geretourneerde actie waarde wordt gebruikt als globale return waarde."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
@@ -181,7 +181,7 @@ msgstr ""
 "Kies methode voor sms-verzending:\n"
 "SMS: massa-sms\n"
 "Post als bericht: log in document\n"
-"Post als Notitie: massa-sms met archieven"
+"Post als Opmerking: massa-sms met archieven"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
@@ -191,7 +191,7 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
-"Kies een methode voor het verzenden van een e-mail:\n"
+"Kies methode voor het verzenden van e-mail:\n"
 "E-mail: stuur direct e-mails\n"
 "Posten als bericht: post op document en stel volgers op de hoogte\n"
 "Posten als notitie: log een notitie op document"
@@ -219,18 +219,18 @@ msgid ""
 "        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "Vertraging na de triggerdatum.\n"
-"        Je kunt een negatief getal invoeren als je een vertraging nodig hebt voor de\n"
+"        Je kunt een negatief getal invoeren als je een vertraging nodig heeft voordat de\n"
 "        triggerdatum, zoals het sturen van een herinnering 15 minuten voor een vergadering."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
 msgid "Delay after trigger date"
-msgstr "Vertraging na triggerdatum"
+msgstr "Vertraging na activeerdatum"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
 msgid "Delay type"
-msgstr "Vertragingssoort"
+msgstr "Soort vertraging"
 
 #. module: base_automation
 #. openerp-web
@@ -257,7 +257,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
 msgid "Display Name"
-msgstr "Weergavenaam"
+msgstr "Schermnaam"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -336,8 +336,8 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Indien aanwezig, moet deze conditie voldaan zijn voordat de actieregel wordt"
-" uitgevoerd."
+"Indien aanwezig, moet deze conditie voldaan zijn voordat de actie regel "
+"wordt uitgevoerd."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
@@ -356,7 +356,7 @@ msgstr "Laatst gewijzigd op"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
 msgid "Last Run"
-msgstr "Laatste run"
+msgstr "Laatst uitgevoerd"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
@@ -386,7 +386,7 @@ msgstr "Minuten"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "Model"
+msgstr "Type"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -399,7 +399,7 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Model voor aanmaken/bijwerken van record. Stel dit veld enkel in voor een "
+"Model voor aanmaken/updaten van record. Stel dit veld enkel in voor een "
 "ander model dan de base module."
 
 #. module: base_automation
@@ -482,7 +482,7 @@ msgstr "Verantwoordelijke"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
 msgid "SMS Template"
-msgstr "sms-sjabloon"
+msgstr "SMS sjabloon"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
@@ -526,7 +526,7 @@ msgstr "Zet een nieuwe geautomatiseerde automatisering op "
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr "Ontvangers aanmelden"
+msgstr "Abonneren Ontvangers"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -541,7 +541,7 @@ msgstr "Doelmodel"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
-msgstr "Naam doelmodel"
+msgstr "Doel model naam"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -576,18 +576,17 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__website_url
 msgid "The full URL to access the server action through the website."
-msgstr ""
-"De volledige URL om toegang tot de server actie te krijgen via de website."
+msgstr "De volledige URL om toegang tot de server te krijgen via de website."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
 msgid "Trigger"
-msgstr "Activeren"
+msgstr "Activeer"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
 msgid "Trigger Date"
-msgstr "Triggerdatum"
+msgstr "Activeringsdatum"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
@@ -611,12 +610,12 @@ msgstr ""
 "Type serveractie. De volgende waarden zijn beschikbaar:\n"
 "- 'Python-code uitvoeren': een blok python-code dat wordt uitgevoerd\n"
 "- 'Maak een nieuw record': maak een nieuw record met nieuwe waarden\n"
-"- 'Een record bijwerken': werk de waarden van een record bij\n"
-"- 'Meerdere acties uitvoeren': definieer een actie die verschillende andere serveracties activeert\n"
-"- 'E-mail verzenden': post een bericht, een notitie of stuur een e-mail (Chat)\n"
-"- 'Volgers toevoegen': volgers toevoegen aan een record (Chat)\n"
-"- 'Volgende activiteit aanmaken': maak een activiteit aan (Chat)\n"
-"- 'SMS-tekstbericht verzenden': stuur sms, log in op documenten (SMS)"
+"- 'Update a Record': update de waarden van een record\n"
+"- 'Voer meerdere acties uit': definieer een actie die verschillende andere serveracties activeert\n"
+"- 'Stuur E-mail': plaats een bericht, een notitie of stuur een e-mail (Bespreek)\n"
+"- 'Volgers toevoegen': volgers toevoegen aan een record (Discussiëren)\n"
+"- 'Create Next Activity': maak een activiteit aan (Bespreek)\n"
+"- 'Stuur SMS-tekstbericht': stuur sms, log in op documenten (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
@@ -690,8 +689,8 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"Bij het berekenen van een op een dag gebaseerde conditie, is het mogelijk om"
-" een kalender te gebruiken gebaseerd op werkdagen."
+"Bij het berekenen van een dag gebaseerde conditie, is het mogelijk om een "
+"kalender te gebruiken gebaseerd op werkdagen."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
@@ -699,8 +698,8 @@ msgid ""
 "When dealing with multiple actions, the execution order is based on the "
 "sequence. Low number means high priority."
 msgstr ""
-"Wanneer je meerdere acties hebt, zal de volgorde van uitvoering bepaald "
-"worden aan de hand van de reeks. Een laag nummer betekent een hoge "
+"Wanneer je meerdere acties heeft zal de volgorde van uitvoering bepaald "
+"worden aan de hand van de sequentie. Een laag nummer betekent een hoge "
 "prioriteit."
 
 #. module: base_automation
@@ -709,8 +708,8 @@ msgid ""
 "When should the condition be triggered.\n"
 "                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Wanneer moet de voorwaarde worden geactiveerd.\n"
-"                Indien aanwezig, wordt gecontroleerd door de planner. Indien leeg, wordt dit gecontroleerd bij het aanmaken en bijwerken."
+"Wanneer moet de aandoening worden geactiveerd.\n"
+"                Indien aanwezig, wordt gecontroleerd door de planner. Indien leeg, wordt dit gecontroleerd bij aanmaken en bijwerken."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active

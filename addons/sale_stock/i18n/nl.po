@@ -229,7 +229,7 @@ msgstr "Vergeet niet de klant te wijzigen op de volgende leveringen: %s"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "Ingangsdatum"
+msgstr "Boekdatum"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -239,13 +239,13 @@ msgstr "Uitzondering(en) opgetreden in de picking:"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Uitzondering(en) op de verkooporder(s):"
+msgstr "Foutmelding(en) zijn opgetreden op de verkooporder(s):"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr "Uitzondering(en):"
+msgstr "Foutmelding(en):"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -276,7 +276,7 @@ msgstr "Prognose datum verwacht"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr "Prognose voorraad"
+msgstr "Voorspelde voorraad"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -307,7 +307,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Impacted Transfer(s):"
-msgstr "Geïmpacteerde verplaatsing(en):"
+msgstr "Beïnvloede verplaatsing(en):"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
@@ -332,7 +332,7 @@ msgid ""
 "used in international transactions."
 msgstr ""
 "International Commercial Terms (INCOTERMS) zijn een set van "
-"voorgedefinieerde commerciële voorwaarden, die worden gebruikt bij "
+"voorgedefinieerde commerciële voorwaarden, welke worden gebruikt bij "
 "internationaal transport."
 
 #. module: sale_stock
@@ -343,7 +343,7 @@ msgstr "Voorraad"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_route
 msgid "Inventory Routes"
-msgstr "Voorraadroutes"
+msgstr "Voorraad routes"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
@@ -353,27 +353,27 @@ msgstr "is MTO"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
 msgid "JSON data for the popover widget"
-msgstr "JSON data voor de popover widget"
+msgstr "JSON data voor de pop-up widget"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
 msgid "Journal Entry"
-msgstr "Dagboekpost"
+msgstr "Boeking"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Boeking"
+msgstr "Boekingsregel"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
 msgid "Lead Time"
-msgstr "Doorlooptijd"
+msgstr "Levertijd"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Partij/Serie"
+msgstr "Partij/Serienummer"
 
 #. module: sale_stock
 #. odoo-python
@@ -461,7 +461,7 @@ msgid ""
 "products to the customer"
 msgstr ""
 "Aantal dagen tussen het bevestigen van de order en het werkelijk leveren van"
-" de producten aan de klant"
+" de producten aan de klant."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -562,7 +562,7 @@ msgstr "Verkooporder"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr "Verkooporder annuleren"
+msgstr "Verkooporder annuleer"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -597,7 +597,7 @@ msgstr "Geplande datum"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Beveiligingstijd"
+msgstr "Veiligheid leveringstijd"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -638,7 +638,7 @@ msgstr "Voorraadverplaatsingen"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Voorraadaanvulling rapport"
+msgstr "Voorraadaanvullen rapportage"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -648,7 +648,7 @@ msgstr "Voorraadregel"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
 msgid "Stock Rules report"
-msgstr "Voorraadroutesrapport"
+msgstr "Voorraadroutes rapport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
@@ -683,8 +683,8 @@ msgid ""
 "The ordered quantity cannot be decreased below the amount already delivered."
 " Instead, create a return in your inventory."
 msgstr ""
-"De bestelde hoeveelheid kan niet worden verlaagd tot onder de reeds "
-"geleverde hoeveelheid. Maak in plaats daarvan een retour aan in je voorraad."
+"De bestelde hoeveelheid kan niet lager worden dan de reeds geleverde "
+"hoeveelheid. Maak in plaats daarvan een retour aan."
 
 #. module: sale_stock
 #. odoo-javascript
@@ -697,12 +697,12 @@ msgstr "Dit voorraad van product wordt op aanvraag aangevuld."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Overdracht"
+msgstr "Verplaatsing"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "Overdrachten"
+msgstr "Verplaatsingen"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_users
@@ -760,7 +760,7 @@ msgstr "dagen"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "of"
-msgstr "of"
+msgstr "van"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

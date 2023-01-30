@@ -1765,7 +1765,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base
 msgid "Base"
-msgstr ""
+msgstr "Imponibile"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__base_template
@@ -1995,7 +1995,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__cancel
 msgid "Cancelled"
-msgstr ""
+msgstr "Annullato"
 
 #. module: mail
 #. odoo-javascript
@@ -2758,7 +2758,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__days
 msgid "Days"
-msgstr ""
+msgstr "Giorno/i"
 
 #. module: mail
 #. odoo-javascript
@@ -5675,7 +5675,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_member_ids
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Members"
-msgstr ""
+msgstr "Soci"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__group_ids
@@ -5837,6 +5837,8 @@ msgid ""
 "Message type: email for email message, notification for system message, "
 "comment for other messages such as user replies"
 msgstr ""
+"Tipo messaggio: email per messaggi email, notifica per messaggio di sistema,"
+" commento per altri messaggi come le risposte degli utenti."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__message_id
@@ -6585,7 +6587,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/channel_member_list_category_view.js:0
 #, python-format
 msgid "Offline"
-msgstr ""
+msgstr "Fuori linea"
 
 #. module: mail
 #. odoo-javascript
@@ -6926,7 +6928,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype__parent_id
 msgid "Parent"
-msgstr ""
+msgstr "Principale"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__parent_id
@@ -6966,7 +6968,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__partner_id
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: mail
 #. odoo-python
@@ -7490,7 +7492,7 @@ msgstr "Referenze"
 #: code:addons/mail/static/src/components/call_invite_request_popup/call_invite_request_popup.xml:0
 #, python-format
 msgid "Refuse"
-msgstr ""
+msgstr "Rifiuta"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
@@ -8397,7 +8399,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
 msgid "Source"
-msgstr ""
+msgstr "Fonte"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_user_type__specific
@@ -8554,7 +8556,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__subject
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__subject
 msgid "Subject"
-msgstr ""
+msgstr "Oggetto"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__subject
@@ -8824,7 +8826,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
-msgstr ""
+msgstr "Il team di"
 
 #. module: mail
 #. odoo-python
@@ -8847,6 +8849,8 @@ msgid ""
 "The Tax Identification Number. Complete it if the contact is subjected to "
 "government taxes. Used in some legal statements."
 msgstr ""
+"Il numero di partita IVA. Compilare questa casella se il contatto è soggetto"
+" a imposte governative. Utilizzato in alcuni documenti legali."
 
 #. module: mail
 #. odoo-javascript
@@ -8968,6 +8972,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Nome dell’alias e-mail, es. “lavori” per intercettare le e-mail a "
+"<lavori@example.odoo.com>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_user_id
@@ -8977,6 +8983,10 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
+"Proprietario dei record creati al ricevimento di e-mail per questo alias. Se"
+" questo campo non è impostato, il sistema proverà a cercare il proprietario "
+"in base al mittente (campo \"Da\"). Se all'indirizzo non è associato alcun "
+"utente di sistema verrà usato l'account amministratore."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -9125,7 +9135,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
 msgid "Timezone"
-msgstr ""
+msgstr "Fuso orario"
 
 #. module: mail
 #. odoo-javascript
@@ -9144,7 +9154,7 @@ msgstr "Titolo"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_to
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_to
 msgid "To"
-msgstr ""
+msgstr "Al"
 
 #. module: mail
 #. odoo-javascript
@@ -9281,7 +9291,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Tracking"
-msgstr ""
+msgstr "Tracciare"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -9928,7 +9938,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__ir_actions_server__activity_date_deadline_range_type__weeks
 msgid "Weeks"
-msgstr ""
+msgstr "Settimane"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
