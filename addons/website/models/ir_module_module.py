@@ -503,6 +503,7 @@ class IrModuleModule(models.Model):
             langs_update = (langs & generic_arch_db.keys()) - {'en_US'}
             if not langs_update:
                 continue
+            # get dictionaries limited to the requested languages
             generic_arch_db_en = generic_arch_db.get('en_US')
             specific_arch_db_en = specific_arch_db.get('en_US')
             generic_arch_db_update = {k: generic_arch_db[k] for k in langs_update}
