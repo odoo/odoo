@@ -48,14 +48,14 @@ const mediaSelector = basicMediaSelector.split(',').map(s => `${s}:not([data-oe-
 // Time to consider a user offline in ms. This fixes the problem of the
 // navigator closing rtc connection when the mac laptop screen is closed.
 const CONSIDER_OFFLINE_TIME = 1000;
-// Check whether the computer could be offline. This fixes the problem of the
-// navigator closing rtc connection when the mac laptop screen is closed. This
-// case happens on Mac OS on every browser when the user closes their laptop's
-// screen. At first, the os/navigator closes all rtc connections, and after some
-// delay, the os/navigator internet goes offline without triggering an
-// offline/online event. However, if the laptop screen is open and the
-// connection is properly remove (e.g. disconnect wifi), the event is properly
-// triggered.
+// Check wether the computer could be offline. This fixes the problem of the
+// navigator closing rtc connection when the mac laptop screen is closed.
+// This case happens on Mac OS on every browser when the user close it's laptop
+// screen. At first, the os/navigator closes all rtc connection, and after some
+// times, the os/navigator internet goes offline without triggering an
+// offline/online event.
+// However, if the laptop screen is open and the connection is properly remove
+// (e.g. disconnect wifi), the event is properly triggered.
 const CHECK_OFFLINE_TIME = 1000;
 const PTP_CLIENT_DISCONNECTED_STATES = [
     'failed',
@@ -591,39 +591,22 @@ const Wysiwyg = Widget.extend({
         window.addEventListener('online', this._checkConnectionChange);
         window.addEventListener('offline', this._checkConnectionChange);
 
-        let checkOfflineTime = CHECK_OFFLINE_TIME;
-        let checkOffline = async () => {
-            if (this.ptp) {
-                checkOfflineTime = CHECK_OFFLINE_TIME; // reset exponential backoff
-                if (!(this._offlineTimeout && this.preSavePromise)) {
-                    const clientsInfos = Object.values(this.ptp.clientsInfos);
-                    const couldBeDisconnected =
-                        Boolean(clientsInfos.length) &&
-                        clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection.connectionState));
+        this._collaborationInterval = setInterval(async () => {
+            if (this._offlineTimeout || this.preSavePromise || !this.ptp) {
+                return;
+            }
 
-                    if (couldBeDisconnected) {
-                        this._offlineTimeout = setTimeout(() => {
-                            this._signalOffline();
-                        }, CONSIDER_OFFLINE_TIME);
-                    }
-                }
-            } else {
-                // We haven't been able to connect to the server yet. Don't try
-                // forever though. Exponential backoff.
-                checkOfflineTime = checkOfflineTime * 2;
+            const clientsInfos = Object.values(this.ptp.clientsInfos);
+            const couldBeDisconnected =
+                Boolean(clientsInfos.length) &&
+                clientsInfos.every((x) => PTP_CLIENT_DISCONNECTED_STATES.includes(x.peerConnection.connectionState));
+
+            if (couldBeDisconnected) {
+                this._offlineTimeout = setTimeout(() => {
+                    this._signalOffline();
+                }, CONSIDER_OFFLINE_TIME);
             }
-            if (checkOfflineTime < Number.MAX_SAFE_INTEGER) {
-                // When the time gets too big, stop trying. This happens after
-                // 43 tries, which is 17592186044415000ms or almost 558
-                // millenia. We might want to stop sooner don't you think? :-D
-                // If we limit to 2^32, we can do 22 tries, which takes 97 days.
-                // Or we just limit to like 15 times (2^15 seconds ~= 9 hours)
-                // :-P
-                this._collaborationTimeout = setTimeout(checkOffline, checkOfflineTime);
-            }
-        }
-        checkOffline = checkOffline.bind(this);
-        this._collaborationTimeout = setTimeout(checkOffline, checkOfflineTime);
+        }, CHECK_OFFLINE_TIME);
 
         this._peerToPeerLoading = new Promise(async (resolve) => {
             this._currentRecord = await this._getCurrentRecord();
@@ -743,7 +726,7 @@ const Wysiwyg = Widget.extend({
                 this.ptp.closeAllConnections();
             });
         }
-        clearTimeout(this._collaborationTimeout);
+        clearInterval(this._collaborationInterval);
         this.$editable && this.$editable.off('blur', this._onBlur);
         document.removeEventListener('mousedown', this._onDocumentMousedown, true);
         const $body = $(document.body);
