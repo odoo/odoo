@@ -3,16 +3,17 @@
 # 	* website_profile
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Lucia Pacheco <lpo@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.1alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
-"PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Lucia Pacheco <lpo@odoo.com>, 2022\n"
+"POT-Creation-Date: 2022-10-06 09:47+0000\n"
+"PO-Revision-Date: 2023-01-17 15:00+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +47,7 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ". Intente otra búsqueda"
+msgstr ". Intente con otra búsqueda"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
@@ -403,12 +404,12 @@ msgstr "Puede publicar"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
-msgstr "Limpiar"
+msgstr "Autorizar"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Close"
-msgstr "Cerrar"
+msgstr "Bloquear"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -434,6 +435,11 @@ msgstr "Foro: Verificación por correo electrónico"
 #: model:ir.model,name:website_profile.model_gamification_badge
 msgid "Gamification Badge"
 msgstr "Insignia de ludificación"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid "Get"
+msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -511,11 +517,6 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "Rank badge"
-msgstr "Insignia de rango"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
 msgstr "Rangos"
 
@@ -527,7 +528,7 @@ msgstr "Regresar al sitio web."
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -549,7 +550,7 @@ msgstr ""
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full URL to access the document through the website."
-msgstr "La URL completa para acceder al documento a través del sitio web."
+msgstr "El URL completo para acceder al documento a través del sitio web."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -600,7 +601,7 @@ msgstr "Correo de verificación enviado a"
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
 msgid "Visible on current website"
-msgstr "Visible desde este sitio web"
+msgstr "Visible en el sitio web actual"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
@@ -687,9 +688,23 @@ msgid "xp"
 msgstr "xp"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid ""
+"xp\n"
+"                        to level up!"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "your account settings"
 msgstr "sus ajustes de cuenta"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
+msgstr ""
 
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email

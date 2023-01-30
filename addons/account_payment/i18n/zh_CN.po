@@ -3,18 +3,19 @@
 # 	* account_payment
 # 
 # Translators:
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
-# Martin Trigaux, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Benson <Benson.Dr@Gmail.com>, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# 稀饭~~ <wangwhai@qq.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 10:59+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -187,7 +188,7 @@ msgstr "关闭"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_register__payment_method_code
 msgid "Code"
-msgstr "代号"
+msgstr "代码"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__create_uid
@@ -274,11 +275,6 @@ msgid "Journal Entry"
 msgstr "会计凭证"
 
 #. module: account_payment
-#: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard____last_update
-msgid "Last Modified on"
-msgstr "最后修改时间"
-
-#. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__write_uid
 msgid "Last Updated by"
 msgstr "最后更新人"
@@ -326,7 +322,7 @@ msgstr "支付方式"
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_id
 #: model:ir.model.fields,field_description:account_payment.field_payment_transaction__payment_id
 msgid "Payment"
-msgstr "支付"
+msgstr "付款"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__payment_amount
@@ -558,3 +554,12 @@ msgid ""
 msgstr ""
 "您无法删除链接到处于已启用或测试状态的提供商的支付方式。\n"
 "链接的提供程序： %s"
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment provider before deleting its journal.\n"
+"Linked providers: %s"
+msgstr ""

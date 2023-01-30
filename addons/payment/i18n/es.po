@@ -3,18 +3,19 @@
 # 	* payment
 # 
 # Translators:
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2022
-# Martin Trigaux, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2023
 # David Ramia, 2023
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: David Ramia, 2023\n"
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -285,8 +286,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"¿Estás seguro de que quieres anular la transacción autorizada? Esta acción "
-"no puede deshacerse."
+"¿Está seguro de que desea anular la transacción autorizada? Esta acción no "
+"puede deshacerse."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -319,11 +320,6 @@ msgstr "Disponibilidad"
 #, python-format
 msgid "Bank"
 msgstr "Banco"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Cuenta bancaria"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
@@ -447,14 +443,9 @@ msgid "Color"
 msgstr "Color"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Comunicación"
-
-#. module: payment
 #: model:ir.model,name:payment.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__company_id
@@ -514,11 +505,6 @@ msgstr "Crear token"
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
 msgstr ""
-
-#. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_token
-msgid "Create a new payment token"
-msgstr "Crear un nuevo token de pago"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -601,6 +587,11 @@ msgstr ""
 #: model:payment.provider,display_as:payment.payment_provider_sips
 msgid "Credit Card (powered by Sips)"
 msgstr "Tarjeta de crédito (con tecnología de Sips)"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
+msgid "Currencies"
+msgstr "Monedas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -699,8 +690,8 @@ msgid "Error"
 msgstr "Error"
 
 #. module: payment
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -763,6 +754,11 @@ msgstr "Generar enlace de pago"
 #: model:ir.model,name:payment.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
 msgstr "Generar enlace de pago de ventas"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate and Copy Payment Link"
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
@@ -915,16 +911,6 @@ msgid "Language"
 msgstr "Idioma"
 
 #. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
 msgstr "Última fecha de cambio de estado"
@@ -986,7 +972,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr "ID de la cuenta del vendedor"
+msgstr "ID de la cuenta del comerciante"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state_message
@@ -1055,7 +1041,7 @@ msgstr "No se seleccionó una opción de pago"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
 msgid "Not done"
-msgstr "Pendiente"
+msgstr "No realizado"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -1136,7 +1122,7 @@ msgstr "Otro"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr "Token de identidad PDT (Payment Data Transfer)"
+msgstr "Token de identidad PDT(Payment Data Transfer)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__partial
@@ -1149,7 +1135,7 @@ msgstr "Parcial"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Socio"
+msgstr "Empresa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
@@ -1192,12 +1178,12 @@ msgstr "Ícono de pago"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 msgid "Payment Icons"
-msgstr "Íconos de pago"
+msgstr "Iconos de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "Instrucciones de pago"
+msgstr "Instrucciones de Pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1348,14 +1334,9 @@ msgid "Please set an amount smaller than %s."
 msgstr "Establece una cantidad menor a %s."
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Use los siguientes detalles de transferencia"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
-msgstr "Use el nombre del pedido como referencia comunicativa."
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid "Please switch to company"
+msgstr ""
 
 #. module: payment
 #. odoo-javascript
@@ -1446,7 +1427,7 @@ msgstr "Reembolso"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "Devoluciones"
+msgstr "Reembolsos"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
@@ -1484,6 +1465,11 @@ msgid "Select countries. Leave empty to make available everywhere."
 msgstr ""
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select currencies. Leave empty not to restrict any."
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
 msgstr "Método de pago de incorporación seleccionado"
@@ -1502,7 +1488,7 @@ msgstr "Secuencia"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Error en servidor"
+msgstr "Error en el servidor"
 
 #. module: payment
 #. odoo-javascript
@@ -1605,6 +1591,11 @@ msgid "Test Mode"
 msgstr "Modo de prueba"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.test_token_badge
+msgid "Test Token"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -1636,6 +1627,13 @@ msgstr "El mensaje de información complementaria sobre el estado"
 msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
+msgid ""
+"The currencies available with this payment provider. Leave empty not to "
+"restrict any."
 msgstr ""
 
 #. module: payment
@@ -1809,6 +1807,11 @@ msgid "There are no transactions to show"
 msgstr "No hay transacciones por mostrar"
 
 #. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_token
+msgid "There is no token created yet."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
 msgstr "No hay nada que pagar."
@@ -1922,8 +1925,8 @@ msgstr "Validación del método de pago"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
-msgid "Variable domestic fees (in percents)"
-msgstr "Comisiones nacionales variables (en porcentaje)"
+msgid "Variable domestic fees"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1934,8 +1937,8 @@ msgstr "Las tarifas variables siempre deben ser positivas y menores a 100%."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
-msgid "Variable international fees (in percents)"
-msgstr "Comisiones internacionales variables (en porcentaje)"
+msgid "Variable international fees"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -1966,7 +1969,7 @@ msgstr "Alerta"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Warning!"
-msgstr "¡Advertencia!"
+msgstr "¡Alerta!"
 
 #. module: payment
 #. odoo-javascript
@@ -2223,7 +2226,6 @@ msgstr ""
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-#: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
 msgstr "pago: transacciones posprocesadas"
 
@@ -2249,14 +2251,13 @@ msgid "success"
 msgstr ""
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.transaction_status
-msgid "warning"
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid ""
+"to make this\n"
+"                    payment."
 msgstr ""
 
 #. module: payment
-#: code:addons/payment/models/account_journal.py:0
-#, python-format
-msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
-"Linked providers: %s"
+#: model_terms:ir.ui.view,arch_db:payment.transaction_status
+msgid "warning"
 msgstr ""

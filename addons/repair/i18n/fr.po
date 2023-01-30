@@ -3,17 +3,17 @@
 # 	* repair
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,7 @@ msgstr ""
 "* Le statut 'Annulé' est utilisé quand l'utilisateur annule l'ordre de réparation."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
@@ -197,7 +198,7 @@ msgstr "Activité d'exception de décoration"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
-msgstr "Status de l'activité"
+msgstr "Statut de l'activité"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_icon
@@ -232,7 +233,7 @@ msgstr "Type de transfert autorisé"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "Compte des pièces jointes"
+msgstr "Nombre de pièces jointes"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__b4repair
@@ -311,10 +312,11 @@ msgid ""
 "same category. The conversion will be made based on the ratios."
 msgstr ""
 "Il est possible de convertir deux unités de mesures si elles appartiennent à"
-" la même catégorie. Cette conversion utilise les rapports définis pour ces "
+" la même catégorie. Cette conversion utilise les ratios définis pour ces "
 "unités."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -336,6 +338,7 @@ msgid "Create Mass Invoice (repair)"
 msgstr "Créer facture en masse (réparation)"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
@@ -421,7 +424,7 @@ msgstr "Emplacement de dest"
 #: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
@@ -485,7 +488,7 @@ msgstr "Abonnés (Partenaires)"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Icône Font Awesome e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -541,7 +544,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si actif, certains messages ont une erreur de livraison."
+msgstr "Si coché, certains messages ont une erreur de livraison."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_stock_picking__is_repairable
@@ -611,6 +614,7 @@ msgid "Invoice and shipping address:"
 msgstr "Adresse de facturation et de livraison :"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
@@ -637,22 +641,12 @@ msgstr "Est un abonné"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
-msgstr "Écriture comptable"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_line____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_order____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
-#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Imputation comptable"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_uid
@@ -683,14 +677,14 @@ msgstr "Activités en retard"
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__location_id
 msgid "Location"
-msgstr "Lieu"
+msgstr "Emplacement"
 
 #. module: repair
 #: model:ir.model,name:repair.model_stock_lot
 #: model:ir.model.fields,field_description:repair.field_repair_line__lot_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__lot_id
 msgid "Lot/Serial"
-msgstr "Lot/N° série"
+msgstr "Lot/Série"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
@@ -710,27 +704,27 @@ msgstr "Messages"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Échéance de mon activité"
+msgstr "Date limite de mon activité"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Activité suivante de l'événement du calendrier"
+msgstr "Activité suivante calendrier événement"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Date limite de l'activité à venir"
+msgstr "Date limite de l'Activité à venir"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Résumé d'activité suivant"
+msgstr "Résumé d'activité suivante"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
 msgid "Next Activity Type"
-msgstr "Type d'activités à venir"
+msgstr "Type d'activité à venir"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
@@ -738,18 +732,21 @@ msgid "No Invoice"
 msgstr "Pas de facture"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Pas de compte défini pour le produit \"%s\"."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "Pas de liste de prix trouvée"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
@@ -761,6 +758,7 @@ msgid "No repair order found. Let's create one!"
 msgstr "Aucun ordre de réparation trouvé. Créons-en un !"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
@@ -769,7 +767,7 @@ msgstr "Aucune ligne de liste de prix valide n'a été trouvée."
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__priority__0
 msgid "Normal"
-msgstr "Normale"
+msgstr "Normal"
 
 #. module: repair
 #. odoo-python
@@ -794,7 +792,7 @@ msgstr "Nombre d'erreurs"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Nombre de messages exigeant une action"
+msgstr "Nombre de messages nécessitant une action"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error_counter
@@ -807,6 +805,7 @@ msgid "Number of repairs linked to this picking"
 msgstr "Nombre de réparations liées à ce transfert"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
@@ -827,7 +826,7 @@ msgstr "Pièces"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Type de transfert"
+msgstr "Type de picking"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1011,6 +1010,7 @@ msgid "Repair Order Reference"
 msgstr "Référence de l'ordre de réparation"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
@@ -1039,18 +1039,13 @@ msgid "Repair Reference"
 msgstr "Référence de la réparation"
 
 #. module: repair
-#: model:product.product,name:repair.product_service_order_repair
-#: model:product.template,name:repair.product_service_order_repair_product_template
-msgid "Repair Services"
-msgstr "Services de réparation"
-
-#. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
 msgstr "Etiquettes de réparation"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
@@ -1059,18 +1054,21 @@ msgstr ""
 "brouillon."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "La réparation doit être confirmée pour pouvoir commencer."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "La réparation doit être terminée pour déplacer le produit."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
@@ -1082,6 +1080,7 @@ msgid "Repair order count"
 msgstr "Nombre d'ordres de réparation"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
@@ -1124,7 +1123,7 @@ msgstr "Responsable"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
-msgstr "Responsable"
+msgstr "Utilisateur responsable"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__picking_id
@@ -1197,6 +1196,7 @@ msgstr ""
 "ordre de réparation"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
@@ -1213,7 +1213,7 @@ msgstr "Marquer comme brouillon"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Montrez toutes les enregistrements pour lesquelles la date des prochaines "
+"Montrez tous les enregistrements pour lesquels la date des prochaines "
 "actions est pour aujourd'hui ou avant"
 
 #. module: repair
@@ -1231,7 +1231,7 @@ msgstr "Commencer la réparation"
 #: model:ir.model.fields,field_description:repair.field_repair_order__state
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_state
@@ -1249,7 +1249,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Stock déplacer"
+msgstr "Mouvement de stock"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
@@ -1294,6 +1294,7 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "Le nom de l'ordre de réparation doit être unique!"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1347,7 +1348,7 @@ msgstr "Rapport de traçabilité"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_picking
 msgid "Transfer"
-msgstr "Transfert"
+msgstr "Virement"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__is_returned
@@ -1366,7 +1367,7 @@ msgstr "Type"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type d'activité d'exception enregistrée"
+msgstr "Type d'activité d'exception enregistrée."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1388,15 +1389,9 @@ msgid "Unit of Measure"
 msgstr "Unité de mesure"
 
 #. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Units"
-msgstr "Unité(s)"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Montant HT"
+msgstr "Montant hors taxes"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1419,7 +1414,8 @@ msgid "Warn Insufficient Repair Quantity"
 msgstr "Avertissement d'une quantité de réparation insuffisante"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0
+#. odoo-python
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Avertissement"
@@ -1441,6 +1437,7 @@ msgid "Website communication history"
 msgstr "Historique de communication du site web"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1451,6 +1448,7 @@ msgstr ""
 "confirmé. Vous devez d'abord l'annuler."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1461,12 +1459,14 @@ msgstr ""
 "facture qui a été comptabilisée une fois."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "Vous ne pouvez pas entrer des quantités négatives."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1477,6 +1477,7 @@ msgstr ""
 "Définissez-en une avant de choisir un produit."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."

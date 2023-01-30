@@ -3,16 +3,18 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Felix Schubert <felix.schubert@go-erp.com>, 2022
+# Felix Schubert <felix.schubert@go-erp.com>, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Robert Förster <hello@suppliot.eu>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,26 +46,6 @@ msgstr ""
 "zur termingerechten Lieferung verfügbar</span>"
 
 #. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\"/>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
 msgstr "<span class=\"o_stat_text\">Pünktlichkeitsrate</span>"
@@ -77,6 +59,11 @@ msgstr "<span class=\"o_stat_text\">Einkäufe</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
 msgstr "<span class=\"o_stat_value\">%</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "<span> days</span>"
+msgstr "<span> Tage</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -107,27 +94,9 @@ msgid "Action"
 msgstr "Aktion"
 
 #. module: purchase_stock
-#: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
-msgid ""
-"Amount of time between expected and effective receipt date. Due to a hack "
-"needed to calculate this,               every record will show the same "
-"average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
-msgstr ""
-"Zeitspanne zwischen erwartetem und tatsächlichem Eingangsdatum. Aufgrund "
-"eines Hacks, der für die Berechnung erforderlich ist, zeigt jeder Datensatz "
-"denselben Durchschnittswert an, daher sollte dieser Wert nur als "
-"aggregierter Wert mit group_operator=avg verwendet werden."
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
 msgid "Arrival"
 msgstr "Ankunft"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
-msgid "Average Receipt Delay"
-msgstr "Durchschnittliche Empfangsverzögerung"
 
 #. module: purchase_stock
 #. odoo-python
@@ -177,9 +146,9 @@ msgid "Corresponding receipt not found."
 msgstr "Entsprechender Beleg nicht gefunden."
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
-msgid "Created Purchase Order Line"
-msgstr "Erstellte Bestellposition"
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
+msgid "Created Purchase Order Lines"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
@@ -243,15 +212,9 @@ msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Documentation"
-msgstr "Dokumentation"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
-msgid "Downstream Moves"
-msgstr "Nachgeschaltete Buchungen"
+msgid "Downstream moves alt"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
@@ -374,17 +337,12 @@ msgstr "Ist das Verkaufsmodul installiert"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journaleintrag"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
 msgstr "Buchungszeile"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
-msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -516,6 +474,7 @@ msgid "Process all the receipt quantities."
 msgstr "Verarbeiten Sie alle Eingangsmengen."
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "Beschaffungsgruppe"
@@ -606,7 +565,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Wareneingang"
+msgstr "Anlieferungen"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -641,9 +600,7 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "Bitten Sie Ihre Lieferanten, direkt an Ihre Kunden zu liefern."
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_product_product_replenishment
 msgid "Requests for quotation"
 msgstr "Angebotsanfragen"
 

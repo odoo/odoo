@@ -3,19 +3,19 @@
 # 	* purchase_stock
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Tony Peng <umingpeng@gmail.com>, 2022
-# 陕西_jack, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Tony Peng <umingpeng@gmail.com>, 2023
+# 陕西_jack, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,25 +47,6 @@ msgstr ""
 "0)]}\">没看见准时交货的数据</span>"
 
 #. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"此处设定的值特定于公司\" aria-"
-"label=\"此处设定的值特定于公司\" groups=\"base.group_multi_company\"/>"
-
-#. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"此处设置的值是特定于公司的。\"  "
-"groups=\"base.group_multi_company\"/>"
-
-#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_text\">On-time Rate</span>"
 msgstr "<span class=\"o_stat_text\">准时率</span>"
@@ -79,6 +60,11 @@ msgstr "<span class=\"o_stat_text\">采购</span>"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
 msgid "<span class=\"o_stat_value\">%</span>"
 msgstr "<span class=\"o_stat_value\">%</span>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
+msgid "<span> days</span>"
+msgstr "<span> 天</span>"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.report_purchaseorder_document
@@ -109,24 +95,9 @@ msgid "Action"
 msgstr "动作"
 
 #. module: purchase_stock
-#: model:ir.model.fields,help:purchase_stock.field_purchase_report__avg_receipt_delay
-msgid ""
-"Amount of time between expected and effective receipt date. Due to a hack "
-"needed to calculate this,               every record will show the same "
-"average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
-msgstr ""
-"预期和有效收货日期之间的时间。由于时间需要计算，每条记录都会显示相同的平均值，因此只能将其作为一个汇总值，group_operator=avg"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
 msgid "Arrival"
 msgstr "到达"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
-msgid "Average Receipt Delay"
-msgstr "平均收货延迟"
 
 #. module: purchase_stock
 #. odoo-python
@@ -176,9 +147,9 @@ msgid "Corresponding receipt not found."
 msgstr "没有找到相应的收货。"
 
 #. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
-msgid "Created Purchase Order Line"
-msgstr "创建采购订单行"
+#: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_ids
+msgid "Created Purchase Order Lines"
+msgstr ""
 
 #. module: purchase_stock
 #. odoo-python
@@ -238,15 +209,9 @@ msgid "Display Name"
 msgstr "显示名称"
 
 #. module: purchase_stock
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
-#: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
-msgid "Documentation"
-msgstr "文档"
-
-#. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_dest_ids
-msgid "Downstream Moves"
-msgstr "下游移动"
+msgid "Downstream moves alt"
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__dest_address_id
@@ -277,7 +242,7 @@ msgstr "采购单出现异常:"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Exception(s):"
-msgstr "异常:"
+msgstr "异常(多个):"
 
 #. module: purchase_stock
 #. odoo-python
@@ -292,7 +257,7 @@ msgstr "对于产品%s，作业类型（%s）的仓库与重新排序规则（%s
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Forecast Report"
-msgstr "预估报表"
+msgstr "预测报告"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__forecasted_issue
@@ -331,7 +296,7 @@ msgstr "进货计数"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Incoming Shipments"
-msgstr "进货"
+msgstr "入向运输"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__incoterm_id
@@ -369,11 +334,6 @@ msgstr "会计凭证"
 #: model:ir.model,name:purchase_stock.model_account_move_line
 msgid "Journal Item"
 msgstr "会计分录"
-
-#. module: purchase_stock
-#: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report____last_update
-msgid "Last Modified on"
-msgstr "最后修改时间"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_product_supplierinfo__last_purchase_date
@@ -498,6 +458,7 @@ msgid "Process all the receipt quantities."
 msgstr "处理所有的收货数量。"
 
 #. module: purchase_stock
+#: model:ir.model,name:purchase_stock.model_procurement_group
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__group_id
 msgid "Procurement Group"
 msgstr "补货组"
@@ -620,11 +581,9 @@ msgid "Request your vendors to deliver to your customers"
 msgstr "请求您的供应商交付给您的客户"
 
 #. module: purchase_stock
-#. odoo-javascript
-#: code:addons/purchase_stock/static/src/purchase_stock_forecasted/forecasted_details.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_report_product_product_replenishment
 msgid "Requests for quotation"
-msgstr "采购在途"
+msgstr "询价"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -770,7 +729,7 @@ msgstr "这些日期已经在收货上作了相应的更新%s。"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
 msgid "Total Quantity"
-msgstr "数量总计"
+msgstr "总数量"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -869,7 +828,7 @@ msgstr "您必须为此合作伙伴设置一个供应商的位置%s"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天数"
+msgstr "天"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po

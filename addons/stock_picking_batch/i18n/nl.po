@@ -3,17 +3,18 @@
 # 	* stock_picking_batch
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Dylan Kiss, 2023
+# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"PO-Revision-Date: 2023-01-17 14:59+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +87,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction
 msgid "Action Needed"
-msgstr "Actie gevraagd"
+msgstr "Actie nodig"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
@@ -96,17 +97,17 @@ msgstr "Activiteiten"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activiteit uitzondering decoratie"
+msgstr "Activiteit Uitzondering Decoratie"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
 msgid "Activity State"
-msgstr "Activiteitsfase"
+msgstr "Activiteitsstatus"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
@@ -204,6 +205,11 @@ msgstr ""
 "mogelijk."
 
 #. module: stock_picking_batch
+#: model:ir.model,name:stock_picking_batch.model_stock_backorder_confirmation
+msgid "Backorder Confirmation"
+msgstr "Bevestiging backorder"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Barcode"
 msgstr "Barcode"
@@ -277,7 +283,7 @@ msgstr "Kan geen wavepicking maken"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Check Availability"
-msgstr "Controleer beschikbaarheid"
+msgstr "Beschikbaarheid controleren"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -294,7 +300,7 @@ msgstr "Kies het type labels om af te drukken"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Clear quantities"
-msgstr "Wis hoeveelheden"
+msgstr "Hoeveelheden wissen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
@@ -312,7 +318,7 @@ msgstr "Bevestigen"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_partner
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_picking_type_form_inherit
 msgid "Contact"
-msgstr "Contact"
+msgstr "Contacteer"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__count_picking_batch
@@ -356,7 +362,7 @@ msgstr "Land van bestemming"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_dest_loc
 msgid "Destination Location"
-msgstr "Bestemming"
+msgstr "Bestemmingslocatie"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -368,7 +374,7 @@ msgstr "Gedetailleerde bewerkingen"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
@@ -396,7 +402,7 @@ msgstr "Volgers (Relaties)"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon bijv. fa-tasks"
+msgstr "Font awesome icon bijv. fa-tasks"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
@@ -406,12 +412,12 @@ msgstr "Toekomstige activiteiten"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__has_message
 msgid "Has Message"
-msgstr "Heeft bericht"
+msgstr "Heeft een bericht"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__id
@@ -428,18 +434,18 @@ msgstr "Icoon"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icoon om uitzondering op activiteit aan te geven."
+msgstr "Icoon om een uitzonderingsactiviteit aan te geven."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Indien aangevinkt hebben sommige leveringen een fout."
+msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking.py:0
@@ -454,7 +460,7 @@ msgstr ""
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "In Progress"
-msgstr "In behandeling"
+msgstr "In uitvoering"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
@@ -464,7 +470,7 @@ msgstr "In behandeling"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
 msgid "Is Follower"
-msgstr "Is een volger"
+msgstr "Is volger"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave____last_update
@@ -520,7 +526,7 @@ msgstr "Maximale verplaatsingen per batch"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht afleverfout"
+msgstr "Fout bij bezorging van bericht"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
@@ -536,7 +542,7 @@ msgstr "Modus"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.view_move_line_tree
 msgid "Move Lines"
-msgstr "Verplaatsingen"
+msgstr "Verplaatsingsregels"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__my_activity_date_deadline
@@ -546,12 +552,12 @@ msgstr "Mijn activiteit deadline"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "My Transfers"
-msgstr "Mijn verplaatsingen"
+msgstr "Mijn overdrachten"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenafspraak"
+msgstr "Volgende activiteiten kalenderafspraak"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
@@ -561,12 +567,12 @@ msgstr "Volgende activiteit deadline"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
 msgid "Next Activity Summary"
-msgstr "Omschrijving volgende actie"
+msgstr "Volgende activiteit overzicht"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
 msgid "Next Activity Type"
-msgstr "Volgende activiteit type"
+msgstr "Volgende activiteitstype"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
@@ -576,22 +582,22 @@ msgstr "Aantal acties"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
 msgid "Number of errors"
-msgstr "Aantal fouten"
+msgstr "Aantal foutmeldingen"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
+msgstr "Aantal berichten waarvoor een actie vereist is"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Aantal berichten met leveringsfout"
+msgstr "Aantal berichten met afleverfout"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_id
 msgid "Operation Type"
-msgstr "Bewerkingssoort"
+msgstr "Bewerkingstype"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -601,12 +607,12 @@ msgstr "Bewerkingen"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__picking_ids
 msgid "Picking"
-msgstr "Picken"
+msgstr "Picking"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Type levering"
+msgstr "Pickingstype"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -640,12 +646,12 @@ msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Put in Pack"
-msgstr "Stop in verpakking"
+msgstr "In de verpakking doen"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_add_to_wave__user_id
@@ -663,7 +669,7 @@ msgstr "Verantwoordelijke gebruiker"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS fout bij versturen"
+msgstr "SMS leverfout"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__scheduled_date
@@ -702,17 +708,17 @@ msgstr "Toewijzingsknop weergeven"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_check_availability
 msgid "Show Check Availability"
-msgstr "Toon controle beschikbaarheid"
+msgstr "Beschikbaarheid controleren weergeven"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_clear_qty_button
 msgid "Show Clear Qty Button"
-msgstr "Knop Wissen aantal weergeven"
+msgstr "Knop Hoeveelheid wissen weergeven"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_set_qty_button
 msgid "Show Set Qty Button"
-msgstr "Knop Aantal instellen weergeven"
+msgstr "Knop Hoeveelheid instellen weergeven"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__show_validate
@@ -722,7 +728,7 @@ msgstr "Toon bevestigingsknop"
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
+msgstr "Toon alle records welke een actiedatum vóór vandaag hebben"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_type__batch_group_by_src_loc
@@ -756,7 +762,7 @@ msgid ""
 msgstr ""
 "Status gebaseerd op activiteiten\n"
 "Te laat: Datum is al gepasseerd\n"
-"Vandaag: Activiteit datum is vandaag\n"
+"Vandaag: Activiteitsdatum is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
 #. module: stock_picking_batch
@@ -872,7 +878,7 @@ msgstr "Activiteiten van vandaag"
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "Transfer"
-msgstr "Verplaatsing"
+msgstr "Overdracht"
 
 #. module: stock_picking_batch
 #: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
@@ -884,22 +890,22 @@ msgstr "Overgeplaatst door"
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Transfers"
-msgstr "Verplaatsingen"
+msgstr "Overdrachten"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_type_code
 msgid "Type of Operation"
-msgstr "Soort bewerking"
+msgstr "Bewerkingstype"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type van activiteit uitzondering op record."
+msgstr "Type activiteit uitzondering op record."
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Validate"
-msgstr "Bevestig"
+msgstr "Bevestigen"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_warehouse
@@ -930,12 +936,12 @@ msgstr "Waves"
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__website_message_ids
 msgid "Website Messages"
-msgstr "Websiteberichten"
+msgstr "Berichten website"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website gespreksgeschiedenis"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_to_batch__is_create_draft

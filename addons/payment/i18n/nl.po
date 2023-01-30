@@ -3,16 +3,16 @@
 # 	* payment
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -331,11 +331,6 @@ msgid "Bank"
 msgstr "Bank"
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Bank Account"
-msgstr "Bankrekening"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Naam bank"
@@ -430,7 +425,7 @@ msgstr "Kies een betalinsgmethode"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
-msgstr "Plaats"
+msgstr "Stad"
 
 #. module: payment
 #. odoo-javascript
@@ -442,7 +437,7 @@ msgstr "Klik hier om doorverwezen te worden naar de bevestigingspagina."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__code
@@ -455,11 +450,6 @@ msgstr "Code"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__color
 msgid "Color"
 msgstr "Kleur"
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Communication"
-msgstr "Communicatie"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -497,7 +487,7 @@ msgstr "Bevestigd"
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
 msgid "Contact"
-msgstr "Contact"
+msgstr "Contacteer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
@@ -524,11 +514,6 @@ msgstr "Token maken"
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
 msgstr "Een nieuwe betalingsprovider maken"
-
-#. module: payment
-#: model_terms:ir.actions.act_window,help:payment.action_payment_token
-msgid "Create a new payment token"
-msgstr "Een nieuwe betalingstoken maken"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
@@ -613,6 +598,11 @@ msgid "Credit Card (powered by Sips)"
 msgstr "Credit Card (mogelijk gemaakt door Sips)"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_payment_provider__available_currency_ids
+msgid "Currencies"
+msgstr "Valuta"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
@@ -663,7 +653,7 @@ msgstr "Afwijzen"
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
@@ -706,11 +696,11 @@ msgstr "Onderneming"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
 msgid "Error"
-msgstr "Fout"
+msgstr "Foutmelding"
 
 #. module: payment
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -775,11 +765,16 @@ msgid "Generate Sales Payment Link"
 msgstr "Gegenereerde verkoop betaallink"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid "Generate and Copy Payment Link"
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_http
@@ -927,16 +922,6 @@ msgstr "Landingsroute"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
 msgid "Language"
 msgstr "Taal"
-
-#. module: payment
-#: model:ir.model.fields,field_description:payment.field_payment_icon____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_link_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
@@ -1144,7 +1129,7 @@ msgstr "Alleen bevestigde transacties kunnen worden terugbetaald."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
 msgid "Operation"
-msgstr "Handeling"
+msgstr "Bewerking"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1167,7 +1152,7 @@ msgstr "Gedeeltelijk"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_search
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_search
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_name
@@ -1177,7 +1162,7 @@ msgstr "Relatienaam"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Pay"
-msgstr "Betaal"
+msgstr "Betalen"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__paypal
@@ -1215,7 +1200,7 @@ msgstr "Betaaliconen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr "Betalingsinstructies"
+msgstr "Betaalinstructies"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1225,7 +1210,7 @@ msgstr "Betaal ink"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "Betalingsmethode"
+msgstr "Betaalmethode"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
@@ -1236,7 +1221,7 @@ msgstr "Betalingsprovider"
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr "Betalingsproviders"
+msgstr "Betaalproviders"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
@@ -1366,15 +1351,9 @@ msgid "Please set an amount smaller than %s."
 msgstr "Stel een bedrag in dat kleiner is dan %s."
 
 #. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the following transfer details"
-msgstr "Gebruik de volgende tranfer details."
-
-#. module: payment
-#: model_terms:payment.provider,pending_msg:payment.payment_provider_transfer
-msgid "Please use the order name as communication reference."
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid "Please switch to company"
 msgstr ""
-"Je dient het ordernummer als referentie te gebruiken in alle communicatie."
 
 #. module: payment
 #. odoo-javascript
@@ -1460,17 +1439,17 @@ msgstr "Referentie moet uniek zijn!"
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 #, python-format
 msgid "Refund"
-msgstr "Creditfactuur"
+msgstr "Retour"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Refunds"
-msgstr "Creditfacturen"
+msgstr "Terugbetalingen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr "Terugbetalingen tellen"
+msgstr "Aantal credits"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1480,12 +1459,12 @@ msgstr "Gerelateerde document ID"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_model
 msgid "Related Document Model"
-msgstr "Gerelateerde documentmodel"
+msgstr "Gerelateerd documentmodel"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA automatische incasso"
+msgstr "SEPA Direct Debit"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1501,6 +1480,11 @@ msgstr "Bewaar mijn betalingsgegevens"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr "Selecteer landen. Laat leeg om overal beschikbaar te maken."
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
+msgid "Select currencies. Leave empty not to restrict any."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
@@ -1521,7 +1505,7 @@ msgstr "Reeks"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Server Error"
-msgstr "Serverfout"
+msgstr "Server foutmelding"
 
 #. module: payment
 #. odoo-javascript
@@ -1624,6 +1608,11 @@ msgid "Test Mode"
 msgstr "Testmodus"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.test_token_badge
+msgid "Test Token"
+msgstr ""
+
+#. module: payment
 #. odoo-python
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
@@ -1658,6 +1647,13 @@ msgid ""
 msgstr ""
 "De landen waarin deze betalingsprovider beschikbaar is. Laat dit veld leeg "
 "om het in alle landen beschikbaar te maken."
+
+#. module: payment
+#: model:ir.model.fields,help:payment.field_payment_provider__available_currency_ids
+msgid ""
+"The currencies available with this payment provider. Leave empty not to "
+"restrict any."
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1849,6 +1845,11 @@ msgid "There are no transactions to show"
 msgstr "Er zijn geen transacties om weer te geven"
 
 #. module: payment
+#: model_terms:ir.actions.act_window,help:payment.action_payment_token
+msgid "There is no token created yet."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "There is nothing to pay."
 msgstr "Er valt niets te betalen."
@@ -1945,7 +1946,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
 msgid "Type of Refund Supported"
-msgstr "Ondersteund type restitutie"
+msgstr "Soort credit ondersteund"
 
 #. module: payment
 #. odoo-javascript
@@ -1974,8 +1975,8 @@ msgstr "Validatie van de betaalmethode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_var
-msgid "Variable domestic fees (in percents)"
-msgstr "Variabele binnenlandse kosten (in percentage)"
+msgid "Variable domestic fees"
+msgstr ""
 
 #. module: payment
 #. odoo-python
@@ -1986,8 +1987,8 @@ msgstr "Variabele vergoedingen moeten altijd positief zijn en lager dan 100%."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_var
-msgid "Variable international fees (in percents)"
-msgstr "Variabele internationale vergoedingen (in percentage)"
+msgid "Variable international fees"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -2170,7 +2171,7 @@ msgstr "Je bestelling wordt verwerkt, even geduld ..."
 #: model_terms:payment.provider,auth_msg:payment.payment_provider_transfer
 #, python-format
 msgid "Your payment has been authorized."
-msgstr "Je betaling is geautoriseerd."
+msgstr "Je betaling is goedgekeurd."
 
 #. module: payment
 #. odoo-python
@@ -2279,7 +2280,6 @@ msgstr "info"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
-#: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
 msgstr "betaling: transacties na verwerking"
 
@@ -2305,16 +2305,13 @@ msgid "success"
 msgstr "succes"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
+msgid ""
+"to make this\n"
+"                    payment."
+msgstr ""
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
 msgstr "waarschuwing"
-
-#. module: payment
-#: code:addons/payment/models/account_journal.py:0
-#, python-format
-msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
-"Linked providers: %s"
-msgstr ""
-"Je moet eerst een betaalprovider deactiveren voordat je het dagboek ervan verwijdert. \n"
-"Gekoppelde providers: %s"

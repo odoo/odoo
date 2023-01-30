@@ -3,23 +3,28 @@
 # 	* snailmail
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: snailmail
+#: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__attachment_error
+msgid "ATTACHMENT_ERROR"
+msgstr ""
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -144,7 +149,7 @@ msgstr "Geannuleerd"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__city
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "City"
-msgstr "Plaats"
+msgstr "Stad"
 
 #. module: snailmail
 #. odoo-javascript
@@ -153,7 +158,7 @@ msgstr "Plaats"
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -184,7 +189,7 @@ msgstr "Bevestigen"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_res_partner
 msgid "Contact"
-msgstr "Contact"
+msgstr "Contacteer"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__country_id
@@ -260,7 +265,7 @@ msgstr "Mislukte brief"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Soort mislukking"
+msgstr "Storingstype"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
@@ -288,13 +293,6 @@ msgstr "In wachtrij"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
 msgid "Information"
 msgstr "Informatie"
-
-#. module: snailmail
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
-#: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -343,7 +341,7 @@ msgstr "Bericht"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_notification
 msgid "Message Notifications"
-msgstr "Berichten notificaties"
+msgstr "Bericht notificaties"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_mail_mail__message_type
@@ -358,7 +356,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__model
 msgid "Model"
-msgstr "Type"
+msgstr "Model"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_confirm__model_name
@@ -380,12 +378,12 @@ msgstr "Niet genoeg kredieten voor snailmail"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr "Soort notificatie"
+msgstr "Type melding"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__notification_ids
 msgid "Notifications"
-msgstr "Notificaties"
+msgstr "Meldingen"
 
 #. module: snailmail
 #. odoo-python
@@ -413,7 +411,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
 msgid "Partner"
-msgstr "Relatie"
+msgstr "Partner"
 
 #. module: snailmail
 #. odoo-python
@@ -560,7 +558,6 @@ msgstr "Snailmail bericht in fout"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
-#: model:ir.cron,cron_name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
 msgstr "Snailmail: brieven in de wachtrij verwerken"
 
@@ -670,7 +667,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__message_type
 msgid "Type"
-msgstr "Soort"
+msgstr "Type"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error

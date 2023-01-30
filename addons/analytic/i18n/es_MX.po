@@ -3,17 +3,18 @@
 # 	* analytic
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 11:01+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,11 +68,6 @@ msgid "Add a new analytic account"
 msgstr "Agregar una nueva cuenta analítica"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_administratif
-msgid "Administrative"
-msgstr "Administrativo"
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
 msgstr "Número total de las cuentas analíticas"
@@ -85,8 +81,6 @@ msgstr "Importe"
 #. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
-#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
 #, python-format
 msgid "Analytic"
 msgstr "Analítica"
@@ -117,6 +111,12 @@ msgstr "Cuentas analíticas"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
 msgstr "Número de las cuentas analíticas"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribución analítica"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_distribution_model
@@ -191,11 +191,6 @@ msgid "Analytic Precision"
 msgstr "Precisión analítica"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
-msgid "Analytic distribution to apply"
-msgstr "Distribución analítica a aplicar"
-
-#. module: analytic
 #. odoo-python
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
@@ -225,12 +220,7 @@ msgstr "Archivado"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_search
 msgid "Associated Partner"
-msgstr "Empresa asociada"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_asustek
-msgid "Asustek"
-msgstr ""
+msgstr "Partner asociado"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -247,16 +237,6 @@ msgstr "Balance"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_kanban
 msgid "Balance:"
 msgstr "Balance:"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
-msgid "Camp to Camp"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_integration_c2c
-msgid "CampToCamp"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__category
@@ -291,12 +271,7 @@ msgstr "Color"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__color
 msgid "Color Index"
-msgstr "Índice de color"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_commercial_marketing
-msgid "Commercial & Marketing"
-msgstr ""
+msgstr "Índice de colores"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -312,6 +287,11 @@ msgid "Complete Name"
 msgstr "Nombre completo"
 
 #. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Conditions to meet"
+msgstr ""
+
+#. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
 msgid "Config Settings"
 msgstr "Ajustes de configuración"
@@ -322,9 +302,9 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"La conversión entre las unidades de medidas solo pueden ocurrir si "
-"pertenecen a la misma categoría. La conversión se basará en las razones "
-"establecidas."
+"La conversión entre las unidades de medida solo puede ocurrir si las "
+"unidades pertenecen a la misma categoría. La conversión se basará en las "
+"relaciones establecidas."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -389,30 +369,15 @@ msgid "Debit"
 msgstr "Débito"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_agrolait
-msgid "Deco Addict"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
 msgstr "Aplicabilidad predeterminada"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_deltapc
-msgid "Delta PC"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__name
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__description
 msgid "Description"
 msgstr "Descripción"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_desertic_hispafuentes
-msgid "Desertic - Hispafuentes"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__display_name
@@ -422,6 +387,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__display_name
 msgid "Display Name"
 msgstr "Nombre en pantalla"
+
+#. module: analytic
+#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
+msgid "Distribution to apply"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -443,7 +413,7 @@ msgstr "Seguidores"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Partners)"
+msgstr "Seguidores (contactos)"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action
@@ -478,11 +448,8 @@ msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_error
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes presentan un error de "
-"entrega."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -507,15 +474,6 @@ msgstr "No válido"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
 msgid "Is Follower"
 msgstr "Es un seguidor"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account____last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability____last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model____last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_line____last_update
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_plan____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__write_uid
@@ -543,19 +501,9 @@ msgid "Loading..."
 msgstr "Cargando…"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_think_big_systems
-msgid "Lumber Inc"
-msgstr ""
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_luminous_technologies
-msgid "Luminous Technologies"
-msgstr ""
-
-#. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Archivos adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: analytic
 #. odoo-javascript
@@ -569,17 +517,12 @@ msgstr "Obligatorio"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_error
 msgid "Message Delivery error"
-msgstr "Error en el envío del mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_ids
 msgid "Messages"
 msgstr "Mensajes"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_millennium_industries
-msgid "Millennium Industries"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__business_domain__general
@@ -591,11 +534,6 @@ msgstr "Varios"
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_list
 msgid "Name"
 msgstr "Nombre"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_nebula
-msgid "Nebula"
-msgstr ""
 
 #. module: analytic
 #. odoo-javascript
@@ -656,11 +594,6 @@ msgid "One or more lines require a 100% analytic distribution."
 msgstr "Una o más líneas requieren una distribución analítica del 100%."
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_internal
-msgid "Operating Costs"
-msgstr ""
-
-#. module: analytic
 #. odoo-javascript
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_applicability__applicability__optional
@@ -673,11 +606,6 @@ msgstr "Opcional"
 #: model:ir.model.fields.selection,name:analytic.selection__account_analytic_line__category__other
 msgid "Other"
 msgstr "Otro"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_our_super_product
-msgid "Our Super Product"
-msgstr ""
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__parent_id
@@ -693,7 +621,7 @@ msgstr "Ruta padre"
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_id
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -718,11 +646,6 @@ msgid "Reference"
 msgstr "Referencia"
 
 #. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_rd_department
-msgid "Research & Development"
-msgstr "Investigación y desarrollo"
-
-#. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
 msgid ""
@@ -740,16 +663,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
 msgstr "Plan raíz"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "Error de entrega de SMS"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_seagate_p2
-msgid "Seagate P2"
-msgstr ""
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
@@ -791,16 +704,6 @@ msgstr ""
 "seleccionamos este partner, lo tomará automáticamente como cuenta analítica)"
 
 #. module: analytic
-#: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
-msgid "Simultaneous conditions to meet"
-msgstr "Condiciones simultáneas a cumplir"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_spark
-msgid "Spark Systems"
-msgstr ""
-
-#. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
 msgstr "Subplanes"
@@ -815,11 +718,6 @@ msgid ""
 msgstr ""
 "La cuenta seleccionada le pertenece a una empresa diferente para la que "
 "desea crear un elemento analítico"
-
-#. module: analytic
-#: model:account.analytic.account,name:analytic.analytic_absences
-msgid "Time Off"
-msgstr "Tiempo personal"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_tree
@@ -840,22 +738,12 @@ msgstr "Unidad de medida"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr "Categoría UdM"
+msgstr "Categoría de UdM"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
 msgid "User"
 msgstr "Usuario"
-
-#. module: analytic
-#: model:ir.model.fields,field_description:analytic.field_account_analytic_account__website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: analytic
-#: model:ir.model.fields,help:analytic.field_account_analytic_account__website_message_ids
-msgid "Website communication history"
-msgstr "Historial de comunicaciones del sitio web"
 
 #. module: analytic
 #. odoo-python

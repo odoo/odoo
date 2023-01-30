@@ -3,16 +3,18 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2022
 # David Ramia, 2023
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Luis D. Lafaurie <luislafaurie@hotmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: David Ramia, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,8 +165,8 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
-msgid "Analytic"
-msgstr "Analítico"
+msgid "Analytic Distribution"
+msgstr "Distribución analítica"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -264,7 +266,7 @@ msgstr "Cerrado"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__company_id
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__company_id
 msgid "Company"
-msgstr "Compañía"
+msgstr "Empresa"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -508,16 +510,6 @@ msgstr "Es un seguidor"
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Keep Alternatives"
 msgstr ""
-
-#. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__write_uid
@@ -879,9 +871,9 @@ msgid ""
 "\n"
 "                    Select multiple RFQ (non-exclusive): allows multiple purchase orders. On confirmation of a purchase order it does not cancel the remaining orders"
 msgstr ""
-"Seleccione solo una RFQ (exclusivo): cuando se confirma una orden de compra, cancele la orden de compra restante.\n"
+"Seleccione solo una RFQ (exclusivo): cuando se confirma un pedido de compra, cancele el pedido de compra restante.\n"
 "\n"
-"Seleccionar múltiples RFQ (no exclusivo): permite múltiples órdenes de compra. Tras la confirmación de una orden de compra, no cancela los pedidos restantes."
+"Seleccionar múltiples RFQ (no exclusivo): permite múltiples pedidos de compra. Tras la confirmación de un pedido de compra, no cancela los pedidos restantes."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__sequence
@@ -932,12 +924,12 @@ msgstr "Documento origen"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr "Iniciar un nuevo Acuerdo de Compra"
+msgstr "Iniciar un nuevo acuerdo de compra"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr "Orden de Acuerdo Abierto"
+msgstr "Orden de acuerdo abierto"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -1102,7 +1094,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Aviso para %s"
+msgstr "Advertencia para %s"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__website_message_ids
@@ -1135,8 +1127,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "You can only delete draft or cancelled requisitions."
-msgstr ""
+msgid "You can only delete draft requisitions."
+msgstr "Solo se pueden eliminar Acuerdos en borrador"
 
 #. module: purchase_requisition
 #. odoo-python

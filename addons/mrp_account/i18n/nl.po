@@ -3,17 +3,17 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,12 +28,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Analytic Account"
-msgstr "Kostenplaats"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "Kostenplaatsregel"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
@@ -41,8 +41,6 @@ msgid ""
 "Analytic account in which cost and revenue entries will take        place "
 "for financial management of the manufacturing order."
 msgstr ""
-"Kostenplaats waarin kosten en omzet worden geboekt voor het financieel "
-"beheer van de productieorder."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
@@ -50,8 +48,6 @@ msgid ""
 "Analytic account in which cost and revenue entries will take place for "
 "financial management of the manufacturing order."
 msgstr ""
-"Kostenplaats waarin kosten en omzet worden geboekt voor het financieel "
-"beheer van de productieorder."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -62,12 +58,12 @@ msgstr "Stuklijst"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Bills of Materials"
-msgstr "Stuklijsten"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr "Aantal stuklijsten"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -81,7 +77,7 @@ msgstr "Categorie"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Bereken kostprijs vanuit stuklijst"
+msgstr ""
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -91,44 +87,42 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
-"Bereken de prijs van het product gebruikmakend van producten en bewerkingen "
-"gerelateerd aan de stuklijst, enkel voor geproduceerde producten."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr "Kosten geregistreerd"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr "Extra eenheidkosten"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Boekingsregel"
+msgstr "Boeking"
 
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
-msgstr "Productieorder"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Manufacturing Orders"
-msgstr "Productieorders"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 msgid "Manufacturing Orders Count"
-msgstr "Aantal productieorders"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
-msgstr "Kostenplaats productieorderregel"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -136,8 +130,6 @@ msgid ""
 "Posts analytical accounting entries in real time for both component and "
 "operational costs."
 msgstr ""
-"Boekt kostenplaatsboekingen in real time voor zowel onderdeel- als "
-"operationele kosten."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -157,7 +149,7 @@ msgstr "Productieorder"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
-msgstr "Toon waardering"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
@@ -172,49 +164,49 @@ msgstr "Voorraadregel"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Valuation"
-msgstr "Waarde"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
 msgid "Wc Analytic Account Line"
-msgstr "Kostenplaats werkplek"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr "Werkplek"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr "Gebruik werkplek"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
-msgstr "Werkorder"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
-msgstr "Aantal werkorders"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "Werkplek effectiviteitslog"
+msgstr ""
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenters"
-msgstr "Werkplekken"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
-msgstr "[Component] %s"
+msgstr ""
 
 #. module: mrp_account
 #. odoo-python
@@ -222,4 +214,4 @@ msgstr "[Component] %s"
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format
 msgid "[WC] %s"
-msgstr "[WP] %s"
+msgstr ""

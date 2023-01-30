@@ -3,16 +3,17 @@
 # 	* spreadsheet_dashboard
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,21 +22,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
 msgstr "Er is een fout opgetreden tijdens het laden van het dashboard"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
 msgstr "TERUG"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
@@ -50,13 +51,13 @@ msgstr "Configuratie"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_uid
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_uid
 msgid "Created by"
-msgstr "Gemaakt door"
+msgstr "Aangemaakt door"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__create_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__create_date
 msgid "Created on"
-msgstr "Gemaakt op"
+msgstr "Aangemaakt op"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__dashboard_ids
@@ -81,13 +82,18 @@ msgstr "Dashboards"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__data
 msgid "Data"
-msgstr "Data"
+msgstr "Gegevens"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__display_name
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__display_name
 msgid "Display Name"
 msgstr "Weergavenaam"
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_finance
+msgid "Finance"
+msgstr "Boekhouding"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__group_ids
@@ -100,16 +106,15 @@ msgid "Group of dashboards"
 msgstr "Groep dashboards"
 
 #. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_hr
+msgid "Human Resources"
+msgstr "Personeelszaken"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__id
 msgid "ID"
 msgstr "ID"
-
-#. module: spreadsheet_dashboard
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard____last_update
-#: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_uid
@@ -121,14 +126,19 @@ msgstr "Laatst bijgewerkt door"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__write_date
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group__write_date
 msgid "Last Updated on"
-msgstr "Laatst geupdate op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "Loading..."
 msgstr "Laden..."
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_logistics
+msgid "Logistics"
+msgstr "Logistiek"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__name
@@ -137,14 +147,14 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
 msgstr "Geen beschikbaar dashboard"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 #, python-format
 msgid ""
@@ -155,9 +165,19 @@ msgstr ""
 "dashboard bevat er geen"
 
 #. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_project
+msgid "Project"
+msgstr "Project"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__raw
 msgid "Raw"
 msgstr "Rauw"
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_sales
+msgid "Sales"
+msgstr "Verkoop"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -166,15 +186,9 @@ msgid "Sequence"
 msgstr "Reeks"
 
 #. module: spreadsheet_dashboard
-#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
-#, python-format
-msgid "Sheet1"
-msgstr "Blad1"
-
-#. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard
 msgid "Spreadsheet Dashboard"
-msgstr "Spreadsheetdashboard"
+msgstr "Dashboard spreadsheet"
 
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_form
@@ -185,3 +199,8 @@ msgstr "Spreadsheets"
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
 msgid "Thumbnail"
 msgstr "Miniatuur"
+
+#. module: spreadsheet_dashboard
+#: model:spreadsheet.dashboard.group,name:spreadsheet_dashboard.spreadsheet_dashboard_group_website
+msgid "Website"
+msgstr "Website"

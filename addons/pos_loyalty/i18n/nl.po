@@ -3,17 +3,17 @@
 # 	* pos_loyalty
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +29,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Technisch veld dat wordt gebruikt om meerdere beloningslijnen van dezelfde beloning aan elkaar te koppelen.\n"
+"        Technisch veld dat wordt gebruikt om meerdere beloningsregels van dezelfde beloning aan elkaar te koppelen.\n"
 "    "
 
 #. module: pos_loyalty
@@ -38,16 +38,6 @@ msgstr ""
 #, python-format
 msgid "%s Points"
 msgstr "%s Punten"
-
-#. module: pos_loyalty
-#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
-msgid "15% on next order"
-msgstr "15% op volgende order"
-
-#. module: pos_loyalty
-#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
-msgid "15% on your order"
-msgstr "15% op je bestelling"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -146,11 +136,6 @@ msgid "Coupon Codes"
 msgstr "Kortingscodes"
 
 #. module: pos_loyalty
-#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
-msgid "Coupon point(s)"
-msgstr "Punt(en) kortingsbon"
-
-#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
 #, python-format
@@ -203,7 +188,7 @@ msgstr "Voer de cadeauboncode in"
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/eWalletButton.js:0
 #, python-format
 msgid "Error"
-msgstr "Fout"
+msgstr "Foutmelding"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -211,11 +196,6 @@ msgstr "Fout"
 #, python-format
 msgid "Error validating rewards"
 msgstr "Fout bij bevstigen van beloningen"
-
-#. module: pos_loyalty
-#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
-msgid "Free Product - Simple Pen"
-msgstr "Gratis product - Eenvoudige pen"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
@@ -301,13 +281,7 @@ msgid "Loyalty Coupon"
 msgstr "Loyaliteitsbon"
 
 #. module: pos_loyalty
-#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
-msgid "Loyalty Points"
-msgstr "Loyaliteitspunten"
-
-#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
-#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "Loyaliteitsprogramma"
 
@@ -339,13 +313,6 @@ msgstr "Met deze kortingsbon kan geen beloning worden geclaimd."
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
-msgid "No rewards available."
-msgstr "Geen beloningen beschikbaar."
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
-#, python-format
 msgid "Please select a product for this reward"
 msgstr "Selecteer een product voor deze beloning"
 
@@ -365,13 +332,6 @@ msgstr "Aantal Kassa-bestellingen"
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
 msgstr "Kassa-bestellingsreferentie"
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "PoS Orders"
-msgstr "Kassaorders"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
@@ -497,11 +457,6 @@ msgid "Select program"
 msgstr "Selecteer programma"
 
 #. module: pos_loyalty
-#: model:product.template,name:pos_loyalty.simple_pen_product_template
-msgid "Simple Pen"
-msgstr "Enkele pen"
-
-#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
@@ -574,13 +529,6 @@ msgstr "De beloning die aan deze regel is gekoppeld."
 #, python-format
 msgid "The reward could not be applied."
 msgstr "De beloning kon niet worden toegepast."
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
-#, python-format
-msgid "There are no rewards claimable for this customer."
-msgstr "Er kunnen geen beloningen worden geclaimd voor deze klant."
 
 #. module: pos_loyalty
 #. odoo-python
@@ -685,7 +633,7 @@ msgstr ""
 #. module: pos_loyalty
 #: model:ir.model.fields,field_description:pos_loyalty.field_barcode_rule__type
 msgid "Type"
-msgstr "Soort"
+msgstr "Type"
 
 #. module: pos_loyalty
 #. odoo-javascript

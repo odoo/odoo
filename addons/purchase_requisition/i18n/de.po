@@ -3,15 +3,15 @@
 # 	* purchase_requisition
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +92,7 @@ msgstr "Aktivitäten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme Dekoration"
+msgstr "Aktivität Ausnahme-Dekoration"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_state
@@ -162,8 +162,8 @@ msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
-msgid "Analytic"
-msgstr "Kostenstelle"
+msgid "Analytic Distribution"
+msgstr "Kostenstellen Distribution"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -460,12 +460,12 @@ msgstr "ID"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon"
-msgstr "Icon"
+msgstr "Symbol"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__message_needaction
@@ -509,16 +509,6 @@ msgid "Keep Alternatives"
 msgstr ""
 
 #. module: purchase_requisition
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line____last_update
-#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type____last_update
-msgid "Last Modified on"
-msgstr "Letzte Änderung am"
-
-#. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__write_uid
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__write_uid
@@ -546,7 +536,7 @@ msgstr "Verspätete Aktivitäten"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__line_copy
 msgid "Lines"
-msgstr "Zeilen"
+msgstr "Linien"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
@@ -1110,7 +1100,7 @@ msgstr "Website-Nachrichten"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__website_message_ids
 msgid "Website communication history"
-msgstr "Website-Kommunikationsverlauf"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__has_alternatives
@@ -1133,8 +1123,8 @@ msgstr ""
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
-msgid "You can only delete draft or cancelled requisitions."
-msgstr ""
+msgid "You can only delete draft requisitions."
+msgstr "Sie können nur Bestellanforderungen im Entwurf löschen."
 
 #. module: purchase_requisition
 #. odoo-python

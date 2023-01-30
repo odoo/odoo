@@ -3,19 +3,18 @@
 # 	* pos_loyalty
 # 
 # Translators:
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# digitalliuzg8888, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
-# Martin Trigaux, 2022
+# digitalliuzg8888, 2023
+# Martin Trigaux, 2023
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,16 +38,6 @@ msgstr ""
 #, python-format
 msgid "%s Points"
 msgstr "%s积分"
-
-#. module: pos_loyalty
-#: model:loyalty.program,name:pos_loyalty.15_pc_on_next_order
-msgid "15% on next order"
-msgstr "15% 在下一个订单"
-
-#. module: pos_loyalty
-#: model:loyalty.reward,description:pos_loyalty.15_pc_on_next_order_reward
-msgid "15% on your order"
-msgstr "您订单的15%"
 
 #. module: pos_loyalty
 #. odoo-javascript
@@ -145,11 +134,6 @@ msgid "Coupon Codes"
 msgstr "优惠券代码"
 
 #. module: pos_loyalty
-#: model:loyalty.program,portal_point_name:pos_loyalty.15_pc_on_next_order
-msgid "Coupon point(s)"
-msgstr "优惠券积分"
-
-#. module: pos_loyalty
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/xml/Orderline.xml:0
 #, python-format
@@ -210,11 +194,6 @@ msgstr "错误"
 #, python-format
 msgid "Error validating rewards"
 msgstr "验证奖励的错误"
-
-#. module: pos_loyalty
-#: model:loyalty.reward,description:pos_loyalty.loyalty_program_reward
-msgid "Free Product - Simple Pen"
-msgstr "免费产品 - 简易笔"
 
 #. module: pos_loyalty
 #: model:ir.model.fields.selection,name:pos_loyalty.selection__pos_config__gift_card_settings__create_set
@@ -296,13 +275,7 @@ msgid "Loyalty Coupon"
 msgstr "会员优惠"
 
 #. module: pos_loyalty
-#: model:loyalty.program,portal_point_name:pos_loyalty.loyalty_program
-msgid "Loyalty Points"
-msgstr "会员积分"
-
-#. module: pos_loyalty
 #: model:ir.model,name:pos_loyalty.model_loyalty_program
-#: model:loyalty.program,name:pos_loyalty.loyalty_program
 msgid "Loyalty Program"
 msgstr "会员方案"
 
@@ -334,13 +307,6 @@ msgstr "使用此优惠券不能申请奖励"
 #. odoo-javascript
 #: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
 #, python-format
-msgid "No rewards available."
-msgstr "没有可用的奖励"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
-#, python-format
 msgid "Please select a product for this reward"
 msgstr "请选择作为奖励的产品"
 
@@ -360,13 +326,6 @@ msgstr "POS订单计数"
 #: model:ir.model.fields,field_description:pos_loyalty.field_loyalty_card__source_pos_order_id
 msgid "PoS Order Reference"
 msgstr "PoS订单参考"
-
-#. module: pos_loyalty
-#. odoo-python
-#: code:addons/pos_loyalty/models/loyalty_program.py:0
-#, python-format
-msgid "PoS Orders"
-msgstr "POS 订单"
 
 #. module: pos_loyalty
 #: model:ir.model.fields,help:pos_loyalty.field_loyalty_card__source_pos_order_id
@@ -490,11 +449,6 @@ msgid "Select program"
 msgstr "选择方案"
 
 #. module: pos_loyalty
-#: model:product.template,name:pos_loyalty.simple_pen_product_template
-msgid "Simple Pen"
-msgstr "简易笔"
-
-#. module: pos_loyalty
 #. odoo-python
 #: code:addons/pos_loyalty/models/pos_order.py:0
 #, python-format
@@ -563,13 +517,6 @@ msgstr "与此行相关联的奖励。"
 #, python-format
 msgid "The reward could not be applied."
 msgstr "奖励无法应用"
-
-#. module: pos_loyalty
-#. odoo-javascript
-#: code:addons/pos_loyalty/static/src/js/ControlButtons/RewardButton.js:0
-#, python-format
-msgid "There are no rewards claimable for this customer."
-msgstr "该客户没有可申请的奖励。"
 
 #. module: pos_loyalty
 #. odoo-python

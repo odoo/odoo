@@ -3,16 +3,18 @@
 # 	* hr_contract
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Gunther Clauwaert <gclauwae@hotmail.com>, 2022
+# Dylan Kiss, 2023
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+# Gunther Clauwaert <gclauwae@hotmail.com>, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
-"PO-Revision-Date: 2022-09-22 05:46+0000\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -32,6 +34,7 @@ msgid "# Contracts using it"
 msgstr "# Contracten die het gebruiken"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/report/hr_contract_history.py:0
 #, python-format
 msgid "%s's Contracts History"
@@ -43,7 +46,7 @@ msgid "/ month"
 msgstr "/ maand"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span attrs=\"{'invisible' : [('contracts_count', '!=', 1)]}\" class=\"o_stat_text text-danger\">\n"
 "                                    Contract\n"
@@ -60,7 +63,18 @@ msgstr ""
 "                                </span>"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
+msgid ""
+"<span attrs=\"{'invisible' : [('contracts_count', '=', 1)]}\" class=\"o_stat_text\">\n"
+"                                        Contracts\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible' : [('contracts_count', '&gt;', 1)]}\" class=\"o_stat_text\">\n"
+"                                        Contract\n"
+"                                    </span>"
+msgstr ""
+
+#. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
 "                                    In Contract Since\n"
@@ -71,20 +85,29 @@ msgstr ""
 "                                </span>"
 
 #. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form2
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
 msgid ""
 "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
 "[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> In "
 "Contract Since</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
-"[('contract_warning', '=', True)]}\" title=\" In contract sinds\"> In dienst"
-" sinds</span>"
+"[('contract_warning', '=', True)]}\" title=\"In dienst sinds\"> In dienst "
+"sinds</span>"
+
+#. module: hr_contract
+#. odoo-python
+#: code:addons/hr_contract/models/hr_contract.py:0
+#, python-format
+msgid ""
+"According to the contract's end date, this contract has been put in red on "
+"the %s. Please advise and correct."
+msgstr ""
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
 msgid "Action Needed"
-msgstr "Actie gevraagd"
+msgstr "Actie nodig"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__active
@@ -109,18 +132,18 @@ msgstr "Activiteiten"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activiteit uitzondering decoratie"
+msgstr "Activiteit Uitzondering Decoratie"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__activity_state
 msgid "Activity State"
-msgstr "Activiteitsfase"
+msgstr "Activiteitsstatus"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Activiteitensoort icoon"
+msgstr "Activiteitstype icoon"
 
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
@@ -128,6 +151,7 @@ msgid "Administrator"
 msgstr "Beheerder"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -162,6 +186,15 @@ msgid "Calendar Mismatch"
 msgstr "Kalender mismatch"
 
 #. module: hr_contract
+#. odoo-javascript
+#: code:addons/hr_contract/static/src/widgets/tooltip_warning_widget.js:0
+#, python-format
+msgid ""
+"Calendar Mismatch : The employee's calendar does not match this contract's "
+"calendar. This could lead to unexpected behaviors."
+msgstr ""
+
+#. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__state__cancel
 msgid "Cancelled"
@@ -193,6 +226,7 @@ msgid "Contract"
 msgstr "Contract"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -203,6 +237,7 @@ msgstr ""
 "contracteinddatum (%(end)s)."
 
 #. module: hr_contract
+#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
 msgstr "Contract teller"
@@ -316,7 +351,7 @@ msgstr "Landcode"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
 msgid "Create"
-msgstr "Aanmaken"
+msgstr "Maken"
 
 #. module: hr_contract
 #: model_terms:ir.actions.act_window,help:hr_contract.action_hr_contract
@@ -384,6 +419,7 @@ msgid "Departure Wizard"
 msgstr "Vertrek wizard"
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/wizard/hr_departure_wizard.py:0
 #, python-format
 msgid ""
@@ -397,12 +433,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__display_name
 #: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
-msgid "Dropdown menu"
-msgstr "Dropdown menu"
+msgstr "Weergavenaam"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -506,7 +537,7 @@ msgstr "Volgers (Relaties)"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Font awesome icoon bijv. fa-tasks"
+msgstr "Font awesome icon bijv. fa-tasks"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -527,12 +558,10 @@ msgstr "Grijs"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Group By"
-msgstr "Groepeer op"
+msgstr "Groeperen op"
 
 #. module: hr_contract
 #: model:ir.actions.server,name:hr_contract.ir_cron_data_contract_update_state_ir_actions_server
-#: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
-#: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
 msgstr "HR Contract: bijwerken status"
 
@@ -545,7 +574,7 @@ msgstr "HR verantwoordelijke"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__has_message
 msgid "Has Message"
-msgstr "Heeft bericht"
+msgstr "Heeft een bericht"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__date_hired
@@ -567,18 +596,17 @@ msgstr "Icoon"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icoon om uitzondering op activiteit aan te geven."
+msgstr "Icoon om een uitzonderingsactiviteit aan te geven."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Indien aangevinkt vragen nieuwe berichten je aandacht."
+msgstr "Indien aangevinkt, vragen nieuwe berichten je aandacht."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "indien aangevinkt hebben sommige leveringen een fout."
+msgstr "indien aangevinkt hebben sommige leveringen een foutmelding."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__is_under_contract
@@ -588,7 +616,7 @@ msgstr "Staat momenteel onder contract"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_is_follower
 msgid "Is Follower"
-msgstr "Is een volger"
+msgstr "Is volger"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__job_id
@@ -602,13 +630,6 @@ msgstr "Functie"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__kanban_state
 msgid "Kanban State"
 msgstr "Kanban status"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract____last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history____last_update
-#: model:ir.model.fields,field_description:hr_contract.field_hr_payroll_structure_type____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__write_uid
@@ -635,7 +656,7 @@ msgstr "Hoofdbijlage"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr "Bericht afleverfout"
+msgstr "Fout bij bezorging van bericht"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -659,16 +680,9 @@ msgid "New"
 msgstr "Nieuw"
 
 #. module: hr_contract
-#. openerp-web
-#: code:addons/hr_contract/static/src/js/hr_contract_history_list_controller.js:0
-#, python-format
-msgid "New Employee"
-msgstr "Nieuwe werknemer"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Volgende activiteitenkalender Evenement"
+msgstr "Volgende activiteiten kalenderafspraak"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
@@ -678,12 +692,12 @@ msgstr "Volgende activiteit deadline"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
 msgid "Next Activity Summary"
-msgstr "Omschrijving volgende actie"
+msgstr "Volgende activiteit overzicht"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_type_id
 msgid "Next Activity Type"
-msgstr "Volgende activiteit type"
+msgstr "Volgende activiteitstype"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
@@ -714,17 +728,17 @@ msgstr "Aantal acties"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of errors"
-msgstr "Aantal fouten"
+msgstr "Aantal foutmeldingen"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "Aantal berichten die actie vereisen"
+msgstr "Aantal berichten waarvoor een actie vereist is"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Aantal berichten met leveringsfout"
+msgstr "Aantal berichten met afleverfout"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -785,11 +799,6 @@ msgstr "Actief"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Running Contracts"
 msgstr "Lopende contracten"
-
-#. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
-msgid "SMS Delivery error"
-msgstr "SMS fout bij versturen"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -858,7 +867,7 @@ msgid ""
 msgstr ""
 "Status gebaseerd op activiteiten\n"
 "Te laat: Datum is al gepasseerd\n"
-"Vandaag: Activiteit datum is vandaag\n"
+"Vandaag: Activiteitsdatum is vandaag\n"
 "Gepland: Toekomstige activiteiten."
 
 #. module: hr_contract
@@ -877,6 +886,7 @@ msgstr ""
 "Je kunt dit veld gebruiken voor snelzoeken."
 
 #. module: hr_contract
+#. odoo-python
 #: code:addons/hr_contract/models/hr_contract.py:0
 #, python-format
 msgid "The contract of %s is about to expire."
@@ -885,7 +895,7 @@ msgstr "Het contract van %s gaat bijna vervallen."
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_contract_pending
 msgid "To Renew"
-msgstr "Te vernieuwen"
+msgstr "Te verlengen"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -900,7 +910,7 @@ msgstr "Type aantekeningen over dit contract..."
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type van activiteit uitzondering op record."
+msgstr "Type activiteit uitzondering op record."
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract_history__under_contract_state__done
@@ -920,7 +930,7 @@ msgstr "Visa vervaldatum"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__visa_no
 msgid "Visa No"
-msgstr "Visa nr."
+msgstr "Visanr."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__wage
@@ -929,19 +939,9 @@ msgid "Wage"
 msgstr "Salaris"
 
 #. module: hr_contract
-#: model:ir.model.fields,field_description:hr_contract.field_hr_contract__website_message_ids
-msgid "Website Messages"
-msgstr "Websiteberichten"
-
-#. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__website_message_ids
-msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
-
-#. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__permit_no
 msgid "Work Permit No"
-msgstr "Werkvergunning nr."
+msgstr "Werkvergunningnr."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__resource_calendar_id

@@ -3,17 +3,17 @@
 # 	* portal
 # 
 # Translators:
-# Claude Perrin <claude@perrin.it>, 2022
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Claude Perrin <claude@perrin.it>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:45+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -303,7 +303,7 @@ msgstr "Clé API prête"
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
-msgstr "Accepter & signer"
+msgstr "Accepter & Signer"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -398,8 +398,8 @@ msgid ""
 "your account. Please contact us directly for this operation."
 msgstr ""
 "Changer le numéro de TVA n'est pas autorisé une fois que des documents ont "
-"déjà été émis pour votre compte. Merci de nous contacter directement pour "
-"cette opération."
+"déjà été émis pour votre compte. Veuillez nous contacter directement pour "
+"effectuer cette modification."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -407,9 +407,9 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Modifier le nom de la société n'est pas permis une fois que le(s) "
-"documents(s) ont été créés pour votre compte. Merci de nous contacter "
-"directement pour cette opération."
+"Modifier le nom de la société n'est pas autorisé une fois que des documents "
+"ont été créés pour votre compte. Veuillez nous contacter directement pour "
+"effectuer cette modification."
 
 #. module: portal
 #. odoo-javascript
@@ -437,7 +437,7 @@ msgstr "Cliquez ici pour consulter votre document."
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Close"
-msgstr "Fermer"
+msgstr "Clôturer"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -447,7 +447,7 @@ msgstr "Nom de la société"
 #. module: portal
 #: model:ir.model,name:portal.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: portal
 #. odoo-javascript
@@ -550,6 +550,11 @@ msgid "Customer Portal URL"
 msgstr "URL du portail client"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Customers can generate API Keys"
+msgstr ""
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
 msgstr "Cher"
@@ -559,7 +564,7 @@ msgstr "Cher"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Supprimer"
+msgstr "Effacer"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -609,7 +614,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -644,7 +649,7 @@ msgstr "Adresse email déjà prise par un autre utilisateur"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Discussion par email"
+msgstr "Fil de discussion"
 
 #. module: portal
 #. odoo-javascript
@@ -795,13 +800,6 @@ msgstr ""
 "                et complète,"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_share____last_update
-#: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -826,11 +824,6 @@ msgstr "Dernière authentification"
 #, python-format
 msgid "Leave a comment"
 msgstr "Laisser un commentaire"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
-msgid "Let your customers create developer API keys"
-msgstr "Permettez à vos clients de créer des clés API développeur"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -995,7 +988,7 @@ msgstr "Portail : invitation d'utilisateur"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr "Fourni par"
+msgstr "Généré par"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -1008,7 +1001,7 @@ msgstr "Préc."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
-msgstr "Précedent"
+msgstr "Précédent"
 
 #. module: portal
 #. odoo-javascript
@@ -1149,7 +1142,7 @@ msgstr "État / Province"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1350,7 +1343,7 @@ msgstr "Vérifier le nouveau mot de passe"
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
-msgstr "Vue"
+msgstr "Afficher"
 
 #. module: portal
 #. odoo-javascript
@@ -1360,32 +1353,72 @@ msgid "Visible"
 msgstr "Visible"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
 msgstr "Messages du site web"
 
 #. module: portal
+#: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"

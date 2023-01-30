@@ -3,17 +3,17 @@
 # 	* auth_totp_mail_enforce
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 11:02+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -120,6 +120,7 @@ msgid "All users"
 msgstr "Alle gebruikers"
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
@@ -139,12 +140,12 @@ msgstr "Configuratie instellingen"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_uid
 msgid "Created by"
-msgstr "Gemaakt door"
+msgstr "Aangemaakt door"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__create_date
 msgid "Created on"
-msgstr "Gemaakt op"
+msgstr "Aangemaakt op"
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__display_name
@@ -159,12 +160,10 @@ msgstr "Alleen werknemers"
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.res_config_settings_view_form
 msgid ""
-"Enforce the two-factor authentication by email for employees or for all users\n"
-"                                (including portal users) if they didn't enable any other two-factor authentication\n"
-"                                method."
+"Enforce the two-factor authentication by email for employees or for all "
+"users (including portal users) if they didn't enable any other two-factor "
+"authentication method."
 msgstr ""
-"Dwing de tweestapsverificatie per e-mail af voor werknemers of voor alle gebruikers\n"
-"                              (inclusief portalgebruikers) als ze geen andere tweestapsverificatiemethode hebben ingeschakeld."
 
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_res_config_settings__auth_totp_enforce
@@ -182,11 +181,6 @@ msgid "Ip"
 msgstr "Ip"
 
 #. module: auth_totp_mail_enforce
-#: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_uid
 msgid "Last Updated by"
 msgstr "Laatst bijgewerkt door"
@@ -194,7 +188,7 @@ msgstr "Laatst bijgewerkt door"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields,field_description:auth_totp_mail_enforce.field_auth_totp_rate_limit_log__write_date
 msgid "Last Updated on"
-msgstr "Laatst geupdate op"
+msgstr "Laatst bijgewerkt op"
 
 #. module: auth_totp_mail_enforce
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail_enforce.auth_totp_mail_form
@@ -219,7 +213,7 @@ msgstr "Bereik"
 #. module: auth_totp_mail_enforce
 #: model:ir.model.fields.selection,name:auth_totp_mail_enforce.selection__auth_totp_rate_limit_log__limit_type__send_email
 msgid "Send Email"
-msgstr "Verzend e-mail"
+msgstr "E-mail verzenden"
 
 #. module: auth_totp_mail_enforce
 #: model:mail.template,name:auth_totp_mail_enforce.mail_template_totp_mail_code
@@ -243,6 +237,7 @@ msgid "User"
 msgstr "Gebruiker"
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
@@ -258,6 +253,7 @@ msgstr ""
 "               <br/>"
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of authentication mails sent for your account"
@@ -266,6 +262,7 @@ msgstr ""
 "verzonden, bereikt"
 
 #. module: auth_totp_mail_enforce
+#. odoo-python
 #: code:addons/auth_totp_mail_enforce/models/res_users.py:0
 #, python-format
 msgid "You reached the limit of code verifications for your account"

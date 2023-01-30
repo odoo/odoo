@@ -3,19 +3,19 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Nicolas Seinlet <nicolas@seinlet.com>, 2022
-# Marie Willemyns <mwi@odoo.com>, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Nicolas Seinlet <nicolas@seinlet.com>, 2023
+# Marie Willemyns <mwi@odoo.com>, 2023
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -227,7 +227,7 @@ msgstr "Société"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: stock_account
 #. odoo-python
@@ -345,17 +345,12 @@ msgstr "Affichage des lots et des numéros de série sur les factures"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "Affichage du numéro de série et de lot sur les factures"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Documentation"
 
 #. module: stock_account
 #. odoo-python
@@ -435,23 +430,17 @@ msgstr "Journal"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Écriture comptable"
+msgstr "Imputation comptable"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "Coûts logistiques"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
@@ -472,8 +461,8 @@ msgstr "Lié à"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Les numéros de lot &amp; de série apparaitront sur la facture"
+msgid "Lots & Serial numbers will appear on the invoice"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -593,12 +582,12 @@ msgstr "Svl Quantité"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr "Quants"
+msgstr "Qtés"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
 msgid "Reason"
-msgstr "Motif"
+msgstr "Raison"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -628,7 +617,7 @@ msgstr "Valeur restante"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour à la cueillette"
+msgstr "Transfert de retour"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -684,7 +673,7 @@ msgstr "Journal de stock"
 #: model:ir.model.fields,field_description:stock_account.field_account_payment__stock_move_id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_move_id
 msgid "Stock Move"
-msgstr "Stock déplacer"
+msgstr "Mouvement de stock"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_output_categ_id
@@ -708,7 +697,7 @@ msgstr "Stock Demander un Compte"
 
 #. module: stock_account
 #. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
+#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
@@ -860,7 +849,7 @@ msgstr "Valeur Totale"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Transfert"
+msgstr "Virement"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -945,10 +934,8 @@ msgid "Valuation Report"
 msgstr "Rapport de valorisation"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/xml/inventory_report.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
-#, python-format
 msgid "Valuation at Date"
 msgstr "Valorisation à la date"
 
@@ -967,9 +954,7 @@ msgid "Value"
 msgstr "Valeur"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "Value On Hand:"
 msgstr "Valeur disponible :"
 

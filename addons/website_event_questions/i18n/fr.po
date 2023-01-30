@@ -3,16 +3,17 @@
 # 	* website_event_questions
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Malika Berardi, 2023
+# Martin Trigaux, 2023
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:26+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"POT-Creation-Date: 2023-01-17 10:55+0000\n"
+"PO-Revision-Date: 2023-01-17 14:59+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -20,16 +21,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_2
-msgid "A friend"
-msgstr "Un ami"
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_0_question_1
-msgid "Allergies"
-msgstr "Allergies"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__name
@@ -68,14 +59,9 @@ msgid "Booked by"
 msgstr "Réservé par"
 
 #. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_1
-msgid "Commercials"
-msgstr "Publicités"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_0
-msgid "Consumers"
-msgstr "Consommateurs"
+#: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
+msgid "Come back once you have registrations to overview answers."
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__create_uid
@@ -141,16 +127,6 @@ msgid "General Questions"
 msgstr "Questions générales"
 
 #. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_7_question_1
-msgid "How did you hear about us ?"
-msgstr "Comment avez-vous entendu parler de nous ?"
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_0_question_2
-msgid "How did you learn about this event?"
-msgstr "Comment avez-vous découvert cet événement ?"
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__id
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__id
@@ -169,13 +145,6 @@ msgstr ""
 "participants d'une réservation."
 
 #. module: website_event_questions
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question____last_update
-#: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer____last_update
-#: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
-
-#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__write_uid
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__write_uid
@@ -190,39 +159,26 @@ msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
 
 #. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
+msgid "Mandatory"
+msgstr "Obligatoire"
+
+#. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question__is_mandatory_answer
 msgid "Mandatory Answer"
 msgstr "Réponse obligatoire"
 
 #. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_0_question_0
-msgid "Meal Type"
-msgstr "Type de repas"
+#: model_terms:ir.actions.act_window,help:website_event_questions.action_event_registration_report
+msgid "No Answers yet!"
+msgstr ""
 
 #. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_0
-msgid "Mixed"
-msgstr "Mélangé"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_type_data_conference_question_0_answer_1
-msgid "No"
-msgstr "Non"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_2_answer_0
-msgid "Our website"
-msgstr "Notre site web"
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_type_data_conference_question_0
-msgid "Participate in Social Event"
-msgstr "Participer à un événement social"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_2
-msgid "Pastafarian"
-msgstr "Pastafarian"
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_type_view_form_inherit_question
+msgid "Once per Order"
+msgstr ""
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_question_answer__question_id
@@ -239,6 +195,7 @@ msgid "Question Type"
 msgstr "Type de question"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid "Question cannot belong to both the event category and itself."
@@ -260,16 +217,7 @@ msgid "Registration"
 msgstr "Inscription"
 
 #. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_2
-msgid "Research"
-msgstr "Recherche"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_7_question_0_answer_1
-msgid "Sales"
-msgstr "Ventes"
-
-#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_questions.event_registration_view_tree
 msgid "Selected Answers"
 msgstr "Réponses sélectionnées"
@@ -294,6 +242,11 @@ msgstr "Séquence"
 #: model:ir.model.fields,field_description:website_event_questions.field_event_event__specific_question_ids
 msgid "Specific Questions"
 msgstr "Questions spécifiques"
+
+#. module: website_event_questions
+#: model_terms:ir.ui.view,arch_db:website_event_questions.event_event_view_form
+msgid "Stats"
+msgstr "Stats"
 
 #. module: website_event_questions
 #: model:ir.model.fields,field_description:website_event_questions.field_event_registration_answer__value_answer_id
@@ -327,21 +280,7 @@ msgid "Type"
 msgstr "Type"
 
 #. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_0_question_0_answer_1
-msgid "Vegetarian"
-msgstr "Végétarien"
-
-#. module: website_event_questions
-#: model:event.question,title:website_event_questions.event_7_question_0
-msgid "Which field are you working in"
-msgstr "Dans quel domaine travaillez-vous"
-
-#. module: website_event_questions
-#: model:event.question.answer,name:website_event_questions.event_type_data_conference_question_0_answer_0
-msgid "Yes"
-msgstr "Oui"
-
-#. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -351,6 +290,7 @@ msgstr ""
 "des réponses !"
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""
@@ -360,6 +300,7 @@ msgstr ""
 "déjà répondu."
 
 #. module: website_event_questions
+#. odoo-python
 #: code:addons/website_event_questions/models/event_question.py:0
 #, python-format
 msgid ""

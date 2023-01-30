@@ -3,17 +3,17 @@
 # 	* event_sale
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"PO-Revision-Date: 2023-01-17 11:03+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,8 +65,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un produit stockable est un produit dont on gère le stock. L'application \"Inventaire\" doit être installée. \n"
-"Un produit consommable, d'un autre côté, est un produit pour lequel le stock n'est pas géré.\n"
+"Un produit stockable est un produit pour lequel vous gérez un stock. L'application \"Inventaire\" doit être installée. \n"
+"Un produit consommable est un produit pour lequel vous ne gérez pas de stock.\n"
 "Un service est un produit immatériel que vous fournissez."
 
 #. module: event_sale
@@ -202,7 +202,7 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__display_name
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_registration_editor
@@ -309,13 +309,13 @@ msgstr "Billet d'événement"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
-msgstr "Billets d'événement"
+msgstr "Tickets d'événement"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_type_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Event Type"
-msgstr "Type d’événement"
+msgstr "Type d'événement"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -332,7 +332,7 @@ msgstr "Exception:"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__free
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Free"
-msgstr "Gratuit"
+msgstr "Offert"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -374,7 +374,7 @@ msgstr "L'inscription est-elle active (pas archivée)?"
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_account_move
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_event_configurator____last_update
@@ -406,12 +406,12 @@ msgstr "Bloqué"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_medium_id
 msgid "Medium"
-msgstr "Moyen"
+msgstr "Medium"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__mobile
 msgid "Mobile"
-msgstr "Mobile"
+msgstr "Téléphone portable"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__name
@@ -453,7 +453,7 @@ msgstr "Date de la commande"
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_report_template_full_page_ticket_inherit_sale
 msgid "Order Ref"
-msgstr "Réf. Commande"
+msgstr "Réf. commande"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__registration_id
@@ -482,7 +482,7 @@ msgstr "Événements passés"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__payment_status
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__payment_status
 msgid "Payment Status"
-msgstr "État du paiement"
+msgstr "Statut du paiement"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
@@ -565,7 +565,7 @@ msgstr "Date d'inscription"
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_state
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Registration Status"
-msgstr "État de l'inscription"
+msgstr "Statut de l'inscription"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
@@ -598,7 +598,7 @@ msgstr "Bon de commande"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_line_id
 msgid "Sale Order Line"
-msgstr "Ligne de commande"
+msgstr "Ligne de bon de commande"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_order_state
@@ -634,7 +634,7 @@ msgstr "Bon de commande"
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__sale_order_line_id
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor_line__sale_order_line_id
 msgid "Sales Order Line"
-msgstr "Ligne de bons de commande"
+msgstr "Ligne de bon de commande"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_event_ticket_view_tree_from_event
@@ -654,7 +654,7 @@ msgstr "Ignorer"
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_registration__utm_source_id
 msgid "Source"
-msgstr "Source"
+msgstr "Origine"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search

@@ -3,18 +3,18 @@
 # 	* stock_account
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Jolien De Paepe, 2022
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
+# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -92,7 +92,7 @@ msgstr "<span>SN/PN</span>"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr "Grootboekschema sjabloon"
+msgstr "Rekeningenstelsel sjabloon"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__account_move_ids
@@ -341,17 +341,12 @@ msgstr "Toon partijen & serienummers op facturen"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: stock_account
 #: model:res.groups,name:stock_account.group_lot_on_invoice
 msgid "Display Serial & Lot Number on Invoices"
 msgstr "Toon serie & partijnummer op facturen"
-
-#. module: stock_account
-#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Documentatie"
 
 #. module: stock_account
 #. odoo-python
@@ -373,7 +368,7 @@ msgstr "First In First Out (FIFO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Group by..."
-msgstr "Groepeer op..."
+msgstr "Groeperen op..."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
@@ -430,23 +425,17 @@ msgstr "Dagboek"
 #: model:ir.model,name:stock_account.model_account_move
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "Boeking"
+msgstr "Dagboekpost"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "Boekingsregel"
+msgstr "Boeking"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
 msgid "Landed Costs"
 msgstr "Logistieke kosten"
-
-#. module: stock_account
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer____last_update
-#: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__write_uid
@@ -467,8 +456,8 @@ msgstr "Gelinkt aan"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
-msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Partij- &amp; Serienummers worden afgedrukt op de factuur"
+msgid "Lots & Serial numbers will appear on the invoice"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__manual_periodic
@@ -548,7 +537,7 @@ msgstr "Productcategorie"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Productverplaatsingen (voorraadverplaatsingsregels)"
+msgstr "Productverplaatstingen (voorraadverplaatsingsregels)"
 
 #. module: stock_account
 #. odoo-python
@@ -578,7 +567,7 @@ msgstr "Productwaarde handmatig gewijzigd (vanaf %s naar %s)"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__quantity
 msgid "Quantity"
-msgstr "Aantal"
+msgstr "Hoeveelheid"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
@@ -588,7 +577,7 @@ msgstr "Hoeveelheid Svl"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
 msgid "Quants"
-msgstr "Aantallen"
+msgstr "Hoeveelheden"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__reason
@@ -623,12 +612,12 @@ msgstr "Resterende waarde"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Retour boeken"
+msgstr "Retour picking"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr "Retour pickingregel"
+msgstr "Retour pickingsregel"
 
 #. module: stock_account
 #. odoo-python
@@ -695,16 +684,16 @@ msgstr "Voorraadhoeveelheid geschiedenis"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr "Voorraadaanvullen rapportage"
+msgstr "Voorraadaanvulling rapport"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr "Voorraad Een voorraadtelling aanvragen"
+msgstr "Een voorraadtelling aanvragen"
 
 #. module: stock_account
 #. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
+#: code:addons/stock_account/static/src/js/report_stock_forecasted.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
@@ -766,8 +755,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
-"The Stock Input and/or Output accounts cannot be the same as the Stock "
-"Valuation account."
+"De voorraadtoename- en/of voorraadafnamerekening kunnen niet hetzelfde zijn "
+"als de voorraadwaarderingsrekening."
 
 #. module: stock_account
 #. odoo-python
@@ -856,7 +845,7 @@ msgstr "Totale waarde"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
 msgid "Transfer"
-msgstr "Verplaatsing"
+msgstr "Overdracht"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_move__to_refund
@@ -942,10 +931,8 @@ msgid "Valuation Report"
 msgstr "Voorraadwaarde rapport"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/xml/inventory_report.xml:0
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
-#, python-format
 msgid "Valuation at Date"
 msgstr "Waardering op huidig moment"
 
@@ -964,9 +951,7 @@ msgid "Value"
 msgstr "Waarde"
 
 #. module: stock_account
-#. odoo-javascript
-#: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "Value On Hand:"
 msgstr "Huidige waardering:"
 

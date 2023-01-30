@@ -3,17 +3,18 @@
 # 	* portal
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:45+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -307,7 +308,7 @@ msgstr "Aceptar y firmar"
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
 #: model:ir.model.fields,field_description:portal.field_portal_share__access_warning
 msgid "Access warning"
-msgstr "Alerta de acceso"
+msgstr "Advertencia de acceso"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -341,7 +342,7 @@ msgstr "Agregar contactos para compartir el documento...."
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_share__note
 msgid "Add extra content to display in the email"
-msgstr "Agregar contenido adicional para mostrar en el correo electrónico"
+msgstr "Agregue contenido adicional a mostrar en el correo electrónico"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -395,8 +396,9 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"No se permite cambiar el RFC una vez que se han emitido los documentos de su"
-" cuenta. Póngase en contacto con nosotros directamente para esta operación."
+"No se permite cambiar el RFC una vez que se hayan emitido los documentos de "
+"su cuenta. Póngase en contacto con nosotros directamente para esta "
+"operación."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -404,9 +406,9 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"No se permite cambiar el nombre de la empresa una vez que se han emitido los"
-" documentos para su cuenta. Póngase en contacto con nosotros directamente "
-"para esta operación."
+"No se permite cambiar el nombre de la empresa una vez que se hayan emitido "
+"los documentos para su cuenta. Póngase en contacto con nosotros directamente"
+" para esta operación."
 
 #. module: portal
 #. odoo-javascript
@@ -434,7 +436,7 @@ msgstr "Haga clic aquí para ver sus documentos"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Close"
-msgstr "Cerrar"
+msgstr "Bloquear"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -546,19 +548,24 @@ msgstr "Claves API de los clientes"
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "URL del portal de cliente"
+msgstr "URL del portal del cliente"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
+msgid "Customers can generate API Keys"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "Dear"
-msgstr "Estimada/o"
+msgstr "Apreciable"
 
 #. module: portal
 #. odoo-javascript
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Delete"
-msgstr "Suprimir"
+msgstr "Eliminar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -643,7 +650,7 @@ msgstr "Esta dirección de correo ya la está usando otro usuario"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Hilo de mensajes"
+msgstr "Hilo de correo electrónico"
 
 #. module: portal
 #. odoo-javascript
@@ -792,13 +799,6 @@ msgstr ""
 "                y esté completa"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_portal_share____last_update
-#: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
-#: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__write_uid
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__write_uid
@@ -823,11 +823,6 @@ msgstr "Autenticación más reciente"
 #, python-format
 msgid "Leave a comment"
 msgstr "Escriba un comentario"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.res_config_settings_view_form
-msgid "Let your customers create developer API keys"
-msgstr "Deje que sus clientes creen claves API de desarrollador"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__share_link
@@ -1062,7 +1057,7 @@ msgstr "Alcance"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
-msgstr "Búsqueda"
+msgstr "Buscar"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1137,7 +1132,7 @@ msgstr "Algunos campos requeridos están vacíos."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
 msgid "State / Province"
-msgstr "Estado / Provincia"
+msgstr "Estado/Provincia"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email_state
@@ -1359,36 +1354,76 @@ msgid "Visible"
 msgstr "Visible"
 
 #. module: portal
+#: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
 msgstr "Mensajes del sitio web"
 
 #. module: portal
+#: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team_member__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
+#: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
+#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
+#: model:ir.model.fields,help:portal.field_loyalty_card__website_message_ids
+#: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_cc__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_thread_phone__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_equipment_category__website_message_ids
+#: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
+#: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
+#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "Historial de comunicación del sitio web"
+msgstr "Historial de comunicaciones del sitio web"
 
 #. module: portal
 #. odoo-javascript

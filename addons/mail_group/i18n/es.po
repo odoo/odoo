@@ -3,17 +3,18 @@
 # 	* mail_group
 # 
 # Translators:
-# Martin Trigaux, 2022
-# marcescu, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:25+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 11:06+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -276,9 +277,19 @@ msgid "Alias Name"
 msgstr "Seudónimo"
 
 #. module: mail_group
+#: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_status
+msgid "Alias Status"
+msgstr ""
+
+#. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_domain
 msgid "Alias domain"
 msgstr "Seudónimo del dominio"
+
+#. module: mail_group
+#: model:ir.model.fields,help:mail_group.field_mail_group__alias_status
+msgid "Alias status assessed on the last message received."
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__alias_model_id
@@ -306,7 +317,7 @@ msgid "Always Allow"
 msgstr "Siempre permitir"
 
 #. module: mail_group
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "An email with instructions has been sent."
@@ -498,6 +509,7 @@ msgid "Email"
 msgstr "Correo electrónico"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Email %s is invalid"
@@ -506,7 +518,7 @@ msgstr "El correo %s no es válido"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Email Alias"
-msgstr "Pseudónimo de correo"
+msgstr "Seudónimo de correo electrónico"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
@@ -575,6 +587,7 @@ msgid "Group Name"
 msgstr "Nombre del grupo"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Group message can only be linked to mail group. Current model is %s."
@@ -631,6 +644,7 @@ msgid "Image"
 msgstr "Imagen"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
@@ -638,6 +652,7 @@ msgid "Invalid action for URL generation (%s)"
 msgstr "Acción no válida para la generación de URL (%s)"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #: code:addons/mail_group/models/mail_group_moderation.py:0
 #, python-format
@@ -674,15 +689,6 @@ msgstr "Es miembro"
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_kanban
 msgid "Join"
 msgstr "Unirse"
-
-#. module: mail_group
-#: model:ir.model.fields,field_description:mail_group.field_mail_group____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_member____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject____last_update
-#: model:ir.model.fields,field_description:mail_group.field_mail_group_moderation____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__write_uid
@@ -750,8 +756,6 @@ msgstr "Grupos de correo"
 
 #. module: mail_group
 #: model:ir.actions.server,name:mail_group.ir_cron_mail_notify_group_moderators_ir_actions_server
-#: model:ir.cron,cron_name:mail_group.ir_cron_mail_notify_group_moderators
-#: model:ir.cron,name:mail_group.ir_cron_mail_notify_group_moderators
 msgid "Mail List: Notify group moderators"
 msgstr "Lista de correo: notifique a los moderadores del grupo"
 
@@ -849,6 +853,7 @@ msgid "Messages Per Month"
 msgstr "Mensajes por mes"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Messages are pending moderation"
@@ -896,6 +901,7 @@ msgid "Moderated emails in this group"
 msgstr "Correos moderados en este grupo"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderated group must have moderators."
@@ -934,15 +940,11 @@ msgid "Moderators"
 msgstr "Moderadores"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Moderators must have an email address."
 msgstr "Los moderadores deben tener una dirección de correo electrónico."
-
-#. module: mail_group
-#: model:mail.group,name:mail_group.mail_group_1
-msgid "My Company News"
-msgstr "Noticias de Mi Empresa"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__name
@@ -1002,6 +1004,7 @@ msgid "Number of message in this group"
 msgstr "Número de mensajes en este grupo"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid ""
@@ -1011,6 +1014,7 @@ msgstr ""
 "de este grupo."
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "Only members can send email to the mailing list."
@@ -1061,7 +1065,7 @@ msgstr ""
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_member__partner_id
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__member_partner_ids
@@ -1127,11 +1131,7 @@ msgid "Privacy"
 msgstr "Privacidad"
 
 #. module: mail_group
-#: model:mail.group,name:mail_group.mail_group_2
-msgid "Public Mailing List"
-msgstr "Lista de correo pública"
-
-#. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/wizard/mail_group_message_reject.py:0
 #, python-format
 msgid "Re: %s"
@@ -1205,12 +1205,12 @@ msgstr "Buscar grupo de correo"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_moderation_view_search
 msgid "Search Moderation List"
-msgstr "Buscar Listas de Moderación"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group__access_mode__groups
 msgid "Selected group of users"
-msgstr "Grupo de usuarios seleccionado"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
@@ -1221,12 +1221,12 @@ msgstr "Enviar"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Ban"
-msgstr "Enviar y suspender"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Send & Reject"
-msgstr "Enviar y rechazar"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__send_email
@@ -1236,29 +1236,27 @@ msgstr "Enviar correo electrónico"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Send Guidelines"
-msgstr "Enviar reglas"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group_message_reject__send_email
 msgid "Send an email to the author of the message"
-msgstr "Enviar un correo al autor del mensaje"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group__moderation_guidelines
 msgid "Send guidelines to new subscribers"
-msgstr "Enviar lineamientos a los nuevos suscriptores "
+msgstr ""
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Enviado a personas que se suscribieron a un grupo de correo con pautas de "
-"grupo"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr "Enviado a personas que se dieron de baja de un grupo de correo"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1270,78 +1268,81 @@ msgstr "Estado"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "Stay in touch with our Community"
-msgstr "Permanecer en contacto con nuestra comunidad"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__subject
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__subject
 msgid "Subject"
-msgstr "Asunto"
+msgstr ""
 
 #. module: mail_group
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Subscribe"
-msgstr "Suscribirse"
+msgstr ""
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr "Confirmación de suscripción a un grupo de correo"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid ""
 "Template \"mail_group.mail_template_guidelines\" was not found. No email has"
 " been sent. Please contact an administrator to fix this issue."
 msgstr ""
-"No se encontró la plantilla \"mail_group.mail_template_guidelines\". No se "
-"envió ningún correo, contacte a su administrador para solucionar este "
-"problema."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "Thank you!"
-msgstr "¡Gracias!"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The \"Authorized Group\" is missing."
-msgstr "Falta el \"grupo autorizado\""
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "The email"
-msgstr "el correo"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The email \"%s\" is not valid."
-msgstr "El correo\"%s\" no es válido"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The group of the message do not match."
-msgstr "El grupo del mensaje no coincide."
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is empty."
-msgstr "La descripción de las reglas está vacía."
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The guidelines description is missing."
-msgstr "Falta la descripción de las reglas."
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_model_id
@@ -1350,10 +1351,6 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"El modelo (Tipo de documento de Odoo) al que corresponde este seudónimo. "
-"Cualquier correo entrante que no sea respuesta a un registro existente, "
-"causará la creación de un nuevo registro de este modelo (por ejemplo, una "
-"tarea de proyecto)."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1361,15 +1358,13 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"El nombre de este seudónimo de correo electrónico. Por ejemplo, "
-"\"trabajos\",  si lo que quiere es obtener los correos para "
-"<trabajos@example.odoo.com>"
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The notification message is missing."
-msgstr "Falta la notificación del mensaje."
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_user_id
@@ -1379,144 +1374,141 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"El propietario de los registros creados al recibir correos electrónicos en "
-"este seudónimo. Si el campo no está establecido, el sistema tratará de "
-"encontrar el propietario adecuado basado en la dirección del emisor (De), o "
-"usará la cuenta de administrador si no se encuentra un usuario para esa "
-"dirección."
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group.py:0
 #, python-format
 msgid "The partner can not be found."
-msgstr "No se puede encontrar el partner."
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "The record of the message should be the group."
-msgstr "El registro del mensaje debería se el grupo."
+msgstr ""
 
 #. module: mail_group
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is already subscribed."
-msgstr "Este correo ya está suscrito"
+msgstr ""
 
 #. module: mail_group
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #, python-format
 msgid "This email is not subscribed."
-msgstr "Este correo no está suscrito"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "This message can not be moderated"
-msgstr "Este mensaje no se puede moderar"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_member_unique_partner
 msgid "This partner is already subscribed to the group"
-msgstr "Este partner ya está suscrito al grupo"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Those messages can not be moderated: %s."
-msgstr "Esos mensajes no se pueden moderar: %s."
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "To Review"
-msgstr "A revisar"
+msgstr ""
 
 #. module: mail_group
-#. openerp-web
+#. odoo-javascript
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #: code:addons/mail_group/static/src/js/mail_group.js:0
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 #, python-format
 msgid "Unsubscribe"
-msgstr "Anular subscripción"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "Unsubscribe:"
-msgstr "Cancelar suscripción:"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.actions.act_window,help:mail_group.mail_group_message_action
 msgid ""
 "When people send an email to the alias of the list, they will appear here."
 msgstr ""
-"Cuando la gente envíe un correo al seudónimo de esta lista, aparecerán aquí."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_form
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_list
 msgid "Whitelist"
-msgstr "Lista blanca"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.fields.selection,name:mail_group.selection__mail_group_message__author_moderation__allow
 msgid "Whitelisted"
-msgstr "En la lista blanca"
+msgstr ""
 
 #. module: mail_group
+#. odoo-python
 #: code:addons/mail_group/models/mail_group_message.py:0
 #, python-format
 msgid "Wrong status (%s)"
-msgstr "Estado equivocado (%s)"
+msgstr ""
 
 #. module: mail_group
 #: model:ir.model.constraint,message:mail_group.constraint_mail_group_moderation_mail_group_email_uniq
 msgid "You can create only one rule for a given email address in a group."
 msgstr ""
-"Solo puede crear una regla para una dirección de correo dada en un grupo."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
 msgid "You have messages to moderate, please go for the proceedings."
 msgstr ""
-"Usted tiene mensajes para moderar, por favor vaya a los procedimientos."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_footer
 msgid "_______________________________________________"
-msgstr "_______________________________________________"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "and send an email to the author ("
-msgstr "y enviar un correo al autor ("
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_attachments
 msgid "attachments"
-msgstr "adjuntos"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
 msgid "by"
-msgstr "por"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr "p. ej. \"Newsletter\""
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search
 msgid "group"
-msgstr "grupo"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "has been"
-msgstr "ha sido"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
@@ -1524,40 +1516,38 @@ msgid ""
 "members<br/>\n"
 "                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 msgstr ""
-"miembros<br/>\n"
-"                        <i class=\"fa fa-fw fa-envelope-o\" role=\"img\" aria-label=\"Traffic\" title=\"Traffic\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "messages / month"
-msgstr "mensajes / mes"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "more replies"
-msgstr "más respuestas"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.messages_short
 msgid "replies"
-msgstr "respuestas"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "subscribed to"
-msgstr "suscrito a"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "the list"
-msgstr "la lista"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
 msgid "unsubscribed from"
-msgstr "se canceló la suscripción de"
+msgstr ""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "your email..."
-msgstr "su correo electrónico..."
+msgstr ""

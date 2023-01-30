@@ -3,17 +3,17 @@
 # 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Cécile Collart <cco@odoo.com>, 2022
+# Cécile Collart <cco@odoo.com>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"PO-Revision-Date: 2023-01-17 14:58+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,18 +57,6 @@ msgstr ""
 "                </span>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Les valeurs définies ici sont"
-" spécifiques à l'entreprise.\" role=\"img\" aria-label=\"Les valeurs "
-"définies ici sont spécifiques à l'entreprise.\" "
-"groups=\"base.group_multi_company\"/>"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr "<span class=\"o_stat_text\">Ventes</span>"
@@ -110,7 +98,7 @@ msgstr ""
 " - Mouvements de stock: la quantité provient des transferts confirmés\n"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -125,10 +113,10 @@ msgstr "Appliquer routes spécifiques"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
 msgid "As soon as possible"
-msgstr "Aussi vite que possible"
+msgstr "Dès que possible"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.js:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -136,7 +124,7 @@ msgid "Availability"
 msgstr "Disponibilité"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -144,7 +132,7 @@ msgid "Available"
 msgstr "Disponible"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -159,7 +147,7 @@ msgstr "Appliquer des routes spécifiques par commande."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
 msgid "Companies"
-msgstr "Sociétés"
+msgstr "Entreprises"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
@@ -169,7 +157,7 @@ msgstr "Date d'exécution du premier ordre de livraison"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -227,10 +215,11 @@ msgstr "Afficher les incotermes sur les ordres de vente et les factures liées"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Display incoterms on orders &amp; invoices"
-msgstr "Afficher les incoterms sur les commandes et les factures"
+msgid "Display incoterms on orders & invoices"
+msgstr ""
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -238,11 +227,6 @@ msgid ""
 msgstr ""
 "N'oubliez pas de changer de partenaire sur les bons de livraison suivants: "
 "%s"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Documentation"
-msgstr "Documentation"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -271,7 +255,7 @@ msgid "Expected Date"
 msgstr "Date prévue"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -289,7 +273,7 @@ msgid "Forecast Expected Date"
 msgstr "Date Prévue Espérée"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -319,8 +303,8 @@ msgid ""
 "shortest."
 msgstr ""
 "Si vous livrez tous les produits en même temps, le bon de livraison sera "
-"établi sur base du produit avec le plus grand délai. Autrement, sur le plus "
-"court."
+"établi en fonction du délai le plus long. Sinon, il sera basé sur le délai "
+"le plus court."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -375,12 +359,12 @@ msgstr "Données JSON pour le widget popover"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
 msgid "Journal Entry"
-msgstr "Pièce comptable"
+msgstr "Écriture comptable"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "Écriture comptable"
+msgstr "Imputation comptable"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__customer_lead
@@ -390,9 +374,10 @@ msgstr "Délai"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_lot
 msgid "Lot/Serial"
-msgstr "Lot/N° série"
+msgstr "Lot/Série"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid "Make To Order"
@@ -438,21 +423,21 @@ msgid "Move forward expected delivery dates by"
 msgstr "Avancer les dates de livraison prévues de"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No enough future availaibility"
 msgstr "Pas assez de disponibilité future"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availability"
 msgstr "Pas de disponibilité future"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #, python-format
 msgid "No future availaibility"
@@ -464,7 +449,7 @@ msgid "Not Delivered"
 msgstr "Non livré"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Not enough future availability"
@@ -480,7 +465,7 @@ msgstr ""
 "produits au client"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -519,14 +504,12 @@ msgid "Qty To Deliver"
 msgstr "Qté à livrer"
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/sale_stock_forecasted/forecasted_details.xml:0
-#, python-format
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
 msgid "Quotations"
 msgstr "Devis"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -534,7 +517,7 @@ msgid "Remaining demand available at"
 msgstr "Demande restante disponible à"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -559,7 +542,7 @@ msgstr "Bon de commande"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
 msgid "Sale Orders"
-msgstr "Commandes de vente"
+msgstr "Bons de commande"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_lot__sale_order_count
@@ -585,7 +568,7 @@ msgstr "Annulation Commande"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de bons de commande"
+msgstr "Ligne de bon de commande"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -645,7 +628,7 @@ msgstr "Politique d'expédition"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "Mouvement d'inventaire"
+msgstr "Mouvement de stock"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
@@ -661,7 +644,7 @@ msgstr "Rapport de Réassorts de Stock"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr "Règle de stock minimum"
+msgstr "Règle de stock"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
@@ -674,13 +657,14 @@ msgid "Stock rule report"
 msgstr "Rapport de règle de stock"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "The delivery"
 msgstr "La livraison"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -693,6 +677,7 @@ msgstr ""
 "                         Vous devriez probablement mettre à jour le partenaire sur ce document."
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -703,7 +688,7 @@ msgstr ""
 " Au lieu de cela, créez un retour dans votre inventaire."
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -713,7 +698,7 @@ msgstr "Ce produit est réapprovisionné à la demande."
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "Transfert"
+msgstr "Virement"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
@@ -726,7 +711,7 @@ msgid "User"
 msgstr "Utilisateur"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/legacy/qty_at_date_widget.xml:0
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
@@ -746,6 +731,7 @@ msgid "Warehouse"
 msgstr "Entrepôt"
 
 #. module: sale_stock
+#. odoo-python
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning!"
@@ -788,7 +774,7 @@ msgid "processed instead of"
 msgstr "Traité à la place de"
 
 #. module: sale_stock
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_stock/static/src/xml/delay_alert.xml:0
 #, python-format
 msgid "will be late."

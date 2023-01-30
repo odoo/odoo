@@ -3,17 +3,18 @@
 # 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +41,24 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban_stars
 msgid "A star"
 msgstr ""
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__access_token
+msgid "Access token to set the rating of the value"
+msgstr "Token de acceso para establecer la clasificación del valor"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__message_id
+msgid ""
+"Associated message when posting a review. Mainly used in website addons."
+msgstr ""
+"Mensaje asociado al publicar un comentario. Se utiliza principalmente en el "
+"sitio web add ons."
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__partner_id
+msgid "Author of the rating"
+msgstr "Autor de la valoración"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
@@ -196,6 +215,11 @@ msgid "Message"
 msgstr "Mensaje"
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__res_model_id
+msgid "Model of the followed resource"
+msgstr "Modelo del recurso seguido"
+
+#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
 msgstr "Mis calificaciones"
@@ -224,6 +248,11 @@ msgstr "Sin valoración aun"
 #, python-format
 msgid "Okay"
 msgstr "OK"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
+msgid "Owner of the rated resource"
+msgstr "Propietario del recurso valorado"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
@@ -346,6 +375,11 @@ msgid "Rating should be between 0 and 5"
 msgstr "La valoración debe ser entre 0 y 5"
 
 #. module: rating
+#: model:ir.model.fields,help:rating.field_rating_rating__rating
+msgid "Rating value: 0=Unhappy, 5=Happy"
+msgstr "Valores de la calificación: 0=infeliz, 5=feliz"
+
+#. module: rating
 #. openerp-web
 #: code:addons/rating/static/src/components/channel_preview_view/channel_preview_view.xml:0
 #: code:addons/rating/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
@@ -364,7 +398,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Ratings"
-msgstr "Valoraciones"
+msgstr "Calificaciones"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
+#: model:ir.model.fields,help:rating.field_rating_rating__feedback
+msgid "Reason of the rating"
+msgstr "Causa de la calificación"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id

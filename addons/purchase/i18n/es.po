@@ -3,18 +3,23 @@
 # 	* purchase
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# Víctor Martínez <victor.martinez@tecnativa.com>, 2022
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2023
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # David Ramia, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: David Ramia, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -355,18 +360,6 @@ msgstr ""
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
@@ -476,7 +469,7 @@ msgstr "<strong>Fecha prevista</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Fecha del pedido:</strong>"
+msgstr "<strong>Fecha orden:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -497,7 +490,7 @@ msgstr "<strong>Cant</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>Fecha de recepción:</strong>"
+msgstr "<strong>Fecha de recibo:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -724,28 +717,10 @@ msgstr ""
 "cada línea de pedido de compra."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
-msgid ""
-"Amount of time between purchase approval and document creation date. Due to "
-"a hack needed to calculate this,               every record will show the "
-"same average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
-msgstr ""
-"Cantidad de tiempo entre la aprobación de la compra y la fecha de creación "
-"del documento. Debido a un truco necesario para calcular esto,"
-"               cada registro mostrará el mismo valor promedio, por lo tanto,"
-" use esto solo como un valor agregado con group_operator=avg"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr ""
 "Cantidad de tiempo entre la aprobación de la compra y el pedido por fecha."
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
-msgid "Analytic"
-msgstr "Analítico"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -753,9 +728,14 @@ msgid "Analytic Account"
 msgstr "Cuenta analítica"
 
 #. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribución analítica"
+
+#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr "Aplicabilidad del plan de análisis"
+msgstr "Aplicabilidad del plan analítico"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_precision
@@ -833,11 +813,6 @@ msgid "Average Cost"
 msgstr "Costo promedio"
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
-msgid "Average Days to Purchase"
-msgstr "Días promedio para comprar"
-
-#. module: purchase
 #. odoo-javascript
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
@@ -903,7 +878,7 @@ msgstr "Mensaje de bloqueo"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 msgid "Buyer"
-msgstr "Vendedor"
+msgstr "Comprador"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
@@ -969,7 +944,7 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "Compañía"
+msgstr "Empresa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
@@ -1219,11 +1194,6 @@ msgid "Display Type"
 msgstr "Tipo de pantalla"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Documentation"
-msgstr "Documentación"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "Dominio"
@@ -1451,7 +1421,7 @@ msgstr "Facturas y recepciones"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Invoicing"
-msgstr "Facturación"
+msgstr "Facturación / Contabilidad"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_is_follower
@@ -1467,14 +1437,6 @@ msgstr "Asiento contable"
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
 msgstr "Apunte contable"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
@@ -1711,7 +1673,7 @@ msgstr "Nombre"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "Nombre, NIF, correo electrónico o referencia"
+msgstr "Nombre, NIF, correo electrónico o referencia."
 
 #. module: purchase
 #. odoo-python
@@ -1940,7 +1902,7 @@ msgstr "Cantidad de embalaje"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
 msgid "Partner"
-msgstr "Contacto"
+msgstr "Empresa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
@@ -1950,12 +1912,12 @@ msgstr "País del Contacto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Plazos de pago"
+msgstr "Términos de pago"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Payment terms"
-msgstr "Términos de Pago"
+msgstr "Términos de pago"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -1972,7 +1934,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Pricing"
-msgstr "Precio"
+msgstr "Precios"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -2222,7 +2184,7 @@ msgstr "Informe de Compras"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr "Representante de Compra"
+msgstr "Representante del Proveedor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2246,7 +2208,6 @@ msgstr "Comprar productos por múltiplo de unidad # por paquete"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
-#: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "Recordatorio de compra"
 
@@ -2318,7 +2279,7 @@ msgstr "Ctdad facturada"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
 msgid "Qty Ordered"
-msgstr "Ctd, pedida"
+msgstr "Ctd. pedida"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
@@ -2506,7 +2467,7 @@ msgstr "Recordatorio confirmado"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
 msgid "Reporting"
-msgstr "Informes"
+msgstr "Reportes"
 
 #. module: purchase
 #. odoo-python
@@ -2634,6 +2595,11 @@ msgstr ""
 "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
 "el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
 "siguiente campo."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Sell and purchase products in different units of measure"
+msgstr "Vender y comprar productos en diferentes unidades de medida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2815,7 +2781,7 @@ msgstr "Impuestos"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "Campo técnico para propósitos de usabilidad."
+msgstr "Campo técnico para propósitos de usabilidad"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -3068,6 +3034,11 @@ msgid "Unit of Measure"
 msgstr "Unidad de medida"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units Of Measure"
+msgstr "Unidades de medida"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
 msgstr "Unidades de medida"
@@ -3102,7 +3073,7 @@ msgstr "Base imponible"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
-msgstr "Total libre de impuestos"
+msgstr "Base imponible"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3125,15 +3096,6 @@ msgstr "Urgente"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "Usuario"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/report/purchase_report.py:0
-#, python-format
-msgid ""
-"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
-" are seeing this message then it is being accessed incorrectly."
-msgstr ""
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -3243,7 +3205,7 @@ msgstr "Alerta"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Aviso para %s"
+msgstr "Advertencia para %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons

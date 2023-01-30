@@ -3,18 +3,18 @@
 # 	* purchase
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
-# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Lucia Pacheco <lpo@odoo.com>, 2023
+# Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,14 +42,14 @@ msgstr "# Facturas de proveedores"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__nbr_lines
 msgid "# of Lines"
-msgstr "# de líneas"
+msgstr "Número de líneas"
 
 #. module: purchase
 #. odoo-python
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%(amount)s due %(date)s"
-msgstr "%(amount)s adeudado al %(date)s"
+msgstr "%(amount)s debido al %(date)s"
 
 #. module: purchase
 #. odoo-python
@@ -355,18 +355,6 @@ msgstr ""
 "                        <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" aria-label=\"Los valores establecidos aquí"
-" son específicos de la empresa.\" groups=\"base.group_multi_company\" "
-"role=\"img\"/>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
@@ -476,7 +464,7 @@ msgstr "<strong>Fecha prevista</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Fecha del pedido:</strong>"
+msgstr "<strong>Fecha de la orden:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -497,7 +485,7 @@ msgstr "<strong>Cant.</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "<strong>Receipt Date:</strong>"
-msgstr "<strong>Fecha de recepción:</strong>"
+msgstr "<strong>Fecha de recibo:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -508,7 +496,7 @@ msgstr "<strong>Fecha de la solicitud de cotización:</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchasequotation_document
 msgid "<strong>Shipping address:</strong>"
-msgstr "<strong>Dirección de envío</strong>"
+msgstr "<strong>Dirección de entrega</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -559,8 +547,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona sus existencias. Debe tener instalada la aplicación de inventario.\n"
-"Un producto consumible es un producto para el que no se gestionan sus existencias.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación de Inventario.\n"
+"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: purchase
@@ -587,7 +575,7 @@ msgstr "Aceptar"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_warning
 msgid "Access warning"
-msgstr "Alerta de acceso"
+msgstr "Advertencia de acceso"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
@@ -618,7 +606,7 @@ msgstr "Actividades"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de excepción de actividad"
+msgstr "Decoración de actividad de excepción"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -638,7 +626,7 @@ msgstr "Agregar nota"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Add a product"
-msgstr "Agregar un producto"
+msgstr "Agregar producto"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -724,33 +712,20 @@ msgstr ""
 "cada línea de la orden de compra."
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
-msgid ""
-"Amount of time between purchase approval and document creation date. Due to "
-"a hack needed to calculate this,               every record will show the "
-"same average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
-msgstr ""
-"Cantidad de tiempo entre la aprobación de la compra y la fecha de creación "
-"del documento. Debido a un truco necesario para calcular esto,"
-"               cada registro mostrará el mismo valor promedio, por lo tanto,"
-" use esto solo como un valor agregado con group_operator=avg"
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr ""
 "Cantidad de tiempo entre la aprobación de la compra y la orden por fecha."
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
-msgid "Analytic"
-msgstr "Analítica"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Cuenta analítica"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "Distribución analítica"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
@@ -770,7 +745,7 @@ msgstr "Aprobar pedido"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Número de archivos adjuntos"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -831,11 +806,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
 msgstr "Costo promedio"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
-msgid "Average Days to Purchase"
-msgstr "Días promedio para comprar"
 
 #. module: purchase
 #. odoo-javascript
@@ -982,12 +952,12 @@ msgstr "Divisa de la empresa"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Compose Email"
-msgstr "Redactar un correo electrónico"
+msgstr "Redactar correo electrónico"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_config_settings
 msgid "Config Settings"
-msgstr "Opciones de configuración"
+msgstr "Ajustes de configuración"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config
@@ -1004,7 +974,7 @@ msgstr "Confirmar"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Confirm Order"
-msgstr "Confirmar pedido"
+msgstr "Confirmar orden"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1107,7 +1077,7 @@ msgstr "Creado el"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__currency_id
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__currency_rate
@@ -1117,7 +1087,7 @@ msgstr "Tasa de cambio"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__access_url
 msgid "Customer Portal URL"
-msgstr "URL del portal de cliente"
+msgstr "URL del portal del cliente"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__date
@@ -1216,12 +1186,7 @@ msgstr "Nombre en pantalla"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__display_type
 msgid "Display Type"
-msgstr "Tipo de pantalla"
-
-#. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Documentation"
-msgstr "Documentación"
+msgstr "Cómo mostrar en pantalla"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
@@ -1231,7 +1196,7 @@ msgstr "Dominio"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__done
 msgid "Done"
-msgstr "Listo"
+msgstr "Hecho"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_double_validation_amount
@@ -1272,7 +1237,7 @@ msgstr "Entrega esperada"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Extended Filters"
-msgstr "Filtro avanzado"
+msgstr "Filtros avanzados"
 
 #. module: purchase
 #. odoo-python
@@ -1377,14 +1342,14 @@ msgstr "Icono para indicar una actividad de excepción."
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Si está seleccionado hay nuevos mensajes que requieren su atención."
+msgstr ""
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Si se encuentra seleccionado, algunos mensajes tienen un error en el envío."
+msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1441,8 +1406,8 @@ msgid ""
 "International Commercial Terms are a series of predefined commercial terms "
 "used in international transactions."
 msgstr ""
-"Los términos de comercio internacional son una serie de condiciones "
-"comerciales usadas en las transacciones internacionales."
+"Los términos de comercio internacional son una serie de términos comerciales"
+" usados en las transacciones internacionales."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1462,20 +1427,12 @@ msgstr "Es un seguidor"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
 msgid "Journal Entry"
-msgstr "Asiento contable"
+msgstr "Asiento de diario"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "Apunte contable"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Apunte de diario"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
@@ -1494,13 +1451,13 @@ msgstr "Última actualización el"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Late"
-msgstr "Retrasado"
+msgstr "Atrasada"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades atrasadas"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
@@ -1564,7 +1521,7 @@ msgstr "Bloqueado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Adjuntos principales"
+msgstr "Archivo adjunto principal"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1623,7 +1580,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de envío del mensaje"
+msgstr "Error de envío de mensaje"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
@@ -1712,7 +1669,7 @@ msgstr "Nombre"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Name, TIN, Email, or Reference"
-msgstr "Nombre, NIF, correo electrónico o referencia"
+msgstr "Nombre, NIF, correo electrónico o referencia."
 
 #. module: purchase
 #. odoo-python
@@ -1724,12 +1681,12 @@ msgstr "Más reciente"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr "Siguiente evento en el calendario de avtividades."
+msgstr "Siguiente evento en el calendario de actividades."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Siguiente plazo de actividad"
+msgstr "Fecha límite de la siguiente actividad"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
@@ -1739,7 +1696,7 @@ msgstr "Resumen de la siguiente actividad"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
 msgid "Next Activity Type"
-msgstr "Siguiente tipo de actividad"
+msgstr "Tipo de la siguiente actividad"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__no-message
@@ -1755,7 +1712,7 @@ msgstr "No hay análisis de compras"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "No product found. Let's create one!"
-msgstr "No se ha encontrado ningún producto. ¡Creemos uno!"
+msgstr "No se encontró ningún producto. ¡Creemos uno!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
@@ -1872,7 +1829,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Order"
-msgstr "Pedido"
+msgstr "Orden"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_order
@@ -1881,7 +1838,7 @@ msgstr "Pedido"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Order Date"
-msgstr "Fecha de pedido"
+msgstr "Fecha de la orden"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_order
@@ -1892,14 +1849,14 @@ msgstr "Fecha límite de pedido"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__order_line
 msgid "Order Lines"
-msgstr "Líneas del pedido"
+msgstr "Líneas de la orden"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__name
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__order_id
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
 msgid "Order Reference"
-msgstr "Referencia del pedido"
+msgstr "Referencia de la orden"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
@@ -1909,13 +1866,13 @@ msgstr "Cantidad pedida:"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__purchase
 msgid "Ordered quantities"
-msgstr "Cantidades pedidas"
+msgstr "Cantidades ordenadas"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Orders"
-msgstr "Pedidos"
+msgstr "Órdenes"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1936,7 +1893,7 @@ msgstr "Empaquetado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_packaging_qty
 msgid "Packaging Quantity"
-msgstr "Cantidad de embalaje"
+msgstr "Cantidad de empaquetado"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -1951,12 +1908,12 @@ msgstr "País del contacto"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "Plazos de pago"
+msgstr "Términos de pago"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Payment terms"
-msgstr "Plazos de pago"
+msgstr "Términos de pago"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
@@ -2020,7 +1977,7 @@ msgstr "Categoría de producto"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_packaging
 msgid "Product Packaging"
-msgstr "Embalaje del producto"
+msgstr "Empaquetado del producto"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__product_tmpl_id
@@ -2041,7 +1998,7 @@ msgstr "Variante de producto"
 #: model:ir.actions.act_window,name:purchase.product_product_action
 #: model:ir.ui.menu,name:purchase.product_product_menu
 msgid "Product Variants"
-msgstr "Variantes de producto"
+msgstr "Variantes del producto"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.product_normal_action_puchased
@@ -2071,7 +2028,7 @@ msgstr "Compra"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__module_purchase_requisition
 msgid "Purchase Agreements"
-msgstr "Acuerdos de compra"
+msgstr "Contratos de compra"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
@@ -2210,7 +2167,7 @@ msgstr "Permite modificar una orden de compra ya confirmada"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
-msgstr "Órdenes de compra"
+msgstr "Orden de compra"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -2223,7 +2180,9 @@ msgstr "Reporte de compras"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Representative"
-msgstr "Representante del proveedor"
+msgstr ""
+"Representante del \n"
+"proveedor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__group_warning_purchase
@@ -2247,7 +2206,6 @@ msgstr "Comprar productos por múltiplo de unidad # por paquete"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
-#: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "Recordatorio de compra"
 
@@ -2319,7 +2277,7 @@ msgstr "Cant. facturada"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
 msgid "Qty Ordered"
-msgstr "Cant. pedida"
+msgstr "Cantidad ordenada"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
@@ -2427,12 +2385,12 @@ msgstr "Entregado"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received
 msgid "Received Qty"
-msgstr "Cantidad entregada"
+msgstr "Cant. recibida"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr "Método de cantidad entregada"
+msgstr "Método de cantidad recibida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2563,12 +2521,12 @@ msgstr "Usuario responsable"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "Error de entrega del SMS"
+msgstr "Error de entrega de SMS"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid "Scheduled Date"
-msgstr "Fecha prevista"
+msgstr "Fecha programada"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_search
@@ -2597,7 +2555,7 @@ msgstr "Sección"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Nombre de la sección (p. ej., productos, servicios)"
+msgstr "Nombre de la sección (por ejemplo, productos, servicios)"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__use_po_lead
@@ -2631,10 +2589,15 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Si selecciona la opción \"Aviso\" se notificará a los usuarios con el "
+"Si selecciona la opción \"Advertencia\" se notificará al usuario con un "
 "mensaje, si selecciona \"Mensaje de bloqueo\" se lanzará una excepción con "
-"el mensaje y se bloqueará el flujo. El mensaje debe escribirse en el "
-"siguiente campo."
+"un mensaje y se bloqueará el flujo. Escriba el mensaje en el siguiente "
+"campo."
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Sell and purchase products in different units of measure"
+msgstr "Venda y compre productos en diferentes unidades de medida"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2693,7 +2656,7 @@ msgstr "Secuencia"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Set to Draft"
-msgstr "Establecer como borrador"
+msgstr "Establecer a borrador"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
@@ -2711,8 +2674,7 @@ msgstr "Compartir"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
-"hoy"
+"Mostrar todos los registros cuya fecha próxima de acción es anterior a hoy"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__reference
@@ -2722,7 +2684,7 @@ msgstr "Origen"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__origin
 msgid "Source Document"
-msgstr "Documento origen"
+msgstr "Documento de origen"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2748,9 +2710,9 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: ya pasó la fecha límite\n"
-"Hoy: hoy es la fecha límite\n"
-"Planificada: actividades futuras."
+"Vencida: la fecha límite ya pasó\n"
+"Hoy: la fecha límite es hoy\n"
+"Planeada: futuras actividades."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_subtotal
@@ -2791,7 +2753,7 @@ msgstr "Moneda del proveedor"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Tarifa de proveedor"
+msgstr "Lista de precios del proveedor"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__price_tax
@@ -2817,7 +2779,7 @@ msgstr "Impuestos"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__display_type
 msgid "Technical field for UX purpose."
-msgstr "Campo técnico para propósitos de usabilidad."
+msgstr "Campo técnico para propósitos de usabilidad"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__tax_country_id
@@ -2844,7 +2806,7 @@ msgid ""
 "The ISO country code in two chars. \n"
 "You can use this field for quick search."
 msgstr ""
-"EL código ISO del país en dos caracteres.\n"
+"El código ISO del país en dos caracteres.\n"
 "Puede utilizar este campo para una búsqueda rápida."
 
 #. module: purchase
@@ -2912,8 +2874,8 @@ msgid ""
 "This default value is applied to any new product created. This can be "
 "changed in the product detail form."
 msgstr ""
-"Este valor predeterminado se aplica a cualquier producto nuevo creado. Esto "
-"se puede cambiar en el formulario de detalles del producto."
+"Este valor predeterminado se aplica a cualquier producto nuevo que se cree. "
+"Se puede cambiar en los detalles del producto."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
@@ -2969,7 +2931,7 @@ msgstr "Consejo: Nunca pierda una orden de compra"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
-msgstr "Para aprobar"
+msgstr "Por aprobar"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
@@ -3071,6 +3033,11 @@ msgid "Unit of Measure"
 msgstr "Unidad de medida"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units Of Measure"
+msgstr "Unidades de medida"
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
 msgstr "Unidades de medida"
@@ -3100,12 +3067,12 @@ msgstr "No tributable"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_untaxed
 msgid "Untaxed Amount"
-msgstr "Cantidad no tributable"
+msgstr "Importe sin impuestos"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__untaxed_total
 msgid "Untaxed Total"
-msgstr "Total no tributable"
+msgstr "Total sin impuestos"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3130,18 +3097,9 @@ msgid "User"
 msgstr "Usuario"
 
 #. module: purchase
-#. odoo-python
-#: code:addons/purchase/report/purchase_report.py:0
-#, python-format
-msgid ""
-"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
-" are seeing this message then it is being accessed incorrectly."
-msgstr ""
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr "Entrada de la cuadrícula de variante"
+msgstr "Entrada en la tabla de variantes"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -3238,7 +3196,7 @@ msgstr "Solicitudes de cotización en espera"
 #: model:ir.model.fields.selection,name:purchase.selection__res_partner__purchase_warn__warning
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: purchase
 #. odoo-python
@@ -3246,7 +3204,7 @@ msgstr "Alerta"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Alerta para %s"
+msgstr "Advertencia para %s"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_partner_view_purchase_buttons
@@ -3263,7 +3221,7 @@ msgstr "Alerta cuando compra este producto"
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Warnings"
-msgstr "Alertas"
+msgstr "Advertencias"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__website_message_ids

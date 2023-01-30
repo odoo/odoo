@@ -3,18 +3,18 @@
 # 	* website_hr_recruitment
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Raymond Yu <cl_yu@hotmail.com>, 2022
-# digitalliuzg8888, 2022
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Raymond Yu <cl_yu@hotmail.com>, 2023
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# digitalliuzg8888, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 15:00+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,7 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: website_hr_recruitment
-#: code:addons/website_hr_recruitment/models/hr_recruitment.py:0
+#. odoo-python
+#: code:addons/website_hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "%s's Application"
 msgstr "%s 的申请"
@@ -35,7 +36,6 @@ msgstr "12 天/年，包括您选择的 <br/>6 天。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 msgstr "<br/><i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
@@ -46,7 +46,6 @@ msgstr "<i j=\"0/\"> 职位描述</i>"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
@@ -173,7 +172,6 @@ msgstr ""
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid ""
 "<span>\n"
 "                                            We usually reply between one and three days.<br/>\n"
@@ -236,7 +234,7 @@ msgid "Applicant"
 msgstr "申请人"
 
 #. module: website_hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #, python-format
 msgid "Applied Job"
@@ -297,7 +295,6 @@ msgstr "将在工作提交网页上显示的补充信息"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Congratulations!"
 msgstr "恭喜！"
 
@@ -308,7 +305,6 @@ msgstr "联系我们"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Continue To Our Website"
 msgstr "请继续浏览我们的网站"
 
@@ -334,7 +330,7 @@ msgid "Customer Relationship"
 msgstr "客户关系"
 
 #. module: website_hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_hr_recruitment/static/src/js/website_hr_recruitment_editor.js:0
 #: model:ir.model,name:website_hr_recruitment.model_hr_department
 #, python-format
@@ -413,7 +409,6 @@ msgstr "我觉得很幸运"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "In the meantime,"
 msgstr "同时，"
 
@@ -444,12 +439,14 @@ msgid "Job Position"
 msgstr "工作岗位"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/controllers/main.py:0
 #, python-format
 msgid "Job Title"
 msgstr "工作头衔"
 
 #. module: website_hr_recruitment
+#. odoo-python
 #: code:addons/website_hr_recruitment/models/website.py:0
 #: model:ir.ui.menu,name:website_hr_recruitment.menu_job_pages
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.apply
@@ -483,7 +480,6 @@ msgstr "引领整个销售循环"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Look around on our website:"
 msgstr "浏览我们的网站："
 
@@ -581,6 +577,11 @@ msgid "Published"
 msgstr "已发布"
 
 #. module: website_hr_recruitment
+#: model:ir.model.fields,field_description:website_hr_recruitment.field_hr_job__published_date
+msgid "Published Date"
+msgstr "发布日期"
+
+#. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Qualify the customer needs"
 msgstr "评估客户需求"
@@ -638,12 +639,12 @@ msgstr "体育活动"
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Strong analytical skills"
-msgstr "较强的分析能力"
+msgstr "较强的分析技能"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.default_website_description
 msgid "Technical Expertise"
-msgstr "技术领域"
+msgstr "技术专长"
 
 #. module: website_hr_recruitment
 #: model:ir.model.fields,help:website_hr_recruitment.field_hr_job__website_url
@@ -739,13 +740,11 @@ msgstr "您可以在此处写下您的职位描述的简短描述，该描述将
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been posted successfully."
 msgstr "您的应用程序已成功发布。"
 
 #. module: website_hr_recruitment
 #: model_terms:ir.ui.view,arch_db:website_hr_recruitment.thankyou_ir_ui_view
-#: model_terms:website.page,arch_db:website_hr_recruitment.thankyou
 msgid "Your application has been sent to:"
 msgstr "您的应用程序已发送至："
 
