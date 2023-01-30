@@ -4,7 +4,7 @@
 <t t-name="mail.activity" owl="1">
     <t t-set="activity" t-value="props.data"/>
     <div class="o-mail-activity d-flex px-4 py-1 mb-2">
-        <div class="o-mail-activity-sidebar">
+        <div class="o-mail-activity-sidebar flex-shrink-0">
             <img class="o-mail-activity-user-avatar w-100 h-100 rounded-circle" t-attf-src="/web/image/res.users/{{activity.user_id[0]}}/avatar_128"/>
         </div>
         <div class="flex-grow px-3">
@@ -28,7 +28,7 @@
                     </tbody>
                 </table>
             </div>
-            <div t-if="activity.note" class="o-activity-note" t-out="activity.note"/>
+            <div t-if="activity.note" class="o-activity-note text-break" t-out="activity.note"/>
             <div t-if="activity.mail_template_ids.length > 0" class="o-mail-activity-mail-templates">
                 <ActivityMailTemplate activity="activity" onUpdate="props.onUpdate"/>
             </div>
