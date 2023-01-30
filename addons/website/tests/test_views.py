@@ -1032,10 +1032,10 @@ class TestCowViewSaving(TestViewSavingCommon):
 
         specific_view.invalidate_model(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
-                         "loading module translation copy translation from base to specific view")
+                         "loading module translation for a specific language should not remove existing translations for other languages")
 
         self.assertEqual(specific_view.with_context(lang='es_ES').arch, '<div>hola</div>',
-                         "loading module translation should not remove specific translations that are not available on base view")
+                         "loading module translation for a specific language should not remove existing translations for other languages")
 
     def test_soc_complete_flow(self):
         """
