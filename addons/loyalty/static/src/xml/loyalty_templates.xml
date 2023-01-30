@@ -42,9 +42,9 @@
     </t>
 
     <t t-name="loyalty.LoyaltyX2ManyField" owl="1" t-inherit-mode="primary" t-inherit="web.X2ManyField">
-        <t t-if="displayAddButton" position="replace">
+        <t t-if="displayControlPanelButtons" position="replace">
             <h4 t-esc="field.string or ''"/>
-            <t t-if="displayAddButton">
+            <t t-if="displayControlPanelButtons">
                 <div class="o_cp_buttons me-0 ms-auto" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                     <div>
                         <button type="button" class="btn btn-secondary o-kanban-button-new" title="Create record" accesskey="c" t-on-click="() => this.onAdd()">

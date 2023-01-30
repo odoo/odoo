@@ -60,6 +60,7 @@ export class KanbanArchParser extends XMLParser {
         const templateDocs = {};
         const activeFields = {};
         let headerButtons = [];
+        const creates = [];
         let buttonId = 0;
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
@@ -76,6 +77,22 @@ export class KanbanArchParser extends XMLParser {
                         id: buttonId++,
                     }))
                     .filter((button) => button.modifiers.invisible !== true);
+                return false;
+            } else if (node.tagName === "control") {
+                for (const childNode of node.children) {
+                    if (childNode.tagName === "button") {
+                        creates.push({
+                            type: "button",
+                            ...processButton(childNode),
+                        });
+                    } else if (childNode.tagName === "create") {
+                        creates.push({
+                            type: "create",
+                            context: childNode.getAttribute("context"),
+                            string: childNode.getAttribute("string"),
+                        });
+                    }
+                }
                 return false;
             }
             // Case: field node
@@ -157,6 +174,7 @@ export class KanbanArchParser extends XMLParser {
             activeActions,
             activeFields,
             className,
+            creates,
             defaultGroupBy,
             fieldNodes,
             handleField,
