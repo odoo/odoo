@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { makeContext } from "@web/core/context";
-import { registry } from "@web/core/registry";
+import { _lt } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
+import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 import {
     useActiveActions,
@@ -15,7 +16,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { KanbanRenderer } from "@web/views/kanban/kanban_renderer";
 import { ListRenderer } from "@web/views/list/list_renderer";
 import { evalDomain } from "@web/views/utils";
-import { _lt } from "@web/core/l10n/translation";
+import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component } from "@odoo/owl";
 
@@ -26,8 +27,6 @@ export class X2ManyField extends Component {
 
         this.isMany2Many =
             this.field.type === "many2many" || this.activeField.widget === "many2many";
-
-        this.addButtonText = this.props.addLabel || this.env._t("Add");
 
         this.viewMode = this.activeField.viewMode;
 
@@ -41,6 +40,17 @@ export class X2ManyField extends Component {
             archInfo = this.activeField.views[this.viewMode];
         } else {
             archInfo = {};
+        }
+        if (this.viewMode === "kanban") {
+            this.creates = archInfo.creates.length
+                ? archInfo.creates
+                : [
+                      {
+                          type: "create",
+                          string: this.props.addLabel || this.env._t("Add"),
+                          class: "o-kanban-button-new",
+                      },
+                  ];
         }
         const subViewActiveActions = archInfo.activeActions;
         this.activeActions = useActiveActions({
@@ -96,7 +106,7 @@ export class X2ManyField extends Component {
         };
     }
 
-    get displayAddButton() {
+    get displayControlPanelButtons() {
         return (
             this.viewMode === "kanban" &&
             ("link" in this.activeActions ? this.activeActions.link : this.activeActions.create) &&
@@ -229,7 +239,7 @@ export class X2ManyField extends Component {
         return this._openRecord({ record, mode: this.props.readonly ? "readonly" : "edit" });
     }
 }
-X2ManyField.components = { Pager, KanbanRenderer, ListRenderer };
+X2ManyField.components = { Pager, KanbanRenderer, ListRenderer, ViewButton };
 X2ManyField.props = {
     ...standardFieldProps,
     addLabel: { type: "string", optional: true },
