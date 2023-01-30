@@ -4,6 +4,13 @@ odoo.define("pos_gift_card.gift_card", function (require) {
   const { Order, Orderline } = require("point_of_sale.models");
   const Registries = require('point_of_sale.Registries');
 
+<<<<<<< HEAD
+||||||| parent of 9d5e54571c0 (temp)
+  models.load_fields("pos.order.line", "generated_gift_card_ids");
+  models.load_fields("pos.order.line", "redeem_pos_order_line_ids");
+=======
+  models.load_fields("pos.order.line", "generated_gift_card_ids");
+>>>>>>> 9d5e54571c0 (temp)
 
   const PosGiftCardOrder = (Order) => class PosGiftCardOrder extends Order {
     //@override
