@@ -1450,3 +1450,20 @@ QUnit.test(
         assert.containsOnce(target, "h4:contains(Congratulations, your inbox is empty)");
     }
 );
+
+QUnit.test(
+    "composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+        const { openDiscuss } = await start();
+        await openDiscuss(mailChannelId1);
+        await insertText(".o-mail-composer-textarea", "Dummy Message");
+        await click(".o-mail-composer-send-button");
+
+        assert.strictEqual(
+            target.querySelector(".o-mail-composer-textarea"),
+            document.activeElement
+        );
+    }
+);

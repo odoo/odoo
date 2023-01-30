@@ -559,3 +559,175 @@ QUnit.test(
         assert.containsNone(target, "hr + span:contains(New messages)");
     }
 );
+
+QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async function (assert) {
+    const pyEnv = await startServer();
+    const resPartnerId1 = pyEnv["res.partner"].create({
+        email: "usatyi@example.com",
+        name: "Pynya's spokesman",
+    });
+    const mailChannelId1 = pyEnv["mail.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(mailChannelId1);
+    await insertText(".o-mail-composer-textarea", "@");
+    await insertText(".o-mail-composer-textarea", "Pyn");
+    await click(".o-composer-suggestion");
+    await click(".o-mail-composer-send-button");
+    assert.containsOnce(
+        target.querySelector(".o-mail-message-body"),
+        `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`
+    );
+});
+
+QUnit.test("mention 2 different partners that have the same name", async function (assert) {
+    const pyEnv = await startServer();
+    const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
+        {
+            email: "partner1@example.com",
+            name: "TestPartner",
+        },
+        {
+            email: "partner2@example.com",
+            name: "TestPartner",
+        },
+    ]);
+    const mailChannelId1 = pyEnv["mail.channel"].create({
+        name: "test",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: resPartnerId1 }],
+            [0, 0, { partner_id: resPartnerId2 }],
+        ],
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(mailChannelId1);
+    await insertText(".o-mail-composer-textarea", "@");
+    await insertText(".o-mail-composer-textarea", "Te");
+    await afterNextRender(() => target.querySelectorAll(".o-composer-suggestion")[0].click());
+    await insertText(".o-mail-composer-textarea", "@");
+    await insertText(".o-mail-composer-textarea", "Te");
+    await afterNextRender(() => target.querySelectorAll(".o-composer-suggestion")[1].click());
+    await click(".o-mail-composer-send-button");
+    assert.containsOnce(target, ".o-mail-message-body");
+    assert.containsOnce(
+        target.querySelector(`.o-mail-message-body`),
+        `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+    );
+    assert.containsOnce(
+        target.querySelector(`.o-mail-message-body`),
+        `.o_mail_redirect[data-oe-id="${resPartnerId2}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+    );
+});
+
+QUnit.test(
+    "mention a channel on a second line when the first line contains #",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            name: "General good",
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(mailChannelId1);
+        await insertText(".o-mail-composer-textarea", "#blabla\n");
+        await insertText(".o-mail-composer-textarea", "#");
+        await click(".o-composer-suggestion");
+        await click(".o-mail-composer-send-button");
+        assert.containsOnce(target.querySelector(".o-mail-message-body"), ".o_channel_redirect");
+        assert.strictEqual(
+            target.querySelector(".o_channel_redirect").textContent,
+            "#General good"
+        );
+    }
+);
+
+QUnit.test(
+    "mention a channel when replacing the space after the mention by another char",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            name: "General good",
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(mailChannelId1);
+
+        await insertText(".o-mail-composer-textarea", "#");
+        await click(".o-composer-suggestion");
+        const text = target.querySelector(`.o-mail-composer-textarea`).value;
+        target.querySelector(`.o-mail-composer-textarea`).value = text.slice(0, -1);
+        await insertText(".o-mail-composer-textarea", ", test");
+        await click(".o-mail-composer-send-button");
+        assert.containsOnce(target.querySelector(".o-mail-message-body"), ".o_channel_redirect");
+        assert.strictEqual(
+            target.querySelector(".o_channel_redirect").textContent,
+            "#General good"
+        );
+    }
+);
+
+QUnit.test("mention 2 different channels that have the same name", async function (assert) {
+    const pyEnv = await startServer();
+    const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+        {
+            channel_type: "channel",
+            group_public_id: false,
+            name: "my channel",
+        },
+        {
+            channel_type: "channel",
+            name: "my channel",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(mailChannelId1);
+    await insertText(".o-mail-composer-textarea", "#");
+    await insertText(".o-mail-composer-textarea", "m");
+    await afterNextRender(() => target.querySelectorAll(".o-composer-suggestion")[0].click());
+    await insertText(".o-mail-composer-textarea", "#");
+    await insertText(".o-mail-composer-textarea", "m");
+    await afterNextRender(() => target.querySelectorAll(".o-composer-suggestion")[1].click());
+    await click(".o-mail-composer-send-button");
+    assert.containsOnce(target, ".o-mail-message-body");
+    assert.containsOnce(
+        target.querySelector(`.o-mail-message-body`),
+        `.o_channel_redirect[data-oe-id="${mailChannelId1}"][data-oe-model="mail.channel"]:contains("#my channel")`
+    );
+    assert.containsOnce(
+        target.querySelector(`.o-mail-message-body`),
+        `.o_channel_redirect[data-oe-id="${mailChannelId2}"][data-oe-model="mail.channel"]:contains("#my channel")`
+    );
+});
+
+QUnit.test(
+    "Post a message containing an email address followed by a mention on another line",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv["res.partner"].create({
+            email: "testpartner@odoo.com",
+            name: "TestPartner",
+        });
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            name: "test",
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: resPartnerId1 }],
+            ],
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(mailChannelId1);
+        await insertText(".o-mail-composer-textarea", "email@odoo.com\n");
+        await insertText(".o-mail-composer-textarea", "@");
+        await insertText(".o-mail-composer-textarea", "Te");
+        await click(".o-composer-suggestion");
+        await click(".o-mail-composer-send-button");
+        assert.containsOnce(
+            target.querySelector(`.o-mail-message-body`),
+            `.o_mail_redirect[data-oe-id="${resPartnerId1}"][data-oe-model="res.partner"]:contains("@TestPartner")`
+        );
+    }
+);
