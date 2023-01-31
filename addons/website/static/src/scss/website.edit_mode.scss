@@ -1,17 +1,19 @@
 $-editor-messages-margin-x: 2%;
 %o-editor-messages {
-    width: 100% - $-editor-messages-margin-x * 2; // Need to be forced here to avoid flickering
-    margin: 20px $-editor-messages-margin-x;
     border: 2px dashed #999999;
-    padding: 12px 0px;
     text-align: center;
-    color: #999999;
+    color: white;
 
     &:before {
         content: attr(data-editor-message);
         display: block;
         font-size: 20px;
-        line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
+    }
+    // Show the default editor message only for "empty" elements
+    &:not(:empty), &:not(:only-child) {
+        &[data-editor-message-default]:before {
+            content: none;
+        }
     }
     &:after {
         content: attr(data-editor-sub-message);
@@ -24,13 +26,6 @@ $-editor-messages-margin-x: 2%;
     &::before {
         animation: inherit;
         animation-delay: 0ms;
-    }
-}
-
-.oe_structure_not_nearest .oe_drop_zone {
-    &:before {
-        opacity: 0.5;
-        line-height: 35px !important;
     }
 }
 
@@ -80,16 +75,42 @@ $-editor-messages-margin-x: 2%;
         pointer-events: none;
     }
 
+    // This style block is about the "editor message" which highlights the areas
+    // where the user can drag & drop snippets.
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        &#wrap:empty, &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
-            @extend %o-editor-messages;
-            padding: 112px 0px;
-        }
-        > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+        // Base case (website.page (#wrap), t-field (product description), ..)
+        > .oe_drop_zone.oe_insert:not(.oe_vertical) {
             @extend %o-editor-messages;
             height: auto;
-            color: $o-brand-odoo;
+            text-shadow: -1px -1px 0 $o-brand-odoo, 1px -1px 0 $o-brand-odoo, -1px 1px 0 $o-brand-odoo, 1px 1px 0 $o-brand-odoo;
+
+            // Empty editable element during drag & drop
+            &:only-child {
+                margin: 20px $-editor-messages-margin-x;
+                width: 100% - $-editor-messages-margin-x * 2;
+                padding: 12px 0px;
+            }
+
+            &:not(:only-child)::before {
+                font-size: 16px;
+            }
         }
+
+        // Exception 1: empty wrap NOT during drag & drop
+        &#wrap:empty {
+            @extend %o-editor-messages;
+            padding: 112px 0px;
+            margin: 20px $-editor-messages-margin-x;
+            color: #999999;
+        }
+
+        // Exception 2: empty wrap during drag & drop (override of base case)
+        &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+            padding: 112px 0px;
+            color: #999999;
+            text-shadow: none;
+        }
+
         > p:empty:only-child {
             color: #aaa;
         }
