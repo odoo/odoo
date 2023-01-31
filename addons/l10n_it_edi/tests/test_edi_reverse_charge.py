@@ -14,8 +14,7 @@ class TestItEdiReverseCharge(TestItEdi):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
-                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
+        super().setUpClass()
 
         # Helper functions -----------
         def get_tag_ids(tag_codes):
