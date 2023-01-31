@@ -35,6 +35,18 @@
         <record id="project_tags_05" model="project.tags">
             <field name="name">External</field>
         </record>
+        <record id="project_tags_06" model="project.tags">
+            <field name="name">Construction</field>
+        </record>
+        <record id="project_tags_07" model="project.tags">
+            <field name="name">Architecture</field>
+        </record>
+        <record id="project_tags_08" model="project.tags">
+            <field name="name">Design</field>
+        </record>
+        <record id="project_tags_09" model="project.tags">
+            <field name="name">Interior</field>
+        </record>
 
         <!-- Analytic Accounts -->
         <!-- Needed so that we can have the same analytic accounts on hr_timesheet and project_account_budget -->
@@ -54,6 +66,11 @@
             <field name="name">Renovations</field>
             <field name="plan_id" ref="analytic.analytic_plan_projects"/>
             <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="analytic_construction" model="account.analytic.account">
+            <field name="name">Home Construction</field>
+            <field name="plan_id" ref="analytic.analytic_plan_projects"/>
         </record>
 
         <!-- Stage templates -->
@@ -156,6 +173,22 @@
             <field name="stage_id" ref="project.project_project_stage_2"/>
         </record>
 
+        <record id="project_home_construction" model="project.project">
+            <field name="date_start" eval="(DateTime.today() + relativedelta(months=-2)).strftime('%Y-%m-%d 10:00:00')"/>
+            <field name="date" eval="(DateTime.today() + relativedelta(days=-5)).strftime('%Y-%m-%d 17:00:00')"/>
+            <field name="name">Home Construction</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="description">Designing and construction of an appealing, comfortable, safe and well-built home that fits the needs and wants of you and your family.</field>
+            <field name="color">5</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="type_ids" eval="[Command.link(ref('project_stage_0')), Command.link(ref('project_stage_1')), Command.link(ref('project_stage_2')), Command.link(ref('project_stage_3'))]"/>
+            <field name="favorite_user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
+            <field name="tag_ids" eval="[Command.link(ref('project_tags_06')), Command.link(ref('project_tags_07')), Command.link(ref('project_tags_08')), Command.link(ref('project_tags_09'))]"/>
+            <field name="stage_id" ref="project.project_project_stage_2"/>
+            <field name="analytic_account_id" ref="project.analytic_construction"/>
+            <field name="privacy_visibility">portal</field>
+        </record>
+
         <!-- Personal Stages: Mitchell Admin-->
         <record id="project_personal_stage_admin_0" model="project.task.type">
             <field name="sequence">1</field>
@@ -253,6 +286,27 @@
             <field name="deadline" eval="(DateTime.now() + relativedelta(years=2)).strftime('%Y-%m-%d')"/>
             <field name="name">Final Phase</field>
             <field name="project_id" ref="project.project_project_1"/>
+        </record>
+
+        <!-- Project Home Construction -->
+        <record id="project_home_construction_milestone_1" model="project.milestone">
+            <field name="is_reached" eval="True"/>
+            <field name="deadline" eval="time.strftime('%Y-%m-2')"/>
+            <field name="name">Piping Installation</field>
+            <field name="reached_date" eval="time.strftime('%Y-%m-2')"/>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+        <record id="project_home_construction_milestone_2" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="time.strftime('%Y-%m-5')"/>
+            <field name="name">Door and Window Framing</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+        <record id="project_home_construction_milestone_3" model="project.milestone">
+            <field name="is_reached" eval="False"/>
+            <field name="deadline" eval="time.strftime('%Y-%m-10')"/>
+            <field name="name">Wiring</field>
+            <field name="project_id" ref="project.project_home_construction"/>
         </record>
 
         <!-- Project 1 Tasks -->
@@ -1368,6 +1422,21 @@ Send it ASAP, its urgent.</field>
             <field name="user_id" eval="ref('base.user_admin')"/>
             <field name="progress" eval="100"/>
             <field name="status">done</field>
+        </record>
+        <!-- Home Construction Project Update -->
+        <record id="project_update_construction_1" model="project.update" context="{'default_project_id': ref('project.project_home_construction')}">
+            <field name="name">Design Approval</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="65"/>
+            <field name="status">on_track</field>
+            <field name="date" eval="time.strftime('%Y-%m-5')"/>
+        </record>
+        <record id="project_update_construction_2" model="project.update" context="{'default_project_id': ref('project.project_home_construction')}">
+            <field name="name">Construction</field>
+            <field name="user_id" eval="ref('base.user_admin')"/>
+            <field name="progress" eval="30"/>
+            <field name="status">on_track</field>
+            <field name="date" eval="time.strftime('%Y-%m-1')"/>
         </record>
     </data>
 </odoo>

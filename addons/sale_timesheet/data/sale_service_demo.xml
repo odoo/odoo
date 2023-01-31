@@ -2,6 +2,63 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="job_interior_designer" model="hr.job">
+            <field name="name">Interior Designer</field>
+            <field name="no_of_recruitment">5</field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+        </record>
+
+        <record id="job_engineer" model="hr.job">
+            <field name="name">Site Manager</field>
+            <field name="no_of_recruitment">7</field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+        </record>
+
+        <record id="job_labour" model="hr.job">
+            <field name="name">Handyman</field>
+            <field name="no_of_recruitment">10</field>
+            <field name="contract_type_id" ref="hr.contract_type_permanent"/>
+        </record>
+
+        <record id="employee_jjo" model="hr.employee">
+            <field name="name">Jessica Johnson</field>
+            <field name="parent_id" ref="hr.employee_al"/>
+            <field name="job_id" ref="sale_timesheet.job_engineer"/>
+            <field name="job_title">Site Manager</field>
+            <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="work_location_id" ref="hr.work_location_1"/>
+            <field name="work_phone">(535)-495-4164</field>
+            <field name="work_contact_id" ref="hr.work_contact_al"/>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jjo-image.jpg"/>
+            <field name="create_date">2020-02-02 00:00:00</field>
+        </record>
+
+        <record id="employee_awa" model="hr.employee">
+            <field name="name">Amy Watson</field>
+            <field name="parent_id" ref="sale_timesheet.employee_jjo"/>
+            <field name="job_id" ref="sale_timesheet.job_interior_designer"/>
+            <field name="job_title">Interior Designer</field>
+            <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="work_location_id" ref="hr.work_location_1"/>
+            <field name="work_phone">(535)-495-4222</field>
+            <field name="work_contact_id" ref="hr.work_contact_mit"/>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_awa-image.jpg"/>
+            <field name="create_date">2020-01-01 00:00:00</field>
+        </record>
+
+        <record id="employee_jsm" model="hr.employee">
+            <field name="name">Justin Smith</field>
+            <field name="parent_id" ref="sale_timesheet.employee_jjo"/>
+            <field name="job_id" ref="sale_timesheet.job_labour"/>
+            <field name="job_title">Handyman</field>
+            <field name="category_ids" eval="[(6, 0, [ref('hr.employee_category_4')])]"/>
+            <field name="work_location_id" ref="hr.work_location_1"/>
+            <field name="work_phone">(535)-495-4444</field>
+            <field name="work_contact_id" ref="hr.work_contact_niv"/>
+            <field name="image_1920" type="base64" file="sale_timesheet/static/img/employee_jsm-image.jpg"/>
+            <field name="create_date">2020-02-02 00:00:00</field>
+        </record>
+
         <record id="sale_line_services" model="sale.order.line">
             <field name="order_id" ref="sale.sale_order_3"/>
             <field name="name" model="sale.order.line" eval="obj().env.ref('sale.advance_product_0').get_product_multiline_description_sale()"/>
@@ -106,6 +163,58 @@
             <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="sale_project.so_template_project"/>
+        </record>
+
+        <record id="product_product_elevator_installation" model="product.product">
+            <field name="name">Elevator Installation</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">5500.00</field>
+            <field name="standard_price">5000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">ordered_prepaid</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_solar_installation" model="product.product">
+            <field name="name">Solar Panel Installation</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">4050.00</field>
+            <field name="standard_price">4000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_timesheet</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_interior_designing" model="product.product">
+            <field name="name">Interior Designing</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">2500.00</field>
+            <field name="standard_price">2000.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_milestones</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+        </record>
+
+        <record id="product_product_roofing" model="product.product">
+            <field name="name">Roofing</field>
+            <field name="categ_id" ref="product.product_category_construction"/>
+            <field name="list_price">4000.00</field>
+            <field name="standard_price">3500.00</field>
+            <field name="type">service</field>
+            <field name="uom_id" ref="uom.product_uom_hour"/>
+            <field name="uom_po_id" ref="uom.product_uom_hour"/>
+            <field name="service_policy">delivered_manual</field>
+            <field name="service_tracking">task_global_project</field>
+            <field name="project_id" ref="project.project_home_construction"/>
         </record>
 
         <record id="product_service_deliver_manual" model="product.product">
@@ -248,6 +357,38 @@
             <field name="product_uom_qty">14</field>
         </record>
 
+        <record id="sale_order_4_construction" model="sale.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="tag_ids" eval="[Command.link(ref('sales_team.categ_oppor6'))]"/>
+        </record>
+        <record id="sale_line_construction_41" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4_construction"/>
+            <field name="sequence" eval="1"/>
+            <field name="product_id" ref="product_product_elevator_installation"/>
+            <field name="product_uom_qty">20</field>
+        </record>
+        <record id="sale_line_construction_42" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4_construction"/>
+            <field name="product_id" ref="product_product_solar_installation"/>
+            <field name="sequence" eval="2"/>
+            <field name="discount">18</field>
+            <field name="product_uom_qty">10</field>
+        </record>
+        <record id="sale_line_construction_43" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4_construction"/>
+            <field name="sequence" eval="1"/>
+            <field name="product_id" ref="product_product_interior_designing"/>
+            <field name="product_uom_qty">15</field>
+        </record>
+        <record id="sale_line_construction_44" model="sale.order.line">
+            <field name="order_id" ref="sale_order_4_construction"/>
+            <field name="product_id" ref="product_product_roofing"/>
+            <field name="sequence" eval="2"/>
+            <field name="discount">10</field>
+            <field name="product_uom_qty">20</field>
+        </record>
+
         <!-- Activity of sales order -->
         <record id="sale_timesheet_activity_1" model="mail.activity">
             <field name="res_id" ref="sale_timesheet.sale_order_2"/>
@@ -263,6 +404,43 @@
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_1')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_2')]]"/>
         <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_3')]]"/>
+        <function model="sale.order" name="action_confirm" eval="[[ref('sale_order_4_construction')]]"/>
+
+        <!-- Function to set task stage and users -->
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_41'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids':[Command.link(ref('base.user_admin'))],
+                'state': '03_approved',
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_42'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_3'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_43'))]"/>
+            <value eval="{
+                'milestone_id': ref('project.project_home_construction_milestone_2'),
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids':[Command.link(ref('base.user_admin'))],
+                'state': '03_approved',
+            }"/>
+        </function>
+        <function model="project.task" name="write">
+            <value model="project.task" search="[('sale_line_id', '=', ref('sale_timesheet.sale_line_construction_44'))]"/>
+            <value eval="{
+                'stage_id': ref('project.project_stage_1'),
+                'user_ids': [Command.link(ref('base.user_demo'))],
+                'state': '03_approved',
+            }"/>
+        </function>
 
         <!-- Change order dates -->
         <record id="sale_order_1" model="sale.order">
@@ -958,6 +1136,44 @@
             <field name="project_id" ref="project_support"/>
             <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_33'))]"/>
             <field name="so_line" ref="sale_line_33"/>
+        </record>
+
+        <!-- Timesheets on sale_order_4_construction -->
+        <record id="sale_line_41_task_timesheet" model="account.analytic.line">
+            <field name="name">Elevator Installation</field>
+            <field name="employee_id" ref="sale_timesheet.employee_jsm"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-2)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">5.00</field>
+            <field name="project_id" ref="project.project_home_construction"/>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_41'))]"/>
+            <field name="so_line" ref="sale_line_construction_41"/>
+        </record>
+        <record id="sale_line_42_task_timesheet" model="account.analytic.line">
+            <field name="name">Solar Panel Installation</field>
+            <field name="employee_id" ref="sale_timesheet.employee_jsm"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-3)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">4.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_42'))]"/>
+            <field name="project_id" ref="project.project_home_construction"/>
+            <field name="so_line" ref="sale_line_construction_42"/>
+        </record>
+        <record id="sale_line_43_task_timesheet" model="account.analytic.line">
+            <field name="name">House Interior Designing</field>
+            <field name="employee_id" ref="sale_timesheet.employee_jjo"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-4)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">8.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_43'))]"/>
+            <field name="project_id" ref="project.project_home_construction"/>
+            <field name="so_line" ref="sale_line_construction_43"/>
+        </record>
+        <record id="sale_line_44_task_timesheet" model="account.analytic.line">
+            <field name="name">House Renovation</field>
+            <field name="employee_id" ref="sale_timesheet.employee_awa"/>
+            <field name="date" eval="(DateTime.now() + relativedelta(weekday=0,weeks=-5)).strftime('%Y-%m-%d')"/>
+            <field name="unit_amount">10.00</field>
+            <field name="task_id" search="[('sale_line_id', '=', ref('sale_line_construction_44'))]"/>
+            <field name="project_id" ref="project.project_home_construction"/>
+            <field name="so_line" ref="sale_line_construction_44"/>
         </record>
 
         <!-- Non billable Timesheets in project_support -->
