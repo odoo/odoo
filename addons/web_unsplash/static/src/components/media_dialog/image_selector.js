@@ -134,6 +134,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
                 url.searchParams.delete('w');
                 return Object.assign({}, record, {
                     url: url.toString(),
+                    mediaType: 'unsplashRecord',
                 });
             });
             return { isMaxed, records };
