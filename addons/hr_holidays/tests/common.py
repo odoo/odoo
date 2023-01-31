@@ -23,7 +23,7 @@ class TestHrHolidaysCommon(common.TransactionCase):
         cls.user_hrmanager_id = cls.user_hrmanager.id
         cls.user_hrmanager.tz = 'Europe/Brussels'
 
-        cls.user_employee = mail_new_test_user(cls.env, login='david', groups='base.group_user')
+        cls.user_employee = mail_new_test_user(cls.env, login='enguerran', password='enguerran', groups='base.group_user')
         cls.user_employee_id = cls.user_employee.id
 
         # Hr Data

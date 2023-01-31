@@ -45,7 +45,7 @@
 
                 <t t-if="env.isSmall">
                     <t t-set="holiday" t-value="leaveState.holidays[filter.value]"/>
-                    <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2] === 'yes'" />
+                    <TimeOffCardMobile t-if="holiday" name="holiday[0]" id="holiday[3]" data="holiday[1]" requires_allocation="holiday[2] === 'yes'"/>
                 </t>
             </span>
         </xpath>

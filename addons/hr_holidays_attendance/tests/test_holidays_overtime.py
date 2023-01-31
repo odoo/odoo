@@ -162,7 +162,7 @@ class TestHolidaysOvertime(TransactionCase):
                     'holiday_status_id': self.leave_type_employee_allocation.id,
                     'employee_id': self.employee.id,
                     'number_of_days': 1,
-                    'state': 'draft',
+                    'state': 'confirm',
                     'date_from': time.strftime('%Y-1-1'),
                     'date_to': time.strftime('%Y-12-31'),
                 })
@@ -170,16 +170,15 @@ class TestHolidaysOvertime(TransactionCase):
             self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
             self.assertAlmostEqual(self.employee.total_overtime, 8, 'Should have 8 hours of overtime')
 
-            allocation = self.env['hr.leave.allocation'].create({
+            self.env['hr.leave.allocation'].sudo().create({
                 'name': 'test allocation',
                 'holiday_status_id': self.leave_type_employee_allocation.id,
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
-                'state': 'draft',
+                'state': 'confirm',
                 'date_from': time.strftime('%Y-1-1'),
                 'date_to': time.strftime('%Y-12-31'),
             })
-            allocation.action_confirm()
             self.assertEqual(self.employee.total_overtime, 0)
 
             leave_type = self.env['hr.leave.type'].sudo().create({
@@ -192,16 +191,15 @@ class TestHolidaysOvertime(TransactionCase):
             })
 
             # User can request another allocation even without overtime
-            allocation2 = self.env['hr.leave.allocation'].create({
+            self.env['hr.leave.allocation'].create({
                 'name': 'test allocation',
                 'holiday_status_id': leave_type.id,
                 'employee_id': self.employee.id,
                 'number_of_days': 1,
-                'state': 'draft',
+                'state': 'confirm',
                 'date_from': time.strftime('%Y-1-1'),
                 'date_to': time.strftime('%Y-12-31'),
             })
-            allocation2.action_confirm()
 
     def test_allocation_check_overtime_write(self):
         self.new_attendance(check_in=datetime(2021, 1, 2, 8), check_out=datetime(2021, 1, 2, 16))
@@ -213,7 +211,7 @@ class TestHolidaysOvertime(TransactionCase):
             'holiday_status_id': self.leave_type_employee_allocation.id,
             'employee_id': self.employee.id,
             'number_of_days': 1,
-            'state': 'draft',
+            'state': 'confirm',
             'date_from': time.strftime('%Y-1-1'),
             'date_to': time.strftime('%Y-12-31'),
         })

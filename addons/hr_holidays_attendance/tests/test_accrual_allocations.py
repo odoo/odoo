@@ -47,7 +47,6 @@ class TestAccrualAllocationsAttendance(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')

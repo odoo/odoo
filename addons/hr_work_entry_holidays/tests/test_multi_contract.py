@@ -229,7 +229,7 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
             'leave_validation_type': 'hr',
             'request_unit': 'day',
         })
-        self.env['hr.leave.allocation'].create({
+        allocation = self.env['hr.leave.allocation'].create({
             'name': 'Allocation',
             'employee_id': employee.id,
             'holiday_status_id': leave_type.id,
@@ -237,19 +237,20 @@ class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
             'state': 'confirm',
             'date_from': datetime.strptime('2023-01-01', '%Y-%m-%d').date(),
             'date_to': datetime.strptime('2023-12-31', '%Y-%m-%d').date(),
-        }).action_validate()
+        })
+        allocation.action_validate()
         leave_during_full_time, leave_during_partial_time = self.env['hr.leave'].create([
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'request_date_from': '2023-1-3', # Tuesday
-                'request_date_to': '2023-1-5', # Thursday
+                'request_date_from': '2023-1-3',  # Tuesday
+                'request_date_to': '2023-1-5',  # Thursday
             },
             {
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'request_date_from': '2023-12-5', # Tuesday
-                'request_date_to': '2023-12-7', # Thursday
+                'request_date_from': '2023-12-5',  # Tuesday
+                'request_date_to': '2023-12-7',  # Thursday
             },
         ])
         self.assertEqual(leave_during_full_time.number_of_days_display, 3)

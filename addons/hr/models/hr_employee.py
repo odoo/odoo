@@ -507,6 +507,10 @@ class HrEmployeePrivate(models.Model):
         # Returns a dict {employee_id: tz}
         return {emp.id: emp._get_tz() for emp in self}
 
+    def _get_calendar_attendances(self, date_from, date_to):
+        self.ensure_one()
+        return self.resource_calendar_id.get_work_duration_data(date_from, date_to)
+
     # ---------------------------------------------------------
     # Business Methods
     # ---------------------------------------------------------

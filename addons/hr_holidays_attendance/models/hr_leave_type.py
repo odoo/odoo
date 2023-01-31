@@ -33,22 +33,23 @@ class HRLeaveType(models.Model):
             }
         super(HRLeaveType, self - overtime_leaves)._compute_display_name()
 
-    def get_employees_days(self, employee_ids, date=None):
-        res = super().get_employees_days(employee_ids, date)
-        deductible_time_off_type_ids = self.env['hr.leave.type'].search([
+    def get_allocation_data(self, employees, date=None):
+        res = super().get_allocation_data(employees, date)
+        deductible_time_off_types = self.env['hr.leave.type'].search([
             ('overtime_deductible', '=', True),
-            ('requires_allocation', '=', 'no')]).ids
-        for employee_id, allocations in res.items():
-            for allocation_id in allocations:
-                if allocation_id in deductible_time_off_type_ids:
-                    res[employee_id][allocation_id]['virtual_remaining_leaves'] = self.env['hr.employee'].sudo().browse(employee_id).total_overtime
-                    res[employee_id][allocation_id]['overtime_deductible'] = True
+            ('requires_allocation', '=', 'no')])
+        leave_type_names = deductible_time_off_types.mapped('name')
+        for employee in res:
+            for leave_data in res[employee]:
+                if leave_data[0] in leave_type_names:
+                    leave_data[1]['virtual_remaining_leaves'] = employee.sudo().total_overtime
+                    leave_data[1]['overtime_deductible'] = True
                 else:
-                    res[employee_id][allocation_id]['overtime_deductible'] = False
+                    leave_data[1]['overtime_deductible'] = False
         return res
 
-    def _get_days_request(self):
-        res = super()._get_days_request()
+    def _get_days_request(self, date=None):
+        res = super()._get_days_request(date)
         res[1]['overtime_deductible'] = self.overtime_deductible
         return res
 
