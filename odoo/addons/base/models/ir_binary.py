@@ -48,6 +48,9 @@ class IrBinary(models.AbstractModel):
 
         if record._name == 'ir.attachment':
             record = record.validate_access(access_token)
+        else:
+            record.check_access_rights('read')
+            record.check_access_rule('read')
 
         return record
 
@@ -66,6 +69,7 @@ class IrBinary(models.AbstractModel):
         if record._name == 'ir.attachment' and field_name in ('raw', 'datas', 'db_datas'):
             return Stream.from_attachment(record)
 
+        record.check_field_access_rights('read', [field_name])
         field_def = record._fields[field_name]
 
         # fields.Binary(attachment=False) or compute/related
