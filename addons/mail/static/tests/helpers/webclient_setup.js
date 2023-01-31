@@ -36,6 +36,7 @@ import { DiscussClientAction } from "@mail/new/discuss/discuss_client_action";
 import { personaService } from "@mail/new/core/persona_service";
 import { attachmentService } from "@mail/new/attachments/attachment_service";
 import { notificationPermissionService } from "@mail/new/core/notification_permission_service";
+import { session } from "@web/session";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -191,7 +192,7 @@ async function setupMessagingServiceRegistries({
             createXhr: getCreateXHR(),
         });
     }
-
+    patchWithCleanup(session, { show_effect: true });
     Object.entries(services).forEach(([serviceName, service]) => {
         serviceRegistry.add(serviceName, service);
     });

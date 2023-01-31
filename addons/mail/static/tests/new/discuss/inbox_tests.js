@@ -9,7 +9,12 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { getFixture, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import {
+    getFixture,
+    patchWithCleanup,
+    triggerHotkey,
+    mockTimeout,
+} from "@web/../tests/helpers/utils";
 
 let target;
 
@@ -609,4 +614,58 @@ QUnit.test("error notifications should not be shown in Inbox", async function (a
     assert.containsOnce(target, ".o-mail-message");
     assert.containsOnce(target, ".o-mail-msg-header:contains(on Demo User)");
     assert.containsNone(target, ".o-mail-message-notification");
+});
+
+QUnit.test("emptying inbox displays rainbow man in inbox", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const messageId1 = pyEnv["mail.message"].create([
+        {
+            body: "not empty",
+            model: "mail.channel",
+            needaction: true,
+            res_id: channelId,
+        },
+    ]);
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId1,
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Mark all read)");
+    assert.containsOnce(target, ".o_reward_rainbow");
+});
+
+QUnit.test("emptying inbox doesn't display rainbow man in another thread", async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const partnerId = pyEnv["res.partner"].create({});
+    const messageId = pyEnv["mail.message"].create({
+        body: "not empty",
+        model: "res.partner",
+        needaction: true,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+        res_id: partnerId,
+    });
+    pyEnv["mail.notification"].create([
+        {
+            mail_message_id: messageId,
+            notification_type: "inbox",
+            res_partner_id: pyEnv.currentPartnerId,
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.containsOnce(target, "button:contains(Inbox) .badge:contains(1)");
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/mark_as_read", {
+        message_ids: [messageId],
+        needaction_inbox_counter: 0,
+    });
+    await afterNextRender(() => mockTimeout().execRegisteredTimeouts);
+    assert.containsNone(target, "button:contains(Inbox) .badge");
+    assert.containsNone(target, ".o_reward_rainbow");
 });
