@@ -30,6 +30,10 @@
             <field name="parent_id" ref="product_category_all"/>
             <field name="name">Consumable</field>
         </record>
+        <record id="product_category_construction" model="product.category">
+            <field name="parent_id" ref="product_category_all"/>
+            <field name="name">Home Construction</field>
+        </record>
 
         <!-- Expensable products -->
         <record id="expense_product" model="product.product">
