@@ -188,9 +188,6 @@ export class ThreadService {
     async fetchNewMessages(thread) {
         const min = thread.mostRecentNonTransientMessage?.id;
         const fetchedMsgs = await this.fetchMessages(thread, { min });
-        if (fetchedMsgs.length > 0) {
-            this.markAsRead(thread);
-        }
         Object.assign(thread, {
             loadMore:
                 min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
