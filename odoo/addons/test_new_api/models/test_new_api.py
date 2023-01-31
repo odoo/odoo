@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+_logger = logging.getLogger('precompute_setter')
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
@@ -1554,8 +1555,6 @@ class PrecomputeCombo(models.Model):
     _name = 'test_new_api.precompute.combo'
     _description = 'yet another model with precomputed fields'
 
-    _logger = logging.getLogger('precompute_setter')
-
     name = fields.Char()
     reader = fields.Char(compute='_compute_reader', precompute=True, store=True)
     editer = fields.Char(compute='_compute_editer', precompute=True, store=True, readonly=False)
@@ -1577,7 +1576,7 @@ class PrecomputeCombo(models.Model):
             record.setter = record.name
 
     def _inverse_setter(self):
-        self._logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
+        _logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
 
 
 class PrecomputeEditable(models.Model):
