@@ -83,7 +83,13 @@ class SaleOrderLine(models.Model):
         domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_template_id = fields.Many2one(
         string="Product Template",
-        related='product_id.product_tmpl_id',
+        comodel_name='product.template',
+        compute='_compute_product_template_id',
+        readonly=False,
+        search='_search_product_template_id',
+        # previously related='product_id.product_tmpl_id'
+        # not anymore since the field must be considered editable for product configurator logic
+        # without modifying the related product_id when updated.
         domain=[('sale_ok', '=', True)])
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
@@ -258,6 +264,14 @@ class SaleOrderLine(models.Model):
         compute='_compute_product_uom_readonly')
 
     #=== COMPUTE METHODS ===#
+
+    @api.depends('product_id')
+    def _compute_product_template_id(self):
+        for line in self:
+            line.product_template_id = line.product_id.product_tmpl_id
+
+    def _search_product_template_id(self, operator, value):
+        return [('product_id.product_tmpl_id', operator, value)]
 
     @api.depends('product_id')
     def _compute_custom_attribute_values(self):

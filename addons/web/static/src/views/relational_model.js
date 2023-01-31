@@ -357,7 +357,7 @@ class DataPoint {
                 return value ? deserializeDateTime(value) : false;
             }
             case "html": {
-                return markup(value);
+                return markup(value || "");
             }
             case "selection": {
                 if (value === false) {

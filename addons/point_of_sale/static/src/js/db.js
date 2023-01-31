@@ -329,7 +329,7 @@ var PosDB = core.Class.extend({
 
             this.partner_search_strings[chunkId] = utils.unaccent(searchString);
         }
-        return Object.keys(updated).lentgh;
+        return Object.keys(updated).length;
     },
     get_partner_write_date: function(){
         return this.partner_write_date || "1970-01-01 00:00:00";
