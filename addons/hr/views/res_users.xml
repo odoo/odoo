@@ -234,13 +234,6 @@
             <field name="view_id" ref="hr.res_users_view_form_profile"/>
         </record>
 
-        <record id="hr_employee_action_from_user" model="ir.actions.act_window">
-            <field name="name">Employees</field>
-            <field name="res_model">hr.employee</field>
-            <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[('user_id', '=', active_id)]</field>
-        </record>
-
         <record id="res_users_view_form" model="ir.ui.view">
             <field name="name">res.users.form.inherit</field>
             <field name="model">res.users</field>
@@ -257,13 +250,13 @@
                             <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(hr_employee_action_from_user)d"
+                    <button name="action_open_employees"
                         class="oe_stat_button"
                         icon="fa-users"
                         attrs="{'invisible': [('employee_count', '=', 0)]}"
                         context="{'active_test': False}"
-                        type="action">
-                        <field name="employee_count" widget="statinfo" string="Employee(s)"/>
+                        type="object">
+                        <field name="employee_count" widget="statinfo" string="Employee"/>
                     </button>
                 </xpath>
             </field>
