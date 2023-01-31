@@ -209,6 +209,7 @@ export class FileSelector extends Component {
                     offset,
                 }
             );
+            attachments.forEach(attachment => attachment.mediaType = 'attachment');
         } catch (e) {
             // Reading attachments as a portal user is not permitted and will raise
             // an access error so we catch the error silently and don't return any
