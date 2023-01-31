@@ -134,3 +134,41 @@ PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
 registry.category("web_tour.tours").add('PaymentScreenRoundingDown', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.00');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Chrome.do.clickTicketButton();
+TicketScreen.do.clickNewTicket();
+
+ProductScreen.exec.addOrderline('Product Test 1.25', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.5');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+Chrome.do.clickTicketButton();
+TicketScreen.do.clickNewTicket();
+
+ProductScreen.exec.addOrderline('Product Test 1.4', '1');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('1.5');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui', steps: getSteps() });
