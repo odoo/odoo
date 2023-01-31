@@ -238,7 +238,6 @@ class TestUi(odoo.tests.HttpCase):
             'name': 'EditorExtension',
             'bundle': 'website.assets_wysiwyg',
             'path': custom_url,
-            'website_id': new_website.id,
         })
         url_params = url_encode({'path': '/@/'})
         self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login='admin')

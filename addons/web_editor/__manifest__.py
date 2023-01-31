@@ -22,7 +22,7 @@ Odoo Web Editor widget.
         # MAIN BUNDLES
         #----------------------------------------------------------------------
 
-        'web_editor.assets_wysiwyg': [
+        'web_editor.assets_wysiwyg_lib': [
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
             'web_editor/static/lib/cropperjs/cropper.js',
@@ -32,14 +32,7 @@ Odoo Web Editor widget.
             'web_editor/static/lib/webgl-image-filter/webgl-image-filter.js',
             'web_editor/static/lib/DOMPurify.js',
 
-            # odoo-editor
-            'web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/utils/constants.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/utils/serialize.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/tablepicker/TablePicker.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/powerbox/patienceDiff.js',
-            'web_editor/static/src/js/editor/odoo-editor/src/powerbox/Powerbox.js',
+            # odoo-editor commands
             'web_editor/static/src/js/editor/odoo-editor/src/commands/align.js',
             'web_editor/static/src/js/editor/odoo-editor/src/commands/commands.js',
             'web_editor/static/src/js/editor/odoo-editor/src/commands/deleteBackward.js',
@@ -49,6 +42,17 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/editor/odoo-editor/src/commands/shiftTab.js',
             'web_editor/static/src/js/editor/odoo-editor/src/commands/tab.js',
             'web_editor/static/src/js/editor/odoo-editor/src/commands/toggleList.js',
+        ],
+        'web_editor.assets_wysiwyg': [
+            # odoo-editor
+            'web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/constants.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/sanitize.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/utils/serialize.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/tablepicker/TablePicker.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/powerbox/patienceDiff.js',
+            'web_editor/static/src/js/editor/odoo-editor/src/powerbox/Powerbox.js',
+            'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
 
             # utils
             'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
