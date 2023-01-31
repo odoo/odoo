@@ -116,6 +116,9 @@ export class Rtc {
             this.toggleVideo("camera");
             void proxyBlur.useBlur;
         }).useBlur;
+        this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
+        this.ringingThreads.length;
+        this.store.ringingThreads = this.ringingThreads;
         const proxyVoiceActivation = reactive(this.userSettings, async () => {
             await this.linkVoiceActivation();
             void proxyVoiceActivation.voiceActivationThreshold;
@@ -219,10 +222,18 @@ export class Rtc {
      * should only be called if the channel of the notification is the channel of this call
      */
     endCall(channel = this.state.channel) {
-        channel.rtcInvitingSession = undefined;
+        channel.rtcInvitingSessionId = undefined;
         if (this.state.channel === channel) {
             this.clear();
             this.soundEffects.play("channel-leave");
+        }
+    }
+
+    onRingingThreadsChange() {
+        if (this.ringingThreads.length > 0) {
+            this.soundEffects.play("incoming-call", { loop: true });
+        } else {
+            this.soundEffects.stop("incoming-call");
         }
     }
 
@@ -663,7 +674,7 @@ export class Rtc {
             3000,
             true
         );
-        this.state.channel.rtcInvitingSession = undefined;
+        this.state.channel.rtcInvitingSessionId = undefined;
         // discuss refactor: todo call channel.update below when availalbe and do the formatting in update
         this.call();
         this.soundEffects.play("channel-join");

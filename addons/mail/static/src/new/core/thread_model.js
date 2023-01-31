@@ -35,6 +35,7 @@ export class Thread {
     channelMembers = [];
     /** @type {RtcSession{}} */
     rtcSessions = {};
+    invitingRtcSessionId;
     /** @type {import("@mail/new/core/persona_model").Persona[]} */
     invitedPartners = [];
     /** @type {integer} */
@@ -295,6 +296,10 @@ export class Thread {
 
     get hasTypingMembers() {
         return this.typingMembers.length !== 0;
+    }
+
+    get rtcInvitingSession() {
+        return this._store.rtcSessions[this.invitingRtcSessionId];
     }
 
     get typingMembers() {

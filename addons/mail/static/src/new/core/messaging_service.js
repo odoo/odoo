@@ -374,6 +374,13 @@ export class Messaging {
                     break;
                 case "mail.record/insert":
                     {
+                        if (notif.payload.Thread) {
+                            this.thread.insert({
+                                id: notif.payload.Thread.id,
+                                model: notif.payload.Thread.model,
+                                serverData: notif.payload.Thread,
+                            });
+                        }
                         if (notif.payload.RtcSession) {
                             this.rtc.insertSession(notif.payload.RtcSession);
                         }

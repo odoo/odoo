@@ -419,7 +419,22 @@ export class ThreadService {
             if ("defaultDisplayMode" in serverData) {
                 thread.defaultDisplayMode = serverData.defaultDisplayMode;
             }
-            if (thread.type === "chat") {
+            if ("rtc_inviting_session" in serverData) {
+                thread.invitingRtcSessionId = serverData.rtc_inviting_session.id;
+                this.store.ringingThreads.push(thread.localId);
+            }
+            if ("rtcInvitingSession" in serverData) {
+                if (Array.isArray(serverData.rtcInvitingSession)) {
+                    if (serverData.rtcInvitingSession[0][0] === "unlink") {
+                        thread.invitingRtcSessionId = undefined;
+                        removeFromArray(this.store.ringingThreads, thread.localId);
+                    }
+                    return;
+                }
+                thread.invitingRtcSessionId = serverData.rtcInvitingSession.id;
+                this.store.ringingThreads.push(thread.localId);
+            }
+            if ("channel" in serverData && thread.type === "chat") {
                 for (const elem of serverData.channel.channelMembers[0][1]) {
                     this.persona.insert({ ...elem.persona.partner, type: "partner" });
                     if (
