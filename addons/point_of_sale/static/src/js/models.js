@@ -3084,8 +3084,8 @@ class Order extends PosModel {
                 var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
-                if(rounding_method !== "HALF-UP" && (this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0)) {
-                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
+                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
+                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : rounding_method;
                 }
 
                 remaining *= sign;
