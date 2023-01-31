@@ -64,11 +64,13 @@ export class Composer extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
-        this.attachmentUploader = useAttachmentUploader(
-            this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread,
-            this.props.composer.message,
-            true
-        );
+        if (this.allowUpload) {
+            this.attachmentUploader = useAttachmentUploader(
+                this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread,
+                this.props.composer.message,
+                true
+            );
+        }
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
@@ -98,7 +100,7 @@ export class Composer extends Component {
                 );
             },
         });
-        if (this.props.dropzoneRef) {
+        if (this.props.dropzoneRef && this.allowUpload) {
             useDropzone(this.props.dropzoneRef, (ev) => {
                 if (isDragSourceExternalFile(ev.dataTransfer)) {
                     for (const file of ev.dataTransfer.files) {
@@ -162,7 +164,7 @@ export class Composer extends Component {
             }
             this.props.messageToReplyTo?.cancel();
         });
-        onWillDestroy(() => this.attachmentUploader.unlinkAll());
+        onWillDestroy(() => this.attachmentUploader?.unlinkAll());
     }
 
     onInput(ev) {
@@ -197,15 +199,19 @@ export class Composer extends Component {
         return this.props.composer.thread ?? null;
     }
 
+    get allowUpload() {
+        return true;
+    }
+
     get message() {
         return this.props.composer.message ?? null;
     }
 
     get isSendButtonDisabled() {
+        const attachments = this.attachmentUploader?.attachments ?? [];
         return (
-            (!this.props.composer.textInputContent &&
-                this.attachmentUploader.attachments.length === 0) ||
-            this.attachmentUploader.attachments.some(({ uploading }) => Boolean(uploading))
+            (!this.props.composer.textInputContent && attachments.length === 0) ||
+            attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
 
@@ -213,6 +219,9 @@ export class Composer extends Component {
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
     onPaste(ev) {
+        if (!this.allowUpload) {
+            return;
+        }
         if (!ev.clipboardData?.items) {
             return;
         }
@@ -263,7 +272,7 @@ export class Composer extends Component {
     }
 
     async onClickFullComposer(ev) {
-        const attachmentIds = this.attachmentUploader.attachments.map(
+        const attachmentIds = this.attachmentUploader?.attachments.map(
             (attachment) => attachment.id
         );
         const context = {
@@ -298,7 +307,7 @@ export class Composer extends Component {
     }
 
     clear() {
-        this.attachmentUploader.clear();
+        this.attachmentUploader?.clear();
         this.threadService.clearComposer(this.props.composer);
     }
 
@@ -313,7 +322,7 @@ export class Composer extends Component {
 
     async processMessage(cb) {
         const el = this.ref.el;
-        const attachments = this.attachmentUploader.attachments;
+        const attachments = this.attachmentUploader?.attachments ?? [];
         if (
             el.value.trim() ||
             (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
@@ -328,7 +337,7 @@ export class Composer extends Component {
                 this.props.onPostCallback();
             }
             this.state.active = true;
-            this.attachmentUploader.clear();
+            this.attachmentUploader?.clear();
             this.props.composer.textInputContent = "";
             el.focus();
         }
@@ -339,7 +348,7 @@ export class Composer extends Component {
             const thread =
                 this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
             const postData = {
-                attachments: this.attachmentUploader.attachments,
+                attachments: this.attachmentUploader?.attachments ?? [],
                 isNote:
                     this.props.composer.type === "note" ||
                     this.props.messageToReplyTo?.message?.isNote,
@@ -384,7 +393,7 @@ export class Composer extends Component {
                 this.messageService.update(
                     this.props.composer.message,
                     value,
-                    this.attachmentUploader.attachments
+                    this.attachmentUploader?.attachments
                 )
             );
         } else {
