@@ -46,6 +46,11 @@ class Users(models.Model):
         # when it's not `mail.group_mail_notification_type_inbox` or `share` that are being changed.
         inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
 
+        # During module installation, the field is initialized before the group is created
+        if not inbox_group_id:
+            self.filtered_domain([('notification_type', '=', 'inbox')]).notification_type = 'email'
+            return
+
         self.filtered_domain([
             ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
         ]).notification_type = 'inbox'
