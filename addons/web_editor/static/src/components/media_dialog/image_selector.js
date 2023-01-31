@@ -31,6 +31,11 @@ export class AutoResizeImage extends Attachment {
         }
         if (this.props.onLoaded) {
             await this.props.onLoaded(this.image.el);
+            if (!this.image.el) {
+                // If replaced by colored version, aspect ratio will be
+                // computed on it instead.
+                return;
+            }
         }
         const aspectRatio = this.image.el.offsetWidth / this.image.el.offsetHeight;
         const width = aspectRatio * this.props.minRowHeight;
@@ -170,6 +175,7 @@ export class ImageSelector extends FileSelector {
             );
             this.state.isFetchingLibrary = false;
             const media = (response.media || []).slice(0, this.NUMBER_OF_MEDIA_TO_DISPLAY);
+            media.forEach(record => record.mediaType = 'libraryMedia');
             return { media, results: response.results };
         } catch {
             // Either API endpoint doesn't exist or is misconfigured.
@@ -276,8 +282,12 @@ export class ImageSelector extends FileSelector {
 
     async onImageLoaded(imgEl, attachment) {
         this.debouncedScroll();
-
-        if (attachment.mediaType === 'libraryMedia') {
+        if (attachment.mediaType === 'libraryMedia' && !imgEl.src.startsWith('blob')) {
+            // This call applies the theme's color palette to the
+            // loaded illustration. Upon replacement of the image,
+            // `onImageLoad` is called again, but the replacement image
+            // has an URL that starts with 'blob'. The condition above
+            // uses this to avoid an infinite loop.
             await this.onLibraryImageLoaded(imgEl, attachment);
         }
     }
@@ -295,14 +305,20 @@ export class ImageSelector extends FileSelector {
         try {
             const response = await fetch(mediaUrl);
             if (response.headers.get('content-type') === 'image/svg+xml') {
-                const svg = await response.text();
+                let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
-                svg.replace(combinedColorsRegex, match => {
+                svg = svg.replace(combinedColorsRegex, match => {
                     const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
                     const colorKey = 'c' + colorId
                     dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                    return dynamicColors[colorKey];
                 });
+                const fileName = mediaUrl.split('/').pop();
+                const file = new File([svg], fileName, {
+                    type: "image/svg+xml",
+                });
+                imgEl.src = URL.createObjectURL(file);
                 if (Object.keys(dynamicColors).length) {
                     media.isDynamicSVG = true;
                     media.dynamicColors = dynamicColors;
