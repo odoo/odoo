@@ -76,6 +76,9 @@ options.registry.SnippetPopup = options.Class.extend({
                 clearTimeout(timeoutID);
                 resolve();
             });
+            // The following line is in charge of hiding .s_popup at the same
+            // time the modal is closed when the page is saved in edit mode.
+            this.$target[0].closest('.s_popup').classList.add('d-none');
             this.$target.modal('hide');
         });
     },
