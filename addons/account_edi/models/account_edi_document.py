@@ -277,6 +277,10 @@ class AccountEdiDocument(models.Model):
         }
         """
         self.ensure_one()
-        if not self.attachment_id:
+        attachment_sudo = self.sudo().attachment_id
+        if not attachment_sudo:
             return {}
-        return {'attachment_ids': self.attachment_id.ids}
+        if not (attachment_sudo.res_model and attachment_sudo.res_id):
+            # do not return system attachment not linked to a record
+            return {}
+        return {'attachment_ids': attachment_sudo.ids}
