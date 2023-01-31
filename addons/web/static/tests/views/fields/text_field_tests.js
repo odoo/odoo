@@ -436,6 +436,60 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("text field translatable on notebook page", async function (assert) {
+        serverData.models.partner.fields.txt.translate = true;
+        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+            force: true,
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <notebook>
+                            <page string="First Page">
+                                <field name="txt"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+            resId: 1,
+            mockRPC(route, { args, method }) {
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([
+                        ["en_US", "English"],
+                        ["fr_BE", "French (Belgium)"],
+                    ]);
+                }
+                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                    return Promise.resolve([
+                        [
+                            { lang: "en_US", source: "yop", value: "yop" },
+                            { lang: "fr_BE", source: "yop", value: "valeur français" },
+                        ],
+                        { translation_type: "text", translation_show_source: false },
+                    ]);
+                }
+            },
+        });
+
+        assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[0], "active");
+
+        assert.hasClass(target.querySelector("[name=txt] textarea"), "o_field_translate");
+
+        assert.strictEqual(
+            target.querySelector("[name=txt] textarea").nextElementSibling.textContent,
+            "EN",
+            "The input should be preceded by a translate button"
+        );
+        await click(target, ".o_field_text .btn.o_field_translate");
+
+        assert.containsOnce(target, ".modal", "there should be a translation modal");
+    });
+
     QUnit.test(
         "go to next line (and not the next row) when pressing enter",
         async function (assert) {
