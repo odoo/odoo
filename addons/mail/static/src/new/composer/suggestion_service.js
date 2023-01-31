@@ -107,7 +107,7 @@ class SuggestionService {
     }
 
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
-        if (!["chat", "channel", "group"].includes(thread.type)) {
+        if (!thread.isChannel) {
             // channel commands are channel specific
             return;
         }

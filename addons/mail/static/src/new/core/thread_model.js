@@ -127,6 +127,10 @@ export class Thread {
         return attachments;
     }
 
+    get isChannel() {
+        return ["chat", "channel", "group"].includes(this.type);
+    }
+
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
