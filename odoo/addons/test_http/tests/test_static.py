@@ -264,10 +264,20 @@ class TestHttpStatic(TestHttpStaticCommon):
             assert_content=self.gizeh_data[100:200]
         )
 
-    def test_static16_public_user_image(self):
+    def test_static16_public_access_rights(self):
         public_user = self.env.ref('base.public_user')
-        res = self.url_open(f'/web/image/res.users/{public_user.id}/image_128?download=1')
-        self.assertEqual(res.status_code, 404)
+
+        with self.subTest('model access rights'):
+            res = self.url_open(f'/web/content/res.users/{public_user.id}/image_128')
+            self.assertEqual(res.status_code, 404)
+
+        with self.subTest('attachment + field access rights'):
+            res = self.url_open('/web/content/test_http.pegasus?field=picture')
+            self.assertEqual(res.status_code, 404)
+
+        with self.subTest('related attachment + field access rights'):
+            res = self.url_open('/web/content/test_http.earth?field=galaxy_picture')
+            self.assertEqual(res.status_code, 404)
 
 
 @tagged('post_install', '-at_install')
