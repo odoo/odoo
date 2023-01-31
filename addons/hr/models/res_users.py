@@ -311,3 +311,22 @@ class User(models.Model):
             company_id=self.env.company.id,
             **self.env['hr.employee']._sync_user(self)
         ))
+
+    def action_open_employees(self):
+        self.ensure_one()
+        employees = self.employee_ids
+        if len(employees) > 1:
+            return {
+                'name': _('Related Employees'),
+                'type': 'ir.actions.act_window',
+                'res_model': 'hr.employee',
+                'view_mode': 'kanban,tree,form',
+                'domain': [('id', 'in', employees.ids)],
+            }
+        return {
+            'name': _('Employee'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'hr.employee',
+            'res_id': employees.id,
+            'view_mode': 'form',
+        }
