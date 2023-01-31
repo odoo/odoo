@@ -181,21 +181,33 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("building a domain with a datetime", async (assert) => {
         assert.expect(4);
 
+        class Parent extends Component {
+            setup() {
+                this.value = `[("datetime", "=", "2017-03-27 15:42:00")]`;
+            }
+            onUpdate(newValue) {
+                assert.strictEqual(
+                    newValue,
+                    `[("datetime", "=", "2017-02-26 15:42:00")]`,
+                    "datepicker value should have changed"
+                );
+                this.value = newValue;
+                this.render();
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector
+                resModel="'partner'"
+                value="value"
+                readonly="false"
+                isDebugMode="true"
+                update="(newValue) => this.onUpdate(newValue)"
+            />
+        `;
+
         // Create the domain selector and its mock environment
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: `[("datetime", "=", "2017-03-27 15:42:00")]`,
-                readonly: false,
-                update: (newValue) => {
-                    assert.strictEqual(
-                        newValue,
-                        `[("datetime", "=", "2017-02-26 15:42:00")]`,
-                        "datepicker value should have changed"
-                    );
-                },
-            },
-        });
+        await mountComponent(Parent);
 
         // Check that there is a datepicker to choose the date
         assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
@@ -241,8 +253,9 @@ QUnit.module("Components", (hooks) => {
             document.body.querySelector(`.bootstrap-datetimepicker-widget [data-action=close]`)
         );
 
-        // The input field should display an empty value. NB: this could be improved, but OK for now
-        assert.equal(target.querySelector(".o_datepicker_input").value, "");
+        // The input field should continue displaying 'Invalid DateTime'.
+        // The value is still invalid.
+        assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
         assert.verifySteps([]);
     });
 
