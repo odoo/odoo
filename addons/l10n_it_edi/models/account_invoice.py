@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for invoice in self:
-            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
+            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa).sudo()
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
