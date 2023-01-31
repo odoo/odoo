@@ -11,7 +11,7 @@ from datetime import date, datetime
 from lxml import etree
 
 from odoo import api, fields, models, _
-from odoo.tools import float_repr
+from odoo.tools import float_repr, float_compare
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.tests.common import Form
@@ -37,7 +37,7 @@ class AccountMove(models.Model):
         ('delivered_expired', 'This invoice is delivered and expired (expiry of the maximum term for communication of acceptance/refusal)'),
         ('failed_delivery', 'Delivery impossible, ES certify that it has received the invoice and that the file \
                         could not be delivered to the addressee') # ok we must do nothing
-    ], default='to_send', copy=False)
+    ], default='to_send', copy=False, string="FatturaPA Send State")
 
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
@@ -87,6 +87,73 @@ class AccountMove(models.Model):
         """
         return len(self.commercial_partner_id.l10n_it_pa_index or '') == 6
 
+    def _l10n_it_edi_prepare_fatturapa_line_details(self, reverse_charge_refund=False, is_downpayment=False, convert_to_euros=True):
+        """ Returns a list of dictionaries passed to the template for the invoice lines (DettaglioLinee)
+        """
+        invoice_lines = []
+        lines = self.invoice_line_ids.filtered(lambda l: not l.display_type)
+
+        for num, line in enumerate(lines):
+            sign = -1 if line.move_id.is_inbound() else 1
+            price_subtotal = (line.balance * sign) if convert_to_euros else line.price_subtotal
+            # The price_subtotal should be inverted when the line is a reverse charge refund.
+            if reverse_charge_refund:
+                price_subtotal = -price_subtotal
+
+            # Unit price
+            price_unit = 0
+            if line.quantity and line.discount != 100.0:
+                price_unit = price_subtotal / ((1 - (line.discount or 0.0) / 100.0) * abs(line.quantity))
+            else:
+                price_unit = line.price_unit
+
+            description = line.name
+            if not is_downpayment:
+                if line.price_subtotal < 0:
+                    moves = line._get_downpayment_lines().move_id
+                    if moves:
+                        description += ', '.join([move.name for move in moves])
+
+            line_dict = {
+                'line': line,
+                'line_number': num + 1,
+                'description': description or 'NO NAME',
+                'unit_price': price_unit,
+                'subtotal_price': price_subtotal,
+            }
+            invoice_lines.append(line_dict)
+        return invoice_lines
+
+    def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
+        """ Returns an adapted dictionary passed to the template for the tax lines (DatiRiepilogo)
+        """
+        for _tax_name, tax_dict in tax_details['tax_details'].items():
+            # The assumption is that the company currency is EUR.
+            base_amount = tax_dict['base_amount']
+            base_amount_currency = tax_dict['base_amount_currency']
+            tax_amount = tax_dict['tax_amount']
+            tax_amount_currency = tax_dict['tax_amount_currency']
+            tax_rate = tax_dict['tax'].amount
+            expected_base_amount_currency = tax_amount_currency * 100 / tax_rate if tax_rate else False
+            expected_base_amount = tax_amount * 100 / tax_rate if tax_rate else False
+            # Constraints within the edi make local rounding on price included taxes a problem.
+            # To solve this there is a <Arrotondamento> or 'rounding' field, such that:
+            #   taxable base = sum(taxable base for each unit) + Arrotondamento
+            if tax_dict['tax'].price_include and tax_dict['tax'].amount_type == 'percent':
+                if expected_base_amount_currency and float_compare(base_amount_currency, expected_base_amount_currency, 2):
+                    tax_dict['rounding'] = base_amount_currency - (tax_amount_currency * 100 / tax_rate)
+                    tax_dict['base_amount_currency'] = base_amount_currency - tax_dict['rounding']
+                if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
+                    tax_dict['rounding_euros'] = base_amount - (tax_amount * 100 / tax_rate)
+                    tax_dict['base_amount'] = base_amount - tax_dict['rounding_euros']
+
+            if not reverse_charge_refund:
+                tax_dict['base_amount'] = abs(tax_dict['base_amount'])
+                tax_dict['base_amount_currency'] = abs(tax_dict['base_amount_currency'])
+                tax_dict['tax_amount'] = abs(tax_dict['tax_amount'])
+                tax_dict['tax_amount_currency'] = abs(tax_dict['tax_amount_currency'])
+        return tax_details
+
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
 
@@ -135,21 +202,24 @@ class AccountMove(models.Model):
                 return 'IT'
             return vat[:2].upper()
 
-        def in_eu(partner):
-            europe = self.env.ref('base.europe', raise_if_not_found=False)
-            country = partner.country_id
-            if not europe or not country or country in europe.country_ids:
-                return True
-            return False
+        def format_alphanumeric(text_to_convert):
+            return text_to_convert.encode('latin-1', 'replace').decode('latin-1') if text_to_convert else False
 
         formato_trasmissione = "FPA12" if self._is_commercial_partner_pa() else "FPR12"
 
-        if self.move_type == 'out_invoice':
-            document_type = 'TD01'
-        elif self.move_type == 'out_refund':
-            document_type = 'TD04'
-        else:
-            document_type = 'TD0X'
+        # Flags
+        in_eu = self.env['account.edi.format']._l10n_it_edi_partner_in_eu
+        is_self_invoice = self.env['account.edi.format']._l10n_it_edi_is_self_invoice(self)
+        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
+        if self.env['account.edi.format']._l10n_it_is_simplified_document_type(document_type):
+            formato_trasmissione = "FSM10"
+
+        document_type = self.env['account.edi.format']._l10n_it_get_document_type(self)
+        # Represent if the document is a reverse charge refund in a single variable
+        reverse_charge = document_type in ['TD17', 'TD18', 'TD19']
+        is_downpayment = document_type in ['TD02']
+        reverse_charge_refund = self.move_type == 'in_refund' and reverse_charge
+        convert_to_euros = self.currency_id.name != 'EUR'
 
         # b64encode returns a bytestring, the template tries to turn it to string,
         # but only gets the repr(pdf) --> "b'<base64_data>'"
@@ -164,24 +234,77 @@ class AccountMove(models.Model):
                 if tax.amount == 0.0:
                     tax_map[tax] = tax_map.get(tax, 0.0) + line.price_subtotal
 
+        tax_details = self._prepare_edi_tax_details(
+            filter_to_apply=lambda l: l['tax_repartition_line_id'].factor_percent >= 0
+        )
+
+        company = self.company_id
+        partner = self.commercial_partner_id
+        buyer = partner if not is_self_invoice else company
+        seller = company if not is_self_invoice else partner
+        codice_destinatario = (
+            (is_self_invoice and company.partner_id.l10n_it_pa_index)
+            or partner.l10n_it_pa_index
+            or (partner.country_id.code == 'IT' and '0000000')
+            or 'XXXXXXX')
+
+        # Self-invoices are technically -100%/+100% repartitioned
+        # but functionally need to be exported as 100%
+        document_total = self.amount_total
+        if is_self_invoice:
+            document_total += sum([abs(v['tax_amount_currency']) for k, v in tax_details['tax_details'].items()])
+            if reverse_charge_refund:
+                document_total = -abs(document_total)
+
+        # Reference line for finding the conversion rate used in the document
+        conversion_line = self.invoice_line_ids.sorted(lambda l: abs(l.balance), reverse=True)[0] if self.invoice_line_ids else None
+        conversion_rate = float_repr(
+            abs(conversion_line.balance / conversion_line.amount_currency), precision_digits=5,
+        ) if convert_to_euros and conversion_line else None
+
+        invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
+        tax_details = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
+
         # Create file content.
         template_values = {
             'record': self,
+            'company': company,
+            'sender': company,
+            'sender_partner': company.partner_id,
+            'partner': partner,
+            'buyer': buyer,
+            'buyer_partner': partner if not is_self_invoice else company.partner_id,
+            'buyer_is_company': is_self_invoice or partner.is_company,
+            'seller': seller,
+            'seller_partner': company.partner_id if not is_self_invoice else partner,
+            'currency': self.currency_id or self.company_currency_id if not convert_to_euros else self.env.ref('base.EUR'),
+            'document_total': document_total,
+            'representative': company.l10n_it_tax_representative_partner_id,
+            'codice_destinatario': codice_destinatario,
+            'regime_fiscale': company.l10n_it_tax_system if not is_self_invoice else 'RF18',
+            'is_self_invoice': is_self_invoice,
+            'partner_bank': self.partner_bank_id,
             'format_date': format_date,
             'format_monetary': format_monetary,
             'format_numbers': format_numbers,
             'format_numbers_two': format_numbers_two,
             'format_phone': format_phone,
+            'format_alphanumeric': format_alphanumeric,
             'discount_type': discount_type,
-            'get_vat_number': get_vat_number,
-            'get_vat_country': get_vat_country,
-            'in_eu': in_eu,
-            'abs': abs,
             'formato_trasmissione': formato_trasmissione,
             'document_type': document_type,
             'pdf': pdf,
             'pdf_name': pdf_name,
             'tax_map': tax_map,
+            'tax_details': tax_details,
+            'abs': abs,
+            'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
+            'get_vat_number': get_vat_number,
+            'get_vat_country': get_vat_country,
+            'in_eu': in_eu,
+            'rc_refund': reverse_charge_refund,
+            'invoice_lines': invoice_lines,
+            'conversion_rate': conversion_rate,
         }
         return template_values
 
@@ -191,7 +314,12 @@ class AccountMove(models.Model):
         :return: The XML content as str.
         '''
         template_values = self._prepare_fatturapa_export_values()
-        content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        if not self.env['account.edi.format']._l10n_it_is_simplified_document_type(template_values['document_type']):
+            content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
+        else:
+            content = self.env.ref('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export')._render(template_values)
+            self.message_post(body=_("A simplified invoice was created instead of an ordinary one. This is because the invoice \
+                                    is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."))
         return content
 
     def _post(self, soft=True):

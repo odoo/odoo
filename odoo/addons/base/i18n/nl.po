@@ -6,14 +6,15 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:42+0000\n"
+"POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -626,6 +627,17 @@ msgid ""
 msgstr ""
 "\n"
 "Rapportage grootboekrekeningen voor Nederland"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pk_reports
+msgid ""
+"\n"
+"        Accounting reports for Pakistan\n"
+"    "
+msgstr ""
+"\n"
+"        Boekhoudrapporten voor Pakistan\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_es_reports
@@ -1662,6 +1674,21 @@ msgstr ""
 "    Arabisch/Engels voor GCC\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock_extended
+msgid ""
+"\n"
+"    Bridge module to extend the delivery guide (Complemento XML Carta de Porte)\n"
+"    - exported goods (COMEX)\n"
+"    - extended address fields\n"
+"    "
+msgstr ""
+"\n"
+"    Bridge-module om de leveringsgids uit te breiden (Complemento XML Carta de Porte)\n"
+"- geëxporteerde goederen (COMEX)\n"
+"- uitgebreide adresvelden\n"
+"    "
+
+#. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
 msgid ""
 "\n"
@@ -1864,6 +1891,24 @@ msgstr ""
 "\n"
 "    Ondersteuning voor export/import van facturen in Factur-x-formaat (1.0.04).\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mx_edi_stock
+msgid ""
+"\n"
+"    The delivery guide (Complemento XML Carta de Porte) is needed as a proof\n"
+"    that you are sending goods between A and B.\n"
+"\n"
+"    It is only when a delivery order is validated that you can create the delivery\n"
+"    guide.\n"
+"    "
+msgstr ""
+"\n"
+"De leveringsgids (Complemento XML Carta de Porte) is nodig als bewijs\n"
+"dat u goederen verzendt tussen A en B.\n"
+"\n"
+"Pas wanneer een leveringsopdracht is gevalideerd, kunt u de levering maken\n"
+"gids."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -4987,6 +5032,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_gcc_pos
+msgid ""
+"\n"
+"GCC POS Localization\n"
+"=======================================================\n"
+"    "
+msgstr ""
+"\n"
+"GCC POS Localisatie\n"
+"=======================================================\n"
+"    "
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -5489,6 +5547,19 @@ msgid ""
 msgstr ""
 "\n"
 "Het maakt het mogelijk om producten van de verlanglijst te vergelijken\n"
+"    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_sa_pos
+msgid ""
+"\n"
+"K.S.A. POS Localization\n"
+"=======================================================\n"
+"    "
+msgstr ""
+"\n"
+"K.S.A. POS Lokalisatie\n"
+"=======================================================\n"
 "    "
 
 #. module: base
@@ -7215,7 +7286,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Toont je bedrijfsadres / relatie adres op Google Maps. Configureer een API sleutel in de website instellingen."
+"Toont je bedrijfsadres / relatie adres op Google Maps. Configureer een API key in de website instellingen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sign
@@ -7558,7 +7629,7 @@ msgstr ""
 "\n"
 "Boven een volledige maaltijd en leverancier beheer biedt deze module de mogelijkheid om waarschuwingen te tonen en bied snelle order selectie gebaseerd op de werknemer zijn voorkeuren.\n"
 "\n"
-"Als je je werknemer zijn tijd wilt bewaren en om te vermeiden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
+"Als je je werknemer zijn tijd wilt bewaren en om te vermijden dat ze altijd geld op zakken moeten hebben is deze module essentieel."
 
 #. module: base
 #: model:ir.module.module,description:base.module_base
@@ -9176,7 +9247,7 @@ msgstr ""
 "\n"
 "Deze module test de belangrijkste certificeringsstroom van Odoo.\n"
 "Het zal de e-learning-, enquête- en e-commerce-apps installeren en een complete\n"
-"certificeringsstroom maken inclusief aankoop, certificering, mislukking en succes.\n"
+"certificeringsstroom maken inclusief inkoop, certificering, mislukking en succes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_event_full
@@ -9308,7 +9379,7 @@ msgstr ""
 "\n"
 "Opmerking: logischerwijs voorkomt twee factoren wachtwoordgebaseerde RPC-toegang voor gebruikers\n"
 "waar het is ingeschakeld. Om RPC-scripts te kunnen uitvoeren, moet de gebruiker\n"
-"kunnen API-sleutels instellen om hun hoofdwachtwoord te vervangen."
+"kunnen API keys instellen om hun hoofdwachtwoord te vervangen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -9764,6 +9835,15 @@ msgstr ""
 "voor Hong Kong"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_pk
+msgid ""
+" This is the base module to manage chart of accounts and localization for "
+"the Pakistan "
+msgstr ""
+" Dit is de basismodule om rekeningschema's en lokalisatie voor Pakistan te "
+"beheren"
+
+#. module: base
 #: code:addons/model.py:0
 #, python-format
 msgid ""
@@ -9942,7 +10022,7 @@ msgstr "%y - Jaar zonder eeuw [00,99].\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
 msgid "&amp; Close"
-msgstr "&amp; Afsluiten"
+msgstr "&amp; Sluiten"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -10910,7 +10990,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_contact
 msgid "A user associated to the contact"
-msgstr "Een gebruiker behorende bij deze contactpersoon"
+msgstr "Een gebruiker behorende bij dit contactpersoon"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -10977,17 +11057,17 @@ msgstr "ABA overschrijving"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
-msgstr "API-sleutel: wizard voor het invoeren van beschrijvingen"
+msgstr "API Key: wizard voor het invoeren van beschrijvingen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__api_key_ids
 msgid "API Keys"
-msgstr "API Sleutels"
+msgstr "API Keys"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_apikeys_admin
 msgid "API Keys Listing"
-msgstr "API Sleutel lijst"
+msgstr "API Keys lijst"
 
 #. module: base
 #: code:addons/fields.py:0
@@ -11127,6 +11207,11 @@ msgstr "Rekeninghouder"
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_holder_name
 msgid "Account Holder Name"
 msgstr "Rekeninghouder naam"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_intrastat_expiry
+msgid "Account Invoice Expiry"
+msgstr "Vervaldatum factuur"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
@@ -11639,6 +11724,11 @@ msgstr ""
 "Addison Olson werkt sinds <b>10 jaar</b> in de IT-sector. Hij is bekend\n"
 "met name voor het verkopen van muizenvallen. Met die truc sneed hij\n"
 "IT-budget met bijna de helft in de afgelopen 2 jaar."
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_report_measures
+msgid "Additional Measures in Reporting"
+msgstr "Aanvullende eenheden in rapportage"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13146,6 +13236,11 @@ msgstr "Wit-Rusland"
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
 msgid "Belgian Intrastat Declaration"
 msgstr "Belgische Intrastatverklaring"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_report_measures
+msgid "Belgian Payroll - Addition Measures in Reporting"
+msgstr "Belgische salarisadministratie - Extra eenheden bij de rapportage"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_holiday_pay_recovery
@@ -14934,7 +15029,7 @@ msgstr "Landengroep"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__country_group_ids
 msgid "Country Groups"
-msgstr "Land groepen"
+msgstr "Landengroepen"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__name
@@ -16069,7 +16164,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Developer API Keys"
-msgstr "Ontwikkelaar API sleutels"
+msgstr "Ontwikkelaar API Keys"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
@@ -18591,7 +18686,7 @@ msgstr "Duitsland - Certificering voor verkooppunt van type restaurant"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_purchase
 msgid "Germany - Purchase"
-msgstr "Duitsland - Aankoop"
+msgstr "Duitsland - Inkoop"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_de_repair
@@ -18677,7 +18772,7 @@ msgstr "Cadeaukaart voor verkoopmodule"
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
 #: model_terms:ir.ui.view,arch_db:base.view_rule_search
 msgid "Global"
-msgstr "Alle producten"
+msgstr "Voor iedereen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -18901,6 +18996,11 @@ msgstr "Guinee-Bissau"
 #: model:res.country.group,name:base.gulf_cooperation_council
 msgid "Gulf Cooperation Council (GCC)"
 msgstr "Samenwerkingsraad van de Golf (GCC)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
+msgid "Gulf Cooperation Council - Point of Sale"
+msgstr "Gulf Cooperation Council - Kassa"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -19252,7 +19352,7 @@ msgid ""
 "Here is your new API key, use it instead of a password for RPC access.\n"
 "                            Your login is still necessary for interactive usage."
 msgstr ""
-"Hier is je nieuwe API-sleutel, gebruik deze in plaats van een wachtwoord voor RPC-toegang.\n"
+"Hier is je nieuwe API key, gebruik deze in plaats van een wachtwoord voor RPC-toegang.\n"
 "Jouw login is nog steeds nodig voor interactief gebruik."
 
 #. module: base
@@ -20745,7 +20845,7 @@ msgstr "Jordanië"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__exclude_journal_item
 msgid "Journal Items associated to the contact"
-msgstr "Boekingen behorende bij deze contactpersoon"
+msgstr "Boekingen behorende bij dit contactpersoon"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
@@ -20771,6 +20871,11 @@ msgstr "K.S.A. - salarisadministratie"
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "K.S.A. - Payroll with Accounting"
 msgstr "KSA - Salaris met boekhouding"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
+msgid "K.S.A. - Point of Sale"
+msgstr "K.S.A. - Kassa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest
@@ -22371,6 +22476,16 @@ msgid "Mexico - Accounting"
 msgstr "Mexico - Boekhouding"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
+msgid "Mexico - Electronic Delivery Guide"
+msgstr "Mexico - Electronic Delivery Guide"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
+msgid "Mexico - Electronic Delivery Guide Comex"
+msgstr "Mexico - Electronic Delivery Guide Comex"
+
+#. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
 msgstr "Micronesië"
@@ -23127,7 +23242,7 @@ msgstr "Nederlandse Intrastat-aangifteverslagen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr "Nieuwe API sleutel"
+msgstr "Nieuwe API Key"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -24899,7 +25014,7 @@ msgstr ""
 "\n"
 "Consolideer al je verkoopteams in realtime: winkels, e-commerce, verkoop\n"
 "teams. Krijg realtime controle over de voorraad en nauwkeurige prognoses om te beheren\n"
-"aankopen.\n"
+"inkopen.\n"
 "\n"
 "Een volledig magazijnbeheersysteem binnen handbereik: krijg informatie over:\n"
 "productbeschikbaarheid, trigger inkoopverzoeken, etc.\n"
@@ -25027,7 +25142,7 @@ msgstr ""
 "Geautomatiseerde inkoopvoorstellen\n"
 "----------------------------------\n"
 "\n"
-"Verlaag het voorraadniveau met inkoopregels. Zorg voor de juiste aankoop\n"
+"Verlaag het voorraadniveau met inkoopregels. Zorg voor de juiste inkoop\n"
 "propositie op het juiste moment om je voorraadniveau te verlagen. Verbeter je\n"
 "inkoop- en voorraadprestaties met inkoopregels afhankelijk van voorraad\n"
 "niveaus, logistieke regels, verkooporders, voorspelde productieorders, enz.\n"
@@ -25035,7 +25150,7 @@ msgstr ""
 "Verstuur offerteaanvragen of inkooporders met één klik naar je leverancier.\n"
 "Krijg toegang tot productontvangsten en facturen van je inkooporder.\n"
 "\n"
-"Aankoopoffertes\n"
+"Inkoopoffertes\n"
 "----------------\n"
 "\n"
 "Lanceer aanbestedingen, integreer de antwoorden van leveranciers in het proces en\n"
@@ -25861,7 +25976,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "Only internal users can create API keys"
-msgstr "Alleen interne gebruikers kunnen API-sleutels maken"
+msgstr "Alleen interne gebruikers kunnen API keys maken"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -26537,6 +26652,16 @@ msgstr "Pagina breedte (mm)"
 #: model:res.country,name:base.pk
 msgid "Pakistan"
 msgstr "Pakistan"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk
+msgid "Pakistan - Accounting"
+msgstr "Pakistan - Boekhouding"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pk_reports
+msgid "Pakistan - Accounting Reports"
+msgstr "Pakistan - Boekhoudkundige rapporten"
 
 #. module: base
 #: model:res.country,name:base.pw
@@ -27578,7 +27703,7 @@ msgstr "Project planning"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_purchase
 msgid "Project Purchase"
-msgstr "Projectaankoop"
+msgstr "Projectinkoop"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_account
@@ -30135,7 +30260,7 @@ msgstr "Start configuratie"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "State"
-msgstr "Status"
+msgstr "Provincie / Staat"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country_state__code
@@ -30184,7 +30309,7 @@ msgstr "Status"
 #: code:addons/base/static/src/js/res_config_settings.js:0
 #, python-format
 msgid "Stay Here"
-msgstr "Blijf hier"
+msgstr "Hier blijven"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_sequence__number_increment
@@ -30431,6 +30556,11 @@ msgid "Sweden"
 msgstr "Zweden"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_se
+msgid "Sweden - Accounting"
+msgstr "Zweden - Boekhouding"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
 msgstr "Financiele rapportages - Zweden"
@@ -30439,11 +30569,6 @@ msgstr "Financiele rapportages - Zweden"
 #: model:ir.module.module,shortdesc:base.module_pos_l10n_se
 msgid "Sweden Registered Cash Register"
 msgstr "In Zweden geregistreerde kassa"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_se
-msgid "Swedish - Accounting"
-msgstr "Boekhouding - Zweden"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -30809,7 +30934,7 @@ msgstr "Testen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr "Test API sleutel"
+msgstr "Test API Keys"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -31623,6 +31748,14 @@ msgstr "Dit is de valuta van je bedrijf."
 #, python-format
 msgid "This method can only be accessed over HTTP"
 msgstr "Deze methode is alleen toegankelijk via HTTP"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_intrastat_expiry
+msgid ""
+"This module adds an expiry feature to transaction account intrastat codes."
+msgstr ""
+"Deze module voegt een vervalfunctie toe aan intrastat-codes van "
+"transactierekeningen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_bot_hr
@@ -32781,7 +32914,7 @@ msgstr "Module bijwerken"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 msgid "Update Module List"
-msgstr "Modulellijst bijwerken"
+msgstr "Lijst met Apps bijwerken"
 
 #. module: base
 #: model:ir.model,name:base.model_base_update_translations
@@ -34052,7 +34185,7 @@ msgstr "Je kunt niet twee gebruikers hebben met dezelfde gebruikersnaam!"
 msgid ""
 "You can not remove API keys unless they're yours or you are a system user"
 msgstr ""
-"Je kunt API-sleutels alleen verwijderen als ze van je zijn of als je een "
+"Je kunt API keys alleen verwijderen als ze van je zijn of als je een "
 "systeemgebruiker bent"
 
 #. module: base
@@ -34385,6 +34518,12 @@ msgid "binary"
 msgstr "binair"
 
 #. module: base
+#: code:addons/base/models/ir_attachment.py:0
+#, python-format
+msgid "binary_field_real_user should be a res.users record."
+msgstr "binary_field_real_user zou een res.users record moeten zijn."
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
 msgstr "boolean"
@@ -34668,6 +34807,13 @@ msgstr "mail_bot_hr"
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2many
 msgid "many2many"
 msgstr "many2many"
+
+#. module: base
+#: code:addons/base/models/ir_actions.py:0
+#, python-format
+msgid "many2many fields cannot be evaluated by reference"
+msgstr ""
+"many2many velden kunnen niet geëvalueerd worden door middel van referentie"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

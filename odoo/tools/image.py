@@ -7,6 +7,10 @@ import io
 from PIL import Image, ImageOps
 # We can preload Ico too because it is considered safe
 from PIL import IcoImagePlugin
+try:
+    from PIL.Image import Transpose, Palette, Resampling
+except ImportError:
+    Transpose = Palette = Resampling = Image
 
 from random import randrange
 
@@ -30,21 +34,21 @@ FILETYPE_BASE64_MAGICWORD = {
 EXIF_TAG_ORIENTATION = 0x112
 # The target is to have 1st row/col to be top/left
 # Note: rotate is counterclockwise
-EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = {  # Initial side on 1st row/col:
-    0: [],                                          # reserved
-    1: [],                                          # top/left
-    2: [Image.FLIP_LEFT_RIGHT],                     # top/right
-    3: [Image.ROTATE_180],                          # bottom/right
-    4: [Image.FLIP_TOP_BOTTOM],                     # bottom/left
-    5: [Image.FLIP_LEFT_RIGHT, Image.ROTATE_90],    # left/top
-    6: [Image.ROTATE_270],                          # right/top
-    7: [Image.FLIP_TOP_BOTTOM, Image.ROTATE_90],    # right/bottom
-    8: [Image.ROTATE_90],                           # left/bottom
+EXIF_TAG_ORIENTATION_TO_TRANSPOSE_METHODS = { # Initial side on 1st row/col:
+    0: [],                                              # reserved
+    1: [],                                              # top/left
+    2: [Transpose.FLIP_LEFT_RIGHT],                     # top/right
+    3: [Transpose.ROTATE_180],                          # bottom/right
+    4: [Transpose.FLIP_TOP_BOTTOM],                     # bottom/left
+    5: [Transpose.FLIP_LEFT_RIGHT, Transpose.ROTATE_90],# left/top
+    6: [Transpose.ROTATE_270],                          # right/top
+    7: [Transpose.FLIP_TOP_BOTTOM, Transpose.ROTATE_90],# right/bottom
+    8: [Transpose.ROTATE_90],                           # left/bottom
 }
 
-# Arbitrary limit to fit most resolutions, including Nokia Lumia 1020 photo,
+# Arbitrary limit to fit most resolutions, including Samsung Galaxy A22 photo,
 # 8K with a ratio up to 16:10, and almost all variants of 4320p
-IMAGE_MAX_RESOLUTION = 45e6
+IMAGE_MAX_RESOLUTION = 50e6
 
 
 class ImageProcess():
@@ -86,7 +90,7 @@ class ImageProcess():
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 10e6)))
+                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 1e6)))
 
     def image_quality(self, quality=0, output_format=''):
         """Return the image resulting of all the image processing
@@ -136,7 +140,7 @@ class ImageProcess():
             if quality:
                 if output_image.mode != 'P':
                     # Floyd Steinberg dithering by default
-                    output_image = output_image.convert('RGBA').convert('P', palette=Image.WEB, colors=256)
+                    output_image = output_image.convert('RGBA').convert('P', palette=Palette.WEB, colors=256)
         if output_format == 'JPEG':
             opt['optimize'] = True
             opt['quality'] = quality or 95
@@ -215,7 +219,7 @@ class ImageProcess():
             asked_width = max_width or (w * max_height) // h
             asked_height = max_height or (h * max_width) // w
             if asked_width != w or asked_height != h:
-                self.image.thumbnail((asked_width, asked_height), Image.LANCZOS)
+                self.image.thumbnail((asked_width, asked_height), Resampling.LANCZOS)
                 if self.image.width != w or self.image.height != h:
                     self.operationsCount += 1
         return self
@@ -456,6 +460,8 @@ def image_apply_opt(image, format, **params):
     :return: the image formatted
     :rtype: bytes
     """
+    if format == 'JPEG' and image.mode not in ['1', 'L', 'RGB']:
+        image = image.convert("RGB")
     stream = io.BytesIO()
     image.save(stream, format=format, **params)
     return stream.getvalue()

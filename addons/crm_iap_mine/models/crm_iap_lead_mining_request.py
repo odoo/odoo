@@ -41,7 +41,7 @@ class CRMLeadMiningRequest(models.Model):
     error_type = fields.Selection([
         ('credits', 'Insufficient Credits'),
         ('no_result', 'No Result'),
-    ], string='Error Type', readonly=True)
+    ], string='Error Type', copy=False, readonly=True)
 
     # Lead / Opportunity Data
 

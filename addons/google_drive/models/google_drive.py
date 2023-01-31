@@ -14,7 +14,15 @@ from odoo.tools.translate import _
 
 from odoo.addons.google_account.models.google_service import GOOGLE_TOKEN_ENDPOINT, TIMEOUT
 
+from datetime import date
+
 _logger = logging.getLogger(__name__)
+
+# Google is depreciating their OOB Auth Flow on 3rd October 2022, the Google Drive
+# integration thus become irrelevant after that date.
+
+# https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html#disallowed-oob
+GOOGLE_AUTH_DEPRECATION_DATE = date(2022, 10, 3)
 
 
 class GoogleDrive(models.Model):
@@ -22,7 +30,13 @@ class GoogleDrive(models.Model):
     _name = 'google.drive.config'
     _description = "Google Drive templates config"
 
+    def _module_deprecated(self):
+        return GOOGLE_AUTH_DEPRECATION_DATE < fields.Date.today()
+
     def get_google_drive_url(self, res_id, template_id):
+        if self._module_deprecated():
+            return
+
         self.ensure_one()
         self = self.sudo()
 
@@ -49,6 +63,9 @@ class GoogleDrive(models.Model):
 
     @api.model
     def get_access_token(self, scope=None):
+        if self._module_deprecated():
+            return
+
         Config = self.env['ir.config_parameter'].sudo()
         google_drive_refresh_token = Config.get_param('google_drive_refresh_token')
         user_is_admin = self.env.is_admin()
@@ -84,6 +101,9 @@ class GoogleDrive(models.Model):
 
     @api.model
     def copy_doc(self, res_id, template_id, name_gdocs, res_model):
+        if self._module_deprecated():
+            return
+
         google_web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         access_token = self.get_access_token()
         # Copy template in to drive with help of new access token

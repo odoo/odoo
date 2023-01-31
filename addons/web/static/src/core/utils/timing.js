@@ -47,34 +47,28 @@ export function throttleForAnimation(func) {
  * @returns {{ (...args): Promise<T>, cancel: () => void }} the debounced function
  */
 export function debounce(func, wait, immediate = false) {
-    let cancelled;
     let timeout;
     const funcName = func.name ? func.name + " (debounce)" : "debounce";
     return Object.assign(
         {
             [funcName](...args) {
-                const context = this;
-                let resolve;
-                const prom = new Promise((r) => {
-                    resolve = r;
-                });
-                function later() {
-                    if (!immediate && !cancelled) {
-                        Promise.resolve(func.apply(context, args)).then(resolve);
+                return new Promise((resolve) => {
+                    const callNow = immediate && !timeout;
+                    browser.clearTimeout(timeout);
+                    timeout = browser.setTimeout(() => {
+                        timeout = null;
+                        if (!immediate) {
+                            Promise.resolve(func.apply(this, args)).then(resolve);
+                        }
+                    }, wait);
+                    if (callNow) {
+                        Promise.resolve(func.apply(this, args)).then(resolve);
                     }
-                }
-                const callNow = immediate && !timeout && !cancelled;
-                browser.clearTimeout(timeout);
-                timeout = browser.setTimeout(later, wait);
-                if (callNow) {
-                    Promise.resolve(func.apply(context, args)).then(resolve);
-                }
-                return prom;
+                });
             },
         }[funcName],
         {
             cancel() {
-                cancelled = true;
                 browser.clearTimeout(timeout);
             },
         }

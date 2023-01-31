@@ -848,12 +848,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_900')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>
@@ -872,12 +880,20 @@
                     'repartition_type': 'base',
                     'plus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
                 }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
                     'minus_report_line_ids': [ref('account_tax_report_line_chtax_910')],
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
                 }),
             ]"/>
         </record>

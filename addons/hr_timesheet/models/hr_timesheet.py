@@ -17,6 +17,11 @@ class AccountAnalyticLine(models.Model):
         result = super(AccountAnalyticLine, self).default_get(field_list)
         if 'encoding_uom_id' in field_list:
             result['encoding_uom_id'] = self.env.company.timesheet_encode_uom_id.id
+        employee_id = self._context.get('default_employee_id')
+        if employee_id:
+            employee = self.env['hr.employee'].browse(employee_id)
+            if 'user_id' not in result or employee.user_id.id != result.get('user_id'):
+                result['user_id'] = employee.user_id.id
         if not self.env.context.get('default_employee_id') and 'employee_id' in field_list and result.get('user_id'):
             result['employee_id'] = self.env['hr.employee'].search([('user_id', '=', result['user_id']), ('company_id', '=', result.get('company_id', self.env.company.id))], limit=1).id
         return result
@@ -46,7 +51,7 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
         domain=_domain_project_id)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id, context={'active_test': False})
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     partner_id = fields.Many2one(compute='_compute_partner_id', store=True, readonly=False)
@@ -81,7 +86,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('task_id', 'task_id.project_id')
     def _compute_project_id(self):
-        for line in self.filtered(lambda line: not line.project_id):
+        for line in self:
+            if not line.task_id.project_id or line.project_id == line.task_id.project_id:
+                continue
             line.project_id = line.task_id.project_id
 
     @api.depends('project_id')
@@ -120,17 +127,24 @@ class AccountAnalyticLine(models.Model):
 
         # Although this make a second loop on the vals, we need to wait the preprocess as it could change the company_id in the vals
         # TODO To be refactored in master
-        company_ids_in_vals = list({vals['company_id'] for vals in vals_list if vals.get('company_id', False)})
-        employees = self.env['hr.employee'].search([('user_id', 'in', user_ids), ('company_id', 'in', [self.env.company.id] + company_ids_in_vals)])
-        user_map = defaultdict(dict)
+        employees = self.env['hr.employee'].sudo().search([('user_id', 'in', user_ids)])
+        employee_for_user_company = defaultdict(dict)
         for employee in employees:
-            user_map[employee.company_id.id][employee.user_id.id] = employee.id
+            employee_for_user_company[employee.user_id.id][employee.company_id.id] = employee.id
 
+        employee_ids = set()
         for vals in vals_list:
             # compute employee only for timesheet lines, makes no sense for other lines
             if not vals.get('employee_id') and vals.get('project_id'):
-                vals['employee_id'] = user_map[vals.get('company_id', self.env.company.id)].get(vals.get('user_id', default_user_id), False)
-
+                employee_for_company = employee_for_user_company.get(vals.get('user_id', default_user_id), False)
+                if not employee_for_company:
+                    continue
+                company_id = list(employee_for_company)[0] if len(employee_for_company) == 1 else vals.get('company_id', self.env.company.id)
+                vals['employee_id'] = employee_for_company.get(company_id, False)
+            elif vals.get('employee_id'):
+                employee_ids.add(vals['employee_id'])
+        if any(not emp.active for emp in self.env['hr.employee'].browse(list(employee_ids))):
+            raise UserError(_('Timesheets must be created with an active employee.'))
         lines = super(AccountAnalyticLine, self).create(vals_list)
         for line, values in zip(lines, vals_list):
             if line.project_id:  # applied only for timesheet
@@ -143,6 +157,10 @@ class AccountAnalyticLine(models.Model):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
+        if values.get('employee_id'):
+            employee = self.env['hr.employee'].browse(values['employee_id'])
+            if not employee.active:
+                raise UserError(_('You cannot set an archived employee to the existing timesheets.'))
         if 'name' in values and not values.get('name'):
             values['name'] = '/'
         result = super(AccountAnalyticLine, self).write(values)
@@ -228,7 +246,7 @@ class AccountAnalyticLine(models.Model):
             if partner_id:
                 vals['partner_id'] = partner_id
         # set timesheet UoM from the AA company (AA implies uom)
-        if 'product_uom_id' not in vals and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
+        if not vals.get('product_uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
             analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
             vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
         return vals
@@ -257,7 +275,7 @@ class AccountAnalyticLine(models.Model):
                 cost = timesheet._employee_timesheet_cost()
                 amount = -timesheet.unit_amount * cost
                 amount_converted = timesheet.employee_id.currency_id._convert(
-                    amount, timesheet.account_id.currency_id, self.env.company, timesheet.date)
+                    amount, timesheet.account_id.currency_id or timesheet.currency_id, self.env.company, timesheet.date)
                 result[timesheet.id].update({
                     'amount': amount_converted,
                 })

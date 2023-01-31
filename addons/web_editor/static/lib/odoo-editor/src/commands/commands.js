@@ -8,19 +8,18 @@ import {
     closestPath,
     DIRECTIONS,
     findNode,
-    getCursorDirection,
     getCursors,
     getDeepRange,
     getInSelection,
     getListMode,
-    getNormalizedCursorPosition,
     getSelectedNodes,
     getTraversedNodes,
+    insertAndSelectZws,
     insertText,
     isBlock,
-    isBold,
     isColorGradient,
     isContentTextNode,
+    isSelectionFormat,
     isShrunkBlock,
     isVisible,
     isVisibleStr,
@@ -38,12 +37,17 @@ import {
     allowsParagraphRelatedElements,
     isUnbreakable,
     makeContentsInline,
+    formatSelection,
+    getDeepestPosition,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
 const BG_CLASSES_REGEX = /\bbg-[^\s]*\b/g;
 
 function insert(editor, data, isText = true) {
+    if (!data) {
+        return;
+    }
     const selection = editor.document.getSelection();
     const range = selection.getRangeAt(0);
     let startNode;
@@ -57,64 +61,142 @@ function insert(editor, data, isText = true) {
     } else {
         editor.deleteRange(selection);
     }
-    startNode = startNode || editor.document.getSelection().anchorNode;
-    if (startNode.nodeType === Node.ELEMENT_NODE) {
-        if (selection.anchorOffset === 0) {
-            startNode.prepend(editor.document.createTextNode(''));
-            startNode = startNode.firstChild;
-        } else {
-            startNode = startNode.childNodes[selection.anchorOffset - 1];
-        }
-    }
 
     const fakeEl = document.createElement('fake-element');
+    const fakeElFirstChild = document.createElement('fake-element-fc');
+    const fakeElLastChild = document.createElement('fake-element-lc');
     if (isText) {
         fakeEl.innerText = data;
     } else {
         fakeEl.innerHTML = data;
     }
+
+    // In case the html inserted starts with a list and will be inserted within
+    // a list, unwrap the list elements from the list.
+    if (closestElement(selection.anchorNode, 'UL, OL') &&
+        (fakeEl.firstChild.nodeName === 'UL' || fakeEl.firstChild.nodeName === 'OL')) {
+       fakeEl.replaceChildren(...fakeEl.firstChild.childNodes);
+    }
+
+    startNode = startNode || editor.document.getSelection().anchorNode;
+
+    // In case the html inserted is all contained in a single root <p> or <li>
+    // tag, we take the all content of the <p> or <li> and avoid inserting the
+    // <p> or <li>. The same is true for a <pre> inside a <pre>.
+    if (fakeEl.childElementCount === 1 && (
+        fakeEl.firstChild.nodeName === 'P' ||
+        fakeEl.firstChild.nodeName === 'LI' ||
+        fakeEl.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+    )) {
+        const p = fakeEl.firstElementChild;
+        fakeEl.replaceChildren(...p.childNodes);
+    } else if (fakeEl.childElementCount > 1) {
+        // Grab the content of the first child block and isolate it.
+        if (isBlock(fakeEl.firstChild)) {
+            fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
+            fakeEl.firstElementChild.remove();
+        }
+        // Grab the content of the last child block and isolate it.
+        if (isBlock(fakeEl.lastChild)) {
+            fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
+            fakeEl.lastElementChild.remove();
+        }
+    }
+
+    if (startNode.nodeType === Node.ELEMENT_NODE) {
+        if (selection.anchorOffset === 0) {
+            const textNode = editor.document.createTextNode('');
+            startNode.prepend(textNode);
+            startNode = textNode;
+        } else {
+            startNode = startNode.childNodes[selection.anchorOffset - 1];
+        }
+    }
+
+    // If we have isolated block content, first we split the current focus
+    // element if it's a block then we insert the content in the right places.
+    let currentNode = startNode;
+    let lastChildNode = false;
+    const _insertAt = (reference, nodes, insertBefore) => {
+        for (const child of (insertBefore ? nodes.reverse() : nodes)) {
+            reference[insertBefore ? 'before' : 'after'](child);
+            reference = child;
+        }
+    }
+    if (fakeElLastChild.hasChildNodes()) {
+        const toInsert = [...fakeElLastChild.childNodes]; // Prevent mutation
+        _insertAt(currentNode, [...toInsert], insertBefore);
+        currentNode = insertBefore ? toInsert[0] : currentNode;
+        lastChildNode = toInsert[toInsert.length - 1];
+    }
+    if (fakeElFirstChild.hasChildNodes()) {
+        const toInsert = [...fakeElFirstChild.childNodes]; // Prevent mutation
+        _insertAt(currentNode, [...toInsert], insertBefore);
+        currentNode = toInsert[toInsert.length - 1];
+        insertBefore = false;
+    }
+
+    // If all the Html have been isolated, We force a split of the parent element
+    // to have the need new line in the final result
+    if (!fakeEl.hasChildNodes()) {
+        if (isUnbreakable(closestBlock(currentNode.nextSibling))) {
+            currentNode.nextSibling.oShiftEnter(0);
+        } else {
+            // If we arrive here, the o_enter index should always be 0.
+            const parent = currentNode.nextSibling.parentElement;
+            const index = [...parent.childNodes].indexOf(currentNode.nextSibling);
+            currentNode.nextSibling.parentElement.oEnter(index);
+        }
+    }
+
     let nodeToInsert;
     const insertedNodes = [...fakeEl.childNodes];
     while ((nodeToInsert = fakeEl.childNodes[0])) {
-        if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(startNode)) {
+        if (isBlock(nodeToInsert) && !allowsParagraphRelatedElements(currentNode)) {
             // Split blocks at the edges if inserting new blocks (preventing
-            // <p><p>text</p></p> scenarios).
+            // <p><p>text</p></p> or <li><li>text</li></li> scenarios).
             while (
-                startNode.parentElement !== editor.editable &&
-                !allowsParagraphRelatedElements(startNode.parentElement)
+                currentNode.parentElement !== editor.editable &&
+                (!allowsParagraphRelatedElements(currentNode.parentElement) ||
+                currentNode.parentElement.nodeName === 'LI')
             ) {
-                if (isUnbreakable(startNode.parentElement)) {
+                if (isUnbreakable(currentNode.parentElement)) {
                     makeContentsInline(fakeEl);
                     nodeToInsert = fakeEl.childNodes[0];
                     break;
                 }
-                let offset = childNodeIndex(startNode);
+                let offset = childNodeIndex(currentNode);
                 if (!insertBefore) {
                     offset += 1;
                 }
                 if (offset) {
-                    const [left, right] = splitElement(startNode.parentElement, offset);
-                    startNode = insertBefore ? right : left;
+                    const [left, right] = splitElement(currentNode.parentElement, offset);
+                    currentNode = insertBefore ? right : left;
                 } else {
-                    startNode = startNode.parentElement;
+                    currentNode = currentNode.parentElement;
                 }
             }
         }
         if (insertBefore) {
-            startNode.before(nodeToInsert);
+            currentNode.before(nodeToInsert);
             insertBefore = false;
         } else {
-            startNode.after(nodeToInsert);
+            currentNode.after(nodeToInsert);
         }
-        if (startNode.tagName !== 'BR' && isShrunkBlock(startNode)) {
-            startNode.remove();
+        if (currentNode.tagName !== 'BR' && isShrunkBlock(currentNode)) {
+            currentNode.remove();
         }
-        startNode = nodeToInsert;
+        currentNode = nodeToInsert;
     }
 
+    currentNode = lastChildNode || currentNode;
     selection.removeAllRanges();
     const newRange = new Range();
-    const lastPosition = rightPos(startNode);
+    let lastPosition = rightPos(currentNode);
+    if (lastPosition[0] === editor.editable) {
+        // Correct the position if it happens to be in the editable root.
+        lastPosition = getDeepestPosition(...lastPosition);
+    }
     newRange.setStart(lastPosition[0], lastPosition[1]);
     newRange.setEnd(lastPosition[0], lastPosition[1]);
     selection.addRange(newRange);
@@ -202,75 +284,6 @@ function hasColor(element, mode) {
             getComputedStyle(element)[mode] !== getComputedStyle(parent)[mode])
     );
 }
-/**
- * This function abstracts the difficulty of applying a inline style to a
- * selection. TODO: This implementations potentially adds one span per text
- * node, in an ideal world it would wrap all concerned nodes in one span
- * whenever possible.
- * @param {Element => void} applyStyle Callback that receives an element to
- * which the wanted style should be applied
- */
-export function applyInlineStyle(editor, applyStyle) {
-    const sel = editor.document.getSelection();
-    const { startContainer, startOffset, endContainer, endOffset } = sel.getRangeAt(0);
-    const { anchorNode, anchorOffset, focusNode, focusOffset } = sel;
-    const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
-    const [
-        normalizedStartContainer,
-        normalizedStartOffset
-    ] = getNormalizedCursorPosition(startContainer, startOffset)
-    const [
-        normalizedEndContainer,
-        normalizedEndOffset
-    ] = getNormalizedCursorPosition(endContainer, endOffset)
-    const selectedTextNodes = getTraversedNodes(editor.editable).filter(node => {
-        const atLeastOneCharFromNodeInSelection = !(
-            (node === normalizedEndContainer && normalizedEndOffset === 0) ||
-            (node === normalizedStartContainer && normalizedStartOffset === node.textContent.length)
-        );
-        return isContentTextNode(node) && atLeastOneCharFromNodeInSelection;
-    });
-    for (const textNode of selectedTextNodes) {
-        // If text node ends after the end of the selection, split it and
-        // keep the part that is inside.
-        if (endContainer === textNode && endOffset < textNode.textContent.length) {
-            // No reassignement needed, entirely dependent on the
-            // splitTextNode implementation.
-            splitTextNode(textNode, endOffset, DIRECTIONS.LEFT);
-        }
-        // If text node starts before the beginning of the selection, split it
-        // and keep the part that is inside as textNode.
-        if (startContainer === textNode && startOffset > 0) {
-            // No reassignement needed, entirely dependent on the
-            // splitTextNode implementation.
-            splitTextNode(textNode, startOffset, DIRECTIONS.RIGHT);
-        }
-        // If the parent is not inline or is not completely in the
-        // selection, wrap text node in inline node. Also skips <a> tags to
-        // work with native `removeFormat` command
-        const siblings = [...textNode.parentElement.childNodes];
-        if (
-            isBlock(textNode.parentElement) ||
-            !(
-                selectedTextNodes.includes(siblings[0]) &&
-                selectedTextNodes.includes(siblings[siblings.length - 1])
-            ) ||
-            textNode.parentElement.tagName === 'A'
-        ) {
-            const newParent = document.createElement('span');
-            textNode.after(newParent);
-            newParent.appendChild(textNode);
-        }
-        applyStyle(textNode.parentElement);
-    }
-    const firstNode = selectedTextNodes[0];
-    const lastNode = selectedTextNodes[selectedTextNodes.length - 1];
-    if (direction === DIRECTIONS.RIGHT) {
-        setSelection(firstNode, 0, lastNode, lastNode.length);
-    } else {
-        setSelection(lastNode, lastNode.length, firstNode, 0);
-    }
-}
 function addColumn(editor, beforeOrAfter) {
     getDeepRange(editor.editable, { select: true }); // Ensure deep range for finding td.
     const c = getInSelection(editor.document, 'td');
@@ -327,19 +340,30 @@ export const editorCommands = {
     // Change tags
     setTag(editor, tagName) {
         const restoreCursor = preserveCursor(editor.document);
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable).map(closestBlock))];
+        const range = getDeepRange(editor.editable, { correctTripleClick: true });
+        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         for (const block of selectedBlocks) {
             if (
-                ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'BLOCKQUOTE'].includes(
+                ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
                     block.nodeName,
                 )
             ) {
                 setSelection(block, 0, block, nodeSize(block));
                 editor.historyPauseSteps();
+                // Keep the alignment and remove rest of the applied styles.
+                const textAlign = block.style.textAlign;
                 editor.execCommand('removeFormat');
+                if (textAlign) {
+                    block.style.textAlign = textAlign;
+                }
                 editor.historyUnpauseSteps();
-                setTagName(block, tagName);
-            } else {
+                const inLI = block.closest('li');
+                if (inLI && tagName === "P") {
+                    inLI.oToggleList(0);
+                } else {
+                    setTagName(block, tagName);
+                }
+            }  else {
                 // eg do not change a <div> into a h1: insert the h1
                 // into it instead.
                 const newBlock = editor.document.createElement(tagName);
@@ -354,25 +378,38 @@ export const editorCommands = {
 
     // Formats
     // -------------------------------------------------------------------------
-    bold: editor => {
-        const selection = editor.document.getSelection();
-        if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
+    bold: editor => formatSelection(editor, 'bold'),
+    italic: editor => formatSelection(editor, 'italic'),
+    underline: editor => formatSelection(editor, 'underline'),
+    strikeThrough: editor => formatSelection(editor, 'strikeThrough'),
+    setFontSize: (editor, size) => formatSelection(editor, 'fontSize', {applyStyle: true, formatProps: {size}}),
+    switchDirection: editor => {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
-        const isAlreadyBold = getSelectedNodes(editor.editable)
-            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length)
-            .find(n => isBold(n.parentElement));
-        applyInlineStyle(editor, el => {
-            if (isAlreadyBold) {
-                const block = closestBlock(el);
-                el.style.fontWeight = isBold(block) ? 'normal' : getComputedStyle(block).fontWeight;
+        const selection = editor.document.getSelection();
+        const selectedTextNodes = [selection.anchorNode, ...getSelectedNodes(editor.editable), selection.focusNode]
+            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+
+        const changedElements = [];
+        const defaultDirection = editor.options.direction;
+        const shouldApplyStyle = !isSelectionFormat(editor.editable, 'switchDirection');
+        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+            if (!shouldApplyStyle) {
+                block.removeAttribute('dir');
             } else {
-                el.style.fontWeight = 'bolder';
+                block.setAttribute('dir', defaultDirection === 'ltr' ? 'rtl' : 'ltr');
             }
-        });
+            changedElements.push(block);
+        }
+
+        for (const element of changedElements) {
+            const style = getComputedStyle(element);
+            if (style.direction === 'ltr' && style.textAlign === 'right') {
+                element.style.setProperty('text-align', 'left');
+            } else if (style.direction === 'rtl' && style.textAlign === 'left') {
+                element.style.setProperty('text-align', 'right');
+            }
+        }
     },
-    italic: editor => editor.document.execCommand('italic'),
-    underline: editor => editor.document.execCommand('underline'),
-    strikeThrough: editor => editor.document.execCommand('strikeThrough'),
     removeFormat: editor => {
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
@@ -386,16 +423,6 @@ export const editorCommands = {
     justifyRight: editor => align(editor, 'right'),
     justifyCenter: editor => align(editor, 'center'),
     justifyFull: editor => align(editor, 'justify'),
-    /**
-     * @param {string} size A valid css size string
-     */
-    setFontSize: (editor, size) => {
-        const selection = editor.document.getSelection();
-        if (!selection.rangeCount || selection.getRangeAt(0).collapsed) return;
-        applyInlineStyle(editor, element => {
-            element.style.fontSize = size;
-        });
-    },
 
     // Link
     createLink: (editor, link, content) => {
@@ -425,6 +452,9 @@ export const editorCommands = {
         // before we apply the unlink, otherwise the command is not performed
         // because the content editable root is the link
         const closestEl = closestElement(sel.focusNode, 'a');
+        if(closestEl) {
+            closestEl.removeAttribute('class'); // To prevent firefox from adding unnecessary <span>.
+        }
         if (closestEl && closestEl.getAttribute('contenteditable') === 'true') {
             editor._activateContenteditable();
         }
@@ -504,7 +534,13 @@ export const editorCommands = {
     applyColor: (editor, color, mode, element) => {
         if (element) {
             colorElement(element, color, mode);
-            return;
+            return [element];
+        }
+        const selection = editor.document.getSelection();
+        let wasCollapsed = false;
+        if (selection.getRangeAt(0).collapsed) {
+            insertAndSelectZws(selection);
+            wasCollapsed = true;
         }
         const range = getDeepRange(editor.editable, { splitText: true, select: true });
         if (!range) return;
@@ -518,13 +554,18 @@ export const editorCommands = {
                 // Partially selected <font>: split it.
                 const selectedChildren = children.filter(child => selectedNodes.includes(child));
                 if (selectedChildren.length) {
-                    const splitResult = splitAroundUntil(selectedChildren, font);
-                    font = splitResult[0] || splitResult[1] || font;
+                    font = splitAroundUntil(selectedChildren, font);
                 } else {
                     font = [];
                 }
-            } else if (node.nodeType === Node.TEXT_NODE && isVisibleStr(node)) {
-                // Node is a visible text node: wrap it in a <font>.
+            } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || (node.nodeType === Node.ELEMENT_NODE &&
+                        ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
+                        isVisibleStr(node.textContent) &&
+                        !node.classList.contains('btn') &&
+                        !node.querySelector('font'))) {
+                // Node is a visible text or inline node without font nor a button:
+                // wrap it in a <font>.
                 const previous = node.previousSibling;
                 const classRegex = mode === 'color' ? BG_CLASSES_REGEX : TEXT_CLASSES_REGEX;
                 if (
@@ -560,6 +601,15 @@ export const editorCommands = {
             }
         }
         restoreCursor();
+        if (wasCollapsed) {
+            const newSelection = editor.document.getSelection();
+            const range = new Range();
+            range.setStart(newSelection.anchorNode, newSelection.anchorOffset);
+            range.collapse(true);
+            newSelection.removeAllRanges();
+            newSelection.addRange(range);
+        }
+        return fonts;
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {

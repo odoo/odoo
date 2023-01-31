@@ -117,7 +117,8 @@ class AccountMove(models.Model):
             for line in inv.mapped('invoice_line_ids').filtered(lambda x: x.display_type not in ('line_section', 'line_note')):
                 vat_taxes = line.tax_ids.filtered(lambda x: x.tax_group_id.l10n_ar_vat_afip_code)
                 if len(vat_taxes) != 1:
-                    raise UserError(_('There must be one and only one VAT tax per line. Check line "%s"', line.name))
+                    raise UserError(_('There should be a single tax from the "VAT" tax group per line, add it to "%s". If you already have it, please check the tax configuration, in advanced options, in the corresponding field "Tax Group".') % line.name)
+
                 elif purchase_aliquots == 'zero' and vat_taxes.tax_group_id.l10n_ar_vat_afip_code != '0':
                     raise UserError(_('On invoice id "%s" you must use VAT Not Applicable on every line.')  % inv.id)
                 elif purchase_aliquots == 'not_zero' and vat_taxes.tax_group_id.l10n_ar_vat_afip_code == '0':
@@ -129,6 +130,22 @@ class AccountMove(models.Model):
                 rec.l10n_ar_afip_service_start = rec.invoice_date + relativedelta(day=1)
             if not rec.l10n_ar_afip_service_end:
                 rec.l10n_ar_afip_service_end = rec.invoice_date + relativedelta(day=1, days=-1, months=+1)
+
+    def _set_afip_responsibility(self):
+        """ We save the information about the receptor responsability at the time we validate the invoice, this is
+        necessary because the user can change the responsability after that any time """
+        for rec in self:
+            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
+
+    def _set_afip_rate(self):
+        """ We set the l10n_ar_currency_rate value with the accounting date. This should be done
+        after invoice has been posted in order to have the proper accounting date"""
+        for rec in self:
+            if rec.company_id.currency_id == rec.currency_id:
+                rec.l10n_ar_currency_rate = 1.0
+            elif not rec.l10n_ar_currency_rate:
+                rec.l10n_ar_currency_rate = rec.currency_id._convert(
+                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
 
     @api.onchange('partner_id')
     def _onchange_afip_responsibility(self):
@@ -166,19 +183,15 @@ class AccountMove(models.Model):
 
     def _post(self, soft=True):
         ar_invoices = self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.l10n_latam_use_documents)
-        for rec in ar_invoices:
-            rec.l10n_ar_afip_responsibility_type_id = rec.commercial_partner_id.l10n_ar_afip_responsibility_type_id.id
-            if rec.company_id.currency_id == rec.currency_id:
-                rec.l10n_ar_currency_rate = 1.0
-            elif not rec.l10n_ar_currency_rate:
-                rec.l10n_ar_currency_rate = rec.currency_id._convert(
-                    1.0, rec.company_id.currency_id, rec.company_id, rec.date, round=False)
-
         # We make validations here and not with a constraint because we want validation before sending electronic
         # data on l10n_ar_edi
         ar_invoices._check_argentinean_invoice_taxes()
-        posted = super()._post(soft)
-        posted._set_afip_service_dates()
+        posted = super()._post(soft=soft)
+
+        posted_ar_invoices = posted & ar_invoices
+        posted_ar_invoices._set_afip_responsibility()
+        posted_ar_invoices._set_afip_rate()
+        posted_ar_invoices._set_afip_service_dates()
         return posted
 
     def _reverse_moves(self, default_values_list=None, cancel=False):
@@ -223,10 +236,18 @@ class AccountMove(models.Model):
     def _get_starting_sequence(self):
         """ If use documents then will create a new starting sequence using the document type code prefix and the
         journal document number with a 8 padding number """
-        if self.journal_id.l10n_latam_use_documents and self.env.company.country_id.code == "AR":
+        if self.journal_id.l10n_latam_use_documents and self.company_id.account_fiscal_country_id.code == "AR":
             if self.l10n_latam_document_type_id:
                 return self._get_formatted_sequence()
         return super()._get_starting_sequence()
+
+    def _get_last_sequence(self, relaxed=False, with_prefix=None, lock=True):
+        """ If use share sequences we need to recompute the sequence to add the proper document code prefix """
+        res = super()._get_last_sequence(relaxed=relaxed, with_prefix=with_prefix, lock=lock)
+        if res and self.journal_id.l10n_ar_share_sequences and self.l10n_latam_document_type_id.doc_code_prefix not in res:
+            res = self._get_formatted_sequence(number=self._l10n_ar_get_document_number_parts(
+                res.split()[-1], self.l10n_latam_document_type_id.code)['invoice_number'])
+        return res
 
     def _get_last_sequence_domain(self, relaxed=False):
         where_string, param = super(AccountMove, self)._get_last_sequence_domain(relaxed)

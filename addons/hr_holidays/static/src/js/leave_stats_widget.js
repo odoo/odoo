@@ -4,6 +4,7 @@ odoo.define('hr_holidays.LeaveStatsWidget', function (require) {
     var time = require('web.time');
     var Widget = require('web.Widget');
     var widget_registry = require('web.widget_registry');
+    var fieldUtils = require('web.field_utils');
 
     var LeaveStatsWidget = Widget.extend({
         template: 'hr_holidays.leave_stats',
@@ -110,8 +111,14 @@ odoo.define('hr_holidays.LeaveStatsWidget', function (require) {
                 self.departmentLeaves = data.map(function (leave) {
                     // Format datetimes to date (in the user's format)
                     return _.extend(leave, {
-                        date_from: moment(leave.date_from).format(dateFormat),
-                        date_to: moment(leave.date_to).format(dateFormat),
+                        date_from: fieldUtils.parse.datetime(
+                            leave.date_from,
+                            false,
+                            { isUTC: true }).local().format(dateFormat),
+                        date_to: fieldUtils.parse.datetime(
+                            leave.date_to,
+                            false,
+                            { isUTC: true }).local().format(dateFormat),
                         number_of_days: leave.number_of_days,
                     });
                 });

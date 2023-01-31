@@ -6,9 +6,9 @@ import logging
 import uuid
 from lxml import etree, html
 
-from odoo.exceptions import AccessError
-from odoo import api, models
+from odoo import api, models, _
 from odoo.osv import expression
+from odoo.exceptions import AccessError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
@@ -51,7 +51,11 @@ class IrUiView(models.Model):
 
         model = 'ir.qweb.field.' + el.get('data-oe-type')
         converter = self.env[model] if model in self.env else self.env['ir.qweb.field']
-        value = converter.from_html(Model, Model._fields[field], el)
+
+        try:
+            value = converter.from_html(Model, Model._fields[field], el)
+        except ValueError:
+            raise ValidationError(_("Invalid field value for %s: %s", Model._fields[field].string, el.text_content().strip()))
 
         if value is not None:
             # TODO: batch writes?
@@ -123,6 +127,10 @@ class IrUiView(models.Model):
             return False
         return all(self._are_archs_equal(arch1, arch2) for arch1, arch2 in zip(arch1, arch2))
 
+    @api.model
+    def _get_allowed_root_attrs(self):
+        return ['style', 'class']
+
     def replace_arch_section(self, section_xpath, replacement, replace_tail=False):
         # the root of the arch section shouldn't actually be replaced as it's
         # not really editable itself, only the content truly is editable.
@@ -138,7 +146,7 @@ class IrUiView(models.Model):
         root.text = replacement.text
 
         # We need to replace some attrib for styles changes on the root element
-        for attribute in ('style', 'class'):
+        for attribute in self._get_allowed_root_attrs():
             if attribute in replacement.attrib:
                 root.attrib[attribute] = replacement.attrib[attribute]
 
@@ -213,6 +221,9 @@ class IrUiView(models.Model):
 
     @api.model
     def _view_get_inherited_children(self, view):
+        if self._context.get('no_primary_children', False):
+            original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
+            return view.inherit_children_ids.filtered(lambda extension: extension.mode != 'primary' or extension.id in original_hierarchy)
         return view.inherit_children_ids
 
     @api.model
@@ -231,7 +242,7 @@ class IrUiView(models.Model):
     @api.model
     def _views_get(self, view_id, get_children=True, bundles=False, root=True, visited=None):
         """ For a given view ``view_id``, should return:
-                * the view itself
+                * the view itself (starting from its top most parent)
                 * all views inheriting from it, enabled or not
                   - but not the optional children of a non-enabled child
                 * all views called from it (via t-call)
@@ -245,7 +256,9 @@ class IrUiView(models.Model):
 
         if visited is None:
             visited = []
+        original_hierarchy = self._context.get('__views_get_original_hierarchy', [])
         while root and view.inherit_id:
+            original_hierarchy.append(view.id)
             view = view.inherit_id
 
         views_to_return = view

@@ -19,7 +19,7 @@ odoo.define("website_sale.tour_shop", function (require) {
     }, {
         trigger: ".modal-dialog #editor_new_product input[type=text]",
         content: _t("Enter a name for your new product"),
-        position: "right",
+        position: "left",
     }, {
         trigger: ".modal-footer button.btn-primary.btn-continue",
         content: Markup(_t("Click on <em>Continue</em> to create the product.")),
@@ -45,6 +45,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         run: function (actions) {
             actions.auto(".modal-footer .btn-secondary");
         },
+        auto: true,
     }, {
         trigger: "button.o_we_add_snippet_btn",
         auto: true,

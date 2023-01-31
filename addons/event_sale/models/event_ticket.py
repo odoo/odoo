@@ -43,11 +43,19 @@ class EventTemplateTicket(models.Model):
             if not ticket.description:
                 ticket.description = False
 
+    @api.depends_context('pricelist', 'quantity')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for ticket in self:
             product = ticket.product_id
-            discount = (product.lst_price - product.price) / product.lst_price if product.lst_price else 0.0
+            pricelist = self.env['product.pricelist'].browse(self._context.get('pricelist'))
+            lst_price = product.currency_id._convert(
+                product.lst_price,
+                pricelist.currency_id,
+                self.env.company,
+                fields.Datetime.now()
+            )
+            discount = (lst_price - product.price) / lst_price if lst_price else 0.0
             ticket.price_reduce = (1.0 - discount) * ticket.price
 
     def _init_column(self, column_name):

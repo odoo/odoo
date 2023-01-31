@@ -180,6 +180,10 @@ WHERE sub.user_id IN %%s""" % {
         """
             Method that can be called on a batch of users with the same new rank
         """
+        if self.env.context.get('install_mode', False):
+            # avoid sending emails in install mode (prevents spamming users when creating data ranks)
+            return
+
         template = self.env.ref('gamification.mail_template_data_new_rank_reached', raise_if_not_found=False)
         if template:
             for u in self:

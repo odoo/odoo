@@ -119,7 +119,8 @@ class StockPickingBatch(models.Model):
 
     @api.depends('picking_ids', 'picking_ids.scheduled_date')
     def _compute_scheduled_date(self):
-        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+        for rec in self:
+            rec.scheduled_date = min(rec.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
 
     @api.onchange('scheduled_date')
     def onchange_scheduled_date(self):
@@ -149,6 +150,8 @@ class StockPickingBatch(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
+        if not self.picking_ids:
+            self.filtered(lambda b: b.state == 'in_progress').action_cancel()
         if vals.get('picking_type_id'):
             self._sanity_check()
         if vals.get('picking_ids'):
@@ -188,7 +191,6 @@ class StockPickingBatch(models.Model):
         return True
 
     def action_cancel(self):
-        self.ensure_one()
         self.state = 'cancel'
         self.picking_ids = False
         return True
@@ -249,9 +251,9 @@ class StockPickingBatch(models.Model):
                                      precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
                                      precision_rounding=ml.product_uom_id.rounding) == 0)
             if move_line_ids:
-                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                res = move_line_ids.picking_id[0]._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                    res = move_line_ids.picking_id[0]._put_in_pack(move_line_ids, False)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))

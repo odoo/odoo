@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2021
 # Lucia Pacheco <lpo@odoo.com>, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -14,13 +14,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: purchase
 #: model:ir.actions.report,print_report_name:purchase.action_report_purchase_order
@@ -129,7 +129,7 @@ msgstr ""
 "            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
 "        </t>\n"
 "        <br/><br/>\n"
-"        Este es un recordatorio de que la entrega del pedido de compra<strong t-out=\"object.name or ''\">P00015</strong>\n"
+"        Este es un recordatorio de que la entrega de la orden de compra<strong t-out=\"object.name or ''\">P00015</strong>\n"
 "        <t t-if=\"object.partner_ref\">\n"
 "            <strong>(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</strong>\n"
 "        </t>\n"
@@ -602,7 +602,7 @@ msgstr "Agregar una sección"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr "Añadir varias variantes a un pedido de compra desde una matriz"
+msgstr "Añadir varias variantes a una orden de compra desde una tabla"
 
 #. module: purchase
 #. openerp-web
@@ -627,28 +627,28 @@ msgstr "Todos"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Draft RFQs"
-msgstr "Todos los borradores de RFQ"
+msgstr "Todos los borradores de solicitudes de contización"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Late RFQs"
-msgstr "Todas las RFQ tardías"
+msgstr "Todas las solicitudes de cotización tardías"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All RFQs"
-msgstr "Todas las RFQ"
+msgstr "Todas las solicitudes de cotización"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "All Waiting RFQs"
-msgstr "Todas las RFQ en espera"
+msgstr "Todas las solicitudes de cotización en espera"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
@@ -674,7 +674,7 @@ msgid ""
 "order line."
 msgstr ""
 "Cantidad de tiempo entre la fecha planificada y el pedido por fecha para "
-"cada línea de pedido de compra."
+"cada línea de la orden de compra."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
@@ -693,7 +693,7 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr ""
-"Cantidad de tiempo entre la aprobación de la compra y el pedido por fecha."
+"Cantidad de tiempo entre la aprobación de la compra y la orden por fecha."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
@@ -958,7 +958,7 @@ msgstr "Confirmar la fecha de recepción"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__one_step
 msgid "Confirm purchase orders in one step"
-msgstr "Confirmar pedidos de compra en un único paso"
+msgstr "Confirmar órdenes de compra en un solo paso"
 
 #. module: purchase
 #. openerp-web
@@ -1192,12 +1192,12 @@ msgstr "Descargar"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__draft
 msgid "Draft RFQ"
-msgstr "RFQ en borrador"
+msgstr "Solicitudes de cotización en borrador"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Draft RFQs"
-msgstr "Borradores de RFQ"
+msgstr "Borradores de solicitudes de cotización"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1244,7 +1244,7 @@ msgstr "Icono de Font Awesome ej. fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr "Valores prohibidos en una línea de pedido de compra no computable"
+msgstr "Valores prohibidos en una línea de orden de compra no computable"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1260,7 +1260,7 @@ msgstr "Actividades futuras"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_double_validation__two_step
 msgid "Get 2 levels of approvals to confirm a purchase order"
-msgstr "Requerir 2 niveles de aprobación para confirmar un pedido de compra"
+msgstr "Requerir 2 niveles de aprobación para confirmar una orden de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -1341,7 +1341,7 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
-"Si está instalado, las variantes del producto se agregarán a los pedidos de "
+"Si está instalado, las variantes del producto se agregarán a las órdenes de "
 "compra a través de una entrada de cuadrícula."
 
 #. module: purchase
@@ -1364,7 +1364,7 @@ msgstr "Importar plantilla de productos"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "In order to delete a purchase order, you must cancel it first."
-msgstr "Para borrar un pedido de compra, debe cancelarlo primero."
+msgstr "Para borrar una orden de compra, debe cancelarlo primero."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__incoterm_id
@@ -1448,7 +1448,7 @@ msgstr "Actividades tardías"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr "RFQ retrasadas"
+msgstr "Solicitudes de cotización retrasadas"
 
 #. module: purchase
 #. openerp-web
@@ -1547,7 +1547,7 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega de proveedores. Cuando el sistema"
-" genera pedidos de compra para la adquisición de productos, se programarán "
+" genera órdenes de compra para la adquisición de productos, se programarán "
 "muchos días anteriores para hacer frente a los retrasos inesperados de los "
 "proveedores."
 
@@ -1559,7 +1559,7 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Margen de error para los plazos de entrega del proveedor. Cuando el sistema "
-"genera pedidos de compra para abastecer productos, se programarán muchos "
+"genera órdenes de compra para abastecer productos, se programarán muchos "
 "días antes para hacer frente a las demoras inesperadas de los proveedores."
 
 #. module: purchase
@@ -1571,13 +1571,13 @@ msgstr "Error de envío del mensaje"
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_warn_msg
 msgid "Message for Purchase Order"
-msgstr "Mensaje para el pedido de compra"
+msgstr "Mensaje para la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn_msg
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn_msg
 msgid "Message for Purchase Order Line"
-msgstr "Mensaje para la línea del pedido de compra"
+msgstr "Mensaje para la línea de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_ids
@@ -1599,7 +1599,7 @@ msgstr "Cantidad mínima para la que se requiere doble validación"
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
 msgstr ""
-"Faltan campos obligatorios en una línea de pedido de compra computable."
+"Faltan campos obligatorios en una línea de la orden de compra computable."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__my_activity_date_deadline
@@ -1611,14 +1611,14 @@ msgstr "Fecha límite de mi actividad"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
-msgstr "Mi borrador de RFQ"
+msgstr "Mi borrador de solicitud de cotización"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
-msgstr "Mis RFQ atrasadas"
+msgstr "Mis solicitudes de cotización atrasadas"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1635,14 +1635,14 @@ msgstr "Mis compras"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr "Mis RFQ"
+msgstr "Mis solicitudes de cotización"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
-msgstr "Mis RFQ en espera"
+msgstr "Mis solicitudes de cotización en espera"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1691,7 +1691,7 @@ msgstr "Sin mensaje"
 #: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_kanban
 #: model_terms:ir.actions.act_window,help:purchase.purchase_action_dashboard_list
 msgid "No RFQs to display"
-msgstr "No hay RFQ para mostrar"
+msgstr "No hay solicitudes de cotización para mostrar"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1801,7 +1801,7 @@ msgid ""
 "Once you get the price from the vendor, you can complete the purchase order "
 "with the right price."
 msgstr ""
-"Una vez que obtenga el precio del proveedor, puede completar el pedido de "
+"Una vez que obtenga el precio del proveedor, puede completar la orden de "
 "compra con el precio correcto."
 
 #. module: purchase
@@ -1811,7 +1811,7 @@ msgid ""
 "quotation and it will turn into a purchase order."
 msgstr ""
 "Una vez que haya pedido sus productos a su proveedor, confirme su solicitud "
-"de presupuesto y se convertirá en un pedido de compra."
+"de cotización y se convertirá en una orden de compra."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__order_id
@@ -1942,7 +1942,7 @@ msgstr "Imprimir"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Imprimir RFQ"
+msgstr "Imprimir solicitudes de cotización"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
@@ -2090,24 +2090,24 @@ msgstr "Plazo de tiempo de compra"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 #, python-format
 msgid "Purchase Order"
-msgstr "Pedido de compra"
+msgstr "Orden de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Purchase Order #"
-msgstr "Pedido de compra #"
+msgstr "Orden de compra #"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_order_approval
 msgid "Purchase Order Approval"
-msgstr "Aprobación de pedido de compra"
+msgstr "Aprobación de orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_account__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_partner__purchase_order_count
 #: model:ir.model.fields,field_description:purchase.field_res_users__purchase_order_count
 msgid "Purchase Order Count"
-msgstr "Nº de pedidos de compra"
+msgstr "Conteo de órdenes de compra"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
@@ -2115,29 +2115,29 @@ msgstr "Nº de pedidos de compra"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_form2
 msgid "Purchase Order Line"
-msgstr "Línea de pedido de compra"
+msgstr "Línea de orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_line_warn
 #: model:ir.model.fields,field_description:purchase.field_product_template__purchase_line_warn
 msgid "Purchase Order Line Warning"
-msgstr "Advertencia de línea de pedido de compra"
+msgstr "Advertencia en la línea de orden de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_line_tree
 msgid "Purchase Order Lines"
-msgstr "Líneas pedido de compra"
+msgstr "Líneas de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lock
 msgid "Purchase Order Modification"
-msgstr "Modificación del pedido de compra"
+msgstr "Modificación de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__po_lock
 msgid "Purchase Order Modification *"
-msgstr "Modificación del pedido de compra *"
+msgstr "Modificación de la orden de compra"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_company__po_lock
@@ -2145,17 +2145,17 @@ msgstr "Modificación del pedido de compra *"
 msgid ""
 "Purchase Order Modification used when you want to purchase order editable "
 "after confirm"
-msgstr "Permite modificar un pedido de compra ya confirmado"
+msgstr "Permite modificar una orden de compra ya confirmada"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
 msgid "Purchase Order: Send PO"
-msgstr "Orden de compra: enviar PO"
+msgstr "Orden de compra: enviar orden de compra"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase Order: Send RFQ"
-msgstr "Orden de compra: enviar RFQ"
+msgstr "Orden de compra: enviar solicitud de cotización"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
@@ -2173,7 +2173,7 @@ msgstr "Orden de compra: recordar al proveedor"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Purchase Orders"
-msgstr "Pedidos de compra"
+msgstr "Órdenes de compra"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
@@ -2299,22 +2299,22 @@ msgstr "Cantidad:"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__draft
 msgid "RFQ"
-msgstr "RFQ"
+msgstr "Solicitud de cotización"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_approved
 msgid "RFQ Approved"
-msgstr "RFQ aprobada"
+msgstr "Solicitud de cotización aprobada"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_confirmed
 msgid "RFQ Confirmed"
-msgstr "RFQ confirmada"
+msgstr "Solicitud de cotización confirmada"
 
 #. module: purchase
 #: model:mail.message.subtype,name:purchase.mt_rfq_done
 msgid "RFQ Done"
-msgstr "RFQ realizada"
+msgstr "Solicitud de cotización realizada"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__sent
@@ -2330,25 +2330,25 @@ msgstr "RFQ_{{ (object.name or '').replace('/','_') }}"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "RFQs"
-msgstr "Solicitudes de cotización (RFQ)"
+msgstr "Solicitudes de cotización"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "RFQs Sent Last 7 Days"
-msgstr "RFQ enviadas los últimos 7 días"
+msgstr "Solicitudes de cotización enviadas los últimos 7 días"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr "RFQ y compras"
+msgstr "Solicitudes de cotización y compras"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
 msgstr ""
-"Precisión decimal entre la moneda de la empresa y la del pedido de compra"
+"Precisión decimal entre la moneda de la empresa y la de la orden de compra"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2438,8 +2438,8 @@ msgid ""
 "Reference of the document that generated this purchase order request (e.g. a"
 " sales order)"
 msgstr ""
-"Referencia del documento que generó esta solicitud de pedido de compra (por "
-"ejemplo, un pedido de cliente)"
+"Referencia del documento que generó esta solicitud de orden de compra (por "
+"ejemplo, una orden de venta)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__partner_ref
@@ -2507,7 +2507,7 @@ msgid ""
 "                Once an agreement has been found with the supplier, they will be confirmed and turned into purchase orders."
 msgstr ""
 "Las solicitudes de cotización son documentos que se enviarán a sus proveedores para solicitar precios de diferentes productos que considere comprar.\n"
-"                Una vez que se haya llegado a un acuerdo con el proveedor, se confirmarán y se convertirán en pedidos de compra."
+"                Una vez que se haya llegado a un acuerdo con el proveedor, se confirmarán y se convertirán en órdenes de compra."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_user_id
@@ -2593,7 +2593,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Send PO by Email"
-msgstr "Enviar PC por correo electrónico"
+msgstr "Enviar orden de compra por correo electrónico"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
@@ -2787,7 +2787,7 @@ msgid ""
 "                    of the products and the vendor bill."
 msgstr ""
 "La solicitud de cotización es el primer paso del flujo de compras. Una vez \n"
-"que la solicitud se convierta en un pedido de compra, usted será capaz de controlar la entrega\n"
+"que la solicitud se convierta en una orden de compra, usted será capaz de controlar la entrega\n"
 "de los productos y la factura de proveedor."
 
 #. module: purchase
@@ -2819,7 +2819,7 @@ msgid ""
 "validating this vendor bill."
 msgstr ""
 "Esta cuenta se utiliza en la valoración de inventario automatizada para "
-"registrar la diferencia de precio entre un pedido de compra y su factura de "
+"registrar la diferencia de precio entre una orden de compra y su factura de "
 "proveedor relacionada al validar esta factura de proveedor."
 
 #. module: purchase
@@ -2854,7 +2854,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note is added to purchase orders."
-msgstr "Esta nota se agrega a los pedidos de compra."
+msgstr "Esta nota se agrega a las órdenes de compra."
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -2882,8 +2882,8 @@ msgstr "Esta factura de proveedor ha sido modificada desde: %s"
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
 msgid "This vendor has no purchase order. Create a new RfQ"
 msgstr ""
-"Este vendedor no tiene ningún pedido de compra. Cree una nueva solicitud de "
-"presupuesto"
+"Este vendedor no tiene ninguna orden de compra. Cree una nueva solicitud de "
+"cotización"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
@@ -3146,7 +3146,7 @@ msgstr "Para facturar"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Waiting RFQs"
-msgstr "RFQ en espera"
+msgstr "Solicitudes de cotización en espera"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
@@ -3219,7 +3219,7 @@ msgstr ""
 "Al enviar una orden de compra por correo electrónico, Odoo le pide al "
 "proveedor que reconozca la recepción del mismo. Cuando el proveedor reconoce"
 " el pedido haciendo clic en un botón en el correo electrónico, la "
-"información se agrega en el pedido de compra. Utilice filtros para realizar "
+"información se agrega en la orden de compra. Utilice filtros para realizar "
 "un seguimiento de los pedidos que no se han confirmado."
 
 #. module: purchase
@@ -3242,7 +3242,7 @@ msgid ""
 "You cannot change the type of a purchase order line. Instead you should "
 "delete the current line and create a new line of the proper type."
 msgstr ""
-"No puede cambiar el tipo de línea de pedido de compra. En su lugar, debe "
+"No puede cambiar el tipo de línea de la orden de compra. En su lugar, debe "
 "eliminar la línea actual y crear una nueva línea del tipo adecuado."
 
 #. module: purchase

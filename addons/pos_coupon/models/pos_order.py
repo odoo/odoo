@@ -64,8 +64,18 @@ class PosOrder(models.Model):
 
     def _get_fields_for_order_line(self):
         fields = super(PosOrder, self)._get_fields_for_order_line()
-        fields.append('is_program_reward')
+        fields.extend({
+            'is_program_reward',
+            'coupon_id',
+            'program_id',
+        })
         return fields
+
+    def _prepare_order_line(self, order_line):
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+        if order_line['program_id']:
+            order_line['program_id'] = order_line['program_id'][0]
+        return order_line
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"

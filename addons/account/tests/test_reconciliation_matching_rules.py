@@ -659,7 +659,9 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     def test_matching_fields_match_partner_category_ids(self):
         test_category = self.env['res.partner.category'].create({'name': 'Consulting Services'})
-        self.partner_2.category_id = test_category
+        test_category2 = self.env['res.partner.category'].create({'name': 'Consulting Services2'})
+
+        self.partner_2.category_id = test_category + test_category2
         self.rule_1.match_partner_category_ids |= test_category
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': []},
@@ -958,6 +960,61 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': invoice_line.ids, 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
             self.bank_line_2.id: {'aml_ids': []},
         }, statements=self.bank_st)
+
+    def test_auto_reconcile_with_tax_and_foreign_currency(self):
+        ''' Test auto reconciliation of a bank statement in foreign currency journal with tax in counterpart values'''
+
+        currency_statement = self.currency_data_2['currency']
+
+        journal = self.env['account.journal'].create({
+            'name': 'test_match_multi_currencies',
+            'code': 'xxxx',
+            'type': 'bank',
+            'currency_id': currency_statement.id,
+        })
+
+        self.rule_1.write({
+            'auto_reconcile': True,
+            'rule_type': 'writeoff_suggestion',
+            'match_journal_ids': [(6, 0, journal.ids)],
+            'match_same_currency': False,
+            'match_nature': 'both',
+            'match_partner': False,
+            'match_label': 'contains',
+            'match_label_param': 'Tournicoti',  # So that we only match what we want to test
+            'line_ids': [(1, self.rule_1.line_ids.id, {
+                'amount': 100,
+                'force_tax_included': True,
+                'tax_ids': [(6, 0, self.tax21.ids)],
+            })]
+        })
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_match_multi_currencies',
+            'journal_id': journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'journal_id': journal.id,
+                    'date': '2016-01-01',
+                    'payment_ref': 'TournicotiTest',
+                    'amount': 100.0,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        statement.button_post()
+
+        self._check_statement_matching(self.rule_1, {
+            statement_line.id: {'aml_ids': [], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.env['res.partner']},
+        }, statements=statement)
+
+        # Check first line has been well reconciled.
+        self.assertRecordValues(statement_line.line_ids, [
+            {'partner_id': False, 'debit': 10.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': False},
+            {'partner_id': False, 'debit': 0.0, 'credit': 8.26, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': False, 'debit': 0.0, 'credit': 1.74, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+        ])
 
     def test_invoice_matching_rule_no_partner(self):
         """ Tests that a statement line without any partner can be matched to the

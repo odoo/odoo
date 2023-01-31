@@ -18,6 +18,12 @@ class TestUi(HttpCaseWithUserDemo):
         # The tour created and saved an email. The edited version should be
         # saved in body_arch, and its transpiled version (see convert_inline)
         # for email client compatibility should be saved in body_html. This
-        # ensures both fields have different values.
-        self.assertEqual(mail.body_arch, '<p><br></p>')
-        self.assertEqual(mail.body_html, '<p style="margin:0px 0 14px 0;box-sizing:border-box;"><br></p>')
+        # ensures both fields have different values (the mailing body should
+        # have been converted to a table in body_html).
+        self.assertIn('data-snippet="s_title"', mail.body_arch)
+        self.assertTrue(mail.body_arch.startswith('<div'))
+        self.assertIn('data-snippet="s_title"', mail.body_html)
+        self.assertTrue(mail.body_html.startswith('<table'))
+
+    def test_02_mass_mailing_snippets_menu_tabs(self):
+        self.start_tour("/web", 'mass_mailing_snippets_menu_tabs', login="demo")

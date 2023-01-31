@@ -173,7 +173,7 @@ var PosDB = core.Class.extend({
         str  = product.id + ':' + str.replace(/:/g,'') + '\n';
         return str;
     },
-    add_products: function(products){
+    add_products: async function(products){
         var stored_categories = this.product_by_category_id;
 
         if(!products instanceof Array){
@@ -509,14 +509,14 @@ var PosDB = core.Class.extend({
     },
     /**
      * Return the orders with requested ids if they are unpaid.
-     * @param {array<number>} ids order_ids.
+     * @param {array<string>} ids order_ids (uid).
      * @return {array<object>} list of orders.
      */
     get_unpaid_orders_to_sync: function(ids){
         var saved = this.load('unpaid_orders',[]);
         var orders = [];
         saved.forEach(function(o) {
-            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length)){
+            if (ids.includes(o.id) && (o.data.server_id || o.data.lines.length || o.data.statement_ids.length)){
                 orders.push(o);
             }
         });

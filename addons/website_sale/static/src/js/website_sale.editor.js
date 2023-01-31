@@ -47,6 +47,37 @@ WebsiteNewMenu.include({
 });
 });
 
+odoo.define('website_sale.editMenu', function (require) {
+    'use strict';
+
+var WebsiteEditMenu = require('website.editMenu');
+
+// TODO this whole include actually seems unnecessary. The bug it solved seems
+// to stay solved if this is removed. To investigate.
+WebsiteEditMenu.include({
+    /**
+     * @override
+     */
+    _getContentEditableAreas() {
+        const array = this._super(...arguments);
+        return array.filter(el => {
+            // TODO should really review this system of "ContentEditableAreas +
+            // ReadOnlyAreas", here the "products_header" stuff is duplicated in
+            // both but this system is also duplicated with o_not_editable and
+            // maybe even other systems (like preserving contenteditable="false"
+            // with oe-keep-contenteditable).
+            return !el.closest('.oe_website_sale .products_header');
+        });
+    },
+    /**
+     * @override
+     */
+    _getReadOnlyAreas () {
+        return $("#wrapwrap").find('.oe_website_sale .products_header, .oe_website_sale .products_header a').toArray();
+    },
+});
+});
+
 //==============================================================================
 
 odoo.define('website_sale.editor', function (require) {

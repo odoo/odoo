@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_edi
 #: code:addons/account_edi/models/account_move.py:0
@@ -49,7 +49,7 @@ msgstr "È stato richiesto un annullamento di EDI."
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
-msgstr "Una richiesta di cancellazione dell'EDI è stata annullata."
+msgstr "Una richiesta di annullamento EDI è stata annullata."
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_ir_attachment
@@ -429,6 +429,12 @@ msgstr ""
 #: model:ir.model.constraint,message:account_edi.constraint_account_edi_format_unique_code
 msgid "This code already exists"
 msgstr "Codice già esistente"
+
+#. module: account_edi
+#: code:addons/account_edi/models/account_edi_document.py:0
+#, python-format
+msgid "This document is being sent by another process already. "
+msgstr "Questo documento è già stato inviato da un altro processo."
 
 #. module: account_edi
 #: model:ir.model.fields.selection,name:account_edi.selection__account_edi_document__state__to_cancel

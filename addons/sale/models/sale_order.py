@@ -10,6 +10,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import float_is_zero, html_keep_url, is_html_empty
 
+from odoo.addons.payment import utils as payment_utils
 
 class SaleOrder(models.Model):
     _name = "sale.order"
@@ -30,6 +31,10 @@ class SaleOrder(models.Model):
 
     def _get_default_require_payment(self):
         return self.env.company.portal_confirmation_pay
+
+    def _compute_amount_total_without_delivery(self):
+        self.ensure_one()
+        return self.amount_total
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -185,12 +190,14 @@ class SaleOrder(models.Model):
 
     user_id = fields.Many2one(
         'res.users', string='Salesperson', index=True, tracking=2, default=lambda self: self.env.user,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('sales_team.group_sale_salesman').id)])
+        domain=lambda self: "[('groups_id', '=', {}), ('share', '=', False), ('company_ids', '=', company_id)]".format(
+            self.env.ref("sales_team.group_sale_salesman").id
+        ),)
     partner_id = fields.Many2one(
         'res.partner', string='Customer', readonly=True,
         states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         required=True, change_default=True, index=True, tracking=1,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",)
+        domain="[('type', '!=', 'private'), ('company_id', 'in', (False, company_id))]",)
     partner_invoice_id = fields.Many2one(
         'res.partner', string='Invoice Address',
         readonly=True, required=True,
@@ -209,8 +216,9 @@ class SaleOrder(models.Model):
     currency_id = fields.Many2one(related='pricelist_id.currency_id', depends=["pricelist_id"], store=True, ondelete="restrict")
     analytic_account_id = fields.Many2one(
         'account.analytic.account', 'Analytic Account',
-        readonly=True, copy=False, check_company=True,  # Unrequired company
-        states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
+        compute='_compute_analytic_account_id', store=True,
+        readonly=False, copy=False, check_company=True,  # Unrequired company
+        states={'sale': [('readonly', True)], 'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="The analytic account related to a sales order.")
 
@@ -346,10 +354,6 @@ class SaleOrder(models.Model):
             tax_totals = account_move._get_tax_totals(order.partner_id, tax_lines_data, order.amount_total, order.amount_untaxed, order.currency_id)
             order.tax_totals_json = json.dumps(tax_totals)
 
-    @api.onchange('expected_date')
-    def _onchange_expected_date(self):
-        self.commitment_date = self.expected_date
-
     @api.depends('transaction_ids')
     def _compute_authorized_transaction_ids(self):
         for trans in self:
@@ -359,7 +363,7 @@ class SaleOrder(models.Model):
         for order in self:
             total = 0.0
             for line in order.order_line:
-                total += line.price_subtotal + line.price_unit * ((line.discount or 0.0) / 100.0) * line.product_uom_qty  # why is there a discount in a field named amount_undiscounted ??
+                total += (line.price_subtotal * 100)/(100-line.discount) if line.discount != 100 else (line.price_unit * line.product_uom_qty)
             order.amount_undiscounted = total
 
     @api.depends('state')
@@ -374,6 +378,18 @@ class SaleOrder(models.Model):
                 record.tax_country_id = record.fiscal_position_id.country_id
             else:
                 record.tax_country_id = record.company_id.account_fiscal_country_id
+
+    @api.depends('partner_id', 'date_order')
+    def _compute_analytic_account_id(self):
+        for order in self:
+            if not order.analytic_account_id:
+                default_analytic_account = order.env['account.analytic.default'].sudo().account_get(
+                    partner_id=order.partner_id.id,
+                    user_id=order.env.uid,
+                    date=order.date_order,
+                    company_id=order.company_id.id,
+                )
+                order.analytic_account_id = default_analytic_account.analytic_id
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_draft_or_cancel(self):
@@ -443,16 +459,18 @@ class SaleOrder(models.Model):
             elif not is_html_empty(self.env.company.invoice_terms):
                 values['note'] = self.with_context(lang=self.partner_id.lang).env.company.invoice_terms
         if not self.env.context.get('not_self_saleperson') or not self.team_id:
+            default_team = self.env.context.get('default_team_id', False) or self.partner_id.team_id.id
             values['team_id'] = self.env['crm.team'].with_context(
-                default_team_id=self.partner_id.team_id.id
+                default_team_id=default_team
             )._get_default_team_id(domain=['|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)], user_id=user_id)
         self.update(values)
 
     @api.onchange('user_id')
     def onchange_user_id(self):
         if self.user_id:
+            default_team = self.env.context.get('default_team_id', False) or self.team_id.id
             self.team_id = self.env['crm.team'].with_context(
-                default_team_id=self.team_id.id
+                default_team_id=default_team
             )._get_default_team_id(user_id=self.user_id.id, domain=None)
 
     @api.onchange('partner_id')
@@ -480,7 +498,7 @@ class SaleOrder(models.Model):
                 }
             }
 
-    @api.onchange('commitment_date')
+    @api.onchange('commitment_date', 'expected_date')
     def _onchange_commitment_date(self):
         """ Warn if the commitment dates is sooner than the expected date """
         if (self.commitment_date and self.expected_date and self.commitment_date < self.expected_date):
@@ -499,26 +517,16 @@ class SaleOrder(models.Model):
         else:
             self.show_update_pricelist = False
 
+    def _get_update_prices_lines(self):
+        """ Hook to exclude specific lines which should not be updated based on price list recomputation """
+        return self.order_line.filtered(lambda line: not line.display_type)
+
     def update_prices(self):
         self.ensure_one()
-        lines_to_update = []
-        for line in self.order_line.filtered(lambda line: not line.display_type):
-            product = line.product_id.with_context(
-                partner=self.partner_id,
-                quantity=line.product_uom_qty,
-                date=self.date_order,
-                pricelist=self.pricelist_id.id,
-                uom=line.product_uom.id
-            )
-            price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                line._get_display_price(product), line.product_id.taxes_id, line.tax_id, line.company_id)
-            if self.pricelist_id.discount_policy == 'without_discount' and price_unit:
-                price_discount_unrounded = self.pricelist_id.get_product_price(product, line.product_uom_qty, self.partner_id, self.date_order, line.product_uom.id)
-                discount = max(0, (price_unit - price_discount_unrounded) * 100 / price_unit)
-            else:
-                discount = 0
-            lines_to_update.append((1, line.id, {'price_unit': price_unit, 'discount': discount}))
-        self.update({'order_line': lines_to_update})
+        for line in self._get_update_prices_lines():
+            line.product_uom_change()
+            line.discount = 0  # Force 0 as discount for the cases when _onchange_discount directly returns
+            line._onchange_discount()
         self.show_update_pricelist = False
         self.message_post(body=_("Product prices have been recomputed according to pricelist <b>%s<b> ", self.pricelist_id.display_name))
 
@@ -590,7 +598,7 @@ class SaleOrder(models.Model):
         self and self.activity_unlink(['sale.mail_act_sale_upsell'])
         for order in self:
             ref = "<a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a>"
-            order_ref = ref % (order._name, order.id, order.name)
+            order_ref = ref % (order._name, order.id or order._origin.id, order.name)
             customer_ref = ref % (order.partner_id._name, order.partner_id.id, order.partner_id.display_name)
             order.activity_schedule(
                 'sale.mail_act_sale_upsell',
@@ -622,7 +630,7 @@ class SaleOrder(models.Model):
             'partner_id': self.partner_invoice_id.id,
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(self.partner_invoice_id.id)).id,
-            'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
+            'partner_bank_id': self.company_id.partner_id.bank_ids.filtered(lambda bank: bank.company_id.id in (self.company_id.id, False))[:1].id,
             'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
@@ -868,7 +876,7 @@ class SaleOrder(models.Model):
     def _action_cancel(self):
         inv = self.invoice_ids.filtered(lambda inv: inv.state == 'draft')
         inv.button_cancel()
-        return self.write({'state': 'cancel'})
+        return self.write({'state': 'cancel', 'show_update_pricelist': False})
 
     def _show_cancel_wizard(self):
         for order in self:
@@ -877,6 +885,7 @@ class SaleOrder(models.Model):
         return False
 
     def _find_mail_template(self, force_confirmation_template=False):
+        self.ensure_one()
         template_id = False
 
         if force_confirmation_template or (self.state == 'sale' and not self.env.context.get('proforma', False)):
@@ -937,9 +946,9 @@ class SaleOrder(models.Model):
         if self.env.su:
             # sending mail in sudo was meant for it being sent from superuser
             self = self.with_user(SUPERUSER_ID)
-        template_id = self._find_mail_template(force_confirmation_template=True)
-        if template_id:
-            for order in self:
+        for order in self:
+            template_id = order._find_mail_template(force_confirmation_template=True)
+            if template_id:
                 order.with_context(force_send=True).message_post_with_template(template_id, composition_mode='comment', email_layout_xmlid="mail.mail_notification_paynow")
 
     def action_done(self):
@@ -1055,10 +1064,16 @@ class SaleOrder(models.Model):
                 line.qty_to_invoice = 0
 
     def payment_action_capture(self):
-        self.authorized_transaction_ids._send_capture_request()
+        """ Capture all transactions linked to this sale order. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_capture()
 
     def payment_action_void(self):
-        self.authorized_transaction_ids._send_void_request()
+        """ Void all transactions linked to this sale order. """
+        payment_utils.check_rights_on_recordset(self)
+        # In sudo mode because we need to be able to read on acquirer fields.
+        self.authorized_transaction_ids.sudo().action_void()
 
     def get_portal_last_transaction(self):
         self.ensure_one()
@@ -1084,6 +1099,7 @@ class SaleOrder(models.Model):
 
         :param optional_values: any parameter that should be added to the returned down payment section
         """
+        context = {'lang': self.partner_id.lang}
         down_payments_section_line = {
             'display_type': 'line_section',
             'name': _('Down Payments'),
@@ -1094,6 +1110,7 @@ class SaleOrder(models.Model):
             'price_unit': 0,
             'account_id': False
         }
+        del context
         if optional_values:
             down_payments_section_line.update(optional_values)
         return down_payments_section_line

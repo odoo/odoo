@@ -599,3 +599,45 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(purchase_order_line.product_qty, 45, 'The demand on the Purchase Order should not have been increased since it is has been confirmed.')
         purchase_orders = self.env['purchase.order'].search([('partner_id', '=', partner.id)])
         self.assertEqual(len(purchase_orders), 2, 'A new RFQ should have been created for missing demand.')
+
+    def test_update_qty_purchased(self):
+        """
+            Test that the price unit in the purchase order line and the move is updated
+            according to the price defined in the PO line when the PO is confirmed,
+            and that the "stock.moves" are merged correctly when changing the qty purchased.
+        """
+        # add vendor to the product
+        self.product_id_1.seller_ids = [(0, 0, {
+            'name': self.partner_id.id,
+            'min_qty': 10,
+            'price': 15,
+        })]
+
+        # Create PO
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product_id_1
+            po_line.product_qty = 10
+        purchase_order = po_form.save()
+
+        # Confirm Purchase order
+        purchase_order.button_confirm()
+        # Check purchase order state, it should be "purchase".
+        self.assertEqual(purchase_order.state, 'purchase', 'Purchase order should be in purchase state.')
+        # Make sure that picking has been created
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        # check that the price list has been applied
+        self.assertEqual(purchase_order.order_line.price_unit, 15)
+        self.assertEqual(purchase_order.picking_ids.move_lines.price_unit, 15)
+        # update the product qty purchased
+        with po_form.order_line.edit(0) as po_line:
+            po_line.product_qty = 9
+            po_line.price_unit = 10
+        purchase_order = po_form.save()
+        # verify that the move for the decreased qty has been merged with the initial move
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        self.assertEqual(len(purchase_order.picking_ids.move_lines), 1)
+        # check that the price has been updated in the purchase order line and in the stock.move
+        self.assertEqual(purchase_order.order_line.price_unit, 10)
+        self.assertEqual(purchase_order.picking_ids.move_lines.price_unit, 10)

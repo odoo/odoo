@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-from hashlib import sha1
+from hashlib import new as hashnew
 
 import requests
 
@@ -27,9 +27,9 @@ class PaymentAcquirer(models.Model):
     ogone_password = fields.Char(
         string="API User Password", required_if_provider='ogone', groups='base.group_system')
     ogone_shakey_in = fields.Char(
-        string="SHA Key IN", size=32, required_if_provider='ogone', groups='base.group_system')
+        string="SHA Key IN", required_if_provider='ogone', groups='base.group_system')
     ogone_shakey_out = fields.Char(
-        string="SHA Key OUT", size=32, required_if_provider='ogone', groups='base.group_system')
+        string="SHA Key OUT", required_if_provider='ogone', groups='base.group_system')
 
     @api.model
     def _get_compatible_acquirers(self, *args, is_validation=False, **kwargs):
@@ -88,8 +88,14 @@ class PaymentAcquirer(models.Model):
             formatted_items = [(k.upper(), v) for k, v in values.items()]
         sorted_items = sorted(formatted_items)
         signing_string = ''.join(f'{k}={v}{key}' for k, v in sorted_items if _filter_key(k) and v)
-        shasign = sha1(signing_string.encode()).hexdigest()
-        return shasign
+        signing_string = signing_string.encode()
+        hash_function = self.env['ir.config_parameter'].sudo().get_param('payment_ogone.hash_function')
+        if not hash_function or hash_function.lower() not in ['sha1', 'sha256', 'sha512']:
+            hash_function = 'sha1'
+
+        shasign = hashnew(hash_function)
+        shasign.update(signing_string)
+        return shasign.hexdigest()
 
     def _ogone_make_request(self, payload=None, method='POST'):
         """ Make a request to one of Ogone APIs.

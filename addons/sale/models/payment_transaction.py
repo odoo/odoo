@@ -92,11 +92,12 @@ class PaymentTransaction(models.Model):
 
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
-        sales_orders = self.mapped('sale_order_ids').filtered(lambda so: so.state in ('draft', 'sent'))
+        draft_orders = self.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
         for tx in self:
             tx._check_amount_and_confirm_order()
+        confirmed_sales_orders = draft_orders.filtered(lambda so: so.state in ('sale', 'done'))
         # send order confirmation mail
-        sales_orders._send_order_confirmation_mail()
+        confirmed_sales_orders._send_order_confirmation_mail()
         # invoice the sale orders if needed
         self._invoice_sale_orders()
         res = super()._reconcile_after_done()

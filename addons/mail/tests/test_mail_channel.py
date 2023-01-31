@@ -85,8 +85,9 @@ class TestChannelAccessRights(MailCommon):
         # Employee update employee-based group: ok
         group_groups.write({'name': 'modified'})
 
-        # Employee unlink employee-based group: ok
-        group_groups.unlink()
+        # Employee unlink employee-based group: ko
+        with self.assertRaises(AccessError):
+            group_groups.unlink()
 
         # Employee cannot read a private group
         with self.assertRaises(AccessError):
@@ -354,6 +355,14 @@ class TestChannelInternals(MailCommon):
             "Last message id should stay the same after mark channel as seen with an older message"
         )
 
+    def test_channel_message_post_should_not_allow_adding_wrong_parent(self):
+        channels = self.env['mail.channel'].create([{'name': '1'}, {'name': '2'}])
+        message = self._add_messages(channels[0], 'Body1')
+        message_format2 = channels[1].message_post(body='Body2', parent_id=message.id)
+        self.assertFalse(message_format2['parent_id'], "should not allow parent from wrong thread")
+        message_format3 = channels[1].message_post(body='Body3', parent_id=message.id + 100)
+        self.assertFalse(message_format3['parent_id'], "should not allow non-existing parent")
+
     @mute_logger('odoo.models.unlink')
     def test_channel_unsubscribe_auto(self):
         """ Archiving / deleting a user should automatically unsubscribe related
@@ -399,6 +408,16 @@ class TestChannelInternals(MailCommon):
         self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
         self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
         self.assertEqual(test_chat.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
+    @users('employee')
+    def test_channel_private_unfollow(self):
+        """ Test that a partner can leave (unfollow) a private channel. """
+        channel_private = self.env['mail.channel'].create({
+            'name': 'Winden caves',
+            'public': 'private',
+        })
+        channel_private.action_unfollow()
+        self.assertEqual(channel_private.channel_partner_ids, self.env['res.partner'])
 
     def test_channel_unfollow_should_not_post_message_if_the_partner_has_been_removed(self):
         '''
@@ -473,6 +492,30 @@ class TestChannelInternals(MailCommon):
         ):
             channel.image_128 = base64.b64encode(("<svg/>").encode())
 
+    def test_mail_message_starred_private_channel(self):
+        """ Test starred message computation for a private channel. A starred
+        message in a private channel should be considered only if:
+            - It's our message
+            - OR we have access to the channel
+        """
+        self.assertEqual(self.user_employee._init_messaging()['starred_counter'], 0)
+        private_channel = self.env['mail.channel'].create({
+            'name': 'Private Channel',
+            'public': 'private',
+            'channel_partner_ids': [(6, 0, self.partner_employee.id)]
+        })
+
+        private_channel_own_message = private_channel.with_user(self.user_employee.id).message_post(body='TestingMessage')
+        private_channel_own_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
+
+        private_channel_message = private_channel.message_post(body='TestingMessage')
+        private_channel_message.write({'starred_partner_ids': [(6, 0, self.partner_employee.ids)]})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 2)
+
+        private_channel.write({'channel_partner_ids': False})
+        self.assertEqual(self.user_employee.with_user(self.user_employee)._init_messaging()['starred_counter'], 1)
+
     def test_multi_company_chat(self):
         self._activate_multi_company()
         self.assertEqual(self.env.user.company_id, self.company_admin)
@@ -482,3 +525,11 @@ class TestChannelInternals(MailCommon):
                 allowed_company_ids=self.company_admin.ids
             ).channel_get(self.partner_employee_c2.ids)
             self.assertTrue(initial_channel_info, 'should be able to chat with multi company user')
+
+    @users('employee')
+    def test_create_chat_channel_should_only_pin_the_channel_for_the_current_user(self):
+        chat = self.env['mail.channel'].channel_get(partners_to=self.test_partner.ids)
+        member_of_current_user = self.env['mail.channel.partner'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.env.user.partner_id.id)])
+        member_of_correspondent = self.env['mail.channel.partner'].search([('channel_id', '=', chat['id']), ('partner_id', '=', self.test_partner.id)])
+        self.assertTrue(member_of_current_user.is_pinned)
+        self.assertFalse(member_of_correspondent.is_pinned)

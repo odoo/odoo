@@ -5,6 +5,7 @@
 # Copyright 2015 Camptocamp SA
 
 from odoo.addons.stock.tests.common2 import TestStockCommon
+from odoo.exceptions import UserError
 from odoo.tests.common import Form
 
 
@@ -106,6 +107,33 @@ class TestVirtualAvailable(TestStockCommon):
         self.product_3.active = False
         self.assertFalse(orderpoint.active)
 
+    def test_change_product_company(self):
+        """ Checks we can't change the product's company if this product has
+        quant in another company. """
+        company1 = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        product = self.env['product.product'].create({
+            'name': 'Product [TEST - Change Company]',
+            'type': 'product',
+        })
+        # Creates a quant for productA in the first company.
+        self.env['stock.quant'].create({
+            'product_id': product.id,
+            'product_uom_id': self.uom_unit.id,
+            'location_id': self.location_1.id,
+            'quantity': 7,
+            'reserved_quantity': 0,
+        })
+        # Assigns a company: should be OK for company1 but should raise an error for company2.
+        product.company_id = company1.id
+        with self.assertRaises(UserError):
+            product.company_id = company2.id
+        # Checks we can assing company2 for the product once there is no more quant for it.
+        quant = self.env['stock.quant'].search([('product_id', '=', product.id)])
+        quant.quantity = 0
+        self.env['stock.quant']._unlink_zero_quants()
+        product.company_id = company2.id  # Should work this time.
+
     def test_search_qty_available(self):
         product = self.env['product.product'].create({
             'name': 'Brand new product',
@@ -116,3 +144,63 @@ class TestVirtualAvailable(TestStockCommon):
             ('id', 'in', product.ids),
         ])
         self.assertEqual(product, result)
+
+    def test_search_product_template(self):
+        """
+        Suppose a variant V01 that can not be deleted because it is used by a
+        lot [1]. Then, the variant's template T is changed: we add a dynamic
+        attribute. Because of [1], V01 is archived. This test ensures that
+        `name_search` still finds T.
+        Then, we create a new variant V02 of T. This test also ensures that
+        calling `name_search` with a negative operator will exclude T from the
+        result.
+        """
+        template = self.env['product.template'].create({
+            'name': 'Super Product',
+        })
+        product01 = template.product_variant_id
+
+        self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': product01.id,
+            'company_id': self.env.company.id,
+        })
+
+        product_attribute = self.env['product.attribute'].create({
+            'name': 'PA',
+            'create_variant': 'dynamic'
+        })
+
+        self.env['product.attribute.value'].create([{
+            'name': 'PAV' + str(i),
+            'attribute_id': product_attribute.id
+        } for i in range(2)])
+
+        tmpl_attr_lines = self.env['product.template.attribute.line'].create({
+            'attribute_id': product_attribute.id,
+            'product_tmpl_id': product01.product_tmpl_id.id,
+            'value_ids': [(6, 0, product_attribute.value_ids.ids)],
+        })
+
+        self.assertFalse(product01.active)
+        self.assertTrue(template.active)
+        self.assertFalse(template.product_variant_ids)
+
+        res = self.env['product.template'].name_search(name='super', operator='ilike')
+        res_ids = [r[0] for r in res]
+        self.assertIn(template.id, res_ids)
+
+        product02 = self.env['product.product'].create({
+            'default_code': '123',
+            'product_tmpl_id': template.id,
+            'product_template_attribute_value_ids': [(6, 0, tmpl_attr_lines.product_template_value_ids[0].ids)]
+        })
+
+        self.assertFalse(product01.active)
+        self.assertTrue(product02.active)
+        self.assertTrue(template)
+        self.assertEqual(template.product_variant_ids, product02)
+
+        res = self.env['product.template'].name_search(name='123', operator='not ilike')
+        res_ids = [r[0] for r in res]
+        self.assertNotIn(template.id, res_ids)

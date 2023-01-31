@@ -44,6 +44,7 @@ var Tip = Widget.extend({
                 x: 50,
                 y: 50,
             },
+            content: _t("Click here to go to the next step."),
             scrollContent: _t("Scroll to reach the next step."),
         });
         this.position = {
@@ -169,13 +170,13 @@ var Tip = Widget.extend({
             this._setupAnchor($anchor, $altAnchor);
         }
         this._bind_anchor_events();
-        this._delegateEvents();
         if (!this.$el) {
             // Ideally this case should not happen but this is still possible,
             // as update may be called before the `start` method is called.
             // The `start` method is calling _updatePosition too anyway.
             return;
         }
+        this._delegateEvents();
         this._updatePosition(true);
     },
 

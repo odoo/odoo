@@ -471,26 +471,26 @@ class StockQuant(TransactionCase):
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
         self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, 1.0, lot_id=lot1, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 1.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 0.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
 
         self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, lot_id=lot1, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
         with self.assertRaises(UserError):
             self.env['stock.quant']._update_reserved_quantity(self.product_serial, self.stock_location, -1.0, strict=True)
 
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location), 2.0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, strict=True), 1.0)
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 1.0)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product_serial, self.stock_location, lot_id=lot1), 2.0)
 
     def test_access_rights_1(self):
         """ Directly update the quant with a user with or without stock access rights should not raise
@@ -750,3 +750,49 @@ class StockQuant(TransactionCase):
 
         quant = self.gather_relevant(self.product, self.stock_subloc2)
         self.assertFalse(quant.inventory_quantity_set)
+
+    def test_unpack_and_quants_merging(self):
+        """
+        When unpacking a package, if there are already some quantities of the
+        packed product in the stock, the quant of the on hand quantity and the
+        one of the package should be merged
+        """
+        stock_location = self.env['stock.warehouse'].search([], limit=1).lot_stock_id
+        supplier_location = self.env.ref('stock.stock_location_suppliers')
+        picking_type_in = self.env.ref('stock.picking_type_in')
+
+        self.env['stock.quant']._update_available_quantity(self.product, stock_location, 1.0)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': picking_type_in.id,
+            'location_id': supplier_location.id,
+            'location_dest_id': stock_location.id,
+            'move_lines': [(0, 0, {
+                'name': 'In 10 x %s' % self.product.name,
+                'product_id': self.product.id,
+                'location_id': supplier_location.id,
+                'location_dest_id': stock_location.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product.uom_id.id,
+            })],
+        })
+        picking.action_confirm()
+
+        package = self.env['stock.quant.package'].create({
+            'name': 'Super Package',
+        })
+        picking.move_lines.move_line_ids.write({
+            'qty_done': 10,
+            'result_package_id': package.id,
+        })
+        picking.button_validate()
+
+        package.unpack()
+
+        quant = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('on_hand', '=', True)])
+        self.assertEqual(len(quant), 1)
+        # The quants merging is processed thanks to a SQL query (see StockQuant._merge_quants).
+        # At that point, the ORM is not aware of the new value. So we need to invalidate the
+        # cache to ensure that the value will be the newest
+        quant.invalidate_cache(fnames=['quantity'], ids=quant.ids)
+        self.assertEqual(quant.quantity, 11)

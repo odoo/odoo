@@ -5,6 +5,7 @@
         <field name="model">account.analytic.account</field>
         <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
         <field eval="14" name="priority"/>
+        <field name="groups_id" eval="[(4, ref('mrp.group_mrp_user'))]"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="action_view_mrp_production"

@@ -225,6 +225,56 @@ export async function triggerEvents(el, querySelector, events) {
     }
 }
 
+/**
+ * Triggers a scroll event on the given target
+ *
+ * If the target cannot be scrolled or an axis has reached
+ * the end of the scrollable area, the event can be transmitted
+ * to its nearest parent until it can be triggered
+ *
+ * @param {HTMLElement} target target of the scroll event
+ * @param {Object} coordinates
+ * @param {Number} coordinates[left] coordinates to scroll horizontally
+ * @param {Number} coordinates[top] coordinates to scroll vertically
+ * @param {Boolean} canPropagate states if the scroll can propagate to a scrollable parent
+ */
+export async function triggerScroll(
+    target,
+    coordinates = { left: null, top: null },
+    canPropagate = true
+) {
+    const isScrollable =
+        (target.scrollHeight > target.clientHeight && target.clientHeight > 0) ||
+        (target.scrollWidth > target.clientWidth && target.clientWidth > 0);
+    if (!isScrollable && !canPropagate) return;
+    if (isScrollable) {
+        const canScrollFrom = {
+            left:
+                coordinates.left > target.scrollLeft
+                    ? target.scrollLeft + target.clientWidth < target.scrollWidth
+                    : target.scrollLeft > 0,
+            top:
+                coordinates.top > target.scrollTop
+                    ? target.scrollTop + target.clientHeight < target.scrollHeight
+                    : target.scrollTop > 0,
+        };
+        const scrollCoordinates = {};
+        Object.entries(coordinates).forEach(([key, value]) => {
+            if (value !== null && canScrollFrom[key]) {
+                scrollCoordinates[key] = value;
+                delete coordinates[key];
+            }
+        });
+        target.scrollTo(scrollCoordinates);
+        target.dispatchEvent(new UIEvent("scroll"));
+        if (!canPropagate || !Object.entries(coordinates).length) return;
+    }
+    target.parentElement
+        ? triggerScroll(target.parentElement, coordinates)
+        : window.dispatchEvent(new UIEvent("scroll"));
+    await nextTick();
+}
+
 export function click(el, selector) {
     return triggerEvent(el, selector, "click", { bubbles: true, cancelable: true });
 }
@@ -263,8 +313,12 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
         }
     }
 
-    window.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
-    window.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
+    if (!("bubbles" in eventAttrs)) {
+        eventAttrs.bubbles = true;
+    }
+
+    document.activeElement.dispatchEvent(new KeyboardEvent("keydown", eventAttrs));
+    document.activeElement.dispatchEvent(new KeyboardEvent("keyup", eventAttrs));
 }
 
 export async function legacyExtraNextTick() {
@@ -282,7 +336,7 @@ for (const propName of Object.keys(window.console)) {
 
 export function mockTimeout() {
     const timeouts = new Map();
-    let id = 0;
+    let id = 1;
     patchWithCleanup(browser, {
         setTimeout(fn) {
             timeouts.set(id, fn);
@@ -302,7 +356,7 @@ export function mockTimeout() {
 
 export function mockAnimationFrame() {
     const callbacks = new Map();
-    let id = 0;
+    let id = 1;
     patchWithCleanup(browser, {
         requestAnimationFrame(fn) {
             callbacks.set(id, fn);

@@ -334,7 +334,7 @@ class MailThread(models.AbstractModel):
             return True
         # discard pending tracking
         self._discard_tracking()
-        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)]).sudo().unlink()
+        self.env['mail.message'].sudo().search([('model', '=', self._name), ('res_id', 'in', self.ids)]).unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
@@ -1254,6 +1254,9 @@ class MailThread(models.AbstractModel):
             mixed = False
             html = u''
             for part in message.walk():
+                if part.get_content_type() == 'binary/octet-stream':
+                    _logger.warning("Message containing an unexpected Content-Type 'binary/octet-stream', assuming 'application/octet-stream'")
+                    part.replace_header('Content-Type', 'application/octet-stream')
                 if part.get_content_type() == 'multipart/alternative':
                     alternative = True
                 if part.get_content_type() == 'multipart/mixed':
@@ -1333,7 +1336,7 @@ class MailThread(models.AbstractModel):
         if email_part:
             if email_part.get_content_type() == 'text/rfc822-headers':
                 # Convert the message body into a message itself
-                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+                email_payload = message_from_string(email_part.get_content(), policy=policy.SMTP)
             else:
                 email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
@@ -1391,8 +1394,8 @@ class MailThread(models.AbstractModel):
         if message.get('Subject'):
             msg_dict['subject'] = tools.decode_message_header(message, 'Subject')
 
-        email_from = tools.decode_message_header(message, 'From')
-        email_cc = tools.decode_message_header(message, 'cc')
+        email_from = tools.decode_message_header(message, 'From', separator=',')
+        email_cc = tools.decode_message_header(message, 'cc', separator=',')
         email_from_list = tools.email_split_and_format(email_from)
         email_cc_list = tools.email_split_and_format(email_cc)
         msg_dict['email_from'] = email_from_list[0] if email_from_list else email_from
@@ -1402,18 +1405,18 @@ class MailThread(models.AbstractModel):
         # for all the odd MTAs out there, as there is no standard header for the envelope's `rcpt_to` value.
         msg_dict['recipients'] = ','.join(set(formatted_email
             for address in [
-                tools.decode_message_header(message, 'Delivered-To'),
-                tools.decode_message_header(message, 'To'),
-                tools.decode_message_header(message, 'Cc'),
-                tools.decode_message_header(message, 'Resent-To'),
-                tools.decode_message_header(message, 'Resent-Cc')
+                tools.decode_message_header(message, 'Delivered-To', separator=','),
+                tools.decode_message_header(message, 'To', separator=','),
+                tools.decode_message_header(message, 'Cc', separator=','),
+                tools.decode_message_header(message, 'Resent-To', separator=','),
+                tools.decode_message_header(message, 'Resent-Cc', separator=',')
             ] if address
             for formatted_email in tools.email_split_and_format(address))
         )
         msg_dict['to'] = ','.join(set(formatted_email
             for address in [
-                tools.decode_message_header(message, 'Delivered-To'),
-                tools.decode_message_header(message, 'To')
+                tools.decode_message_header(message, 'Delivered-To', separator=','),
+                tools.decode_message_header(message, 'To', separator=',')
             ] if address
             for formatted_email in tools.email_split_and_format(address))
         )
@@ -1443,10 +1446,16 @@ class MailThread(models.AbstractModel):
 
         parent_ids = False
         if msg_dict['in_reply_to']:
-            parent_ids = self.env['mail.message'].search([('message_id', '=', msg_dict['in_reply_to'])], limit=1)
+            parent_ids = self.env['mail.message'].search(
+                [('message_id', '=', msg_dict['in_reply_to'])],
+                order='create_date DESC, id DESC',
+                limit=1)
         if msg_dict['references'] and not parent_ids:
             references_msg_id_list = tools.mail_header_msgid_re.findall(msg_dict['references'])
-            parent_ids = self.env['mail.message'].search([('message_id', 'in', [x.strip() for x in references_msg_id_list])], limit=1)
+            parent_ids = self.env['mail.message'].search(
+                [('message_id', 'in', [x.strip() for x in references_msg_id_list])],
+                order='create_date DESC, id DESC',
+                limit=1)
         if parent_ids:
             msg_dict['parent_id'] = parent_ids.id
             msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
@@ -1827,8 +1836,6 @@ class MailThread(models.AbstractModel):
         if self._context.get('mail_post_autofollow') and partner_ids:
             self.message_subscribe(partner_ids=list(partner_ids))
 
-        parent_id = self._message_compute_parent_id(parent_id)
-
         values = dict(msg_kwargs)
         values.update({
             'author_id': author_id,
@@ -1839,7 +1846,7 @@ class MailThread(models.AbstractModel):
             'body': body,
             'subject': subject or False,
             'message_type': message_type,
-            'parent_id': parent_id,
+            'parent_id': self._message_compute_parent_id(parent_id),
             'subtype_id': subtype_id,
             'partner_ids': partner_ids,
             'add_sign': add_sign,
@@ -1917,14 +1924,19 @@ class MailThread(models.AbstractModel):
             views = views_or_xmlid
         if not views:
             return
+
+        messages_as_sudo = self.env['mail.message']
         for record in self:
             values['object'] = record
             rendered_template = views._render(values, engine='ir.qweb', minimal_qcontext=True)
             if message_log:
-                return record._message_log(body=rendered_template, **kwargs)
+                messages_as_sudo += record._message_log(body=rendered_template, **kwargs)
             else:
                 kwargs['body'] = rendered_template
-                return record.message_post_with_template(False, **kwargs)
+                # ``Composer._action_send_mail`` returns None in 15.0, no message to return here
+                record.message_post_with_template(False, **kwargs)
+
+        return messages_as_sudo
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id """
@@ -2086,6 +2098,13 @@ class MailThread(models.AbstractModel):
         return author_id, email_from
 
     def _message_compute_parent_id(self, parent_id):
+        # parent management, depending on ``_mail_flat_thread``
+        # ``_mail_flat_thread`` True: no free message. If no parent, find the first
+        # posted message and attach new message to it. If parent, get back to the first
+        # ancestor and attach it. We don't keep hierarchy (one level of threading).
+        # ``_mail_flat_thread`` False: free message = new thread (think of mailing lists).
+        # If parent get up one level to try to flatten threads without completely
+        # removing hierarchy.
         MailMessage_sudo = self.env['mail.message'].sudo()
         if self._mail_flat_thread and not parent_id:
             parent_message = MailMessage_sudo.search([('res_id', '=', self.id), ('model', '=', self._name), ('message_type', '!=', 'user_notification')], order="id ASC", limit=1)
@@ -2093,15 +2112,17 @@ class MailThread(models.AbstractModel):
             # Note that with sudo we will match message with internal subtypes.
             parent_id = parent_message.id if parent_message else False
         elif parent_id:
-            parent_message = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)], limit=1)
-            # avoid loops when finding ancestors
-            processed_list = []
-            if parent_message:
-                new_parent_id = parent_message.parent_id and parent_message.parent_id.id
-                while (new_parent_id and new_parent_id not in processed_list):
-                    processed_list.append(new_parent_id)
-                    parent_message = parent_message.parent_id
-                parent_id = parent_message.id
+            current_ancestor = MailMessage_sudo.search([('id', '=', parent_id), ('parent_id', '!=', False)])
+            if self._mail_flat_thread:
+                if current_ancestor:
+                    # avoid loops when finding ancestors
+                    processed_list = []
+                    while (current_ancestor.parent_id and current_ancestor.parent_id not in processed_list):
+                        processed_list.append(current_ancestor)
+                        current_ancestor = current_ancestor.parent_id
+                    parent_id = current_ancestor.id
+            else:
+                parent_id = current_ancestor.parent_id.id if current_ancestor.parent_id else parent_id
         return parent_id
 
     def _message_create(self, values_list):
@@ -2115,10 +2136,12 @@ class MailThread(models.AbstractModel):
                 create_values.pop(x, None)
             create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
             create_values_list.append(create_values)
-        if 'default_child_ids' in self._context:
-            ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
-            self = self.with_context(ctx)
-        return self.env['mail.message'].create(create_values_list)
+
+        # remove context, notably for default keys, as this thread method is not
+        # meant to propagate default values for messages, only for master records
+        return self.env['mail.message'].with_context(
+            clean_context(self.env.context)
+        ).create(create_values_list)
 
     # ------------------------------------------------------
     # NOTIFICATION API
@@ -2223,13 +2246,21 @@ class MailThread(models.AbstractModel):
         mail_subject = message.subject or (message.record_name and 'Re: %s' % message.record_name) # in cache, no queries
         # Replace new lines by spaces to conform to email headers requirements
         mail_subject = ' '.join((mail_subject or '').splitlines())
+        # compute references: set references to the parent and add current message just to
+        # have a fallback in case replies mess with Messsage-Id in the In-Reply-To (e.g. amazon
+        # SES SMTP may replace Message-Id and In-Reply-To refers an internal ID not stored in Odoo)
+        message_sudo = message.sudo()
+        if message_sudo.parent_id:
+            references = f'{message_sudo.parent_id.message_id} {message_sudo.message_id}'
+        else:
+            references = message_sudo.message_id
         # prepare notification mail values
         base_mail_values = {
             'mail_message_id': message.id,
             'mail_server_id': message.mail_server_id.id, # 2 query, check acces + read, may be useless, Falsy, when will it be used?
             'auto_delete': mail_auto_delete,
             # due to ir.rule, user have no right to access parent message if message is not published
-            'references': message.parent_id.sudo().message_id if message.parent_id else False,
+            'references': references,
             'subject': mail_subject,
         }
         base_mail_values = self._notify_by_email_add_values(base_mail_values)
@@ -2308,7 +2339,7 @@ class MailThread(models.AbstractModel):
         #   2. do not send emails immediately if the registry is not loaded,
         #      to prevent sending email during a simple update of the database
         #      using the command-line.
-        test_mode = getattr(threading.currentThread(), 'testing', False)
+        test_mode = getattr(threading.current_thread(), 'testing', False)
         if force_send and len(emails) < recipients_max and (not self.pool._init or test_mode):
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails

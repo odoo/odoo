@@ -125,7 +125,7 @@ class TestAutoComplete(TransactionCase):
             "Many results contain this page",
             "How many times does the word many appear",
             "Will there be many results",
-            "Welcome to our many friends",
+            "Welcome to our many friends next week-end",
             "This should only be approximately matched",
         ]
         for text in texts:
@@ -222,3 +222,35 @@ class TestAutoComplete(TransactionCase):
         for result in suggestions['results']:
             self._check_highlight("many", result['name'])
             self._check_highlight("many", result['description'])
+
+    def test_07_no_fuzzy_for_mostly_number(self):
+        """ Ensures exact match is used when search contains mostly numbers. """
+        self._create_page('Product P7935432254U7 page', 'Product P7935432254U7', '/numberpage')
+        suggestions = self._autocomplete("54321")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
+        suggestions = self._autocomplete("54322")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        suggestions = self._autocomplete("P79355")
+        self.assertEqual(0, suggestions['results_count'], "Test data contains no exact match")
+        suggestions = self._autocomplete("P79354")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one exact match")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")
+        suggestions = self._autocomplete("produkt")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one fuzzy match")
+        self.assertTrue(suggestions['fuzzy_search'], "Expects a fuzzy match")
+
+    def test_08_fuzzy_classic_numbers(self):
+        """ Ensures fuzzy match is used when search contains a few numbers. """
+        self._create_page('iPhone 6', 'iPhone6', '/iphone6')
+        suggestions = self._autocomplete("iphone7")
+        self.assertEqual(1, suggestions['results_count'], "Test data contains one fuzzy match")
+        self.assertTrue(suggestions['fuzzy_search'], "Expects an fuzzy match")
+
+    def test_09_hyphen(self):
+        """ Ensures that hyphen is considered part of word """
+        suggestions = self._autocomplete("weekend")
+        self.assertEqual(1, suggestions['results_count'], "Text data contains one page with 'weekend'")
+        self.assertEqual('week-end', suggestions['fuzzy_search'], "Expects a fuzzy match")
+        suggestions = self._autocomplete("week-end")
+        self.assertEqual(1, len(suggestions['results']), "All results must be present")
+        self.assertFalse(suggestions['fuzzy_search'], "Expects an exact match")

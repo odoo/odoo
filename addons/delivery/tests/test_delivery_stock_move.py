@@ -140,3 +140,48 @@ class StockMoveInvoice(AccountTestInvoicingCommon):
             ml.write({'qty_done': 1, 'lot_id': lot.id})
         self.picking = self.sale_prepaid.picking_ids._action_done()
         self.assertEqual(moves[0].move_line_ids[0].sale_price, 862.5, 'wrong shipping value')
+
+    def test_03_invoiced_status(self):
+        super_product = self.env['product.product'].create({
+            'name': 'Super Product',
+            'invoice_policy': 'delivery',
+        })
+        great_product = self.env['product.product'].create({
+            'name': 'Great Product',
+            'invoice_policy': 'delivery',
+        })
+
+        so = self.env['sale.order'].create({
+            'name': 'Sale order',
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {'name': super_product.name, 'product_id': super_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+                (0, 0, {'name': great_product.name, 'product_id': great_product.id, 'product_uom_qty': 1, 'price_unit': 1,}),
+            ]
+        })
+        # Confirm the SO
+        so.action_confirm()
+
+        # Deliver one product and create a backorder
+        self.assertEqual(sum([line.quantity_done for line in so.picking_ids.move_lines]), 0)
+        so.picking_ids.move_lines[0].quantity_done = 1
+        backorder_wizard_dict = so.picking_ids.button_validate()
+        backorder_wizard = Form(self.env[backorder_wizard_dict['res_model']].with_context(backorder_wizard_dict['context'])).save()
+        backorder_wizard.process()
+        self.assertEqual(sum([line.quantity_done for line in so.picking_ids.move_lines]), 1)
+
+        # Invoice the delivered product
+        invoice = so._create_invoices()
+        invoice.action_post()
+        self.assertEqual(so.invoice_status, 'no')
+
+        # Add delivery fee
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': so.id,
+            'default_carrier_id': self.normal_delivery.id
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        self.assertEqual(so.invoice_status, 'no', 'The status should still be "Nothing To Invoice"')

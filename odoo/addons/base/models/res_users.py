@@ -226,7 +226,6 @@ class Groups(models.Model):
         # DLE P139
         if self.ids:
             self.env['ir.model.access'].call_cache_clearing_methods()
-            self.env['res.users'].has_group.clear_cache(self.env['res.users'])
         return super(Groups, self).write(vals)
 
 
@@ -448,8 +447,9 @@ class Users(models.Model):
 
     def _read(self, fields):
         super(Users, self)._read(fields)
-        canwrite = self.check_access_rights('write', raise_exception=False)
-        if not canwrite and set(USER_PRIVATE_FIELDS).intersection(fields):
+        if set(USER_PRIVATE_FIELDS).intersection(fields):
+            if self.check_access_rights('write', raise_exception=False):
+                return
             for record in self:
                 for f in USER_PRIVATE_FIELDS:
                     try:
@@ -475,6 +475,14 @@ class Users(models.Model):
         action_open_website = self.env.ref('base.action_open_website', raise_if_not_found=False)
         if action_open_website and any(user.action_id.id == action_open_website.id for user in self):
             raise ValidationError(_('The "App Switcher" action cannot be selected as home action.'))
+        # Prevent using reload actions.
+        # We use sudo() because  "Access rights" admins can't read action models
+        for user in self.sudo():
+            if user.action_id.type == "ir.actions.client":
+                action = self.env["ir.actions.client"].browse(user.action_id.id)  # magic
+                if action.tag == "reload":
+                    raise ValidationError(_('The "%s" action cannot be selected as home action.', action.name))
+
 
     @api.constrains('groups_id')
     def _check_one_user_type(self):
@@ -817,8 +825,10 @@ class Users(models.Model):
     def has_group(self, group_ext_id):
         # use singleton's id if called on a non-empty recordset, otherwise
         # context uid
-        uid = self.id or self._uid
-        return self.with_user(uid)._has_group(group_ext_id)
+        uid = self.id
+        if uid and uid != self._uid:
+            self = self.with_user(uid)
+        return self._has_group(group_ext_id)
 
     @api.model
     @tools.ormcache('self._uid', 'group_ext_id')
@@ -834,11 +844,9 @@ class Users(models.Model):
         assert group_ext_id and '.' in group_ext_id, "External ID '%s' must be fully qualified" % group_ext_id
         module, ext_id = group_ext_id.split('.')
         self._cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
-                            (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
+                            (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s AND model='res.groups')""",
                          (self._uid, module, ext_id))
         return bool(self._cr.fetchone())
-    # for a few places explicitly clearing the has_group cache
-    has_group.clear_cache = _has_group.clear_cache
 
     def _action_show(self):
         """If self is a singleton, directly access the form view. If it is a recordset, open a tree view"""
@@ -1099,16 +1107,18 @@ class GroupsImplied(models.Model):
         """ Add the given group to the groups implied by the current group
         :param implied_group: the implied group to add
         """
-        if implied_group not in self.implied_ids:
-            self.write({'implied_ids': [Command.link(implied_group.id)]})
+        groups = self.filtered(lambda g: implied_group not in g.implied_ids)
+        groups.write({'implied_ids': [Command.link(implied_group.id)]})
 
     def _remove_group(self, implied_group):
         """ Remove the given group from the implied groups of the current group
         :param implied_group: the implied group to remove
         """
-        if implied_group in self.implied_ids:
-            self.write({'implied_ids': [Command.unlink(implied_group.id)]})
-            implied_group.write({'users': [Command.unlink(user.id) for user in self.users]})
+        groups = self.filtered(lambda g: implied_group in g.implied_ids)
+        if groups:
+            groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+            if groups.users:
+                implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
 class UsersImplied(models.Model):
     _inherit = 'res.users'
@@ -1125,19 +1135,23 @@ class UsersImplied(models.Model):
         return super(UsersImplied, self).create(vals_list)
 
     def write(self, values):
+        if not values.get('groups_id'):
+            return super(UsersImplied, self).write(values)
         users_before = self.filtered(lambda u: u.has_group('base.group_user'))
         res = super(UsersImplied, self).write(values)
-        if values.get('groups_id'):
-            # add implied groups for all users
-            for user in self:
-                if not user.has_group('base.group_user') and user in users_before:
-                    # if we demoted a user, we strip him of all its previous privileges
-                    # (but we should not do it if we are simply adding a technical group to a portal user)
-                    vals = {'groups_id': [Command.clear()] + values['groups_id']}
-                    super(UsersImplied, user).write(vals)
-                gs = set(concat(g.trans_implied_ids for g in user.groups_id))
-                vals = {'groups_id': [Command.link(g.id) for g in gs]}
-                super(UsersImplied, user).write(vals)
+        demoted_users = users_before.filtered(lambda u: not u.has_group('base.group_user'))
+        if demoted_users:
+            # demoted users are restricted to the assigned groups only
+            vals = {'groups_id': [Command.clear()] + values['groups_id']}
+            super(UsersImplied, demoted_users).write(vals)
+        # add implied groups for all users (in batches)
+        users_batch = defaultdict(self.browse)
+        for user in self:
+            users_batch[user.groups_id] += user
+        for groups, users in users_batch.items():
+            gs = set(concat(g.trans_implied_ids for g in groups))
+            vals = {'groups_id': [Command.link(g.id) for g in gs]}
+            super(UsersImplied, users).write(vals)
         return res
 
 #
@@ -1468,6 +1482,13 @@ class UsersView(models.Model):
                     values.pop('groups_id', None)
         return res
 
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        if fields:
+            # ignore reified fields
+            fields = [fname for fname in fields if not is_reified_group(fname)]
+        return super().read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
     def _add_reified_groups(self, fields, values):
         """ add the given reified group fields into `values` """
         gids = set(parse_m2m(values.get('groups_id') or []))
@@ -1753,8 +1774,7 @@ class APIKeyDescription(models.TransientModel):
     @check_identity
     def make_key(self):
         # only create keys for users who can delete their keys
-        if not self.user_has_groups('base.group_user'):
-            raise AccessError(_("Only internal users can create API keys"))
+        self.check_access_make_key()
 
         description = self.sudo()
         k = self.env['res.users.apikeys']._generate(None, self.sudo().name)
@@ -1770,6 +1790,10 @@ class APIKeyDescription(models.TransientModel):
                 'default_key': k,
             }
         }
+
+    def check_access_make_key(self):
+        if not self.user_has_groups('base.group_user'):
+            raise AccessError(_("Only internal users can create API keys"))
 
 class APIKeyShow(models.AbstractModel):
     _name = _description = 'res.users.apikeys.show'

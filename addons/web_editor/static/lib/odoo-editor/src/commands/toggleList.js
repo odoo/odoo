@@ -30,6 +30,9 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
         restoreCursor();
     } else {
         const list = insertListAfter(this, mode, [this]);
+        for (const attribute of this.attributes) {
+            list.setAttribute(attribute.name, attribute.value);
+        }
         restoreCursor(new Map([[this, list.firstElementChild]]));
     }
 };
@@ -37,6 +40,9 @@ HTMLElement.prototype.oToggleList = function (offset, mode = 'UL') {
 HTMLParagraphElement.prototype.oToggleList = function (offset, mode = 'UL') {
     const restoreCursor = preserveCursor(this.ownerDocument);
     const list = insertListAfter(this, mode, [[...this.childNodes]]);
+    for (const attribute of this.attributes) {
+        list.setAttribute(attribute.name, attribute.value);
+    }
     this.remove();
 
     restoreCursor(new Map([[this, list.firstChild]]));

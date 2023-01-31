@@ -85,17 +85,22 @@
                         </thead>
                         <tbody>
                             <t t-if="o.move_raw_ids">
-                                <tr t-foreach="o.move_raw_ids" t-as="raw_line">
+                                <tr t-foreach="o.move_raw_ids.filtered(lambda m: m.state != 'cancel')" t-as="raw_line">
                                     <td>
                                         <span t-field="raw_line.product_id"/>
                                     </td>
                                     <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
-                                        <span t-field="raw_line.product_uom_qty"/>
+                                        <t t-if="o.state == 'done'">
+                                            <span t-field="raw_line.quantity_done"/>
+                                        </t>
+                                        <t t-else="">
+                                            <span t-field="raw_line.product_uom_qty"/>
+                                        </t>
                                         <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td t-if="has_product_barcode" width="15%" class="text-center">
                                         <t t-if="raw_line.product_id.barcode">
-                                            <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
+                                            <div t-field="raw_line.product_id.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
                                         </t>
                                     </td>
                                 </tr>

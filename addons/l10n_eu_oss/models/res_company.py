@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, Command
+from odoo import Command, api, models
+from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
-
-import itertools
 
 
 class Company(models.Model):
@@ -39,18 +38,18 @@ class Company(models.Model):
                 ('foreign_vat', '!=', False),
             ])
             oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
-            for country in oss_countries:
+            for destination_country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
-                            ('country_id', '=', country.id),
+                            ('country_id', '=', destination_country.id),
                             ('company_id', '=', company.id),
                             ('auto_apply', '=', True),
                             ('vat_required', '=', False),
                             ('foreign_vat', '=', False)], limit=1)
                 if not fpos:
                     fpos = self.env['account.fiscal.position'].create({
-                        'name': 'OSS B2C %s' % country.name,
-                        'country_id': country.id,
+                        'name': f'OSS B2C {destination_country.name}',
+                        'country_id': destination_country.id,
                         'company_id': company.id,
                         'auto_apply': True,
                     })
@@ -58,26 +57,26 @@ class Company(models.Model):
                 foreign_taxes = {tax.amount: tax for tax in fpos.tax_ids.tax_dest_id if tax.amount_type == 'percent'}
 
                 for domestic_tax in taxes:
-                    tax_amount = EU_TAX_MAP.get((company.account_fiscal_country_id.code, domestic_tax.amount, country.code), False)
+                    tax_amount = EU_TAX_MAP.get((company.account_fiscal_country_id.code, domestic_tax.amount, destination_country.code), False)
                     if tax_amount and domestic_tax not in fpos.tax_ids.tax_src_id:
                         if not foreign_taxes.get(tax_amount, False):
-                            tax_group_fid = 'oss_tax_group_%s' % str(tax_amount).replace('.', '_')
-                            if not self.env.ref('l10n_eu_oss.%s' % tax_group_fid, raise_if_not_found=False):
+                            oss_tax_group_local_xml_id = f"oss_tax_group_{str(tax_amount).replace('.', '_')}"
+                            if not self.env.ref(f"l10n_eu_oss.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
                                 self.env['ir.model.data'].create({
-                                    'name': tax_group_fid,
+                                    'name': oss_tax_group_local_xml_id,
                                     'module': 'l10n_eu_oss',
                                     'model': 'account.tax.group',
-                                    'res_id': self.env['account.tax.group'].create({'name': 'OSS %s%%' % tax_amount}).id,
+                                    'res_id': self.env['account.tax.group'].create({'name': f'OSS {tax_amount}%'}).id,
                                     'noupdate': True,
-                                    })
+                                })
                             foreign_taxes[tax_amount] = self.env['account.tax'].create({
-                                'name': '%(rate)s%% %(country)s %(label)s' % {'rate': tax_amount, 'country': country.code, 'label': country.vat_label},
+                                'name': f'{tax_amount}% {destination_country.code} {destination_country.vat_label}',
                                 'amount': tax_amount,
                                 'invoice_repartition_line_ids': invoice_repartition_lines,
                                 'refund_repartition_line_ids': refund_repartition_lines,
                                 'type_tax_use': 'sale',
-                                'description': "%s%%" % tax_amount,
-                                'tax_group_id': self.env.ref('l10n_eu_oss.%s' % tax_group_fid).id,
+                                'description': f"{tax_amount}%",
+                                'tax_group_id': self.env.ref(f'l10n_eu_oss.{oss_tax_group_local_xml_id}').id,
                                 'country_id': company.account_fiscal_country_id.id,
                                 'sequence': 1000,
                                 'company_id': company.id,
@@ -91,21 +90,19 @@ class Company(models.Model):
     def _get_repartition_lines_oss(self):
         self.ensure_one()
         defaults = self.env['account.tax'].with_company(self).default_get(['invoice_repartition_line_ids', 'refund_repartition_line_ids'])
-        oss_account = self._get_oss_account()
-        if oss_account:
-            defaults['invoice_repartition_line_ids'][1][2]['account_id'] = oss_account.id
-            defaults['refund_repartition_line_ids'][1][2]['account_id'] = oss_account.id
-
-        oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
-        for orm_command in itertools.chain(defaults['invoice_repartition_line_ids'], defaults['refund_repartition_line_ids']):
-            rep_line_vals = orm_command[2]
-            rep_line_vals['tag_ids'] = rep_line_vals.get('tag_ids', []) + [Command.link(oss_tag.id)]
-
+        oss_account, oss_tags = self._get_oss_account(), self._get_oss_tags()
+        base_line, tax_line, vals = 0, 1, 2
+        for doc_type in 'invoice', 'refund':
+            if oss_account:
+                defaults[f'{doc_type}_repartition_line_ids'][tax_line][vals]['account_id'] = oss_account.id
+            if oss_tags:
+                defaults[f'{doc_type}_repartition_line_ids'][base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags[f'{doc_type}_base_tag']]
+                defaults[f'{doc_type}_repartition_line_ids'][tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags[f'{doc_type}_tax_tag']]
         return defaults['invoice_repartition_line_ids'], defaults['refund_repartition_line_ids']
 
     def _get_oss_account(self):
         self.ensure_one()
-        if not self.env.ref('l10n_eu_oss.oss_tax_account_company_%s' % self.id, raise_if_not_found=False):
+        if not self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}', raise_if_not_found=False):
             sales_tax_accounts = self.env['account.tax'].search([
                     ('type_tax_use', '=', 'sale'),
                     ('company_id', '=', self.id)
@@ -114,16 +111,35 @@ class Company(models.Model):
                 return False
             new_code = self.env['account.account']._search_new_account_code(self, len(sales_tax_accounts[0].code), sales_tax_accounts[0].code[:-2])
             oss_account = self.env['account.account'].create({
-                'name': '%s OSS' % sales_tax_accounts[0].name,
+                'name': f'{sales_tax_accounts[0].name} OSS',
                 'code': new_code,
                 'user_type_id': sales_tax_accounts[0].user_type_id.id,
                 'company_id': self.id,
                 })
             self.env['ir.model.data'].create({
-                'name': 'oss_tax_account_company_%s' % self.id,
+                'name': f'oss_tax_account_company_{self.id}',
                 'module': 'l10n_eu_oss',
                 'model': 'account.account',
                 'res_id': oss_account.id,
                 'noupdate': True,
                 })
-        return self.env.ref('l10n_eu_oss.oss_tax_account_company_%s' % self.id)
+        return self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}')
+
+    def _get_oss_tags(self):
+        oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
+        [chart_template_xml_id] = self.chart_template_id.parent_id.get_xml_id().values() or self.chart_template_id.get_xml_id().values()
+        tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
+            'invoice_base_tag': None,
+            'invoice_tax_tag': None,
+            'refund_base_tag': None,
+            'refund_tax_tag': None,
+        })
+
+        mapping = {}
+        for repartition_line_key, tag_xml_id in tag_for_country.items():
+            tag = self.env.ref(tag_xml_id) if tag_xml_id else self.env['account.account.tag']
+            if tag and tag._name == "account.tax.report.line":
+                tag = tag.tag_ids.filtered(lambda t: not t.tax_negate)
+            mapping[repartition_line_key] = tag + oss_tag
+
+        return mapping

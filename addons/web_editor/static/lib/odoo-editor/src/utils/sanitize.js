@@ -13,7 +13,10 @@ import {
     isMediaElement,
     getDeepRange,
     isUnbreakable,
-    isUnremovable
+    closestElement,
+    getUrlsInfosInString,
+    URL_REGEX,
+    isVoidElement,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -78,89 +81,133 @@ export function areSimilarElements(node, node2) {
 class Sanitize {
     constructor(root) {
         this.root = root;
+        const rootClosestBlock = closestBlock(root);
+        if (rootClosestBlock) {
+            // Remove unique ids from checklists. These will be renewed afterwards.
+            for (const node of rootClosestBlock.querySelectorAll('[id^=checklist-id-]')) {
+                node.removeAttribute('id');
+            }
+        }
         this.parse(root);
+        if (rootClosestBlock) {
+            // Ensure unique ids on checklists and stars.
+            for (const node of rootClosestBlock.querySelectorAll('.o_checklist > li')) {
+                node.setAttribute('id', `checklist-id-${Math.floor(new Date() * Math.random())}`);
+            }
+        }
     }
 
     parse(node) {
         node = closestBlock(node);
-        if (['UL', 'OL'].includes(node.tagName)) {
+        if (node && ['UL', 'OL'].includes(node.tagName)) {
             node = node.parentElement;
         }
         this._parse(node);
     }
 
     _parse(node) {
-        if (!node) {
-            return;
-        }
-
-        // Merge identical elements together
-        while (areSimilarElements(node, node.previousSibling) && !isUnbreakable(node)) {
-            getDeepRange(this.root, { select: true });
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
-            const nodeP = node.previousSibling;
-            moveNodes(...endPos(node.previousSibling), node);
-            restoreCursor();
-            node = nodeP;
-        }
-
-        // Remove zero-width spaces added by `fillEmpty` when there is content.
-        if (
-            node.nodeType === Node.TEXT_NODE &&
-            node.textContent.includes('\u200B') &&
-            (
-                node.textContent.length > 1 ||
-                // There can be multiple ajacent text nodes, in which case the
-                // zero-width space is not needed either, despite being alone
-                // (length === 1) in its own text node.
-                Array.from(node.parentNode.childNodes).find(
-                    sibling =>
-                        sibling !== node &&
-                        sibling.nodeType === Node.TEXT_NODE &&
-                        sibling.length > 0
-                )
-            ) &&
-            !isBlock(node.parentElement)
-        ) {
-            const restoreCursor = preserveCursor(this.root.ownerDocument);
-            node.textContent = node.textContent.replace('\u200B', '');
-            node.parentElement.removeAttribute("oe-zws-empty-inline");
-            restoreCursor();
-        }
-
-        // Remove empty blocks in <li>
-        if (node.nodeName === 'P' && node.parentElement.tagName === 'LI') {
-            const next = node.nextSibling;
-            const pnode = node.parentElement;
-            if (isEmptyBlock(node)) {
-                const restoreCursor = preserveCursor(this.root.ownerDocument);
-                node.remove();
-                fillEmpty(pnode);
-                this._parse(next);
-                restoreCursor(new Map([[node, pnode]]));
-                return;
+        while (node) {
+            // Merge identical elements together
+            while (
+                areSimilarElements(node, node.previousSibling) &&
+                !isUnbreakable(node)
+            ) {
+                getDeepRange(this.root, { select: true });
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                const nodeP = node.previousSibling;
+                moveNodes(...endPos(node.previousSibling), node);
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+                node = nodeP;
             }
-        }
 
-        // Sanitize font awesome elements
-        if (isFontAwesome(node)) {
+            const sel = this.root.ownerDocument.getSelection();
+            const anchor = sel && this.root.ownerDocument.getSelection().anchorNode;
+            const anchorEl = anchor && closestElement(anchor);
+            // Remove zero-width spaces added by `fillEmpty` when there is
+            // content and the selection is not next to it.
+            if (
+                node.nodeType === Node.TEXT_NODE &&
+                node.textContent.includes('\u200B') &&
+                node.parentElement.hasAttribute('oe-zws-empty-inline') &&
+                (
+                    node.textContent.length > 1 ||
+                    // There can be multiple ajacent text nodes, in which case
+                    // the zero-width space is not needed either, despite being
+                    // alone (length === 1) in its own text node.
+                    Array.from(node.parentNode.childNodes).find(
+                        sibling =>
+                            sibling !== node &&
+                            sibling.nodeType === Node.TEXT_NODE &&
+                            sibling.length > 0
+                    )
+                ) &&
+                !isBlock(node.parentElement) &&
+                anchor !== node
+            ) {
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                node.textContent = node.textContent.replace('\u200B', '');
+                node.parentElement.removeAttribute("oe-zws-empty-inline");
+                if (restoreCursor) {
+                    restoreCursor();
+                }
+            }
+
+            // Remove empty blocks in <li>
+            if (
+                node.nodeName === 'P' &&
+                node.parentElement.tagName === 'LI' &&
+                isEmptyBlock(node)
+            ) {
+                const parent = node.parentElement;
+                const restoreCursor = node.isConnected &&
+                    preserveCursor(this.root.ownerDocument);
+                node.remove();
+                fillEmpty(parent);
+                if (restoreCursor) {
+                    restoreCursor(new Map([[node, parent]]));
+                }
+            }
+
+            // Transform <li> into <p> if they are not in a <ul> / <ol>
+            if (node.nodeName === 'LI' && !node.closest('ul, ol')) {
+                const paragraph = document.createElement("p");
+                paragraph.replaceChildren(...node.childNodes);
+                node.replaceWith(paragraph);
+                node = paragraph;
+            }
+
             // Ensure a zero width space is present inside the FA element.
-            if (node.innerHTML !== '\u200B') node.innerHTML = '&#x200B;';
-        }
+            if (isFontAwesome(node) && node.textContent !== '\u200B') {
+                node.textContent = '\u200B';
+            }
 
-        // Sanitize media elements
-        if (isMediaElement(node)) {
-            // Ensure all media elements are tagged contenteditable=false.
-            // we cannot use the node.isContentEditable because it can wrongly return false
-            // when the editor is starting up ( first sanitize )
-            if (node.getAttribute('contenteditable') !== 'false') {
+            // Ensure elements which should not contain any content are tagged
+            // contenteditable=false to avoid any hiccup.
+            if (
+                isVoidElement(node) &&
+                node.getAttribute('contenteditable') !== 'false'
+            ) {
                 node.setAttribute('contenteditable', 'false');
             }
+            if (node.firstChild) {
+                this._parse(node.firstChild);
+            }
+            // Update link URL if label is a new valid link.
+            if (node.nodeName === 'A' && anchorEl === node) {
+                const linkLabel = node.textContent;
+                const match = linkLabel.match(URL_REGEX);
+                if (match && match[0] === node.textContent && !node.href.startsWith('mailto:')) {
+                    const urlInfo = getUrlsInfosInString(linkLabel)[0];
+                    node.setAttribute('href', urlInfo.url);
+                }
+            }
+            node = node.nextSibling;
         }
 
-        // FIXME not parse out of editable zone...
-        this._parse(node.firstChild);
-        this._parse(node.nextSibling);
     }
 }
 

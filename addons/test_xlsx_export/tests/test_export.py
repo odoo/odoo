@@ -7,6 +7,7 @@ from unittest.mock import patch
 
 from odoo import http
 from odoo.tests import common, tagged
+from odoo.tools.misc import get_lang
 from odoo.addons.web.controllers.main import ExportXlsxWriter
 from odoo.addons.mail.tests.common import mail_new_test_user
 
@@ -37,7 +38,12 @@ class XlsxCreatorCase(common.HttpCase):
         }
 
     def _mock_write(self, row, column, value, style=None):
-        self.worksheet[row, column] = str(value)
+        if isinstance(value, float):
+            decimal_places = style.num_format[::-1].find('.')
+            style_format = "{:." + str(decimal_places) + "f}"
+            self.worksheet[row, column] = style_format.format(value)
+        else:
+            self.worksheet[row, column] = str(value)
 
     def make(self, values, context=None):
         return self.model.with_context(**(context or {})).create(values)
@@ -73,6 +79,7 @@ class XlsxCreatorCase(common.HttpCase):
 @tagged('-at_install', 'post_install')
 class TestGroupedExport(XlsxCreatorCase):
     model_name = 'export.group_operator'
+    # pylint: disable=bad-whitespace
 
     def test_int_sum_max(self):
         values = [
@@ -119,12 +126,12 @@ class TestGroupedExport(XlsxCreatorCase):
             ['Int Sum'      ,'Float Min'],
             ['10 (2)'       ,'111.00'],
             ['    111.0 (1)','111.00'],
-            ['10'           ,'111.0'],
+            ['10'           ,'111.00'],
             ['    222.0 (1)','222.00'],
-            ['10'           ,'222.0'],
+            ['10'           ,'222.00'],
             ['20 (1)'       ,'333.00'],
             ['    333.0 (1)','333.00'],
-            ['20'           ,'333.0'],
+            ['20'           ,'333.00'],
         ])
 
     def test_float_avg(self):
@@ -139,12 +146,12 @@ class TestGroupedExport(XlsxCreatorCase):
             ['Int Sum'      ,'Float Avg'],
             ['10 (2)'       ,'150.00'],
             ['    100.0 (1)','100.00'],
-            ['10'           ,'100.0'],
+            ['10'           ,'100.00'],
             ['    200.0 (1)','200.00'],
-            ['10'           ,'200.0'],
+            ['10'           ,'200.00'],
             ['20 (1)'       ,'300.00'],
             ['    300.0 (1)','300.00'],
-            ['20'           ,'300.0'],
+            ['20'           ,'300.00'],
         ])
 
     def test_float_avg_nested(self):
@@ -161,12 +168,12 @@ class TestGroupedExport(XlsxCreatorCase):
             ['10 (3)'           ,'300.00'],
             ['    20 (1)'       ,'600.00'],
             ['        600.0 (1)','600.00'],
-            ['10'               ,'600.0'],
+            ['10'               ,'600.00'],
             ['    30 (2)'       ,'150.00'],
             ['        100.0 (1)','100.00'],
-            ['10'               ,'100.0'],
+            ['10'               ,'100.00'],
             ['        200.0 (1)','200.00'],
-            ['10'               ,'200.0'],
+            ['10'               ,'200.00'],
         ])
 
     def test_float_avg_nested_no_value(self):
@@ -183,11 +190,11 @@ class TestGroupedExport(XlsxCreatorCase):
             ['10 (3)'               ,'0.00'],
             ['    20 (1)'           ,'0.00'],
             ['        Undefined (1)','0.00'],
-            ['10'                   ,'0.0'],
+            ['10'                   ,'0.00'],
             ['    30 (2)'           ,'0.00'],
             ['        Undefined (2)','0.00'],
-            ['10'                   ,'0.0'],
-            ['10'                   ,'0.0'],
+            ['10'                   ,'0.00'],
+            ['10'                   ,'0.00'],
         ])
 
     def test_date_max(self):
@@ -361,11 +368,28 @@ class TestGroupedExport(XlsxCreatorCase):
             ['Int Sum', 'Float Monetary'],
             ['1 (1)', '60739.200'],
             ['    60739.2 (1)', '60739.200'],
-            ['1', '60739.2'],
+            ['1', '60739.20'],
             ['2 (1)', '2.000'],
             ['    2.0 (1)', '2.000'],
-            ['2', '2.0'],
+            ['2', '2.00'],
             ['3 (1)', '1000.000'],
             ['    1000.0 (1)', '1000.000'],
-            ['3', '1000.0'],
+            ['3', '1000.00'],
+        ])
+
+    def test_decimal_separator(self):
+        """ The decimal separator of the language used shouldn't impact the float representation in the exported xlsx """
+        get_lang(self.env).decimal_point = ','
+        get_lang(self.env).thousands_sep = '.'
+
+        values = [
+                {'int_sum': 1, 'float_min': 86420.864},
+        ]
+        export = self.export(values, fields=['int_sum', 'float_min'], params={'groupby': ['int_sum', 'float_min']})
+
+        self.assertExportEqual(export, [
+            ['Int Sum'          ,'Float Min'],
+            ['1 (1)'            ,'86420.86'],
+            ['    86420.864 (1)','86420.86'],
+            ['1'                ,'86420.86'],
         ])

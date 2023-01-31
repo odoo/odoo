@@ -28,6 +28,8 @@ class AccountTestInvoicingCommon(TransactionCase):
     def setUpClass(cls, chart_template_ref=None):
         super(AccountTestInvoicingCommon, cls).setUpClass()
 
+        assert 'post_install' in cls.test_tags, 'This test requires a CoA to be installed, it should be tagged "post_install"'
+
         if chart_template_ref:
             chart_template = cls.env.ref(chart_template_ref)
         else:
@@ -385,7 +387,8 @@ class AccountTestInvoicingCommon(TransactionCase):
                 line_form.product_id = product
                 if taxes:
                     line_form.tax_ids.clear()
-                    line_form.tax_ids.add(taxes)
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
 
         for amount in (amounts or []):
             with move_form.invoice_line_ids.new() as line_form:
@@ -659,7 +662,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         if currency_id:
             invoice_vals['currency_id'] = currency_id
 
-        invoice = self.env['account.move'].with_context(default_move_type=type).create(invoice_vals)
+        invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
         if auto_validate:
             invoice.action_post()
         return invoice

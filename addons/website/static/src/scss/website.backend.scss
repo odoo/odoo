@@ -217,13 +217,8 @@
     }
 }
 
-.oe_stat_button {
-    &.o_stat_button_info:hover {
-        color: #666666 !important;
-        background-color: transparent !important;
-        opacity: 0.8 !important;
-        cursor: default !important;
-    }
+.oe_stat_button.o_stat_button_info {
+    pointer-events: none;
 }
 
 .o_kanban_view.o_theme_kanban {

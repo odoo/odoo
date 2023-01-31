@@ -8,11 +8,11 @@
                             'o-downloadable': !attachmentCard.attachmentList.composerView,
                             'o-isUploading': attachmentCard.attachment.isUploading,
                             'o-viewable': attachmentCard.attachment.isViewable,
-                            }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" t-att-data-id="attachmentCard.attachment.localId"
+                            }" t-att-title="attachmentCard.attachment.displayName ? attachmentCard.attachment.displayName : undefined" role="menu" t-att-aria-label="attachmentCard.attachment.displayName" t-att-data-id="attachmentCard.attachment.localId"
                 >
                     <!-- Image style-->
                     <!-- o_image from mimetype.scss -->
-                    <div class="o_AttachmentCard_image o_image" t-on-click="attachmentCard.onClickImage" t-att-class="{'o-attachment-viewable': attachmentCard.attachment.isViewable,}" t-att-data-mimetype="attachmentCard.attachment.mimetype">
+                    <div class="o_AttachmentCard_image o_image" t-on-click="attachmentCard.onClickImage" t-att-class="{'o-attachment-viewable': attachmentCard.attachment.isViewable,}" role="menuitem" aria-label="Preview" t-att-tabindex="attachmentCard.attachment.isViewable ? 0 : -1" t-att-aria-disabled="!attachmentCard.attachment.isViewable" t-att-data-mimetype="attachmentCard.attachment.mimetype">
                     </div>
                     <!-- Attachment details -->
                     <div class="o_AttachmentCard_details d-flex justify-content-center">
@@ -44,13 +44,13 @@
                             </t>
                             <!-- Remove button -->
                             <t t-if="attachmentCard.attachment.isEditable">
-                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink d-flex justify-content-center align-items-center" t-att-class="{ 'o-pretty position-absolute': attachmentCard.attachmentList.composerView }" t-on-click="attachmentCard.onClickUnlink" title="Remove">
+                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemUnlink d-flex justify-content-center align-items-center" t-att-class="{ 'o-pretty position-absolute': attachmentCard.attachmentList.composerView }" tabindex="0" aria-label="Remove" role="menuitem" t-on-click="attachmentCard.onClickUnlink" title="Remove">
                                     <i class="fa fa-trash"/>
                                 </div>
                             </t>
                             <!-- Download button -->
                             <t t-if="!attachmentCard.attachmentList.composerView and !attachmentCard.attachment.isUploading">
-                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload d-flex justify-content-center align-items-center" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
+                                <div class="o_AttachmentCard_asideItem o_AttachmentCard_asideItemDownload d-flex justify-content-center align-items-center" tabindex="0" aria-label="Download" role="menuitem" t-on-click="attachmentCard.attachment.onClickDownload" title="Download">
                                     <i class="fa fa-download"/>
                                 </div>
                             </t>

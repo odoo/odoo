@@ -1123,7 +1123,7 @@ class TestStockFlow(TestStockCommon):
         self.assertEqual(lotproduct.qty_available, 10, "Wrong qty available for lotproduct")
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', lot1.id)])
         total_qty = sum([quant.quantity for quant in quants])
-        self.assertEqual(total_qty, 10, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
+        self.assertEqual(total_qty, 10, 'Expecting 10 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
         quants = self.StockQuantObj.search([('product_id', '=', lotproduct.id), ('location_id', '=', self.stock_location), ('lot_id', '=', False)])
         total_qty = sum([quant.quantity for quant in quants])
         self.assertEqual(total_qty, 0, 'Expecting 0 units lot of lotproduct, but we got %.4f on location stock!' % (total_qty))
@@ -2102,3 +2102,143 @@ class TestStockFlow(TestStockCommon):
 
         bo = self.env['stock.picking'].search([('backorder_id', '=', picking_out.id)])
         self.assertEqual(bo.state, 'assigned')
+
+    def test_stock_move_with_partner_id(self):
+        """ Ensure that the partner_id of the picking entry is
+        transmitted to the SM upon object creation.
+        """
+        partner_1 = self.env['res.partner'].create({'name': 'Hubert Bonisseur de la Bath'})
+        partner_2 = self.env['res.partner'].create({'name': 'Donald Clairvoyant du Bled'})
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'type': 'product'})
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        f = Form(self.env['stock.picking'])
+        f.partner_id = partner_1
+        f.picking_type_id = wh.out_type_id
+        with f.move_ids_without_package.new() as move:
+            move.product_id = product
+            move.product_uom_qty = 5
+        picking = f.save()
+
+        self.assertEqual(picking.move_lines.partner_id, partner_1)
+
+        picking.write({'partner_id': partner_2.id})
+        self.assertEqual(picking.move_lines.partner_id, partner_2)
+
+    def test_cancel_picking_with_scrapped_products(self):
+        """
+        The user scraps some products of a picking, then cancel this picking
+        The test ensures that the scrapped SM is not cancelled
+        """
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10)
+
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+        move = self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location,
+        })
+
+        picking.action_confirm()
+        picking.action_assign()
+
+        scrap = self.env['stock.scrap'].create({
+            'picking_id': picking.id,
+            'product_id': self.productA.id,
+            'product_uom_id': self.productA.uom_id.id,
+            'scrap_qty': 1.0,
+        })
+        scrap.do_scrap()
+
+        picking.action_cancel()
+
+        self.assertEqual(picking.state, 'cancel')
+        self.assertEqual(move.state, 'cancel')
+        self.assertEqual(scrap.move_id.state, 'done')
+
+    def test_receive_tracked_product(self):
+        self.productA.tracking = 'serial'
+        type_in = self.env['stock.picking.type'].browse(self.picking_type_in)
+
+        receipt_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
+        receipt_form.picking_type_id = type_in
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.productA
+        receipt = receipt_form.save()
+
+        move_form = Form(receipt.move_lines, view='stock.view_stock_move_nosuggest_operations')
+        with move_form.move_line_nosuggest_ids.new() as line:
+            line.lot_name = "USN01"
+        move_form.save()
+
+        receipt.button_validate()
+        quant = self.productA.stock_quant_ids.filtered(lambda q: q.location_id.id == self.stock_location)
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(quant.quantity, 1.0)
+        self.assertEqual(quant.lot_id.name, 'USN01')
+
+    def test_assign_sm_to_existing_picking(self):
+        """
+        Suppose:
+            - Two warehouses WH01, WH02
+            - Three products with the route 'WH02 supplied by WH01'
+        We trigger an orderpoint for each product
+        There should be two pickings (out from WH01 + in to WH02)
+        """
+        wh01_address, wh02_address = self.env['res.partner'].create([{
+            'name': 'Address %s' % i,
+            'parent_id': self.env.company.id,
+            'type': 'delivery',
+        } for i in [1, 2]])
+
+        warehouse01 = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse01.partner_id = wh01_address
+        warehouse02 = self.env['stock.warehouse'].create({
+            'name': 'Second Warehouse',
+            'code': 'WH02',
+            'partner_id': wh02_address.id,
+            'resupply_wh_ids': [(6, 0, warehouse01.ids)],
+        })
+
+        wh01_stock_location = warehouse01.lot_stock_id
+        wh02_stock_location = warehouse02.lot_stock_id
+        products = self.productA + self.productB + self.productC
+
+        for product in products:
+            product.route_ids = [(6, 0, warehouse02.resupply_route_ids.ids)]
+            self.env['stock.quant']._update_available_quantity(product, wh01_stock_location, 10)
+            self.env['stock.warehouse.orderpoint'].create({
+                'name': 'RR for %s' % product.name,
+                'warehouse_id': warehouse02.id,
+                'location_id': wh02_stock_location.id,
+                'product_id': product.id,
+                'product_min_qty': 1,
+                'product_max_qty': 5,
+            })
+
+        self.env['procurement.group'].run_scheduler()
+
+        out_moves = self.env['stock.move'].search([('product_id', 'in', products.ids), ('picking_id', '!=', False), ('location_id', '=', wh01_stock_location.id)])
+        in_moves = self.env['stock.move'].search([('product_id', 'in', products.ids), ('picking_id', '!=', False), ('location_dest_id', '=', wh02_stock_location.id)])
+
+        out_picking = out_moves[0].picking_id
+        self.assertEqual(len(out_moves), 3)
+        self.assertEqual(out_moves.product_id, products)
+        self.assertEqual(out_moves.picking_id, out_picking, 'All SM should be part of the same picking')
+        self.assertEqual(out_picking.partner_id, wh02_address, 'It should be an outgoing picking to %s' % wh02_address.display_name)
+
+        in_picking = in_moves[0].picking_id
+        self.assertEqual(len(in_moves), 3)
+        self.assertEqual(in_moves.product_id, products)
+        self.assertEqual(in_moves.picking_id, in_picking, 'All SM should be part of the same picking')
+        self.assertEqual(in_picking.partner_id, wh01_address, 'It should be an incoming picking from %s' % wh01_address.display_name)

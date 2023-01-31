@@ -42,7 +42,8 @@ class MrpBom(models.Model):
     byproduct_ids = fields.One2many('mrp.bom.byproduct', 'bom_id', 'By-products', copy=True)
     product_qty = fields.Float(
         'Quantity', default=1.0,
-        digits='Unit of Measure', required=True)
+        digits='Unit of Measure', required=True,
+        help="This should be the smallest quantity that this product can be produced in. If the BOM contains operations, make sure the work center capacity is accurate.")
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
         default=_get_default_product_uom_id, required=True,
@@ -132,6 +133,18 @@ class MrpBom(models.Model):
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
 
+    @api.onchange('bom_line_ids', 'product_qty')
+    def onchange_bom_structure(self):
+        if self.type == 'phantom' and self._origin and self.env['stock.move'].search([('bom_line_id', 'in', self._origin.bom_line_ids.ids)], limit=1):
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _(
+                        'The product has already been used at least once, editing its structure may lead to undesirable behaviours. '
+                        'You should rather archive the product and create a new one with a new bill of materials.'),
+                }
+            }
+
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}
@@ -165,8 +178,9 @@ class MrpBom(models.Model):
         res = super().copy(default)
         for bom_line in res.bom_line_ids:
             if bom_line.operation_id:
-                operation = res.operation_ids.filtered(lambda op: op.name == bom_line.operation_id.name and op.workcenter_id == bom_line.operation_id.workcenter_id)
-                bom_line.operation_id = operation
+                operation = res.operation_ids.filtered(lambda op: op._get_comparison_values() == bom_line.operation_id._get_comparison_values())
+                # Two operations could have the same values so we take the first one
+                bom_line.operation_id = operation[:1]
         return res
 
     @api.model
@@ -207,7 +221,7 @@ class MrpBom(models.Model):
 
     @api.model
     def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
-        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
+        domain = ['&', '|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids), ('active', '=', True)]
         if company_id or self.env.context.get('company_id'):
             domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
         if picking_type:

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.hr_expense.tests.common import TestExpenseCommon
 from odoo.tests import tagged, Form
+from odoo.tools.misc import formatLang
 from odoo import fields
 
 
@@ -67,9 +68,9 @@ class TestExpenses(TestExpenseCommon):
         """ Checking accounting move entries and analytic entries when submitting expense """
 
         # The expense employee is able to a create an expense sheet.
-        # The total should be 1725.0 because:
-        # - first line: 1000.0 (unit amount) + 150.0 (tax) = 1150.0
-        # - second line: (1500.0 (unit amount) + 225.0 (tax)) * 1/3 (rate) = 575.0.
+        # The total should be 1500.0 because:
+        # - first line: 1000.0 (unit amount), 130.43 (tax). But taxes are included in total thus - 1000
+        # - second line: (1500.0 (unit amount), 195.652 (tax)) - 65.22 (tax in company currency). total 1500.0 * 1/3 (rate) = 500
 
         expense_sheet = self.env['hr.expense.sheet'].create({
             'name': 'First Expense for employee',
@@ -102,7 +103,7 @@ class TestExpenses(TestExpenseCommon):
         })
 
         # Check expense sheet values.
-        self.assertRecordValues(expense_sheet, [{'state': 'draft', 'total_amount': 1725.0}])
+        self.assertRecordValues(expense_sheet, [{'state': 'draft', 'total_amount': 1500.0}])
 
         expense_sheet.action_submit_sheet()
         expense_sheet.approve_expense_sheets()
@@ -113,8 +114,8 @@ class TestExpenses(TestExpenseCommon):
             # Receivable line (company currency):
             {
                 'debit': 0.0,
-                'credit': 1150.0,
-                'amount_currency': -1150.0,
+                'credit': 1000.0,
+                'amount_currency': -1000.0,
                 'account_id': self.company_data['default_account_payable'].id,
                 'product_id': False,
                 'currency_id': self.company_data['currency'].id,
@@ -124,8 +125,8 @@ class TestExpenses(TestExpenseCommon):
             # Receivable line (foreign currency):
             {
                 'debit': 0.0,
-                'credit': 862.5,
-                'amount_currency': -1725.0,
+                'credit': 750,
+                'amount_currency': -1500.0,
                 'account_id': self.company_data['default_account_payable'].id,
                 'product_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -134,9 +135,9 @@ class TestExpenses(TestExpenseCommon):
             },
             # Tax line (foreign currency):
             {
-                'debit': 112.5,
+                'debit': 97.83,
                 'credit': 0.0,
-                'amount_currency': 225.0,
+                'amount_currency': 195.652,
                 'account_id': self.company_data['default_account_tax_purchase'].id,
                 'product_id': False,
                 'currency_id': self.currency_data['currency'].id,
@@ -145,9 +146,9 @@ class TestExpenses(TestExpenseCommon):
             },
             # Tax line (company currency):
             {
-                'debit': 150.0,
+                'debit': 130.43,
                 'credit': 0.0,
-                'amount_currency': 150.0,
+                'amount_currency': 130.43,
                 'account_id': self.company_data['default_account_tax_purchase'].id,
                 'product_id': False,
                 'currency_id': self.company_data['currency'].id,
@@ -156,9 +157,9 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (foreign currency):
             {
-                'debit': 750.0,
+                'debit': 652.17,
                 'credit': 0.0,
-                'amount_currency': 1500.0,
+                'amount_currency': 1304.348, # untaxed amount
                 'account_id': self.company_data['default_account_expense'].id,
                 'product_id': self.product_b.id,
                 'currency_id': self.currency_data['currency'].id,
@@ -167,9 +168,9 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (company currency):
             {
-                'debit': 1000.0,
+                'debit': 869.57,
                 'credit': 0.0,
-                'amount_currency': 1000.0,
+                'amount_currency': 869.57,
                 'account_id': self.company_data['default_account_expense'].id,
                 'product_id': self.product_a.id,
                 'currency_id': self.company_data['currency'].id,
@@ -181,13 +182,13 @@ class TestExpenses(TestExpenseCommon):
         # Check expense analytic lines.
         self.assertRecordValues(expense_sheet.account_move_id.line_ids.analytic_line_ids.sorted('amount'), [
             {
-                'amount': -1000.0,
+                'amount': -869.57,
                 'date': fields.Date.from_string('2017-01-01'),
                 'account_id': self.analytic_account_1.id,
                 'currency_id': self.company_data['currency'].id,
             },
             {
-                'amount': -750.0,
+                'amount': -652.17,
                 'date': fields.Date.from_string('2017-01-01'),
                 'account_id': self.analytic_account_2.id,
                 'currency_id': self.company_data['currency'].id,
@@ -350,3 +351,84 @@ class TestExpenses(TestExpenseCommon):
         move = self.env['account.payment'].browse(action['res_id']).move_id
         move.button_cancel()
         self.assertEqual(sheet.state, 'cancel', 'Sheet state must be cancel when the payment linked to that sheet is canceled')
+
+    def test_expense_amount_total_signed_compute(self):
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id
+                }),
+            ],
+        })
+
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
+        action = wizard.action_create_payments()
+
+        move = self.env['account.payment'].browse(action['res_id']).move_id
+        self.assertEqual(move.amount_total_signed, 10.0, 'The total amount of the payment move is not correct')
+
+    def test_print_expense_check(self):
+        """
+        Test the check content when printing a check
+        that comes from an expense
+        """
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 10.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+                (0, 0, {
+                    'name': 'expense_2',
+                    'date': '2016-01-01',
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1.0,
+                    'employee_id': self.expense_employee.id,
+                }),
+            ],
+        })
+
+        #actions
+        sheet.action_submit_sheet()
+        sheet.approve_expense_sheets()
+        sheet.action_sheet_move_create()
+        action_data = sheet.action_register_payment()
+        payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            wiz_form.payment_method_line_id = payment_method_line
+        wizard = wiz_form.save()
+        action = wizard.action_create_payments()
+        self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
+
+        payment = self.env[action['res_model']].browse(action['res_id'])
+        pages = payment._check_get_pages()
+        stub_line = pages[0]['stub_lines'][:1]
+        self.assertTrue(stub_line)
+        move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+        self.assertDictEqual(stub_line[0], {
+            'due_date': '',
+            'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+            'amount_total': formatLang(self.env, 11.0, currency_obj=self.env.company.currency_id),
+            'amount_residual': '-',
+            'amount_paid': formatLang(self.env, 11.0, currency_obj=self.env.company.currency_id),
+            'currency': self.env.company.currency_id
+        })

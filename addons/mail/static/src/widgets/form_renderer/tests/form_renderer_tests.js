@@ -5,6 +5,7 @@ import {
     afterEach,
     afterNextRender,
     beforeEach,
+    isScrolledToBottom,
     nextAnimationFrame,
     start,
 } from '@mail/utils/test_utils';
@@ -341,7 +342,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
     assert.containsNone(
         document.body,
         '.o_FollowerListMenu',
-        "there should be no followers menu"
+        "there should be no followers menu because the 'message_follower_ids' field is not present in 'oe_chatter'"
     );
     assert.containsOnce(
         document.body,
@@ -391,7 +392,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
     assert.containsNone(
         document.body,
         '.o_ChatterTopbar_buttonScheduleActivity',
-        "there should be a schedule activity button"
+        "there should be no schedule activity button because the 'activity_ids' field is not present in 'oe_chatter'"
     );
     assert.containsOnce(
         document.body,
@@ -456,7 +457,7 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_Chatter_thread',
-        "there should be a thread"
+        "there should be no thread because the 'message_ids' field is not present in 'oe_chatter'"
     );
 });
 
@@ -844,9 +845,8 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
             'scroll'
         );
     });
-    assert.strictEqual(
-        controllerContentEl.scrollTop,
-        controllerContentEl.scrollHeight - controllerContentEl.clientHeight,
+    assert.ok(
+        isScrolledToBottom(controllerContentEl),
         "The controller container should be scrolled to its bottom"
     );
 

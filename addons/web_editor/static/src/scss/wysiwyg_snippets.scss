@@ -176,16 +176,17 @@ body.editor_enable.editor_has_snippets {
 
 %we-generic-tab-button {
     @extend %we-generic-link;
-    @include o-text-overflow(inline-flex);
+    display: inline-flex;
     flex: 1 1 auto;
     justify-content: center;
+    min-width: 0;
     border: none;
     background-color: transparent;
     color: inherit;
     font-weight: normal;
 
     > span {
-        display: inline-block;
+        @include o-text-overflow(inline-block);
         $-r: $o-we-sidebar-tabs-size-ratio;
         padding: (0.6em * $-r) (0.4em * $-r) (0.5em * $-r);
     }
@@ -576,6 +577,7 @@ body.editor_enable.editor_has_snippets {
             }
 
             #colorInputButtonGroup {
+                position: static;
                 grid-area: colors;
 
                 .dropdown-toggle:after {
@@ -585,7 +587,7 @@ body.editor_enable.editor_has_snippets {
                 .colorpicker-group {
                     display: flex;
                     align-items: stretch;
-                    position: initial;
+                    position: static;
                 }
 
                 #oe-text-color {
@@ -667,12 +669,17 @@ body.editor_enable.editor_has_snippets {
             }
 
             .dropdown-menu.colorpicker-menu {
+                min-width: 0;
                 max-height: none;
-                left: auto;
-                right: 0;
+                left: $o-we-sidebar-content-indent;
+                right: $o-we-sidebar-content-padding-base;
                 border: $o-we-sidebar-content-field-dropdown-border-width solid $o-we-sidebar-content-field-dropdown-border-color;
                 border-radius: $o-we-item-border-radius;
                 padding: 0;
+            }
+
+            :not(.dropup) > .dropdown-menu.colorpicker-menu {
+                top: 2em; // TODO Ugly and not precise, conflict with row-gap of grid
             }
         }
 
@@ -1510,6 +1517,7 @@ body.editor_enable.editor_has_snippets {
         .o_we_m2m {
             we-list, we-list > div, we-list we-select {
                 margin-top: 0;
+                max-width: 100%;
             }
         }
 
@@ -1745,6 +1753,7 @@ body.editor_enable.editor_has_snippets {
 
     .o_we_colorpicker_switch_pane_btn {
         @extend %we-generic-tab-button;
+        flex: 0 1 auto;
     }
     .o_colorpicker_reset {
         @extend %we-generic-button;
@@ -1912,6 +1921,11 @@ body.editor_enable.editor_has_snippets {
             float: left;
             margin: 0 (-$o-we-dropzone-size/2);
         }
+    }
+    &.oe_drop_zone_danger {
+        background-color: rgba($o-we-color-danger, 0.15);
+        color: $o-we-color-danger;
+        border-color: $o-we-color-danger;
     }
 }
 
@@ -2093,8 +2107,13 @@ body.editor_enable.editor_has_snippets {
                     min-width: 22px;
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
                     color: $o-we-fg-lighter;
-                    &.oe_snippet_remove {
+                    // TODO In master: restore `.oe_snippet_remove`.
+                    &.fa-trash {
                         background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);
+                        // TODO In master: use `.o_disabled`.
+                        &:not(.oe_snippet_remove) {
+                            opacity: 0.5;
+                        }
                     }
                 }
                 > .o_overlay_move_options > .o_move_handle {
@@ -2112,6 +2131,16 @@ body.editor_enable.editor_has_snippets {
                         &:hover {
                             border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
                             background-color: $o-we-sidebar-content-field-pressed-bg;
+
+                            // TODO In master: restore `.oe_snippet_remove`.
+                            &.fa-trash {
+                                border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
+                                background-color: $o-we-color-danger;
+                                // TODO In master: use `.o_disabled`.
+                                &:not(.oe_snippet_remove) {
+                                    opacity: 0.5;
+                                }
+                            }
                         }
                     }
                 }

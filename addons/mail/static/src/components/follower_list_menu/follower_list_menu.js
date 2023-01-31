@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerMessagingComponent } from '@mail/utils/messaging_component';
+import { isEventHandled } from '@mail/utils/utils';
 
 const { Component } = owl;
 const { useRef, useState } = owl.hooks;
@@ -105,6 +106,9 @@ export class FollowerListMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickFollower(ev) {
+        if (isEventHandled(ev, 'Follower.clickRemove')) {
+            return;
+        }
         this._hide();
     }
 }

@@ -52,6 +52,8 @@ class ProductLabelLayout(models.TransientModel):
         elif self.product_ids:
             products = self.product_ids.ids
             active_model = 'product.product'
+        else:
+            raise UserError(_("No product to print, if the product is archived please unarchive it before printing its label."))
 
         # Build data to pass to the report
         data = {

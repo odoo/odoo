@@ -49,6 +49,7 @@ HTMLLIElement.prototype.oShiftTab = function () {
         return li;
     } else {
         const ul = li.parentNode;
+        const dir = ul.getAttribute('dir');
         let p;
         while (li.firstChild) {
             if (isBlock(li.firstChild)) {
@@ -56,6 +57,10 @@ HTMLLIElement.prototype.oShiftTab = function () {
                 ul.after(li.firstChild);
             } else {
                 p = p || document.createElement('P');
+                if (dir) {
+                    p.setAttribute('dir', dir);
+                    p.style.setProperty('text-align', ul.style.getPropertyValue('text-align'));
+                }
                 p.append(li.firstChild);
             }
         }

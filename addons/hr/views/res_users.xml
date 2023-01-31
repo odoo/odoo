@@ -47,6 +47,7 @@
             <field name="arch" type="xml">
                 <form position="attributes">
                     <attribute name="create">false</attribute>
+                    <attribute name="delete">false</attribute>
                     <attribute name="js_class">hr_employee_profile_form</attribute>
                 </form>
                 <notebook position="replace">
@@ -91,7 +92,7 @@
                         </h1>
                     </div>
                     <div class="row">
-                        <h2 class="col-6">
+                        <h2 class="col-6 pl-0">
                             <field name="job_title" placeholder="Job Position" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                         </h2>
                     </div>

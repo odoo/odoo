@@ -95,6 +95,26 @@ options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     }
 });
 
+options.registry.ImageTools.include({
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+
+        // Transform is _very_ badly supported in mail clients. Hide the option.
+        const transformEl = this.el.querySelector('[data-transform="true"]');
+        if (transformEl) {
+            transformEl.classList.toggle('d-none', true);
+        }
+    },
+});
+
 options.registry.ImageOptimize.include({
 
     //--------------------------------------------------------------------------
@@ -113,7 +133,8 @@ options.registry.ImageOptimize.include({
         // feature.
         const imgShapeContainerEl = this.el.querySelector('.o_we_image_shape');
         if (imgShapeContainerEl) {
-            imgShapeContainerEl.classList.toggle('d-none', !odoo.debug);
+            // Hidden from view as the feature is not yet supported in emails
+            imgShapeContainerEl.classList.add('d-none');
         }
     },
 
@@ -147,6 +168,39 @@ options.registry.ImageOptimize.include({
             warningEl.classList.add('fa', 'fa-exclamation-triangle', 'ml-1');
             warningEl.title = _t("Be aware that this option may not work on many mail clients");
             imgShapeTitleEl.appendChild(warningEl);
+        }
+    },
+});
+
+options.registry.Parallax = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        // Parallax is not supported in emails.
+        return false;
+    },
+});
+
+options.userValueWidgetsRegistry['we-colorpicker'] = options.userValueWidgetsRegistry['we-colorpicker'].extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    toggleVisibility() {
+        this._super(...arguments);
+        if (this.$target.is('a')) {
+            // There is an option in link tools for that, do not duplicate it.
+            this.$el.hide();
         }
     },
 });

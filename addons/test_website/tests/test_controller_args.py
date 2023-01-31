@@ -29,3 +29,7 @@ class TestWebsiteControllerArgs(odoo.tests.HttpCase):
         req = self.url_open('/ignore_args/kw?a=valueA&b=valueB')
         self.assertEqual(req.status_code, 200)
         self.assertEqual(req.json(), {'a': 'valueA', 'kw': {'b': 'valueB'}})
+
+        req = self.url_open('/test_website/country/whatever-999999')
+        self.assertEqual(req.status_code, 404,
+                         "Model converter record does not exist, return a 404.")

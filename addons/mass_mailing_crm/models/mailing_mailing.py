@@ -36,6 +36,8 @@ class MassMailing(models.Model):
         values = super(MassMailing, self)._prepare_statistics_email_values()
         if not self.user_id:
             return values
+        if not self.env['crm.lead'].check_access_rights('read', raise_exception=False):
+            return values
         values['kpi_data'][1]['kpi_col1'] = {
             'value': tools.format_decimalized_number(self.crm_lead_count, decimal=0),
             'col_subtitle': _('LEADS'),

@@ -176,9 +176,12 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @return {Promise}
      */
     saveChanges: async function (recordId) {
+        // waits for _applyChanges to finish
+        await this.mutex.getUnlockedDef();
+
         recordId = recordId || this.handle;
         if (this.isDirty(recordId)) {
-            await Promise.all([this.mutex.getUnlockedDef(), this.savingDef]);
+            await this.savingDef;
             await this.saveRecord(recordId, {
                 stayInEdit: true,
                 reload: false,

@@ -74,7 +74,8 @@ class ProductTemplate(models.Model):
     @api.depends('price', 'list_price', 'base_unit_count')
     def _compute_base_unit_price(self):
         for template in self:
-            template.base_unit_price = template.base_unit_count and (template.price or template.list_price) / template.base_unit_count
+            template_price = (template.price or template.list_price) if template.id else template.list_price
+            template.base_unit_price = template.base_unit_count and template_price / template.base_unit_count
 
     @api.depends('uom_name', 'base_unit_id.name')
     def _compute_base_unit_name(self):
@@ -204,7 +205,7 @@ class ProductTemplate(models.Model):
 
             combination_info.update(
                 base_unit_name=product.base_unit_name,
-                base_unit_price=product.base_unit_price,
+                base_unit_price=product.base_unit_count and list_price / product.base_unit_count,
                 price=price,
                 list_price=list_price,
                 price_extra=price_extra,
@@ -212,18 +213,6 @@ class ProductTemplate(models.Model):
             )
 
         return combination_info
-
-    def _create_first_product_variant(self, log_warning=False):
-        """Create if necessary and possible and return the first product
-        variant for this template.
-
-        :param log_warning: whether a warning should be logged on fail
-        :type log_warning: bool
-
-        :return: the first product variant or none
-        :rtype: recordset of `product.product`
-        """
-        return self._create_product_variant(self._get_first_possible_combination(), log_warning)
 
     def _get_image_holder(self):
         """Returns the holder of the image to use as default representation.
@@ -362,10 +351,11 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name']
+        search_fields = ['name', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
+            'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }
         if with_image:
@@ -397,7 +387,9 @@ class ProductTemplate(models.Model):
         with_category = 'extra_link' in mapping
         with_price = 'detail' in mapping
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
+        current_website = self.env['website'].get_current_website()
         for product, data in zip(self, results_data):
+            categ_ids = product.public_categ_ids.filtered(lambda c: not c.website_id or c.website_id == current_website)
             if with_price:
                 combination_info = product._get_combination_info(only_template=True)
                 monetary_options = {'display_currency': mapping['detail']['display_currency']}
@@ -406,10 +398,10 @@ class ProductTemplate(models.Model):
                     data['list_price'] = self.env['ir.qweb.field.monetary'].value_to_html(combination_info['list_price'], monetary_options)
             if with_image:
                 data['image_url'] = '/web/image/product.template/%s/image_128' % data['id']
-            if with_category and product.public_categ_ids:
-                data['category'] = {'extra_link_title': _('Categories:') if len(product.public_categ_ids) > 1 else _('Category:')}
+            if with_category and categ_ids:
+                data['category'] = {'extra_link_title': _('Categories:') if len(categ_ids) > 1 else _('Category:')}
                 data['category_url'] = dict()
-                for categ in product.public_categ_ids:
+                for categ in categ_ids:
                     slug_categ = slug(categ)
                     data['category'][slug_categ] = categ.name
                     data['category_url'][slug_categ] = '/shop/category/%s' % slug_categ

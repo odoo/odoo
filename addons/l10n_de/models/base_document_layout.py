@@ -24,4 +24,4 @@ class BaseDocumentLayout(models.TransientModel):
         ]
 
     def _compute_l10n_de_document_title(self):
-        self.l10n_de_document_title = 'Invoice'
+        self.l10n_de_document_title = _('Invoice')

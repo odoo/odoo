@@ -991,6 +991,15 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         // If simulate is true, it means we want the option to be toggled but
         // not saved on the server yet
         if (!forceSave) {
+            // Add the 'o_dirty' class on an editable element specific to the
+            // page to notify the editor that the page should be saved,
+            // otherwise it won't save anything if it doesn't detect any change
+            // inside the #wrapwrap. (e.g. the header "over the content" option
+            // which adds a class on the #wrapwrap itself and not inside it).
+            const pageEl = document.querySelector(`.o_editable[data-oe-model="ir.ui.view"][data-oe-id="${mo.viewid}"]`);
+            if (pageEl) {
+                pageEl.classList.add('o_dirty');
+            }
             return Promise.resolve();
         }
 
@@ -1102,11 +1111,13 @@ function _clonePage(pageId) {
             title: _t("Duplicate Page"),
             $content: $(qweb.render('website.duplicate_page_action_dialog')),
             confirm_callback: function () {
-                var new_page_name =  this.$('#page_name').val();
                 return self._rpc({
                     model: 'website.page',
                     method: 'clone_page',
-                    args: [pageId, new_page_name],
+                    args: [
+                        pageId,
+                        this.$('#page_name').val(),
+                    ],
                 }).then(function (path) {
                     window.location.href = path;
                 }).guardedCatch(reject);

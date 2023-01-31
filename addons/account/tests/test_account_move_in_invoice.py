@@ -1896,6 +1896,7 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
             'company_id': self.company_data['company'].id,
         })
         self.env.company.account_cash_basis_base_account_id = tax_base_amount_account
+        self.env.company.tax_exigibility = True
         tax_tags = defaultdict(dict)
         for line_type, repartition_type in [(l, r) for l in ('invoice', 'refund') for r in ('base', 'tax')]:
             tax_tags[line_type][repartition_type] = self.env['account.account.tag'].create({
@@ -2003,3 +2004,15 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 'credit': value['debit'],
             })
         self.assertRecordValues(reversed_caba_move.line_ids, expected_values)
+
+    def test_in_invoice_line_tax_line_delete(self):
+        with Form(self.invoice) as invoice_form:
+            lines_count = len(invoice_form.line_ids)
+            with invoice_form.line_ids.edit(0) as line_form:
+                tax = line_form.tax_line_id
+            invoice_form.line_ids.remove(0)
+            # check that the tax line is recreated
+            self.assertEqual(len(invoice_form.line_ids), lines_count)
+
+        # Assert the tax line is recreated for the tax
+        self.assertIn(tax, self.invoice.line_ids.tax_line_id)

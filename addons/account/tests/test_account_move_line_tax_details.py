@@ -17,8 +17,8 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
             .sorted(lambda x: (x.move_id, x.tax_line_id, x.tax_ids, x.tax_repartition_line_id))
         return base_lines, tax_lines
 
-    def _get_tax_details(self, fallback=False):
-        domain = [('company_id', '=', self.env.company.id)]
+    def _get_tax_details(self, fallback=False, extra_domain=None):
+        domain = [('company_id', '=', self.env.company.id)] + (extra_domain or [])
         tax_details_query, tax_details_params = self.env['account.move.line']._get_query_tax_details_from_domain(domain, fallback=fallback)
         self.cr.execute(tax_details_query, tax_details_params)
         tax_details_res = self.cr.dictfetchall()
@@ -1168,87 +1168,46 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         )
         self.assertTotalAmounts(invoice, tax_details)
 
-    def test_zero_amount_tax(self):
-        """ Ensure the tax details is generated for 0% tax. """
-        zero_tax = self.env['account.tax'].create({
-            'name': "zero_tax",
-            'amount_type': 'percent',
-            'amount': 0.0,
-        })
+    def test_amounts_sign(self):
+        for tax_sign in (1, -1):
+            tax = self.env['account.tax'].create({
+                'name': "tax",
+                'amount_type': 'percent',
+                'amount': tax_sign * 10.0,
+            })
 
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'partner_id': self.partner_a.id,
-            'invoice_date': '2019-01-01',
-            'invoice_line_ids': [
-                Command.create({
-                    'name': 'line1',
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'price_unit': 1000.0,
-                    'tax_ids': [Command.set(zero_tax.ids)],
-                }),
-                Command.create({
-                    'name': 'line2',
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'price_unit': 1000.0,
-                    'tax_ids': [Command.set(zero_tax.ids)],
-                }),
+            amounts_list = [
+                (-1000.0, 7000.0, -2000.0),
+                (1000.0, -7000.0, 2000.0),
+                (-1000.0, -7000.0, 2000.0),
+                (1000.0, 7000.0, -2000.0),
             ]
-        })
-        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+            for amounts in amounts_list:
+                with self.subTest(tax_sign=tax_sign, amounts=amounts):
+                    invoice = self.env['account.move'].create({
+                        'move_type': 'in_invoice',
+                        'partner_id': self.partner_a.id,
+                        'invoice_date': '2019-01-01',
+                        'invoice_line_ids': [
+                            Command.create({
+                                'name': 'line2',
+                                'account_id': self.company_data['default_account_revenue'].id,
+                                'price_unit': amount,
+                                'tax_ids': [Command.set(tax.ids)],
+                            })
+                        for amount in amounts],
+                    })
+                    base_lines, tax_lines = self._dispatch_move_lines(invoice)
 
-        tax_details = self._get_tax_details()
-        self.assertTaxDetailsValues(
-            tax_details,
-            [
-                {
-                    'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[0].id,
-                    'base_amount': -1000.0,
-                    'tax_amount': 0.0,
-                },
-                {
-                    'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[0].id,
-                    'base_amount': -1000.0,
-                    'tax_amount': 0.0,
-                },
-            ],
-        )
-        self.assertTotalAmounts(invoice, tax_details)
-
-        # Same with a group of taxes
-
-        tax_group = self.env['account.tax'].create({
-            'name': "tax_group",
-            'amount_type': 'group',
-            'children_tax_ids': [Command.set(zero_tax.ids)],
-        })
-
-        invoice.write({
-            'invoice_line_ids': [
-                Command.update(base_lines[0].id, {'tax_ids': [Command.set(tax_group.ids)]}),
-                Command.update(base_lines[1].id, {'tax_ids': [Command.set(tax_group.ids)]}),
-            ],
-        })
-        base_lines, tax_lines = self._dispatch_move_lines(invoice)
-
-        tax_details = self._get_tax_details()
-        self.assertTaxDetailsValues(
-            tax_details,
-            [
-                {
-                    'base_line_id': base_lines[0].id,
-                    'tax_line_id': tax_lines[0].id,
-                    'base_amount': -1000.0,
-                    'tax_amount': 0.0,
-                },
-                {
-                    'base_line_id': base_lines[1].id,
-                    'tax_line_id': tax_lines[0].id,
-                    'base_amount': -1000.0,
-                    'tax_amount': 0.0,
-                },
-            ],
-        )
-        self.assertTotalAmounts(invoice, tax_details)
+                    tax_details = self._get_tax_details(extra_domain=[('move_id', '=', invoice.id)])
+                    self.assertTaxDetailsValues(
+                        tax_details,
+                        [
+                            {
+                                'tax_line_id': tax_lines[0].id,
+                                'base_amount': amount,
+                                'tax_amount': tax_sign * amount * 0.1,
+                            }
+                        for amount in amounts],
+                    )
+                    self.assertTotalAmounts(invoice, tax_details)

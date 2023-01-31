@@ -7,7 +7,7 @@
         <field name="priority">30</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='analytic_account_id']" position="before">
-                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}" widget="sale_order_many2one"/>
+                <field name="sale_order_id" attrs="{'invisible': [('can_be_reinvoiced', '=', False)], 'readonly': [('sheet_is_editable', '=', False)]}" options="{'no_create_edit': True, 'no_create': True, 'no_open': True}" context="{'sale_show_partner_name': True, 'sale_expense_all_order': True}" widget="sale_order_many2one"/>
                 <field name="can_be_reinvoiced" invisible="1"/>
             </xpath>
         </field>
@@ -29,7 +29,7 @@
         <field name="inherit_id" ref="sale_expense.hr_expense_form_view_inherit_sale_expense"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='sale_order_id']" position="attributes">
-                <attribute name="attrs">{'invisible':[['can_be_reinvoiced','=',False]],'readonly':[['state','in',['done']]]}</attribute>
+                <attribute name="attrs">{'invisible':[['can_be_reinvoiced','=',False]],'readonly':['|', ['state','in',['done']], ['sheet_is_editable', '=', False]]}</attribute>
                 <attribute name="widget">many2one</attribute>
             </xpath>
         </field>

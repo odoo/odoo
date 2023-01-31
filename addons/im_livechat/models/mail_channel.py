@@ -154,6 +154,15 @@ class MailChannel(models.Model):
             message_body = '<ul>%s</ul>' % (''.join(html_links))
         self._send_transient_message(self.env['res.partner'].browse(pid), message_body)
 
+    def _message_update_content_after_hook(self, message):
+        self.ensure_one()
+        if self.channel_type == 'livechat':
+            self.env['bus.bus']._sendone(self.uuid, 'mail.message/insert', {
+                'id': message.id,
+                'body': message.body,
+            })
+        super()._message_update_content_after_hook(message=message)
+
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor has left the conversation.')
 

@@ -93,6 +93,7 @@ class Speedscope:
             if sql:
                 self.add_output([key], hide_gaps=True, display_name=f'{key} (no gap)')
                 self.add_output([key], continuous=False, complete=False, display_name=f'{key} (density)')
+
             else:
                 self.add_output([key], display_name=key)
         return self
@@ -144,7 +145,8 @@ class Speedscope:
             stack_ids.append(self.get_frame_id(frame))
         return stack_ids
 
-    def process(self, entries, continuous=True, hide_gaps=False, use_context=True):
+    def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=False):
+        # constant_time parameters is mainly usefull to hide temporality when focussing on sql determinism
         entry_end = previous_end = None
         if not entries:
             return []
@@ -157,25 +159,29 @@ class Speedscope:
         if last_entry['stack']:
             entries.append({'stack': [], 'start': last_entry['start'] + last_entry.get('time', 0)})
 
-        for entry in entries:
-            previous_end = entry_end
-
-            if hide_gaps and previous_end:
-                entry_start = previous_end
+        for index, entry in enumerate(entries):
+            if constant_time:
+                entry_start = close_time = index
             else:
-                entry_start = entry['start'] - frames_start
+                previous_end = entry_end
 
-            if previous_end and previous_end > entry_start:
-                # skip entry if entry starts after another entry end/
-                continue
+                if hide_gaps and previous_end:
+                    entry_start = previous_end
+                else:
+                    entry_start = entry['start'] - frames_start
 
-            if previous_end:
-                close_time = min(entry_start, previous_end)
-            else:
-                close_time = entry_start
+                if previous_end and previous_end > entry_start:
+                    # skip entry if entry starts after another entry end
+                    continue
 
-            entry_time = entry.get('time')
-            entry_end = None if entry_time is None else entry_start + entry_time
+                if previous_end:
+                    close_time = min(entry_start, previous_end)
+                else:
+                    close_time = entry_start
+
+                entry_time = entry.get('time')
+                entry_end = None if entry_time is None else entry_start + entry_time
+
             entry_stack_ids = self.stack_to_ids(
                 entry['stack'] or [],
                 use_context and entry.get('exec_context'),

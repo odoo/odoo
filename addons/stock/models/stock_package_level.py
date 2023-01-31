@@ -6,6 +6,7 @@ from operator import itemgetter
 from collections import defaultdict
 
 from odoo import _, api, fields, models
+from odoo.tools.float_utils import float_is_zero
 
 
 class StockPackageLevel(models.Model):
@@ -54,9 +55,15 @@ class StockPackageLevel(models.Model):
                 if not package_level.is_fresh_package:
                     ml_update_dict = defaultdict(float)
                     for quant in package_level.package_id.quant_ids:
-                        corresponding_ml = package_level.move_line_ids.filtered(lambda ml: ml.product_id == quant.product_id and ml.lot_id == quant.lot_id)
-                        if corresponding_ml:
-                            ml_update_dict[corresponding_ml[0]] += quant.quantity
+                        corresponding_mls = package_level.move_line_ids.filtered(lambda ml: ml.product_id == quant.product_id and ml.lot_id == quant.lot_id)
+                        to_dispatch = quant.quantity
+                        if corresponding_mls:
+                            for ml in corresponding_mls:
+                                qty = min(to_dispatch, ml.product_qty) if len(corresponding_mls) > 1 else to_dispatch
+                                to_dispatch = to_dispatch - qty
+                                ml_update_dict[ml] += qty
+                                if float_is_zero(to_dispatch, precision_rounding=ml.product_uom_id.rounding):
+                                    break
                         else:
                             corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]
                             self.env['stock.move.line'].create({
@@ -94,7 +101,7 @@ class StockPackageLevel(models.Model):
                 package_level.state = 'draft'
             elif not package_level.move_line_ids and package_level.move_ids.filtered(lambda m: m.state not in ('done', 'cancel')):
                 package_level.state = 'confirmed'
-            elif package_level.move_line_ids and not package_level.move_line_ids.filtered(lambda ml: ml.state == 'done'):
+            elif package_level.move_line_ids and not package_level.move_line_ids.filtered(lambda ml: ml.state in ('done', 'cancel')):
                 if package_level.is_fresh_package:
                     package_level.state = 'new'
                 elif package_level._check_move_lines_map_quant_package(package_level.package_id, 'product_uom_qty'):

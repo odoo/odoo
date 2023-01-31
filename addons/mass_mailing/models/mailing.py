@@ -85,7 +85,7 @@ class MassMailing(models.Model):
         help="Date at which the mailing was or will be sent.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False, sanitize=False)
-    body_html = fields.Html(string='Body converted to be sent by mail', sanitize=False)
+    body_html = fields.Html(string='Body converted to be sent by mail', render_engine='qweb', sanitize=False)
     is_body_empty = fields.Boolean(compute="_compute_is_body_empty",
                                    help='Technical field used to determine if the mail body is empty')
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
@@ -199,8 +199,8 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if mass_mailing.ab_testing_pc < 100:
-                total = int(total / 100.0 * mass_mailing.ab_testing_pc)
+            if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
+                total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
@@ -301,7 +301,7 @@ class MassMailing(models.Model):
         that mailing_model being mailing.list means contacting mailing.contact
         (see mailing_model_name versus mailing_model_real). """
         for mailing in self:
-            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list']:
+            if mailing.mailing_model_id.model in ['res.partner', 'mailing.list', 'mailing.contact']:
                 mailing.reply_to_mode = 'new'
             else:
                 mailing.reply_to_mode = 'update'
@@ -340,10 +340,10 @@ class MassMailing(models.Model):
             else:
                 mailing.calendar_date = False
 
-    @api.depends('body_html')
+    @api.depends('body_arch')
     def _compute_is_body_empty(self):
         for mailing in self:
-            mailing.is_body_empty = tools.is_html_empty(mailing.body_html)
+            mailing.is_body_empty = tools.is_html_empty(mailing.body_arch)
 
     def _compute_mail_server_available(self):
         self.mail_server_available = self.env['ir.config_parameter'].sudo().get_param('mass_mailing.outgoing_mail_server')
@@ -504,7 +504,7 @@ class MassMailing(models.Model):
         ])
         failed_mails.mapped('mailing_trace_ids').unlink()
         failed_mails.unlink()
-        self.write({'state': 'in_queue'})
+        self.action_put_in_queue()
 
     def action_view_traces_scheduled(self):
         return self._action_view_traces_filtered('scheduled')
@@ -609,7 +609,7 @@ class MassMailing(models.Model):
             'type': 'ir.actions.act_window',
             'view_mode': 'tree,kanban,form,calendar,graph',
             'res_model': 'mailing.mailing',
-            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True)],
+            'domain': [('campaign_id', '=', self.campaign_id.id), ('ab_testing_enabled', '=', True), ('mailing_type', '=', self.mailing_type)],
         }
         if self.mailing_type == 'mail':
             action['views'] = [
@@ -744,26 +744,30 @@ class MassMailing(models.Model):
             SELECT lower(substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
               FROM mailing_trace s
               JOIN %(target)s t ON (s.res_id = t.id)
+              %(join_domain)s
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+              %(where_domain)s                               
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
-        if 'partner_id' in target._fields:
+        if 'partner_id' in target._fields and target._fields['partner_id'].store:
             mail_field = 'email'
             query = """
                 SELECT lower(substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)'))
                   FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
+                  %(join_domain)s                  
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
+                  %(where_domain)s 
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
-        elif 'email_from' in target._fields:
+        elif 'email_from' in target._fields and target._fields['email_from'].store:
             mail_field = 'email_from'
-        elif 'partner_email' in target._fields:
+        elif 'partner_email' in target._fields and target._fields['partner_email'].store:
             mail_field = 'partner_email'
-        elif 'email' in target._fields:
+        elif 'email' in target._fields and target._fields['email'].store:
             mail_field = 'email'
         else:
             raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))
@@ -777,13 +781,17 @@ class MassMailing(models.Model):
                AND s.mass_mailing_id = %%(mailing_id)s
                AND s.model = %%(target_model)s;
             """
-        query = query % {'target': target._table, 'mail_field': mail_field}
+        join_domain, where_domain = self._get_seen_list_extra()
+        query = query % {'target': target._table, 'mail_field': mail_field, 'join_domain': join_domain, 'where_domain': where_domain}
         params = {'mailing_id': self.id, 'mailing_campaign_id': self.campaign_id.id, 'target_model': self.mailing_model_real}
         self._cr.execute(query, params)
         seen_list = set(m[0] for m in self._cr.fetchall())
         _logger.info(
             "Mass-mailing %s has already reached %s %s emails", self, len(seen_list), target._name)
         return seen_list
+
+    def _get_seen_list_extra(self):
+        return ('', '')
 
     def _get_mass_mailing_context(self):
         """Returns extra context items with pre-filled blacklist and seen list for massmailing"""
@@ -798,7 +806,9 @@ class MassMailing(models.Model):
         # randomly choose a fragment
         if self.ab_testing_enabled and self.ab_testing_pc < 100:
             contact_nbr = self.env[self.mailing_model_real].search_count(mailing_domain)
-            topick = int(contact_nbr / 100.0 * self.ab_testing_pc)
+            topick = 0
+            if contact_nbr:
+                topick = max(int(contact_nbr / 100.0 * self.ab_testing_pc), 1)
             if self.campaign_id and self.ab_testing_enabled:
                 already_mailed = self.campaign_id._get_mailing_recipients()[self.campaign_id.id]
             else:
@@ -883,7 +893,7 @@ class MassMailing(models.Model):
             extra_context = mailing._get_mass_mailing_context()
             composer = composer.with_context(active_ids=res_ids, **extra_context)
             # auto-commit except in testing mode
-            auto_commit = not getattr(threading.currentThread(), 'testing', False)
+            auto_commit = not getattr(threading.current_thread(), 'testing', False)
             composer._action_send_mail(auto_commit=auto_commit)
             mailing.write({
                 'state': 'done',
@@ -1140,6 +1150,6 @@ class MassMailing(models.Model):
                 modified = True
 
         if modified:
-            return lxml.html.tostring(root)
+            return lxml.html.tostring(root, encoding='unicode')
 
         return body_html

@@ -2,10 +2,18 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import re
 import base64
+import io
+
+from PyPDF2 import PdfFileReader, PdfFileMerger, PdfFileWriter
+from reportlab.platypus import Frame, Paragraph, KeepInFrame
+from reportlab.lib.units import mm
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.pdfgen.canvas import Canvas
 
 from odoo import fields, models, api, _
 from odoo.addons.iap.tools import iap_tools
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
@@ -137,7 +145,13 @@ class SnailmailLetter(models.Model):
             else:
                 report_name = 'Document'
             filename = "%s.%s" % (report_name, "pdf")
-            pdf_bin, _ = report.with_context(snailmail_layout=not self.cover)._render_qweb_pdf(self.res_id)
+            paperformat = report.get_paperformat()
+            if (paperformat.format == 'custom' and paperformat.page_width != 210 and paperformat.page_height != 297) or paperformat.format != 'A4':
+                raise UserError(_("Please use an A4 Paper format."))
+            pdf_bin, unused_filetype = report.with_context(snailmail_layout=not self.cover, lang='en_US')._render_qweb_pdf(self.res_id)
+            pdf_bin = self._overwrite_margins(pdf_bin)
+            if self.cover:
+                pdf_bin = self._append_cover_page(pdf_bin)
             attachment = self.env['ir.attachment'].create({
                 'name': filename,
                 'datas': base64.b64encode(pdf_bin),
@@ -247,7 +261,7 @@ class SnailmailLetter(models.Model):
                     letter.write({
                         'info_msg': 'The attachment could not be generated.',
                         'state': 'error',
-                        'error_code': 'ATTACHMENT_ERROR'
+                        'error_code': 'UNKNOWN_ERROR'
                     })
                     continue
                 if letter.company_id.external_report_layout_id == self.env.ref('l10n_de.external_layout_din5008', False):
@@ -404,10 +418,12 @@ class SnailmailLetter(models.Model):
             ('state', '=', 'pending'),
             '&',
             ('state', '=', 'error'),
-            ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'ATTACHMENT_ERROR', 'MISSING_REQUIRED_FIELDS'])
+            ('error_code', 'in', ['TRIAL_ERROR', 'CREDIT_ERROR', 'MISSING_REQUIRED_FIELDS'])
         ])
         for letter in letters_send:
             letter._snailmail_print()
+            if letter.error_code == 'CREDIT_ERROR':
+                break  # avoid spam
             # Commit after every letter sent to avoid to send it again in case of a rollback
             if autocommit:
                 self.env.cr.commit()
@@ -417,3 +433,79 @@ class SnailmailLetter(models.Model):
         record.ensure_one()
         required_keys = ['street', 'city', 'zip', 'country_id']
         return all(record[key] for key in required_keys)
+
+    def _append_cover_page(self, invoice_bin: bytes):
+        address = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().replace('\n', '<br/>')
+        address_x = 118 * mm
+        address_y = 60 * mm
+        frame_width = 85.5 * mm
+        frame_height = 25.5 * mm
+
+        cover_buf = io.BytesIO()
+        canvas = Canvas(cover_buf, pagesize=A4)
+        styles = getSampleStyleSheet()
+
+        frame = Frame(address_x, A4[1] - address_y - frame_height, frame_width, frame_height)
+        story = [Paragraph(address, styles['Normal'])]
+        address_inframe = KeepInFrame(0, 0, story)
+        frame.addFromList([address_inframe], canvas)
+        canvas.save()
+        cover_buf.seek(0)
+
+        invoice = PdfFileReader(io.BytesIO(invoice_bin))
+        cover_bin = io.BytesIO(cover_buf.getvalue())
+        cover_file = PdfFileReader(cover_bin)
+        merger = PdfFileMerger()
+
+        merger.append(cover_file, import_bookmarks=False)
+        merger.append(invoice, import_bookmarks=False)
+
+        out_buff = io.BytesIO()
+        merger.write(out_buff)
+        return out_buff.getvalue()
+
+    def _overwrite_margins(self, invoice_bin: bytes):
+        """
+        Fill the margins with white for validation purposes.
+        """
+        pdf_buf = io.BytesIO()
+        canvas = Canvas(pdf_buf, pagesize=A4)
+        canvas.setFillColorRGB(255, 255, 255)
+        page_width = A4[0]
+        page_height = A4[1]
+
+        # Horizontal Margin
+        hmargin_width = page_width
+        hmargin_height = 5 * mm
+
+        # Vertical Margin
+        vmargin_width = 5 * mm
+        vmargin_height = page_height
+
+        # Bottom left square
+        sq_width = 15 * mm
+
+        # Draw the horizontal margins
+        canvas.rect(0, 0, hmargin_width, hmargin_height, stroke=0, fill=1)
+        canvas.rect(0, page_height, hmargin_width, -hmargin_height, stroke=0, fill=1)
+
+        # Draw the vertical margins
+        canvas.rect(0, 0, vmargin_width, vmargin_height, stroke=0, fill=1)
+        canvas.rect(page_width, 0, -vmargin_width, vmargin_height, stroke=0, fill=1)
+
+        # Draw the bottom left white square
+        canvas.rect(0, 0, sq_width, sq_width, stroke=0, fill=1)
+        canvas.save()
+        pdf_buf.seek(0)
+
+        new_pdf = PdfFileReader(pdf_buf)
+        curr_pdf = PdfFileReader(io.BytesIO(invoice_bin))
+        out = PdfFileWriter()
+        for page in curr_pdf.pages:
+            page.mergePage(new_pdf.getPage(0))
+            out.addPage(page)
+        out_stream = io.BytesIO()
+        out.write(out_stream)
+        out_bin = out_stream.getvalue()
+        out_stream.close()
+        return out_bin

@@ -12,6 +12,9 @@ from odoo.exceptions import ValidationError
 from odoo.http import request
 from odoo.tools import consteq
 
+from odoo.addons.payment_stripe import utils as stripe_utils
+
+
 _logger = logging.getLogger(__name__)
 
 
@@ -90,7 +93,9 @@ class StripeController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
                     'stripe', data
                 )
-                if self._verify_webhook_signature(tx_sudo.acquirer_id._get_stripe_webhook_secret()):
+                if self._verify_webhook_signature(
+                    stripe_utils.get_webhook_secret(tx_sudo.acquirer_id)
+                ):
                     # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
                     if checkout_session.get('payment_intent'):  # Can be None
                         payment_intent = tx_sudo.acquirer_id._stripe_make_request(

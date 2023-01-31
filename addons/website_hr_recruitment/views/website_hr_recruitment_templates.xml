@@ -147,7 +147,7 @@
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required=""/>
+                                            <input id="recruitment1" type="text" class="form-control s_website_form_input" name="partner_name" required="" data-fill-with="name"/>
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required=""/>
+                                            <input id="recruitment2" type="email" class="form-control s_website_form_input" name="email_from" required="" data-fill-with="email"/>
                                         </div>
                                     </div>
                                 </div>
@@ -169,7 +169,7 @@
                                             <span class="s_website_form_mark"> *</span>
                                         </label>
                                         <div class="col-sm">
-                                            <input id="recruitment3" type="tel" class="form-control s_website_form_input" name="partner_phone" required=""/>
+                                            <input id="recruitment3" type="tel" class="form-control s_website_form_input" name="partner_phone" required="" data-fill-with="phone"/>
                                         </div>
                                     </div>
                                 </div>
@@ -461,6 +461,7 @@
     <field name="name">Thank you (Recruitment)</field>
     <field name="type">qweb</field>
     <field name="key">website_hr_recruitment.thankyou</field>
+    <field name="cache_time">0</field>
     <field name="arch" type="xml">
         <t name="Thank you (Recruitment)" t-name="website_hr_recruitment.thankyou">
             <t t-call="website.layout">

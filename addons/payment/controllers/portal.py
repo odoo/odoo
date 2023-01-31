@@ -4,7 +4,7 @@ import urllib.parse
 import werkzeug
 
 from odoo import _, http
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.fields import Command
 from odoo.http import request
 
@@ -68,9 +68,9 @@ class PaymentPortal(portal.CustomerPortal):
         """
         # Cast numeric parameters as int or float and void them if their str value is malformed
         currency_id, acquirer_id, partner_id, company_id, invoice_id = tuple(map(
-            self.cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
+            self._cast_as_int, (currency_id, acquirer_id, partner_id, company_id, invoice_id)
         ))
-        amount = self.cast_as_float(amount)
+        amount = self._cast_as_float(amount)
 
         # Raise an HTTP 404 if a partner is provided with an invalid access token
         if partner_id:
@@ -100,7 +100,8 @@ class PaymentPortal(portal.CustomerPortal):
         reference = reference or payment_utils.singularize_reference_prefix(prefix='tx')
         amount = amount or 0.0  # If the amount is invalid, set it to 0 to stop the payment flow
         company_id = company_id or partner_sudo.company_id.id or user_sudo.company_id.id
-        currency_id = currency_id or request.env['res.company'].browse(company_id).currency_id.id
+        company = request.env['res.company'].sudo().browse(company_id)
+        currency_id = currency_id or company.currency_id.id
 
         # Make sure that the currency exists and is active
         currency = request.env['res.currency'].browse(currency_id).exists()
@@ -109,13 +110,18 @@ class PaymentPortal(portal.CustomerPortal):
 
         # Select all acquirers and tokens that match the constraints
         acquirers_sudo = request.env['payment.acquirer'].sudo()._get_compatible_acquirers(
-            company_id, partner_sudo.id, currency_id=currency.id
+            company_id, partner_sudo.id, currency_id=currency.id, **kwargs
         )  # In sudo mode to read the fields of acquirers and partner (if not logged in)
         if acquirer_id in acquirers_sudo.ids:  # Only keep the desired acquirer if it's suitable
             acquirers_sudo = acquirers_sudo.browse(acquirer_id)
         payment_tokens = request.env['payment.token'].search(
             [('acquirer_id', 'in', acquirers_sudo.ids), ('partner_id', '=', partner_sudo.id)]
         ) if logged_in else request.env['payment.token']
+
+        # Make sure that the partner's company matches the company passed as parameter.
+        if not PaymentPortal._can_partner_pay_in_company(partner_sudo, company):
+            acquirers_sudo = request.env['payment.acquirer'].sudo()
+            payment_tokens = request.env['payment.token']
 
         # Compute the fees taken by acquirers supporting the feature
         fees_by_acquirer = {
@@ -138,6 +144,7 @@ class PaymentPortal(portal.CustomerPortal):
             'access_token': access_token,
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
+            'res_company': company,  # Display the correct logo in a multi-company environment
             'partner_is_different': partner_is_different,
             'invoice_id': invoice_id,
             **self._get_custom_rendering_context_values(**kwargs),
@@ -246,16 +253,22 @@ class PaymentPortal(portal.CustomerPortal):
                 provider=acquirer_sudo.provider, **kwargs
             ) or tokenization_requested
             tokenize = bool(
-                # Public users are not allowed to save tokens as their partner is unknown
-                not request.env.user._is_public()
                 # Don't tokenize if the user tried to force it through the browser's developer tools
-                and acquirer_sudo.allow_tokenization
+                acquirer_sudo.allow_tokenization
                 # Token is only created if required by the flow or requested by the user
                 and tokenization_required_or_requested
             )
         elif flow == 'token':  # Payment by token
-            token = request.env['payment.token'].browse(payment_option_id)
-            acquirer_sudo = token.acquirer_id.sudo()
+            token_sudo = request.env['payment.token'].sudo().browse(payment_option_id)
+
+            # Prevent from paying with a token that doesn't belong to the current partner (either
+            # the current user's partner if logged in, or the partner on behalf of whom the payment
+            # is being made).
+            partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+            if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
+                raise AccessError(_("You do not have access to this payment token."))
+
+            acquirer_sudo = token_sudo.acquirer_id
             token_id = payment_option_id
             tokenize = False
         else:
@@ -331,7 +344,7 @@ class PaymentPortal(portal.CustomerPortal):
         :param dict kwargs: Optional data. This parameter is not used here
         :raise: werkzeug.exceptions.NotFound if the access token is invalid
         """
-        tx_id = self.cast_as_int(tx_id)
+        tx_id = self._cast_as_int(tx_id)
         if tx_id:
             tx_sudo = request.env['payment.transaction'].sudo().browse(tx_id)
 
@@ -389,7 +402,7 @@ class PaymentPortal(portal.CustomerPortal):
             token_sudo.active = False
 
     @staticmethod
-    def cast_as_int(str_value):
+    def _cast_as_int(str_value):
         """ Cast a string as an `int` and return it.
 
         If the conversion fails, `None` is returned instead.
@@ -404,7 +417,7 @@ class PaymentPortal(portal.CustomerPortal):
             return None
 
     @staticmethod
-    def cast_as_float(str_value):
+    def _cast_as_float(str_value):
         """ Cast a string as a `float` and return it.
 
         If the conversion fails, `None` is returned instead.
@@ -417,3 +430,18 @@ class PaymentPortal(portal.CustomerPortal):
             return float(str_value)
         except (TypeError, ValueError, OverflowError):
             return None
+
+    @staticmethod
+    def _can_partner_pay_in_company(partner, document_company):
+        """ Return whether the provided partner can pay in the provided company.
+
+        The payment is allowed either if the partner's company is not set or if the companies match.
+
+        :param recordset partner: The partner on behalf on which the payment is made, as a
+                                  `res.partner` record.
+        :param recordset document_company: The company of the document being paid, as a
+                                           `res.company` record.
+        :return: Whether the payment is allowed.
+        :rtype: str
+        """
+        return not partner.company_id or partner.company_id == document_company

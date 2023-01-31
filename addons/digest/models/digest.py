@@ -158,7 +158,11 @@ class Digest(models.Model):
         mail_values = {
             'auto_delete': True,
             'author_id': self.env.user.partner_id.id,
-            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_from': (
+                self.company_id.partner_id.email_formatted
+                or self.env.user.email_formatted
+                or self.env.ref('base.user_root').email_formatted
+            ),
             'email_to': user.email_formatted,
             'body_html': full_mail,
             'state': 'outgoing',
@@ -254,7 +258,7 @@ class Digest(models.Model):
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
         ], limit=tips_count)
         tip_descriptions = [
-            self.env['mail.render.mixin'].sudo()._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id]
+            tools.html_sanitize(self.env['mail.render.mixin'].sudo()._render_template(tip.tip_description, 'digest.tip', tip.ids, post_process=True, engine="qweb")[tip.id])
             for tip in tips
         ]
         if consumed:

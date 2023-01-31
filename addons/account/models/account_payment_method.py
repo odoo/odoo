@@ -44,15 +44,15 @@ class AccountPaymentMethod(models.Model):
         self.ensure_one()
         information = self._get_payment_method_information().get(self.code)
 
-        currency_id = information.get('currency_id')
+        currency_ids = information.get('currency_ids')
         country_id = information.get('country_id')
         default_domain = [('type', 'in', ('bank', 'cash'))]
         domains = [information.get('domain', default_domain)]
 
-        if currency_id:
+        if currency_ids:
             domains += [expression.OR([
-                [('currency_id', '=', False), ('company_id.currency_id', '=', currency_id)],
-                [('currency_id', '=', currency_id)]],
+                [('currency_id', '=', False), ('company_id.currency_id', 'in', currency_ids)],
+                [('currency_id', 'in', currency_ids)]],
             )]
 
         if country_id:
@@ -76,6 +76,14 @@ class AccountPaymentMethod(models.Model):
         return {
             'manual': {'mode': 'multi', 'domain': [('type', 'in', ('bank', 'cash'))]},
         }
+
+    @api.model
+    def _get_sdd_payment_method_code(self):
+        """
+        TO OVERRIDE
+        This hook will be used to return the list of sdd payment method codes
+        """
+        return []
 
 
 class AccountPaymentMethodLine(models.Model):

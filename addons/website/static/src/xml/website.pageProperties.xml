@@ -173,7 +173,7 @@
                             </t>
                             <t t-else="">
                                 <t t-set='groups_tooltip'>More than one group has been set on the view.</t>
-                                <a class="show_group_id btn btn-link mx-auto" href="/web#model=ir.ui.view&amp;id=681" t-att-title='groups_tooltip'>Discard &amp; Edit in backend</a>
+                                <a class="show_group_id btn btn-link mx-auto" t-attf-href="/web#id=#{widget.page.view_id[0]}&amp;view_type=form&amp;model=ir.ui.view" t-att-title='groups_tooltip'>Discard &amp; Edit in backend</a>
                             </t>
                         </div>
                     </div>

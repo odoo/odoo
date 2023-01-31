@@ -28,12 +28,12 @@ server_clean:
 allinone: server_clean
 	cp $(SERVER_DIRECTORY)/requirements.txt $(WINPY32_DIR)/
 	-(cd $(WINPY32_DIR) && ./python.exe -m pip install --upgrade pip)
-	-(cd $(WINPY32_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC}" ; done)
+	-(cd $(WINPY32_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
 	-(cd $(WINPY32_DIR) && Scripts/pip3.exe freeze)
 	rm $(WINPY32_DIR)/requirements.txt
 	cp $(SERVER_DIRECTORY)/requirements.txt $(WINPY64_DIR)/
 	-(cd $(WINPY64_DIR) && ./python.exe -m pip install --upgrade pip)
-	-(cd $(WINPY64_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC}" ; done)
+	-(cd $(WINPY64_DIR) && cat requirements.txt | while read PAC ; do Scripts/pip3.exe install "$${PAC%%#*}" ; done)
 	-(cd $(WINPY64_DIR) && Scripts/pip3.exe freeze)
 	rm $(WINPY64_DIR)/requirements.txt
 	(cd $(SERVER_DIRECTORY)/setup/win32 && $(LAUNCH_MAKENSIS))

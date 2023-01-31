@@ -145,7 +145,7 @@ class Channel(models.Model):
         if new_members:
             self.env['mail.channel.partner'].create(new_members)
         if outdated:
-            outdated.unlink()
+            outdated.sudo().unlink()
 
     def _search_channel_partner_ids(self, operator, operand):
         return [(
@@ -317,6 +317,13 @@ class Channel(models.Model):
                         channel_name=channel.name,
                         group_name=channel.group_public_id.name,
                         partner_names=', '.join(partner.name for partner in invalid_partners)
+                    ))
+                if guests:
+                    raise UserError(_(
+                        'Channel "%(channel_name)s" only accepts members of group "%(group_name)s". Forbidden for: %(guest_names)s',
+                        channel_name=channel.name,
+                        group_name=channel.group_public_id.name,
+                        guest_names=', '.join(guest.name for guest in guests)
                     ))
             existing_partners = self.env['res.partner'].search([('id', 'in', partners.ids), ('channel_ids', 'in', channel.id)])
             members_to_create += [{
@@ -577,7 +584,13 @@ class Channel(models.Model):
     def _message_compute_parent_id(self, parent_id):
         # super() unravels the chain of parents to set parent_id as the first
         # ancestor. We don't want that in channel.
-        return parent_id
+        if not parent_id:
+            return parent_id
+        return self.env['mail.message'].search(
+            [('id', '=', parent_id),
+             ('model', '=', self._name),
+             ('res_id', '=', self.id)
+            ]).id
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, message_type='notification', **kwargs):
@@ -791,6 +804,10 @@ class Channel(models.Model):
                     'fetched_message_id': cp.fetched_message_id.id,
                     'seen_message_id': cp.seen_message_id.id,
                 } for cp in members_by_channel[channel] if cp.partner_id], key=lambda p: p['partner_id'])
+                info['guestMembers'] = [('insert', sorted([{
+                    'id': member.guest_id.id,
+                    'name': member.guest_id.name,
+                } for member in members_by_channel[channel] if member.guest_id], key=lambda g: g['id']))]
 
             # add RTC sessions info
             info.update({
@@ -868,7 +885,13 @@ class Channel(models.Model):
         else:
             # create a new one
             channel = self.create({
-                'channel_partner_ids': [Command.link(partner_id) for partner_id in partners_to],
+                'channel_last_seen_partner_ids': [
+                    Command.create({
+                        'partner_id': partner_id,
+                        # only pin for the current user, so the chat does not show up for the correspondent until a message has been sent
+                        'is_pinned': partner_id == self.env.user.partner_id.id
+                    }) for partner_id in partners_to
+                ],
                 'public': 'private',
                 'channel_type': 'chat',
                 'name': ', '.join(self.env['res.partner'].sudo().browse(partners_to).mapped('name')),
@@ -1062,7 +1085,7 @@ class Channel(models.Model):
         self.add_members(self.env.user.partner_id.ids)
 
     @api.model
-    def channel_create(self, name, privacy='public'):
+    def channel_create(self, name, privacy='groups'):
         """ Create a channel and add the current partner, broadcast it (to make the user directly
             listen to it when polling)
             :param name : the name of the channel to create
@@ -1181,13 +1204,13 @@ class Channel(models.Model):
     def execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.", self.name)
+            msg = _("You are in channel <b>#%s</b>.", html_escape(self.name))
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", html_escape(channel_partners[0].partner_id.name if channel_partners else _('Anonymous')))
+            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name) for member in channel_partners) if channel_partners else _('Anonymous'))
         msg += self._execute_command_help_message_extra()
 
         self._send_transient_message(partner, msg)

@@ -8,6 +8,7 @@ from psycopg2 import IntegrityError
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 
 from odoo import http
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.tools import consteq, file_open
 from odoo.tools.misc import get_lang
@@ -80,13 +81,21 @@ class DiscussController(http.Controller):
             channel_sudo = channel_partner_sudo.channel_id  # ensure guest is in context
         else:
             if not channel_sudo.env.user._is_public():
-                channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
+                try:
+                    channel_sudo.add_members([channel_sudo.env.user.partner_id.id])
+                except UserError:
+                    raise NotFound()
             else:
                 guest = channel_sudo.env['mail.guest']._get_guest_from_request(request)
                 if guest:
                     channel_sudo = channel_sudo.with_context(guest=guest)
-                    channel_sudo.add_members(guest_ids=[guest.id])
+                    try:
+                        channel_sudo.add_members(guest_ids=[guest.id])
+                    except UserError:
+                        raise NotFound()
                 else:
+                    if channel_sudo.public == 'groups':
+                        raise NotFound()
                     guest = channel_sudo.env['mail.guest'].create({
                         'country_id': channel_sudo.env['res.country'].search([('code', '=', request.session.get('geoip', {}).get('country_code'))], limit=1).id,
                         'lang': get_lang(channel_sudo.env).code,
@@ -198,6 +207,9 @@ class DiscussController(http.Controller):
     # Thread API (channel/chatter common)
     # --------------------------------------------------------------------------
 
+    def _get_allowed_message_post_params(self):
+        return {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
+
     @http.route('/mail/message/post', methods=['POST'], type='json', auth='public')
     def mail_message_post(self, thread_model, thread_id, post_data, **kwargs):
         if thread_model == 'mail.channel':
@@ -205,14 +217,13 @@ class DiscussController(http.Controller):
             thread = channel_partner_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
-        allowed_params = {'attachment_ids', 'body', 'message_type', 'partner_ids', 'subtype_xmlid', 'parent_id'}
-        return thread.message_post(**{key: value for key, value in post_data.items() if key in allowed_params}).message_format()[0]
+        return thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
 
     @http.route('/mail/message/update_content', methods=['POST'], type='json', auth='public')
     def mail_message_update_content(self, message_id, body, attachment_ids):
         guest = request.env['mail.guest']._get_guest_from_request(request)
         message_sudo = guest.env['mail.message'].browse(message_id).sudo().exists()
-        if not message_sudo.is_current_user_or_guest_author and not guest.env.user.has_group('base.group_system'):
+        if not message_sudo.is_current_user_or_guest_author and not guest.env.user._is_admin():
             raise NotFound()
         message_sudo._update_content(body=body, attachment_ids=attachment_ids)
         return {
@@ -242,17 +253,20 @@ class DiscussController(http.Controller):
         if channel_partner.env.user.share:
             # Only generate the access token if absolutely necessary (= not for internal user).
             vals['access_token'] = channel_partner.env['ir.attachment']._generate_access_token()
-        attachment = channel_partner.env['ir.attachment'].create(vals)
-        attachment._post_add_create()
-        attachmentData = {
-            'filename': ufile.filename,
-            'id': attachment.id,
-            'mimetype': attachment.mimetype,
-            'name': attachment.name,
-            'size': attachment.file_size
-        }
-        if attachment.access_token:
-            attachmentData['accessToken'] = attachment.access_token
+        try:
+            attachment = channel_partner.env['ir.attachment'].create(vals)
+            attachment._post_add_create()
+            attachmentData = {
+                'filename': ufile.filename,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+                'size': attachment.file_size
+            }
+            if attachment.access_token:
+                attachmentData['accessToken'] = attachment.access_token
+        except AccessError:
+            attachmentData = {'error': _("You are not allowed to upload an attachment here.")}
         return request.make_response(
             data=json.dumps(attachmentData),
             headers=[('Content-Type', 'application/json')]
@@ -262,7 +276,9 @@ class DiscussController(http.Controller):
     def mail_attachment_delete(self, attachment_id, access_token=None, **kwargs):
         attachment_sudo = request.env['ir.attachment'].browse(int(attachment_id)).sudo().exists()
         if not attachment_sudo:
-            raise NotFound()
+            target = request.env.user.partner_id
+            request.env['bus.bus']._sendone(target, 'ir.attachment/delete', {'id': attachment_id})
+            return
         if not request.env.user.share:
             # Check through standard access rights/rules for internal users.
             attachment_sudo.sudo(False)._delete_and_notify()
@@ -357,7 +373,10 @@ class DiscussController(http.Controller):
         # Do not add the guest to channel members if they are already member.
         if not channel_partner:
             channel_sudo = channel_sudo.with_context(guest=guest)
-            channel_sudo.add_members(guest_ids=[guest.id])
+            try:
+                channel_sudo.add_members(guest_ids=[guest.id])
+            except UserError:
+                raise NotFound()
 
     @http.route('/mail/channel/messages', methods=['POST'], type='json', auth='public')
     def mail_channel_messages(self, channel_id, max_id=None, min_id=None, limit=30, **kwargs):
@@ -390,6 +409,14 @@ class DiscussController(http.Controller):
     # --------------------------------------------------------------------------
     # Chatter API
     # --------------------------------------------------------------------------
+
+    @http.route('/mail/thread/data', methods=['POST'], type='json', auth='user')
+    def mail_thread_data(self, thread_model, thread_id, request_list, **kwargs):
+        res = {}
+        thread = request.env[thread_model].with_context(active_test=False).search([('id', '=', thread_id)])
+        if 'attachments' in request_list:
+            res['attachments'] = thread.env['ir.attachment'].search([('res_id', '=', thread.id), ('res_model', '=', thread._name)], order='id desc')._attachment_format(commands=True)
+        return res
 
     @http.route('/mail/thread/messages', methods=['POST'], type='json', auth='user')
     def mail_thread_messages(self, thread_model, thread_id, max_id=None, min_id=None, limit=30, **kwargs):

@@ -14,13 +14,19 @@
 
 <template id="snippets" inherit_id="website.snippets">
     <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
     </xpath>
 </template>
 

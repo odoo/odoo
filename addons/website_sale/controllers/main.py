@@ -216,6 +216,28 @@ class WebsiteSale(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
+    def _get_search_options(
+        self, category=None, attrib_values=None, pricelist=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
+    ):
+        return {
+            'displayDescription': True,
+            'displayDetail': True,
+            'displayExtraDetail': True,
+            'displayExtraLink': True,
+            'displayImage': True,
+            'allowFuzzy': not post.get('noFuzzy'),
+            'category': str(category.id) if category else None,
+            'min_price': min_price / conversion_rate,
+            'max_price': max_price / conversion_rate,
+            'attrib_values': attrib_values,
+            'display_currency': pricelist.currency_id,
+        }
+
+    def _get_additional_shop_values(self, values):
+        """ Hook to update values used for rendering website_sale.products template """
+        return {}
+
+
     @http.route([
         '''/shop''',
         '''/shop/page/<int:page>''',
@@ -276,19 +298,15 @@ class WebsiteSale(http.Controller):
         if attrib_list:
             post['attrib'] = attrib_list
 
-        options = {
-            'displayDescription': True,
-            'displayDetail': True,
-            'displayExtraDetail': True,
-            'displayExtraLink': True,
-            'displayImage': True,
-            'allowFuzzy': not post.get('noFuzzy'),
-            'category': str(category.id) if category else None,
-            'min_price': min_price / conversion_rate,
-            'max_price': max_price / conversion_rate,
-            'attrib_values': attrib_values,
-            'display_currency': pricelist.currency_id,
-        }
+        options = self._get_search_options(
+            category=category,
+            attrib_values=attrib_values,
+            pricelist=pricelist,
+            min_price=min_price,
+            max_price=max_price,
+            conversion_rate=conversion_rate,
+            **post
+        )
         # No limit because attributes are obtained from complete product list
         product_count, details, fuzzy_search_term = request.website._search_with_fuzzy("products_only", search,
             limit=None, order=self._get_search_order(post), options=options)
@@ -360,6 +378,7 @@ class WebsiteSale(http.Controller):
         values = {
             'search': fuzzy_search_term or search,
             'original_search': fuzzy_search_term and search,
+            'order': post.get('order', ''),
             'category': category,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
@@ -367,6 +386,7 @@ class WebsiteSale(http.Controller):
             'pricelist': pricelist,
             'add_qty': add_qty,
             'products': products,
+            'search_product': search_product,
             'search_count': product_count,  # common for all searchbox
             'bins': TableCompute().process(products, ppg, ppr),
             'ppg': ppg,
@@ -384,6 +404,7 @@ class WebsiteSale(http.Controller):
             values['available_max_price'] = tools.float_round(available_max_price, 2)
         if category:
             values['main_object'] = category
+        values.update(self._get_additional_shop_values(values))
         return request.render("website_sale.products", values)
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
@@ -441,9 +462,9 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/change_pricelist/<model("product.pricelist"):pl_id>'], type='http', auth="public", website=True, sitemap=False)
     def pricelist_change(self, pl_id, **post):
+        redirect_url = request.httprequest.referrer
         if (pl_id.selectable or pl_id == request.env.user.partner_id.property_product_pricelist) \
                 and request.website.is_pricelist_available(pl_id.id):
-            redirect_url = request.httprequest.referrer
             if redirect_url and request.website.is_view_active('website_sale.filter_products_price'):
                 decoded_url = url_parse(redirect_url)
                 args = url_decode(decoded_url.query)
@@ -688,6 +709,13 @@ class WebsiteSale(http.Controller):
         error = dict()
         error_message = []
 
+        # prevent name change if invoices exist
+        if data.get('partner_id'):
+            partner = request.env['res.partner'].browse(int(data['partner_id']))
+            if partner.exists() and partner.name and not partner.sudo().can_edit_vat() and 'name' in data and (data['name'] or False) != (partner.name or False):
+                error['name'] = 'error'
+                error_message.append(_('Changing your name is not allowed once invoices have been issued for your account. Please contact us directly for this operation.'))
+
         # Required fields from form
         required_fields = [f for f in (all_form_values.get('field_required') or '').split(',') if f]
 
@@ -833,6 +861,10 @@ class WebsiteSale(http.Controller):
                 values = kw
             else:
                 partner_id = self._checkout_form_save(mode, post, kw)
+                # We need to validate _checkout_form_save return, because when partner_id not in shippings
+                # it returns Forbidden() instead the partner_id
+                if isinstance(partner_id, Forbidden):
+                    return partner_id
                 if mode[1] == 'billing':
                     order.partner_id = partner_id
                     order.with_context(not_self_saleperson=True).onchange_partner_id()
@@ -841,6 +873,10 @@ class WebsiteSale(http.Controller):
                     if not kw.get('use_same'):
                         kw['callback'] = kw.get('callback') or \
                             (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
+                    # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
+                    # We only need to update the pricelist when it is not redirected to /confirm_order
+                    if kw.get('callback', '') != '/shop/confirm_order':
+                        request.website.sale_get_order(update_pricelist=True)
                 elif mode[1] == 'shipping':
                     order.partner_shipping_id = partner_id
 
@@ -1055,6 +1091,12 @@ class WebsiteSale(http.Controller):
         """
         if sale_order_id is None:
             order = request.website.sale_get_order()
+            if not order and 'sale_last_order_id' in request.session:
+                # Retrieve the last known order from the session if the session key `sale_order_id`
+                # was prematurely cleared. This is done to prevent the user from updating their cart
+                # after payment in case they don't return from payment through this route.
+                last_order_id = request.session['sale_last_order_id']
+                order = request.env['sale.order'].sudo().browse(last_order_id).exists()
         else:
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
@@ -1222,14 +1264,21 @@ class PaymentPortal(payment_portal.PaymentPortal):
         """
         # Check the order id and the access token
         try:
-            self._document_check_access('sale.order', order_id, access_token)
+            order_sudo = self._document_check_access('sale.order', order_id, access_token)
         except MissingError as error:
             raise error
         except AccessError:
-            raise ValidationError("The access token is invalid.")
+            raise ValidationError(_("The access token is invalid."))
+
+        if order_sudo.state == "cancel":
+            raise ValidationError(_("The order has been canceled."))
+
+        if tools.float_compare(kwargs['amount'], order_sudo.amount_total, precision_rounding=order_sudo.currency_id.rounding):
+            raise ValidationError(_("The cart has been updated. Please refresh the page."))
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
+            'partner_id': order_sudo.partner_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

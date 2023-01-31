@@ -143,6 +143,35 @@ class TestDigest(mail_test.MailCommon):
         self.assertEqual(digest.periodicity, 'quarterly')
 
     @users('admin')
+    def test_digest_tip_description(self):
+        self.env["digest.tip"].create({
+            'name': "Test digest tips",
+            'tip_description': """
+                <t t-set="record_exists" t-value="True" />
+                <t t-if="record_exists">
+                    <p class="rendered">Record exists.</p>
+                </t>
+                <t t-else="">
+                    <p class="not-rendered">Record doesn't exist.</p>
+                </t>
+            """,
+        })
+        with self.mock_mail_gateway():
+            self.test_digest._action_send_to_user(self.user_employee)
+        self.assertEqual(len(self._new_mails), 1, "A new Email should have been created")
+        sent_mail_body = html.fromstring(self._new_mails.body_html)
+        values_to_check = [
+            sent_mail_body.xpath('//t[@t-set="record_exists"]'),
+            sent_mail_body.xpath('//p[@class="rendered"]/text()'),
+            sent_mail_body.xpath('//p[@class="not-rendered"]/text()')
+        ]
+        self.assertEqual(
+            values_to_check,
+            [[], ['Record exists.'], []],
+            "Sent mail should contain properly rendered tip content"
+        )
+
+    @users('admin')
     def test_digest_tone_down_wlogs(self):
         digest = self.env['digest.digest'].browse(self.test_digest.ids)
         digest._action_subscribe_users(self.user_employee)

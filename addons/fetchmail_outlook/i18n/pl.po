@@ -1,0 +1,123 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fetchmail_outlook
+# 
+# Translators:
+# Martin Trigaux, 2022
+# Maksym <ms@myodoo.pl>, 2022
+# DanielDemedziuk <daniel.demedziuk@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-03-30 10:59+0000\n"
+"PO-Revision-Date: 2022-05-17 12:41+0000\n"
+"Last-Translator: DanielDemedziuk <daniel.demedziuk@gmail.com>, 2022\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Connect your Outlook account"
+msgstr "<i class=\"fa fa-arrow-right\"/>Połącz swoje konto Outlook"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<i class=\"fa fa-cog\"/>\n"
+"                        Edit Settings"
+msgstr "<i class=\"fa fa-cog\"/>Edytuj ustawienia"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"<span attrs=\"{'invisible': ['|', ('use_microsoft_outlook_service', '=', False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge badge-success\">\n"
+"                        Outlook Token Valid\n"
+"                    </span>"
+msgstr ""
+"<span attrs=\"{'invisible'\\: ['|', ('use_microsoft_outlook_service', '=', "
+"False), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge "
+"badge-success\">Ważny token Outlooka</span>"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
+msgid "Authentication URI"
+msgstr "Uwierzytelnienie URI"
+
+#. module: fetchmail_outlook
+#: model:ir.model,name:fetchmail_outlook.model_fetchmail_server
+msgid "Incoming Mail Server"
+msgstr "Serwer poczty przychodzącej"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__is_microsoft_outlook_configured
+msgid "Is Outlook Credential Configured"
+msgstr "Czy poświadczenia programu Outlook są skonfigurowane"
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid "Outlook"
+msgstr "Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token
+msgid "Outlook Access Token"
+msgstr "Token dostępu do Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
+msgid "Outlook Access Token Expiration Timestamp"
+msgstr "Znacznik czasu wygaśnięcia tokena dostępu do Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
+msgid "Outlook Authentication"
+msgstr "Uwierzytelnianie Outlook"
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
+msgid "Outlook Refresh Token"
+msgstr "Odśwież token Outlook"
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid "Outlook mail server %r only supports IMAP server type."
+msgstr "Outlook mail server %r obsługuje jedynie serwer typu IMAP."
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid ""
+"Please leave the password field empty for Outlook mail server %r. The OAuth "
+"process does not require it"
+msgstr ""
+"Proszę pozostawić puste pole hasła dla serwera pocztowego Outlook %r. Proces"
+" OAuth go nie wymaga."
+
+#. module: fetchmail_outlook
+#: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
+#, python-format
+msgid "SSL is required ."
+msgstr "Wymagane jest SSL."
+
+#. module: fetchmail_outlook
+#: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
+msgid ""
+"Setup your Outlook API credentials in the general settings to link a Outlook"
+" account."
+msgstr ""
+"W ustawieniach ogólnych skonfiguruj poświadczenia API programu Outlook, aby "
+"połączyć konto programu Outlook."
+
+#. module: fetchmail_outlook
+#: model:ir.model.fields,help:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
+msgid "The URL to generate the authorization code from Outlook"
+msgstr "Adres URL do generowania kodu autoryzacji z programu Outlook"

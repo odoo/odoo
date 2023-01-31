@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:20+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: base_import
 #. openerp-web
@@ -71,10 +71,10 @@ msgid ""
 "import it at once."
 msgstr ""
 "Se produjo un problema desconocido durante la importación (posiblemente "
-"pérdida de conexión, límite de datos excedido o límites de memoria "
-"excedido). Vuelva a intentarlo en caso de que el problema sea temporal. Si "
-"el problema persiste, intente dividir el archivo en lugar de importarlo todo"
-" al mismo tiempo."
+"pérdida de conexión, límite de datos excedido o límite de memoria excedido)."
+" Vuelva a intentarlo en caso de que el problema sea temporal. Si el problema"
+" persiste, intente dividir el archivo en lugar de importarlo todo al mismo "
+"tiempo."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -417,7 +417,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Go to Import FAQ"
-msgstr "Ir a importar FAQ"
+msgstr "Ir a preguntas frecuentes de importación"
 
 #. module: base_import
 #. openerp-web
@@ -875,7 +875,7 @@ msgstr "Campos sugeridos"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Tab"
-msgstr "Tabulación"
+msgstr "Pestaña"
 
 #. module: base_import
 #. openerp-web
@@ -904,12 +904,12 @@ msgstr "Pruebas: modelo de importación base, carácter"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr "Pruebas: modelo de importación base, carácter de no solo lectura"
+msgstr "Pruebas: modelo de importación base, carácter no de readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly
 msgid "Tests : Base Import Model, Character readonly"
-msgstr "Pruebas: modelo de importación base, carácter de solo lectura"
+msgstr "Pruebas: modelo de importación base, carácter de readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_required
@@ -925,8 +925,7 @@ msgstr "Pruebas: modelo de importación base, estados de caracteres"
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_stillreadonly
 msgid "Tests : Base Import Model, Character still readonly"
 msgstr ""
-"Pruebas: modelo de importación base, el carácter sigue siendo de solo "
-"lectura"
+"Pruebas: modelo de importación base, el carácter sigue siendo de readonly"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_m2o
@@ -1125,7 +1124,7 @@ msgid ""
 "empty cells"
 msgstr ""
 "Advertencia: ignora las líneas de etiquetas, líneas vacías y líneas "
-"compuestas solo de células vacías"
+"compuestas solo de celdas vacías"
 
 #. module: base_import
 #. openerp-web
@@ -1141,8 +1140,8 @@ msgid ""
 "You can not import images via URL, check with your administrator or support "
 "for the reason."
 msgstr ""
-"No puedes importar imágenes a través del URL, consúltelo con su "
-"administrador o soporte técnico."
+"No puede importar imágenes a través del URL, consúltelo con su administrador"
+" o soporte técnico."
 
 #. module: base_import
 #. openerp-web

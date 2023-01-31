@@ -13,9 +13,18 @@ class AccountChartTemplate(models.Model):
             for journal in res:
                 if journal.get('type') in ('sale','purchase'):
                     journal['l10n_in_gstin_partner_id'] = company.partner_id.id
-                if journal['code'] == 'INV':
-                    journal['name'] = _('Tax Invoices')
         return res
+
+    def _load(self, sale_tax_rate, purchase_tax_rate, company):
+        """ Set Opening Date and Fiscal Year End in Indian localization"""
+        res = super(AccountChartTemplate, self)._load(sale_tax_rate, purchase_tax_rate, company)
+        if self == self.env.ref("l10n_in.indian_chart_template_standard"):
+            company.write({
+                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
+                'fiscalyear_last_month': '3',
+            })
+        return res
+
 
 class AccountTaxTemplate(models.Model):
     _inherit = 'account.tax.template'

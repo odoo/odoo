@@ -6,6 +6,7 @@ import {
     afterNextRender,
     beforeEach,
     dragenterFiles,
+    isScrolledToBottom,
     start,
 } from '@mail/utils/test_utils';
 
@@ -753,9 +754,7 @@ QUnit.test('basic rendering of canceled notification', async function (assert) {
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -854,9 +853,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 20 initially"
     );
 
@@ -878,9 +876,8 @@ QUnit.test('should scroll to bottom on receiving new message if the list is init
         predicate: data => threadViewer === data.threadViewer,
     });
     const messageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        messageList.scrollTop,
-        messageList.scrollHeight - messageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(messageList),
         "should scroll to bottom on receiving new message because the list is initially scrolled to bottom"
     );
 });
@@ -927,9 +924,8 @@ QUnit.test('should not scroll on receiving new message if the list is initially 
         predicate: data => threadViewer === data.threadViewer,
     });
     const initialMessageList = document.querySelector('.o_ThreadView_messageList');
-    assert.strictEqual(
-        initialMessageList.scrollTop,
-        initialMessageList.scrollHeight - initialMessageList.clientHeight,
+    assert.ok(
+        isScrolledToBottom(initialMessageList),
         "should have scrolled to bottom of channel 20 initially"
     );
 
@@ -995,9 +991,7 @@ QUnit.test("delete all attachments of message without content should no longer d
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1055,9 +1049,7 @@ QUnit.test('delete all attachments of a message with some text content should st
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1122,9 +1114,7 @@ QUnit.test('delete all attachments of a message with tracking fields should stil
     // wait for messages of the thread to be loaded
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1567,9 +1557,7 @@ QUnit.test('show empty placeholder when thread contains no message', async funct
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1613,9 +1601,7 @@ QUnit.test('show empty placeholder when thread contains only empty messages', as
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "thread become loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1664,9 +1650,7 @@ QUnit.test('message with subtype should be displayed (and not considered as empt
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView);
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (
@@ -1722,9 +1706,7 @@ QUnit.test('[technical] message list with a full page of empty messages should s
     });
     await this.afterEvent({
         eventName: 'o-thread-view-hint-processed',
-        func: () => {
-            createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true });
-        },
+        func: () => createThreadViewComponent(threadViewer.threadView, undefined, { isFixedSize: true }),
         message: "should wait until thread becomes loaded with messages",
         predicate: ({ hint, threadViewer }) => {
             return (

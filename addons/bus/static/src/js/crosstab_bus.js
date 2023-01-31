@@ -296,10 +296,9 @@ var CrossTabBus = Longpolling.extend({
         }
 
         const peerChannelsAfter = JSON.stringify(peerChannels);
-        if (peerChannelsBefore === peerChannelsAfter) {
-            return false;
+        if (peerChannelsBefore !== peerChannelsAfter) {
+            this._callLocalStorage('setItem', 'channels', peerChannels);
         }
-        this._callLocalStorage('setItem', 'channels', peerChannels);
 
         const allChannels = new Set();
         for (const channels of Object.values(peerChannels)) {
@@ -312,8 +311,13 @@ var CrossTabBus = Longpolling.extend({
         for (const channel of this._currentTabChannels) {
             allChannels.add(channel);
         }
-        this._channels = Array.from(allChannels);
-        return true;
+        const allChannelsSorted = Array.from(allChannels).sort();
+        if (JSON.stringify(allChannelsSorted) === JSON.stringify(this._channels.sort())) {
+            return false;
+        } else {
+            this._channels = allChannelsSorted;
+            return true;
+        };
     },
     //--------------------------------------------------------------------------
     // Handlers

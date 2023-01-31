@@ -133,6 +133,9 @@
             <div name="button_box" position="inside">
                 <field name="is_published" widget="website_redirect_button" attrs="{'invisible': [('sale_ok','=',False)]}"/>
             </div>
+            <group name="upsell" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </group>
             <xpath expr="//group[@name='upsell']" position="inside">
                 <field name="accessory_product_ids" widget="many2many_tags" attrs="{'invisible': [('sale_ok','=',False)]}"
                        placeholder="Suggested accessories in the eCommerce cart"/>
@@ -147,7 +150,7 @@
                     <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
                     <field name="website_sequence" groups="base.group_no_one"/>
                     <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
-                    <field name="website_ribbon_id" groups="base.group_no_one"/>
+                    <field name="website_ribbon_id" groups="base.group_no_one" options="{'no_quick_create': True'}"/>
                 </group>
                 <group name="product_template_images" string="Extra Product Media" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="product_template_image_ids" class="o_website_sale_image_list" context="{'default_name': name}" mode="kanban" add-label="Add a Media" nolabel="1"/>
@@ -246,6 +249,16 @@
             Categories are used to browse your products through the
             touchscreen interface.
           </p>
+        </field>
+    </record>
+
+    <record id="product_ribbon_view_tree" model="ir.ui.view">
+        <field name="name">product.ribbon.tree</field>
+        <field name="model">product.ribbon</field>
+        <field name="arch" type="xml">
+            <tree string="Products Ribbon">
+                <field name="html" string="Name"/>
+            </tree>
         </field>
     </record>
 

@@ -215,7 +215,7 @@ class FleetVehicle(models.Model):
             ('expiration_date', '>', today),
             ('expiration_date', '<', limit_date),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
+        ]).mapped('vehicle_id').ids
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -231,7 +231,7 @@ class FleetVehicle(models.Model):
             ('expiration_date', '!=', False),
             ('expiration_date', '<', today),
             ('state', 'in', ['open', 'expired'])
-        ]).mapped('id')
+        ]).mapped('vehicle_id').ids
         res.append(('id', search_operator, res_ids))
         return res
 
@@ -277,6 +277,10 @@ class FleetVehicle(models.Model):
                 if self.vehicle_type == 'car':
                     future_driver.sudo().write({'plan_to_change_car': True})
 
+        if 'active' in vals and not vals['active']:
+            self.env['fleet.vehicle.log.contract'].search([('vehicle_id', 'in', self.ids)]).active = False
+            self.env['fleet.vehicle.log.services'].search([('vehicle_id', 'in', self.ids)]).active = False
+
         res = super(FleetVehicle, self).write(vals)
         return res
 
@@ -307,11 +311,6 @@ class FleetVehicle(models.Model):
                 vehicle.future_driver_id.sudo().write({'plan_to_change_car': False})
             vehicle.driver_id = vehicle.future_driver_id
             vehicle.future_driver_id = False
-
-    def toggle_active(self):
-        self.env['fleet.vehicle.log.contract'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
-        self.env['fleet.vehicle.log.services'].with_context(active_test=False).search([('vehicle_id', 'in', self.ids)]).toggle_active()
-        super(FleetVehicle, self).toggle_active()
 
     @api.model
     def _read_group_stage_ids(self, stages, domain, order):

@@ -205,16 +205,6 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
-.editor_enable {
-    @if o-website-value('header-template') == 'sidebar' {
-        #wrapwrap > header {
-            @if o-website-value('hamburger-position') != 'right' {
-                right: $o-we-sidebar-width;
-            }
-        }
-    }
-}
-
 // s_countdown preview classes
 body.editor_enable {
     .s_countdown {
@@ -230,7 +220,10 @@ body.editor_enable {
 //s_dynamic_snippet
 body.editor_enable {
     .s_dynamic {
-        > * {
+        // TODO remove .stretched-link::after in master
+        // BS4 adds pointer-events: auto on it which breaks the editor.
+        // BS5 doesn't do that so this can safely be removed in master.
+        > *, .stretched-link::after {
             pointer-events: none;
         }
         [data-url] {

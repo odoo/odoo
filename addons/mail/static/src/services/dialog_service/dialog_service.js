@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+// ensure component is registered beforehand.
+import '@mail/components/dialog_manager/dialog_manager';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import AbstractService from 'web.AbstractService';

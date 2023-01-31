@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from collections import defaultdict
 import functools
 import itertools
 import logging
@@ -250,8 +251,10 @@ class MergePartnerAutomatic(models.TransientModel):
                 return item.id
             else:
                 return item
+
         # get all fields that are not computed or x2many
         values = dict()
+        values_by_company = defaultdict(dict)   # {company: vals}
         for column in model_fields:
             field = dst_partner._fields[column]
             if field.type not in ('many2many', 'one2many') and field.compute is None:
@@ -261,10 +264,21 @@ class MergePartnerAutomatic(models.TransientModel):
                             values[column] += write_serializer(item[column])
                         else:
                             values[column] = write_serializer(item[column])
+            elif field.company_dependent and column in summable_fields:
+                # sum the values of partners for each company; use sudo() to
+                # compute the sum on all companies, including forbidden ones
+                partners = (src_partners + dst_partner).sudo()
+                for company in self.env['res.company'].sudo().search([]):
+                    values_by_company[company][column] = sum(
+                        partners.with_company(company).mapped(column)
+                    )
+
         # remove fields that can not be updated (id and parent_id)
         values.pop('id', None)
         parent_id = values.pop('parent_id', None)
         dst_partner.write(values)
+        for company, vals in values_by_company.items():
+            dst_partner.with_company(company).sudo().write(vals)
         # try to update the parent_id
         if parent_id and parent_id != dst_partner.id:
             try:

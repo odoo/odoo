@@ -7,20 +7,21 @@
 # surapas haemaprasertsuk <surapas@gmail.com>, 2021
 # monchai7 <montchye@gmail.com>, 2021
 # Amin Cheloh <nineamin@hotmail.com>, 2021
-# Martin Trigaux, 2021
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2021
 # Pornvibool Tippayawat <pornvibool.t@gmail.com>, 2021
 # Odoo Thaidev <odoothaidev@gmail.com>, 2021
 # Krisa C, 2021
 # Wichanon Jamwutthipreecha, 2022
+# Martin Trigaux, 2022
+# Desausoi Laurent, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:19+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
+"Last-Translator: Desausoi Laurent, 2022\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -474,7 +475,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        <t t-set=\"doc_name\" t-value=\"'quotation' if object.state in ('draft', 'sent') else 'order'\"/>\n"
+"        <t t-set=\"doc_name\" t-value=\"'ใบเสนอราคา' if object.state in ('draft', 'sent') else 'คำสั่ง'\"/>\n"
 "        สวัสดี,\n"
 "        <br/><br/>\n"
 "         \n"
@@ -848,9 +849,9 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"ตามการกำหนดค่าสินค้า ปริมาณที่จัดส่งสามารถคำนวณได้โดยอัตโนมัติโดยใช้กลไก:\n"
-"- ด้วยตนเอง: จำนวนถูกตั้งค่าด้วยตนเองในบรรทัด\n"
-" - วิเคราะห์จากค่าใช้จ่าย: จำนวนคือผลรวมปริมาณจากค่าใช้จ่ายที่ลงรายการบัญชี\n"
+"ตามการกำหนดค่าสินค้า จำนวนที่จัดส่งสามารถคำนวณได้โดยอัตโนมัติโดยใช้กลไก:\n"
+"- ด้วยตนเอง: จำนวนถูกตั้งค่าด้วยตนเองในไลน์\n"
+" - วิเคราะห์จากค่าใช้จ่าย: จำนวนคือผลรวมจำนวนจากค่าใช้จ่ายที่ลงรายการบัญชี\n"
 "- ใบบันทึกเวลา: จำนวนคือผลรวมของชั่วโมงที่บันทึกในงานที่เชื่อมโยงกับไลน์การขายนี้\n"
 "- การย้ายสต๊อก: จำนวนมาจากแพ็กเกจที่ยืนยันแล้ว\n"
 
@@ -1359,8 +1360,8 @@ msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
-msgid "Credit card (via Stripe)"
-msgstr "บัตรเครดิต (ผ่าน Stripe)"
+msgid "Credit & Debit card (via Stripe)"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1597,7 +1598,7 @@ msgid ""
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
 "วันที่จัดส่งที่คุณสามารถสัญญากับลูกค้าได้ "
-"โดยคำนวณจากระยะเวลานำการผลิตขั้นต่ำของไลน์คำสั่งในกรณีของสินค้าบริการ "
+"โดยคำนวณจากระยะเวลานำสินค้าขั้นต่ำของไลน์คำสั่งในกรณีของสินค้าบริการ "
 "ในกรณีของการจัดส่ง "
 "นโยบายการจัดส่งของคำสั่งจะถูกนำมาพิจารณาโดยใช้ระยะเวลานำสินค้าขั้นต่ำหรือสูงสุดของไลน์คำสั่ง"
 
@@ -1706,6 +1707,12 @@ msgstr "เงินดาวน์: %s"
 #, python-format
 msgid "Down Payments"
 msgstr "เงินดาวน์"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:0
+#, python-format
+msgid "Down payment"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__fixed
@@ -3274,6 +3281,11 @@ msgid "Reference of the document that generated this sales order request."
 msgstr "การอ้างอิงของเอกสารที่สร้างคำขอคำสั่งขายนี้"
 
 #. module: sale
+#: model:ir.model,name:sale.model_account_payment_register
+msgid "Register Payment"
+msgstr "ลงทะเบียนการจ่ายเงิน"
+
+#. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
 msgstr "ใบแจ้งหนี้ปกติ"
@@ -4655,6 +4667,15 @@ msgstr ""
 "ลูกค้าจะได้รับประเภทการสื่อสารเมื่อพวกเขาเลือกวิธีการชำระเงิน"
 
 #. module: sale
+#: code:addons/sale/models/product_product.py:0
+#: code:addons/sale/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot change the product's type because it is already used in sales "
+"orders."
+msgstr ""
+
+#. module: sale
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -4707,6 +4728,13 @@ msgid ""
 msgstr ""
 "ใบเสนอราคาของคุณมีสินค้าจากบริษัท %(product_company)s ในขณะที่ใบเสนอราคาของคุณเป็นของบริษัท %(quote_company)s \n"
 "กรุณาเปลี่ยนบริษัทที่เสนอราคาหรือนำสินค้าออกจากบริษัทอื่น(%(bad_products)s)"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.send_invoice_cron_ir_actions_server
+#: model:ir.cron,cron_name:sale.send_invoice_cron
+#: model:ir.cron,name:sale.send_invoice_cron
+msgid "automatic invoicing: send ready invoice"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost

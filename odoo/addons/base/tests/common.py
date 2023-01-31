@@ -249,6 +249,9 @@ class MockSmtplibCase:
             def login(self, user, password):
                 pass
 
+            def starttls(self, keyfile=None, certfile=None, context=None):
+                pass
+
         self.testing_smtp_session = TestingSMTPSession()
 
         IrMailServer = self.env['ir.mail_server']

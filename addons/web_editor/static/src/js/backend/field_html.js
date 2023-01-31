@@ -11,6 +11,7 @@ const {QWebPlugin} = require('@web_editor/js/backend/QWebPlugin');
 require('web._field_registry');
 
 var _lt = core._lt;
+var _t = core._t;
 var TranslatableFieldMixin = basic_fields.TranslatableFieldMixin;
 var QWeb = core.qweb;
 
@@ -44,7 +45,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         wysiwyg_change: '_onChange',
         wysiwyg_attachment: '_onAttachmentChange',
     },
-
     /**
      * @override
      */
@@ -93,16 +93,25 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      *
      * @override
      */
-    commitChanges: function () {
+    commitChanges: async function () {
         if (this.mode == "readonly" || !this.isRendered) {
             return this._super();
         }
         var _super = this._super.bind(this);
-        this.wysiwyg.odooEditor.clean();
-        return this.wysiwyg.saveModifiedImages(this.$content).then(() => {
-            this._isDirty = this.wysiwyg.isDirty();
-            _super();
-        });
+        // Do not wait for the resolution of the cleanForSave promise to update
+        // the internal value in case this happens during an urgentSave as the
+        // beforeunload event does not play well with asynchronicity. It is
+        // better to have a partially cleared value than to lose changes. When
+        // this function is called outside of an urgentSave context, the full
+        // cleaning is still awaited below and `_super` will reupdate the value.
+        const fullClean = this.wysiwyg.cleanForSave();
+        this._setValue(this._getValue());
+        this._isDirty = this.wysiwyg.isDirty();
+        await fullClean;
+        await this.wysiwyg.saveModifiedImages(this.$content);
+        // Update the value to the fully cleaned version.
+        this._setValue(this._getValue());
+        _super();
     },
     /**
      * @override
@@ -199,8 +208,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
+            allowCommandVideo: Boolean(this.nodeOptions.allowCommandVideo) && (!this.field.sanitize || !this.field.sanitize_tags),
             mediaModalParams: {
                 noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
+                res_model: this.model,
+                res_id: this.res_id,
+                useMediaLibrary: true,
             },
             linkForceNewWindow: true,
             tabsize: 0,
@@ -218,25 +231,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _toggleCodeView: function ($codeview) {
         this.wysiwyg.odooEditor.observerUnactive();
-        $codeview.height(this.$content.height());
         $codeview.toggleClass('d-none');
         this.$content.toggleClass('d-none');
         if ($codeview.hasClass('d-none')) {
-            if (this.resizerHandleObserver) {
-                this.resizerHandleObserver.disconnect();
-                delete this.resizerHandleObserver;
-            }
             this.wysiwyg.odooEditor.observerActive();
             this.wysiwyg.setValue($codeview.val());
         } else {
-            this.resizerHandleObserver = new MutationObserver((mutations, observer) => {
-                for (let mutation of mutations) {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        $codeview[0].style.height = this.$content[0].style.height;
-                    }
-                }
-            });
-            this.resizerHandleObserver.observe(this.$content[0], {attributes: true});
             $codeview.val(this.$content.html());
             this.wysiwyg.odooEditor.observerActive();
         }
@@ -251,17 +251,18 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      * when closing the wizard.
      *
      * @private
-     * @param {Object} attachments
+     * @param {Object} event the event containing attachment data
      */
-    _onAttachmentChange: function (attachments) {
-        if (!this.fieldNameAttachment) {
+    _onAttachmentChange: function (event) {
+        // This only needs to happen for the composer for now
+        if (!this.fieldNameAttachment || this.model !== 'mail.compose.message') {
             return;
         }
         this.trigger_up('field_changed', {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
                 operation: 'ADD_M2M',
-                ids: attachments
+                ids: event.data
             }])
         });
     },
@@ -309,6 +310,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         var def = new Promise(function (resolve) {
             resolver = resolve;
         });
+        const externalLinkSelector = `a:not([href^="${location.origin}"]):not([href^="/"])`;
         if (this.nodeOptions.cssReadonly) {
             this.$iframe = $('<iframe class="o_readonly d-none"/>');
             this.$iframe.appendTo(this.$el);
@@ -374,6 +376,12 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
                             self._onClick(ev);
                         }
                     });
+
+                    // Ensure all external links are opened in a new tab.
+                    for (const externalLink of cwindow.document.body.querySelectorAll(externalLinkSelector)) {
+                        externalLink.setAttribute('target', '_blank');
+                        externalLink.setAttribute('rel', 'noreferrer');
+                    }
                 });
             });
         } else {
@@ -381,11 +389,18 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             this.$content.appendTo(this.$el);
             this._qwebPlugin = new QWebPlugin();
             this._qwebPlugin.sanitizeElement(this.$content[0]);
+            // Ensure all external links are opened in a new tab.
+            for (const externalLink of this.$content.find(externalLinkSelector)) {
+                externalLink.setAttribute('target', '_blank');
+                externalLink.setAttribute('rel', 'noreferrer');
+            }
             resolver();
         }
 
         def.then(function () {
-            self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            if (!self.hasReadonlyModifier) {
+                self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
+            }
             if (self.$iframe) {
                 // Iframe is hidden until fully loaded to avoid glitches.
                 self.$iframe.removeClass('d-none');
@@ -525,13 +540,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
      */
     _onLoadWysiwyg: function () {
         var $button = this._renderTranslateButton();
-        $button.css({
-            'font-size': '15px',
-            position: 'absolute',
-            right: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
-            top: '5px',
-        });
-        this.$el.append($button);
+        var $container;
+        if (this.nodeOptions.cssEdit && this.wysiwyg) {
+            $container = this.wysiwyg.$iframeBody.find('.email_designer_top_actions');
+        } else {
+            $container = this.$el;
+            $button.css({
+                'font-size': '15px',
+                position: 'absolute',
+                top: '5px',
+                [_t.database.parameters.direction === 'rtl' ? 'left' : 'right']: odoo.debug && this.nodeOptions.codeview ? '40px' : '5px',
+            });
+        }
+        $container.append($button);
         if (odoo.debug && this.nodeOptions.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">

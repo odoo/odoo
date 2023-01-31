@@ -220,7 +220,9 @@
 
                             <!-- Journal Entry  button -->
                             <button name="button_open_journal_entry" type="object" class="oe_stat_button" icon="fa-bars">
-                                Journal Entry
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Journal Entry</span>
+                                </div>
                             </button>
                         </div>
 
@@ -281,10 +283,13 @@
                                             'readonly': [('state', '!=', 'draft')],
                                         }"/>
 
-                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account" readonly="1"
+                                <!-- This field should always be readonly but using readonly="1" overrides the other partner_bank_id
+                                fields readonly condition in the framework, preventing the modification of these fields -->
+                                <field name="partner_bank_id" context="{'default_partner_id': partner_id}" string="Company Bank Account"
                                         attrs="{
                                             'invisible': ['|', '|', ('show_partner_bank_account', '=', False), ('is_internal_transfer', '=', True), ('payment_type', '=', 'outbound')],
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
+                                            'readonly': [('payment_type', '!=', 'outbound')],
                                         }"/>
 
                                 <field name="destination_journal_id" context="{'default_partner_id': partner_id}"

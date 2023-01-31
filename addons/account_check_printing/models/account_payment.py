@@ -20,7 +20,7 @@ class AccountPaymentRegister(models.TransientModel):
                 lambda l: l.payment_method_id == preferred
             )
             if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line
+                record.payment_method_line_id = method_line[0]
 
 
 class AccountPayment(models.Model):
@@ -113,15 +113,14 @@ class AccountPayment(models.Model):
             method_line = record.journal_id.outbound_payment_method_line_ids\
                 .filtered(lambda l: l.payment_method_id == preferred)
             if record.payment_type == 'outbound' and method_line:
-                record.payment_method_line_id = method_line
+                record.payment_method_line_id = method_line[0]
 
     def action_post(self):
-        res = super(AccountPayment, self).action_post()
         payment_method_check = self.env.ref('account_check_printing.account_payment_method_check')
         for payment in self.filtered(lambda p: p.payment_method_id == payment_method_check and p.check_manual_sequencing):
             sequence = payment.journal_id.check_sequence_id
             payment.check_number = sequence.next_by_id()
-        return res
+        return super(AccountPayment, self).action_post()
 
     def print_checks(self):
         """ Check that the recordset is valid, set the payments state to sent and call print_checks() """
@@ -142,8 +141,8 @@ class AccountPayment(models.Model):
                     FROM account_payment payment
                     JOIN account_move move ON movE.id = payment.move_id
                    WHERE journal_id = %(journal_id)s
-                   AND check_number IS NOT NULL
-                ORDER BY check_number::INTEGER DESC
+                   AND payment.check_number IS NOT NULL
+                ORDER BY payment.check_number::INTEGER DESC
                    LIMIT 1
             """, {
                 'journal_id': self.journal_id.id,
@@ -229,7 +228,7 @@ class AccountPayment(models.Model):
         def prepare_vals(invoice, partials):
             number = ' - '.join([invoice.name, invoice.ref] if invoice.ref else [invoice.name])
 
-            if invoice.is_outbound():
+            if invoice.is_outbound() or invoice.move_type == 'entry':
                 invoice_sign = 1
                 partial_field = 'debit_amount_currency'
             else:
@@ -250,10 +249,11 @@ class AccountPayment(models.Model):
                 'currency': invoice.currency_id,
             }
 
-        # Decode the reconciliation to keep only invoices.
+        # Decode the reconciliation to keep only bills.
         term_lines = self.line_ids.filtered(lambda line: line.account_id.internal_type in ('receivable', 'payable'))
-        invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id)\
-            .filtered(lambda x: x.is_outbound())
+        invoices = (term_lines.matched_debit_ids.debit_move_id.move_id + term_lines.matched_credit_ids.credit_move_id.move_id) \
+            .filtered(lambda move: move.is_outbound() or move.move_type == 'entry')
+
         invoices = invoices.sorted(lambda x: x.invoice_date_due or x.date)
 
         # Group partials by invoices.
@@ -280,7 +280,7 @@ class AccountPayment(models.Model):
         else:
             stub_lines = [prepare_vals(invoice, partials)
                           for invoice, partials in invoice_map.items()
-                          if invoice.move_type == 'in_invoice']
+                          if invoice.move_type in ('in_invoice', 'entry')]
 
         # Crop the stub lines or split them on multiple pages
         if not self.company_id.account_check_printing_multi_stub:

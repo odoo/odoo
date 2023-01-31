@@ -14,6 +14,12 @@ class TestUBLBE(AccountEdiTestCommon):
     def setUpClass(cls, chart_template_ref='l10n_be.l10nbe_chart_template', edi_format_ref='l10n_be_edi.edi_efff_1'):
         super().setUpClass(chart_template_ref=chart_template_ref, edi_format_ref=edi_format_ref)
 
+        if cls.env['ir.module.module'].search(
+            [('name', '=', 'account_edi_ubl_cii'), ('state', '=', 'installed')],
+            limit=1,
+        ):
+            cls.skipTest(cls, "L10n_be_edi Tests skipped because account_edi_ubl_cii is installed.")
+
         cls.partner_a.write({
             'street': "Chaussée de Namur 40",
             'zip': "1367",
@@ -44,7 +50,7 @@ class TestUBLBE(AccountEdiTestCommon):
             'invoice_payment_term_id': self.pay_terms_b.id,
             'invoice_date': '2017-01-01',
             'date': '2017-01-01',
-            'invoice_origin': 'test invoice origin',
+            'ref': 'test invoice ref',
             'narration': 'test narration',
             'invoice_line_ids': [(0, 0, {
                 'price_unit': 1000.0,
@@ -76,7 +82,7 @@ class TestUBLBE(AccountEdiTestCommon):
                 <Note>test narration</Note>
                 <DocumentCurrencyCode>EUR</DocumentCurrencyCode>
                 <OrderReference>
-                    <ID>test invoice origin</ID>
+                    <ID>test invoice ref</ID>
                 </OrderReference>
                 <AdditionalDocumentReference>
                     <ID>efff_BE0477472701_INV201700001.pdf</ID>

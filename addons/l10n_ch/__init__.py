@@ -15,8 +15,8 @@ def load_translations(env):
 def init_settings(env):
     '''If the company is localized in Switzerland, activate the cash rounding by default.
     '''
-    # The cash rounding is activated by default only if the company is localized in Switzerland.
-    for company in env['res.company'].search([('partner_id.country_id.code', '=', "CH")]):
+    # The cash rounding is activated by default only if the company is localized in Switzerland or Liechtenstein.
+    for company in env['res.company'].search([('partner_id.country_id.code', 'in', ["CH", "LI"])]):
         res_config_id = env['res.config.settings'].create({
             'company_id': company.id,
             'group_cash_rounding': True

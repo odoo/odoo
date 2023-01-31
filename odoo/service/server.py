@@ -123,7 +123,7 @@ class RequestHandler(werkzeug.serving.WSGIRequestHandler):
             self.timeout = 5
         # flag the current thread as handling a http request
         super(RequestHandler, self).setup()
-        me = threading.currentThread()
+        me = threading.current_thread()
         me.name = 'odoo.service.http.request.%s' % (me.ident,)
 
 
@@ -290,7 +290,7 @@ class FSWatcherInotify(FSWatcherBase):
     def start(self):
         self.started = True
         self.thread = threading.Thread(target=self.run, name="odoo.service.autoreload.watcher")
-        self.thread.setDaemon(True)
+        self.thread.daemon = True
         self.thread.start()
 
     def stop(self):
@@ -350,7 +350,7 @@ class CommonServer(object):
 class ThreadedServer(CommonServer):
     def __init__(self, app):
         super(ThreadedServer, self).__init__(app)
-        self.main_thread_id = threading.currentThread().ident
+        self.main_thread_id = threading.current_thread().ident
         # Variable keeping track of the number of calls to the signal handler defined
         # below. This variable is monitored by ``quit_on_signals()``.
         self.quit_signals_received = 0
@@ -385,7 +385,7 @@ class ThreadedServer(CommonServer):
         memory = memory_info(psutil.Process(os.getpid()))
         if config['limit_memory_soft'] and memory > config['limit_memory_soft']:
             _logger.warning('Server memory limit (%s) reached.', memory)
-            self.limits_reached_threads.add(threading.currentThread())
+            self.limits_reached_threads.add(threading.current_thread())
 
         for thread in threading.enumerate():
             if not thread.daemon or getattr(thread, 'type', None) == 'cron':
@@ -430,7 +430,13 @@ class ThreadedServer(CommonServer):
         conn = odoo.sql_db.db_connect('postgres')
         with conn.cursor() as cr:
             pg_conn = cr._cnx
-            cr.execute("LISTEN cron_trigger")
+            # LISTEN / NOTIFY doesn't work in recovery mode
+            cr.execute("SELECT pg_is_in_recovery()")
+            in_recovery = cr.fetchone()[0]
+            if not in_recovery:
+                cr.execute("LISTEN cron_trigger")
+            else:
+                _logger.warning("PG cluster in recovery mode, cron trigger not activated")
             cr.commit()
 
             while True:
@@ -442,7 +448,7 @@ class ThreadedServer(CommonServer):
                 _logger.debug('cron%d polling for jobs', number)
                 for db_name, registry in registries.d.items():
                     if registry.ready:
-                        thread = threading.currentThread()
+                        thread = threading.current_thread()
                         thread.start_time = time.time()
                         try:
                             ir_cron._process_jobs(db_name)
@@ -466,7 +472,7 @@ class ThreadedServer(CommonServer):
             def target():
                 self.cron_thread(i)
             t = threading.Thread(target=target, name="odoo.service.cron.cron%d" % i)
-            t.setDaemon(True)
+            t.daemon = True
             t.type = 'cron'
             t.start()
             _logger.debug("cron%d started!" % i)
@@ -479,7 +485,7 @@ class ThreadedServer(CommonServer):
 
     def http_spawn(self):
         t = threading.Thread(target=self.http_thread, name="odoo.service.httpd")
-        t.setDaemon(True)
+        t.daemon = True
         t.start()
 
     def start(self, stop=False):
@@ -521,11 +527,11 @@ class ThreadedServer(CommonServer):
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
         # threading.Thread.join() should not mask signals (at least in python 2.5).
-        me = threading.currentThread()
+        me = threading.current_thread()
         _logger.debug('current thread: %r', me)
         for thread in threading.enumerate():
-            _logger.debug('process %r (%r)', thread, thread.isDaemon())
-            if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
+            _logger.debug('process %r (%r)', thread, thread.daemon)
+            if (thread != me and not thread.daemon and thread.ident != self.main_thread_id and
                     thread not in self.limits_reached_threads):
                 while thread.is_alive() and (time.time() - stop_time) < 1:
                     # We wait for requests to finish, up to 1 second.
@@ -534,6 +540,8 @@ class ThreadedServer(CommonServer):
                     # and would prevent the forced shutdown.
                     thread.join(0.05)
                     time.sleep(0.05)
+
+        odoo.sql_db.close_all()
 
         _logger.debug('--')
         logging.shutdown()
@@ -874,6 +882,8 @@ class PreforkServer(CommonServer):
             # FIXME make longpolling process handle SIGTERM correctly
             self.worker_kill(self.long_polling_pid, signal.SIGKILL)
             self.long_polling_pid = None
+        if self.socket:
+            self.socket.close()
         if graceful:
             _logger.info("Stopping gracefully")
             super().stop()
@@ -892,8 +902,6 @@ class PreforkServer(CommonServer):
             _logger.info("Stopping forcefully")
         for pid in self.workers:
             self.worker_kill(pid, signal.SIGTERM)
-        if self.socket:
-            self.socket.close()
 
     def run(self, preload, stop):
         self.start()
@@ -1176,7 +1184,13 @@ class WorkerCron(Worker):
 
         dbconn = odoo.sql_db.db_connect('postgres')
         self.dbcursor = dbconn.cursor()
-        self.dbcursor.execute("LISTEN cron_trigger")
+        # LISTEN / NOTIFY doesn't work in recovery mode
+        self.dbcursor.execute("SELECT pg_is_in_recovery()")
+        in_recovery = self.dbcursor.fetchone()[0]
+        if not in_recovery:
+            self.dbcursor.execute("LISTEN cron_trigger")
+        else:
+            _logger.warning("PG cluster in recovery mode, cron trigger not activated")
         self.dbcursor.commit()
 
     def stop(self):
@@ -1217,7 +1231,7 @@ def _reexec(updated_modules=None):
 
 def load_test_file_py(registry, test_file):
     from odoo.tests.common import OdooSuite
-    threading.currentThread().testing = True
+    threading.current_thread().testing = True
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
         for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
@@ -1233,7 +1247,7 @@ def load_test_file_py(registry, test_file):
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
-        threading.currentThread().testing = False
+        threading.current_thread().testing = False
 
 def preload_registries(dbnames):
     """ Preload a registries, possibly run a test file."""

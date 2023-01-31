@@ -38,3 +38,7 @@ class StockPicking(models.Model):
     def _compute_is_dropship(self):
         for picking in self:
             picking.is_dropship = picking.location_dest_id.usage == 'customer' and picking.location_id.usage == 'supplier'
+
+    def _is_to_external_location(self):
+        self.ensure_one()
+        return super()._is_to_external_location() or self.is_dropship

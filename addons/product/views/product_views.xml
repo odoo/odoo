@@ -43,7 +43,7 @@
                         <h1>
                             <div class="d-flex">
                                 <field name="priority" widget="priority" class="mr-3"/>
-                                <field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/>
+                                <field class="text-break" name="name" placeholder="e.g. Cheese Burger"/>
                             </div>
                         </h1>
                     </div>
@@ -100,7 +100,7 @@
                         </page>
                         <page string="Sales" attrs="{'invisible':[('sale_ok','=',False)]}" name="sales" invisible="1">
                             <group name="sale">
-                                <group string="Upsell &amp; Cross-Sell" name="upsell"/>
+                                <group string="Upsell &amp; Cross-Sell" name="upsell" invisible="1"/>
                             </group>
                             <group>
                                 <group string="Sales Description" name="description">
@@ -132,7 +132,7 @@
                                 colspan="4"
                                 attrs="{'invisible':['|', ('type', 'not in', ['product', 'consu']), ('product_variant_count', '>', 1), ('is_product_variant', '=', False)]}"
                                 groups="product.group_stock_packaging">
-                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2'}"/>
+                                <field name="packaging_ids" nolabel="1" context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </page>
                     </notebook>
@@ -245,6 +245,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="active" invisible="1"/>
                         <field name="id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Product Name"/>
@@ -287,7 +288,7 @@
                             </group>
                             <group name="packaging" string="Packaging" groups="product.group_stock_packaging">
                                 <field name="packaging_ids" nolabel="1"
-                                    context="{'tree_view_ref':'product.product_packaging_tree_view2'}"/>
+                                    context="{'tree_view_ref':'product.product_packaging_tree_view2', 'default_company_id': company_id}"/>
                             </group>
                         </group>
                     </sheet>
@@ -365,9 +366,10 @@
                 </xpath>
                 <field name="list_price" position="attributes">
                    <attribute name="attrs">{'readonly': [('product_variant_count', '&gt;', 1)]}</attribute>
+                   <attribute name="invisible">1</attribute>
                 </field>
                 <field name="list_price" position="after">
-                   <field name="lst_price" invisible="1"/>
+                   <field name="lst_price" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                 </field>
                 <group name="packaging" position="attributes">
                     <attribute name="attrs">{'invisible': 0}</attribute>
@@ -696,7 +698,9 @@
                     <field name="name" readonly="1"/>
                     <field name="product_id" readonly="1" optional="hide"
                         invisible="context.get('product_template_invisible_variant', False)"
-                        groups="product.group_product_variant"/>
+                        groups="product.group_product_variant"
+                        domain="[('product_tmpl_id', '=?', context.get('default_product_tmpl_id', False))]"
+                        options="{'no_quick_create': True, 'no_create_edit' : True}"/>
                     <field name="product_tmpl_id" string="Product" readonly="1"
                         invisible="context.get('visible_product_tmpl_id', True)"/>
                     <field name="product_name" optional="hide"/>

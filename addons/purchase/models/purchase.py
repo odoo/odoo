@@ -20,7 +20,7 @@ from odoo.tools.misc import formatLang, get_lang, format_amount
 
 class PurchaseOrder(models.Model):
     _name = "purchase.order"
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
+    _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _description = "Purchase Order"
     _order = 'priority desc, id desc'
 
@@ -509,6 +509,7 @@ class PurchaseOrder(models.Model):
 
         # 1) Prepare invoice vals and clean-up the section lines
         invoice_vals_list = []
+        sequence = 10
         for order in self:
             if order.invoice_status != 'to invoice':
                 continue
@@ -524,9 +525,15 @@ class PurchaseOrder(models.Model):
                     continue
                 if not float_is_zero(line.qty_to_invoice, precision_digits=precision):
                     if pending_section:
-                        invoice_vals['invoice_line_ids'].append((0, 0, pending_section._prepare_account_move_line()))
+                        line_vals = pending_section._prepare_account_move_line()
+                        line_vals.update({'sequence': sequence})
+                        invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                        sequence += 1
                         pending_section = None
-                    invoice_vals['invoice_line_ids'].append((0, 0, line._prepare_account_move_line()))
+                    line_vals = line._prepare_account_move_line()
+                    line_vals.update({'sequence': sequence})
+                    invoice_vals['invoice_line_ids'].append((0, 0, line_vals))
+                    sequence += 1
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
@@ -578,6 +585,7 @@ class PurchaseOrder(models.Model):
             raise UserError(_('Please define an accounting purchase journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
         partner_invoice_id = self.partner_id.address_get(['invoice'])['invoice']
+        partner_bank_id = self.partner_id.commercial_partner_id.bank_ids.filtered_domain(['|', ('company_id', '=', False), ('company_id', '=', self.company_id.id)])[:1]
         invoice_vals = {
             'ref': self.partner_ref or '',
             'move_type': move_type,
@@ -587,7 +595,7 @@ class PurchaseOrder(models.Model):
             'partner_id': partner_invoice_id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(partner_invoice_id)).id,
             'payment_reference': self.partner_ref or '',
-            'partner_bank_id': self.partner_id.bank_ids[:1].id,
+            'partner_bank_id': partner_bank_id.id,
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
@@ -646,6 +654,16 @@ class PurchaseOrder(models.Model):
         }
 
         one_week_ago = fields.Datetime.to_string(fields.Datetime.now() - relativedelta(days=7))
+
+        # Get list of translation values
+        Translation = self.env['ir.translation']
+        list_old_value_char = []
+        list_new_value_char = []
+        field_name = 'ir.model.fields.selection,name'
+        for lang in self.env['res.lang'].search_read([], ['code']):
+            list_old_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ'))
+            list_new_value_char.append(Translation._get_source(field_name, 'model', lang['code'], source='RFQ Sent'))
+
         # This query is brittle since it depends on the label values of a selection field
         # not changing, but we don't have a direct time tracker of when a state changes
         query = """SELECT COUNT(1)
@@ -655,12 +673,12 @@ class PurchaseOrder(models.Model):
                    WHERE m.create_date >= %s
                      AND m.model = 'purchase.order'
                      AND m.message_type = 'notification'
-                     AND v.old_value_char = 'RFQ'
-                     AND v.new_value_char = 'RFQ Sent'
+                     AND v.old_value_char IN %s
+                     AND v.new_value_char IN %s
                      AND po.company_id = %s;
                 """
 
-        self.env.cr.execute(query, (one_week_ago, self.env.company.id))
+        self.env.cr.execute(query, (one_week_ago, tuple(list_old_value_char), tuple(list_new_value_char), self.env.company.id))
         res = self.env.cr.fetchone()
         result['all_sent_rfqs'] = res[0] or 0
 
@@ -932,7 +950,7 @@ class PurchaseOrderLine(models.Model):
         for line in self:
             taxes = line.taxes_id.compute_all(**line._prepare_compute_all_values())
             line.update({
-                'price_tax': taxes['total_included'] - taxes['total_excluded'],
+                'price_tax': sum(t.get('amount', 0.0) for t in taxes.get('taxes', [])),
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
@@ -966,7 +984,7 @@ class PurchaseOrderLine(models.Model):
             # compute qty_invoiced
             qty = 0.0
             for inv_line in line._get_invoice_lines():
-                if inv_line.move_id.state not in ['cancel']:
+                if inv_line.move_id.state not in ['cancel'] or inv_line.move_id.payment_state == 'invoicing_legacy':
                     if inv_line.move_id.move_type == 'in_invoice':
                         qty += inv_line.product_uom_id._compute_quantity(inv_line.quantity, line.product_uom)
                     elif inv_line.move_id.move_type == 'in_refund':
@@ -1039,11 +1057,16 @@ class PurchaseOrderLine(models.Model):
             raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
+            precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             for line in self:
-                if line.order_id.state == 'purchase':
+                if (
+                    line.order_id.state == "purchase"
+                    and float_compare(line.product_qty, values["product_qty"], precision_digits=precision) != 0
+                ):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+
         if 'qty_received' in values:
             for line in self:
                 line._track_qty_received(values['qty_received'])
@@ -1078,7 +1101,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_account_analytic_id(self):
         for rec in self:
-            if not rec.account_analytic_id:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1091,7 +1114,7 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_id', 'date_order')
     def _compute_analytic_tag_ids(self):
         for rec in self:
-            if not rec.analytic_tag_ids:
+            if not rec.display_type:
                 default_analytic_account = rec.env['account.analytic.default'].sudo().account_get(
                     product_id=rec.product_id.id,
                     partner_id=rec.order_id.partner_id.id,
@@ -1150,7 +1173,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.onchange('product_qty', 'product_uom')
     def _onchange_quantity(self):
-        if not self.product_id:
+        if not self.product_id or self.invoice_lines:
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
@@ -1192,8 +1215,16 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
-        product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
-        self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
+
+        default_names = []
+        vendors = self.product_id._prepare_sellers({})
+        for vendor in vendors:
+            product_ctx = {'seller_id': vendor.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+            default_names.append(self._get_product_purchase_description(self.product_id.with_context(product_ctx)))
+
+        if (self.name in default_names or not self.name):
+            product_ctx = {'seller_id': seller.id, 'lang': get_lang(self.env, self.partner_id.lang).code}
+            self.name = self._get_product_purchase_description(self.product_id.with_context(product_ctx))
 
     @api.onchange('product_id', 'product_qty', 'product_uom')
     def _onchange_suggest_packaging(self):
@@ -1202,7 +1233,7 @@ class PurchaseOrderLine(models.Model):
             self.product_packaging_id = False
         # suggest biggest suitable packaging
         if self.product_id and self.product_qty and self.product_uom:
-            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom) or self.product_packaging_id
 
     @api.onchange('product_packaging_id')
     def _onchange_product_packaging_id(self):

@@ -9,7 +9,6 @@
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Mehmet Demirel <mdemirell@gmail.com>, 2021
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2021
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
@@ -21,6 +20,7 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -28,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +45,8 @@ msgid ""
 ")\n"
 "                    to meet them !"
 msgstr ""
+")\n"
+"                    onlarla tanışmak için!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -56,14 +58,14 @@ msgstr "<i class=\"fa fa-ban mr-2\"/>Yayınlanmamış"
 msgid ""
 "<i class=\"fa fa-folder-open\"/>\n"
 "                By Country"
-msgstr ""
+msgstr "<i j=\"0/\">Ülkeye Göre</i>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_sponsorship
 msgid ""
 "<i class=\"fa fa-folder-open\"/>\n"
 "                By Level"
-msgstr ""
+msgstr "<i j=\"0/\">Seviyeye Göre</i>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -77,24 +79,25 @@ msgstr ""
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<small class=\"badge badge-danger\">Unpublished</small>"
-msgstr ""
+msgstr "<small class=\"badge badge-danger\">Yayımlanmamış</small>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_search_tag
 msgid "<span class=\"btn border-0 py-1\">×</span>"
-msgstr ""
+msgstr "<span class=\"btn border-0 py-1\">×</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_aside
 msgid "<span class=\"h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2\">Other exhibitors</span>"
 msgstr ""
+"<span class=\"h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2\">Diğer katılımcılar</span>"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid ""
 "<span>Oops! This room is currently closed</span><br/>\n"
 "                    Come back between"
-msgstr ""
+msgstr "<span>Oops! Bu oda şu anda kapalı</span><br/>Arasına geri dön"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -102,6 +105,8 @@ msgid ""
 "<span>Oops! This room is full</span><br/>Come back later to have a chat with"
 " us!"
 msgstr ""
+"<span>Oops! Bu oda dolu!</span><br/>Bizimle sohbet etmek için daha sonra "
+"tekrar gelin!"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
@@ -136,7 +141,7 @@ msgstr "Aktivite Durumu"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivite Simge Tipi "
+msgstr "Aktivite Simge Tipi"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
@@ -151,7 +156,7 @@ msgstr "Tüm Ülkeler"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_topbar_sponsorship
 msgid "All Levels"
-msgstr ""
+msgstr "Tüm Seviyeler"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -185,12 +190,12 @@ msgstr "Ek Sayısı"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Attendees will be able to join to meet"
-msgstr ""
+msgstr "Katılımcılar toplantıya katılabilecek"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Available from"
-msgstr ""
+msgstr "Şuradan."
 
 #. module: website_event_exhibitor
 #: model:event.sponsor.type,name:website_event_exhibitor.event_sponsor_type1
@@ -206,7 +211,7 @@ msgstr "Yayımlanabilir"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__subtitle
 msgid "Catchy marketing sentence for promote"
-msgstr ""
+msgstr "Tanıtım için akılda kalıcı pazarlama cümlesi"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__chat_room_id
@@ -218,7 +223,7 @@ msgstr "Sohbet Odası"
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "Come back between"
-msgstr ""
+msgstr "Arasına geri dön"
 
 #. module: website_event_exhibitor
 #: model_terms:event.sponsor,website_description:website_event_exhibitor.event_7_sponsor_0
@@ -262,7 +267,7 @@ msgstr "Bir Sponsor / Sergileyici Oluşturun"
 #. module: website_event_exhibitor
 #: model_terms:ir.actions.act_window,help:website_event_exhibitor.event_sponsor_type_action
 msgid "Create a Sponsor Level"
-msgstr ""
+msgstr "Sponsor Seviyesi Oluşturma"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__create_uid
@@ -314,7 +319,7 @@ msgstr "Sergileyicileri web sitesinde görüntüle"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Display in footer"
-msgstr ""
+msgstr "Altbilgide görüntüle"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__partner_email
@@ -348,12 +353,12 @@ msgstr "Etkinlik Sponsoru"
 #: model:ir.model,name:website_event_exhibitor.model_event_sponsor_type
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_type_view_tree
 msgid "Event Sponsor Level"
-msgstr ""
+msgstr "Etkinlik Sponsoru Seviyesi"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_type_view_form
 msgid "Event Sponsor Levels"
-msgstr ""
+msgstr "Etkinlik Sponsoru Seviyeleri"
 
 #. module: website_event_exhibitor
 #: model:ir.actions.act_window,name:website_event_exhibitor.event_sponsor_action
@@ -495,7 +500,7 @@ msgstr "Yayınlandı"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Jitsi Name"
-msgstr ""
+msgstr "Jitsi Adı"
 
 #. module: website_event_exhibitor
 #. openerp-web
@@ -503,12 +508,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 #, python-format
 msgid "Join us next time to meet"
-msgstr ""
+msgstr "Bir dahaki sefere buluşmak için bize katılın"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_main
 msgid "Join us there to meet"
-msgstr ""
+msgstr "Tanışmak için orada bize katılın"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_lang_id
@@ -571,7 +576,7 @@ msgstr "Azami kapasite"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__room_max_participant_reached
 msgid "Maximum number of participant reached in the room at the same time"
-msgstr ""
+msgstr "Aynı anda odada ulaşılan maksimum katılımcı sayısı"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_website_event_menu__menu_type
@@ -718,6 +723,8 @@ msgid ""
 "Rank your sponsors based on your own grading system (e.g. \"Gold, Silver, "
 "Bronze\")."
 msgstr ""
+"Sponsorlarınızı kendi derecelendirme sisteminize göre sıralayın (örneğin, "
+"\"Altın, Gümüş, Bronz\")."
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitor_card
@@ -732,7 +739,7 @@ msgstr "Sorumlu Kullanıcı"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__display_ribbon_style
 msgid "Ribbon Style"
-msgstr ""
+msgstr "Şerit Stili"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__room_is_full
@@ -777,7 +784,7 @@ msgstr "Slogan"
 #: model:ir.model.fields.selection,name:website_event_exhibitor.selection__event_sponsor__exhibitor_type__sponsor
 #, python-format
 msgid "Sponsor"
-msgstr ""
+msgstr "Sponsor"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_count
@@ -787,34 +794,34 @@ msgstr "Sponsor Sayısı"
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__email
 msgid "Sponsor Email"
-msgstr ""
+msgstr "Sponsor E-postası"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor_type__name
 msgid "Sponsor Level"
-msgstr ""
+msgstr "Sponsor Seviyesi"
 
 #. module: website_event_exhibitor
 #: model:ir.actions.act_window,name:website_event_exhibitor.event_sponsor_type_action
 #: model:ir.ui.menu,name:website_event_exhibitor.menu_event_sponsor_type
 msgid "Sponsor Levels"
-msgstr ""
+msgstr "Sponsor Seviyeleri"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__mobile
 msgid "Sponsor Mobile"
-msgstr ""
+msgstr "Sponsor Mobil"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__name
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "Sponsor Name"
-msgstr ""
+msgstr "Sponsor Adı"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__phone
 msgid "Sponsor Phone"
-msgstr ""
+msgstr "Sponsor Telefonu"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__exhibitor_type
@@ -829,12 +836,12 @@ msgstr "Sponsor Websitesi"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_kanban
 msgid "Sponsor image"
-msgstr ""
+msgstr "Sponsor resmi"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_sponsor__sponsor_type_id
 msgid "Sponsoring Level"
-msgstr ""
+msgstr "Sponsorluk Seviyesi"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,field_description:website_event_exhibitor.field_event_event__sponsor_ids
@@ -849,6 +856,9 @@ msgid ""
 "Sponsors are advertised on your event pages.<br>\n"
 "    Exhibitors have a dedicated page a with chat room for people to connect with them."
 msgstr ""
+"Sponsorların reklamları etkinlik sayfalarınızda yapılır.<br>Katılımcıların, "
+"insanların onlarla bağlantı kurması için sohbet odası içeren özel bir "
+"sayfası vardır."
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__activity_state
@@ -870,6 +880,8 @@ msgid ""
 "The event %s starts on %s (%s). \n"
 "Join us there to meet %s !"
 msgstr ""
+"Etkinlik %s %s (%s) tarihinde başlar. \n"
+"%s tanışmak için orada bize katılın!"
 
 #. module: website_event_exhibitor
 #: model:ir.model.fields,help:website_event_exhibitor.field_event_sponsor__website_url
@@ -909,7 +921,7 @@ msgstr "Mevcut web sitesinde görülebilir"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.exhibitors_main
 msgid "We did not find any exhibitor matching your"
-msgstr ""
+msgstr "Size uyan herhangi bir katılımcı bulamadık"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
@@ -945,22 +957,22 @@ msgstr "Çalışma saatleri içinde"
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. : OpenWood Decoration"
-msgstr ""
+msgstr "örn. : OpenWood Dekorasyon"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. : https://www.odoo.com"
-msgstr ""
+msgstr "örn. : https://www.odoo.com"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. : open.wood.decoration@example.com"
-msgstr ""
+msgstr "örn. : open.wood.decoration@example.com"
 
 #. module: website_event_exhibitor
 #: model_terms:ir.ui.view,arch_db:website_event_exhibitor.event_sponsor_view_form
 msgid "e.g. Your best choice for your home"
-msgstr ""
+msgstr "örn. : Eviniz için en iyi seçiminiz"
 
 #. module: website_event_exhibitor
 #. openerp-web
@@ -968,7 +980,7 @@ msgstr ""
 #: code:addons/website_event_exhibitor/static/src/xml/event_exhibitor_connect.xml:0
 #, python-format
 msgid "is not available right now."
-msgstr ""
+msgstr "şu anda mevcut değil."
 
 #. module: website_event_exhibitor
 #. openerp-web
@@ -982,7 +994,7 @@ msgstr "bitti."
 msgid ""
 "is over.\n"
 "                <br/>"
-msgstr ""
+msgstr "bitti.                <br/>"
 
 #. module: website_event_exhibitor
 #. openerp-web

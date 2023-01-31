@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+// ensure component is registered beforehand.
+import '@mail/components/chatter_container/chatter_container';
 import { getMessagingComponent } from "@mail/utils/messaging_component";
 
 import FormRenderer from 'web.FormRenderer';

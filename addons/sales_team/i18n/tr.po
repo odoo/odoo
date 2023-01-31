@@ -19,9 +19,9 @@
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # Buket Şeker <buket_skr@hotmail.com>, 2021
-# Tugay Hatıl <tugayh@projetgrup.com>, 2021
 # Murat Durmuş <muratd@projetgrup.com>, 2021
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021
+# Tugay Hatıl <tugayh@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2021\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +46,12 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope mr-1\" role=\"img\" aria-label=\"Email\" title=\"Email\"/>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_member_view_kanban
 msgid "<span class=\"bg-error\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"bg-error\">Arşivlendi</span>"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_kanban_dashboard
@@ -90,6 +90,7 @@ msgstr "Aktivite Türleri"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Belgelerini bu satış ekibine otomatik olarak atamak için üyeler ekleyin."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -98,6 +99,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"%(user_name)s'yi bu takıma eklemek, onu mevcut %(team_name)s takımından "
+"çıkaracaktır."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -106,6 +109,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"%(user_name)s'yi bu takıma eklemek, onu mevcut %(team_names)s takımından "
+"çıkaracaktır."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -114,6 +119,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"%(user_names)s'yi bu takıma eklemek, onları mevcut takımlarından "
+"(%(team_names)s) çıkarır."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -149,7 +156,7 @@ msgstr "Büyük Güzel Düğme :)"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_tag
 msgid "CRM Tag"
-msgstr ""
+msgstr "CRM Etiketi"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -192,12 +199,12 @@ msgstr "Kontak"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
 msgid "Create CRM Tags"
-msgstr ""
+msgstr "CRM Etiketleri Oluşturun"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_config
 msgid "Create a Sales Team"
-msgstr ""
+msgstr "Satış Ekibi Oluşturun"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_member_action
@@ -207,7 +214,7 @@ msgstr "Yeni bir satıcı oluşturun"
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.mail_activity_type_action_config_sales
 msgid "Create an Activity Type"
-msgstr ""
+msgstr "Bir Etkinlik Türü Oluşturun"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
@@ -325,6 +332,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"İşaretli ise, kullanıcılar birkaç satış ekibine ait olabilir. Aksi takdirde "
+"üyelik tek bir satış ekibiyle sınırlıdır."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -367,7 +376,7 @@ msgstr "Görsel"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_128
 msgid "Image (128)"
-msgstr ""
+msgstr "Görsel (128)"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor4
@@ -407,6 +416,8 @@ msgid ""
 "Link salespersons to sales teams. Set their monthly lead capacity\n"
 "                and configure automatic lead assignment."
 msgstr ""
+"Satış görevlilerini satış ekiplerine bağlayın. Aylık müşteri adayı "
+"kapasitelerini ayarlayın ve otomatik müşteri adayı atamasını yapılandırın."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
@@ -420,16 +431,18 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Ana kullanıcı satış ekibi. Özellikle pipeline için faturalandırma veya "
+"abonelikte satış ekibini ayarlamak için kullanılır."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
 msgid "Member Company"
-msgstr ""
+msgstr "Üye Şirket"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__member_warning
 msgid "Member Warning"
-msgstr ""
+msgstr "Üye Uyarısı"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
@@ -439,7 +452,7 @@ msgstr "Üyeler"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_warning
 msgid "Membership Issue Warning"
-msgstr ""
+msgstr "Üyelik Sorunu Uyarısı"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
@@ -462,7 +475,7 @@ msgstr "Mobil"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_membership_multi
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__is_membership_multi
 msgid "Multiple Memberships Allowed"
-msgstr ""
+msgstr "Birden Fazla Üyeliğe İzin Verilir"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__name
@@ -517,7 +530,7 @@ msgstr "Satış Noktası"
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
 msgid "Pre-Sales"
-msgstr ""
+msgstr "Ön satış"
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor1
@@ -561,12 +574,12 @@ msgstr "Satış Ekibi Üyesi"
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_ids
 #: model:ir.model.fields,field_description:sales_team.field_res_users__crm_team_member_ids
 msgid "Sales Team Members"
-msgstr ""
+msgstr "Satış Ekibi Üyeleri"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__crm_team_member_all_ids
 msgid "Sales Team Members (incl. inactive)"
-msgstr ""
+msgstr "Satış Ekibi Üyeleri (etkin olmayanlar dahil)"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_action_config
@@ -636,7 +649,7 @@ msgstr "Etiketler"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Team Details"
-msgstr ""
+msgstr "Takım Detayları"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -670,6 +683,8 @@ msgid ""
 "Those represent the different categories of things you have to do (e.g. "
 "\"Call\" or \"Prepare meeting\")."
 msgstr ""
+"Bunlar, yapmanız gereken farklı kategorileri temsil eder (ör. \"Arama\" veya"
+" \"Toplantıya hazırlanma\")."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -678,6 +693,8 @@ msgid ""
 "To add a Salesperson into multiple Teams, activate the Multi-Team option in "
 "settings."
 msgstr ""
+"Bir Satış Görevlisini birden çok Takıma eklemek için, ayarlarda Çoklu Takım "
+"seçeneğini etkinleştirin."
 
 #. module: sales_team
 #: model:crm.tag,name:sales_team.categ_oppor6
@@ -689,12 +706,14 @@ msgstr "Eğitim"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: Yinelemeleri önlemek için kullanıcılara şu anda seçilen takımı "
+"eklememelerini sağlayın."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX. Aday şirkete sınırlayın ya da şirket yoksa hepsine"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -720,6 +739,8 @@ msgstr "Okunmamış Mesaj Sayacı"
 msgid ""
 "Use Sales Teams to organize your sales departments and draw up reports."
 msgstr ""
+"Satış departmanlarınızı düzenlemek ve raporlar hazırlamak için Satış "
+"Ekiplerini kullanın."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_action_pipeline
@@ -728,6 +749,8 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                Each team will work with a separate pipeline."
 msgstr ""
+"Satış departmanlarınızı düzenlemek için Satış Ekiplerini kullanın.\n"
+"Her ekip ayrı bir fırsat ile çalışacaktır."
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
@@ -735,6 +758,8 @@ msgid ""
 "Use Tags to manage and track your Opportunities (product structure, sales "
 "type, ...)"
 msgstr ""
+"Fırsatlarınızı yönetmek ve takip etmek için Etiketleri kullanın (ürün "
+"yapısı, satış türü, ...)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_company_ids
@@ -744,7 +769,7 @@ msgstr "Kullanıcı Şirket"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__user_in_teams_ids
 msgid "User In Teams"
-msgstr ""
+msgstr "Ekiplerde Kullanıcı"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
@@ -769,7 +794,7 @@ msgstr "Kullanıcılar"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_ids
 msgid "Users assigned to this team."
-msgstr ""
+msgstr "Bu ekibe atanan kullanıcılar."
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
@@ -783,16 +808,18 @@ msgid ""
 "You are trying to create duplicate membership(s). We found that "
 "%(duplicates)s already exist(s)."
 msgstr ""
+"Yinelenen üyelik(ler) oluşturmaya çalışıyorsunuz. %(duplicates)s'nin zaten "
+"var üyeliği bulunmaktadır."
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "e.g. North America"
-msgstr ""
+msgstr "e.g. North America"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
 msgid "e.g. Services"
-msgstr ""
+msgstr "Örneğin. Hizmetler"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

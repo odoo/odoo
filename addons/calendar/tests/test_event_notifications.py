@@ -31,6 +31,20 @@ class TestEventNotifications(TransactionCase, MailCase, CronMixinCase):
         }):
             self.event.partner_ids = self.partner
 
+    def test_message_invite_allday(self):
+        with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
+            'message_type': 'user_notification',
+            'subtype': 'mail.mt_note',
+        }):
+            self.env['calendar.event'].with_context(mail_create_nolog=True).create([{
+                'name': 'Meeting',
+                'allday': True,
+                'start_date': fields.Date.today() + relativedelta(days=7),
+                'stop_date': fields.Date.today() + relativedelta(days=8),
+                'partner_ids': [(4, self.partner.id)],
+            }])
+
+
     def test_message_invite_self(self):
         with self.assertNoNotifications():
             self.event.with_user(self.user).partner_ids = self.partner

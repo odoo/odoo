@@ -164,7 +164,12 @@ class PickingType(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
+            # Try to reverse the `name_get` structure
+            parts = name.split(': ')
+            if len(parts) == 2:
+                domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]
+            else:
+                domain = ['|', ('name', operator, name), ('warehouse_id.name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('code')
@@ -514,6 +519,8 @@ class Picking(models.Model):
                 'any_draft': picking_moves_state_map[picking_id.id].get('any_draft', False) or move_state == 'draft',
                 'all_cancel': picking_moves_state_map[picking_id.id].get('all_cancel', True) and move_state == 'cancel',
                 'all_cancel_done': picking_moves_state_map[picking_id.id].get('all_cancel_done', True) and move_state in ('cancel', 'done'),
+                'all_done_are_scrapped': picking_moves_state_map[picking_id.id].get('all_done_are_scrapped', True) and (move.scrapped if move_state == 'done' else True),
+                'any_cancel_and_not_scrapped': picking_moves_state_map[picking_id.id].get('any_cancel_and_not_scrapped', False) or (move_state == 'cancel' and not move.scrapped),
             })
             picking_move_lines[picking_id.id].add(move.id)
         for picking in self:
@@ -525,7 +532,10 @@ class Picking(models.Model):
             elif picking_moves_state_map[picking_id]['all_cancel']:
                 picking.state = 'cancel'
             elif picking_moves_state_map[picking_id]['all_cancel_done']:
-                picking.state = 'done'
+                if picking_moves_state_map[picking_id]['all_done_are_scrapped'] and picking_moves_state_map[picking_id]['any_cancel_and_not_scrapped']:
+                    picking.state = 'cancel'
+                else:
+                    picking.state = 'done'
             else:
                 relevant_move_state = self.env['stock.move'].browse(picking_move_lines[picking_id])._get_relevant_state_among_moves()
                 if picking.immediate_transfer and relevant_move_state not in ('draft', 'cancel', 'done'):
@@ -697,7 +707,7 @@ class Picking(models.Model):
                     'message': partner.picking_warn_msg
                 }}
 
-    @api.onchange('location_id', 'location_dest_id')
+    @api.onchange('location_id', 'location_dest_id', 'picking_type_id')
     def _onchange_locations(self):
         (self.move_lines | self.move_ids_without_package).update({
             "location_id": self.location_id,
@@ -751,6 +761,8 @@ class Picking(models.Model):
             after_vals['location_id'] = vals['location_id']
         if vals.get('location_dest_id'):
             after_vals['location_dest_id'] = vals['location_dest_id']
+        if 'partner_id' in vals:
+            after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.mapped('move_lines').filtered(lambda move: not move.scrapped).write(after_vals)
         if vals.get('move_lines'):
@@ -766,6 +778,14 @@ class Picking(models.Model):
     def do_print_picking(self):
         self.write({'printed': True})
         return self.env.ref('stock.action_report_picking').report_action(self)
+
+    def should_print_delivery_address(self):
+        self.ensure_one()
+        return self.move_lines and self.move_lines[0].partner_id and self._is_to_external_location()
+
+    def _is_to_external_location(self):
+        self.ensure_one()
+        return self.picking_type_code == 'outgoing'
 
     def action_confirm(self):
         self._check_company()
@@ -787,7 +807,7 @@ class Picking(models.Model):
         """
         self.filtered(lambda picking: picking.state == 'draft').action_confirm()
         moves = self.mapped('move_lines').filtered(lambda move: move.state not in ('draft', 'cancel', 'done')).sorted(
-            key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.id)
+            key=lambda move: (-int(move.priority), not bool(move.date_deadline), move.date_deadline, move.date, move.id)
         )
         if not moves:
             raise UserError(_('Nothing to check the availability for.'))
@@ -1010,7 +1030,7 @@ class Picking(models.Model):
             lines = self.move_lines.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
-                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.id), ('usage', '!=', 'supplier')])
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
                 if self.env['stock.move'].search([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),
@@ -1372,7 +1392,7 @@ class Picking(models.Model):
                     quantity_left_todo = float_round(
                         ml.product_uom_qty - ml.qty_done,
                         precision_rounding=ml.product_uom_id.rounding,
-                        rounding_method='UP')
+                        rounding_method='HALF-UP')
                     done_to_keep = ml.qty_done
                     new_move_line = ml.copy(
                         default={'product_uom_qty': 0, 'qty_done': ml.qty_done})

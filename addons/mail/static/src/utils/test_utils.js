@@ -245,12 +245,13 @@ function beforeEach(self) {
     });
 
     data.currentPartnerId = 3;
+    data.currentUserId = 2;
     data['res.partner'].records.push({
         display_name: "Your Company, Mitchell Admin",
         id: data.currentPartnerId,
         name: "Mitchell Admin",
+        user_ids: [data.currentUserId],
     });
-    data.currentUserId = 2;
     data['res.users'].records.push({
         display_name: "Your Company, Mitchell Admin",
         id: data.currentUserId,
@@ -845,6 +846,23 @@ function pasteFiles(el, files) {
 }
 
 //------------------------------------------------------------------------------
+// Public: DOM utilities
+//------------------------------------------------------------------------------
+
+/**
+ * Determine if a DOM element has been totally scrolled
+ *
+ * A 1px margin of error is given to accomodate subpixel rounding issues and
+ * Element.scrollHeight value being either int or decimal
+ *
+ * @param {DOM.Element} el
+ * @returns {boolean}
+ */
+function isScrolledToBottom(el) {
+    return Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1;
+}
+
+//------------------------------------------------------------------------------
 // Export
 //------------------------------------------------------------------------------
 
@@ -855,6 +873,7 @@ export {
     createRootMessagingComponent,
     dragenterFiles,
     dropFiles,
+    isScrolledToBottom,
     nextAnimationFrame,
     nextTick,
     pasteFiles,

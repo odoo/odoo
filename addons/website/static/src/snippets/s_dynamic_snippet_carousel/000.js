@@ -26,9 +26,7 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Method to be overridden in child components in order to prepare QWeb
-     * options
-     * @private
+     * @override
      */
     _getQWebRenderOptions: function () {
         return Object.assign(
@@ -38,20 +36,18 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
             },
         );
     },
-
     /**
-     *
-     * @override
+     * @todo remove me in master.
      */
     _renderContent: function () {
         this._super.apply(this, arguments);
         this._computeHeights();
     },
-
     /**
-     *
-     * Force height of carousel to the higher slide, to avoid flickering.
-     * @private
+     * @todo remove me in master. This is already automatically done by the
+     * related public widget which is also in charge of initializing the
+     * carousel behaviors. This is left to be done twice in stable to not break
+     * potential custo.
      */
     _computeHeights: function () {
         var maxHeight = 0;
@@ -69,7 +65,6 @@ const DynamicSnippetCarousel = DynamicSnippet.extend({
         });
         $items.css('min-height', maxHeight);
     },
-
 });
 publicWidget.registry.dynamic_snippet_carousel = DynamicSnippetCarousel;
 

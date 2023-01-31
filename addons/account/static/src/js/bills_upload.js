@@ -42,6 +42,9 @@ odoo.define('account.upload.bill.mixin', function (require) {
                 context: this.initialState.context,
             }).then(function(result) {
                 self.do_action(result);
+            }).catch(function () {
+                // Reset the file input, allowing to select again the same file if needed
+                self.$('.o_vendor_bill_upload .o_input_file').val('');
             });
         },
 

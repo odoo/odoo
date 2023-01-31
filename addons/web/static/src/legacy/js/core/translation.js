@@ -68,7 +68,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         url += '/' + (cacheId ? cacheId : Date.now());
         const paramsGet = {};
         if (modules) {
-            paramsGet.modules = modules.join(',');
+            paramsGet.mods = modules.join(',');
         }
         if (lang) {
             paramsGet.lang = lang;

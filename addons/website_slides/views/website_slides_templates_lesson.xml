@@ -138,10 +138,11 @@
             </t>
         </a>
         <ul class="collapse show p-0 m-0 list-unstyled" t-att-id="('collapse-%s') % (category.id if category else 0)" >
+            <t t-set="is_member" t-value="slide.channel_id.is_member"/>
+            <t t-set="can_access_channel" t-value="is_member or slide.channel_id.can_publish"/>
             <t t-foreach="category_slide_ids" t-as="aside_slide">
                 <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
-                <t t-set="is_member" t-value="slide.channel_id.is_member"/>
-                <t t-set="can_access" t-value="aside_slide.is_preview or is_member or slide.channel_id.can_publish"/>
+                <t t-set="can_access" t-value="can_access_channel or aside_slide.is_preview"/>
                 <li class="p-0 pb-1">
                     <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
                         t-att-class="'o_wslides_lesson_aside_list_link d-flex align-items-top px-2 pt-1 text-decoration-none %s%s' % (('bg-100 py-1 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')">
@@ -162,10 +163,10 @@
                             </span>
                         </div>
                     </a>
-                    <ul t-if="aside_slide.link_ids or aside_slide.slide_resource_ids or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
+                    <ul t-if="aside_slide.link_ids or aside_slide._has_additional_resources() or aside_slide.question_ids" class="list-group px-2 mb-1 list-unstyled">
                         <t t-foreach="aside_slide.link_ids" t-as="resource">
                             <li class="pl-4">
-                                <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
+                                <a t-if="can_access_channel" t-att-href="resource.link" target="new" class="text-decoration-none small">
                                     <i class="fa fa-link mr-1"/><span t-field="resource.name"/>
                                 </a>
                                 <span t-else="" class="text-decoration-none text-muted small">
@@ -173,8 +174,8 @@
                                 </span>
                             </li>
                         </t>
-                        <div class="o_wslides_js_course_join pl-4" t-if="aside_slide.slide_resource_ids">
-                            <t t-if="is_member or aside_slide.channel_id.can_publish">
+                        <div class="o_wslides_js_course_join pl-4" t-if="aside_slide._has_additional_resources()">
+                            <t t-if="can_access_channel">
                                 <li t-foreach="aside_slide.slide_resource_ids" t-as="resource">
                                     <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" class="text-decoration-none small">
                                         <i class="fa fa-download mr-1"/><span t-field="resource.name"/>
@@ -186,12 +187,12 @@
                                 <t t-call="website_slides.join_course_link"/>
                             </li>
                         </div>
-                        <li class="pl-4">
-                            <a t-if="can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
+                        <li t-if="aside_slide.question_ids and aside_slide.slide_type != 'quiz'" class="pl-4">
+                            <a t-if="can_access" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))"
+                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </a>
-                            <span t-elif="not can_access and aside_slide.question_ids and aside_slide.slide_type != 'quiz'"
-                                class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
+                            <span t-else="" class="o_wslides_lesson_aside_list_link text-decoration-none small text-600 text-muted">
                                 <i class="fa fa-flag text-warning"/> Quiz
                             </span>
                         </li>
@@ -402,7 +403,7 @@
                 </t>
             </div>
         </div>
-        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="len(slide.slide_resource_ids)">
+        <div class="col-12 col-md d-flex align-items-start mb-4 mb-md-0 o_wslides_js_course_join" t-if="slide._has_additional_resources()">
             <span t-if="slide.channel_id.is_member or slide.channel_id.can_publish or slide.is_preview or slide.channel_id.enroll in ['private', 'payment']" class="text-muted font-weight-bold mr-3">
                 Additional Resources
             </span>

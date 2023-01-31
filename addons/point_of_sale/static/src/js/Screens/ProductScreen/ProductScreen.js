@@ -154,7 +154,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Do not add product if options is undefined.
             if (!options) return;
             // Add the product after having the extra information.
-            this.currentOrder.add_product(product, options);
+            await this.currentOrder.add_product(product, options);
             NumberBuffer.reset();
         }
         _setNumpadMode(event) {
@@ -166,6 +166,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         async _updateSelectedOrderline(event) {
             if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
+                if(!order.orderlines.length)
+                    return;
                 let selectedLine = order.get_selected_orderline();
                 let lastId = order.orderlines.last().cid;
                 let currentQuantity = this.env.pos.get_order().get_selected_orderline().get_quantity();
@@ -179,15 +181,18 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 }
                 const parsedInput = event.detail.buffer && parse.float(event.detail.buffer) || 0;
                 if(lastId != selectedLine.cid)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
                 else if(currentQuantity < parsedInput)
                     this._setValue(event.detail.buffer);
                 else if(parsedInput < currentQuantity)
-                    this._showDecreaseQuantityPopup();
+                    await this._showDecreaseQuantityPopup();
             } else {
                 let { buffer } = event.detail;
                 let val = buffer === null ? 'remove' : buffer;
                 this._setValue(val);
+            }
+            if (this.env.pos.config.iface_customer_facing_display) {
+                this.env.pos.send_current_order_to_customer_facing_display();
             }
         }
         async _newOrderlineSelected() {
@@ -205,9 +210,6 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
-                }
-                if (this.env.pos.config.iface_customer_facing_display) {
-                    this.env.pos.send_current_order_to_customer_facing_display();
                 }
             }
         }
@@ -265,18 +267,14 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     merge: false,
                 });
             }
-            this.currentOrder.add_product(product,  options)
+            await this.currentOrder.add_product(product,  options);
         }
         _barcodeClientAction(code) {
             const partner = this.env.pos.db.get_partner_by_barcode(code.code);
             if (partner) {
                 if (this.currentOrder.get_client() !== partner) {
                     this.currentOrder.set_client(partner);
-                    this.currentOrder.set_pricelist(
-                        _.findWhere(this.env.pos.pricelists, {
-                            id: partner.property_product_pricelist[0],
-                        }) || this.env.pos.default_pricelist
-                    );
+                    this.currentOrder.updatePricelist(partner);
                 }
                 return true;
             }
@@ -317,7 +315,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== "" ? parse.float(inputNumber) : null;
+            let newQuantity = inputNumber && inputNumber !== "" ? parse.float(inputNumber) : null;
             if (confirmed && newQuantity !== null) {
                 let order = this.env.pos.get_order();
                 let selectedLine = this.env.pos.get_order().get_selected_orderline();
@@ -360,8 +358,20 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 this.currentOrder.updatePricelist(newClient);
             }
         }
-        _onClickPay() {
-            this.showScreen('PaymentScreen');
+        async _onClickPay() {
+            if (this.env.pos.get_order().orderlines.any(line => line.get_product().tracking !== 'none' && !line.has_valid_product_lot() && (this.env.pos.picking_type.use_create_lots || this.env.pos.picking_type.use_existing_lots))) {
+                const { confirmed } = await this.showPopup('ConfirmPopup', {
+                    title: this.env._t('Some Serial/Lot Numbers are missing'),
+                    body: this.env._t('You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?'),
+                    confirmText: this.env._t('Yes'),
+                    cancelText: this.env._t('No')
+                });
+                if (confirmed) {
+                    this.showScreen('PaymentScreen');
+                }
+            } else {
+                this.showScreen('PaymentScreen');
+            }
         }
         switchPane() {
             this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";

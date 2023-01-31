@@ -242,7 +242,7 @@ You receive this email because you are:
                 self.invalidate_cache()
                 self._warn_template_error(scheduler, e)
             else:
-                if autocommit and not getattr(threading.currentThread(), 'testing', False):
+                if autocommit and not getattr(threading.current_thread(), 'testing', False):
                     self.env.cr.commit()
         return True
 
@@ -276,11 +276,12 @@ class EventMailRegistration(models.Model):
                 author = company.partner_id
             elif self.env.user.email:
                 author = self.env.user
-            
+
             email_values = {
-                'email_from': author.email_formatted,
                 'author_id': author.id,
             }
+            if not reg_mail.scheduler_id.template_ref.email_from:
+                email_values['email_from'] = author.email_formatted
             reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
         todo.write({'mail_sent': True})
 

@@ -23,15 +23,15 @@
                             Discuss
                         </div>
                     </t>
-                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.isChannelDescriptionChangeable">
+                    <t t-if="threadViewTopbar.hasDescriptionArea">
                         <div class="o_ThreadViewTopbar_threadDescriptionSeparator flex-shrink-0 mx-2"/>
                         <t t-if="!threadViewTopbar.isEditingThreadDescription">
                             <t t-if="threadViewTopbar.thread.description">
-                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem text-truncate px-1" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopbar.isMouseOverThreadDescription and !messaging.isCurrentUserGuest }">
+                                <div class="o_ThreadViewTopbar_threadDescription o_ThreadViewTopbar_editableItem text-truncate px-1" t-att-title="threadViewTopbar.thread.description" t-on-click="threadViewTopbar.onClickTopbarThreadDescription" t-on-mouseenter="threadViewTopbar.onMouseEnterTopbarThreadDescription" t-on-mouseleave="threadViewTopbar.onMouseLeaveTopbarThreadDescription" t-att-class="{ 'o-threadDescriptionEditable': threadViewTopbar.isDescriptionHighlighted }">
                                     <t t-esc="threadViewTopbar.thread.description"/>
                                 </div>
                             </t>
-                            <t t-if="!messaging.isCurrentUserGuest and !threadViewTopbar.thread.description and threadViewTopbar.thread.isChannelDescriptionChangeable">
+                            <t t-if="!threadViewTopbar.thread.description">
                                 <div class="o_ThreadViewTopbar_threadAddDescriptionEmptyLabel text-truncate" t-on-click="threadViewTopbar.onClickTopbarThreadDescription">
                                     Add a description
                                 </div>
@@ -49,7 +49,7 @@
                     <t t-if="threadViewTopbar.thread and threadViewTopbar.thread === messaging.starred">
                         <button class="o_ThreadViewTopbar_unstarAllButton btn btn-secondary" t-att-disabled="threadViewTopbar.threadView.messages.length === 0" t-on-click="threadViewTopbar.onClickUnstarAll">Unstar all</button>
                     </t>
-                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.model === 'mail.channel' and threadViewTopbar.thread.rtcSessions.length === 0">
+                    <t t-if="threadViewTopbar.thread and threadViewTopbar.thread.hasCallFeature and threadViewTopbar.thread.rtcSessions.length === 0">
                         <button class="o_ThreadViewTopbar_callButton o_ThreadViewTopbar_button o-active" t-att-disabled="threadViewTopbar.thread.hasPendingRtcRequest" title="Start a Call" t-on-click="_onClickPhone">
                             <i class="fa fa-lg fa-phone"/>
                         </button>

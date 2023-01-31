@@ -3,10 +3,11 @@
 
 from unittest.mock import MagicMock, patch
 
-from odoo.tests.common import TransactionCase
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+from odoo.addons.google_account.models.google_service import GoogleService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
+from odoo.tests.common import HttpCase
 
 def patch_api(func):
     @patch.object(GoogleSync, '_google_insert', MagicMock(spec=GoogleSync._google_insert))
@@ -17,7 +18,7 @@ def patch_api(func):
     return patched
 
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
-class TestSyncGoogle(TransactionCase):
+class TestSyncGoogle(HttpCase):
 
     def setUp(self):
         super().setUp()
@@ -57,3 +58,19 @@ class TestSyncGoogle(TransactionCase):
         self.assertGoogleEventNotPatched()
         self.assertGoogleEventNotInserted()
         self.assertGoogleEventNotDeleted()
+
+    def assertGoogleEventSendUpdates(self, expected_value):
+        GoogleService._do_request.assert_called_once()
+        args, _ = GoogleService._do_request.call_args
+        val = "?sendUpdates=%s" % expected_value
+        self.assertTrue(val in args[0], "The URL should contain %s" % val)
+
+    def call_post_commit_hooks(self):
+        """
+        manually calls postcommit hooks defined with the decorator @after_commit
+        """
+
+        funcs = self.env.cr.postcommit._funcs.copy()
+        while funcs:
+            func = funcs.popleft()
+            func()

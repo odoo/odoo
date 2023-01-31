@@ -53,13 +53,8 @@ msgstr "مسموح به"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__auth_endpoint
-msgid "Authentication URL"
-msgstr "رابط المصادقة"
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
-msgid "Body"
-msgstr "المتن"
+msgid "Authorization URL"
+msgstr "رابط URL للتفويض "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__css_class
@@ -94,8 +89,8 @@ msgstr "أنشئ في"
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__data_endpoint
-msgid "Data URL"
-msgstr "رابط البيانات"
+msgid "Data Endpoint"
+msgstr "نقطة نهاية البيانات "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__display_name
@@ -133,11 +128,6 @@ msgid "Last Updated on"
 msgstr "آخر تحديث في"
 
 #. module: auth_oauth
-#: model:ir.model.fields,help:auth_oauth.field_auth_oauth_provider__body
-msgid "Link text in Login Dialog"
-msgstr "ربط النص في حوار تسجيل الدخول "
-
-#. module: auth_oauth
 #: model:auth.oauth.provider,body:auth_oauth.provider_facebook
 msgid "Log in with Facebook"
 msgstr "تسجيل الدخول بواسطة Facebook "
@@ -151,6 +141,11 @@ msgstr "تسجيل الدخول بواسطة Google "
 #: model:auth.oauth.provider,body:auth_oauth.provider_openerp
 msgid "Log in with Odoo.com"
 msgstr "تسجيل الدخول بواسطة Odoo.com "
+
+#. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__body
+msgid "Login button label"
+msgstr "بطاقة عنوان زر تسجيل الدخول "
 
 #. module: auth_oauth
 #: model:ir.model.fields,field_description:auth_oauth.field_res_users__oauth_access_token
@@ -230,14 +225,14 @@ msgid "System Parameter"
 msgstr "معيار النظام "
 
 #. module: auth_oauth
+#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
+msgid "UserInfo URL"
+msgstr "رابط URL لمعلومات المستخدم "
+
+#. module: auth_oauth
 #: model:ir.model,name:auth_oauth.model_res_users
 msgid "Users"
 msgstr "المستخدمين "
-
-#. module: auth_oauth
-#: model:ir.model.fields,field_description:auth_oauth.field_auth_oauth_provider__validation_endpoint
-msgid "Validation URL"
-msgstr "رابط التحقق"
 
 #. module: auth_oauth
 #: code:addons/auth_oauth/controllers/main.py:0

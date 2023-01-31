@@ -1269,6 +1269,47 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('disabled stat buttons stays disabled', async function (assert) {
+        assert.expect(4);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners">' +
+                    '<sheet>' +
+                        '<div name="button_box" class="oe_button_box">' +
+                            '<button class="oe_stat_button" disabled="disabled">' +
+                                '<field name="int_field"/>' +
+                            '</button>' +
+                            '<button class="oe_stat_button" type="action" name="some_action">' +
+                                '<field name="bar"/>' +
+                            '</button>' +
+                        '</div>' +
+                        '<group>' +
+                            '<button type="action" name="action_to_perform">Run an action</button>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+        });
+
+        var count = 0;
+        await testUtils.mock.intercept(form, "execute_action", function (event) {
+            if (event.data.action_data.name == "action_to_perform") {
+                assert.containsN(form, 'button.oe_stat_button[disabled]', 2, "While performing the action, both buttons should be disabled.");
+                event.data.on_success();
+            }
+        });
+
+        assert.containsN(form, 'button.oe_stat_button', 2);
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1);
+        await testUtils.dom.click('button[name=action_to_perform]');
+        assert.containsN(form, 'button.oe_stat_button[disabled]', 1, "After performing the action, only one button should be disabled.");
+        
+        form.destroy();
+    });
+
     QUnit.test('label uses the string attribute', async function (assert) {
         assert.expect(1);
 
@@ -2564,6 +2605,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('remove default value in subviews', async function (assert) {
+        assert.expect(2);
+
+        this.data.product.onchanges = {}
+        this.data.product.onchanges.name = function () {};
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            viewOptions: {
+                context: {default_state: "ab"}
+            },
+            arch: '<form string="Partners">' +
+                    '<field name="product_ids" context="{\'default_product_uom_qty\': 68}">' +
+                      '<tree editable="top">' +
+                        '<field name="name"/>' +
+                      '</tree>' +
+                    '</field>' +
+                  '</form>',
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_kw/partner/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_state: 'ab',
+                    })
+                }
+                else if (route === "/web/dataset/call_kw/product/onchange") {
+                    assert.deepEqual(args.kwargs.context, {
+                        default_product_uom_qty: 68,
+                    })
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        form.destroy();
+    });
+
     QUnit.test('reference field in one2many list', async function (assert) {
         assert.expect(1);
 
@@ -2913,7 +2992,7 @@ QUnit.module('Views', {
             arch:'<form string="Partners">' +
                     '<sheet>' +
                         '<div name="button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7346,7 +7425,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7410,7 +7489,7 @@ QUnit.module('Views', {
                     '</header>' +
                     '<sheet>' +
                         '<div name="button_box" class="oe_button_box">' +
-                            '<button class="oe_stat_button">' +
+                            '<button class="oe_stat_button" name="some_action" type="action">' +
                                 '<field name="bar"/>' +
                             '</button>' +
                         '</div>' +
@@ -7505,6 +7584,44 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('buttons with "confirm" attribute: click twice on "Ok"', async function (assert) {
+        assert.expect(7);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <header>
+                        <button name="post" class="p" string="Confirm" type="object" confirm="U sure?"/>
+                    </header>
+                </form>`,
+            mockRPC: function (route, args) {
+                assert.step(args.method);
+                return this._super.apply(this, arguments);
+            },
+            intercepts: {
+                execute_action: function (event) {
+                    assert.step('execute_action'); // should be called only once
+                    event.data.on_success();
+                },
+            },
+        });
+
+        assert.verifySteps(["onchange"]);
+
+        await testUtils.dom.click(form.$('.o_statusbar_buttons button'));
+        assert.verifySteps([]);
+
+        testUtils.dom.click($('.modal-footer button.btn-primary'));
+        await Promise.resolve();
+        await testUtils.dom.click($('.modal-footer button.btn-primary'));
+        assert.verifySteps(['create', 'read', 'execute_action']);
+
+        form.destroy();
+    });
+
     QUnit.test('buttons are disabled until action is resolved (in dialogs)', async function (assert) {
         assert.expect(3);
 
@@ -7523,7 +7640,7 @@ QUnit.module('Views', {
                 'partner,false,form': '<form>' +
                         '<sheet>' +
                             '<div name="button_box" class="oe_button_box">' +
-                                '<button class="oe_stat_button">' +
+                                '<button class="oe_stat_button" name="some_action" type="action">' +
                                     '<field name="bar"/>' +
                                 '</button>' +
                             '</div>' +
@@ -10922,6 +11039,44 @@ QUnit.module('Views', {
 
         assert.containsOnce(form, '.o_form_view.o_form_readonly',
             'should not switch into edit mode');
+
+        form.destroy();
+    });
+
+    QUnit.test('Quick Edition: Readonly one2many list (non editable form)', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].p.push(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form edit="0">
+                    <field name="p">
+                        <tree>
+                            <field name="foo"/>
+                        </tree>
+                        <form>
+                            <field name="foo"/>
+                        </form>
+                    </field>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly');
+        assert.containsNone(document.body, '.modal');
+
+        assert.containsNone(form, '.o_field_x2many_list_row_add a', 'no add button should be displayed');
+        assert.containsNone(form, '.o_list_record_remove', 'no remove button should be displayed');
+
+        await testUtils.dom.click(form.$('.o_field_cell:first'));
+
+        assert.containsOnce(form, '.o_form_view.o_form_readonly', 'should not switch into edit mode');
+        assert.containsOnce(document.body, '.modal');
+        assert.containsOnce(document.body, '.modal span.o_field_widget[name="foo"]');
 
         form.destroy();
     });

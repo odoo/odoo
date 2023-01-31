@@ -312,7 +312,7 @@ class AccountReconcileModel(models.Model):
     # RECONCILIATION PROCESS
     ####################################################
 
-    def _get_taxes_move_lines_dict(self, tax, base_line_dict):
+    def _get_taxes_move_lines_dict(self, tax, base_line_dict, statement_line=None):
         ''' Get move.lines dict (to be passed to the create()) corresponding to a tax.
         :param tax:             An account.tax record.
         :param base_line_dict:  A dict representing the move.line containing the base amount.
@@ -322,7 +322,11 @@ class AccountReconcileModel(models.Model):
         balance = base_line_dict['balance']
 
         tax_type = tax.type_tax_use
-        is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        if statement_line:
+            is_refund = (tax_type == 'sale' and balance > 0) or (tax_type == 'purchase' and balance < 0)
+        else:
+            is_refund = (tax_type == 'sale' and balance < 0) or (tax_type == 'purchase' and balance > 0)
+
         res = tax.compute_all(balance, is_refund=is_refund)
 
         new_aml_dicts = []
@@ -394,7 +398,8 @@ class AccountReconcileModel(models.Model):
                 if match:
                     sign = 1 if residual_balance > 0.0 else -1
                     try:
-                        extracted_balance = float(re.sub(r'\D' + self.decimal_separator, '', match.group(1)).replace(self.decimal_separator, '.'))
+                        extracted_match_group = re.sub(r'[^\d' + self.decimal_separator + ']', '', match.group(1))
+                        extracted_balance = float(extracted_match_group.replace(self.decimal_separator, '.'))
                         balance = copysign(extracted_balance * sign, residual_balance)
                     except ValueError:
                         balance = 0
@@ -417,6 +422,7 @@ class AccountReconcileModel(models.Model):
                 'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                 'reconcile_model_id': self.id,
                 'journal_id': line.journal_id.id,
+                'tax_ids': [],
             }
             lines_vals_list.append(writeoff_line)
 
@@ -427,12 +433,12 @@ class AccountReconcileModel(models.Model):
                 detected_fiscal_position = self.env['account.fiscal.position'].get_fiscal_position(partner_id)
                 if detected_fiscal_position:
                     taxes = detected_fiscal_position.map_tax(taxes)
-                writeoff_line['tax_ids'] = [Command.set(taxes.ids)]
+                writeoff_line['tax_ids'] += [Command.set(taxes.ids)]
                 # Multiple taxes with force_tax_included results in wrong computation, so we
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
                     taxes = taxes[0].with_context(force_price_include=True)
-                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line)
+                tax_vals_list = self._get_taxes_move_lines_dict(taxes, writeoff_line, statement_line=st_line)
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
                     for tax_line in tax_vals_list:
@@ -531,7 +537,7 @@ class AccountReconcileModel(models.Model):
             or (self.match_amount == 'between' and (abs(st_line.amount) > self.match_amount_max or abs(st_line.amount) < self.match_amount_min))
             or (self.match_partner and not partner)
             or (self.match_partner and self.match_partner_ids and partner not in self.match_partner_ids)
-            or (self.match_partner and self.match_partner_category_ids and partner.category_id not in self.match_partner_category_ids)
+            or (self.match_partner and self.match_partner_category_ids and not (partner.category_id & self.match_partner_category_ids))
         ):
             return False
 

@@ -26,7 +26,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/*.xml',
         ],
         'web_editor.assets_wysiwyg': [
-
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
             'web_editor/static/lib/cropperjs/cropper.js',
@@ -85,11 +84,13 @@ Odoo Web Editor widget.
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
         ],
         'web.assets_common': [
+            'web_editor/static/lib/odoo-editor/src/base_style.css',
             'web_editor/static/lib/vkbeautify/**/*',
             'web_editor/static/src/js/common/**/*',
             'web_editor/static/lib/odoo-editor/src/utils/utils.js',
         ],
         'web.assets_backend': [
+            'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 

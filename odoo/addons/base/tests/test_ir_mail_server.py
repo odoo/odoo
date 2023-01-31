@@ -253,6 +253,20 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             from_filter='custom_domain.com',
         )
 
+        # Test when forcing the mail server and when smtp_encryption is "starttls"
+        self.server_domain.smtp_encryption = "starttls"
+        with self.mock_smtplib_connection():
+            message = self._build_email(mail_from='specific_user@test.com')
+            IrMailServer.send_email(message, mail_server_id=self.server_domain.id)
+
+        self.connect_mocked.assert_called_once()
+        self.assert_email_sent_smtp(
+            smtp_from='specific_user@test.com',
+            message_from='specific_user@test.com',
+            from_filter='test.com',
+        )
+
+
     @mute_logger('odoo.models.unlink')
     def test_mail_server_send_email_smtp_session(self):
         """Test all the cases when we provide the SMTP session.

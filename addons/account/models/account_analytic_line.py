@@ -62,7 +62,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_sale_types())],
             "context": {"create": False},
-            "name": "Customer Invoices",
+            "name": _("Customer Invoices"),
             'view_mode': 'tree,form',
         }
         return result
@@ -74,7 +74,7 @@ class AccountAnalyticAccount(models.Model):
             "res_model": "account.move",
             "domain": [('id', 'in', self.line_ids.move_id.move_id.ids), ('move_type', 'in', self.env['account.move'].get_purchase_types())],
             "context": {"create": False},
-            "name": "Vendor Bills",
+            "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
         }
         return result

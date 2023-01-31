@@ -6,7 +6,7 @@
     <t t-extend="portal.Composer">
         <t t-jquery="textarea" t-operation="inner"><t t-esc="widget.options['default_message'] ? _.str.trim(widget.options['default_message']) : ''"/></t><!-- need to be one line to avoid \t in textarea -->
         <t t-jquery="button.o_portal_chatter_composer_btn" t-operation="attributes">
-            <attribute name="t-attf-data-action" t-value="#{widget.options['force_submit_url'] || '/mail/chatter_post'}" />
+            <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/chatter_post'}</attribute>
         </t>
         <t t-jquery=".o_portal_chatter_composer_input div.o_portal_chatter_composer_body" t-operation="before">
             <t t-call="portal_rating.rating_star_input">

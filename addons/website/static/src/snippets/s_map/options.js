@@ -2,6 +2,7 @@
 
 import {_t} from 'web.core';
 import options from 'web_editor.snippets.options';
+import {generateGMapLink} from 'website.utils';
 
 options.registry.Map = options.Class.extend({
     /**
@@ -62,10 +63,7 @@ options.registry.Map = options.Class.extend({
         const $embedded = this.$target.find('.s_map_embedded');
         const $info = this.$target.find('.missing_option_warning');
         if (dataset.mapAddress) {
-            const url = 'https://maps.google.com/maps?q=' + encodeURIComponent(dataset.mapAddress)
-                + '&t=' + encodeURIComponent(dataset.mapType)
-                + '&z=' + encodeURIComponent(dataset.mapZoom)
-                + '&ie=UTF8&iwloc=&output=embed';
+            const url = generateGMapLink(dataset);
             if (url !== $embedded.attr('src')) {
                 $embedded.attr('src', url);
             }

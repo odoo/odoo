@@ -121,7 +121,7 @@ class AlipayTest(AlipayCommon):
             processing_values = tx._get_processing_values()
         redirect_form_data = self._extract_values_from_html_form(processing_values['redirect_form_html'])
 
-        self.assertEqual(redirect_form_data['inputs']['total_fee'], str(total_fee))
+        self.assertEqual(redirect_form_data['inputs']['total_fee'], f'{total_fee:.2f}')
 
     def test_21_standard_checkout_feedback(self):
         self.alipay.alipay_payment_method = 'standard_checkout'

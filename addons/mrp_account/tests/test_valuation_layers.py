@@ -316,3 +316,35 @@ class TestMrpValuationStandard(TestMrpValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 2)
         self._make_out_move(self.product1, 1)
         self.assertEqual(self.product1.value_svl, 15)
+
+    def test_validate_draft_kit(self):
+        """
+        Create a draft receipt, add a kit to its move lines and directly
+        validate it. From client side, such a behaviour is possible with
+        the Barcode app.
+        """
+        self.component.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.type = 'consu'
+        self.bom.type = 'phantom'
+        self.component.standard_price = 1424
+
+        receipt = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in.id,
+            'move_line_ids': [(0, 0, {
+                'product_id': self.product1.id,
+                'qty_done': 1,
+                'product_uom_id': self.product1.uom_id.id,
+                'location_id': self.customer_location.id,
+                'location_dest_id': self.stock_location.id,
+            })]
+        })
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertRecordValues(receipt.move_lines, [
+            {'product_id': self.component.id, 'quantity_done': 1, 'state': 'done'},
+        ])
+        self.assertEqual(self.component.qty_available, 1)
+        self.assertEqual(self.component.value_svl, 1424)

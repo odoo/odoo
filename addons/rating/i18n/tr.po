@@ -7,12 +7,12 @@
 # Martin Trigaux, 2021
 # Levent Karakaş <levent@mektup.at>, 2021
 # Murat Kaplan <muratk@projetgrup.com>, 2021
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2021
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2021
 # Emre Akayoğlu <emre.akayoglu@mechsoft.com.tr>, 2021
 # Umur Akın <umura@projetgrup.com>, 2021
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # abc Def <hdogan1974@gmail.com>, 2021
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-09-14 10:29+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2021\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +31,7 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_count
 msgid "# Ratings"
-msgstr ""
+msgstr "# Derecelendirmeler"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
@@ -83,7 +83,7 @@ msgstr "Görünüm Adı"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #, python-format
 msgid "Dissatisfied"
-msgstr ""
+msgstr "Memnun değilim"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -104,12 +104,12 @@ msgstr "E-Posta İşlemleri"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
-msgstr "Değerlendirme gönderildi ise aktif olur"
+msgstr "Değerlendirme gönderildi ise aktif olur."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Feel free to write a feedback on your experience:"
-msgstr "Feel free to write a feedback on your experience:"
+msgstr "Deneyiminiz hakkında bir geri bildirim yazmaktan çekinmeyin:"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -131,7 +131,8 @@ msgstr "Grupla"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
-"Hide to public / portal users, independently from subtype configuration."
+"Alt tür yapılandırmasından bağımsız olarak genel / portal kullanıcılarına "
+"gizleyin."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -235,12 +236,12 @@ msgstr "Üst Belge Adı"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Parent Holder"
-msgstr "Parent Holder"
+msgstr "Üst Sahip"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
 msgid "Parent Ref"
-msgstr "Parent Ref"
+msgstr "Üst Referans"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
@@ -256,7 +257,7 @@ msgstr "Mutlu derecelendirmelerin yüzdesi"
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated Operator"
-msgstr ""
+msgstr "Değerlendirilmiş Operatörü"
 
 #. module: rating
 #: model:ir.model,name:rating.model_rating_rating
@@ -274,7 +275,7 @@ msgstr "Değerlendirme Ortalaması"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Son Geribildirimleri Derecelendirme "
+msgstr "Son Geribildirimleri Derecelendirme"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
@@ -312,7 +313,7 @@ msgstr "Değerlendirme Puanı"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Value (/5)"
-msgstr "Rating Value (/5)"
+msgstr "Değerlendirme Değeri (/5)"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -322,12 +323,12 @@ msgstr "Değerlendirme sayısı"
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 and 5"
-msgstr ""
+msgstr "Değerlendirme 0 ile 5 arasında olmalıdır"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
 msgid "Rating value: 0=Unhappy, 5=Happy"
-msgstr "Rating value: 0=Unhappy, 5=Happy"
+msgstr "Değerlendirme değeri: 0=Mutsuz, 5=Mutlu"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.rating_rating_view
@@ -367,7 +368,7 @@ msgstr "Kaynak"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
 msgid "Resource Ref"
-msgstr "Resource Ref"
+msgstr "Kaynak Referans"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
@@ -400,12 +401,12 @@ msgstr "Gönderildi"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thank you for rating our services!"
-msgstr "Thank you for rating our services!"
+msgstr "Hizmetlerimizi derecelendirdiğiniz için teşekkür ederiz!"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Thank you, we appreciate your feedback!"
-msgstr "Thank you, we appreciate your feedback!"
+msgstr "Teşekkür ederiz, geri bildiriminiz için teşekkür ederiz!"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
@@ -425,12 +426,12 @@ msgstr "Bugün"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
 msgid "Visible Internally Only"
-msgstr "Visible Internally Only"
+msgstr "Yalnızca Dahili Olarak Görünür"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
-msgstr "Talebi karşılayan: "
+msgstr "tarafından"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban

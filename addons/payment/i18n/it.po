@@ -3,24 +3,24 @@
 # 	* payment
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Martin Trigaux, 2021
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2021
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-21 12:49+0000\n"
+"POT-Creation-Date: 2022-05-10 14:27+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
@@ -79,7 +79,7 @@ msgstr "<span class=\"o_stat_text\">Metodi di pagamento salvati</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "<span><i class=\"fa fa-arrow-right\"/> Get my Stripe keys</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-arrow-right\"/> Ottenere i miei Stripe key</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -159,7 +159,7 @@ msgstr "<strong>Attenzione</strong> Devi essere connesso per poter pagare."
 #: code:addons/payment/models/account_payment.py:0
 #, python-format
 msgid "A payment transaction with reference %s already exists."
-msgstr ""
+msgstr "Un'operazione di pagamento con riferimento %s esiste già."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -184,6 +184,7 @@ msgstr "Per creare una nuova transazione di pagamento è necessario un token."
 msgid ""
 "A transaction with reference %(ref)s has been initiated (%(acq_name)s)."
 msgstr ""
+"È stata avviata una transazione con riferimento %(ref)s (%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -207,19 +208,9 @@ msgid "Account"
 msgstr "Conto"
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Holder:"
-msgstr ""
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__acc_number
 msgid "Account Number"
 msgstr "Numero conto"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Account Number:"
-msgstr ""
 
 #. module: payment
 #: code:addons/payment/models/account_payment_method.py:0
@@ -257,6 +248,11 @@ msgstr "Elenco sistemi"
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_kanban
 msgid "Activate"
 msgstr "Attiva"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Activate Stripe"
+msgstr "Attiva Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
@@ -381,14 +377,14 @@ msgid "Bank"
 msgstr "Banca"
 
 #. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Bank Accounts"
+msgstr "Conti bancari"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
 msgid "Bank Name"
 msgstr "Nome banca"
-
-#. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Bank:"
-msgstr ""
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
@@ -398,7 +394,7 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Callback Document Model"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
@@ -418,7 +414,7 @@ msgstr "Metodo di callback"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr ""
+msgstr "Callback Record ID"
 
 #. module: payment
 #. openerp-web
@@ -436,7 +432,7 @@ msgstr "Annullata"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Canceled Message"
-msgstr "Messaggio cancellato"
+msgstr "Messaggio annullato"
 
 #. module: payment
 #. openerp-web
@@ -479,11 +475,6 @@ msgid "Choose a payment method"
 msgstr "Scegliere un metodo di pagamento"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Choose your default customer payment method."
-msgstr "Scegliere il metodo di pagamento cliente predefinito."
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "City"
@@ -511,6 +502,11 @@ msgstr "Codice"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
 msgid "Color"
 msgstr "Colore"
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Communication"
+msgstr "Comunicazioni"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_company
@@ -619,6 +615,11 @@ msgid "Credentials"
 msgstr "Credenziali"
 
 #. module: payment
+#: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
+msgid "Credit & Debit Card"
+msgstr "Carta di credito e di debito"
+
+#. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
 msgid "Credit Card (powered by Adyen)"
 msgstr "Carta di credito (supportata da Adyen)"
@@ -641,7 +642,7 @@ msgstr "Carta di credito (supportata da Buckaroo)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
 msgid "Credit Card (powered by Ogone)"
-msgstr ""
+msgstr "Carta di credito (powered by Ogone)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -657,11 +658,6 @@ msgstr "Carta di credito (supportata da PayUmoney)"
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
 msgstr "Carta di credito (supportata da Sips)"
-
-#. module: payment
-#: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
-msgid "Credit Card (powered by Stripe)"
-msgstr "Carta di credito (supportata da Stripe)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -751,6 +747,12 @@ msgid "Email"
 msgstr "E-mail"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Enable credit &amp; debit card payments supported by Stripe"
+msgstr ""
+"Abilita i pagamenti con carta di credito e di debito supportati da Stripe"
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
 msgid "Enabled"
 msgstr "Abilitato"
@@ -801,6 +803,9 @@ msgid ""
 "Force the customer to pay via the specified payment acquirer. Leave empty to"
 " allow the customer to choose among all acquirers."
 msgstr ""
+"Forza il cliente a pagare tramite l'acquirer di pagamento specificato. "
+"Lasciare vuoto per permettere al cliente di scegliere tra tutti gli "
+"acquirer."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -842,7 +847,7 @@ msgstr "Instradamento HTTP"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_acquirers
 msgid "Has Multiple Acquirers"
-msgstr ""
+msgstr "Ha più Acquirer"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
@@ -918,6 +923,8 @@ msgid ""
 "In test mode, a fake payment is processed through a test payment interface.\n"
 "This mode is advised when setting up the acquirer."
 msgstr ""
+"In modalità test, un falso pagamento viene elaborato attraverso un'interfaccia di pagamento di prova.\n"
+"Questa modalità è consigliata quando si imposta l'acquirer."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
@@ -967,7 +974,7 @@ msgstr "Conteggio Fatture"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "È stato post-trattato"
 
 #. module: payment
 #. openerp-web
@@ -1090,7 +1097,7 @@ msgstr "Mollie"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Più opzioni di pagamento selezionate"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1104,7 +1111,7 @@ msgstr "Nome"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Nessun fornitore impostato"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1166,7 +1173,7 @@ msgstr "Modulo Odoo Enterprise"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Pagamento offline tramite token"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1182,6 +1189,11 @@ msgid "Ok"
 msgstr "Ok"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Online Payments"
+msgstr "Pagamenti online"
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
 msgstr "Pagamento online diretto"
@@ -1195,6 +1207,11 @@ msgstr "Pagamento online via token"
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
 msgstr "Pagamento online con reindirizzamento"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
+msgid "Online payments enabled"
+msgstr "Pagamenti online attivati"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1218,7 +1235,7 @@ msgstr "Solo le transazioni autorizzate possono essere annullate."
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Solo le transazioni confermate possono essere rimborsate."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1349,7 +1366,6 @@ msgstr "Link di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Payment Method"
 msgstr "Metodo di pagamento"
 
@@ -1421,12 +1437,7 @@ msgstr "Procedura di attivazione sistema di pagamento"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
 msgid "Payment acquirer selected"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Payment method set!"
-msgstr "Metodo di pagamento impostato!"
+msgstr "Acquirente di pagamento selezionato"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1469,11 +1480,6 @@ msgid "Phone"
 msgstr "Telefono"
 
 #. module: payment
-#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
-msgid "Please make a payment to:"
-msgstr "Si prega di effettuare un pagamento a:"
-
-#. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -1492,6 +1498,22 @@ msgstr "Seleziona solo un metodo di pagamento per favore."
 #, python-format
 msgid "Please set an amount smaller than %s."
 msgstr "Impostare un importo più piccolo di %s."
+
+#. module: payment
+#: code:addons/payment/controllers/portal.py:0
+#, python-format
+msgid "Please switch to company '%s' to make this payment."
+msgstr "Passa all'azienda '%s' per effettuare questo pagamento."
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Please use the following transfer details"
+msgstr "Usare le seguenti informazioni per il bonifico"
+
+#. module: payment
+#: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
+msgid "Please use the order name as communication reference."
+msgstr "Usare il nome dell'ordine come riferimento per le comunicazioni."
 
 #. module: payment
 #. openerp-web
@@ -1529,7 +1551,7 @@ msgstr "Motivo: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Reindirizzamento del template del modulo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1654,11 +1676,6 @@ msgid "Server error:"
 msgstr "Errore del server:"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
-msgid "Set payments"
-msgstr "Imposta pagamenti"
-
-#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
 msgid "Show Allow Tokenization"
 msgstr ""
@@ -1676,7 +1693,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_credentials_page
 msgid "Show Credentials Page"
-msgstr ""
+msgstr "Mostra la pagina delle credenziali"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_done_msg
@@ -1686,7 +1703,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_payment_icon_ids
 msgid "Show Payment Icon"
-msgstr ""
+msgstr "Mostra l'icona di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pending_msg
@@ -1845,6 +1862,7 @@ msgstr "La descrizione mostrata nella carta nella vista kanban"
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "The fees amount; set by the system as it depends on the acquirer"
 msgstr ""
+"L'importo delle tasse; impostato dal sistema in quanto dipende dall'acquirer"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1865,7 +1883,7 @@ msgstr "Il giornale in cui sono registrate le transazioni di successo"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__acquirer_ids
 msgid "The list of acquirers supporting this payment icon"
-msgstr ""
+msgstr "L'elenco degli acquirenti che supportano questa icona di pagamento"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
@@ -1915,7 +1933,7 @@ msgstr ""
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "The related payment is posted: %s"
-msgstr ""
+msgstr "Il relativo pagamento è stato registrato: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
@@ -1930,7 +1948,7 @@ msgstr "Il pagamento alla fonte dei relativi pagamenti di rimborso"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of related refund transactions"
-msgstr ""
+msgstr "La transazione di origine delle transazioni di rimborso collegate"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__redirect_form_view_id
@@ -1946,6 +1964,8 @@ msgstr ""
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
 msgstr ""
+"Il modello che rende il modulo di pagamento inline quando si effettua un "
+"pagamento diretto"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1984,6 +2004,8 @@ msgid ""
 "The transaction with reference %(ref)s for %(amount)s is canceled "
 "(%(acq_name)s)."
 msgstr ""
+"La transazione con riferimento %(ref)s per %(amount)s è annullato "
+"(%(acq_name)s)."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -2028,6 +2050,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
 msgstr ""
+"Questo campo contiene l'immagine utilizzata per questa icona di pagamento, "
+"limitata a 64x64 px"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2042,7 +2066,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "This payment has not been processed yet."
-msgstr ""
+msgstr "Questo pagamento non è stato ancora elaborato."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -2106,7 +2130,7 @@ msgstr "Aggiorna"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Usa metodo di pagamento elettronico"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
@@ -2246,10 +2270,10 @@ msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr "Non puoi eliminare una vista usata da un'acquirente di pagamento."
 
 #. module: payment
-#: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
+#: code:addons/payment/controllers/portal.py:0
 #, python-format
-msgid "You have to set a journal for your payment acquirer %s."
-msgstr "È necessario impostare un registro per il sistema di pagamento %s."
+msgid "You do not have access to this payment token."
+msgstr "Non hai accesso a questo token di pagamento."
 
 #. module: payment
 #. openerp-web
@@ -2402,7 +2426,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show less"
-msgstr ""
+msgstr "mostra di meno"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list

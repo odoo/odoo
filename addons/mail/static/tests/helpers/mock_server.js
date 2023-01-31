@@ -56,7 +56,7 @@ MockServer.include({
     async _performFetch(resource, init) {
         if (resource === '/mail/attachment/upload') {
             const ufile = init.body.get('ufile');
-            const is_pending = init.body.get('is_pending');
+            const is_pending = init.body.get('is_pending') === 'true';
             const model = is_pending ? 'mail.compose.message' : init.body.get('thread_model');
             const id = is_pending ? 0 : parseInt(init.body.get('thread_id'));
             const attachmentId = this._mockCreate('ir.attachment', {
@@ -126,6 +126,9 @@ MockServer.include({
         if (route === '/mail/read_subscription_data') {
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
+        }
+        if (route === '/mail/thread/data') {
+            return this._mockRouteMailThreadData(args.thread_model, args.thread_id, args.request_list);
         }
         if (route === '/mail/thread/messages') {
             const { min_id, max_id, limit, thread_model, thread_id } = args;
@@ -503,6 +506,26 @@ MockServer.include({
     },
 
     /**
+     * Simulates the `/mail/thread/data` route.
+     *
+     * @param {string} thread_model
+     * @param {integer} thread_id
+     * @param {string[]} request_list
+     * @returns {Object}
+     */
+    async _mockRouteMailThreadData(thread_model, thread_id, request_list) {
+        const res = {};
+        const thread = this._mockSearchRead(thread_model, [[['id', '=', thread_id]]], {})[0];
+        if (request_list.includes('attachments')) {
+            const attachments = this._mockSearchRead('ir.attachment', [
+                [['res_id', '=', thread.id], ['res_model', '=', thread_model]],
+            ], {}); // order not done for simplicity
+            res['attachments'] = this._mockIrAttachment_attachmentFormat(attachments.map(attachment => attachment.id), true);
+        }
+        return res;
+    },
+
+    /**
      * Simulates the `/mail/thread/messages` route.
      *
      * @private
@@ -525,6 +548,39 @@ MockServer.include({
     //--------------------------------------------------------------------------
     // Private Mocked Methods
     //--------------------------------------------------------------------------
+
+    /**
+     * Simulates `_attachment_format` on `ir.attachment`.
+     *
+     * @private
+     * @param {string} res_model
+     * @param {string} domain
+     * @returns {Object}
+     */
+    _mockIrAttachment_attachmentFormat(ids, commands = false) {
+        const attachments = this._mockRead('ir.attachment', [ids]);
+        return attachments.map(attachment => {
+            const res = {
+                'checksum': attachment.checksum,
+                'filename': attachment.name,
+                'id': attachment.id,
+                'mimetype': attachment.mimetype,
+                'name': attachment.name,
+            };
+            if (commands) {
+                res['originThread'] = [['insert', {
+                    'id': attachment.res_id,
+                    'model': attachment.res_model,
+                }]];
+            } else {
+                Object.assign(res, {
+                    'res_id': attachment.res_id,
+                    'res_model': attachment.res_model,
+                });
+            }
+            return res;
+        });
+    },
 
     /**
      * Simulates `get_activity_data` on `mail.activity`.
@@ -1117,7 +1173,7 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', [{
             type: 'mail.channel/insert',
             payload: {
-                id: 20,
+                id,
                 avatarCacheKey: avatarCacheKey,
             },
         }]);
@@ -1782,10 +1838,10 @@ MockServer.include({
 
             // notify update of last_interest_dt
             const now = datetime_to_str(new Date());
-            this._mockWrite('mail.channel',
+            this._mockWrite('mail.channel', [
                 [channel.id],
                 { last_interest_dt: now },
-            );
+            ]);
             notifications.push({
                 type: 'mail.channel/last_interest_dt_changed',
                 payload: {
@@ -1814,7 +1870,7 @@ MockServer.include({
             ['res_id', 'in', ids],
             ['partner_id', 'in', partner_ids || []],
         ]);
-        this._mockUnlink(model, [followers.map(follower => follower.id)]);
+        this._mockUnlink('mail.followers', [followers.map(follower => follower.id)]);
     },
     /**
      * Simulates `_get_channels_as_member` on `res.partner`.
@@ -2009,19 +2065,29 @@ MockServer.include({
             [['id', 'in', ids]],
             { active_test: false }
         );
-        // Servers is also returning `user_id` and `is_internal_user` but not
+        // Servers is also returning `is_internal_user` but not
         // done here for simplification.
-        return new Map(partners.map(partner => [
-            partner.id,
-            {
+        return new Map(partners.map(partner => {
+            const users = this._getRecords('res.users', [['id', 'in', partner.user_ids]]);
+            const internalUsers = users.filter(user => !user.share);
+            let mainUser;
+            if (internalUsers.length > 0) {
+                mainUser = internalUsers[0];
+            } else if (users.length > 0) {
+                mainUser = users[0];
+            } else {
+                mainUser = [];
+            }
+            return [partner.id, {
                 "active": partner.active,
                 "display_name": partner.display_name,
                 "email": partner.email,
                 "id": partner.id,
                 "im_status": partner.im_status,
                 "name": partner.name,
-            }
-        ]));
+                "user_id": mainUser.id,
+            }];
+        }));
     },
     /**
      * Simulates `search_for_channel_invite` on `res.partner`.

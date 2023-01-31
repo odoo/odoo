@@ -30,7 +30,7 @@ msgstr "<span class=\"o_stat_text\">Lastschriften</span>"
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "Add Debit Note"
-msgstr "Lastschrift erstellen"
+msgstr "Lastschrift hinzufügen"
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_debit_note
@@ -93,7 +93,8 @@ msgstr "ID"
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
 msgstr ""
-"Wenn leer, wird das Journal des zu belastenden Journaleintrags verwendet."
+"Wenn leer, wird das Journal des Journaleintrags verwendet, der belastet "
+"werden soll."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -108,7 +109,7 @@ msgstr ""
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
 msgid "Journal Entry"
-msgstr "Buchungssatz"
+msgstr "Journaleintrag"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
@@ -123,7 +124,7 @@ msgstr "Zuletzt geändert am"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__write_date
@@ -145,7 +146,7 @@ msgstr "Umzugstyp"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_move__debit_note_count
 #: model:ir.model.fields,field_description:account_debit_note.field_account_payment__debit_note_count
 msgid "Number of Debit Notes"
-msgstr "Anzahl der Lastschriften"
+msgstr "Anzahl Lastschriften"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_origin_id
@@ -157,25 +158,25 @@ msgstr "Original-Rechnung Belastet"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__reason
 msgid "Reason"
-msgstr "Grund"
+msgstr "Begründung"
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_bank_statement_line__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "Die für diese Rechnung erstellten Belastungsanzeigen"
+msgstr "Die für diese Rechnung erstellten Lastschriften"
 
 #. module: account_debit_note
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from:"
-msgstr "Diese Belastungsanzeige wurde erstellt von:"
+msgstr "Diese Lastschrift wurde erstellt aus:"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr "Benutze das spezifische Journal"
+msgstr "Spezifisches Journal verwenden"
 
 #. module: account_debit_note
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0

@@ -170,6 +170,15 @@ class WebsiteForm(http.Controller):
                 except ValueError:
                     error_fields.append(field_name)
 
+                if dest_model._name == 'mail.mail' and field_name == 'email_from':
+                    # As the "email_from" is used to populate the email_from of the
+                    # sent mail.mail, it could be filtered out at sending time if no
+                    # outgoing mail server "from_filter" match the sender email.
+                    # To make sure the email contains that (important) information
+                    # we also add it to the "custom message" that will be included
+                    # in the body of the email sent.
+                    custom_fields.append((_('email'), field_value))
+
             # If it's a custom field
             elif field_name != 'context':
                 custom_fields.append((field_name, field_value))
@@ -250,7 +259,11 @@ class WebsiteForm(http.Controller):
             }
             attachment_id = request.env['ir.attachment'].sudo().create(attachment_value)
             if attachment_id and not custom_field:
-                record.sudo()[file.field_name] = [(4, attachment_id.id)]
+                record_sudo = record.sudo()
+                value = [(4, attachment_id.id)]
+                if record_sudo._fields[file.field_name].type == 'many2one':
+                    value = attachment_id.id
+                record_sudo[file.field_name] = value
             else:
                 orphan_attachment_ids.append(attachment_id.id)
 

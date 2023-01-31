@@ -50,7 +50,6 @@
                 <div class="o_panel_header">Body</div>
                 <div class="o_panel_body" id="email_designer_body_elements">
                     <t t-snippet="mass_mailing.s_title" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_title.svg"/>
-                    <t t-snippet="mass_mailing.s_mail_block_title_text" t-thumbnail="/mass_mailing/static/src/img/blocks/block_title_text.png"/>
                     <t t-snippet="mass_mailing.s_text_block" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
                     <t t-snippet="mass_mailing.s_comparisons" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_comparisons.svg"/>
                     <t t-snippet="mass_mailing.s_color_blocks_2" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_color_blocks_2.svg"/>
@@ -109,7 +108,7 @@
             <div class="row">
                 <div class="col-lg-8 pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
-                         <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;" alt="Your Logo" />
+                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;" />
                     </a>
                 </div>
                 <div class="col-lg-4 text-right o_mail_no_resize">
@@ -169,7 +168,7 @@
                 <div class="col-lg-4"/>
                 <div class="col-lg-4 text-center pt16 pb16">
                     <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                        <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;width:auto"/>
+                        <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;width:auto"/>
                     </a>
                 </div>
                 <div class="col-lg-4 text-right"/>
@@ -708,7 +707,7 @@
 </template>
 
 <template id="s_mail_block_footer_social" name="Footer Center">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
         <div class="container o_mail_table_styles">
             <div class="row">
                 <div class="col-lg o_mail_footer_social">
@@ -889,6 +888,8 @@
                         title="Full"/>
         </we-button-group>
     </div>
+    <!-- TODO there is no data-js associated to this but a data-option-name, -->
+    <!-- somehow it acts as data-js... it will be reviewed in master. -->
     <div data-option-name="minHeight" data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
         <we-button-group string="Height">
             <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
@@ -948,7 +949,7 @@
         .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
         .note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link),
         td, td.o_mail_no_colorpicker div:first-child, th"
-        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2, .s_mail_color_blocks_2 .row > div">
         <we-colorpicker string="Background Color"
             data-select-style="true"
             data-no-transparency="true"
@@ -956,15 +957,34 @@
             data-color-prefix="bg-"/>
     </div>
 
-    <!-- COLOR, BORDER | .s_three_columns | .s_comparisons -->
-    <div data-js="Box"
-         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
-         data-target=".card">
-        <we-colorpicker string="Colors"
+    <div data-selector=".s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
             data-select-style="true"
             data-no-transparency="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
+    </div>
+
+    <!-- Allow changing background images in Masonry -->
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="'.s_masonry_block .row > div'"/>
+        <t t-set="with_images" t-value="True"/>
+    </t>
+
+    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-target=".card-body">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+    <!-- BORDER | .s_three_columns | .s_comparisons -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-target=".card">
         <t t-call="mass_mailing.snippet_options_border_widgets">
             <t t-set="so_rounded_no_dependencies" t-value="True"/>
         </t>

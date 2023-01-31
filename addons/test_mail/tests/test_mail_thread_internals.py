@@ -8,10 +8,11 @@ from werkzeug.urls import url_parse, url_decode
 from odoo import exceptions
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
-from odoo.tests.common import tagged, HttpCase
+from odoo.tests.common import tagged, HttpCase, users
 from odoo.tools import mute_logger
 
 
+@tagged('mail_thread')
 class TestChatterTweaks(TestMailCommon, TestRecipients):
 
     @classmethod
@@ -38,6 +39,14 @@ class TestChatterTweaks(TestMailCommon, TestRecipients):
         self.test_record.with_user(self.user_employee).with_context({'mail_create_nosubscribe': True, 'mail_post_autofollow': True}).message_post(
             body='Test Body', message_type='comment', subtype_xmlid='mail.mt_comment', partner_ids=[self.partner_1.id, self.partner_2.id])
         self.assertEqual(self.test_record.message_follower_ids.mapped('partner_id'), original.mapped('partner_id') | self.partner_1 | self.partner_2)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_chatter_context_cleaning(self):
+        """ Test default keys are not propagated to message creation as it may
+        induce wrong values for some fields, like parent_id. """
+        parent = self.env['res.partner'].create({'name': 'Parent'})
+        partner = self.env['res.partner'].with_context(default_parent_id=parent.id).create({'name': 'Contact'})
+        self.assertFalse(partner.message_ids[-1].parent_id)
 
     def test_chatter_mail_create_nolog(self):
         """ Test disable of automatic chatter message at create """
@@ -253,6 +262,23 @@ class TestDiscuss(TestMailCommon, TestRecipients):
         # and the failure from employee's message should not be taken into account for admin
         threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
         self.assertEqual(len(threads_admin), 0)
+
+    @users("employee")
+    def test_unlink_notification_message(self):
+        channel = self.env['mail.channel'].create({'name': 'testChannel'})
+        channel.message_notify(
+            body='test',
+            message_type='user_notification',
+            partner_ids=[self.partner_2.id],
+            author_id=2
+        )
+
+        channel_message = self.env['mail.message'].sudo().search([('model', '=', 'mail.channel'), ('res_id', 'in', channel.ids)])
+        self.assertEqual(len(channel_message), 1, "Test message should have been posted")
+
+        channel.sudo().unlink()
+        remaining_message = channel_message.exists()
+        self.assertEqual(len(remaining_message), 0, "Test message should have been deleted")
 
 
 @tagged('-at_install', 'post_install')

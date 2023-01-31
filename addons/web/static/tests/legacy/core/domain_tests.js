@@ -81,7 +81,7 @@ QUnit.module('core', {}, function () {
     });
 
     QUnit.test("domain <=> condition", function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var domain = [
             '|',
@@ -99,6 +99,9 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(Domain.prototype.conditionToDomain(
             'doc and toto is None or not tata'),
             ['|', '&', ['doc', '!=', false], ['toto', '=', null], ['tata', '=', false]]);
+        assert.deepEqual(Domain.prototype.conditionToDomain(
+            `field in ("foo", "bar") and display_name in ['boo','far']`),
+            ['&', ['field', 'in', ['foo', 'bar']], ['display_name', 'in', ['boo', 'far']]]);
     });
 
     QUnit.test("condition 'a field is set' does not convert to a domain", function (assert) {

@@ -58,7 +58,7 @@ class TestDiscussFullPerformance(TransactionCase):
     def test_init_messaging(self):
         """Test performance of `_init_messaging`."""
         channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
-        self.env['mail.channel'].search([('id', '!=', channel_general.id)]).unlink()
+        self.env['mail.channel'].sudo().search([('id', '!=', channel_general.id)]).unlink()
         user_root = self.env.ref('base.user_root')
         # create public channels
         channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public 1', privacy='public')['id'])
@@ -99,7 +99,7 @@ class TestDiscussFullPerformance(TransactionCase):
         self.maxDiff = None
         self.users[0].flush()
         self.users[0].invalidate_cache()
-        with self.assertQueryCount(emp=98):
+        with self.assertQueryCount(emp=93):  # ent: 89
             init_messaging = self.users[0].with_user(self.users[0])._init_messaging()
 
         self.assertEqual(init_messaging, {
@@ -289,6 +289,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_group_1.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -303,7 +304,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -314,7 +315,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'test12',
                             'email': False,
                             'id': self.users[12].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'test12',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[12]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -352,6 +353,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_chat_1.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -366,7 +368,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -377,7 +379,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'test14',
                             'email': False,
                             'id': self.users[14].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'test14',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[14]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -415,6 +417,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_chat_2.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -429,7 +432,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -440,7 +443,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'test15',
                             'email': False,
                             'id': self.users[15].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'test15',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[15]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -478,6 +481,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_chat_3.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -492,7 +496,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -503,7 +507,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'test2',
                             'email': 'test2@example.com',
                             'id': self.users[2].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'test2',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[2]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -541,6 +545,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_chat_4.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -555,7 +560,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'Ernest Employee',
                             'email': 'e.e@example.com',
                             'id': self.users[0].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'Ernest Employee',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -566,7 +571,7 @@ class TestDiscussFullPerformance(TransactionCase):
                             'display_name': 'test3',
                             'email': False,
                             'id': self.users[3].partner_id.id,
-                            'im_status': 'leave_offline',
+                            'im_status': 'offline',
                             'is_internal_user': True,
                             'name': 'test3',
                             'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[3]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),
@@ -604,6 +609,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_livechat_1.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -667,6 +673,7 @@ class TestDiscussFullPerformance(TransactionCase):
                     'defaultDisplayMode': False,
                     'description': False,
                     'group_based_subscription': False,
+                    'guestMembers': [('insert', [])],
                     'id': channel_livechat_2.id,
                     'invitedGuests': [('insert', [])],
                     'invitedPartners': [('insert', [])],
@@ -768,7 +775,7 @@ class TestDiscussFullPerformance(TransactionCase):
                 'display_name': 'Ernest Employee',
                 'email': 'e.e@example.com',
                 'id': self.users[0].partner_id.id,
-                'im_status': 'leave_offline',
+                'im_status': 'offline',
                 'is_internal_user': True,
                 'name': 'Ernest Employee',
                 'out_of_office_date_end': self.leaves.filtered(lambda l: l.employee_id.user_id == self.users[0]).date_to.strftime(DEFAULT_SERVER_DATE_FORMAT),

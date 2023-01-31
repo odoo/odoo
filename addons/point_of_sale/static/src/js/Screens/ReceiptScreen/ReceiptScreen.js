@@ -89,6 +89,9 @@ odoo.define('point_of_sale.ReceiptScreen', function (require) {
                 this.currentOrder.finalize();
                 const { name, props } = this.nextScreen;
                 this.showScreen(name, props);
+                if (this.env.pos.config.iface_customer_facing_display) {
+                    this.env.pos.send_current_order_to_customer_facing_display();
+                }
             }
             async printReceipt() {
                 const isPrinted = await this._printReceipt();

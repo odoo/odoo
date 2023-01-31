@@ -15,6 +15,14 @@ class MrpDocument(models.Model):
     }
     _order = "priority desc, id desc"
 
+    def copy(self, default=None):
+        ir_default = default
+        if ir_default:
+            ir_fields = list(self.env['ir.attachment']._fields)
+            ir_default = {field : default[field] for field in default.keys() if field in ir_fields}
+        new_attach = self.ir_attachment_id.with_context(no_document=True).copy(ir_default)
+        return super().copy(dict(default, ir_attachment_id=new_attach.id))
+
     ir_attachment_id = fields.Many2one('ir.attachment', string='Related attachment', required=True, ondelete='cascade')
     active = fields.Boolean('Active', default=True)
     priority = fields.Selection([

@@ -54,6 +54,7 @@ class ProjectProductEmployeeMap(models.Model):
 
     @api.depends('employee_id.timesheet_cost')
     def _compute_cost(self):
+        self.env.remove_to_compute(self._fields['is_cost_changed'], self)
         for map_entry in self:
             if not map_entry.is_cost_changed:
                 map_entry.cost = map_entry.employee_id.timesheet_cost or 0.0

@@ -53,7 +53,10 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                 let ProductIds = await this.rpc({
                     model: 'product.product',
                     method: 'search',
-                    args: [[['name', 'ilike', this.searchWordInput.el.value + "%"]]],
+                    args: [['&',['available_in_pos', '=', true], '|','|',
+                     ['name', 'ilike', this.searchWordInput.el.value],
+                     ['default_code', 'ilike', this.searchWordInput.el.value],
+                     ['barcode', 'ilike', this.searchWordInput.el.value]]],
                     context: this.env.session.user_context,
                 });
                 if(!ProductIds.length) {
@@ -62,7 +65,7 @@ odoo.define('point_of_sale.ProductsWidgetControlPanel', function(require) {
                         body: this.env._t("No product found"),
                     });
                 } else {
-                    await this.env.pos._addProducts(ProductIds);
+                    await this.env.pos._addProducts(ProductIds, false);
                 }
                 this.trigger('update-product-list');
             } catch (error) {

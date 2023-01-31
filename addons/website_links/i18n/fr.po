@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Cécile Collart <cco@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: website_links
 #. openerp-web
@@ -44,6 +45,8 @@ msgstr "Nombre de clics"
 #: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
 msgid "<span title=\"Track this page to count clicks\">Link Tracker</span>"
 msgstr ""
+"<span title=\"Suivre cette page pour compter les clics\"></span>Traqueur de "
+"liens</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -73,7 +76,7 @@ msgstr "<strong>Origine</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Tracked Link</strong>"
-msgstr "<strong>Lien surveillé</strong>"
+msgstr "<strong>Lien tracké</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -127,7 +130,7 @@ msgstr "Génération du lien en cours..."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Get tracked link"
-msgstr "Obtenir le lien surveillé"
+msgstr "Obtenir un lien tracké"
 
 #. module: website_links
 #. openerp-web
@@ -151,7 +154,7 @@ msgstr "La semaine dernière"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
-msgstr "Suivi de liens"
+msgstr "Traqueur de liens"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -292,7 +295,7 @@ msgstr "Vous n'avez pas de liens récents."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Your tracked links"
-msgstr "Vos liens surveillés"
+msgstr "Vos liens trackés"
 
 #. module: website_links
 #. openerp-web
@@ -338,7 +341,7 @@ msgstr "ex.: Moteur de recherche, Page web, ..."
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "e.g. https://www.odoo.com/contactus"
-msgstr ""
+msgstr "par ex. https://www.odoo.com/contactus"
 
 #. module: website_links
 #. openerp-web

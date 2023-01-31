@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -12,13 +12,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-08 06:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2021\n"
+"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2022\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: pos_coupon
 #: model:coupon.program,name:pos_coupon.15_pc_on_next_order
@@ -213,8 +213,8 @@ msgid ""
 "A technical field used as an alternative to the promo_code. This is "
 "automatically generated when promo_code is changed."
 msgstr ""
-"Un campo técnico utilizado como alternativa para el promo_code. Se genera "
-"automáticamente cuando se cambia el promo_code."
+"Un campo técnico que se utiliza como alternativa para el promo_code. Se "
+"genera automáticamente cuando se cambia el promo_code."
 
 #. module: pos_coupon
 #. openerp-web
@@ -231,7 +231,7 @@ msgstr "Programas aplicados"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "Applied on PoS Order"
-msgstr "Se aplicó en la orden de PDV"
+msgstr "Se aplicó en la orden de PdV"
 
 #. module: pos_coupon
 #. openerp-web
@@ -311,14 +311,14 @@ msgstr "Desactivar programa"
 msgid "Define the coupon and promotion programs you can use in this PoS."
 msgstr ""
 "Defina el cupón y los programas de promociones que puede utilizar en este "
-"PDV."
+"PdV."
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/ControlButtons/PromoCodeButton.xml:0
 #, python-format
 msgid "Enter Code"
-msgstr "Ingresar código"
+msgstr "Introducir código"
 
 #. module: pos_coupon
 #. openerp-web
@@ -360,39 +360,39 @@ msgstr "Líneas de orden donde se aplicó este programa."
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_count
 msgid "PoS Order Count"
-msgstr "Número de órdenes de PDV"
+msgstr "Número de órdenes de PdV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_line_ids
 msgid "PoS Order Lines"
-msgstr "Líneas de orden de PDV"
+msgstr "Líneas de orden de PdV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS Order Reference"
-msgstr "Referencia de orden de PDV"
+msgstr "Referencia de orden de PdV"
 
 #. module: pos_coupon
 #: code:addons/pos_coupon/models/coupon_program.py:0
 #, python-format
 msgid "PoS Orders"
-msgstr "Órdenes de PDV"
+msgstr "Órdenes de PdV"
 
 #. module: pos_coupon
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_coupon_program_form
 #: model_terms:ir.ui.view,arch_db:pos_coupon.pos_coupon_program_view_promo_program_form
 msgid "PoS Sales"
-msgstr "Ventas del PDV"
+msgstr "Ventas de PdV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__pos_order_id
 msgid "PoS order where this coupon is consumed/booked."
-msgstr "PDV en el que se consumió/agendó este cupón."
+msgstr "PdV en el que se consumió/agendó este cupón."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_coupon__source_pos_order_id
 msgid "PoS order where this coupon is generated."
-msgstr "Orden de PDV que generó este cupón."
+msgstr "Orden de PdV que generó este cupón."
 
 #. module: pos_coupon
 #: model:ir.model,name:pos_coupon.model_pos_config
@@ -417,7 +417,7 @@ msgstr "Punto de venta"
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__pos_order_ids
 msgid "Pos Order"
-msgstr "Orden de PDV"
+msgstr "Orden de PdV"
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_pos_order_line__program_id
@@ -441,7 +441,7 @@ msgstr "Programas de cupones y promociones para utilizar."
 #: model:ir.ui.menu,name:pos_coupon.menu_promotion_type_config
 #: model_terms:ir.ui.view,arch_db:pos_coupon.res_config_view_form_inherit_pos_coupon
 msgid "Promotion Programs"
-msgstr "Programa de promociones"
+msgstr "Programas de promociones"
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_pos_order_line__program_id
@@ -467,7 +467,7 @@ msgstr ""
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__pos_order_ids
 msgid "The PoS orders where this program is applied."
-msgstr "Las órdenes de PDV en las que se aplica este programa."
+msgstr "Las órdenes de PdV en las que se aplica este programa."
 
 #. module: pos_coupon
 #: model:ir.model.fields,help:pos_coupon.field_coupon_program__valid_partner_ids
@@ -504,7 +504,7 @@ msgstr "Tipo"
 #: model:ir.model.fields,help:pos_coupon.field_pos_config__use_coupon_programs
 msgid "Use coupon and promotion programs in this PoS configuration."
 msgstr ""
-"Utilizar programas de promociones y cupones en esta configuración de PDV."
+"Utilizar programas de promociones y cupones en esta configuración de PdV."
 
 #. module: pos_coupon
 #: model:ir.model.fields,field_description:pos_coupon.field_coupon_program__valid_partner_ids
@@ -543,11 +543,11 @@ msgstr "Su cupón de recompensa de {{ object.program_id.company_id.name }} "
 #. module: pos_coupon
 #: model:mail.template,name:pos_coupon.mail_coupon_template
 msgid "[POS] Coupon: Send by Email"
-msgstr "Cupón [PDV]: Enviar por correo electrónico"
+msgstr "Cupón [PdV]: Enviar por correo electrónico"
 
 #. module: pos_coupon
 #. openerp-web
 #: code:addons/pos_coupon/static/src/xml/OrderReceipt.xml:0
 #, python-format
 msgid "no expiration"
-msgstr "sin caducidad"
+msgstr "sin fecha de expiración"

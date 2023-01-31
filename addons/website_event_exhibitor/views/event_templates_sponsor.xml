@@ -5,7 +5,10 @@
     <xpath expr="//div[@id='wrap']" position="inside">
         <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
             <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
-                <t t-foreach="event.sponsor_ids.sorted(lambda sponsor: not sponsor.website_published)" t-as="sponsor">
+                <t t-foreach="event.sponsor_ids.sorted(
+                        lambda sponsor: (not sponsor.website_published, sponsor.sponsor_type_id.sequence, sponsor.sequence)
+                    )"
+                    t-as="sponsor">
                     <t t-set="popover_content">
                         <div t-field="sponsor.name" class="h5"/>
                         <div t-if="sponsor.url" class="d-flex align-items-baseline">

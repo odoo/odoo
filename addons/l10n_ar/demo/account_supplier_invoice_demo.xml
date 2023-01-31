@@ -116,6 +116,22 @@
         ]"/>
     </record>
 
+    <!-- Liquido Producto document type -->
+    <record id="demo_liquido_producto_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
+        <field name="l10n_latam_document_type_id" ref="l10n_ar.dc_liq_cd_sp_a"/>
+        <field name="l10n_latam_document_number">00077-00000077</field>
+        <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
+        <field name="invoice_user_id" ref="base.user_demo"/>
+        <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
+        <field name="move_type">in_invoice</field>
+        <field name="invoice_date" eval="time.strftime('%Y-%m')+'-25'"/>
+        <field name="invoice_line_ids" eval="[
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 5064.98, 'quantity': 1}),
+            (0, 0, {'product_id': ref('product.product_product_2'), 'price_unit': 152.08, 'quantity': 1}),
+            (0, 0, {'product_id': ref('l10n_ar.product_product_no_gravado'), 'price_unit': 10.0, 'quantity': 1}),
+        ]"/>
+    </record>
+
     <!-- Import Cleareance -->
     <record id="demo_despacho_1" model="account.move" context="{'allowed_company_ids': [ref('company_ri')]}">
         <field name="partner_id" ref="l10n_ar.partner_afip"/>
@@ -276,7 +292,7 @@
     </function>
 
     <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
-        <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8')])]).ids"/>
+        <value model="account.move.line" eval="obj().search([('move_id', 'in', [ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_liquido_producto_1')])]).ids"/>
     </function>
 
     <function model="account.move.line" name="write" context="{'check_move_validity': False, 'active_test': False}">
@@ -295,12 +311,12 @@
     </function>
 
     <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
-        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1')]"/>
+        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1'), ref('demo_liquido_producto_1')]"/>
         <value eval="True"/>
     </function>
 
     <function model="account.move" name="action_post">
-        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1')]"/>
+        <value eval="[ref('demo_sup_invoice_1'), ref('demo_sup_invoice_2'), ref('demo_sup_invoice_3'), ref('demo_sup_invoice_4'), ref('demo_sup_invoice_5'), ref('demo_sup_invoice_6'), ref('demo_sup_invoice_7'), ref('demo_sup_invoice_8'), ref('demo_despacho_1'), ref('demo_liquido_producto_1')]"/>
     </function>
 
 </odoo>

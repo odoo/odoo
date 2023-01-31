@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
-# Braulio D. López Vázquez <bdl@odoo.com>, 2021
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021
+# Braulio D. López Vázquez <bdl@odoo.com>, 2022
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,13 +13,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:25+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2021\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: es_MX\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__product_variant_count
@@ -879,7 +879,7 @@ msgstr "Defina la unidad de medida de peso"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
 msgid "Delivery Lead Time"
-msgstr "Tiempo inicial entrega"
+msgstr "Plazo de entrega"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__description
@@ -1353,12 +1353,12 @@ msgstr "Importar plantilla para listas de precios de proveedores"
 #: model:ir.model.fields,help:product.field_product_template__standard_price
 msgid ""
 "In Standard Price & AVCO: value of the product (automatically computed in AVCO).\n"
-"        In FIFO: value of the last unit that left the stock (automatically computed).\n"
+"        In FIFO: value of the next unit that will leave the stock (automatically computed).\n"
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
 "En Standard Price & AVCO: valor del producto (calculado automáticamente en AVCO).\n"
-"En FIFO: valor de la última unidad que salió del stock (calculado automáticamente).\n"
+"En FIFO: valor de la última unidad que salió del inventario (calculado automáticamente).\n"
 "Se utiliza para valorar el producto cuando se desconoce el coste de compra (por ejemplo, ajuste de inventario).\n"
 "Se utiliza para calcular los márgenes de las órdenes de venta."
 
@@ -1517,7 +1517,7 @@ msgid ""
 "receipt of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"Tiempo de espera en días entre la confirmación del pedido de compra y la "
+"Tiempo de espera en días entre la confirmación de la orden de compra y la "
 "recepción de los productos en su almacén. El planificador usa esta "
 "información para calcular automáticamente la planeación de la orden de "
 "compra."
@@ -1688,6 +1688,16 @@ msgid "Next Activity Type"
 msgstr "Siguiente tipo de actividad"
 
 #. module: product
+#: code:addons/product/wizard/product_label_layout.py:0
+#, python-format
+msgid ""
+"No product to print, if the product is archived please unarchive it before "
+"printing its label."
+msgstr ""
+"No hay producto para imprimir, si el producto está archivado primero quítelo"
+" del archivo para imprimir una etiqueta."
+
+#. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
 msgstr "No se encontró una lista de precios para el proveedor"
@@ -1800,7 +1810,7 @@ msgstr "Otra lista de precios"
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Packaging"
-msgstr "Embalaje"
+msgstr "Empaquetado"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
@@ -2686,6 +2696,13 @@ msgstr ""
 "combinación."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "The product variant must be a variant of the product template."
+msgstr ""
+"La variante del producto debe ser una variante de la plantilla del producto."
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__min_qty
 msgid ""
 "The quantity to purchase from this vendor to benefit from the price, "
@@ -2734,6 +2751,18 @@ msgstr "No hay ninguna combinación restante posible."
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_uom
 msgid "This comes from the product form."
 msgstr "Esto proviene del formulario del producto"
+
+#. module: product
+#: code:addons/product/models/product_template.py:0
+#, python-format
+msgid ""
+"This configuration of product attributes, values, and exclusions would lead "
+"to no possible variant. Please archive or delete your product directly if "
+"intended."
+msgstr ""
+"Esta configuración de atributos, valores y exclusiones del producto no "
+"resultará en una variante posible. Bórrela o borre su producto directamente "
+"si así lo desea."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__price_extra
@@ -3264,6 +3293,12 @@ msgstr ""
 "factor de redondeo de la moneda actual de la compañía."
 
 #. module: product
+#: code:addons/product/models/product.py:0
+#, python-format
+msgid "You cannot delete the %s product category."
+msgstr "No puede borrar la categoría de producto %s"
+
+#. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
@@ -3312,6 +3347,15 @@ msgstr ""
 msgid ""
 "You cannot move the attribute %s from the product %s to the product %s."
 msgstr "No puede mover el atributo %s del producto %s al producto %s."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"You cannot disable a pricelist rule, please delete it or archive its "
+"pricelist instead."
+msgstr ""
+"No puede desactivar la regla de lista de precios, bórrela o archívela."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

@@ -5,7 +5,7 @@ import datetime
 import logging
 from collections import namedtuple
 from unittest.mock import patch
-import freezegun
+from freezegun import freeze_time
 
 from odoo import tools
 from odoo.tests import tagged
@@ -13,7 +13,6 @@ from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 
 _logger = logging.getLogger(__name__)
-
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class PecMailServerTests(AccountEdiTestCommon):
@@ -51,7 +50,7 @@ class PecMailServerTests(AccountEdiTestCommon):
         cls.company = cls.company_data_2['company']
 
         # Initialize the company's codice fiscale
-        cls.company.l10n_it_codice_fiscale = 'IT01234560157'
+        cls.company.l10n_it_codice_fiscale = '01234560157'
 
         # Build test data.
         # invoice_filename1 is used for vendor bill receipts tests
@@ -84,6 +83,11 @@ class PecMailServerTests(AccountEdiTestCommon):
             'server_type': 'imap',
             'l10n_it_is_pec': True})
 
+        cls.test_invoice_xmls = {k: cls._get_test_file_content(v) for k, v in [
+            ('normal_1', 'IT01234567890_FPR01.xml'),
+            ('signed', 'IT01234567890_FPR01.xml.p7m'),
+        ]}
+
     @classmethod
     def _get_test_file_content(cls, filename):
         """ Get the content of a test file inside this module """
@@ -111,7 +115,7 @@ class PecMailServerTests(AccountEdiTestCommon):
 
     def test_receive_signed_vendor_bill(self):
         """ Test a signed (P7M) sample e-invoice file from https://www.fatturapa.gov.it/export/documenti/fatturapa/v1.2/IT01234567890_FPR01.xml """
-        with freezegun.freeze_time('2020-04-06'):
+        with freeze_time('2020-04-06'):
             invoices = self._create_invoice(self.signed_invoice_content, self.signed_invoice_filename)
             self.assertRecordValues(invoices, [{
                 'company_id': self.company.id,

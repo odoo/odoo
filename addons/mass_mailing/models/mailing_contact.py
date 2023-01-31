@@ -31,7 +31,7 @@ class MassMailingContactListRel(models.Model):
     def create(self, vals_list):
         now = fields.Datetime.now()
         for vals in vals_list:
-            if 'opt_out' in vals and 'unsubscription_date' not in vals:
+            if 'opt_out' in vals and not vals.get('unsubscription_date'):
                 vals['unsubscription_date'] = now if vals['opt_out'] else False
             if vals.get('unsubscription_date'):
                 vals['opt_out'] = True

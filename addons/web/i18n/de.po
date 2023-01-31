@@ -3,15 +3,15 @@
 # 	* web
 # 
 # Translators:
-# Martin Trigaux, 2021
 # Raymond Vetter, 2021
+# Martin Trigaux, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"POT-Creation-Date: 2022-01-24 08:20+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
 "Last-Translator: Friederike Fasterling-Nesselbosch, 2022\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -435,6 +435,13 @@ msgstr "Zugang zu allen Enterprise-Apps"
 #. openerp-web
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
+msgid "Action"
+msgstr "Aktion"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
 msgid "Action ID:"
 msgstr "Aktion ID:"
 
@@ -561,7 +568,7 @@ msgstr "Notiz hinzufügen"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Add qweb directive context"
-msgstr ""
+msgstr "Add qweb directive context"
 
 #. module: web
 #. openerp-web
@@ -577,6 +584,13 @@ msgstr "Tag hinzufügen"
 #, python-format
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Additional actions"
+msgstr ""
 
 #. module: web
 #. openerp-web
@@ -1052,7 +1066,7 @@ msgstr "Datei auswählen"
 #: code:addons/web/static/src/core/debug/debug_menu.js:0
 #, python-format
 msgid "Choose a debug command..."
-msgstr ""
+msgstr "Wählen Sie einen Debug-Befehl..."
 
 #. module: web
 #. openerp-web
@@ -1109,7 +1123,7 @@ msgstr "Spalte %s"
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #, python-format
 msgid "Column title"
-msgstr "Spaltentitel"
+msgstr "Titel"
 
 #. module: web
 #. openerp-web
@@ -2395,6 +2409,8 @@ msgstr "Mehr anzeigen... ("
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/webclient/loading_indicator/loading_indicator.xml:0
 #, python-format
 msgid "Loading"
@@ -2663,8 +2679,8 @@ msgstr "Mehrzeiliger Text"
 #. openerp-web
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
 #, python-format
-msgid "My Odoo.com.account"
-msgstr ""
+msgid "My Odoo.com account"
+msgstr "Mein Odoo.com Konto"
 
 #. module: web
 #. openerp-web
@@ -2808,6 +2824,7 @@ msgstr "Kein Menü gefunden"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/fields/field_utils.js:0
+#: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
 #, python-format
 msgid "No records"
 msgstr "Keine Datensätze"
@@ -2825,13 +2842,6 @@ msgstr "Kein Datensatz gefunden!"
 #, python-format
 msgid "No results found"
 msgstr "Keine Ergebnisse gefunden"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/legacy/js/fields/relational_fields.js:0
-#, python-format
-msgid "No results to show..."
-msgstr "Es gibt keine anzuzeigenden Resultate ..."
 
 #. module: web
 #: code:addons/web/controllers/main.py:0
@@ -3060,7 +3070,7 @@ msgstr "Nur für Sie"
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "Open Command Palette"
-msgstr ""
+msgstr "Befehlsleiste öffnen"
 
 #. module: web
 #. openerp-web
@@ -3112,14 +3122,14 @@ msgstr "Öffne: "
 #: code:addons/web/static/src/legacy/js/views/calendar/calendar_controller.js:0
 #, python-format
 msgid "Open: %s"
-msgstr ""
+msgstr "Öffnen: %s"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/legacy/js/views/list/list_renderer.js:0
 #, python-format
 msgid "Optional columns"
-msgstr ""
+msgstr "Optionale Spalten"
 
 #. module: web
 #. openerp-web
@@ -3260,7 +3270,7 @@ msgstr "Pivot"
 #: code:addons/web/controllers/pivot.py:0
 #, python-format
 msgid "Pivot %(title)s (%(model_name)s)"
-msgstr ""
+msgstr "Pivot %(title)s (%(model_name)s)"
 
 #. module: web
 #. openerp-web
@@ -3349,12 +3359,12 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
 msgid "Powered by %s%s"
-msgstr "Angetrieben von %s%s"
+msgstr "Powered by %s%s"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_layout
 msgid "Powered by <span>Odoo</span>"
-msgstr "Ein System von <span>Odoo</span>"
+msgstr "Powered by <span>Odoo</span>"
 
 #. module: web
 #. openerp-web
@@ -3436,6 +3446,13 @@ msgstr "Primare Farbe"
 #, python-format
 msgid "Print"
 msgstr "Drucken"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/report.xml:0
+#, python-format
+msgid "Printing options"
+msgstr "Druckoptionen"
 
 #. module: web
 #. openerp-web
@@ -3561,21 +3578,21 @@ msgstr "Radio"
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record qweb"
-msgstr ""
+msgstr "Record qweb"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record sql"
-msgstr ""
+msgstr "Record sql"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/debug/profiling/profiling_item.xml:0
 #, python-format
 msgid "Record traces"
-msgstr ""
+msgstr "Record traces"
 
 #. module: web
 #. openerp-web
@@ -3585,6 +3602,14 @@ msgstr ""
 #, python-format
 msgid "Red"
 msgstr "Rot"
+
+#. module: web
+#. openerp-web
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/legacy/xml/base.xml:0
+#, python-format
+msgid "Refresh"
+msgstr "Aktualisieren"
 
 #. module: web
 #. openerp-web
@@ -3690,7 +3715,7 @@ msgstr "Layout des Berichts"
 #. module: web
 #: model:ir.actions.report,name:web.action_report_layout_preview
 msgid "Report Layout Preview"
-msgstr ""
+msgstr "Report Layout Preview"
 
 #. module: web
 #. openerp-web
@@ -3876,7 +3901,7 @@ msgstr "Details ansehen"
 #: code:addons/web/static/src/legacy/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr "Siehe Beispiele"
+msgstr "Beispiele anzeigen"
 
 #. module: web
 #. openerp-web
@@ -3983,7 +4008,7 @@ msgstr "Ein Titelbild hinterlegen"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set a kanban state..."
-msgstr ""
+msgstr "Kanban-Phase einstellen..."
 
 #. module: web
 #. openerp-web
@@ -4004,7 +4029,7 @@ msgstr "Einstellen einer Zeitzone für Ihren Benutzer"
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "Set kanban state..."
-msgstr ""
+msgstr "Kanban-Phase bestimmen..."
 
 #. module: web
 #. openerp-web
@@ -4432,7 +4457,7 @@ msgstr "Zu viele Artikel zum Anzeigen."
 #: code:addons/web/static/src/views/pivot/pivot_model.js:0
 #, python-format
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: web
 #. openerp-web
@@ -4512,21 +4537,21 @@ msgstr "Alle unarchivieren"
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught CORS Error"
-msgstr ""
+msgstr "Uncaught CORS Error"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught Javascript Error"
-msgstr ""
+msgstr "Uncaught Javascript Error"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/core/errors/error_service.js:0
 #, python-format
 msgid "Uncaught Promise"
-msgstr ""
+msgstr "Uncaught Promise"
 
 #. module: web
 #. openerp-web
@@ -4902,6 +4927,12 @@ msgstr "Ja."
 #, python-format
 msgid "Yesterday"
 msgstr "Gestern"
+
+#. module: web
+#: code:addons/web/controllers/main.py:0
+#, python-format
+msgid "You are not allowed to upload an attachment here."
+msgstr "Sie sind nicht berechtigt, hier einen Anhang hochzuladen."
 
 #. module: web
 #. openerp-web
@@ -5386,7 +5417,7 @@ msgstr "Nachricht: %s"
 #: code:addons/web/static/src/core/debug/profiling/profiling_qweb.xml:0
 #, python-format
 msgid "ms"
-msgstr ""
+msgstr "ms"
 
 #. module: web
 #. openerp-web
@@ -5461,7 +5492,7 @@ msgstr "props.fields"
 #: code:addons/web/static/src/core/debug/profiling/profiling_qweb.xml:0
 #, python-format
 msgid "query"
-msgstr ""
+msgstr "query"
 
 #. module: web
 #. openerp-web
@@ -5533,4 +5564,4 @@ msgstr "gut gemacht!"
 #: code:addons/web/static/src/webclient/actions/action_dialog.xml:0
 #, python-format
 msgid "{\"o_act_window\": actionType === \"ir.actions.act_window\"}"
-msgstr ""
+msgstr "{\"o_act_window\": actionType === \"ir.actions.act_window\"}"

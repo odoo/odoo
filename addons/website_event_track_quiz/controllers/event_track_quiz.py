@@ -66,7 +66,7 @@ class WebsiteEventTrackQuiz(EventTrackController):
         })
 
     def _get_quiz_answers_details(self, track, answer_ids):
-        questions_count = len(track.quiz_ids)
+        questions_count = track.quiz_questions_count
         user_answers = request.env['event.quiz.answer'].sudo().search([('id', 'in', answer_ids)])
 
         if len(user_answers.mapped('question_id')) != questions_count:

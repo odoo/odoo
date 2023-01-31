@@ -12,6 +12,9 @@ from ..controllers.main import BuckarooController
 class BuckarooTest(BuckarooCommon):
 
     def test_redirect_form_values(self):
+        self.patch(self, 'base_url', 'http://localhost:8069')
+        self.patch(type(self.env['base']), 'get_base_url', lambda _: 'http://localhost:8069')
+
         return_url = self._build_url(BuckarooController._return_url)
         expected_values = {
             'Brq_websitekey': self.buckaroo.buckaroo_website_key,

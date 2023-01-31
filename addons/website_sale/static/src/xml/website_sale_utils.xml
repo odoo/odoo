@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<!-- TODO remove in master, this is a leftover from the generalization of search bars -->
 <!-- Products Search Bar autocomplete item -->
 <div t-name="website_sale.productsSearchBar.autocomplete"
     class="dropdown-menu show w-100">
     <t t-if="!products.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
         <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
     </t>
     <a t-foreach="products" t-as="product"

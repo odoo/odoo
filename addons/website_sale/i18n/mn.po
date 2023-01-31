@@ -7,23 +7,23 @@
 # Purevsuren Demberel <purevsurento@gmail.com>, 2021
 # Onii Onii <onii0223@yahoo.com>, 2021
 # Sanjaajamts Badamjunai <b.sanjaajamtsfc@gmail.com>, 2021
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2021
 # Otgonbayar.A <gobi.mn@gmail.com>, 2021
-# Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2021
+# hish, 2021
 # Батмөнх Ганбат <batmunkh2522@gmail.com>, 2021
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2021
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2021
 # baaska sh <sh.baaskash@gmail.com>, 2021
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2021
 # Martin Trigaux, 2021
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 15.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2022-07-26 11:51+0000\n"
 "PO-Revision-Date: 2021-09-14 12:28+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2022\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,7 +34,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Цуглуулсан өгөгдөл"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -100,6 +100,9 @@ msgid ""
 "                30-day money-back guarantee<br/>\n"
 "                Shipping: 2-3 Business Days"
 msgstr ""
+"<br/>\n"
+"                Мөнгөө 30-хоногт буцааж авах баталгаа<br/>\n"
+"                Хүргэлт: 2-3 ажлын өдөр"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -177,6 +180,10 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Та хүчингүй болсон бүх сагсуудыг эндээс олох болно, ж.ш нь танай вебсайтаар зочилсон хүмүүсийн үүсгэсэн бөгөөд батлалгүйгээр цагаас удаан байлгасан сагсууд буюу ноорог захиалгууд.</p>\n"
+"                        <p>Та эдгээр сагсуудыг устгаж цэвэрлэх тухайгаа захиалагч нарт имэйлээр мэдэгдэх хэрэгтэй!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
@@ -281,6 +288,8 @@ msgid ""
 "<span class=\"o_form_label\">Assignment</span>\n"
 "                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Хариуцагч</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -296,6 +305,8 @@ msgstr "<span class=\"o_form_label\">Нэхэмжлэх бодлого</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Санал сэтгэгдлээ бидэнд "
+"үлдээгээрэй</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -305,7 +316,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Таны дугаар</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -346,6 +357,13 @@ msgstr "<span>Захиалга</span>"
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
 msgid "<span>Process Checkout</span>"
 msgstr "<span>Үргэлжлүүлэх</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid ""
+"<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
+"                        Please contact the responsible of the shop for more information.</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -497,18 +515,20 @@ msgid ""
 "A product can be either a physical product or a service that you sell to "
 "your customers."
 msgstr ""
+"Таны захиалагчиддаа санал болгох бараа нь физик бараа материал эсвэл "
+"үйлчилгээ аль нь ч байх боломжтой."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "A short description that will also appear on documents."
-msgstr ""
+msgstr "Баримт дээр богино тайлбар харагдах болно."
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "AT A GLANCE"
-msgstr ""
+msgstr "ГАНЦ ХАРАХАД"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -548,6 +568,10 @@ msgid ""
 "find them in *Website > Orders > Abandoned Carts*. From there you can send "
 "recovery emails to visitors who entered their contact details."
 msgstr ""
+"Орхигдсон сагсууд бол вебсайтаар зочилогсодын батлаагүй үлдээсэн ноорог "
+"захиалгууд юм. Та тэднийг *Вебсайт > Захиалгууд > Орхигдсон сагсууд* цэснээс"
+" олох болно. Тэндээс та холбоо барих хаягаа бөглөсөн зочдод худалдан авалтаа"
+" үргэлжлүүлэн гүйцээх талаар имэйл зөвлөж явуулах боломжтой."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
@@ -557,6 +581,11 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Acceptable file size"
+msgstr "Зөвшөөрөгдөх файлын хэмжээ"
+
+#. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
+msgid "Accessories for Product"
 msgstr ""
 
 #. module: website_sale
@@ -566,6 +595,8 @@ msgid ""
 "Accessories show up when the customer reviews the cart before payment "
 "(cross-sell strategy)."
 msgstr ""
+"Дагалдах бараанууд нь төлбөр төлөхөөс өмнөх алхамд захиалагчдад санал болгох"
+" хэлбэрээр сагсанд харагдах болно (cross-sell стратеги)."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -677,12 +708,12 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Apply specific prices per country, discounts, etc."
-msgstr ""
+msgstr "Улс бүрт зориулсан үнэ, хөнгөлөлт оноох."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Assignment of online orders"
-msgstr ""
+msgstr "Онлайн захиалгыг хариуцуулах нь"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -729,7 +760,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Be aware!"
-msgstr ""
+msgstr "Таны сонорт!"
 
 #. module: website_sale
 #: model:res.country.group,name:website_sale.benelux
@@ -768,7 +799,7 @@ msgstr ""
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
 msgid "Bins"
-msgstr ""
+msgstr "Сав"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -806,7 +837,7 @@ msgstr "Брэнд"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_cabinets
 msgid "Cabinets"
-msgstr ""
+msgstr "Шүүгээ"
 
 #. module: website_sale
 #. openerp-web
@@ -819,7 +850,7 @@ msgstr "Аянууд"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
+msgstr "Зураг нь 1024 хэмжээгээр томрох боломжтой (zoom)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
@@ -836,7 +867,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Capture order payments when the delivery is completed."
-msgstr ""
+msgstr "Хүргэлт хийгдэж дуусах үед төлбөрийн гүйлгээг татаж авна."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
@@ -870,7 +901,7 @@ msgstr "Сагснууд"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Carts are flagged as abandoned after this delay."
-msgstr ""
+msgstr "Энэ хугацаанаас удсан ноорог захиалгыг орхигдсонд тооцно."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -945,6 +976,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Дэд ангилалууд"
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid ""
+"Changing your name is not allowed once invoices have been issued for your "
+"account. Please contact us directly for this operation."
+msgstr ""
+"Нэхэмжлэл танай санхүү бүртгэлд тусгагдсанаас хойш та өөрийн нэрийг өөрчлөх "
+"боломжгүй. Үүний тулд бидэнтэй шууд холбогдоно уу."
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
@@ -1087,7 +1128,7 @@ msgstr "Хөрвүүлэх"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
-msgstr ""
+msgstr "Дасгалжуулагч"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1164,7 +1205,7 @@ msgstr "Захиалагчид"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "DHL Express Connector"
-msgstr ""
+msgstr "DHL Express Connector"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__currency_id
@@ -1257,7 +1298,7 @@ msgstr "Дэлгэрэнгүй нэр"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display a prompt with optional products when adding to cart"
-msgstr ""
+msgstr "Барааг сагсанд хийх үед нэмэлт барааг санал болгоно."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_count
@@ -1297,12 +1338,12 @@ msgstr "Дууссан"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Double click here to set an image describing your product."
-msgstr ""
+msgstr "Энд хоёр дарснаар барааны зургыг тохируулна."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "Drag building blocks here to customize the header for \""
-msgstr ""
+msgstr "Толгойн хэсгийг '' тохируулахын тулд блокыг чирж оруулна."
 
 #. module: website_sale
 #. openerp-web
@@ -1325,12 +1366,12 @@ msgstr "Шургуулга"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
-msgstr ""
+msgstr "E-Commerce Нэмэлт талбарууд"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
-msgstr ""
+msgstr "E-Commerce нэмэлт талбарууд нь барааны хуудсанд харагдана"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1388,7 +1429,7 @@ msgstr "Имэйл үүсгэх харилцах цонх"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Email sent to the customer after the checkout"
-msgstr ""
+msgstr "Захиалагч захиалгаа батласны дараа имэйл илгээгдэнэ"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
@@ -1423,12 +1464,12 @@ msgstr "Барааны нэмэлт зураг"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__product_variant_image_ids
 msgid "Extra Variant Images"
-msgstr ""
+msgstr "Нэмэлт хувилбарын зураг"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 msgid "Extra Variant Media"
-msgstr ""
+msgstr "Хувилбарын нэмэлт медиа"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1463,7 +1504,7 @@ msgstr "Вэбсайтаас"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
 msgid "Furnitures"
-msgstr ""
+msgstr "Тавилга"
 
 #. module: website_sale
 #. openerp-web
@@ -1526,7 +1567,7 @@ msgstr "Нуугдсан"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
 msgid "Huge file size. The image should be optimized/reduced."
-msgstr ""
+msgstr "Файл хэт том байна. Зургын хэмжээг багасгаж оновчилно уу. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_sale_note
@@ -1611,13 +1652,15 @@ msgstr "Нийтлэгдсэн эсэх"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Issue invoices to customers"
-msgstr ""
+msgstr "Захиалагчид холбогдох нэхэмжлэл"
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "It is forbidden to modify a sales order which is not in draft status."
 msgstr ""
+"Нооргоос бусад төлөвт байгаа борлуулалтын захиалгыг засаж өөрчлөхийг "
+"хориглоно."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
@@ -1711,11 +1754,13 @@ msgstr "Зүүн"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let returning shoppers save products in a wishlist"
 msgstr ""
+"Дэлгүүрээр үйлчлүүлэгчид хүслийн жагсаалтандаа бараа сонгож хадгалахыг "
+"зөвшөөрөх"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer enter a shipping address"
-msgstr ""
+msgstr "Захиалагч хүргүүлэх нэмэлт хаяг оруулах боломжтой байх"
 
 #. module: website_sale
 #. openerp-web
@@ -1732,6 +1777,8 @@ msgid ""
 "Let's now take a look at your administration dashboard to get your eCommerce"
 " website ready in no time."
 msgstr ""
+"Таны Онлайн худалдааны вебсайтыг хормын дотор бэлэн болгохын тулд админ "
+"хянах самбараар хамтдаа зочильё"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1769,7 +1816,7 @@ msgstr "Дундаж"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "Merchant Account ID"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
@@ -1794,6 +1841,7 @@ msgstr "Миний Сагс"
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model:ir.model.fields,field_description:website_sale.field_website_base_unit__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_view_tree
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Name"
 msgstr "Нэр"
@@ -1818,6 +1866,7 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
 msgstr ""
 
@@ -1844,12 +1893,12 @@ msgstr "Тодорхойлсон бүтээгдэхүүн алга."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined in category \""
-msgstr ""
+msgstr "'' ангилалд ямар ч бараа бүртгэгдээгүй байна"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.website_sale_visitor_product_action
 msgid "No product views yet for this visitor"
-msgstr ""
+msgstr "Энэ зочин одоогоор харуулах барааны хуудас алга"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1901,27 +1950,29 @@ msgstr "Орхигдсон сагсны тоо"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Number of Columns"
-msgstr ""
+msgstr "Багананы тоо"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
 msgid "Number of grid columns on the shop"
-msgstr ""
+msgstr "Дэлгүүр дээр харуулах хүснэгтийн багананы тоо"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__cart_abandoned_delay
 msgid "Number of hours after which the cart is considered abandoned."
 msgstr ""
+"Сагс үүссэнээс хойш хэдэн цагийн дараа батлагдаагүй хэвээр байвал орхигдсонд"
+" тооцох."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Number of products"
-msgstr ""
+msgstr "Барааны тоо"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
 msgid "Number of products in the grid on the shop"
-msgstr ""
+msgstr "Дэлгүүрийн хүснэгтэнд харуулах барааны тоо"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1958,6 +2009,8 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
+"Зөвхөн компанид хамаарах вебсайтыг зөвшөөрнө..\n"
+"Тухайн компанид хамаарах вебсайтаас сонгох эсвэл хоосон үлдээж болно."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -1977,6 +2030,8 @@ msgid ""
 "Optimization required! Reduce the image size or increase your compression "
 "settings."
 msgstr ""
+"Оновчлох шаардлагатай! Зургын хэмжээг багасгах эсвэл файл шахалт хийх "
+"серверийн тохиргоогоо өөрчилнө үү."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -2096,7 +2151,7 @@ msgstr "Эцэг зам"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parents_and_self
 msgid "Parents And Self"
-msgstr ""
+msgstr "Эцэг ба өөрөө"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2148,12 +2203,12 @@ msgstr "Төлбөрийн гүйлгээнүүд"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Payments to Capture"
-msgstr ""
+msgstr "Хүлээн авах ёстой төлбөрүүд"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Paypal хэрэглэгчийн төрөл"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -2169,7 +2224,7 @@ msgstr "Утас"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Please enter a valid Video URL."
-msgstr ""
+msgstr "Зөв Video URL оруулна уу"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2259,7 +2314,7 @@ msgstr "Хэвлэх"
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "Process the order once the payment is received."
-msgstr ""
+msgstr "Төлбөр хүлээн авмагцаа захиалгыг батлана."
 
 #. module: website_sale
 #. openerp-web
@@ -2316,7 +2371,7 @@ msgstr "Барааны нэр"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "Барааны хуудасны нэмэлт талбарууд"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2337,7 +2392,7 @@ msgstr "Барааны загвар"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr ""
+msgstr "Барааны загварын шинж чанарууд"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__product_tmpl_ids
@@ -2358,12 +2413,12 @@ msgstr "Барааны хувилбар"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 msgid "Product Views"
-msgstr ""
+msgstr "Барааны харагдац"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
 msgid "Product Views History"
-msgstr ""
+msgstr "Барааны харагдацын түүх"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -2378,7 +2433,7 @@ msgstr "Веб каталог дээрх бүтээгдэхүүний үнэ"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "Барааны тууз"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2400,9 +2455,14 @@ msgid "Products Recently Sold With"
 msgstr ""
 
 #. module: website_sale
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
+msgid "Products Recently Sold With Product"
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
-msgstr ""
+msgstr "Барааны харагдац"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2412,13 +2472,17 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
+"Барааны тусгай линк эсвэл татаж авч болохуйц агуулгыг бэлтгэн захиалга "
+"баталгаажуулах дэлгэцэнд байршуулснаар хэрэглэгч төлбөрөө төлсний дараа "
+"тэрхүү агуулгуудыг ашиглах боломжтой. Ингэхийн тулд барааны үндсэн мэдээлэл "
+"цонхонд Шинэ файл нэмэх товчыг ашиглан файлаа хавсаргаж мөн нийтлэнэ."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_image.py:0
 #, python-format
 msgid ""
 "Provided video URL for '%s' is not valid. Please enter a valid video URL."
-msgstr ""
+msgstr "Өгөгдсөн '%s' видео URL буруу байна. Зөв видео URL оруулна уу."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
@@ -2503,11 +2567,13 @@ msgstr "Үнэлгээний шалтгаан"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
+#: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
 msgstr ""
 
@@ -2560,12 +2626,12 @@ msgstr "Захиалга харах"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr ""
+msgstr "Тууз"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Ribbon background color"
-msgstr ""
+msgstr "Туузны арын дэвсгэр өнгө"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
@@ -2645,7 +2711,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Month"
-msgstr ""
+msgstr "Сүүлийн сарын борлуулалт"
 
 #. module: website_sale
 #. openerp-web
@@ -2653,7 +2719,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Week"
-msgstr ""
+msgstr "Сүүлийн долоо хоногын борлуулалт"
 
 #. module: website_sale
 #. openerp-web
@@ -2661,7 +2727,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Year"
-msgstr ""
+msgstr "Сүүлийн жилийн борлуулалт"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2720,12 +2786,12 @@ msgstr "Сонгогдох"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell content to download or URL links"
-msgstr ""
+msgstr "Татаж авах агуулга эсвэл линк зарах"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
-msgstr ""
+msgstr "Шинж чанар бүхий барааны хувилбарууд зарах (хэмжээ, өнгө гэх мэт)"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.ir_actions_server_sale_cart_recovery_email
@@ -2743,6 +2809,8 @@ msgstr "Сэргээх имэйл илгээх"
 #, python-format
 msgid "Send a recovery email to visitors who haven't completed their order."
 msgstr ""
+"Захиалгаа дуусгалгүй орхисон хэрэглэгч нарт захиалгаа үргэлжүүлэх зөвлөмж "
+"бүхий имэйл илгээнэ."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2753,7 +2821,7 @@ msgstr "Сагс орхигдсон үед сэргээх имэйл илгээ�
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
 msgid "Seo name"
-msgstr ""
+msgstr "Seo нэр"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -2774,6 +2842,8 @@ msgid ""
 "Ship to the same address\n"
 "                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>"
 msgstr ""
+"Үндсэн хаяг руу хүргүүлэх\n"
+"                                                    <span class=\"ship_to_other text-muted\" style=\"display: none\">&amp;nbsp;(<i>Таны хүргэлтийн хаяг дараа нь бүртгэгдэнэ) </i></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2826,17 +2896,17 @@ msgstr "Сагс"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show Empty Cart"
-msgstr ""
+msgstr "Хоосон сагс харах"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
 msgid "Show categories"
-msgstr ""
+msgstr "Ангилалууд харуулах"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
 msgid "Show options"
-msgstr ""
+msgstr "Сонголтууд харуулах"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2869,7 +2939,7 @@ msgstr "Хэмжээ У"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Slanted"
-msgstr ""
+msgstr "Налуу"
 
 #. module: website_sale
 #. openerp-web
@@ -2910,7 +2980,7 @@ msgstr "Улс / Муж..."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
-msgstr ""
+msgstr "Онлайн захиалгын төлвүүд бүхий төлбөрийн алхамууд"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2955,6 +3025,8 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
+"Захиалагчдад илүү үнэтэй хувилбаруудыг санал болгох (нэмэлт борлуулалтын "
+"бодлого). Эдгээр бараанууд нь барааны хуудас дээр гарах болно."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -2984,7 +3056,7 @@ msgstr "Татвар:"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__all_pricelist_ids
 msgid "Technical: Used to recompute pricelist_ids"
-msgstr ""
+msgstr "Техник: pricelist_ids дахин тооцоолоход ашиглана"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -3002,6 +3074,12 @@ msgid "The #1"
 msgstr " #1"
 
 #. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The access token is invalid."
+msgstr ""
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
@@ -3012,19 +3090,27 @@ msgstr "Вебсайтаар дамжин баримт руу хандах бү�
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "Өгөгдсөн хослол олдоогүй тул сагсанд хийх боломжтой."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "Захиалсан бараа олдоогүй тул сагсанд хийх боломжгүй."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "The mode selected here applies as invoicing policy of any new product "
 "created but not of products already existing."
+msgstr ""
+"Энд сонгогдсон горим нь шинээр үүсэх барааны нэхэмжлэх горим болж хэрэгжих "
+"хэдий ч аль хэдийнээ үүсгэгдсэн барааны хувьд хэрэгжихгүй."
+
+#. module: website_sale
+#: code:addons/website_sale/controllers/main.py:0
+#, python-format
+msgid "The order has been canceled."
 msgstr ""
 
 #. module: website_sale
@@ -3035,11 +3121,15 @@ msgid ""
 "Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
 "categories."
 msgstr ""
+"Вебсайт ангилалд хамаарах бараануудыг зарах боломжтой. Дэлгүүр > Вебсайт "
+"ангилалыг өөриймшүүлэх болон идэвхижүүлэх үйлдэл хийснээр хэрэгжинэ."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr ""
+"Батлаагүй үлдээсэн сагсыг орхигдсонд тооцох хугацааг тохируулан өөрчлөх "
+"боломжтой."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_product.py:0
@@ -3052,27 +3142,27 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
 msgid "There is no confirmed order from the website"
-msgstr ""
+msgstr "Вебсайтаас батлагдаж үүссэн захиалга алга"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There is no recent confirmed order."
-msgstr ""
+msgstr "Сүүлд батлагдсан захиалга алга."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_unpaid_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_unpaid_quotation_tree
 msgid "There is no unpaid order from the website yet"
-msgstr ""
+msgstr "Вебсайтаас үүсгэгдсэн бөгөөд төлөгдөөгүй захиалга одоогоор алга"
 
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "There isn't any UTM tag detected in orders"
-msgstr ""
+msgstr "Одоогоор ямар нэг UTM пайзтай захиалга алга."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3084,6 +3174,8 @@ msgstr "Энэ зохимж байхгүй байна."
 msgid ""
 "This email template is suggested by default when you send a recovery email."
 msgstr ""
+"Захиалгаа үргэлжүүлэх санал бүхий имэйл илгээхэд уг имэйл загвар нь анхны "
+"утгаар хэрэглэгдэнэ."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3098,7 +3190,7 @@ msgstr "Энэ бараанд боломжит зохимж алга."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "This product is no longer available."
-msgstr ""
+msgstr "Энэ бараа боломжгүй болсон."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_item
@@ -3108,7 +3200,7 @@ msgstr "Энэ бүтээгдэхүүнийг нийтлээгүй байна."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
 msgid "This promo code is not available."
-msgstr ""
+msgstr "Энэ урамшууллын код хүчингүй болсон."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3118,12 +3210,12 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__product_count
 msgid "Total number of product viewed"
-msgstr ""
+msgstr "Нийт зочилсон барааны тоо"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website_visitor__visitor_product_count
 msgid "Total number of views on products"
-msgstr ""
+msgstr "Барааны харагдацын нийт тоо"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3155,7 +3247,7 @@ msgstr "URL"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_image__video_url
 msgid "URL of a video for showcasing your product."
-msgstr ""
+msgstr "Таны барааны танилцуулга бүхий видео URL."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3206,7 +3298,7 @@ msgstr "Татваргүй нийт борлуулалт"
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr ""
+msgstr "Өөрийн локал файлын сангаасаа файл оруулах."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3291,6 +3383,7 @@ msgstr ""
 #, python-format
 msgid "We are waiting for confirmation from the bank or the payment provider"
 msgstr ""
+"Бид банк буюу төлбөр дамжуулагчаас төлбөрийн баталгаажуулалт хүлээж байна."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -3312,7 +3405,7 @@ msgstr "Вэбсайт"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
 msgid "Website Payment acquire onboarding wizard"
-msgstr ""
+msgstr "Вебсайт төлбөр дамжуулагчийн бүртгэлийн цонх"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_public_category
@@ -3382,12 +3475,12 @@ msgstr "Вэбсайт opengraph зураг"
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
 #: model:ir.model.fields,help:website_sale.field_account_payment__website_id
 msgid "Website through which this invoice was created."
-msgstr ""
+msgstr "Энэ нэхэмжлэлийг үүсгэсэн холбогдох вебсайт."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
 msgid "Website through which this order was placed."
-msgstr ""
+msgstr "Энэ захиалга бүртгэгдсэн эх сурвалж вебсайт."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
@@ -3397,7 +3490,7 @@ msgstr "Вебсайт"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team__website_ids
 msgid "Websites using this Sales Team"
-msgstr ""
+msgstr "Энэ борлуулалтын багийг ашиглаж буй вебсайтууд"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -3417,12 +3510,17 @@ msgid ""
 "(from Sales tab). With the second one, you set prices and computation rules "
 "from Pricelists."
 msgstr ""
+"Эхний сонголтоор бол та нэг бараанд хэд хэдэн зарах үнэ тохируулах боломжтой"
+" (барааны мэдээллийн Борлуулалт ТАБ). Хоёрдох сонголтоор бол та үнэ "
+"хөнгөлөлтийн нөхцөлийг үнийн хүснэгтээр удирдан зохион байгуулах боломжтой."
 
 #. module: website_sale
 #: code:addons/website_sale/models/product_misc.py:0
 #, python-format
 msgid "With this action, '%s' website would not have any pricelist available."
 msgstr ""
+"Энэхүү үйлдлээр, '%s' вебсайт нь ямар нэг үнийн хүснэгттэй холбогдоогүй "
+"байна."
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -3436,22 +3534,24 @@ msgid ""
 "You are editing your <b>billing and shipping</b> addresses at the same time!<br/>\n"
 "                                            If you want to modify your shipping address, create a"
 msgstr ""
+"Та өөрийн <b>нэхэмжлэл хүлээн авах болон бараа хүргэлт хүлээн авах</b> хаягуудыг нэгэн зэрэг тохируулах боломжтой!<br/>\n"
+"                                            Хэрэв та хүргэлтийн нэмэлт хаяг ашиглах бол шинээр үүсгэх боломжтой"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_carts
 #: model_terms:ir.actions.act_window,help:website_sale.sale_report_action_dashboard
 msgid "You don't have any order from the website"
-msgstr ""
+msgstr "Танд энэ вебсайтаас үүсгэсэн ямар нэг захиалга алга"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr ""
+msgstr "Танд энэ вебсайтаас үүсгэсэн ямар нэг нэхэмжлэл үүсгэх захиалга алга"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery
 msgid "You left items in your cart!"
-msgstr ""
+msgstr "Та сагсандаа бараа орхисон байна!"
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
@@ -3459,6 +3559,8 @@ msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
+"Та эндээс зочдын орхигдуулсан бүх сагсны бүртгэлийг олох болно.\n"
+"                Хэрэв тэд хаягын мэдээллээ бүрэн оруулсан байвал та тэдэн рүү захиалгаа үргэлжлүүлэх санамж имэйл илгээх боломжтой!"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3484,7 +3586,7 @@ msgstr "Таны сагс хоосон байна."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Your previous cart has already been completed."
-msgstr ""
+msgstr "Таны өмнөх захиалга аль хэдийнээ дууссан байна."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3554,6 +3656,7 @@ msgstr "цаг"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "if you want to merge your previous cart into current cart."
 msgstr ""
+"Хэрэв та өмнө ашиглаж байсан сагсны бүртгэлээ энэхүү сагстай нэгтгэх бол."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -3561,6 +3664,8 @@ msgid ""
 "if you want to restore your previous cart. Your current cart will be "
 "replaced with your previous cart."
 msgstr ""
+"Хэрэв та өмнө ашиглаж байсан сагсны бүртгэлээ сэргээхийг хүсвэл. Таны "
+"одоогийн сагсыг өмнө ашиглаж байсан сагсаар сольж бүртгэнэ."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3570,7 +3675,7 @@ msgstr "Ангилал \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr ""
+msgstr "бараа(ууд))"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3585,24 +3690,24 @@ msgstr "нэр томъёо &amp; нөхцлүүд"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr ""
+msgstr "үйлдэл хийсний дараа захиалга үүсгэх."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Background"
-msgstr ""
+msgstr "⌙ Арын дэвсгэр"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Mode"
-msgstr ""
+msgstr "⌙ Горим"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Position"
-msgstr ""
+msgstr "⌙ Байрлал"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "⌙ Text"
-msgstr ""
+msgstr "⌙ Текст"

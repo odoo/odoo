@@ -58,7 +58,7 @@
                         </group>
                         <group>
                             <field name="date_start" attrs="{'readonly': [('state', '!=', 'draft')]}" />
-                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" />
+                            <field name="date_stop" attrs="{'readonly': [('state', '!=', 'draft')]}" required="1"/>
                             <label for="duration" string="Period"/>
                             <div class="o_row">
                                 <field name="duration" nolabel="1" attrs="{'readonly': [('state', '!=', 'draft')]}" /><span class="ml8">Hours</span>

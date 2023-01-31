@@ -9,6 +9,11 @@ from logging import getLogger
 from PyPDF2 import PdfFileWriter, PdfFileReader
 from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 from zlib import compress, decompress
+from PIL import Image
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from reportlab.lib.utils import ImageReader
+from reportlab.pdfgen import canvas
 
 try:
     from fontTools.ttLib import TTFont
@@ -77,6 +82,69 @@ def rotate_pdf(pdf):
     with io.BytesIO() as _buffer:
         writer.write(_buffer)
         return _buffer.getvalue()
+
+
+def add_banner(pdf_stream, text=None, logo=False, thickness=2 * cm):
+    """ Add a banner on a PDF in the upper right corner, with Odoo's logo (optionally).
+
+    :param pdf_stream (BytesIO):    The PDF stream where the banner will be applied.
+    :param text (str):              The text to be displayed.
+    :param logo (bool):             Whether to display Odoo's logo in the banner.
+    :param thickness (float):       The thickness of the banner in pixels.
+    :return (BytesIO):              The modified PDF stream.
+    """
+
+    old_pdf = PdfFileReader(pdf_stream, strict=False, overwriteWarnings=False)
+    packet = io.BytesIO()
+    can = canvas.Canvas(packet)
+    odoo_logo = Image.open(file_open('base/static/img/main_partner-image.png', mode='rb'))
+    odoo_color = colors.Color(113 / 255, 75 / 255, 103 / 255, 0.8)
+
+    for p in range(old_pdf.getNumPages()):
+        page = old_pdf.getPage(p)
+        width = float(abs(page.mediaBox.getWidth()))
+        height = float(abs(page.mediaBox.getHeight()))
+
+        can.translate(width, height)
+        can.rotate(-45)
+
+        # Draw banner
+        path = can.beginPath()
+        path.moveTo(-width, -thickness)
+        path.lineTo(-width, -2 * thickness)
+        path.lineTo(width, -2 * thickness)
+        path.lineTo(width, -thickness)
+        can.setFillColor(odoo_color)
+        can.drawPath(path, fill=1, stroke=False)
+
+        # Insert text (and logo) inside the banner
+        can.setFontSize(10)
+        can.setFillColor(colors.white)
+        can.drawRightString(0.75 * thickness, -1.45 * thickness, text)
+        logo and can.drawImage(
+            ImageReader(odoo_logo), 0.25 * thickness, -2.05 * thickness, 40, 40, mask='auto', preserveAspectRatio=True)
+
+        can.showPage()
+
+    can.save()
+
+    # Merge the old pages with the watermark
+    watermark_pdf = PdfFileReader(packet, overwriteWarnings=False)
+    new_pdf = PdfFileWriter()
+    for p in range(old_pdf.getNumPages()):
+        new_page = old_pdf.getPage(p)
+        # Remove annotations (if any), to prevent errors in PyPDF2
+        if '/Annots' in new_page:
+            del new_page['/Annots']
+        new_page.mergePage(watermark_pdf.getPage(p))
+        new_pdf.addPage(new_page)
+
+    # Write the new pdf into a new output stream
+    output = io.BytesIO()
+    new_pdf.write(output)
+
+    return output
+
 
 # by default PdfFileReader will overwrite warnings.showwarning which is what
 # logging.captureWarnings does, meaning it essentially reverts captureWarnings

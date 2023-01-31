@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:49+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Martin Trigaux, 2021\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "%(expected_revenue)s + %(recurring_revenue)s %(recurring_plan)s at "
 "%(probability)s%"
 msgstr ""
+"%(expected_revenue)s+ %(recurring_revenue)s%(recurring_plan)s ב- "
+"%(probability)s%"
 
 #. module: crm_mail_plugin
 #. openerp-web
@@ -35,21 +38,21 @@ msgstr ""
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "%(expected_revenue)s at %(probability)s%"
-msgstr ""
+msgstr "%(expected_revenue)sב %(probability)s%"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Could not create the lead"
-msgstr ""
+msgstr "לא ניתן היה ליצור את הליד"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Email already logged on the lead"
-msgstr ""
+msgstr "אימייל כבר מחובר לליד"
 
 #. module: crm_mail_plugin
 #: model:ir.model,name:crm_mail_plugin.model_crm_lead
@@ -59,28 +62,28 @@ msgstr "ליד/הזדמנות"
 #. module: crm_mail_plugin
 #: model:ir.actions.act_window,name:crm_mail_plugin.crm_lead_action_form_edit
 msgid "Lead: redirect form in edit mode"
-msgstr ""
+msgstr "ליד: טופס הפניה מחדש במצב עריכה"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Log Email Into Lead"
-msgstr ""
+msgstr "התחבר אימייל לליד"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Log the email on the lead"
-msgstr ""
+msgstr "התחבר אימייל לליד"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "No opportunities found for this contact."
-msgstr ""
+msgstr "לא נמצאו הזדמנויות עבור איש קשר זה."
 
 #. module: crm_mail_plugin
 #. openerp-web
@@ -94,19 +97,19 @@ msgstr "הזדמנויות"
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Opportunities (%(count)s)"
-msgstr ""
+msgstr "הזדמנויות (%(count)s)"
 
 #. module: crm_mail_plugin
 #. openerp-web
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
 #, python-format
 msgid "Opportunities (%s)"
-msgstr ""
+msgstr "הזדמנויות (%s)"
 
 #. module: crm_mail_plugin
 #: model:ir.actions.server,name:crm_mail_plugin.lead_creation_prefilled_action
 msgid "Redirection to the lead creation form with prefilled info"
-msgstr ""
+msgstr "הפנייה מחדש לטופס יצירת לידים עם מידע מלא מראש"
 
 #. module: crm_mail_plugin
 #. openerp-web
@@ -114,4 +117,18 @@ msgstr ""
 #: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
 #, python-format
 msgid "Save Contact to create new Opportunities."
-msgstr ""
+msgstr "שמור איש קשר כדי ליצור הזדמנויות חדשות."
+
+#. module: crm_mail_plugin
+#. openerp-web
+#: code:addons/crm_mail_plugin/static/src/to_translate/translations_outlook.xml:0
+#, python-format
+msgid "The Contact needs to exist to create Opportunity."
+msgstr "איש הקשר צריך להתקיים כדי ליצור הזדמנות."
+
+#. module: crm_mail_plugin
+#. openerp-web
+#: code:addons/crm_mail_plugin/static/src/to_translate/translations_gmail.xml:0
+#, python-format
+msgid "You can only create opportunities for existing customers."
+msgstr "אתה יכול ליצור הזדמנויות רק ללקוחות קיימים."

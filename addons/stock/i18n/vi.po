@@ -12,10 +12,11 @@
 # Trần Hà <tranthuha13590@gmail.com>, 2021
 # Martin Trigaux, 2021
 # fanha99 <fanha99@hotmail.com>, 2021
-# thanhnguyen.icsc <thanhnguyen.icsc@gmail.com>, 2021
 # Dung Nguyen Thi <dungnt@trobz.com>, 2021
-# Duy BQ <duybq86@gmail.com>, 2021
 # Vo Thanh Thuy, 2022
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Duy BQ <duybq86@gmail.com>, 2022
+# Thi Huong Nguyen, 2022
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Vo Thanh Thuy, 2022\n"
+"Last-Translator: Thi Huong Nguyen, 2022\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -242,7 +243,7 @@ msgstr ", tối đa:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "-&gt;"
-msgstr ""
+msgstr "-&gt;"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -482,7 +483,7 @@ msgstr "<span>Chỉ định số Sê-ri</span>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "<span>Clear All</span>"
-msgstr ""
+msgstr "<span>Xóa hết</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_lot_label
@@ -861,6 +862,8 @@ msgid ""
 "All our contractual relations will be governed exclusively by United States "
 "law."
 msgstr ""
+"Tất cả các quan hệ hợp đồng của chúng tôi sẽ được điều chỉnh độc quyền bởi "
+"luật pháp Hoa Kỳ."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__returned_move_ids
@@ -980,7 +983,10 @@ msgid "As soon as possible"
 msgstr "Càng sớm càng tốt"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Assign"
 msgstr "Phân công"
 
@@ -1167,6 +1173,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Văn bản dưới đây đóng vai trò như một gợi ý và không liên quan đến trách "
+"nhiệm của Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -1339,6 +1347,12 @@ msgid "Change to a better name"
 msgstr "Thay đổi thành tên tốt hơn"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Changing %s is restricted, you can't do this operation."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/product_strategy.py:0
 #: code:addons/stock/models/stock_location.py:0
 #: code:addons/stock/models/stock_orderpoint.py:0
@@ -1430,7 +1444,7 @@ msgstr "Làm sạch"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_operations
 msgid "Clear Lines"
-msgstr ""
+msgstr "Xóa dòng"
 
 #. module: stock
 #. openerp-web
@@ -1827,6 +1841,7 @@ msgid ""
 "Creating a new warehouse will automatically activate the Storage Locations "
 "setting"
 msgstr ""
+"Tạo mới một kho hàng sẽ tự động kích hoạt Địa điểm Tồn kho trong thiết lập"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date
@@ -2065,6 +2080,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
+"Định nghĩa một qui tắc tồn kho tối thiểu, sau đó Odoo sẽ tự động yêu cầu báo"
+" giá hoặc xác nhận Phiếu sản xuất để cung ứng cho Kho của bạn."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -2091,15 +2108,13 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__removal_strategy_id
 msgid ""
-"Defines the default method used for suggesting the exact location (shelf) "
-"where to take the products from, which lot etc. for this location. This "
-"method can be enforced at the product category level, and a fallback is made"
-" on the parent locations if none is set here."
+"Defines the default method used for suggesting the exact location (shelf) where to take the products from, which lot etc. for this location. This method can be enforced at the product category level, and a fallback is made on the parent locations if none is set here.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Xác định phương thức mặc định được sử dụng để đề xuất địa điểm (giá/kệ) "
-"chính xác mà từ đó lấy sản phẩm ra, hay từ lô nào, v.v. đối với địa điểm "
-"này. Phương thức này có thể áp dụng ở cấp nhóm sản phẩm và có thể áp dụng "
-"trên địa điểm cha nếu không được thiết lập ở đây."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date
@@ -3291,6 +3306,12 @@ msgstr "Điều chuyển ngay?"
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
 msgid "Immediate transfer?"
 msgstr "Điều chuyển ngay?"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Import"
+msgstr "Nhập"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__in_type_id
@@ -4604,6 +4625,12 @@ msgid "No stock move found"
 msgstr "Không có chuyển kho"
 
 #. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "No Stock On Hand"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_all
 #: model_terms:ir.actions.act_window,help:stock.action_picking_tree_backorder
@@ -5332,6 +5359,14 @@ msgstr "Lộ trình ưu tiên"
 #: model:ir.model.fields,help:stock.field_stock_move__route_ids
 msgid "Preferred route"
 msgstr "Tuyến đường ưu tiên"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Press the CREATE button to define quantity for each product in your stock or"
+" import them from a spreadsheet throughout Favorites"
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -6509,7 +6544,7 @@ msgstr "Lỗi gửi SMS"
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "STANDARD TERMS AND CONDITIONS OF SALE"
-msgstr ""
+msgstr "ĐIỀU KHOẢN VÀ ĐIỀU KIỆN CỦA BÁN HÀNG TIÊU CHUẨN"
 
 #. module: stock
 #. openerp-web
@@ -6770,11 +6805,13 @@ msgstr "Cài luồng xử lý kho hàng"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_category__removal_strategy_id
 msgid ""
-"Set a specific removal strategy that will be used regardless of the source "
-"location for this product category"
+"Set a specific removal strategy that will be used regardless of the source location for this product category.\n"
+"\n"
+"FIFO: products/lots that were stocked first will be moved out first.\n"
+"LIFO: products/lots that were stocked last will be moved out first.\n"
+"Closet location: products/lots closest to the target location will be moved out first.\n"
+"FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
-"Đặt chiến lược xuất cụ thể sẽ được sử dụng bất kể vị trí nguồn cho danh mục "
-"sản phẩm này"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7250,7 +7287,7 @@ msgstr "Dịch chuyển kho đã được xử lý"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Kiểu đóng gói kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -7521,6 +7558,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Khách hàng từ bỏ các điều khoản và điều kiện tiêu chuẩn của riêng mình một "
+"cách rõ ràng, ngay cả khi chúng được soạn thảo sau các điều khoản và điều "
+"kiện bán hàng tiêu chuẩn này. Để có hiệu lực, bất kỳ sự phủ định nào phải "
+"được đồng ý trước bằng văn bản."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
@@ -7591,8 +7632,8 @@ msgstr "Tên của nhà kho phải là duy nhất đối với mỗi công ty!"
 #. module: stock
 #: code:addons/stock/wizard/stock_assign_serial_numbers.py:0
 #, python-format
-msgid "The number of Serial Numbers to generate must greater than zero."
-msgstr "Số của số lô để được tạo phải lớn hơn 0."
+msgid "The number of Serial Numbers to generate must be greater than zero."
+msgstr ""
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_picking_type_action
@@ -7644,14 +7685,12 @@ msgstr ""
 #, python-format
 msgid ""
 "The quantity done for the product \"%s\" doesn't respect the rounding "
-"precision                                   defined on the unit of measure "
-"\"%s\". Please change the quantity done or the"
-"                                   rounding precision of your unit of "
-"measure."
+"precision defined on the unit of measure \"%s\". Please change the quantity "
+"done or the rounding precision of your unit of measure."
 msgstr ""
-"Số lượng hoàn thành cho sản phẩm  \"%s\" không phù hợp độ làm tròn chính xác"
-" được xác định trên đơn vị tính  \"%s\". Vui lòng thay đổi số lượng hoàn "
-"thành hoặc độ chính xác làm tròn của đơn vị tính đó."
+"Số lượng hoàn tất cho sản phẩm \"%s\" không chính xác khi có làm tròn theo "
+"đơn vị tính \"%s\". Xin hãy thay đổi số lượng hoàn thành hoặc số lượng làm "
+"tròn của đơn vị tính trước."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7735,6 +7774,14 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
 msgid "There's no product move yet"
 msgstr "Không có sản phẩm nào được chuyển đi"
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"This analysis gives you an overview of the current stock level of your "
+"products."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_rule__name
@@ -7882,6 +7929,9 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Sản phẩm này đã được sử dụng trong ít nhất một đợt hàng tồn kho. Không nên "
+"thay đổi Loại Sản phẩm vì nó có thể dẫn đến sự mâu thuẫn. Giải pháp tốt hơn "
+"có thể là lưu trữ sản phẩm và tạo một sản phẩm mới thay thế."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8217,7 +8267,10 @@ msgid "USPS Connector"
 msgstr "Kết nối USPS"
 
 #. module: stock
+#. openerp-web
+#: code:addons/stock/static/src/js/report_stock_reception.js:0
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
+#, python-format
 msgid "Unassign"
 msgstr ""
 
@@ -8891,6 +8944,13 @@ msgstr ""
 "hiệu sản phẩm này."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid "You can not change the type of a product that was already used."
+msgstr ""
+"Bạn không thể thay đổi thể loại của sản phẩm một khi nó đã được sử dụng."
+
+#. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -8925,6 +8985,8 @@ msgid ""
 "You can't desactivate the multi-location if you have more than once "
 "warehouse by company"
 msgstr ""
+"Bạn không thể hủy kích hoạt nhiều địa điểm kho nếu bạn có nhiều hơn một Kho "
+"hàng theo Công ty"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -9181,7 +9243,7 @@ msgstr "Bạn cần cung cấp số Lô/Serial cho sản phẩm %s."
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "Bạn nên cập nhật tài liệu này để phản ánh T&amp;C."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -9215,6 +9277,12 @@ msgstr ""
 "Bạn sẽ tìm thấy ở đây các đề xuất bổ sung thông minh dựa trên dự báo hàng tồn kho.\n"
 "            Chọn số lượng để mua hoặc sản xuất và khởi động đơn đặt hàng trong một cú nhấp chuột.\n"
 "            Để tiết kiệm thời gian trong tương lai, hãy đặt các quy tắc là \"tự động\"."
+
+#. module: stock
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid "Your stock is currently empty"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__product_label_layout__print_format__zpl

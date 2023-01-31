@@ -318,12 +318,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 
         // Get list of website_form compatible models.
         this.models = await this._rpc({
-            model: "ir.model",
-            method: "search_read",
-            args: [
-                [['website_form_access', '=', true]],
-                ['id', 'model', 'name', 'website_form_label', 'website_form_key']
-            ],
+            model: 'ir.model',
+            method: 'get_compatible_form_models',
         });
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
@@ -385,14 +381,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             this.$target.removeClass('d-none');
             this.$message.addClass("d-none");
         }
-
-        // Clear default values coming from data-for/data-values attributes
-        this.$target.find('input[name],textarea[name]').each(function () {
-            var original = $(this).data('website_form_original_default_value');
-            if (original !== undefined && $(this).val() === original) {
-                $(this).val('').removeAttr('value');
-            }
-        });
     },
     /**
      * @override
@@ -623,6 +611,12 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                     // get default value or for many2one fields the first option.
                     const currentValue = this.$target.find(`.s_website_form_dnone input[name="${field.name}"]`).val();
                     const defaultValue = field.defaultValue || field.records[0].id;
+                    // TODO this code is not rightfully placed (even maybe
+                    // from the original form feature in older versions). It
+                    // changes the $target while this method is only about
+                    // declaring the option UI. This for example forces the
+                    // 'email_to' value to a dummy value on contact us form just
+                    // by clicking on it.
                     this._addHiddenField(currentValue || defaultValue, field.name);
                 }
                 uiFragment.insertBefore(option, firstOption);
@@ -1070,10 +1064,14 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     setVisibility(previewMode, widgetValue, params) {
         if (widgetValue === 'conditional') {
-            // Set a default visibility dependency
-            const firstInputOfForm = this.formEl.querySelector('.s_website_form_field:not(.s_website_form_dnone) input');
-            this._setVisibilityDependency(firstInputOfForm.name);
-            return;
+            const widget = this.findWidget('hidden_condition_opt');
+            const firstValue = widget.getMethodsParams('setVisibilityDependency').possibleValues.find(el => el !== '');
+            if (firstValue) {
+                // Set a default visibility dependency
+                this._setVisibilityDependency(firstValue);
+                return;
+            }
+            Dialog.confirm(this, _t("There is no field available for this option."));
         }
         this._deleteConditionalVisibility(this.$target[0]);
     },
@@ -1172,6 +1170,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datepicker');
             case 'hidden_condition_datetime_opt':
                 return dependencyEl && dependencyEl.dataset.target && dependencyEl.dataset.target.includes('#datetimepicker');
+            case 'hidden_condition_file_opt':
+                return dependencyEl && dependencyEl.type === 'file';
             case 'hidden_condition_opt':
                 return this.$target[0].classList.contains('s_website_form_field_hidden_if');
             case 'char_input_type_opt':
@@ -1197,16 +1197,35 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         fieldEl.classList.remove('s_website_form_field_hidden_if', 'd-none');
     },
     /**
+     * @param {HTMLElement} [fieldEl]
      * @returns {HTMLElement} The visibility dependency of the field
      */
-    _getDependencyEl() {
-        const dependencyName = this.$target[0].dataset.visibilityDependency;
+    _getDependencyEl(fieldEl = this.$target[0]) {
+        const dependencyName = fieldEl.dataset.visibilityDependency;
         return this.formEl.querySelector(`.s_website_form_input[name="${dependencyName}"]`);
     },
     /**
      * @override
      */
     _renderCustomXML: async function (uiFragment) {
+        // Create the file visibility selector.
+        uiFragment.querySelector('we-row[data-name="hidden_condition_opt"]').append($(`
+            <we-select data-name="hidden_condition_file_opt" data-attribute-name="visibilityComparator" data-no-preview="true">
+                <we-button data-select-data-attribute="fileSet">${_t("Is set")}</we-button>
+                <we-button data-select-data-attribute="!fileSet">${_t("Is not set")}</we-button>
+            </we-select>
+        `)[0]);
+        const recursiveFindCircular = (el) => {
+            if (el.dataset.visibilityDependency === this._getFieldName()) {
+                return true;
+            }
+            const dependencyInputEl = this._getDependencyEl(el);
+            if (!dependencyInputEl) {
+                return false;
+            }
+            return recursiveFindCircular(dependencyInputEl.closest('.s_website_form_field'));
+        };
+
         // Update available visibility dependencies
         const selectDependencyEl = uiFragment.querySelector('we-select[data-name="hidden_condition_opt"]');
         if (selectDependencyEl) {
@@ -1215,7 +1234,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 const inputEl = el.querySelector('.s_website_form_input');
                 if (el.querySelector('.s_website_form_label_content') && inputEl && inputEl.name
                         && inputEl.name !== this.$target[0].querySelector('.s_website_form_input').name
-                        && !existingDependencyNames.includes(inputEl.name)) {
+                        && !existingDependencyNames.includes(inputEl.name) && !recursiveFindCircular(el)) {
                     const button = document.createElement('we-button');
                     button.textContent = el.querySelector('.s_website_form_label_content').textContent;
                     button.dataset.setVisibilityDependency = inputEl.name;
@@ -1235,7 +1254,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     if (dependencyEl.nodeName === 'SELECT') {
                         for (const option of dependencyEl.querySelectorAll('option')) {
                             const button = document.createElement('we-button');
-                            button.textContent = option.value;
+                            button.textContent = option.value || `<${_t("no value")}>`;
                             button.dataset.selectDataAttribute = option.value;
                             selectOptEl.append(button);
                         }
@@ -1267,6 +1286,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                     } else if (['text', 'email', 'tel', 'url', 'search', 'password', 'number'].includes(dependencyEl.type)
                             || dependencyEl.nodeName === 'TEXTAREA') {
                         this.$target[0].dataset.visibilityComparator = 'equal';
+                    } else if (dependencyEl.type === 'file') {
+                        this.$target[0].dataset.visibilityComparator = 'fileSet';
                     }
                 }
             }
@@ -1300,8 +1321,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';
         const defaults = [...this.$target[0].querySelectorAll('[checked], [selected]')].map(el => {
-            const idInt = parseInt(el.value);
-            return isNaN(idInt) ? el.value : idInt;
+            return /^-?[0-9]{1,15}$/.test(el.value) ? parseInt(el.value) : el.value;
         });
         list.dataset.defaults = JSON.stringify(defaults);
 
@@ -1338,6 +1358,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @param {HTMLElement} fieldEl
      */
     _replaceFieldElement(fieldEl) {
+        const inputEl = this.$target[0].querySelector('input');
+        const dataFillWith = inputEl ? inputEl.dataset.fillWith : undefined;
         const hasConditionalVisibility = this.$target[0].classList.contains('s_website_form_field_hidden_if');
         const previousName = this.$target[0].querySelector('.s_website_form_input').name;
         [...this.$target[0].childNodes].forEach(node => node.remove());
@@ -1357,6 +1379,10 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             for (const fieldEl of dependentFieldEls) {
                 this._deleteConditionalVisibility(fieldEl);
             }
+        }
+        const newInputEl = this.$target[0].querySelector('input');
+        if (newInputEl) {
+            newInputEl.dataset.fillWith = dataFillWith;
         }
     },
     /**
@@ -1386,10 +1412,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             options = [...multipleInputs.querySelectorAll('.checkbox input, .radio input')];
         }
         return options.map(opt => {
-            const id = parseInt(opt.value);
             const name = select ? opt : opt.nextElementSibling;
             return {
-                id: isNaN(id) ? opt.value : id,
+                id: /^-?[0-9]{1,15}$/.test(opt.value) ? parseInt(opt.value) : opt.value,
                 display_name: name.textContent.trim(),
                 selected: select ? opt.selected : opt.checked,
             };
@@ -1462,6 +1487,7 @@ const DisableOverlayButtonOption = options.Class.extend({
         this.$overlay.add(this.$overlay.data('$optionsSection')).on('click', '.' + className, this.preventButton);
         const $button = this.$overlay.add(this.$overlay.data('$optionsSection')).find('.' + className);
         $button.attr('title', message).tooltip({delay: 0});
+        // TODO In master: add `o_disabled` but keep actual class.
         $button.removeClass(className); // Disable the functionnality
     },
 

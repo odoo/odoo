@@ -2,10 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from collections import defaultdict
 from urllib3.util.ssl_ import create_urllib3_context, DEFAULT_CIPHERS
+from urllib3.contrib.pyopenssl import inject_into_urllib3
 from OpenSSL.crypto import load_certificate, load_privatekey, FILETYPE_PEM
 from zeep.transports import Transport
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tools import html_escape
 
 import math
@@ -26,6 +28,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
 
     def init_poolmanager(self, *args, **kwargs):
         # OVERRIDE
+        inject_into_urllib3()
         kwargs['ssl_context'] = create_urllib3_context(ciphers=EUSKADI_CIPHERS)
         return super().init_poolmanager(*args, **kwargs)
 
@@ -46,7 +49,7 @@ class PatchedHTTPAdapter(requests.adapters.HTTPAdapter):
         context = conn.conn_kw['ssl_context']
 
         def patched_load_cert_chain(l10n_es_odoo_certificate, keyfile=None, password=None):
-            cert_file, key_file, dummy = l10n_es_odoo_certificate._decode_certificate()
+            cert_file, key_file, dummy = l10n_es_odoo_certificate.sudo()._decode_certificate()
             cert_obj = load_certificate(FILETYPE_PEM, cert_file)
             pkey_obj = load_privatekey(FILETYPE_PEM, key_file)
 
@@ -228,6 +231,9 @@ class AccountEdiFormat(models.Model):
         if (not partner.country_id or partner.country_id.code == 'ES') and partner.vat:
             # ES partner with VAT.
             partner_info['NIF'] = partner.vat[2:] if partner.vat.startswith('ES') else partner.vat
+            if self.env.context.get('error_1117'):
+                partner_info['IDOtro'] = {'IDType': '07', 'ID': IDOtro_ID}
+
         elif partner.country_id.code in eu_country_codes and partner.vat:
             # European partner.
             partner_info['IDOtro'] = {'IDType': '02', 'ID': IDOtro_ID}
@@ -300,10 +306,11 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                if not com_partner.country_id or com_partner.country_id.code == 'ES':
+                country_code = com_partner.country_id.code
+                if not country_code or country_code == 'ES' or country_code not in eu_country_codes:
                     invoice_node['ClaveRegimenEspecialOTrascendencia'] = '01'
                 else:
-                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09'
+                    invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' # For Intra-Com
 
             if invoice.move_type == 'out_invoice':
                 invoice_node['TipoFactura'] = 'F2' if is_simplified else 'F1'
@@ -350,6 +357,11 @@ class AccountEdiFormat(models.Model):
                         invoice_node.setdefault('TipoDesglose', {})
                         invoice_node['TipoDesglose'].setdefault('DesgloseTipoOperacion', {})
                         invoice_node['TipoDesglose']['DesgloseTipoOperacion']['Entrega'] = tax_details_info_consu_vals['tax_details_info']
+                    if not invoice_node.get('TipoDesglose'):
+                        raise UserError(_(
+                            "In case of a foreign customer, you need to configure the tax scope on taxes:\n%s",
+                            "\n".join(invoice.line_ids.tax_ids.mapped('name'))
+                        ))
 
                     invoice_node['ImporteTotal'] = round(sign * (
                         tax_details_info_service_vals['tax_details']['base_amount']
@@ -397,9 +409,15 @@ class AccountEdiFormat(models.Model):
 
     def _l10n_es_edi_web_service_aeat_vals(self, invoices):
         if invoices[0].is_sale_document():
-            return {'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactEmitidas.wsdl'}
+            return {
+                'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactEmitidas.wsdl',
+                'test_url': 'https://prewww1.aeat.es/wlpl/SSII-FACT/ws/fe/SiiFactFEV1SOAP',
+            }
         else:
-            return {'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactRecibidas.wsdl'}
+            return {
+                'url': 'https://www2.agenciatributaria.gob.es/static_files/common/internet/dep/aplicaciones/es/aeat/ssii_1_1/fact/ws/SuministroFactRecibidas.wsdl',
+                'test_url': 'https://prewww1.aeat.es/wlpl/SSII-FACT/ws/fr/SiiFactFRV1SOAP',
+            }
 
     def _l10n_es_edi_web_service_bizkaia_vals(self, invoices):
         if invoices[0].is_sale_document():
@@ -549,6 +567,11 @@ class AccountEdiFormat(models.Model):
                 results[inv] = {'success': True}
                 inv.message_post(body=_("We saw that this invoice was sent correctly before, but we did not treat "
                                         "the response.  Make sure it is not because of a wrong configuration."))
+
+            elif respl.CodigoErrorRegistro == 1117 and not self.env.context.get('error_1117'):
+                return self.with_context(error_1117=True)._post_invoice_edi(invoices)
+
+
             else:
                 results[inv] = {
                     'error': _("[%s] %s", respl.CodigoErrorRegistro, respl.DescripcionErrorRegistro),

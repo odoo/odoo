@@ -66,6 +66,10 @@ class IrActions(models.Model):
         self.clear_caches()
         return res
 
+    @api.ondelete(at_uninstall=True)
+    def _unlink_check_home_action(self):
+        self.env['res.users'].with_context(active_test=False).search([('action_id', 'in', self.ids)]).sudo().write({'action_id': None})
+
     @api.model
     def _get_eval_context(self, action=None):
         """ evaluation context to pass to safe_eval """

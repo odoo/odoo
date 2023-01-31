@@ -95,6 +95,9 @@ class TestPartner(MailCommon):
             check_partner=new6, should_create=True
         )
 
+        with self.assertRaises(ValueError):
+            self.env['res.partner'].find_or_create("Raoul chirurgiens-dentistes.fr", assert_valid_email=True)
+
     def test_res_partner_log_portal_group(self):
         Users = self.env['res.users']
         subtype_note = self.env.ref('mail.mt_note')

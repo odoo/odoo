@@ -7,10 +7,11 @@ from collections import defaultdict
 from datetime import timedelta, datetime
 from random import randint
 
-from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, Command, fields, models, tools, SUPERUSER_ID, _, _lt
+from odoo.addons.web_editor.controllers.main import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import format_amount
-from odoo.osv.expression import OR
+from odoo.osv.expression import OR, TRUE_LEAF, FALSE_LEAF
 
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
@@ -142,6 +143,42 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+    @api.constrains('user_id', 'project_ids')
+    def _check_personal_stage_not_linked_to_projects(self):
+        if any(stage.user_id and stage.project_ids for stage in self):
+            raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
+
+    def remove_personal_stage(self):
+        """
+        Remove a personal stage, tasks using that stage will move to the first
+        stage with a lower priority if it exists higher if not.
+        This method will not allow to delete the last personal stage.
+        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
+        """
+        self.ensure_one()
+        assert self.user_id == self.env.user or self.env.su
+
+        users_personal_stages = self.env['project.task.type']\
+            .search([('user_id', '=', self.user_id.id)], order='sequence DESC')
+        if len(users_personal_stages) == 1:
+            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
+
+        # Find the most suitable stage, they are already sorted by sequence
+        new_stage = self.env['project.task.type']
+        for stage in users_personal_stages:
+            if stage == self:
+                continue
+            if stage.sequence > self.sequence:
+                new_stage = stage
+            elif stage.sequence <= self.sequence:
+                new_stage = stage
+                break
+
+        self.env['project.task.stage.personal'].search([('stage_id', '=', self.id)]).write({
+            'stage_id': new_stage.id,
+        })
+        self.unlink()
+
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
@@ -153,13 +190,24 @@ class Project(models.Model):
     def _compute_attached_docs_count(self):
         self.env.cr.execute(
             """
-            SELECT coalesce(task.project_id, project.id), count(*)
-              FROM ir_attachment attachment
-              LEFT JOIN project_task task ON attachment.res_model = 'project.task' AND task.id = attachment.res_id
-              LEFT JOIN project_project project ON attachment.res_model = 'project.project' AND project.id = attachment.res_id
-             WHERE project.id IN %(project_ids)s
-                OR task.project_id IN %(project_ids)s
-             GROUP BY coalesce(task.project_id, project.id)
+            WITH docs AS (
+                 SELECT res_id as id, count(*) as count
+                   FROM ir_attachment
+                  WHERE res_model = 'project.project'
+                    AND res_id IN %(project_ids)s
+               GROUP BY res_id
+
+              UNION ALL
+
+                 SELECT t.project_id as id, count(*) as count
+                   FROM ir_attachment a
+                   JOIN project_task t ON a.res_model = 'project.task' AND a.res_id = t.id
+                  WHERE t.project_id IN %(project_ids)s
+               GROUP BY t.project_id
+            )
+            SELECT id, sum(count)
+              FROM docs
+          GROUP BY id
             """,
             {"project_ids": tuple(self.ids)}
         )
@@ -276,12 +324,17 @@ class Project(models.Model):
         ],
         string='Visibility', required=True,
         default='portal',
-        help="Defines the visibility of the tasks of the project:\n"
-            "- Invited employees: employees may only see the followed project and tasks.\n"
-            "- All employees: employees may see all project and tasks.\n"
-            "- Invited portal users and all employees: employees may see everything."
-            "   Invited portal users may see project and tasks followed by.\n"
-            "   them or by someone of their company.")
+        help="People to whom this project and its tasks will be visible.\n\n"
+            "- Invited internal users: when following a project, internal users will get access to all of its tasks without distinction. "
+            "Otherwise, they will only get access to the specific tasks they are following.\n "
+            "A user with the project > administrator access right level can still access this project and its tasks, even if they are not explicitly part of the followers.\n\n"
+            "- All internal users: all internal users can access the project and all of its tasks without distinction.\n\n"
+            "- Invited portal users and all internal users: all internal users can access the project and all of its tasks without distinction.\n"
+            "When following a project, portal users will get access to all of its tasks without distinction. Otherwise, they will only get access to the specific tasks they are following.\n\n"
+            "When a project is shared in read-only, the portal user is redirected to their portal. They can view the tasks, but not edit them.\n"
+            "When a project is shared in edit, the portal user is redirected to the kanban and list views of the tasks. They can modify a selected number of fields on the tasks.\n\n"
+            "In any case, an internal user with no project access rights can still access a task, "
+            "provided that they are given the corresponding URL (and that they are part of the followers if the project is private).")
     doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
@@ -292,7 +345,7 @@ class Project(models.Model):
 
     # Project Sharing fields
     collaborator_ids = fields.One2many('project.collaborator', 'project_id', string='Collaborators', copy=False)
-    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count')
+    collaborator_count = fields.Integer('# Collaborators', compute='_compute_collaborator_count', compute_sudo=True)
 
     # rating fields
     rating_request_deadline = fields.Datetime(compute='_compute_rating_request_deadline', store=True)
@@ -429,22 +482,38 @@ class Project(models.Model):
 
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
+        self.ensure_one()
         project = self.browse(new_project_id)
         tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
         task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id)], order='parent_id').ids
         old_to_new_tasks = {}
-        for task in self.env['project.task'].browse(task_ids):
+        all_tasks = self.env['project.task'].browse(task_ids)
+        for task in all_tasks:
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
             if task.parent_id:
                 # set the parent to the duplicated task
-                defaults['parent_id'] = old_to_new_tasks.get(task.parent_id.id, False)
+                parent_id = old_to_new_tasks.get(task.parent_id.id, False)
+                defaults['parent_id'] = parent_id
+                if not parent_id or task.display_project_id:
+                    defaults['project_id'] = project.id if task.display_project_id == self else False
+                    defaults['display_project_id'] = project.id if task.display_project_id == self else False
+            elif task.display_project_id == self:
+                defaults['project_id'] = project.id
+                defaults['display_project_id'] = project.id
             new_task = task.copy(defaults)
             # If child are created before parent (ex sub_sub_tasks)
             new_child_ids = [old_to_new_tasks[child.id] for child in task.child_ids if child.id in old_to_new_tasks]
             tasks.browse(new_child_ids).write({'parent_id': new_task.id})
             old_to_new_tasks[task.id] = new_task.id
+            if task.allow_task_dependencies:
+                depend_on_ids = [t.id if t not in all_tasks else old_to_new_tasks.get(t.id, None) for t in
+                                 task.depend_on_ids]
+                new_task.write({'depend_on_ids': [Command.link(tid) for tid in depend_on_ids if tid]})
+                dependent_ids = [t.id if t not in all_tasks else old_to_new_tasks.get(t.id, None) for t in
+                                 task.dependent_ids]
+                new_task.write({'dependent_ids': [Command.link(tid) for tid in dependent_ids if tid]})
             tasks += new_task
 
         return project.write({'tasks': [(6, 0, tasks.ids)]})
@@ -698,7 +767,7 @@ class Project(models.Model):
         self.ensure_one()
         buttons = [{
             'icon': 'tasks',
-            'text': _('Tasks'),
+            'text': _lt('Tasks'),
             'number': self.task_count,
             'action_type': 'action',
             'action': 'project.act_project_project_2_project_task_all',
@@ -711,7 +780,7 @@ class Project(models.Model):
         if self.user_has_groups('project.group_project_rating'):
             buttons.append({
                 'icon': 'smile-o',
-                'text': _('Customer Satisfaction'),
+                'text': _lt('Customer Satisfaction'),
                 'number': '%s %%' % (self.rating_percentage_satisfaction),
                 'action_type': 'object',
                 'action': 'action_view_all_rating',
@@ -721,7 +790,7 @@ class Project(models.Model):
         if self.user_has_groups('project.group_project_manager'):
             buttons.append({
                 'icon': 'area-chart',
-                'text': _('Burndown Chart'),
+                'text': _lt('Burndown Chart'),
                 'action_type': 'action',
                 'action': 'project.action_project_task_burndown_chart_report',
                 'additional_context': json.dumps({
@@ -732,7 +801,7 @@ class Project(models.Model):
             })
             buttons.append({
                 'icon': 'users',
-                'text': _('Collaborators'),
+                'text': _lt('Collaborators'),
                 'number': self.collaborator_count,
                 'action_type': 'action',
                 'action': 'project.project_collaborator_action',
@@ -745,7 +814,7 @@ class Project(models.Model):
         if self.user_has_groups('analytic.group_analytic_accounting'):
             buttons.append({
                 'icon': 'usd',
-                'text': _('Gross Margin'),
+                'text': _lt('Gross Margin'),
                 'number': format_amount(self.env, self.analytic_account_balance, self.company_id.currency_id),
                 'action_type': 'object',
                 'action': 'action_view_analytic_account_entries',
@@ -933,7 +1002,7 @@ class Task(models.Model):
     # Second Many2many containing the actual personal stage for the current user
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
-        ondelete='restrict', group_expand='_read_group_personal_stage_type_ids',
+        ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
         domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stage')
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
@@ -992,10 +1061,10 @@ class Task(models.Model):
     allow_task_dependencies = fields.Boolean(related='project_id.allow_task_dependencies')
     # Tracking of this field is done in the write function
     depend_on_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="task_id",
-                                     column2="depends_on_id", string="Blocked By", tracking=True,
+                                     column2="depends_on_id", string="Blocked By", tracking=True, copy=False,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_ids = fields.Many2many('project.task', relation="task_dependencies_rel", column1="depends_on_id",
-                                     column2="task_id", string="Block",
+                                     column2="task_id", string="Block", copy=False,
                                      domain="[('allow_task_dependencies', '=', True), ('id', '!=', id)]")
     dependent_tasks_count = fields.Integer(string="Dependent Tasks", compute='_compute_dependent_tasks_count')
 
@@ -1153,7 +1222,7 @@ class Task(models.Model):
                 # In the case no stages have been found, we create the default stages for the user
                 if not stage:
                     stages = self.env['project.task.type'].sudo().with_context(lang=user_id.partner_id.lang, default_project_id=False).create(
-                        self._get_default_personal_stage_create_vals(user_id.id)
+                        self.with_context(lang=user_id.partner_id.lang)._get_default_personal_stage_create_vals(user_id.id)
                     )
                     stage = stages[0]
                 personal_stage_by_user[user_id].sudo().write({'stage_id': stage.id})
@@ -1469,7 +1538,7 @@ class Task(models.Model):
     # Case management
     # ----------------------------------------
 
-    def stage_find(self, section_id, domain=[], order='sequence'):
+    def stage_find(self, section_id, domain=[], order='sequence, id'):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - section_id: if set, stages must belong to this section or
@@ -1557,7 +1626,11 @@ class Task(models.Model):
         if fields and (not check_group_user or self.env.user.has_group('base.group_portal')) and not self.env.su:
             unauthorized_fields = set(fields) - (self.SELF_READABLE_FIELDS if operation == 'read' else self.SELF_WRITABLE_FIELDS)
             if unauthorized_fields:
-                raise AccessError(_('You cannot %s %s fields in task.', operation if operation == 'read' else '%s on' % operation, ', '.join(unauthorized_fields)))
+                if operation == 'read':
+                    error_message = _('You cannot read %s fields in task.', ', '.join(unauthorized_fields))
+                else:
+                    error_message = _('You cannot write on %s fields in task.', ', '.join(unauthorized_fields))
+                raise AccessError(error_message)
 
     def read(self, fields=None, load='_classic_read'):
         self._ensure_fields_are_accessible(fields)
@@ -1567,15 +1640,17 @@ class Task(models.Model):
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         fields_list = ([f.split(':')[0] for f in fields] or [])
         if groupby:
-            fields_list += [groupby] if isinstance(groupby, str) else groupby
+            fields_groupby = [groupby] if isinstance(groupby, str) else groupby
+            # only take field name when having ':' e.g 'date_deadline:week' => 'date_deadline'
+            fields_list += [f.split(':')[0] for f in fields_groupby]
         if domain:
-            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list))]
+            fields_list += [term[0].split('.')[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     @api.model
     def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
-        fields_list = {term[0] for term in args if isinstance(term, (tuple, list))}
+        fields_list = {term[0] for term in args if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]}
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
 
@@ -1587,12 +1662,14 @@ class Task(models.Model):
         return super(Task, self).mapped(func)
 
     def filtered_domain(self, domain):
-        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list))]
+        fields_list = [term[0] for term in domain if isinstance(term, (tuple, list)) and term not in [TRUE_LEAF, FALSE_LEAF]]
         self._ensure_fields_are_accessible(fields_list)
         return super(Task, self).filtered_domain(domain)
 
     def copy_data(self, default=None):
         defaults = super().copy_data(default=default)
+        if self.env.user.has_group('project.group_project_user'):
+            return defaults
         return [{k: v for k, v in default.items() if k in self.SELF_READABLE_FIELDS} for default in defaults]
 
     @api.model
@@ -1600,6 +1677,27 @@ class Task(models.Model):
         for field in fields:
             if field not in self.SELF_WRITABLE_FIELDS:
                 raise AccessError(_('You have not write access of %s field.') % field)
+
+    def _load_records_create(self, vals_list):
+        projects_with_recurrence = self.env['project.project'].search([('allow_recurring_tasks', '=', True)])
+        for vals in vals_list:
+            if vals.get('recurring_task'):
+                if vals.get('project_id') in projects_with_recurrence.ids and not vals.get('recurrence_id'):
+                    default_val = self.default_get(self._get_recurrence_fields())
+                    vals.update(**default_val)
+                else:
+                    for field_name in self._get_recurrence_fields() + ['recurring_task']:
+                        vals.pop(field_name, None)
+        tasks = super()._load_records_create(vals_list)
+        stage_ids_per_project = defaultdict(list)
+        for task in tasks:
+            if task.stage_id and task.stage_id not in task.project_id.type_ids and task.stage_id.id not in stage_ids_per_project[task.project_id]:
+                stage_ids_per_project[task.project_id].append(task.stage_id.id)
+
+        for project, stage_ids in stage_ids_per_project.items():
+            project.write({'type_ids': [Command.link(stage_id) for stage_id in stage_ids]})
+
+        return tasks
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -1669,6 +1767,8 @@ class Task(models.Model):
         return tasks
 
     def write(self, vals):
+        if len(self) == 1:
+            handle_history_divergence(self, 'description', vals)
         portal_can_write = False
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             # Check if all fields in vals are in SELF_WRITABLE_FIELDS
@@ -1683,6 +1783,8 @@ class Task(models.Model):
         if 'active' in vals and not vals.get('active') and any(self.mapped('recurrence_id')):
             # TODO: show a dialog to stop the recurrence
             raise UserError(_('You cannot archive recurring tasks. Please disable the recurrence first.'))
+        if 'recurrence_id' in vals and vals.get('recurrence_id') and any(not task.active for task in self):
+            raise UserError(_('Archived tasks cannot be recurring. Please unarchive the task first.'))
         # stage change: update date_last_stage_update
         if 'stage_id' in vals:
             vals.update(self.update_date_end(vals['stage_id']))
@@ -1738,7 +1840,7 @@ class Task(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
-            self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+            tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
         for task in self:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set

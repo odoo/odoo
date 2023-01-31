@@ -67,29 +67,63 @@ weSnippetEditor.SnippetsMenu.include({
         });
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
 
-        return this._super(...arguments);
+        const ret = this._super(...arguments);
+
+        // TODO adapt in master. This patches the embed code snippet
+        // in stable versions.
+        const $sbody = this.$snippets.find('[data-snippet="s_embed_code"]');
+        if ($sbody.length) {
+            $sbody[0].classList.remove('o_half_screen_height');
+            $sbody[0].classList.add('pt64', 'pb64');
+        }
+
+        return ret;
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
      * if not already defined.
      *
      * @private
-     * @param {boolean} [reconfigure=false]
-     * @param {boolean} [onlyIfUndefined=false]
+     * @param {boolean} [reconfigure=false] // TODO name is confusing "alwaysReconfigure" is better
+     * @param {boolean} [onlyIfUndefined=false] // TODO name is confusing "configureIfNecessary" is better
      */
     async _configureGMapAPI({reconfigure, onlyIfUndefined}) {
+        if (!reconfigure && !onlyIfUndefined) {
+            return false;
+        }
+
         const apiKey = await new Promise(resolve => {
             this.getParent().trigger_up('gmap_api_key_request', {
                 onSuccess: key => resolve(key),
             });
         });
-        if (!reconfigure && (apiKey || !onlyIfUndefined)) {
+        const apiKeyValidation = apiKey ? await this._validateGMapAPIKey(apiKey) : {
+            isValid: false,
+            message: undefined,
+        };
+        if (!reconfigure && onlyIfUndefined && apiKey && apiKeyValidation.isValid) {
             return false;
         }
+
         let websiteId;
         this.trigger_up('context_get', {
             callback: ctx => websiteId = ctx['website_id'],
         });
+
+        function applyError(message) {
+            const $apiKeyInput = this.find('#api_key_input');
+            const $apiKeyHelp = this.find('#api_key_help');
+            $apiKeyInput.addClass('is-invalid');
+            $apiKeyHelp.empty().text(message);
+        }
+
+        const $content = $(qweb.render('website.s_google_map_modal', {
+            apiKey: apiKey,
+        }));
+        if (!apiKeyValidation.isValid && apiKeyValidation.message) {
+            applyError.call($content, apiKeyValidation.message);
+        }
+
         return new Promise(resolve => {
             let invalidated = false;
             const dialog = new Dialog(this, {
@@ -97,54 +131,56 @@ weSnippetEditor.SnippetsMenu.include({
                 title: _t("Google Map API Key"),
                 buttons: [
                     {text: _t("Save"), classes: 'btn-primary', click: async (ev) => {
-                        const $apiKeyInput = dialog.$('#api_key_input');
-                        const valueAPIKey = $apiKeyInput.val();
-                        const $apiKeyHelp = dialog.$('#api_key_help');
+                        const valueAPIKey = dialog.$('#api_key_input').val();
                         if (!valueAPIKey) {
-                            $apiKeyInput.addClass('is-invalid');
-                            $apiKeyHelp.text(_t("Enter an API Key"));
+                            applyError.call(dialog.$el, _t("Enter an API Key"));
                             return;
                         }
                         const $button = $(ev.currentTarget);
                         $button.prop('disabled', true);
-                        try {
-                            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${valueAPIKey}`);
-                            if (response.status === 200) {
-                                await this._rpc({
-                                    model: 'website',
-                                    method: 'write',
-                                    args: [
-                                        [websiteId],
-                                        {google_maps_api_key: valueAPIKey},
-                                    ],
-                                });
-                                invalidated = true;
-                                dialog.close();
-                            } else {
-                                const text = await response.text();
-                                $apiKeyInput.addClass('is-invalid');
-                                $apiKeyHelp.empty().text(
-                                    _t("Invalid API Key. The following error was returned by Google:")
-                                ).append($('<i/>', {
-                                    text: text,
-                                    class: 'ml-1',
-                                }));
-                            }
-                        } catch (e) {
-                            $apiKeyHelp.text(_t("Check your connection and try again"));
-                        } finally {
-                            $button.prop("disabled", false);
+                        const res = await this._validateGMapAPIKey(valueAPIKey);
+                        if (res.isValid) {
+                            await this._rpc({
+                                model: 'website',
+                                method: 'write',
+                                args: [
+                                    [websiteId],
+                                    {google_maps_api_key: valueAPIKey},
+                                ],
+                            });
+                            invalidated = true;
+                            dialog.close();
+                        } else {
+                            applyError.call(dialog.$el, res.message);
                         }
+                        $button.prop("disabled", false);
                     }},
                     {text: _t("Cancel"), close: true}
                 ],
-                $content: $(qweb.render('website.s_google_map_modal', {
-                    apiKey: apiKey,
-                })),
+                $content: $content,
             });
             dialog.on('closed', this, () => resolve(invalidated));
             dialog.open();
         });
+    },
+    /**
+     * @private
+     */
+    async _validateGMapAPIKey(key) {
+        try {
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const isValid = (response.status === 200);
+            return {
+                isValid: isValid,
+                message: !isValid &&
+                    _t("Invalid API Key. The following error was returned by Google:") + " " + (await response.text()),
+            };
+        } catch (err) {
+            return {
+                isValid: false,
+                message: _t("Check your connection and try again"),
+            };
+        }
     },
     /**
      * @override
@@ -212,7 +248,7 @@ weSnippetEditor.SnippetsMenu.include({
     /**
      * Activates the button to animate text if the selection is in an
      * animated text element or deactivates the button if not.
-     * 
+     *
      * @private
      */
     _toggleAnimatedTextButton() {
@@ -226,7 +262,7 @@ weSnippetEditor.SnippetsMenu.include({
     /**
      * Displays the button that allows to highlight the animated text if there
      * is animated text in the page.
-     * 
+     *
      * @private
      */
     _toggleHighlightAnimatedTextButton() {

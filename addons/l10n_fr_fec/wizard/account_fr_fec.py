@@ -96,18 +96,12 @@ class AccountFrFec(models.TransientModel):
         """
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.account_fiscal_country_id.code in dom_tom_group.country_ids.mapped('code')
-        if is_dom_tom:
+        if not company.vat or is_dom_tom:
             return ''
-        elif company.country_id.code == 'FR':
-            if not company.vat:
-                raise UserError(_("Missing VAT number for company %s") % company.display_name)
-            elif len(company.vat) < 13 or not siren.is_valid(company.vat[4:13]):
-                raise UserError(_("Invalid VAT number for company %s") % company.display_name)
-            else:
-                return company.vat[4:13]
+        elif company.country_id.code == 'FR' and len(company.vat) >= 13 and siren.is_valid(company.vat[4:13]):
+            return company.vat[4:13]
         else:
-            return '' if not company.vat else company.vat
-
+            return company.vat
 
     def generate_fec(self):
         self.ensure_one()
@@ -237,7 +231,8 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id)], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_unaffected_earnings').id),
+                                                                              ('company_id', '=', company.id)], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
@@ -333,7 +328,7 @@ class AccountFrFec(models.TransientModel):
             ELSE REGEXP_REPLACE(replace(am.ref, '|', '/'), '[\\t\\r\\n]', ' ', 'g')
             END
             AS PieceRef,
-            TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
+            TO_CHAR(COALESCE(am.invoice_date, am.date), 'YYYYMMDD') AS PieceDate,
             CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
                 WHEN aml.name SIMILAR TO '[\\t|\\s|\\n]*' THEN '/'
                 ELSE REGEXP_REPLACE(replace(aml.name, '|', '/'), '[\\t\\n\\r]', ' ', 'g') END AS EcritureLib,

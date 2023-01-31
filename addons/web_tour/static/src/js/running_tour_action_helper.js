@@ -28,6 +28,9 @@ var RunningTourActionHelper = core.Class.extend({
     text: function (text, element) {
         this._text(this._get_action_values(element), text);
     },
+    remove_text(text, element) {
+        this._text(this._get_action_values(element), '\n');
+    },
     text_blur: function (text, element) {
         this._text_blur(this._get_action_values(element), text);
     },

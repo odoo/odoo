@@ -167,8 +167,10 @@ class PaymentHttpCommon(PaymentTestUtils, HttpCase):
         """
         uri = '/payment/transaction'
         url = self._build_url(uri)
+        response = self._make_json_request(url, route_kwargs)
+        self.assertEqual(response.status_code, 200)  # Check the request went through.
 
-        return self._make_json_request(url, route_kwargs)
+        return response
 
     def get_processing_values(self, **route_kwargs):
         response = self.portal_transaction(**route_kwargs)
