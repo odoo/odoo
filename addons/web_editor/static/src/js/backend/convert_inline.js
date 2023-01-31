@@ -552,11 +552,14 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
+    const wysiwyg = $editable.data('wysiwyg');
     const doc = editable.ownerDocument;
-    cssRules = cssRules || doc._rulesCache;
+    cssRules = cssRules || wysiwyg && wysiwyg._rulesCache;
     if (!cssRules) {
         cssRules = getCSSRules(doc);
-        doc._rulesCache = cssRules;
+        if (wysiwyg) {
+            wysiwyg._rulesCache = cssRules;
+        }
     }
 
     // If the editable is not visible, we need to make it visible in order to
