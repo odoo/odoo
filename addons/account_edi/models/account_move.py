@@ -395,7 +395,7 @@ class AccountMove(models.Model):
         return self.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
 
     def _get_edi_attachment(self, edi_format):
-        return self._get_edi_document(edi_format).attachment_id
+        return self._get_edi_document(edi_format).sudo().attachment_id
 
     ####################################################
     # Import Electronic Document
