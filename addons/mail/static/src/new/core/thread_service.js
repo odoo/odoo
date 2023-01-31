@@ -170,25 +170,39 @@ export class ThreadService {
         return messages;
     }
 
+    /**
+     * @param {Thread} thread
+     */
     async fetchNewMessages(thread) {
         const min = thread.mostRecentNonTransientMessage?.id;
-        const fetchedMsgs = await this.fetchMessages(thread, { min });
-        Object.assign(thread, {
-            loadMore:
-                min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
-                    ? true
-                    : min === undefined && fetchedMsgs.length !== FETCH_MSG_LIMIT
-                    ? false
-                    : thread.loadMore,
-        });
+        try {
+            const fetchedMsgs = await this.fetchMessages(thread, { min });
+            Object.assign(thread, {
+                loadMore:
+                    min === undefined && fetchedMsgs.length === FETCH_MSG_LIMIT
+                        ? true
+                        : min === undefined && fetchedMsgs.length !== FETCH_MSG_LIMIT
+                        ? false
+                        : thread.loadMore,
+            });
+        } catch {
+            thread.hasLoadingFailed = true;
+        }
     }
 
+    /**
+     * @param {Thread} thread
+     */
     async fetchMoreMessages(thread) {
-        const fetchedMsgs = await this.fetchMessages(thread, {
-            max: thread.oldestNonTransientMessage?.id,
-        });
-        if (fetchedMsgs.length < FETCH_MSG_LIMIT) {
-            thread.loadMore = false;
+        try {
+            const fetchedMsgs = await this.fetchMessages(thread, {
+                max: thread.oldestNonTransientMessage?.id,
+            });
+            if (fetchedMsgs.length < FETCH_MSG_LIMIT) {
+                thread.loadMore = false;
+            }
+        } catch {
+            thread.hasLoadingFailed = true;
         }
     }
 

@@ -43,6 +43,7 @@ export class Thread extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.state = useState({ isReplyingTo: false });
+        /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         if (!this.env.inChatter) {
             useAutoScroll("messages", () => {
@@ -93,8 +94,16 @@ export class Thread extends Component {
             this.loadMore();
             this.scrollPosition.restore();
         });
-        onWillStart(() => this.requestMessages(this.props.thread));
-        onWillUpdateProps((nextProps) => this.requestMessages(nextProps.thread));
+        onWillStart(() => {
+            this.threadService.fetchNewMessages(this.props.thread);
+        });
+        onWillUpdateProps((nextProps) => {
+            this.threadService.fetchNewMessages(nextProps.thread);
+        });
+    }
+
+    onClickLoadMore() {
+        this.threadService.fetchMoreMessages(this.props.thread);
     }
 
     loadMore() {
@@ -106,12 +115,6 @@ export class Thread extends Component {
             this.threadService.fetchMoreMessages(this.props.thread);
             this.pendingLoadMore = true;
         }
-    }
-
-    requestMessages(thread) {
-        // does not return the promise, so the thread is immediately rendered
-        // then updated whenever messages get here
-        this.threadService.fetchNewMessages(thread);
     }
 
     isSquashed(msg, prevMsg) {

@@ -77,6 +77,7 @@ export class Thread {
     serverMessageUnreadCounter = 0;
     /** @type {SuggestedRecipient[]} */
     suggestedRecipients = [];
+    hasLoadingFailed = false;
 
     constructor(store, data) {
         Object.assign(this, {

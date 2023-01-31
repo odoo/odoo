@@ -1613,3 +1613,159 @@ QUnit.test("new messages separator [REQUIRE FOCUS]", async function (assert) {
     await afterNextRender(() => document.querySelector(".o-mail-composer-textarea").focus());
     assert.containsNone(target, "hr + span:contains(New messages)");
 });
+
+QUnit.test("failure on loading messages should display error", async function (assert) {
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv["mail.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    const { openDiscuss } = await start({
+        async mockRPC(route, args) {
+            if (route === "/mail/channel/messages") {
+                return Promise.reject();
+            }
+        },
+    });
+    await openDiscuss(mailChannelId1, { waitUntilMessagesLoaded: false });
+
+    assert.containsOnce(
+        target,
+        ".o-mail-error-msg:contains(An error occurred while fetching messages.)"
+    );
+});
+
+QUnit.test("failure on loading messages should prompt retry button", async function (assert) {
+    const pyEnv = await startServer();
+    const mailChannelId1 = pyEnv["mail.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    const { openDiscuss } = await start({
+        async mockRPC(route, args) {
+            if (route === "/mail/channel/messages") {
+                return Promise.reject();
+            }
+        },
+    });
+    await openDiscuss(mailChannelId1, { waitUntilMessagesLoaded: false });
+
+    assert.containsOnce(target, "button:contains(Click here to retry)");
+});
+
+QUnit.test(
+    "failure on loading more messages should not alter message list display",
+    async function (assert) {
+        // first call needs to be successful as it is the initial loading of messages
+        // second call comes from load more and needs to fail in order to show the error alert
+        // any later call should work so that retry button and load more clicks would now work
+        let messageFetchShouldFail = false;
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            channel_type: "channel",
+            name: "General",
+        });
+        pyEnv["mail.message"].create(
+            [...Array(60).keys()].map(() => {
+                return {
+                    body: "coucou",
+                    model: "mail.channel",
+                    res_id: mailChannelId1,
+                };
+            })
+        );
+        const { openDiscuss } = await start({
+            async mockRPC(route, args) {
+                if (route === "/mail/channel/messages" && messageFetchShouldFail) {
+                    return Promise.reject();
+                }
+            },
+        });
+        await openDiscuss(mailChannelId1);
+
+        messageFetchShouldFail = true;
+        await click("button:contains(Load More)");
+        assert.containsN(target, ".o-mail-message", 30);
+    }
+);
+
+QUnit.test(
+    "failure on loading more messages should display error and prompt retry button",
+    async function (assert) {
+        // first call needs to be successful as it is the initial loading of messages
+        // second call comes from load more and needs to fail in order to show the error alert
+        // any later call should work so that retry button and load more clicks would now work
+        let messageFetchShouldFail = false;
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            channel_type: "channel",
+            name: "General",
+        });
+        pyEnv["mail.message"].create(
+            [...Array(60).keys()].map(() => {
+                return {
+                    body: "coucou",
+                    model: "mail.channel",
+                    res_id: mailChannelId1,
+                };
+            })
+        );
+        const { openDiscuss } = await start({
+            async mockRPC(route, args) {
+                if (route === "/mail/channel/messages" && messageFetchShouldFail) {
+                    return Promise.reject();
+                }
+            },
+        });
+        await openDiscuss(mailChannelId1);
+
+        messageFetchShouldFail = true;
+        await click("button:contains(Load More)");
+        assert.containsOnce(
+            target,
+            ".o-mail-error-msg:contains(An error occurred while fetching messages.)"
+        );
+        assert.containsOnce(target, "button:contains(Click here to retry)");
+        assert.containsNone(target, "button:contains(Load More)");
+    }
+);
+
+QUnit.test(
+    "Retry loading more messages on failed load more messages should load more messages",
+    async function (assert) {
+        // first call needs to be successful as it is the initial loading of messages
+        // second call comes from load more and needs to fail in order to show the error alert
+        // any later call should work so that retry button and load more clicks would now work
+        let messageFetchShouldFail = false;
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({
+            channel_type: "channel",
+            name: "General",
+        });
+        pyEnv["mail.message"].create(
+            [...Array(90).keys()].map(() => {
+                return {
+                    body: "coucou",
+                    model: "mail.channel",
+                    res_id: mailChannelId1,
+                };
+            })
+        );
+        const { openDiscuss } = await start({
+            async mockRPC(route, args) {
+                if (route === "/mail/channel/messages") {
+                    if (messageFetchShouldFail) {
+                        return Promise.reject();
+                    }
+                }
+            },
+        });
+        await openDiscuss(mailChannelId1);
+        messageFetchShouldFail = true;
+        await click("button:contains(Load More)");
+
+        messageFetchShouldFail = false;
+        await click("button:contains(Click here to retry)");
+        assert.containsN(target, ".o-mail-message", 60);
+    }
+);
