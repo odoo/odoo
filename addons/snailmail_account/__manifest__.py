@@ -11,6 +11,7 @@ Allows users to send invoices by post
     'data': [
         'views/res_config_settings_views.xml',
         'wizard/account_invoice_send_views.xml',
+        'wizard/snailmail_confirm_invoice_views.xml',
         'security/ir.model.access.csv',
     ],
     'auto_install': True,

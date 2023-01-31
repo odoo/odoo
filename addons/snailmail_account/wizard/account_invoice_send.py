@@ -65,7 +65,7 @@ class AccountInvoiceSend(models.TransientModel):
     def send_and_print_action(self):
         if self.snailmail_is_letter:
             if self.env['snailmail.confirm.invoice'].show_warning():
-                wizard = self.env['snailmail.confirm.invoice'].create({'model_name': _('Invoice'), 'invoice_send_id': self.id})
+                wizard = self.env['snailmail.confirm.invoice'].create({'invoice_send_id': self.id})
                 return wizard.action_open()
             self._print_action()
         return self.send_and_print()
