@@ -36,10 +36,12 @@ const SharedPopupWidget = publicWidget.Widget.extend({
             return;
         }
 
-        // Popup are always closed when entering/leaving edit mode (see
-        // PopupWidget), this allows to make sure the class is sync on the
-        // .s_popup parent after that moment too.
-        this.el.classList.add('d-none');
+        // Popup are always closed when entering edit mode (see PopupWidget),
+        // this allows to make sure the class is sync on the .s_popup parent
+        // after that moment too.
+        if (!this.editableMode) {
+            this.el.classList.add('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
