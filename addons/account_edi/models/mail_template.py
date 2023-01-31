@@ -23,9 +23,13 @@ class MailTemplate(models.Model):
             OR
             {'attachment_ids': list containing the id of the attachment}
         """
-        if not document.attachment_id:
+        attachment_sudo = document.sudo().attachment_id
+        if not attachment_sudo:
             return {}
-        return {'attachment_ids': [document.attachment_id.id]}
+        if not (attachment_sudo.res_model and attachment_sudo.res_id):
+            # do not return system attachment not linked to a record
+            return {}
+        return {'attachment_ids': [attachment_sudo.id]}
 
     def generate_email(self, res_ids, fields):
         res = super().generate_email(res_ids, fields)
