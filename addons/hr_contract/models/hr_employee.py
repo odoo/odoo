@@ -140,6 +140,13 @@ class Employee(models.Model):
             ))
         return unusual_days
 
+    def _get_calendar_attendances(self, date_from, date_to):
+        self.ensure_one()
+        valid_contracts = self.sudo()._get_contracts(date_from, date_to, states=['open', 'close'])
+        if not valid_contracts:
+            return super()._get_calendar_attendances(date_from, date_to)
+        return valid_contracts.resource_calendar_id.get_work_duration_data(date_from, date_to)
+
     def write(self, vals):
         res = super().write(vals)
         if vals.get('contract_id'):

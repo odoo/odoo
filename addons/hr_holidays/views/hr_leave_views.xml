@@ -212,7 +212,6 @@
             <field name="can_reset" invisible="1"/>
             <field name="can_approve" invisible="1"/>
             <field name="can_cancel" invisible="1"/>
-            <field name="holiday_allocation_id" invisible="1" force_save="1"/>
             <field name="has_mandatory_day" invisible="1"/>
             <header>
                 <button string="Confirm" name="action_confirm" type="object" class="oe_highlight" invisible="state != 'draft' or not active"/>
@@ -249,9 +248,22 @@
                             <field name="display_name" invisible="not holiday_status_id"/>
                         </div>
                         <group name="col_left">
-                            <field name="holiday_status_id" force_save="1" domain="['|', ('requires_allocation', '=', 'no'), '&amp;', ('has_valid_allocation', '=', True), '&amp;', ('virtual_remaining_leaves', '&gt;', 0), ('max_leaves', '>', '0')]" context="{'employee_id':employee_id, 'default_date_from':date_from, 'default_date_to':date_to}" options="{'no_create': True, 'no_open': True, 'request_type':'leave'}"  readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                            <field name="date_from" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
-                            <field name="date_to" invisible="1" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" />
+                            <field name="employee_company_id" invisible="1"/>
+                            <field name="holiday_status_id" force_save="1"
+                                domain="[
+                                    '|',
+                                        ('requires_allocation', '=', 'no'),
+                                        '&amp;',
+                                            ('has_valid_allocation', '=', True),
+                                            '&amp;',
+                                                ('virtual_remaining_leaves', '&gt;', 0),
+                                                ('max_leaves', '>', '0')
+                                ]"
+                                context="{'employee_id': employee_id, 'default_date_from': date_from, 'default_date_to': date_to}"
+                                options="{'no_create': True, 'no_open': True, 'request_type': 'leave'}"
+                                readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+                            <field name="date_from" invisible="1"/>
+                            <field name="date_to" invisible="1"/>
                             <field name="request_date_from" invisible="1"/>
                             <field name="request_date_to" invisible="1"/>
                             <!-- half day or custom hours: only show one date -->
@@ -690,7 +702,6 @@
             'hide_employee_name': 1,
             'holiday_status_display_name': False}
         </field>
-        <field name="domain">[('holiday_allocation_id', '=', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Meet the time off dashboard.

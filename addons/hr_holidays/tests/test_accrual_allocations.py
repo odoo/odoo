@@ -63,7 +63,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -102,7 +101,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -158,7 +156,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -198,7 +195,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': '2021-09-03',
             })
             with freeze_time(datetime.date.today() + relativedelta(days=2)):
-                allocation.action_confirm()
                 allocation.action_validate()
                 self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
                 self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -245,7 +241,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': '2021-09-03',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -289,7 +284,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'date_from': '2021-08-31',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -328,7 +322,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -372,7 +365,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
             })
             self.setAllocationCreateDate(allocation.id, '2021-09-01 00:00:00')
-            allocation.action_confirm()
             allocation.action_validate()
             self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
             self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
@@ -532,7 +524,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
             tomorrow = datetime.date.today() + relativedelta(days=2)
@@ -573,7 +564,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
             tomorrow = datetime.date.today() + relativedelta(days=2)
@@ -623,7 +613,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             next_date = datetime.date.today() + relativedelta(days=11)
             second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
@@ -660,7 +649,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             next_date = datetime.date.today() + relativedelta(days=11)
             second_level = self.env['hr.leave.accrual.level'].search([('accrual_plan_id', '=', accrual_plan.id), ('start_count', '=', 10)])
@@ -690,7 +678,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 10,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         # Reset the cron's lastcall
@@ -725,7 +712,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 10,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         # Reset the cron's lastcall
@@ -759,7 +745,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         # Reset the cron's lastcall
@@ -796,7 +781,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 10,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         # Reset the cron's lastcall
@@ -830,7 +814,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'number_of_days': 0,
                 'allocation_type': 'accrual',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         # Reset the cron's lastcall
@@ -874,7 +857,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': datetime.date(2020, 8, 16),
             })
-            allocation.action_confirm()
             allocation.action_validate()
         with freeze_time('2022-1-10'):
             allocation._update_accrual()
@@ -923,7 +905,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': datetime.date(2022, 1, 31),
             })
-            allocation.action_confirm()
             allocation.action_validate()
         with freeze_time('2022-7-20'):
             allocation._update_accrual()
@@ -970,7 +951,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': datetime.date(2021, 1, 1),
             })
-            allocation.action_confirm()
             allocation.action_validate()
         with freeze_time('2022-4-4'):
             allocation._update_accrual()
@@ -1003,7 +983,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': datetime.date(2019, 1, 1),
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         with freeze_time('2022-4-1'):
@@ -1035,7 +1014,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
 
         with freeze_time("2021-10-3"):
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
 
@@ -1065,7 +1043,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             })
 
         with freeze_time("2021-10-3"):
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
 
@@ -1095,7 +1072,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2022-01-01',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         with freeze_time("2022-3-2"):
@@ -1140,7 +1116,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2022-01-01',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         with freeze_time(datetime.date(2022, 4, 1)):
@@ -1186,7 +1161,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-24',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
             allocation._update_accrual()
@@ -1204,7 +1178,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-24',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
             allocation._update_accrual()
@@ -1236,7 +1209,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-13',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
 
@@ -1283,7 +1255,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-26',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 1, "Should accrue 1 day, at the start of the period.")
@@ -1323,7 +1294,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-26',
             })
-            allocation.action_confirm()
             allocation.action_validate()
             allocation._update_accrual()
         self.assertEqual(allocation.number_of_days, 0, "Should accrue 0 days, days are added on 27th.")
@@ -1373,7 +1343,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-20',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         with freeze_time("2024-04-20"):
@@ -1437,7 +1406,6 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
                 'allocation_type': 'accrual',
                 'date_from': '2023-04-4',
             })
-            allocation.action_confirm()
             allocation.action_validate()
 
         with freeze_time("2026-08-01"):

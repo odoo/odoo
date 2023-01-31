@@ -60,7 +60,7 @@ export class TimeOffCalendarFilterPanel extends CalendarFilterPanel {
         }
 
         const filterData = {};
-        const data = await this.orm.call("hr.leave.type", "get_days_all_request", []);
+        const data = await this.orm.call("hr.leave.type", "get_allocation_data_request", []);
 
         data.forEach((leave) => {
             filterData[leave[3]] = leave;

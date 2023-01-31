@@ -17,8 +17,8 @@ from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tools import float_compare, format_date
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_compare
+from odoo.tools.misc import format_date
 from odoo.tools.translate import _
 from odoo.osv import expression
 
@@ -116,12 +116,13 @@ class HolidaysRequest(models.Model):
     # description
     name = fields.Char('Description', compute='_compute_description', inverse='_inverse_description', search='_search_description', compute_sudo=False, copy=False)
     private_name = fields.Char('Time Off Description', groups='hr_holidays.group_hr_holidays_user')
-    state = fields.Selection([
-        ('draft', 'To Submit'),
-        ('confirm', 'To Approve'),
-        ('refuse', 'Refused'),
-        ('validate1', 'Second Approval'),
-        ('validate', 'Approved')
+    state = fields.Selection(
+        [
+            ('draft', 'To Submit'),
+            ('confirm', 'To Approve'),
+            ('refuse', 'Refused'),
+            ('validate1', 'Second Approval'),
+            ('validate', 'Approved')
         ], string='Status', compute='_compute_state', store=True, tracking=True, copy=False, readonly=False,
         help="The status is set to 'To Submit', when a time off request is created." +
         "\nThe status is 'To Approve', when time off request is confirmed by user." +
@@ -132,10 +133,16 @@ class HolidaysRequest(models.Model):
     manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, readonly=False)
     # leave type configuration
     holiday_status_id = fields.Many2one(
-        "hr.leave.type", compute='_compute_from_employee_id', store=True, string="Time Off Type", required=True, readonly=False,
-        domain="[('company_id', '?=', employee_company_id), '|', ('requires_allocation', '=', 'no'), ('has_valid_allocation', '=', True)]", tracking=True)
-    holiday_allocation_id = fields.Many2one(
-        'hr.leave.allocation', compute='_compute_from_holiday_status_id', string="Allocation", store=True, readonly=False)
+        "hr.leave.type", compute='_compute_from_employee_id',
+        store=True, string="Time Off Type",
+        required=True, readonly=False,
+        domain="""[
+            ('company_id', 'in', [employee_company_id, False]),
+            '|',
+                ('requires_allocation', '=', 'no'),
+                ('has_valid_allocation', '=', True),
+        ]""",
+        tracking=True)
     color = fields.Integer("Color", related='holiday_status_id.color')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.leave_validation_type', readonly=False)
     # HR data
@@ -691,34 +698,6 @@ class HolidaysRequest(models.Model):
                 raise ValidationError(_('You can not set two time off that overlap on the same day for the same employees.\nExisting time off:\n%s') %
                                       ('\n'.join(conflicting_holidays_strings)))
 
-    @api.constrains('state', 'number_of_days', 'holiday_status_id')
-    def _check_holidays(self):
-        for holiday in self:
-            mapped_days_date = holiday.date_from.date() or None
-            mapped_days = self.holiday_status_id.get_employees_days((holiday.employee_id | holiday.sudo().employee_ids).ids, mapped_days_date)
-            if holiday.holiday_type != 'employee'\
-                    or not holiday.employee_id and not holiday.sudo().employee_ids\
-                    or holiday.holiday_status_id.requires_allocation == 'no':
-                continue
-            if holiday.employee_id:
-                leave_days = mapped_days[holiday.employee_id.id][holiday.holiday_status_id.id]
-                if float_compare(leave_days['remaining_leaves'], 0, precision_digits=2) == -1\
-                        or float_compare(leave_days['virtual_remaining_leaves'], 0, precision_digits=2) == -1:
-                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                            'Please also check the time off waiting for validation.'))
-            else:
-                unallocated_employees = []
-                for employee in holiday.sudo().employee_ids:
-                    leave_days = mapped_days[employee.id][holiday.holiday_status_id.id]
-                    if float_compare(leave_days['remaining_leaves'], self.number_of_days, precision_digits=2) == -1\
-                            or float_compare(leave_days['virtual_remaining_leaves'], self.number_of_days, precision_digits=2) == -1:
-                        unallocated_employees.append(employee.name)
-                if unallocated_employees:
-                    raise ValidationError(_('The number of remaining time off is not sufficient for this time off type.\n'
-                                            'Please also check the time off waiting for validation.')
-                                        + _('\nThe employees that lack allocation days are:\n%s',
-                                            (', '.join(unallocated_employees))))
-
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date_state(self):
         if self.env.context.get('leave_skip_state_check'):
@@ -726,6 +705,18 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
                 raise ValidationError(_("This modification is not allowed in the current state."))
+
+    @api.constrains('date_from', 'date_to')
+    def _check_validity(self):
+        for leave in self:
+            leave_type = leave.holiday_status_id
+            if leave_type.requires_allocation == 'no':
+                continue
+            employee = leave.employee_id
+            date_from = leave.date_from.date()
+            leave_data = leave_type.get_allocation_data(employee, date=date_from)
+            if leave_data[employee][0][1]['excess_days']:
+                raise ValidationError(_('The allocation configuration does not allow you to take this leave.'))
 
     ####################################################
     # ORM Overrides methods
@@ -767,7 +758,7 @@ class HolidaysRequest(models.Model):
                         leave.display_name = _("%(leave_type)s: %(duration).2f hours on %(date)s",
                             leave_type=time_off_type_display,
                             duration=leave.number_of_hours_display,
-                            date=fields.Date.to_string(date_from_utc) or "",
+                            date=display_date,
                         )
                     elif not time_off_type_display:
                         leave.display_name = _("%(person)s: %(duration).2f hours on %(date)s",
@@ -1109,7 +1100,6 @@ class HolidaysRequest(models.Model):
 
         current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
-
 
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
@@ -1614,3 +1604,38 @@ class HolidaysRequest(models.Model):
             attendance_to = next((att for att in reversed(attendances) if int(att.dayofweek) <= request_date_to.weekday()), attendances[-1] if attendances else default_value)
 
         return (attendance_from, attendance_to)
+
+    ####################################################
+    # Cron methods
+    ####################################################
+
+    @api.model
+    def _cancel_invalid_leaves(self):
+        inspected_date = fields.Date.today() + timedelta(days=31)
+        start_datetime = datetime.combine(fields.Date.today(), datetime.min.time())
+        end_datetime = datetime.combine(inspected_date, datetime.max.time())
+        concerned_leaves = self.search([
+            ('date_from', '>=', start_datetime),
+            ('date_from', '<=', end_datetime),
+            ('state', 'in', ['confirm', 'validate1', 'validate']),
+        ], order='date_from desc')
+        accrual_allocations = self.env['hr.leave.allocation'].search([
+            ('employee_id', 'in', concerned_leaves.employee_id.ids),
+            ('holiday_status_id', 'in', concerned_leaves.holiday_status_id.ids),
+            ('allocation_type', '=', 'accrual'),
+            ('date_from', '<=', end_datetime),
+            '|',
+            ('date_to', '>=', start_datetime),
+            ('date_to', '=', False),
+        ])
+        # only take leaves linked to accruals
+        concerned_leaves = concerned_leaves\
+            .filtered(lambda leave: leave.holiday_status_id in accrual_allocations.holiday_status_id)\
+            .sorted('date_from', reverse=True)
+        reason = _("the accruated amount is insufficient for that duration.")
+        for leave in concerned_leaves:
+            to_recheck_leaves_per_leave_type = concerned_leaves.employee_id._get_consumed_leaves(leave.holiday_status_id)[1]
+            exceeding_duration = to_recheck_leaves_per_leave_type[leave.employee_id][leave.holiday_status_id]['exceeding_duration']
+            if not exceeding_duration:
+                continue
+            leave._force_cancel(reason, 'mail.mt_note')
