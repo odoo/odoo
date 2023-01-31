@@ -36,6 +36,14 @@ class StockMoveLine(models.Model):
             else:
                 return expression.OR([[('production_id.picking_type_id', operator, value)], res])
 
+    def _prepare_stock_move_vals(self):
+        res = super()._prepare_stock_move_vals()
+        if self.product_id.is_kits and res.get('state') not in ('draft', 'cancel', 'done'):
+            # We need to force the state to draft, so the SM will go through the confirmation process and, thus,
+            # will be exploded
+            res['state'] = 'draft'
+        return res
+
     @api.model_create_multi
     def create(self, values):
         res = super(StockMoveLine, self).create(values)
