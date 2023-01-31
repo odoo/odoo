@@ -22,7 +22,7 @@
 
                     <div align="center">
                         <h2>
-                            <span>记账凭证</span>
+                            <span>Accounting Voucher</span>
                         </h2>
                     </div>
 
@@ -32,15 +32,15 @@
                     <div id="informations" class="row">
                         <!-- offset intentionally for period -->
                         <div class="col-3 offset-3" name="date">
-                            <strong>日期：</strong>
+                            <strong>Date:</strong>
                             <span t-field="o.date"/>
                         </div>
                         <div class="col-4" t-if="o.name" name="name">
-                            <strong>凭证号：</strong>
+                            <strong>Reference:</strong>
                             <span t-field="o.name"/>
                         </div>
                         <div class="col-2">
-                            <strong>附件数：</strong>
+                            <strong>Number of attachments:</strong>
                             <span t-esc="o._count_attachments()"/>
                         </div>
                     </div>
@@ -49,10 +49,10 @@
                         <thead>
                             <tr>
                                 <t t-set="colspan" t-value="4"/>
-                                <th name="th_description" class="text-center"><span>摘要</span></th>
-                                <th name="th_account" class="text-center"><span>科目</span></th>
-                                <th name="th_debit" class="text-center"><span>借方</span></th>
-                                <th name="th_credit" class="text-center"><span>贷方</span></th>
+                                <th name="th_description" class="text-center"><span>Balance</span></th>
+                                <th name="th_account" class="text-center"><span>Account</span></th>
+                                <th name="th_debit" class="text-center"><span>Debit</span></th>
+                                <th name="th_credit" class="text-center"><span>Credit</span></th>
                             </tr>
                         </thead>
                         <tbody class="invoice_tbody">
@@ -81,7 +81,7 @@
                             </t>
                             <t>
                                 <td name="total" colspan="2">
-                                    <span>合计：</span>
+                                    <span>Total:</span>
                                     <span t-esc="o._convert_to_amount_in_word(total_debit)" />
                                 </td>
                                 <td name="total_debit">
@@ -96,13 +96,13 @@
 
                     <div id="staff" class="row" style="color:black">
                         <div class="col-4">
-                            <strong>审核：</strong>
+                            <strong>Validator:</strong>
                         </div>
                         <div class="col-4">
-                            <strong>过账：</strong>
+                            <strong>Poster:</strong>
                         </div>
                         <div class="col-4">
-                            <strong>制单：</strong>
+                            <strong>Salesperson:</strong>
                             <span t-esc="o.invoice_user_id.name"/>
                         </div>
                     </div>
