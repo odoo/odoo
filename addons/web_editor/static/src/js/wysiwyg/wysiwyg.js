@@ -2555,6 +2555,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     resetEditor: function (value, options) {
+        this.$editable[0].removeEventListener('focus', this._joinPeerToPeer);
         if (options) {
             this.options = this._getEditorOptions(options);
         }
