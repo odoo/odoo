@@ -60,6 +60,7 @@ export class Chatter extends Component {
         "threadId?",
         "threadModel",
         "webRecord?",
+        "saveRecord",
     ];
     static defaultProps = {
         compactHeight: false,
@@ -129,6 +130,10 @@ export class Chatter extends Component {
                 if (nextProps.threadId === false) {
                     this.state.thread.composer.type = false;
                 }
+            }
+            if (this.onNextUpdate) {
+                this.onNextUpdate(nextProps);
+                this.onNextUpdate = null;
             }
         });
     }
@@ -319,10 +324,24 @@ export class Chatter extends Component {
     }
 
     toggleComposer(mode = false) {
-        if (this.state.thread.composer.type === mode) {
-            this.state.thread.composer.type = false;
+        const toggle = () => {
+            if (this.state.thread.composer.type === mode) {
+                this.state.thread.composer.type = false;
+            } else {
+                this.state.thread.composer.type = mode;
+            }
+        };
+        if (this.props.threadId) {
+            toggle();
         } else {
-            this.state.thread.composer.type = mode;
+            this.onNextUpdate = (nextProps) => {
+                // if there is no threadId, the save operation probably failed
+                // probably because some required field is not set
+                if (nextProps.threadId) {
+                    toggle();
+                }
+            };
+            this.props.saveRecord();
         }
     }
 

@@ -35,19 +35,6 @@ QUnit.test("base rendering", async function (assert) {
     assert.containsOnce(target, ".o-mail-chatter-topbar-follower-list");
 });
 
-QUnit.test("base disabled rendering", async function (assert) {
-    const { openView } = await start();
-    await openView({
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
-    assert.containsOnce(target, ".o-mail-chatter-topbar");
-    assert.ok($(target).find("button:contains(Send message)")[0].disabled);
-    assert.ok($(target).find("button:contains(Log note)")[0].disabled);
-    assert.ok($(target).find("button:contains(Activities)")[0].disabled);
-    assert.ok($(target).find("button[aria-label='Attach files']")[0].disabled);
-});
-
 QUnit.test("rendering with multiple partner followers", async function (assert) {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2, partnerId_3] = pyEnv["res.partner"].create([

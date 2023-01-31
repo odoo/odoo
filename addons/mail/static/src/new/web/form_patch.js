@@ -114,6 +114,7 @@ patch(FormController.prototype, "mail/new", {
             hasParentReloadOnAttachmentsChanged,
             hasParentReloadOnFollowersUpdate,
             hasParentReloadOnMessagePosted,
+            saveRecord: this.saveButtonClicked.bind(this),
         };
     },
 
