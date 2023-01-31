@@ -18,19 +18,19 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
      */
     _onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
-        const search = $.deparam(window.location.search.substring(1));
-        delete search.min_price;
-        delete search.max_price;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("min_price");
+        searchParams.delete("max_price");
         if (parseFloat(range.min) !== range.valueLow) {
-            search['min_price'] = range.valueLow;
+            searchParams.set("min_price", range.valueLow);
         }
         if (parseFloat(range.max) !== range.valueHigh) {
-            search['max_price'] = range.valueHigh;
+            searchParams.set("max_price", range.valueHigh);
         }
         let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.search = $.param(search);
+        window.location.search = searchParams.toString();
     },
 });
