@@ -330,6 +330,7 @@ snippetsEditor.SnippetsMenu.include({
     _insertDropzone: function ($hook) {
         var $hookParent = $hook.parent();
         var $dropzone = this._super(...arguments);
+        $dropzone.attr('data-editor-message-default', $hookParent.attr('data-editor-message-default'));
         $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;

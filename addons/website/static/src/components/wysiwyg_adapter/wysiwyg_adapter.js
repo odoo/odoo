@@ -345,6 +345,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
     _addEditorMessages() {
         const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
+                .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
