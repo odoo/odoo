@@ -43,7 +43,7 @@ class AccrualPlanLevel(models.Model):
 
     # Accrue of
     added_value = fields.Float(
-        "Rate", required=True,
+        "Rate", required=True, digits=(4, 5),
         help="The number of hours/days that will be incremented in the specified Time Off Type for every period")
     added_value_type = fields.Selection(
         [('days', 'Days'),

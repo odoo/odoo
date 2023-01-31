@@ -387,6 +387,60 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
             self.assertAlmostEqual(allocation_worked_time.number_of_days, 8, 4, 'There should be 8 days allocated.')
             self.assertEqual(allocation_worked_time.nextcall, next_date, 'The next call date of the cron should be September 20th')
 
+    def test_added_value_decimal(self):
+        accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
+            'name': 'Accrual Plan For Test',
+            'level_ids': [(0, 0, {
+                'start_count': 1,
+                'start_type': 'day',
+                'added_value': 0.23476,
+                'added_value_type': 'days',
+                'frequency': 'daily',
+                'maximum_leave': 10000
+            })],
+        })
+        allocation = self.env['hr.leave.allocation'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Accrual allocation for employee',
+            'accrual_plan_id': accrual_plan.id,
+            'employee_id': self.employee_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'number_of_days': 0,
+            'allocation_type': 'accrual',
+        })
+        allocation.action_confirm()
+        allocation.action_validate()
+        self.assertFalse(allocation.nextcall, 'There should be no nextcall set on the allocation.')
+        self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet.')
+        allocation._update_accrual()
+        tomorrow = datetime.date.today() + relativedelta(days=2)
+        self.assertEqual(allocation.number_of_days, 0, 'There should be no days allocated yet. The accrual starts tomorrow.')
+
+        with freeze_time(tomorrow):
+            allocation._update_accrual()
+            nextcall = datetime.date.today() + relativedelta(days=1)
+            self.assertEqual(allocation.number_of_days, 0.23476, 'There should be 0.23476 day allocated.')
+            self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.23476, 'There should be only 0.23476 day allocated.')
+            tomorrow = datetime.date.today() + relativedelta(days=1)
+
+        with freeze_time(tomorrow):
+            allocation._update_accrual()
+            nextcall = datetime.date.today() + relativedelta(days=1)
+            self.assertEqual(allocation.number_of_days, 0.46952, 'There should be 0.46952 day allocated.')
+            self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.46952, 'There should be only 0.46952 day allocated.')
+            twoDaysLater = datetime.date.today() + relativedelta(days=2)
+
+        with freeze_time(twoDaysLater):
+            allocation._update_accrual()
+            nextcall = datetime.date.today() + relativedelta(days=1)
+            self.assertEqual(allocation.number_of_days, 0.93904, 'There should be 0.93904 day allocated.')
+            self.assertEqual(allocation.nextcall, nextcall, 'The next call date of the cron should be in 2 days.')
+            allocation._update_accrual()
+            self.assertEqual(allocation.number_of_days, 0.93904, 'There should be only 0.93904 day allocated.')
+
     def test_check_max_value(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({
             'name': 'Accrual Plan For Test',
