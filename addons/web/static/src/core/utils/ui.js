@@ -156,7 +156,7 @@ export function touching(elements, targetRect) {
 //  - redefine this selector in tests env with ":not(#qunit *)" ?
 
 // Following selector is based on this spec: https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
-let TABABLE_SELECTOR = "[tabindex], a, area, button, frame, iframe, input, object, select, textarea, details > summary:nth-child(1),"
+let TABABLE_SELECTOR = "[tabindex], a, area, button, frame, iframe, input, object, select, textarea, details > summary:nth-child(1), [contenteditable='true']"
     .split(",")
     .join(':not([tabindex="-1"]):not(:disabled),');
 TABABLE_SELECTOR = TABABLE_SELECTOR.slice(0, TABABLE_SELECTOR.length - 1);
