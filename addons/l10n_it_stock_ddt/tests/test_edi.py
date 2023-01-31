@@ -126,12 +126,11 @@ class TestItEdiDDT(TestItEdi):
             deferred_invoice.action_post()
 
         # Check the XML output of the invoice
-        self._test_invoice_with_sample_file(
-            deferred_invoice,
-            "deferred_invoice.xml",
-            xpaths_result={"//DatiGeneraliDocumento/Numero": "<Numero/>",},
-            xpaths_file={"//DatiGeneraliDocumento/Numero": "<Numero/>",}
-        )
+        invoice_xml = self.edi_format._l10n_it_edi_export_invoice_as_xml(deferred_invoice)
+        expected_xml = self._get_stock_ddt_test_file_content("deferred_invoice.xml")
+        result = self._cleanup_etree(invoice_xml, {"//DatiGeneraliDocumento/Numero": "<Numero/>",})
+        expected = self._cleanup_etree(expected_xml, {"//DatiGeneraliDocumento/Numero": "<Numero/>",})
+        self.assertXmlTreeEqual(result, expected)
 
     def _create_delivery(self, sale_order, qty=1):
         """ Create a picking of a limited quantity and create a backorder """
@@ -144,7 +143,7 @@ class TestItEdiDDT(TestItEdi):
         confirm_dialog.process()
 
     @classmethod
-    def _get_test_file_content(cls, filename):
+    def _get_stock_ddt_test_file_content(cls, filename):
         """ Get the content of a test file inside this module """
         path = 'l10n_it_stock_ddt/tests/expected_xmls/' + filename
         with tools.file_open(path, mode='rb') as test_file:
