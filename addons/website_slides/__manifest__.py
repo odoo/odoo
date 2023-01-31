@@ -75,6 +75,7 @@ Featuring
             'website_slides/static/src/scss/slide_views.scss',
             'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/tours/slides_tour.js',
+            'website_slides/static/src/js/components/**/*.js',
         ],
         'web.assets_frontend': [
             'website_slides/static/src/scss/website_slides.scss',
