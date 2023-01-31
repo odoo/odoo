@@ -4,6 +4,7 @@ from werkzeug.exceptions import InternalServerError
 
 from odoo import http
 from odoo.http import request
+from odoo.tools.misc import html_escape
 
 import json
 
@@ -33,9 +34,5 @@ class StockReportController(http.Controller):
                 'message': 'Odoo Server Error',
                 'data': se
             }
-            res = werkzeug.wrappers.Response(
-                json.dumps(error),
-                status=500,
-                headers=[("Content-Type", "application/json")]
-            )
+            res = request.make_response(html_escape(json.dumps(error)))
             raise InternalServerError(response=res) from e
