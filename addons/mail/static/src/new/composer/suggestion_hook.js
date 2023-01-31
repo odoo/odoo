@@ -119,11 +119,15 @@ export function useSuggestion() {
             if (!self.search.delimiter || !comp.props.composer.thread) {
                 return;
             }
-            const [main, extra = { suggestions: [] }] = suggestionService.searchSuggestions(
+            const suggestions = suggestionService.searchSuggestions(
                 self.search,
                 { thread: comp.props.composer.thread },
                 true
             );
+            if (!suggestions) {
+                return;
+            }
+            const [main, extra = { suggestions: [] }] = suggestions;
             // arbitrary limit to avoid displaying too many elements at once
             // ideally a load more mechanism should be introduced
             const limit = 8;

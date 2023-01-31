@@ -109,7 +109,7 @@ class SuggestionService {
     searchChannelCommand(cleanedSearchTerm, thread, sort) {
         if (!["chat", "channel", "group"].includes(thread.type)) {
             // channel commands are channel specific
-            return [[]];
+            return;
         }
         const commands = commandRegistry
             .getEntries()
