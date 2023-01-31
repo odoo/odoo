@@ -87,7 +87,7 @@ QUnit.module("Board", (hooks) => {
     });
 
     QUnit.test("basic functionality, with one sub action", async function (assert) {
-        assert.expect(21);
+        assert.expect(23);
         serverData.views["partner,4,list"] = '<tree string="Partner"><field name="foo"/></tree>';
         await makeView({
             serverData,
@@ -129,6 +129,9 @@ QUnit.module("Board", (hooks) => {
                 if (route === "/web/view/edit_custom") {
                     assert.step("edit custom");
                     return Promise.resolve(true);
+                }
+                if (args.method === "get_views" && args.model == "partner") {
+                    assert.deepEqual(args.kwargs.views.find((v) => v[1] === 'list'), [4, "list"]);
                 }
             },
         });
