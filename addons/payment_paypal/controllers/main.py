@@ -7,9 +7,11 @@ import requests
 from werkzeug import urls
 from werkzeug.exceptions import Forbidden
 
-from odoo import http
+from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import html_escape
+
 
 _logger = logging.getLogger(__name__)
 
@@ -28,9 +30,6 @@ class PaypalController(http.Controller):
         The PDT (Payment Data Transfer) notification contains the parameters necessary to verify the
         origin of the notification and retrieve the actual notification data, if PDT is enabled on
         the account. See https://developer.paypal.com/api/nvp-soap/payment-data-transfer/.
-
-        If PDT is not enabled on the account, the origin of the notification cannot be verified and
-        the latter directly contains the notification data that must be processed.
 
         The route accepts both GET and POST requests because PayPal seems to switch between the two
         depending on whether PDT is enabled, whether the customer pays anonymously (without logging
@@ -68,8 +67,8 @@ class PaypalController(http.Controller):
 
         The validation is done in four steps:
 
-        1. Make a POST request to Paypal with the `tx`, the GET param received with the PDT,
-           and the two other required params `cmd` and `at`.
+        1. Make a POST request to Paypal with `tx`, the GET param received with the PDT data, and
+           with the two other required params `cmd` and `at`.
         2. PayPal sends back a response text starting with either 'SUCCESS' or 'FAIL'. If the
            validation was a success, the notification data are appended to the response text as a
            string formatted as follows: 'SUCCESS\nparam1=value1\nparam2=value2\n...'
@@ -84,16 +83,27 @@ class PaypalController(http.Controller):
         :return: The retrieved notification data
         :raise :class:`werkzeug.exceptions.Forbidden`: if the notification origin can't be verified
         """
-        if 'tx' not in pdt_data:  # We did not receive a PDT but directly notification data
-            # When PDT is not enabled, PayPal sends directly the notification data instead. We can't
-            # verify them but we can process them as is.
-            notification_data = pdt_data
+        if 'tx' not in pdt_data:  # PDT is not enabled; PayPal directly sent the notification data.
+            tx_sudo._log_message_on_linked_documents(_(
+                "The status of transaction with reference %(ref)s was not synchronized because the "
+                "'Payment data transfer' option is not enabled on the PayPal dashboard.",
+                ref=tx_sudo.reference,
+            ))
+            raise Forbidden("PayPal: PDT are not enabled; cannot verify data origin")
         else:
-            if not tx_sudo.provider_id.paypal_pdt_token:  # We received PDT but can't verify them
+            provider_sudo = tx_sudo.provider_id
+            if not provider_sudo.paypal_pdt_token:  # We received PDT data but can't verify them
+                record_link = f'<a href=# data-oe-model=payment.provider ' \
+                              f'data-oe-id={provider_sudo.id}>{html_escape(provider_sudo.name)}</a>'
+                tx_sudo._log_message_on_linked_documents(_(
+                    "The status of transaction with reference %(ref)s was not synchronized because "
+                    "the PDT Identify Token is not configured on the provider %(record_link)s.",
+                    ref=tx_sudo.reference, record_link=record_link
+                ))
                 raise Forbidden("PayPal: The PDT token is not set; cannot verify data origin")
-            else:  # The PayPal account is configured to receive PDTs, and the PDT token is set
-                # Request a PDT authenticity check and the notification data to PayPal
-                url = tx_sudo.provider_id._paypal_get_api_url()
+            else:  # The PayPal account is configured to receive PDT data, and the PDT token is set
+                # Request a PDT data authenticity check and the notification data to PayPal
+                url = provider_sudo._paypal_get_api_url()
                 payload = {
                     'cmd': '_notify-synch',
                     'tx': pdt_data['tx'],
