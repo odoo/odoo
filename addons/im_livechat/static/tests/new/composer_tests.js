@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
-import { getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
+import { editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 let target;
 QUnit.module("composer", {
@@ -37,4 +37,32 @@ QUnit.test("Attachment upload via drag and drop disabled", async function (asser
     dragenterFiles(target.querySelector(".o-mail-composer-textarea"));
     await nextTick();
     assert.containsNone(target, ".o-dropzone");
+});
+
+QUnit.test("Can execute help command on livechat channels", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    await start({
+        mockRPC(route, args, originalMockRPC) {
+            if (args.method === "execute_command_help") {
+                assert.step("execute_command_help");
+                return true;
+            }
+            return originalMockRPC(route, args);
+        },
+    });
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-notification-item");
+    await editInput(target, ".o-mail-composer-textarea", "/help");
+    triggerHotkey("Enter");
+    await nextTick();
+    assert.verifySteps(["execute_command_help"]);
 });

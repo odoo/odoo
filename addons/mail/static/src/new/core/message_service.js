@@ -57,13 +57,14 @@ export class MessageService {
         });
     }
 
-    getCommandFromText(threadType, content) {
+    getCommandFromText(thread, content) {
         if (content.startsWith("/")) {
             const firstWord = content.substring(1).split(/\s/)[0];
             const command = commandRegistry.get(firstWord, false);
             if (command) {
-                const types = command.channel_types || ["channel", "chat", "group"];
-                return types.includes(threadType) ? command : false;
+                return command.channel_types?.includes(thread.type) || thread.isChannel
+                    ? command
+                    : false;
             }
         }
     }

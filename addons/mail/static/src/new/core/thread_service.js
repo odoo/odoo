@@ -570,9 +570,7 @@ export class ThreadService {
      * @param {string} body
      */
     async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
-        const command = this.store.user
-            ? this.message.getCommandFromText(thread.type, body)
-            : undefined;
+        const command = this.store.user ? this.message.getCommandFromText(thread, body) : undefined;
         if (command) {
             await this.executeCommand(thread, command, body);
             return;
