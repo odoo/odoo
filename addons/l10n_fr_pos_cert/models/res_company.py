@@ -73,6 +73,7 @@ class ResCompany(models.Model):
                     corrupted_orders.append(order.name)
                     msg_alert = (_('Corrupted data on point of sale order with id %s.', order.id))
                 previous_hash = order.l10n_fr_hash
+            orders.invalidate_recordset()
 
             orders_sorted_date = orders.sorted(lambda o: o.date_order)
             start_order_info = build_order_info(orders_sorted_date[0])
