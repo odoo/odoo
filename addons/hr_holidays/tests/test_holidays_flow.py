@@ -8,7 +8,6 @@ from freezegun import freeze_time
 from psycopg2 import IntegrityError
 
 from odoo import Command
-from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import date_utils, mute_logger, test_reports
 
 from odoo.addons.hr_holidays.tests.common import TestHrHolidaysCommon
@@ -75,7 +74,6 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         hol12_manager_group.action_approve()
         self.assertEqual(hol1_user_group.state, 'validate', 'hr_holidays: validates leave request should be in validate state')
 
-
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_01_leave_request_flow_limited(self):
         """ Testing leave request flow: limited type of leave request """
@@ -111,14 +109,15 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 }
             ]).action_validate()
 
-            def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
-                self.assertEqual(holiday_status.max_leaves, ml,
+            def _check_holidays_status(holiday_status, employee, ml, lt, rl, vrl):
+                result = holiday_status.get_allocation_data(employee)[employee][0][1]
+                self.assertEqual(result['max_leaves'], ml,
                                 'hr_holidays: wrong type days computation')
-                self.assertEqual(holiday_status.leaves_taken, lt,
+                self.assertEqual(result['leaves_taken'], lt,
                                 'hr_holidays: wrong type days computation')
-                self.assertEqual(holiday_status.remaining_leaves, rl,
+                self.assertEqual(result['remaining_leaves'], rl,
                                 'hr_holidays: wrong type days computation')
-                self.assertEqual(holiday_status.virtual_remaining_leaves, vrl,
+                self.assertEqual(result['virtual_remaining_leaves'], vrl,
                                 'hr_holidays: wrong type days computation')
 
             # HrManager creates some holiday statuses
@@ -148,12 +147,13 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'date_from': time.strftime('%Y-%m-01'),
             })
             # HrUser validates the first step
+            self.env.flush_all()
 
             # HrManager validates the second step
             aloc1_user_group.with_user(self.user_hrmanager_id).action_validate()
             # Checks Employee has effectively some days left
             hol_status_2_employee_group = self.holidays_status_limited.with_user(self.user_employee_id)
-            _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
+            _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 2.0)
 
             # Employee creates a leave request in the limited category, now that he has some days left
             hol2 = HolidaysEmployeeGroup.create({
@@ -163,10 +163,11 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                 'request_date_from': (date.today() + relativedelta(days=2)),
                 'request_date_to': (date.today() + relativedelta(days=2)),
             })
+            self.env.flush_all()
             hol2_user_group = hol2.with_user(self.user_hruser_id)
             # Check left days: - 1 virtual remaining day
             hol_status_2_employee_group.invalidate_model()
-            _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 1.0)
+            _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 1.0)
 
             # HrManager validates the second step
             hol2_user_group.with_user(self.user_hrmanager_id).action_validate()
@@ -174,7 +175,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                             'hr_holidays: second validation should lead to validate state')
             # Check left days: - 1 day taken
             hol_status_2_employee_group.invalidate_model(['max_leaves', 'leaves_taken'])
-            _check_holidays_status(hol_status_2_employee_group, 2.0, 1.0, 1.0, 1.0)
+            _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 1.0, 1.0, 1.0)
 
             # HrManager finds an error: he refuses the leave request
             hol2.with_user(self.user_hrmanager_id).action_refuse()
@@ -183,7 +184,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             # Check left days: 2 days left again
 
             hol_status_2_employee_group.invalidate_model(['max_leaves'])
-            _check_holidays_status(hol_status_2_employee_group, 2.0, 0.0, 2.0, 2.0)
+            _check_holidays_status(hol_status_2_employee_group, self.employee_emp, 2.0, 0.0, 2.0, 2.0)
 
             self.assertEqual(hol2.state, 'refuse',
                             'hr_holidays: hr_user should not be able to reset a refused leave request')
@@ -218,7 +219,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             hol3.action_validate()
             self.assertEqual(hol3.state, 'validate', 'hr_holidays: validation should lead to validate state')
             # Check left days for casual leave: 19 days left
-            _check_holidays_status(hol3_status, 20.0, 1.0, 19.0, 19.0)
+            _check_holidays_status(hol3_status, self.env['hr.employee'].browse(employee_id), 20.0, 1.0, 19.0, 19.0)
 
     def test_10_leave_summary_reports(self):
         # Print the HR Holidays(Summary Employee) Report through the wizard

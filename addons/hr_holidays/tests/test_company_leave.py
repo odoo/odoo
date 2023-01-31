@@ -82,7 +82,6 @@ class TestCompanyLeave(TransactionCase):
         self.assertEqual(all_leaves[3].number_of_days, 1)
         self.assertEqual(all_leaves[3].state, 'validate')
 
-
     def test_leave_whole_company_02(self):
         # TEST CASE 2: Leaves taken in half-days. Take a 3 days leave
         # Add a company leave on the second day

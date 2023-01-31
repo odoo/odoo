@@ -19,7 +19,7 @@
                         ('date_to', '=', False),
                         ('date_to', '&gt;=', context_today().strftime('%Y-%m-%d')),
                     ]"
-                     help="Active Allocations"/>
+                    help="Active Allocations"/>
                 <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]" groups="mail.group_mail_notification_type_inbox"/>
                 <separator/>
@@ -66,63 +66,75 @@
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <form string="Allocation Request">
-                <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
-                <field name="holiday_type" invisible="1" readonly="state not in ['confirm', 'draft']"/>
+                <field name="holiday_type" invisible="1" readonly="state not in ['confirm']"/>
                 <header>
-                    <button string="Confirm" name="action_confirm" invisible="state != 'draft' and 'allocation_type' != 'accrual' and not employee_id" type="object" class="oe_highlight"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate"/>
+                    <field name="state" widget="statusbar" statusbar_visible="confirm,validate"/>
                 </header>
                 <sheet>
-                    <div class="oe_button_box" name="button_box">
-                    </div>
+                    <div class="oe_button_box" name="button_box"/>
                     <div id="title" class="oe_title">
-                        <h2><field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" invisible="state not in ('draft', 'confirm')" readonly="True"/>
-                        <field name="name_validity" invisible="state in ('draft', 'confirm')"/></h2>
+                        <h2><field name="name" class="w-100"
+                            placeholder="e.g. Time Off type (From validity start to validity end / no limit)"
+                            invisible="state != 'confirm'" readonly="True"/>
+                        <field name="name_validity" invisible="state == 'confirm'"/></h2>
                     </div>
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
                             <field name="has_accrual_plan" invisible="1"/>
-                            <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                            <field name="allocation_type" widget="radio"
+                            <field name="holiday_status_id"
+                                context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"
+                                readonly="state == 'validate'"/>
+                            <field name="allocation_type"
+                                widget="radio"
                                 invisible="1"
-                                readonly="not is_officer or state not in ('draft', 'confirm')"/>
+                                readonly="not is_officer or state == 'validate'"/>
                             <field name="is_officer" invisible="1"/>
-                            <field name="accrual_plan_id" invisible="allocation_type == 'regular'" readonly="not is_officer or state not in ('draft', 'confirm')"/>
+                            <field name="accrual_plan_id"
+                                invisible="allocation_type == 'regular'"
+                                required="allocation_type == 'accrual'"
+                                readonly="not is_officer or state == 'validate'"/>
                             <div class="o_td_label" name="validity_label">
-                                <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual' or state not in ('draft', 'confirm')"/>
+                                <label for="date_from" string="Validity Period"
+                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
                                 <label for="date_from" string="Start Date" invisible="allocation_type == 'regular'"/>
                             </div>
                             <div class="o_row" name="validity">
-                                <field name="date_from" widget="date" nolabel="1" readonly="1" invisible="allocation_type == 'regular' and state not in ('draft', 'confirm')"/>
-                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual' or state not in ('draft', 'confirm')"/>
-                                <label class="mx-2" for="date_to" string="Run until" invisible="allocation_type == 'regular'"/>
-                                <field name="date_to" widget="date" nolabel="1" placeholder="No Limit"  readonly="1"  invisible="allocation_type == 'regular' and state not in ('draft', 'confirm')"/>
-                                <div id="no_limit_label" class="oe_read_only" invisible="not id or date_to or state not in ('draft', 'confirm')">No limit</div>
+                                <field name="date_from" widget="date" nolabel="1" readonly="1"
+                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"
+                                    invisible="allocation_type == 'accrual' or state != 'confirm'"/>
+                                <label class="mx-2" for="date_to" string="Run until"
+                                    invisible="allocation_type == 'regular'"/>
+                                <field name="date_to" widget="date" nolabel="1"
+                                    placeholder="No Limit"  readonly="1"
+                                    invisible="allocation_type == 'regular' and state != 'confirm'"/>
+                                <div id="no_limit_label" class="oe_read_only"
+                                    invisible="not id or date_to or state != 'confirm'">No limit</div>
                             </div>
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
                                 <label for="number_of_days_display" string="Allocation"
-                                    readonly="allocation_type == 'accrual' and state not in ('draft', 'confirm')"/>
+                                    readonly="allocation_type == 'accrual' and state == 'validate'"/>
                             </div>
                             <div name="duration_display">
                                 <field name="number_of_days_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit == 'hour'"
-                                    readonly="state not in ('draft', 'confirm')"/>
+                                    readonly="state == 'validate'"/>
                                 <field name="number_of_hours_display" nolabel="1" style="width: 5rem;"
                                     invisible="type_request_unit != 'hour'"
-                                    readonly="state not in ('draft', 'confirm')"/>
+                                    readonly="state == 'validate'"/>
                                 <span class="ml8" invisible="type_request_unit == 'hour'">Days</span>
                                 <span class="ml8" invisible="type_request_unit != 'hour'">Hours</span>
                             </div>
                         </group>
                         <group name="alloc_right_col">
-                            <field name="employee_id" invisible="1" readonly="state in ['cancel', 'refuse', 'validate']"/>
-                            <field name="department_id" invisible="1" readonly="state not in ['confirm', 'draft']"/>
+                            <field name="employee_id" invisible="1" readonly="state in ['refuse', 'validate']"/>
+                            <field name="department_id" invisible="1" readonly="state not in ['confirm']"/>
                         </group>
                     </group>
-                    <field name="notes" nolabel="1" placeholder="Add a reason..." readonly="state not in ['confirm', 'draft']"/>
+                    <field name="notes" nolabel="1" placeholder="Add a reason..." readonly="state not in ['confirm']"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -140,74 +152,73 @@
         <field name="mode">primary</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_confirm']" position="after">
-                <button string="Validate" name="action_validate" invisible="state != 'confirm'" type="object" class="oe_highlight"/>
+            <field name="state" position="before">
+                <button string="Validate" name="action_validate"
+                    invisible="state == 'validate'" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     invisible="not can_approve or state not in ('confirm', 'validate')"/>
-                <button string="Mark as Draft" name="action_draft" type="object"
-                        invisible="not can_reset or state not in ['confirm', 'refuse']"/>
-            </xpath>
-            <xpath expr="//div[@id='title']" position="replace">
+            </field>
+            <div id="title" position="replace">
                 <div class="oe_title">
                     <h2><field name="name" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" required="1"/></h2>
                 </div>
-            </xpath>
-            <xpath expr="//field[@name='employee_id']" position="before">
-                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}"  readonly="state not in ['confirm', 'draft']"/>
-            </xpath>
-            <xpath expr="//field[@name='employee_id']" position="replace">
+            </div>
+            <field name="employee_id" position="before">
+                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" context="{'employee_id':employee_id}"  readonly="state not in ['confirm']"/>
+            </field>
+            <field name="employee_id" position="replace">
                 <!-- :TestLeaveRequests.test_allocation_request -->
-                <field name="employee_id" invisible="1" readonly="state in ['cancel', 'refuse', 'validate']"/>
+                <field name="employee_id" invisible="1" readonly="state in ['refuse', 'validate']"/>
                 <field name="multi_employee" invisible="1" force_save="1"/>
                 <!-- Employee id is only visible if the allocation is created specifically for that user in `_action_validate_create_childs` -->
                 <field name="employee_id" groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'employee' or not employee_id or state in ('draft', 'cancel', 'confirm')"
-                    readonly="state in ['cancel', 'refuse', 'validate']"
+                    invisible="holiday_type != 'employee' or not employee_id or state == 'confirm'"
+                    readonly="state in ['refuse', 'validate']"
                     widget="many2one_avatar_employee"
                     options="{'relation': 'hr.employee.public'}"/>
                 <field name="employee_ids" widget="many2many_avatar_employee"
                     groups="hr_holidays.group_hr_holidays_user"
-                    invisible="holiday_type != 'employee' or (state not in ('draft', 'cancel', 'confirm') and employee_id)"
-                    readonly="state in ['cancel', 'refuse', 'validate']"
-                    required="holiday_type == 'employee' and state in ('draft', 'cancel', 'confirm')"
+                    invisible="holiday_type != 'employee' or state != 'confirm' and employee_id"
+                    readonly="state in ['refuse', 'validate']"
+                    required="holiday_type == 'employee' and state == 'confirm'"
                     options="{'relation': 'hr.employee.public'}"/>
-            </xpath>
-            <xpath expr="//field[@name='employee_id']" position="after">
+            </field>
+            <field name="employee_id" position="after">
                 <field name="category_id"
                     invisible="holiday_type != 'category'"
-                    readonly="state in ['cancel', 'refuse', 'validate']"
+                    readonly="state in ['refuse', 'validate']"
                     required="holiday_type == 'category'"/>
-            </xpath>
-            <xpath expr="//field[@name='department_id']" position="replace">
+            </field>
+            <field name="department_id" position="replace">
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'department'"
-                    readonly="state not in ['confirm', 'draft']"
+                    readonly="state not in ['confirm']"
                     required="holiday_type == 'department'"/>
-            </xpath>
-            <xpath expr="//field[@name='department_id']" position="after">
+            </field>
+            <field name="department_id" position="after">
                 <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user"
                     invisible="holiday_type != 'company'"
-                    readonly="state in ['cancel', 'refuse', 'validate']"
+                    readonly="state in ['refuse', 'validate']"
                     required="holiday_type == 'company'"/>
-            </xpath>
-            <xpath expr="//field[@name='allocation_type']" position="attributes">
+            </field>
+            <field name="allocation_type" position="attributes">
                 <attribute name="invisible">0</attribute>
-            </xpath>
-            <xpath expr="//label[@for='date_from']" position="replace">
+            </field>
+            <label for="date_from" position="replace">
                 <label for="date_from" string="Validity Period" invisible="allocation_type == 'accrual'"/>
-            </xpath>
-            <xpath expr="//field[@name='date_from']" position="replace">
-                <field name="date_from" widget="date" nolabel="1" readonly="allocation_type == 'accrual' and state not in ('draft', 'confirm')"/>
-            </xpath>
+            </label>
+            <field name="date_from" position="replace">
+                <field name="date_from" widget="date" nolabel="1" readonly="allocation_type == 'accrual' and state != 'confirm'"/>
+            </field>
             <xpath expr="//i[hasclass('fa-long-arrow-right')]" position="replace">
                 <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" invisible="allocation_type == 'accrual'"/>
             </xpath>
-            <xpath expr="//field[@name='date_to']" position="replace">
-                <field name="date_to" widget="date" nolabel="1" placeholder="No Limit"  readonly="allocation_type == 'accrual' and state not in ('draft', 'confirm')"/>
-            </xpath>
-            <xpath expr="//div[@id='no_limit_label']" position="replace">
+            <field name="date_to" position="replace">
+                <field name="date_to" widget="date" nolabel="1" placeholder="No Limit"  readonly="allocation_type == 'accrual' and state != 'confirm'"/>
+            </field>
+            <div id="no_limit_label" position="replace">
                 <div id="no_limit_label" class="oe_read_only" invisible="not id or date_to">No limit</div>
-            </xpath>
+            </div>
         </field>
     </record>
 
@@ -237,7 +248,7 @@
         </field>
     </record>
 
-     <record id="hr_leave_allocation_view_form_manager_dashboard" model="ir.ui.view">
+    <record id="hr_leave_allocation_view_form_manager_dashboard" model="ir.ui.view">
         <field name="name">hr.leave.allocation.view.form.manager.dashboard</field>
         <field name="model">hr.leave.allocation</field>
         <field name="inherit_id" ref="hr_holidays.hr_leave_allocation_view_form_manager"/>
@@ -258,18 +269,18 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree string="Allocation Requests" sample="1" decoration-info="state == 'draft'">
-                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['cancel', 'refuse', 'validate']"/>
-                <field name="department_id" optional="hide" readonly="state not in ['confirm', 'draft']"/>
-                <field name="holiday_status_id" class="fw-bold" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
+            <tree string="Allocation Requests" sample="1">
+                <field name="employee_id" decoration-muted="not active_employee" widget="many2one_avatar_user" readonly="state in ['refuse', 'validate']"/>
+                <field name="department_id" optional="hide" readonly="state not in ['confirm']"/>
+                <field name="holiday_status_id" class="fw-bold" readonly="state in ['refuse', 'validate', 'validate1']"/>
                 <field name="name"/>
                 <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
-                <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']"/>
-                <field name="allocation_type" readonly="state not in ['confirm', 'draft']"/>
+                <field name="date_to" string="Validity Stop" optional="hide" readonly="state in ['refuse', 'validate', 'validate1']"/>
+                <field name="allocation_type" readonly="state not in ['confirm']"/>
                 <field name="message_needaction" column_invisible="True"/>
                 <field name="active_employee" column_invisible="True"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
+                <field name="state" widget="badge" decoration-warning="state == 'confirm'" decoration-success="state == 'validate'"/>
                 <button string="Validate" name="action_validate" type="object"
                     icon="fa-check"
                     invisible="state != 'confirm'"
@@ -325,7 +336,7 @@
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
-             <xpath expr="//filter[@name='active_employee']" position="attributes">
+            <xpath expr="//filter[@name='active_employee']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//filter[@name='active_types']" position="attributes">
@@ -410,7 +421,7 @@
                 </templates>
             </kanban>
         </field>
-     </record>
+    </record>
 
     <record id="hr_leave_allocation_view_activity" model="ir.ui.view">
         <field name="name">hr.leave.allocation.view.activity</field>
@@ -500,7 +511,7 @@
         <field name="binding_model_id" ref="hr_holidays.model_hr_leave_allocation"/>
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
-         <field name="code">
+        <field name="code">
             if records:
                 records.action_validate()
         </field>

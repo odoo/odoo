@@ -80,7 +80,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_with_ts.action_validate()
         self.hr_leave_allocation_no_ts = self.Allocations.sudo().create({
             'name': 'Days for limited category without timesheet',
             'employee_id': self.empl_employee.id,
@@ -90,7 +89,6 @@ class TestTimesheetHolidays(TestCommonTimesheet):
             'date_from': time.strftime('%Y-01-01'),
             'date_to': time.strftime('%Y-12-31'),
         })
-        self.hr_leave_allocation_no_ts.action_validate()
 
     def test_validate_with_timesheet(self):
         # employee creates a leave request

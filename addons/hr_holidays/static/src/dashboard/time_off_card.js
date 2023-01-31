@@ -1,19 +1,22 @@
 /* @odoo-module */
 
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useNewAllocationRequest } from "@hr_holidays/views/hooks";
-import { Component } from "@odoo/owl";
+import { formatNumber, useNewAllocationRequest } from "@hr_holidays/views/hooks";
+import { Component, onWillRender } from "@odoo/owl";
 
 export class TimeOffCardPopover extends Component {}
 
 TimeOffCardPopover.template = "hr_holidays.TimeOffCardPopover";
 TimeOffCardPopover.props = [
     "allocated",
+    "accrual_bonus",
     "approved",
     "planned",
     "left",
-    "employeeId",
-    "holidayStatusId",
+    "warning",
+    "closest",
+    "request_unit",
+    "exceeding_duration",
     "close?",
     "onClickNewAllocationRequest?",
 ];
@@ -21,21 +24,37 @@ TimeOffCardPopover.props = [
 export class TimeOffCard extends Component {
     setup() {
         this.popover = usePopover(TimeOffCardPopover, {
-            position: "right",
+            position: "bottom",
             popoverClass: "bg-view",
         });
         this.newAllocationRequest = useNewAllocationRequest();
+        this.lang = this.env.services.user.lang;
+        this.formatNumber = formatNumber;
+        this.updateWarning();
+
+        onWillRender(this.updateWarning);
+    }
+
+    updateWarning() {
+        const { data } = this.props;
+        const closeExpire =
+            data.closest_allocation_duration &&
+            data.closest_allocation_duration < data.virtual_remaining_leaves;
+        this.warning = data.exceeding_duration || closeExpire;
     }
 
     onClickInfo(ev) {
         const { data } = this.props;
         this.popover.open(ev.target, {
-            allocated: data.max_leaves,
-            approved: data.leaves_approved,
-            planned: data.leaves_requested,
-            left: data.virtual_remaining_leaves,
-            employeeId: this.props.employeeId,
-            holidayStatusId: this.props.holidayStatusId,
+            allocated: formatNumber(this.lang, data.max_leaves),
+            accrual_bonus: formatNumber(this.lang, data.accrual_bonus),
+            approved: formatNumber(this.lang, data.leaves_approved),
+            planned: formatNumber(this.lang, data.leaves_requested),
+            left: formatNumber(this.lang, data.virtual_remaining_leaves),
+            warning: this.warning,
+            closest: data.closest_allocation_duration,
+            request_unit: data.request_unit,
+            exceeding_duration: data.exceeding_duration,
             onClickNewAllocationRequest: this.newAllocationRequestFrom.bind(this),
         });
     }

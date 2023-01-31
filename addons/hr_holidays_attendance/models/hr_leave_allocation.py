@@ -5,7 +5,6 @@ from datetime import datetime
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import float_round
 from odoo.osv import expression
 
 
@@ -62,23 +61,6 @@ class HolidaysAllocation(models.Model):
                 if duration > employee.total_overtime - overtime_duration:
                     raise ValidationError(_('The employee does not have enough extra hours to extend this allocation.'))
                 allocation.overtime_id.sudo().duration = -1 * duration
-        return res
-
-    def action_draft(self):
-        overtime_allocations = self.filtered('overtime_deductible')
-        if any([a.employee_overtime < float_round(a.number_of_hours_display, 2) for a in overtime_allocations]):
-            raise ValidationError(_('The employee does not have enough extra hours to request this allocation.'))
-        res = super().action_draft()
-
-        overtime_allocations.overtime_id.sudo().unlink()
-        for allocation in overtime_allocations:
-            overtime = self.env['hr.attendance.overtime'].sudo().create({
-                'employee_id': allocation.employee_id.id,
-                'date': allocation.date_from,
-                'adjustment': True,
-                'duration': -1 * allocation.number_of_hours_display
-            })
-            allocation.sudo().overtime_id = overtime.id
         return res
 
     def action_refuse(self):
