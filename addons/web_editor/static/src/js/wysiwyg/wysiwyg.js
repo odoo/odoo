@@ -2548,6 +2548,7 @@ const Wysiwyg = Widget.extend({
         }
         const {collaborationChannel} = this.options;
         this._stopPeerToPeer();
+        this._rulesCache = undefined; // Reset the cache of rules.
         // If there is no collaborationResId, the record has been deleted.
         if (!collaborationChannel || !collaborationChannel.collaborationResId) {
             this.setValue(value);
