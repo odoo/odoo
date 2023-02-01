@@ -1351,6 +1351,7 @@ class AccountMoveLine(models.Model):
         before = existing()
         yield
         after = existing()
+        amount_currency_2_lines = defaultdict(lambda: {'amount_currency': [], 'balance': []})
         for line in after:
             if (
                 line.display_type == 'product'
@@ -1358,18 +1359,31 @@ class AccountMoveLine(models.Model):
             ):
                 amount_currency = line.move_id.direction_sign * line.currency_id.round(line.price_subtotal)
                 if line.amount_currency != amount_currency or line not in before:
-                    line.amount_currency = amount_currency
+                    amount_currency_2_lines[(amount_currency, line.currency_id, line.company_currency_id)]['amount_currency'].append(line.id)
                 if line.currency_id == line.company_id.currency_id:
-                    line.balance = amount_currency
+                    amount_currency_2_lines[(amount_currency, line.currency_id, line.company_currency_id)]['balance'].append(line.id)
+        for (amount_currency, currency_id, company_currency_id) in amount_currency_2_lines:
+            amount_key = (amount_currency, currency_id, company_currency_id)
+            self.env['account.move.line'] \
+                .with_context(skip_invoice_line_sync=True) \
+                .browse(amount_currency_2_lines[amount_key].get('amount_currency')).amount_currency = amount_currency
+            self.env['account.move.line'] \
+                .with_context(skip_invoice_line_sync=True) \
+                .browse(amount_currency_2_lines[amount_key].get('balance')).balance = amount_currency
 
         after = existing()
+        balance_2_lines = defaultdict(list)
         for line in after:
             if (
                 (changed('amount_currency') or changed('currency_rate') or changed('move_type'))
                 and (not changed('balance') or (line not in before and not line.balance))
             ):
                 balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
-                line.balance = balance
+                balance_2_lines[(balance, line.currency_id, line.company_currency_id)].append(line.id)
+        for (balance, currency_id, company_currency_id) in balance_2_lines:
+            self.env['account.move.line'] \
+                .with_context(skip_invoice_line_sync=True) \
+                .browse(balance_2_lines[(balance, currency_id, company_currency_id)]).balance = balance
         # Since this method is called during the sync, inside of `create`/`write`, these fields
         # already have been computed and marked as so. But this method should re-trigger it since
         # it changes the dependencies.
