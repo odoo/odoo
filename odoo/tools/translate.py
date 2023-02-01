@@ -1412,7 +1412,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, overwrite=False
 
 def get_locales(lang=None):
     if lang is None:
-        lang = locale.getdefaultlocale()[0]
+        lang = locale.getlocale()[0]
 
     if os.name == 'nt':
         lang = _LOCALE2WIN32.get(lang, lang)
