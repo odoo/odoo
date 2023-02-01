@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { TextAreaPopup } from "@point_of_sale/js/Popups/TextAreaPopup";
 
 export class OrderlineNoteButton extends PosComponent {
@@ -10,6 +10,7 @@ export class OrderlineNoteButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
     get selectedOrderline() {
@@ -20,7 +21,7 @@ export class OrderlineNoteButton extends PosComponent {
             return;
         }
 
-        const { confirmed, payload: inputNote } = await this.showPopup(TextAreaPopup, {
+        const { confirmed, payload: inputNote } = await this.popup.add(TextAreaPopup, {
             startingValue: this.selectedOrderline.get_note(),
             title: this.env._t("Add Internal Note"),
         });

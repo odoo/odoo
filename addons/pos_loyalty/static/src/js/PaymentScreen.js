@@ -62,7 +62,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                         );
                 }
                 if (!successful) {
-                    this.showPopup(ErrorPopup, {
+                    this.popup.add(ErrorPopup, {
                         title: this.env._t("Error validating rewards"),
                         body: payload.message,
                     });

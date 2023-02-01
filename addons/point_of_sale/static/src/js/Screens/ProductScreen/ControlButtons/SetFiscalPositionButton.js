@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
 export class SetFiscalPositionButton extends PosComponent {
@@ -10,6 +10,7 @@ export class SetFiscalPositionButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
     get currentOrder() {
@@ -39,7 +40,7 @@ export class SetFiscalPositionButton extends PosComponent {
                 item: fiscalPos,
             });
         }
-        const { confirmed, payload: selectedFiscalPosition } = await this.showPopup(
+        const { confirmed, payload: selectedFiscalPosition } = await this.popup.add(
             SelectionPopup,
             {
                 title: this.env._t("Select Fiscal Position"),

@@ -11,13 +11,15 @@ import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { EditableTable } from "./EditableTable";
 import { EditBar } from "./EditBar";
 import { TableWidget } from "./TableWidget";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
 
 export class FloorScreen extends PosComponent {
     static components = { EditableTable, EditBar, TableWidget };
     static template = "FloorScreen";
-    static hideOrderSelector = true;
+    static storeOnOrder = false;
 
     /**
      * @param {Object} props
@@ -25,6 +27,8 @@ export class FloorScreen extends PosComponent {
      */
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.popup = useService("popup");
         const floor = this.props.floor ? this.props.floor : this.env.pos.floors[0];
         this.state = useState({
             selectedFloorId: floor.id,
@@ -205,7 +209,7 @@ export class FloorScreen extends PosComponent {
                 await this.env.pos.setTable(table);
             }
             const order = this.env.pos.get_order();
-            this.showScreen(order.get_screen_data().name);
+            this.pos.showScreen(order.get_screen_data().name);
         }
     }
     async onSaveTable(table) {
@@ -231,7 +235,7 @@ export class FloorScreen extends PosComponent {
         if (!selectedTable) {
             return;
         }
-        const { confirmed, payload: newName } = await this.showPopup(TextInputPopup, {
+        const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
             startingValue: selectedTable.name,
             title: this.env._t("Table Name ?"),
         });
@@ -248,7 +252,7 @@ export class FloorScreen extends PosComponent {
         if (!selectedTable) {
             return;
         }
-        const { confirmed, payload: inputNumber } = await this.showPopup(NumberPopup, {
+        const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: selectedTable.seats,
             cheap: true,
             title: this.env._t("Number of Seats ?"),
@@ -289,7 +293,7 @@ export class FloorScreen extends PosComponent {
         if (!this.selectedTable) {
             return;
         }
-        const { confirmed } = await this.showPopup(ConfirmPopup, {
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
             title: this.env._t("Are you sure ?"),
             body: this.env._t("Removing a table cannot be undone"),
         });

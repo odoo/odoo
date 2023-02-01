@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useListener } from "@web/core/utils/hooks";
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
@@ -64,10 +64,7 @@ export class ProductsWidget extends PosComponent {
         return this.env.pos.db.get_category_childs_ids(0).length === 0;
     }
     get shouldShowButton() {
-        return (
-            this.productsToDisplay.length === 0 &&
-            this.searchWord
-        );
+        return this.productsToDisplay.length === 0 && this.searchWord;
     }
     _switchCategory(event) {
         this.env.pos.setSelectedCategoryId(event.detail);

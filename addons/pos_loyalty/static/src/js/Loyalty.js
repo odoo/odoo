@@ -3,7 +3,6 @@
 import { Order, Orderline, PosGlobalState } from "@point_of_sale/js/models";
 import session from "web.session";
 import concurrency from "web.concurrency";
-import { Gui } from "@point_of_sale/js/Gui";
 import { round_decimals, round_precision } from "web.utils";
 import core from "web.core";
 import { patch } from "@web/core/utils/patch";
@@ -1627,7 +1626,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.pos.program_by_id[payload.program_id];
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const { confirmed } = await Gui.showPopup(ConfirmPopup, {
+                    const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
                         title: _t("Unpaid gift card"),
                         body: _t(
                             "This gift card is not linked to any order. Do you really want to apply its reward?"
@@ -1666,7 +1665,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     async activateCode(code) {
         const res = await this._activateCode(code);
         if (res !== true) {
-            Gui.showNotification(res);
+            this.pos.env.services.pos_notification.add(res);
         }
     },
     isProgramsResettable() {

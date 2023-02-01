@@ -2,10 +2,9 @@
 
 import { sprintf } from "web.utils";
 import { parse } from "web.field_utils";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { saleOrderFetcher } from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { orderManagement } from "@point_of_sale/js/PosContext";
@@ -24,10 +23,11 @@ const { onMounted, onWillUnmount, useState } = owl;
 export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "SaleOrderManagementScreen";
-    static hideOrderSelector = true;
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
+        this.numberBuffer = useService("number_buffer");
         useListener("close-screen", this.close);
         useListener("click-sale-order", this._onClickSaleOrder);
         useListener("next-page", this._onNextPage);
@@ -72,7 +72,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     async _setNumpadMode(event) {
         const { mode } = event.detail;
         this.numpadMode = mode;
-        numberBuffer.reset();
+        this.numberBuffer.reset();
     }
     _onNextPage() {
         saleOrderFetcher.nextPage();
@@ -87,7 +87,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     }
     async _onClickSaleOrder(event) {
         const clickedOrder = event.detail;
-        const { confirmed, payload: selectedOption } = await this.showPopup(SelectionPopup, {
+        const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
             title: this.env._t("What do you want to do?"),
             list: [
                 { id: "0", label: this.env._t("Apply a down payment"), item: false },
@@ -116,7 +116,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         this.env._t("There was a problem in loading the %s customer."),
                         sale_order.partner_id[1]
                     );
-                    await this.showPopup(ErrorPopup, { title, body });
+                    await this.popup.add(ErrorPopup, { title, body });
                 }
                 currentPOSOrder.set_partner(
                     this.env.pos.db.get_partner_by_id(sale_order.partner_id[0])
@@ -146,7 +146,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                     .filter((line) => !this.env.pos.db.get_product_by_id(line.product_id[0]))
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
-                    const { confirmed } = await this.showPopup(ConfirmPopup, {
+                    const { confirmed } = await this.popup.add(ConfirmPopup, {
                         title: this.env._t("Products not available in POS"),
                         body: this.env._t(
                             "Some of the products in your Sale Order are not available in POS, do you want to import them?"
@@ -202,7 +202,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
                         const { confirmed } =
                             useLoadedLots === undefined
-                                ? await this.showPopup(ConfirmPopup, {
+                                ? await this.popup.add(ConfirmPopup, {
                                       title: this.env._t("SN/Lots Loading"),
                                       body: this.env._t(
                                           "Do you want to load the SN/Lots linked to the Sales Order?"
@@ -244,7 +244,9 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         this.env.pos.config.down_payment_product_id[0]
                     );
                     if (!down_payment_product) {
-                        await this.env.pos._addProducts([this.env.pos.config.down_payment_product_id[0]]);
+                        await this.env.pos._addProducts([
+                            this.env.pos.config.down_payment_product_id[0],
+                        ]);
                         down_payment_product = this.env.pos.db.get_product_by_id(
                             this.env.pos.config.down_payment_product_id[0]
                         );
@@ -260,7 +262,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         down_payment = sale_order.amount_total;
                     }
 
-                    const { confirmed, payload } = await this.showPopup(NumberPopup, {
+                    const { confirmed, payload } = await this.popup.add(NumberPopup, {
                         title: sprintf(
                             this.env._t("Percentage of %s"),
                             this.env.pos.format_currency(sale_order.amount_total)
@@ -291,7 +293,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         "It seems that you didn't configure a down payment product in your point of sale.\
                         You can go to your point of sale configuration to choose one."
                     );
-                    await this.showPopup(ErrorPopup, { title, body });
+                    await this.popup.add(ErrorPopup, { title, body });
                 }
             }
 

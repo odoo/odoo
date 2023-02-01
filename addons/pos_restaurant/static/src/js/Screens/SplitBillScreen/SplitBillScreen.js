@@ -6,6 +6,7 @@ import { Order } from "@point_of_sale/js/models";
 
 import { SplitOrderline } from "./SplitOrderline";
 import { registry } from "@web/core/registry";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { useState, onMounted } = owl;
 
@@ -15,6 +16,7 @@ export class SplitBillScreen extends PosComponent {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         useListener("click-line", this.onClickLine);
         this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
         this.newOrderLines = {};
@@ -46,7 +48,7 @@ export class SplitBillScreen extends PosComponent {
         this._updateNewOrder(line);
     }
     back() {
-        this.showScreen("ProductScreen");
+        this.pos.showScreen("ProductScreen");
     }
     proceed() {
         if (_.isEmpty(this.splitlines)) {
@@ -82,7 +84,7 @@ export class SplitBillScreen extends PosComponent {
             this.env.pos.orders.add(reactiveNewOrder);
             this.env.pos.selectedOrder = reactiveNewOrder;
         }
-        this.showScreen("PaymentScreen");
+        this.pos.showScreen("PaymentScreen");
     }
     /**
      * @param {models.Order} order

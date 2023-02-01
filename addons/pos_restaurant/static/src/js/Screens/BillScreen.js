@@ -4,10 +4,10 @@ import { ReceiptScreen } from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptSc
 import { registry } from "@web/core/registry";
 
 export class BillScreen extends ReceiptScreen {
-    static template = "BillScreen";
+    static template = "pos_restaurant.BillScreen";
     confirm() {
         this.props.resolve({ confirmed: true, payload: null });
-        this.trigger("close-temp-screen");
+        this.pos.closeTempScreen();
     }
     whenClosing() {
         this.confirm();

@@ -7,10 +7,12 @@ import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { useService } from "@web/core/utils/hooks";
 
 patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
     setup() {
         this._super(...arguments);
+        this.notification = useService("pos_notification");
         useBarcodeReader({
             coupon: this._onCouponScan,
         });
@@ -21,12 +23,12 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             .get_orderlines()
             .find((line) => line.getEWalletGiftCardProgramType() === "ewallet");
         if (eWalletLine && !order.get_partner()) {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Customer needed"),
                 body: this.env._t("eWallet requires a customer to be selected"),
             });
             if (confirmed) {
-                const { confirmed, payload: newPartner } = await this.showTempScreen(
+                const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
                     "PartnerListScreen",
                     { partner: null }
                 );
@@ -52,7 +54,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
 
         // If gift card program setting is 'scan_use', ask for the code.
         if (this.env.pos.config.gift_card_settings == "scan_use") {
-            const { confirmed, payload: code } = await this.showPopup(TextInputPopup, {
+            const { confirmed, payload: code } = await this.popup.add(TextInputPopup, {
                 title: this.env._t("Generate a Gift Card"),
                 startingValue: "",
                 placeholder: this.env._t("Enter the gift card code"),
@@ -78,7 +80,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
                 // There should be maximum one gift card for a given code.
                 const giftCard = fetchedGiftCard[0];
                 if (giftCard && giftCard.source_pos_order_id) {
-                    this.showPopup(ErrorPopup, {
+                    this.popup.add(ErrorPopup, {
                         title: this.env._t("This gift card has already been sold"),
                         body: this.env._t(
                             "You cannot sell a gift card that has already been sold."
@@ -95,7 +97,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
                     options.giftCardId = giftCard.id;
                 }
             } else {
-                this.showNotification("Please enter a valid gift card code.");
+                this.notification.add("Please enter a valid gift card code.");
                 return false;
             }
         }
@@ -117,7 +119,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         const linkedPrograms = linkedProgramIds.map((id) => this.env.pos.program_by_id[id]);
         let selectedProgram = null;
         if (linkedPrograms.length > 1) {
-            const { confirmed, payload: program } = await this.showPopup(SelectionPopup, {
+            const { confirmed, payload: program } = await this.popup.add(SelectionPopup, {
                 title: this.env._t("Select program"),
                 list: linkedPrograms.map((program) => ({
                     id: program.id,
@@ -173,7 +175,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             if (selectedLine.eWalletGiftCardProgram) {
                 // Do not allow negative quantity or price in a gift card or ewallet orderline.
                 // Refunding gift card or ewallet is not supported.
-                this.showNotification(
+                this.notification.add(
                     this.env._t(
                         "You cannot set negative quantity or price to gift card or ewallet."
                     ),
@@ -189,7 +191,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             (event.detail.key === "Backspace" || event.detail.key === "Delete")
         ) {
             const reward = this.env.pos.reward_by_id[selectedLine.reward_id];
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Deactivating reward"),
                 body: _.str.sprintf(
                     this.env._t(

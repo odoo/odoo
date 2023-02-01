@@ -4,10 +4,11 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 
 import { PartnerLine } from "./PartnerLine";
 import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { onWillUnmount, useRef } = owl;
 
@@ -32,6 +33,8 @@ export class PartnerListScreen extends PosComponent {
 
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.notification = useService("pos_notification");
         useListener("click-save", () => this.env.bus.trigger("save-partner"));
         useListener("save-changes", this.saveChanges);
         this.searchWordInputRef = useRef("search-word-input-partner");
@@ -59,12 +62,12 @@ export class PartnerListScreen extends PosComponent {
             this.render(true);
         } else {
             this.props.resolve({ confirmed: false, payload: false });
-            this.trigger("close-temp-screen");
+            this.pos.closeTempScreen();
         }
     }
     confirm() {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
-        this.trigger("close-temp-screen");
+        this.pos.closeTempScreen();
     }
     activateEditMode() {
         this.state.detailIsShown = true;
@@ -112,7 +115,7 @@ export class PartnerListScreen extends PosComponent {
             return;
         }
         const result = await this.searchPartner();
-        this.showNotification(
+        this.notification.add(
             _.str.sprintf(
                 this.env._t('%s customer(s) found for "%s".'),
                 result.length,

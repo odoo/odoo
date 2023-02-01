@@ -7,7 +7,7 @@
                 <t t-if="!env.isMobile">
                     <div class="top-content">
                         <div class="button back"
-                              t-on-click="() => this.showScreen('ProductScreen')">
+                              t-on-click="() => pos.showScreen('ProductScreen')">
                             <i class="fa fa-angle-double-left fa-fw"></i>
                             <span class="back_text">Back</span>
                         </div>
@@ -108,7 +108,7 @@
                             t-on-click="() => this.trigger('validate-order')">
                             <h1>Validate</h1>
                         </button>
-                        <button class="btn-switchpane secondary" t-on-click="() => this.showScreen('ProductScreen', {mobile_pane: 'left'})">
+                        <button class="btn-switchpane secondary" t-on-click="() => pos.showScreen('ProductScreen', {mobile_pane: 'left'})">
                             <h1>Review</h1>
                         </button>
                     </div>

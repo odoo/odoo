@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Gui } from "@point_of_sale/js/Gui";
 import { PosGlobalState, Order, Orderline } from "@point_of_sale/js/models";
 import core from "web.core";
 import { patch } from "@web/core/utils/patch";
@@ -12,7 +11,7 @@ patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
     is_french_country() {
         var french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         if (!this.company.country) {
-            Gui.showPopup(ErrorPopup, {
+            this.env.services.popup.add(ErrorPopup, {
                 title: _t("Missing Country"),
                 body: _.str.sprintf(
                     _t("The company %s doesn't have a country set."),
@@ -60,7 +59,7 @@ patch(Order.prototype, "l10n_fr_pos_cert.Order", {
             this.pos.is_french_country() &&
             this.get_orderlines().length
         ) {
-            Gui.showPopup(ErrorPopup, {
+            this.env.services.popup.add(ErrorPopup, {
                 title: _t("Fiscal Data Module error"),
                 body: _t("Deleting of orders is not allowed."),
             });

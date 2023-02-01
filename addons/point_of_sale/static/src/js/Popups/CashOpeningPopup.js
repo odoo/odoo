@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { useService } from "@web/core/utils/hooks";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 
 const { useState } = owl;
@@ -17,6 +18,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             notes: "",
             openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
         });
+        this.popup = useService("popup");
     }
     //@override
     async confirm() {
@@ -30,7 +32,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         super.confirm();
     }
     async openDetailsPopup() {
-        const { confirmed, payload } = await this.showPopup(MoneyDetailsPopup, {
+        const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount ? 0 : this.state.openingCash,
         });

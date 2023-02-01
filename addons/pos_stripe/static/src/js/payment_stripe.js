@@ -4,7 +4,6 @@
 import core from "web.core";
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
-import { Gui } from "@point_of_sale/js/Gui";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 const _t = core._t;
@@ -142,8 +141,10 @@ export const PaymentStripe = PaymentInterface.extend({
 
     captureAfterPayment: async function (processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
-        if (capturePayment.charges)
-            {line.card_type = capturePayment.charges.data[0].payment_method_details.card_present.brand;}
+        if (capturePayment.charges) {
+            line.card_type =
+                capturePayment.charges.data[0].payment_method_details.card_present.brand;
+        }
         line.transaction_id = capturePayment.id;
     },
 
@@ -240,7 +241,7 @@ export const PaymentStripe = PaymentInterface.extend({
         if (!title) {
             title = _t("Stripe Error");
         }
-        Gui.showPopup(ErrorPopup, {
+        this.pos.env.services.popup.add(ErrorPopup, {
             title: title,
             body: msg,
         });

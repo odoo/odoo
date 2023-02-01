@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
@@ -9,11 +10,12 @@ export class TransferOrderButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         useListener("click", this.onClick);
     }
     async onClick() {
         this.env.pos.setCurrentOrderToTransfer();
-        this.showScreen("FloorScreen");
+        this.pos.showScreen("FloorScreen");
     }
 }
 

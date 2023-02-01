@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { Gui } from "@point_of_sale/js/Gui";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
 export class RewardButton extends PosComponent {
@@ -11,6 +10,8 @@ export class RewardButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
+        this.notification = useService("pos_notification");
         useListener("click", this.onClick);
     }
 
@@ -70,7 +71,7 @@ export class RewardButton extends PosComponent {
                 label: this.env.pos.db.get_product_by_id(product_id).display_name,
                 item: product_id,
             }));
-            const { confirmed, payload: selectedProduct } = await this.showPopup(SelectionPopup, {
+            const { confirmed, payload: selectedProduct } = await this.popup.add(SelectionPopup, {
                 title: this.env._t("Please select a product for this reward"),
                 list: productsList,
             });
@@ -93,7 +94,7 @@ export class RewardButton extends PosComponent {
             const result = order._applyReward(reward, coupon_id, args);
             if (result !== true) {
                 // Returned an error
-                Gui.showNotification(result);
+                this.notification.add(result);
             }
             order._updateRewards();
             return result;
@@ -114,7 +115,7 @@ export class RewardButton extends PosComponent {
                 label: reward.reward.description,
                 item: reward,
             }));
-            const { confirmed, payload: selectedReward } = await this.showPopup(SelectionPopup, {
+            const { confirmed, payload: selectedReward } = await this.popup.add(SelectionPopup, {
                 title: this.env._t("Please select a reward"),
                 list: rewardsList,
             });

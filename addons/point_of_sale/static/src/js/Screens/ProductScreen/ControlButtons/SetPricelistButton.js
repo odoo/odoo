@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 
 export class SetPricelistButton extends PosComponent {
@@ -10,6 +10,7 @@ export class SetPricelistButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
     get currentOrder() {
@@ -40,7 +41,7 @@ export class SetPricelistButton extends PosComponent {
             });
         }
 
-        const { confirmed, payload: selectedPricelist } = await this.showPopup(SelectionPopup, {
+        const { confirmed, payload: selectedPricelist } = await this.popup.add(SelectionPopup, {
             title: this.env._t("Select the pricelist"),
             list: selectionList,
         });

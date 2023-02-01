@@ -19,6 +19,12 @@ export class OfflineErrorPopup extends ErrorPopup {
         title: _lt("Offline Error"),
         body: _lt("Either the server is inaccessible or browser is not connected online."),
     };
+    setup() {
+        super.setup(...arguments);
+        if (this.constructor.dontShow) {
+            this.cancel();
+        }
+    }
 
     dontShowAgain() {
         this.constructor.dontShow = true;

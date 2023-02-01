@@ -1,23 +1,27 @@
 /** @odoo-module **/
 
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
+import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 
 /**
  * Prevent refunding ewallet/gift card lines.
  */
 patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
+    setup() {
+        this._super(...arguments);
+        this.notification = useService("pos_notification");
+    },
     _onUpdateSelectedOrderline() {
         const order = this.getSelectedSyncedOrder();
         if (!order) {
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
         if (orderline && this._isEWalletGiftCard(orderline)) {
             this._showNotAllowedRefundNotification();
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
         return this._super(...arguments);
     },
@@ -31,7 +35,7 @@ patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
         return this._super(...arguments);
     },
     _showNotAllowedRefundNotification() {
-        this.showNotification(
+        this.notification.add(
             this.env._t(
                 "Refunding a top up or reward product for an eWallet or gift card program is not allowed."
             ),

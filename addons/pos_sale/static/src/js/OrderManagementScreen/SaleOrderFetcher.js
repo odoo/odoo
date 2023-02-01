@@ -3,7 +3,7 @@
 import { Gui } from "@point_of_sale/js/Gui";
 
 const { EventBus } = owl;
-
+// FIXME POSREF: should probably be a service instead of a singleton.
 class SaleOrderFetcher extends EventBus {
     constructor() {
         super();

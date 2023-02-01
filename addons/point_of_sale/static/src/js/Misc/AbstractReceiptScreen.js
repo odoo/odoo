@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { useService } from "@web/core/utils/hooks";
 import { ConfirmPopup } from "../Popups/ConfirmPopup";
 import { ErrorPopup } from "../Popups/ErrorPopup";
 
@@ -16,6 +17,7 @@ export class AbstractReceiptScreen extends PosComponent {
     setup() {
         super.setup();
         this.orderReceipt = useRef("order-receipt");
+        this.popup = useService("popup");
     }
     async _printReceipt() {
         if (this.env.proxy.printer) {
@@ -25,7 +27,7 @@ export class AbstractReceiptScreen extends PosComponent {
             if (printResult.successful) {
                 return true;
             } else {
-                const { confirmed } = await this.showPopup(ConfirmPopup, {
+                const { confirmed } = await this.popup.add(ConfirmPopup, {
                     title: printResult.message.title,
                     body: "Do you want to print using the web printer?",
                 });
@@ -46,7 +48,7 @@ export class AbstractReceiptScreen extends PosComponent {
             window.print();
             return true;
         } catch {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: this.env._t("Printing is not supported on some browsers"),
                 body: this.env._t(
                     "Printing is not supported on some browsers due to no default printing protocol " +
