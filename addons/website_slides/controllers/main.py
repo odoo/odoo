@@ -648,14 +648,14 @@ class WebsiteSlides(WebsiteProfile):
         # TDE FIXME: why 2 routes ?
         if not request.website.is_public_user():
             channel = request.env['slide.channel'].browse(int(channel_id))
-            channel.action_add_member()
+            channel._action_add_member()
         return request.redirect("/slides/%s" % (slug(channel)))
 
     @http.route(['/slides/channel/join'], type='json', auth='public', website=True)
     def slide_channel_join(self, channel_id):
         if request.website.is_public_user():
             return {'error': 'public_user', 'error_signup_allowed': request.env['res.users'].sudo()._get_signup_invitation_scope() == 'b2c'}
-        success = request.env['slide.channel'].browse(channel_id).action_add_member()
+        success = request.env['slide.channel'].browse(channel_id)._action_add_member()
         if not success:
             return {'error': 'join_done'}
         return success
