@@ -47,6 +47,16 @@ class TestAccess(common.SlidesCase):
         with self.assertRaises(AccessError):
             self.slide.with_user(self.user_emp).read(['name'])
 
+        self.channel.user_id = self.user_manager.id # Ensure officer is not responsible, manager will be added to members
+
+        self.channel.with_user(self.user_manager)._action_add_members(self.user_portal.partner_id)
+        self.assertEqual(self.channel.members_count, 3)
+        self.channel.with_user(self.user_officer)._action_add_members(self.user_public.partner_id)
+        self.assertEqual(self.channel.members_count, 4)
+        with self.assertRaises(AccessError):
+            self.channel.with_user(self.user_emp)._action_add_members(self.user_emp.partner_id)
+            self.assertEqual(self.channel.members_count, 4)
+
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_access_channel_public(self):
         """ Public channels don't give enroll if not member """

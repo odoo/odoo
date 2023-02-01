@@ -680,7 +680,7 @@ class Channel(models.Model):
                 for partner in target_partners if partner.id not in existing_map[channel.id]
             ]
             slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
-            to_join.message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])
+            to_join.sudo().message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 
@@ -690,9 +690,9 @@ class Channel(models.Model):
         if on_invite:
             try:
                 on_invite.check_access_rights('write')
-                on_invite.check_access_rule('write')
+                self.env.user.has_group('website_slides.group_website_slides_officer') or on_invite.check_access_rule('write')
             except:
-                pass
+                raise AccessError(_('You are not allowed add members to this course. Please contact the administrator.'))
             else:
                 allowed |= on_invite
         return allowed
