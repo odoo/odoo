@@ -2,12 +2,32 @@
 
 import { registry } from "./registry";
 import { session } from "@web/session";
+import { Cache } from "./utils/cache";
 
 export const userService = {
     dependencies: ["rpc"],
     async: ["hasGroup"],
     start(env, { rpc }) {
-        const groupProms = {};
+        const groupCache = new Cache((group) => {
+            if (!context.uid) {
+                return Promise.resolve(false);
+            }
+            return rpc("/web/dataset/call_kw/res.users/has_group", {
+                model: "res.users",
+                method: "has_group",
+                args: [group],
+                kwargs: { context },
+            });
+        });
+        const accessRightCache = new Cache((model, operation) => {
+            const url = `/web/dataset/call_kw/${model}/check_access_rights`;
+            return rpc(url, {
+                model,
+                method: "check_access_rights",
+                args: [operation, false],
+                kwargs: { context },
+            });
+        });
 
         const context = {
             ...session.user_context,
@@ -24,19 +44,12 @@ export const userService = {
                 Object.assign(context, update);
             },
             hasGroup(group) {
-                if (!context.uid) {
-                    return Promise.resolve(false);
-                }
-                if (!groupProms[group]) {
-                    groupProms[group] = rpc("/web/dataset/call_kw/res.users/has_group", {
-                        model: "res.users",
-                        method: "has_group",
-                        args: [group],
-                        kwargs: { context },
-                    });
-                }
-                return groupProms[group];
+                return groupCache.read(group);
             },
+            async checkAccessRight(model, operation) {
+                return accessRightCache.read(model, operation);
+            },
+
             name: session.name,
             userName: session.username,
             isAdmin: session.is_admin,
