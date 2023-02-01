@@ -676,7 +676,7 @@ class AccountReportColumn(models.Model):
     expression_label = fields.Char(string="Expression Label", required=True)
     sequence = fields.Integer(string="Sequence")
     report_id = fields.Many2one(string="Report", comodel_name='account.report')
-    sortable = fields.Boolean(string="Sortable")
+    sortable = fields.Boolean(string="Sortable", default=False, readonly=True)
     figure_type = fields.Selection(string="Figure Type", selection=FIGURE_TYPE_SELECTION_VALUES, default="monetary", required=True)
     blank_if_zero = fields.Boolean(string="Blank if Zero", default=True, help="When checked, 0 values will not show in this column.")
     custom_audit_action_id = fields.Many2one(string="Custom Audit Action", comodel_name="ir.actions.act_window")
