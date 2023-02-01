@@ -128,7 +128,7 @@ class Lang(models.Model):
             except locale.Error:
                 continue
         if fail:
-            lc = locale.getdefaultlocale()[0]
+            lc = locale.getlocale()[0]
             msg = 'Unable to get information for locale %s. Information from the default locale (%s) have been used.'
             _logger.warning(msg, lang, lc)
 
