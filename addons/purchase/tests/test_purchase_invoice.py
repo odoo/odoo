@@ -422,6 +422,41 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po_no_analytic_distribution.button_confirm()
         self.assertFalse(pol_no_analytic_distribution.analytic_distribution, "The compute should not overwrite what the user has set.")
 
+    def test_purchase_order_to_invoice_analytic_rule_with_account_prefix(self):
+        """
+        Test whether, when an analytic plan is set within the scope (applicability) of purchase
+        and with an account prefix set in the distribution model,
+        the default analytic account is correctly set during the conversion from po to invoice
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        analytic_plan_default = self.env['account.analytic.plan'].create({
+            'name': 'default',
+            'applicability_ids': [Command.create({
+                'business_domain': 'bill',
+                'applicability': 'optional',
+            })]
+        })
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
+
+        analytic_distribution_model = self.env['account.analytic.distribution.model'].create({
+            'account_prefix': '600',
+            'analytic_distribution': {analytic_account_default.id: 100},
+            'product_id': self.product_a.id,
+        })
+
+        po = self.env['purchase.order'].create({'partner_id': self.partner_a.id})
+        self.env['purchase.order.line'].create({
+            'order_id': po.id,
+            'name': 'test',
+            'product_id': self.product_a.id
+        })
+        self.assertFalse(po.order_line.analytic_distribution, "There should be no analytic set.")
+        po.button_confirm()
+        po.order_line.qty_received = 1
+        po.action_create_invoice()
+        self.assertRecordValues(po.invoice_ids.invoice_line_ids,
+                                [{'analytic_distribution': analytic_distribution_model.analytic_distribution}])
+
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice
            from multiple selected po's"""
