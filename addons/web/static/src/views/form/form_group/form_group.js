@@ -93,28 +93,6 @@ export class InnerGroup extends Group {
         }
         rows.push(currentRow);
 
-        // Compute the relative size of non-label cells
-        // The aim is for cells containing business data to occupy as much space as possible
-        rows.forEach((row) => {
-            let labelCount = 0;
-            const dataCells = [];
-            for (const c of row) {
-                if (c.subType === "label") {
-                    labelCount++;
-                } else if (c.subType === "item_component") {
-                    labelCount++;
-                    dataCells.push(c);
-                } else {
-                    dataCells.push(c);
-                }
-            }
-
-            const sizeOfDataCell = 100 / (maxCols - labelCount);
-            dataCells.forEach((c) => {
-                const itemSpan = c.subType === "item_component" ? c.itemSpan - 1 : c.itemSpan;
-                c.width = (itemSpan || 1) * sizeOfDataCell;
-            });
-        });
         return rows;
     }
 }
