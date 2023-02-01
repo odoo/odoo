@@ -1105,12 +1105,13 @@ class Field(MetaField('DummyField', (object,), {})):
         # discard the records that are not modified
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
-        records = cache.get_records_different_from(records, self, cache_value)
-        if not records:
-            return records
+        dirty = self.store and any(records._ids)
+        if dirty:  # Only make this optimization when it matters
+            records = cache.get_records_different_from(records, self, cache_value)
+            if not records:
+                return records
 
         # update the cache
-        dirty = self.store and any(records._ids)
         cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
 
         return records

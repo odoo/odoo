@@ -1108,6 +1108,8 @@ class Cache(object):
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
         field_cache = self._get_field_cache(records, field)
+        if not field_cache:
+            return records
         if field.translate:
             lang = records.env.lang or 'en_US'
 
