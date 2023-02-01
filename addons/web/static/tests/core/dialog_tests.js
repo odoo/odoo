@@ -6,7 +6,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Dialog } from "@web/core/dialog/dialog";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, destroy, getFixture, mount } from "../helpers/utils";
+import { click, destroy, getFixture, mount, triggerEvent, dragAndDrop } from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
 import { Component, useState, onMounted, xml } from "@odoo/owl";
@@ -295,5 +295,55 @@ QUnit.module("Components", (hooks) => {
             document,
             "UI owner should be reset to the default (document)"
         );
+    });
+
+    QUnit.test("dialog can be moved", async (assert) => {
+        class Parent extends Component {
+            static template = xml`<Dialog>content</Dialog>`;
+            static components = { Dialog };
+        }
+
+        await mount(Parent, target, { env: await makeDialogTestEnv() });
+        const content = target.querySelector(".modal-content");
+        assert.strictEqual(content.style.top, "0px");
+        assert.strictEqual(content.style.left, "0px");
+
+        const header = content.querySelector(".modal-header");
+        const headerRect = header.getBoundingClientRect();
+        await dragAndDrop(header, document.body, {
+            // the util function sets the source coordinates at (x; y) + (w/2; h/2)
+            // so we need to move the dialog based on these coordinates.
+            x: headerRect.x + headerRect.width / 2 + 20,
+            y: headerRect.y + headerRect.height / 2 + 50,
+        });
+        assert.strictEqual(content.style.top, "50px");
+        assert.strictEqual(content.style.left, "20px");
+    });
+
+    QUnit.test("dialog's position is reset on resize", async (assert) => {
+        class Parent extends Component {
+            static template = xml`<Dialog>content</Dialog>`;
+            static components = { Dialog };
+        }
+
+        await mount(Parent, target, { env: await makeDialogTestEnv() });
+        const content = target.querySelector(".modal-content");
+        assert.strictEqual(content.style.top, "0px");
+        assert.strictEqual(content.style.left, "0px");
+
+        const header = content.querySelector(".modal-header");
+        const headerRect = header.getBoundingClientRect();
+        await dragAndDrop(header, document.body, {
+            // the util function sets the source coordinates at (x; y) + (w/2; h/2)
+            // so we need to move the dialog based on these coordinates.
+            x: headerRect.x + headerRect.width / 2 + 20,
+            y: headerRect.y + headerRect.height / 2 + 50,
+        });
+        assert.strictEqual(content.style.top, "50px");
+        assert.strictEqual(content.style.left, "20px");
+
+        await triggerEvent(window, null, "resize");
+        assert.strictEqual(content.style.top, "0px");
+        assert.strictEqual(content.style.left, "0px");
     });
 });
