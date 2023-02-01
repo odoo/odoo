@@ -12,8 +12,8 @@ import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { sprintf } from "@web/core/utils/strings";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { reposition } from '@web/core/position_hook';
-import { archParseBoolean } from '@web/views/utils';
+import { reposition } from "@web/core/position_hook";
+import { archParseBoolean } from "@web/views/utils";
 
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
@@ -21,6 +21,7 @@ export class PropertiesField extends Component {
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
+        this.user = useService("user");
         this.dialogService = useService("dialog");
         this.popover = usePopover();
         this.propertiesRef = useRef("properties");
@@ -90,7 +91,7 @@ export class PropertiesField extends Component {
     get groupedPropertiesList() {
         const columns = this.env.isSmall ? 1 : this.props.columns;
         // If no properties, assure that the "Add Property" button is shown.
-        const res = [...Array(columns)].map(col => []);
+        const res = [...Array(columns)].map((col) => []);
         this.propertiesList.forEach((val, index) => {
             res[index % columns].push(val);
         });
@@ -169,7 +170,7 @@ export class PropertiesField extends Component {
                 direction === "down"
                     ? _lt("This field is already last")
                     : _lt("This field is already first"),
-                { type: "warning" },
+                { type: "warning" }
             );
             return;
         }
@@ -341,11 +342,7 @@ export class PropertiesField extends Component {
             `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
         );
 
-        reposition(
-            targetElement,
-            popover,
-            { position: "top", margin: 10 },
-        );
+        reposition(targetElement, popover, { position: "top", margin: 10 });
 
         const arrow = popover.querySelector(".popover-arrow");
         if (arrow) {
@@ -368,10 +365,9 @@ export class PropertiesField extends Component {
         }
 
         // check if we can write on the definition record
-        this.state.canChangeDefinition = await this.orm.call(
+        this.state.canChangeDefinition = await this.user.checkAccessRight(
             definitionRecordModel,
-            "check_access_rights",
-            ["write", false],
+            "write"
         );
     }
 
@@ -468,7 +464,8 @@ export class PropertiesField extends Component {
                 context: this.context,
                 onChange: this.onPropertyDefinitionChange.bind(this),
                 onDelete: () => this.onPropertyDelete(currentName(propertyName)),
-                onPropertyMove: (direction) => this.onPropertyMove(currentName(propertyName), direction),
+                onPropertyMove: (direction) =>
+                    this.onPropertyMove(currentName(propertyName), direction),
                 isNewlyCreated: isNewlyCreated,
                 propertyIndex: propertyIndex,
                 propertiesSize: propertiesList.length,
@@ -482,7 +479,7 @@ export class PropertiesField extends Component {
                     this.state.movedPropertyName = null;
                     target.classList.remove("disabled");
                 },
-            },
+            }
         );
     }
 }
