@@ -189,7 +189,7 @@ export class DatePicker extends Component {
             };
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
-                    params[prop] = params[prop].isValid ? luxonToMoment(params[prop]) : null;
+                    params[prop] = luxonToMoment(params[prop]);
                 }
             }
             commandOrParams = params;
