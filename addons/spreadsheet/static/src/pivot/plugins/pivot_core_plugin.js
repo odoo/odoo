@@ -94,7 +94,7 @@ export default class PivotCorePlugin extends CorePlugin {
                 const table = new SpreadsheetPivotTable(cols, rows, measures);
                 this._addPivot(id, definition, dataSourceId);
                 this._insertPivot(sheetId, anchor, id, table);
-                this.nextId = parseInt(id, 10) + 1;
+                this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
             case "RE_INSERT_PIVOT": {
