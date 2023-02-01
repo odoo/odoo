@@ -13,6 +13,7 @@
                 t-att-readonly="props.readonly"
                 t-ref="input"
                 t-on-change="() => this.onDateChange()"
+                t-on-input="(ev) => this.props.onInput(ev)"
                 t-on-click="onInputClick"
                 t-on-keydown="onInputKeydown"
             />
