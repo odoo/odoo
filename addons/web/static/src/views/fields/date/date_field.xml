@@ -12,6 +12,8 @@
                 inputId="props.id"
                 placeholder="props.placeholder"
                 onDateTimeChanged="(date) => this.onDateTimeChanged(date)"
+                onInput.bind="onDatePickerInput"
+                onUpdateInput.bind="onUpdateInput"
             />
         </t>
     </t>

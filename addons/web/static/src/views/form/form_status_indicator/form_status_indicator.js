@@ -12,7 +12,7 @@ export class FormStatusIndicator extends Component {
             return this.props.model.root.isValid ? "dirty" : "invalid";
         } else if (!this.props.model.root.isValid) {
             return "invalid";
-        } else if (this.props.model.root.isDirty) {
+        } else if (this.props.model.root.isDirty || this.props.fieldIsDirty) {
             return "dirty";
         } else {
             return "saved";
@@ -32,4 +32,5 @@ FormStatusIndicator.props = {
     save: Function,
     discard: Function,
     isDisabled: Boolean,
+    fieldIsDirty: Boolean,
 };

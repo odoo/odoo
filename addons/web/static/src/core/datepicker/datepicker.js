@@ -166,6 +166,7 @@ export class DatePicker extends Component {
         const [formattedDate] = this.formatValue(this.date, this.getOptions(useStatic));
         if (formattedDate !== null) {
             this.inputRef.el.value = formattedDate;
+            this.props.onUpdateInput(formattedDate);
         }
     }
 
@@ -266,6 +267,8 @@ DatePicker.defaultProps = {
     minDate: DateTime.fromObject({ year: 1000 }),
     useCurrent: false,
     widgetParent: "body",
+    onInput: () => {},
+    onUpdateInput: () => {},
 };
 DatePicker.props = {
     // Components props
@@ -309,6 +312,8 @@ DatePicker.props = {
     widgetParent: { type: String, optional: true },
     daysOfWeekDisabled: { type: Array, optional: true },
     placeholder: { type: String, optional: true },
+    onInput: { type: Function, optional: true },
+    onUpdateInput: { type: Function, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 
