@@ -4,23 +4,29 @@
 import difflib
 import logging
 import re
+import sys
 from contextlib import contextmanager
-from unittest import TestCase
+from unittest import SkipTest, skip
 from unittest.mock import patch
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tests.common import users, warmup
-from odoo.tests.runner import OdooTestResult
+from odoo.tests.result import OdooTestResult
+from odoo.tests.case import TestCase
 
 _logger = logging.getLogger(__name__)
 
 from odoo.tests import MetaCase
 
 
-class TestTestSuite(TestCase, metaclass=MetaCase):
+if sys.version_info >= (3, 8):
+    # this is mainly to ensure that simple tests will continue to work even if BaseCase should be used
+    # this only works if doClassCleanup is available on testCase because of the vendoring of suite.py.
+    # this test will only work in python 3.8 +
+    class TestTestSuite(TestCase, metaclass=MetaCase):
 
-    def test_test_suite(self):
-        """ Check that OdooSuite handles unittest.TestCase correctly. """
+        def test_test_suite(self):
+            """ Check that OdooSuite handles unittest.TestCase correctly. """
 
 
 class TestRunnerLoggingCommon(TransactionCase):
@@ -37,7 +43,7 @@ class TestRunnerLoggingCommon(TransactionCase):
         self.expected_first_frame_methods = None
         return super().setUp()
 
-    def _feedErrorsToResult(self, result, errors):
+    def _addError(self, result, test, exc_info):
         # We use this hook to catch the logged error. It is initially called
         # post tearDown, and logs the actual errors. Because of our hack
         # tests.common._ErrorCatcher, the errors are logged directly. This is
@@ -48,11 +54,10 @@ class TestRunnerLoggingCommon(TransactionCase):
             self.test_result = result
             # while we are here, let's check that the first frame of the stack
             # is always inside the test method
-            for error in errors:
-                _, exc_info = error
-                if exc_info:
-                    tb = exc_info[2]
-                    self._check_first_frame(tb)
+
+            if exc_info:
+                tb = exc_info[2]
+                self._check_first_frame(tb)
 
             # intercept all ir_logging. We cannot use log catchers or other
             # fancy stuff because makeRecord is too low level.
@@ -70,7 +75,7 @@ class TestRunnerLoggingCommon(TransactionCase):
 
             fake_result = OdooTestResult()
             with patch('logging.Logger.makeRecord', makeRecord), patch('logging.Logger.handle', handle):
-                super()._feedErrorsToResult(fake_result, errors)
+                super()._addError(fake_result, test, exc_info)
 
             self._check_log_records(log_records)
 
@@ -112,9 +117,9 @@ class TestRunnerLoggingCommon(TransactionCase):
             value = self._clean_message(value)
         if value != expected:
             if key != 'msg':
-                self._log_error(f"Key `{key}` => `{value}` is not equal to `{expected}` \n {log_record['str']}")
+                self._log_error(f"Key `{key}` => `{value}` is not equal to `{expected}` \n {log_record['msg']}")
             else:
-                diff = '\n'.join(difflib.ndiff(value.splitlines(), expected.splitlines()))
+                diff = '\n'.join(difflib.ndiff(expected.splitlines(), value.splitlines()))
                 self._log_error(f"Key `{key}` did not matched expected:\n{diff}")
 
     def _log_error(self, message):
@@ -133,6 +138,9 @@ class TestRunnerLoggingCommon(TransactionCase):
 
 
 class TestRunnerLogging(TestRunnerLoggingCommon):
+
+    def test_has_add_error(self):
+        self.assertTrue(hasattr(self, '_addError'))
 
     def test_raise(self):
         raise Exception('This is an error')
@@ -171,6 +179,8 @@ Exception: {message}
     @users('__system__')
     @warmup
     def test_with_decorators(self):
+        # note, this test may be broken with a decorator in decorator=5.0.5 since the behaviour changed
+        # but decoratorx was not introduced yet.
         message = (
 '''ERROR: Subtest TestRunnerLogging.test_with_decorators (login='__system__')
 Traceback (most recent call last):
@@ -448,3 +458,72 @@ class TestRunnerLoggingTeardown(TestRunnerLoggingCommon):
         with self.subTest():
             raise Exception('This is a second subTest error')
         raise Exception('This is a test error')
+
+
+class TestSubtests(BaseCase):
+
+    def test_nested_subtests(self):
+        with self.subTest(a=1, x=2):
+            with self.subTest(b=3, x=4):
+                self.assertEqual(self._subtest._subDescription(), '(b=3, x=4, a=1)')
+            with self.subTest(b=5, x=6):
+                self.assertEqual(self._subtest._subDescription(), '(b=5, x=6, a=1)')
+
+
+class TestClassSetup(BaseCase):
+
+    @classmethod
+    def setUpClass(cls):
+        raise SkipTest('Skip this class')
+
+    def test_method(self):
+        pass
+
+
+class TestClassTeardown(BaseCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        raise SkipTest('Skip this class')
+
+    def test_method(self):
+        pass
+
+
+class Test01ClassCleanups(BaseCase):
+    """
+    The purpose of this test combined with Test02ClassCleanupsCheck is to check that
+    class cleanup work. class cleanup where introduced in python3.8 but tests should
+    remain compatible with python 3.7
+    """
+    executed = False
+    cleanup = False
+
+    @classmethod
+    def setUpClass(cls):
+        cls.executed = True
+
+        def doCleanup():
+            cls.cleanup = True
+        cls.addClassCleanup(doCleanup)
+
+    def test_dummy(self):
+        pass
+
+
+class Test02ClassCleanupsCheck(BaseCase):
+    def test_classcleanups(self):
+        self.assertTrue(Test01ClassCleanups.executed, "This test only makes sence when executed after Test01ClassCleanups")
+        self.assertTrue(Test01ClassCleanups.cleanup, "TestClassCleanup shoudl have been cleanuped")
+
+
+@skip
+class TestSkipClass(BaseCase):
+    def test_classcleanups(self):
+        raise Exception('This should be skipped')
+
+
+class TestSkipMethof(BaseCase):
+    @skip
+    def test_skip_method(self):
+        raise Exception('This should be skipped')
