@@ -4,7 +4,7 @@ import { useListener } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
 import { barcodeService } from "@barcodes/barcode_service";
 import { _t } from "web.core";
-import { Gui } from "@point_of_sale/js/Gui";
+import { registry } from "@web/core/registry";
 
 const { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } = owl;
 const INPUT_KEYS = new Set(
@@ -60,10 +60,11 @@ const getDefaultConfig = () => ({
  * - Write more integration tests. NumberPopup can be used as test component.
  */
 class NumberBuffer extends EventBus {
-    constructor() {
+    constructor({ sound }) {
         super();
         this.isReset = false;
         this.bufferHolderStack = [];
+        this.sound = sound;
     }
     /**
      * @returns {String} value of the buffer, e.g. '-95.79'
@@ -294,7 +295,7 @@ class NumberBuffer extends EventBus {
             if (isFirstInput) {
                 this.state.buffer = "" + input;
             } else if (this.state.buffer.length > 12) {
-                Gui.playSound("bell");
+                this.sound.play("bell");
             } else {
                 this.state.buffer += input;
             }
@@ -317,4 +318,11 @@ class NumberBuffer extends EventBus {
     }
 }
 
-export const numberBuffer = new NumberBuffer();
+export const numberBuffer = {
+    dependencies: ["sound"],
+    start(env, { sound }) {
+        return new NumberBuffer({ sound });
+    },
+};
+
+registry.category("services").add("number_buffer", numberBuffer);

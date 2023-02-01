@@ -6,6 +6,8 @@ import { renderToString } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 const { onMounted } = owl;
 
@@ -14,6 +16,8 @@ export class TipScreen extends PosComponent {
     static showBackToFloorButton = true;
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.popup = useService("popup");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.get_total_with_tax();
 
@@ -47,7 +51,7 @@ export class TipScreen extends PosComponent {
         const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
 
         if (!serverId) {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Unsynced order"),
                 body: this.env._t(
                     "This order is not yet synced to server. Make sure it is synced then try again."
@@ -67,7 +71,7 @@ export class TipScreen extends PosComponent {
         }
 
         if (amount > 0.25 * this.totalAmount) {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: "Are you sure?",
                 body: `${this.env.pos.format_currency(
                     amount
@@ -104,7 +108,7 @@ export class TipScreen extends PosComponent {
             this.env.pos.add_new_order();
         }
         const { name, props } = this.nextScreen;
-        this.showScreen(name, props);
+        this.pos.showScreen(name, props);
     }
     get nextScreen() {
         if (this.env.pos.config.module_pos_restaurant && this.env.pos.config.iface_floorplan) {
@@ -139,7 +143,7 @@ export class TipScreen extends PosComponent {
     async _printIoT(receipt) {
         const printResult = await this.env.proxy.printer.print_receipt(receipt);
         if (!printResult.successful) {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: printResult.message.title,
                 body: printResult.message.body,
             });
@@ -151,7 +155,7 @@ export class TipScreen extends PosComponent {
             $(this.el).find(".pos-receipt-container").html(receipt);
             window.print();
         } catch {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: this.env._t("Printing is not supported on some browsers"),
                 body: this.env._t(
                     "Printing is not supported on some browsers due to no default printing protocol " +

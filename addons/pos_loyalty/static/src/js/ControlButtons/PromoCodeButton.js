@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 
 export class PromoCodeButton extends PosComponent {
@@ -10,11 +10,12 @@ export class PromoCodeButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
 
     async onClick() {
-        let { confirmed, payload: code } = await this.showPopup(TextInputPopup, {
+        let { confirmed, payload: code } = await this.popup.add(TextInputPopup, {
             title: this.env._t("Enter Code"),
             startingValue: "",
             placeholder: this.env._t("Gift card or Discount code"),

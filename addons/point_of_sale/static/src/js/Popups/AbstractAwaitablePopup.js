@@ -1,7 +1,7 @@
 /** @odoo-module */
 
+import { useExternalListener } from "@odoo/owl";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
-import { useBus } from "@web/core/utils/hooks";
 
 /**
  * Implement this abstract class by extending it like so:
@@ -22,7 +22,7 @@ import { useBus } from "@web/core/utils/hooks";
  * The concrete popup can now be instantiated and be awaited for
  * the user's response like so:
  * ```js
- * const { confirmed, payload } = await this.showPopup(ConcretePopup);
+ * const { confirmed, payload } = await this.popup.add(ConcretePopup);
  * // based on the implementation above,
  * // if confirmed, payload = 'result'
  * //    otherwise, payload = null
@@ -30,25 +30,24 @@ import { useBus } from "@web/core/utils/hooks";
  */
 export class AbstractAwaitablePopup extends PosComponent {
     setup() {
-        super.setup();
-        if (this.props.confirmKey) {
-            useBus(this.env.posbus, `confirm-popup-${this.props.id}`, this.confirm);
+        super.setup(...arguments);
+        useExternalListener(window, "keyup", this._onWindowKeyup);
+    }
+    _onWindowKeyup(event) {
+        if (!this.props.isActive || ["INPUT", "TEXTAREA"].includes(event.target.tagName)) {
+            return;
         }
-        if (this.props.cancelKey) {
-            useBus(this.env.posbus, `cancel-popup-${this.props.id}`, this.cancel);
+        if (event.key === this.props.cancelKey) {
+            this.cancel();
+        } else if (event.key === this.props.confirmKey) {
+            this.confirm();
         }
     }
     async confirm() {
-        this.env.posbus.trigger("close-popup", {
-            popupId: this.props.id,
-            response: { confirmed: true, payload: await this.getPayload() },
-        });
+        this.props.close({ confirmed: true, payload: await this.getPayload() });
     }
     cancel() {
-        this.env.posbus.trigger("close-popup", {
-            popupId: this.props.id,
-            response: { confirmed: false, payload: null },
-        });
+        this.props.close({ confirmed: false, payload: null });
     }
     /**
      * Override this in the concrete popup implementation to set the

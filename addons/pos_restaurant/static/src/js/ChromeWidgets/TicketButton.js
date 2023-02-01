@@ -15,7 +15,7 @@ patch(TicketButton.prototype, "pos_restaurant.TicketButton", {
                 await this.env.pos._syncAllOrdersFromServer();
             } finally {
                 this.env.pos.setLoadingOrderState(false);
-                this.showScreen("TicketScreen");
+                this.pos.showScreen("TicketScreen");
             }
         } else {
             this._super(...arguments);

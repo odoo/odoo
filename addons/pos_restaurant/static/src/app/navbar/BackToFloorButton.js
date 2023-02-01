@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 
 export class BackToFloorButton extends PosComponent {
@@ -20,6 +20,6 @@ export class BackToFloorButton extends PosComponent {
         return this.table != null;
     }
     backToFloorScreen() {
-        this.showScreen("FloorScreen", { floor: this.floor });
+        this.pos.showScreen("FloorScreen", { floor: this.floor });
     }
 }

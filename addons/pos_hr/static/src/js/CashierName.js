@@ -5,8 +5,8 @@ import { patch } from "@web/core/utils/patch";
 import { SelectCashierMixin } from "@pos_hr/js/SelectCashierMixin";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 
-patch(CashierName.prototype, "pos_hr.CashierName", {
-    ...SelectCashierMixin,
+patch(CashierName.prototype, "pos_hr.CashierName SelectCashierMixin", SelectCashierMixin);
+patch(CashierName.prototype, "pos_hr.CashierName methods", {
     setup() {
         this._super(...arguments);
         useBarcodeReader({ cashier: this.barcodeCashierAction });

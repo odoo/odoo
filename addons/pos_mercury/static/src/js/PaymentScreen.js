@@ -3,7 +3,6 @@
 import { _t } from "web.core";
 import { patch } from "@web/core/utils/patch";
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { PaymentTransactionPopup } from "./PaymentTransactionPopup";
@@ -128,7 +127,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     async validateOrder(isForceValidate) {
-        numberBuffer.capture();
+        this.numberBuffer.capture();
         return this._super(...arguments);
     },
     /**
@@ -137,7 +136,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     async _sendPaymentRequest({ detail: line }) {
-        numberBuffer.capture();
+        this.numberBuffer.capture();
         return this._super(...arguments);
     },
     _get_swipe_pending_line() {
@@ -212,7 +211,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
         var order = this.env.pos.get_order();
         if (order.get_due(order.selected_paymentline) < 0) {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Refunds not supported"),
                 body: this.env._t(
                     "Credit card refunds are not supported. Instead select your credit card payment method, click 'Validate' and refund the original charge manually through the Vantiv backend."
@@ -229,7 +228,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         var decodedMagtek = self.env.pos.decodeMagtek(parsed_result.code);
 
         if (!decodedMagtek) {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Could not read card"),
                 body: this.env._t(
                     "This can be caused by a badly executed swipe or by not having your keyboard layout set to US QWERTY (not US International)."
@@ -354,7 +353,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                         order.selected_paymentline.mercury_data = response; // used to reverse transactions
                         order.selected_paymentline.set_credit_card_name();
 
-                        numberBuffer.reset();
+                        this.numberBuffer.reset();
                         order.trigger("change", order); // needed so that export_to_JSON gets triggered
                         self.render();
 
@@ -421,22 +420,24 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                 isSelected: false,
                 item: paymentMethod.item,
             }));
-            this.showPopup(SelectionPopup, {
-                title: this.env._t("Pay with: "),
-                list: selectionList,
-            }).then(({ confirmed, payload: selectedPaymentMethod }) => {
-                if (confirmed) {
-                    parsed_result.payment_method_id = selectedPaymentMethod;
-                    this.credit_code_transaction(parsed_result);
-                } else {
-                    this.credit_code_cancel();
-                }
-            });
+            this.popup
+                .add(SelectionPopup, {
+                    title: this.env._t("Pay with: "),
+                    list: selectionList,
+                })
+                .then(({ confirmed, payload: selectedPaymentMethod }) => {
+                    if (confirmed) {
+                        parsed_result.payment_method_id = selectedPaymentMethod;
+                        this.credit_code_transaction(parsed_result);
+                    } else {
+                        this.credit_code_cancel();
+                    }
+                });
         }
     },
     remove_paymentline_by_ref(line) {
         this.env.pos.get_order().remove_paymentline(line);
-        numberBuffer.reset();
+        this.numberBuffer.reset();
         this.render();
     },
     do_reversal(line, is_voidsale, old_deferred, retry_nr) {
@@ -446,7 +447,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
 
         // show the transaction popup.
         // the transaction deferred is used to update transaction status
-        this.showPopup(PaymentTransactionPopup, {
+        this.popup.add(PaymentTransactionPopup, {
             transaction: def,
         });
 

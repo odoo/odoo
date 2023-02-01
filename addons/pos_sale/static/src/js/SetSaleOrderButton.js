@@ -3,13 +3,14 @@
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
-import { Gui } from "@point_of_sale/js/Gui";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class SetSaleOrderButton extends PosComponent {
     static template = "SetSaleOrderButton";
 
     setup() {
         super.setup();
+        this.pos = usePos();
         useListener("click", this.onClick);
     }
     get currentOrder() {
@@ -25,13 +26,10 @@ export class SetSaleOrderButton extends PosComponent {
             args: [[]],
             kwargs: { context: this.env.session.user_context },
         });
-        // LegacyComponent doesn't work the same way as before.
-        // We need to use Gui here to show the screen. This will work
-        // because ui methods in Gui is bound to the root component.
         const screen = this.env.isMobile
             ? "MobileSaleOrderManagementScreen"
             : "SaleOrderManagementScreen";
-        Gui.showScreen(screen);
+        this.pos.showScreen(screen);
     }
 }
 

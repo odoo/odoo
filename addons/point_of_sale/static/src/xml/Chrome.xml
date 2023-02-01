@@ -11,10 +11,14 @@
                         <div class="subwindow">
                             <div class="subwindow-container">
                                 <div class="subwindow-container-fix screens">
+                                    <!-- FIXME POSREF: remove the t-key after owl 2.0.6+ is merged, see https://github.com/odoo/owl/pull/1344 -->
+                                    <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->
                                     <t isShown="!pos.tempScreen" t-component="pos.mainScreen.component"
-                                       t-props="pos.mainScreen.props" t-key="pos.mainScreen.name" />
-                                    <t t-if="pos.tempScreen" t-component="pos.tempScreen.component"
-                                       t-props="pos.tempScreen.props" t-key="pos.tempScreen.name" />
+                                       t-props="pos.mainScreen.props" t-key="pos.mainScreen.component.name"/>
+                                    <ErrorHandler onError.bind="onTempScreenError">
+                                        <t t-if="pos.tempScreen" t-component="pos.tempScreen.component"
+                                        t-props="pos.tempScreen.props" t-key="pos.tempScreen.name" />
+                                    </ErrorHandler>
                                 </div>
                             </div>
                         </div>

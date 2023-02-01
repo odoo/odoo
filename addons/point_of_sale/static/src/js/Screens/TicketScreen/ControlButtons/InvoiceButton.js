@@ -1,15 +1,18 @@
 /** @odoo-module */
 
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class InvoiceButton extends PosComponent {
     static template = "InvoiceButton";
 
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.popup = useService("popup");
         useListener("click", this._onClick);
     }
     get isAlreadyInvoiced() {
@@ -45,7 +48,7 @@ export class InvoiceButton extends PosComponent {
                 throw error;
             } else {
                 // NOTE: error here is most probably undefined
-                this.showPopup(ErrorPopup, {
+                this.popup.add(ErrorPopup, {
                     title: this.env._t("Network Error"),
                     body: this.env._t("Unable to download invoice."),
                 });
@@ -69,7 +72,7 @@ export class InvoiceButton extends PosComponent {
         // Part 1: Handle missing partner.
         // Write to pos.order the selected partner.
         if (!order.get_partner()) {
-            const { confirmed: confirmedPopup } = await this.showPopup(ConfirmPopup, {
+            const { confirmed: confirmedPopup } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Need customer to invoice"),
                 body: this.env._t("Do you want to open the customer list to select customer?"),
             });
@@ -78,7 +81,7 @@ export class InvoiceButton extends PosComponent {
             }
 
             const { confirmed: confirmedTempScreen, payload: newPartner } =
-                await this.showTempScreen("PartnerListScreen");
+                await this.pos.showTempScreen("PartnerListScreen");
             if (!confirmedTempScreen) {
                 return;
             }

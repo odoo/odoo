@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 
@@ -15,13 +15,16 @@ export class OrderWidget extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("select-line", this._selectLine);
         useListener("edit-pack-lot-lines", this._editPackLotLines);
         this.scrollableRef = useRef("scrollable");
         useEffect(
             () => {
-                const selectedLineEl = this.scrollableRef.el && this.scrollableRef.el.querySelector(".orderline.selected");
-                if(selectedLineEl) {
+                const selectedLineEl =
+                    this.scrollableRef.el &&
+                    this.scrollableRef.el.querySelector(".orderline.selected");
+                if (selectedLineEl) {
                     selectedLineEl.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
             },
@@ -48,7 +51,7 @@ export class OrderWidget extends PosComponent {
         const orderline = event.detail.orderline;
         const isAllowOnlyOneLot = orderline.product.isAllowOnlyOneLot();
         const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
-        const { confirmed, payload } = await this.showPopup(EditListPopup, {
+        const { confirmed, payload } = await this.popup.add(EditListPopup, {
             title: this.env._t("Lot/Serial Number(s) Required"),
             name: orderline.product.display_name,
             isSingleItem: isAllowOnlyOneLot,

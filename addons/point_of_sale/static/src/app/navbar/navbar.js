@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
 import { CashierName } from "@point_of_sale/js/ChromeWidgets/CashierName";

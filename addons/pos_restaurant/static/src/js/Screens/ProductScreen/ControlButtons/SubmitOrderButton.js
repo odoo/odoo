@@ -3,6 +3,7 @@
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * IMPROVEMENT: Perhaps this class is quite complicated for its worth.
@@ -15,6 +16,7 @@ export class SubmitOrderButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         this.clicked = false; //mutex, we don't want to be able to spam the printers
     }
     async _onClick() {
@@ -27,7 +29,7 @@ export class SubmitOrderButton extends PosComponent {
                     if (isPrintSuccessful) {
                         order.updatePrintedResume();
                     } else {
-                        this.showPopup(ErrorPopup, {
+                        this.popup.add(ErrorPopup, {
                             title: this.env._t("Printing failed"),
                             body: this.env._t("Failed in printing the changes in the order"),
                         });

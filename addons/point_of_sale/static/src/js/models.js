@@ -7,7 +7,6 @@ import core from "web.core";
 import field_utils from "web.field_utils";
 import time from "web.time";
 import utils from "web.utils";
-import { Gui } from "@point_of_sale/js/Gui";
 import { batched, uuidv4 } from "@point_of_sale/js/utils";
 import { ErrorPopup } from "./Popups/ErrorPopup";
 
@@ -145,6 +144,10 @@ export class PosGlobalState extends PosModel {
             selectedPartner: null,
             selectedCategoryId: null,
         });
+
+        this.ready = new Promise((resolve) => {
+            this.markReady = resolve;
+        });
     }
     getDefaultSearchDetails() {
         return {
@@ -167,6 +170,7 @@ export class PosGlobalState extends PosModel {
         await this.load_product_uom_unit();
         await this.load_orders();
         this.set_start_order();
+        this.markReady();
     }
 
     async load_server_data() {
@@ -340,40 +344,37 @@ export class PosGlobalState extends PosModel {
     // reload the list of partner, returns as a promise that resolves if there were
     // updated partners, and fails if not
     async load_new_partners() {
-        let search_params = { domain: this.prepare_new_partners_domain() };
+        const search_params = { domain: this.prepare_new_partners_domain() };
         if (this.env.pos.config.limited_partners_loading) {
-            search_params['order'] = 'write_date desc';
+            search_params["order"] = "write_date desc";
             if (this.env.pos.config.partner_load_background) {
-                search_params['limit'] = this.env.pos.config.limited_partners_amount || 1;
-            }
-            else {
-                search_params['limit'] = 1;
+                search_params["limit"] = this.env.pos.config.limited_partners_amount || 1;
+            } else {
+                search_params["limit"] = 1;
             }
         }
-        const partners = await this.env.services
-            .rpc(
-                {
-                    model: 'pos.session',
-                    method: 'get_pos_ui_res_partner_by_params',
-                    args: [[odoo.pos_session_id], search_params],
-                },
-                {
-                    timeout: 3000,
-                    shadow: true,
-                }
-            )
+        const partners = await this.env.services.rpc(
+            {
+                model: "pos.session",
+                method: "get_pos_ui_res_partner_by_params",
+                args: [[odoo.pos_session_id], search_params],
+            },
+            {
+                timeout: 3000,
+                shadow: true,
+            }
+        );
         if (this.env.pos.config.partner_load_background) {
             this.loadPartnersBackground(
-                search_params['domain'],
+                search_params["domain"],
                 this.env.pos.config.limited_partners_amount || 1,
-                'write_date desc'
+                "write_date desc"
             );
         }
         if (this.addPartners(partners)) {
-            return true
-        }
-        else {
-            return false
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -547,7 +548,7 @@ export class PosGlobalState extends PosModel {
             page += 1;
         } while (products.length == this.config.limited_products_amount);
     }
-    async loadPartnersBackground(domain=[], offset=0, order=false) {
+    async loadPartnersBackground(domain = [], offset = 0, order = false) {
         // Start at the first page since the first set of loaded partners are not actually in the
         // same order as this background loading procedure.
         let i = 0;
@@ -1482,7 +1483,7 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra, recurring=false) {
+    get_price(pricelist, quantity, price_extra, recurring = false) {
         var self = this;
         var date = moment();
 
@@ -1512,12 +1513,13 @@ export class Product extends PosModel {
             pricelist_items = _.filter(
                 self.applicablePricelistItems[pricelist.id],
                 function (item) {
-                return (
-                    (!item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
-                    (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
-                    (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
-                );
-            });
+                    return (
+                        (!item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+                        (!item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
+                        (!item.date_end || moment.utc(item.date_end).isSameOrAfter(date))
+                    );
+                }
+            );
         }
 
         var price = self.lst_price;
@@ -1650,7 +1652,7 @@ export class Orderline extends PosModel {
             var packlotline = pack_lot_lines[i][2];
             var pack_lot_line = new Packlotline(
                 {},
-                { json: _.extend({...packlotline}, { order_line: this }) }
+                { json: _.extend({ ...packlotline }, { order_line: this }) }
             );
             this.pack_lot_lines.add(pack_lot_line);
         }
@@ -1790,7 +1792,7 @@ export class Orderline extends PosModel {
                 const maxQtyToRefund =
                     toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
                 if (quant > 0) {
-                    Gui.showPopup(ErrorPopup, {
+                    this.pos.env.services.popup.add(ErrorPopup, {
                         title: _t("Positive quantity not allowed"),
                         body: _t(
                             "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
@@ -1802,7 +1804,7 @@ export class Orderline extends PosModel {
                 } else if (-quant <= maxQtyToRefund) {
                     toRefundDetail.qty = -quant;
                 } else {
-                    Gui.showPopup(ErrorPopup, {
+                    this.pos.env.services.popup.add(ErrorPopup, {
                         title: _t("Greater than allowed"),
                         body: _.str.sprintf(
                             _t(
@@ -2243,7 +2245,7 @@ export class Orderline extends PosModel {
         };
     }
     display_discount_policy() {
-        return (this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount" );
+        return this.order.pricelist ? this.order.pricelist.discount_policy : "with_discount";
     }
     compute_fixed_price(price) {
         var order = this.order;
@@ -2605,8 +2607,8 @@ export class Order extends PosModel {
         }
         this.set_partner(partner);
 
-        this.temporary = false;     // FIXME
-        this.to_invoice = false;    // FIXME
+        this.temporary = false; // FIXME
+        this.to_invoice = false; // FIXME
         this.shippingDate = json.shipping_date;
 
         var orderlines = json.lines;
@@ -2622,10 +2624,7 @@ export class Order extends PosModel {
         var paymentlines = json.statement_ids;
         for (i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = new Payment(
-                {},
-                { pos: this.pos, order: this, json: paymentline }
-            );
+            var newpaymentline = new Payment({}, { pos: this.pos, order: this, json: paymentline });
             this.paymentlines.add(newpaymentline);
 
             if (i === paymentlines.length - 1) {
@@ -2686,7 +2685,10 @@ export class Order extends PosModel {
     _exportShippingDateForPrinting() {
         const shippingDate = new Date(this.shippingDate);
         const localeShippingDate = field_utils.format.date(
-            moment(shippingDate), {}, {timezone: false});
+            moment(shippingDate),
+            {},
+            { timezone: false }
+        );
         const exportedDate = {
             localestring: localeShippingDate,
             validationDate: shippingDate,
@@ -3399,7 +3401,10 @@ export class Order extends PosModel {
                 var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
-                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
+                if (
+                    (this.get_total_with_tax() < 0 && remaining > 0) ||
+                    (this.get_total_with_tax() > 0 && remaining < 0)
+                ) {
                     rounding_method = rounding_method.endsWith("UP") ? "DOWN" : rounding_method;
                 }
 
@@ -3415,16 +3420,13 @@ export class Order extends PosModel {
                     Math.abs(this.get_total_with_tax()) < this.pos.cash_rounding[0].rounding
                 ) {
                     return 0;
-                } else if(rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
+                } else if (rounding_method === "UP" && rounding_applied < 0 && remaining > 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
-                }
-                else if(rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
+                } else if (rounding_method === "UP" && rounding_applied > 0 && remaining < 0) {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
-                }
-                else if(rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0){
+                } else if (rounding_method === "DOWN" && rounding_applied > 0 && remaining > 0) {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
-                }
-                else if(rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0){
+                } else if (rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;
@@ -3587,7 +3589,7 @@ export class Order extends PosModel {
     }
     /* ---- Ship later --- */
     setShippingDate(shippingDate) {
-        this.shippingDate = shippingDate
+        this.shippingDate = shippingDate;
     }
     getShippingDate() {
         return this.shippingDate;

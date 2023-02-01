@@ -13,7 +13,7 @@ patch(ProductScreen.prototype, "pos_mercury.ProductScreen", {
         });
     },
     credit_error_action() {
-        this.showPopup(ErrorPopup, {
+        this.popup.add(ErrorPopup, {
             body: this.env._t("Go to payment screen to use cards"),
         });
     },

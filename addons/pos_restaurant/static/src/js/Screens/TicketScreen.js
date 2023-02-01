@@ -16,9 +16,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
             const order = this.env.pos.get_order();
             if (order) {
                 const { name: screenName } = order.get_screen_data();
-                this.showScreen(screenName);
+                this.pos.showScreen(screenName);
             } else {
-                this.showScreen("FloorScreen");
+                this.pos.showScreen("FloorScreen");
             }
         }
     },
@@ -101,7 +101,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
                 ? this.env.pos.getTableOrders(this.env.pos.table.id)
                 : this.env.pos.orders;
             if (orderList.length == 0) {
-                this.showScreen("FloorScreen");
+                this.pos.showScreen("FloorScreen");
             }
         }
     },
@@ -135,7 +135,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
             this.env.pos.removeOrder(order);
             return true;
         } catch {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: "Failed to set tip",
                 body: `Failed to set tip to ${order.name}. Do you want to proceed on setting the tips of the remaining?`,
             });

@@ -4,11 +4,16 @@
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { useService } from "@web/core/utils/hooks";
 
 // FIXME POSREF make this into a hook or something
 export const SelectCashierMixin = {
+    setup() {
+        this._super(...arguments);
+        this.popup = useService("popup");
+    },
     async askPin(employee) {
-        const { confirmed, payload: inputPin } = await this.showPopup(NumberPopup, {
+        const { confirmed, payload: inputPin } = await this.popup.add(NumberPopup, {
             isPassword: true,
             title: this.env._t("Password ?"),
             startingValue: null,
@@ -21,7 +26,7 @@ export const SelectCashierMixin = {
         if (employee.pin === Sha1.hash(inputPin)) {
             return employee;
         } else {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: this.env._t("Incorrect Password"),
             });
             return;
@@ -43,7 +48,7 @@ export const SelectCashierMixin = {
                         isSelected: false,
                     };
                 });
-            let { confirmed, payload: employee } = await this.showPopup(SelectionPopup, {
+            let { confirmed, payload: employee } = await this.popup.add(SelectionPopup, {
                 title: this.env._t("Change Cashier"),
                 list: employeesList,
             });

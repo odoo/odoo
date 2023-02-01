@@ -4,9 +4,15 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { useService } from "@web/core/utils/hooks";
 
 export class eWalletButton extends PosComponent {
     static template = "point_of_sale.eWalletButton";
+
+    setup() {
+        super.setup(...arguments);
+        this.popup = useService("popup");
+    }
 
     _getEWalletRewards(order) {
         const claimableRewards = order.getClaimableRewards();
@@ -28,7 +34,7 @@ export class eWalletButton extends PosComponent {
             if (eWalletPrograms.length == 1) {
                 selectedProgram = eWalletPrograms[0];
             } else {
-                const { confirmed, payload } = await this.showPopup(SelectionPopup, {
+                const { confirmed, payload } = await this.popup.add(SelectionPopup, {
                     title: this.env._t("Refund with eWallet"),
                     list: eWalletPrograms.map((program) => ({
                         id: program.id,
@@ -55,7 +61,7 @@ export class eWalletButton extends PosComponent {
             if (eWalletRewards.length == 1) {
                 eWalletReward = eWalletRewards[0];
             } else {
-                const { confirmed, payload } = await this.showPopup(SelectionPopup, {
+                const { confirmed, payload } = await this.popup.add(SelectionPopup, {
                     title: this.env._t("Use eWallet to pay"),
                     list: eWalletRewards.map(({ reward, coupon_id }) => ({
                         id: reward.id,
@@ -75,7 +81,7 @@ export class eWalletButton extends PosComponent {
                 );
                 if (result !== true) {
                     // Returned an error
-                    this.showPopup(ErrorPopup, {
+                    this.popup.add(ErrorPopup, {
                         title: this.env._t("Error"),
                         body: result,
                     });
