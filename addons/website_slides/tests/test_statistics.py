@@ -48,7 +48,7 @@ class TestChannelStatistics(common.SlidesCase):
         self.assertEqual(float_compare(channel_publisher.total_time, sum(s.completion_time for s in channel_publisher.slide_content_ids), 3), 0)
         # members computation
         self.assertEqual(channel_publisher.members_count, 1)
-        channel_publisher.action_add_member()
+        channel_publisher._action_add_member()
         self.assertEqual(channel_publisher.members_count, 1)
         channel_publisher._action_add_members(self.user_emp.partner_id)
         channel_publisher.invalidate_recordset(['partner_ids'])

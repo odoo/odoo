@@ -45,7 +45,7 @@ class TestKarmaGain(common.SlidesCase):
     def test_karma_change_vote(self):
         """ Test like / dislike only karma changes """
         channel = self.channel_2.with_user(self.env.user)
-        channel.action_add_member()
+        channel._action_add_member()
 
         start_karma = self.env.user.karma
 
