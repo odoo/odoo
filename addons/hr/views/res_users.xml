@@ -206,7 +206,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='mobile']" position="after">
                     <field name="create_employee_id" force_save="1" invisible="1"/>
-                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True)" attrs="{'invisible': [('create_employee_id', '>', 0)]}"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True)" attrs="{'invisible': [('create_employee_id', '>', 0)]}" groups="hr.group_hr_user"/>
                 </xpath>
             </field>
         </record>
