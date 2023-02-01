@@ -132,6 +132,7 @@
     const FILTERS_COLOR = "#188038";
     const BACKGROUND_HEADER_FILTER_COLOR = "#E6F4EA";
     const BACKGROUND_HEADER_SELECTED_FILTER_COLOR = "#CEEAD6";
+    const SEPARATOR_COLOR = "#E0E2E4";
     // Color picker
     const COLOR_PICKER_DEFAULTS = [
         "#000000",
@@ -221,10 +222,11 @@
     const HEADER_HEIGHT = 26;
     const HEADER_WIDTH = 48;
     const TOPBAR_HEIGHT = 63;
+    const TOPBAR_TOOLBAR_HEIGHT = 34;
     const BOTTOMBAR_HEIGHT = 36;
     const DEFAULT_CELL_WIDTH = 96;
     const DEFAULT_CELL_HEIGHT = 23;
-    const SCROLLBAR_WIDTH$1 = 15;
+    const SCROLLBAR_WIDTH = 15;
     const AUTOFILL_EDGE_LENGTH = 8;
     const ICON_EDGE_LENGTH = 18;
     const UNHIDE_ICON_EDGE_LENGTH = 14;
@@ -288,7 +290,8 @@
         ComponentsImportance[ComponentsImportance["Figure"] = 10] = "Figure";
         ComponentsImportance[ComponentsImportance["Dropdown"] = 12] = "Dropdown";
         ComponentsImportance[ComponentsImportance["ScrollBar"] = 15] = "ScrollBar";
-        ComponentsImportance[ComponentsImportance["Composer"] = 20] = "Composer";
+        ComponentsImportance[ComponentsImportance["GridComposer"] = 20] = "GridComposer";
+        ComponentsImportance[ComponentsImportance["TopBarComposer"] = 21] = "TopBarComposer";
         ComponentsImportance[ComponentsImportance["ColorPicker"] = 25] = "ColorPicker";
         ComponentsImportance[ComponentsImportance["IconPicker"] = 25] = "IconPicker";
         ComponentsImportance[ComponentsImportance["Popover"] = 30] = "Popover";
@@ -296,6 +299,7 @@
     })(ComponentsImportance || (ComponentsImportance = {}));
     const DEFAULT_SHEETVIEW_SIZE = 1000;
     const MAXIMAL_FREEZABLE_RATIO = 0.85;
+    const NEWLINE = "\n";
 
     const fontSizes = [
         { pt: 7.5, px: 10 },
@@ -733,10 +737,13 @@
     /**
      * Get the default height of the cell given its style.
      */
-    function getDefaultCellHeight(style) {
-        // TO DO: take multi text line into account to compute the real cell height in case of wrapping cell
-        const fontSize = computeTextFontSizeInPixels(style);
-        return computeTextLinesHeight(fontSize) + 2 * PADDING_AUTORESIZE_VERTICAL;
+    function getDefaultCellHeight(cell) {
+        if (!cell || !cell.content) {
+            return DEFAULT_CELL_HEIGHT;
+        }
+        const fontSize = computeTextFontSizeInPixels(cell.style);
+        const multiLineText = cell.content.split(NEWLINE);
+        return computeTextLinesHeight(fontSize, multiLineText.length) + 2 * PADDING_AUTORESIZE_VERTICAL;
     }
     function computeTextWidth(context, text, style) {
         context.save();
@@ -1053,6 +1060,40 @@
             return matrix;
         return matrix[0].map((_, i) => matrix.map((row) => row[i]));
     }
+    /**
+     * Equivalent to "\s" in regexp, minus the new lines characters
+     *
+     * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Character_Classes
+     */
+    const whiteSpaceCharacters = [
+        " ",
+        "\t",
+        "\f",
+        "\v",
+        String.fromCharCode(parseInt("00a0", 16)),
+        String.fromCharCode(parseInt("1680", 16)),
+        String.fromCharCode(parseInt("2000", 16)),
+        String.fromCharCode(parseInt("200a", 16)),
+        String.fromCharCode(parseInt("2028", 16)),
+        String.fromCharCode(parseInt("2029", 16)),
+        String.fromCharCode(parseInt("202f", 16)),
+        String.fromCharCode(parseInt("205f", 16)),
+        String.fromCharCode(parseInt("3000", 16)),
+        String.fromCharCode(parseInt("feff", 16)),
+    ];
+    const whiteSpaceRegexp = new RegExp(whiteSpaceCharacters.join("|"), "g");
+    const newLineRegex = /\r\n|\r|\n/g;
+    /**
+     * Replace all the special spaces in a string (non-breaking, tabs, ...) by normal spaces, and all the
+     * different newlines types by \n.
+     */
+    function replaceSpecialSpaces(text) {
+        if (!text)
+            return "";
+        text = text.replace(whiteSpaceRegexp, " ");
+        text = text.replace(newLineRegex, NEWLINE);
+        return text;
+    }
 
     const colors$1 = [
         "#eb6d00",
@@ -1337,6 +1378,12 @@
      */
     function isSingleCellReference(xc) {
         return singleCellReference.test(xc);
+    }
+    function splitReference(ref) {
+        const parts = ref.split("!");
+        const xc = parts.pop();
+        const sheetName = getUnquotedSheetName(parts.join("!")) || undefined;
+        return { sheetName, xc };
     }
 
     //------------------------------------------------------------------------------
@@ -3011,12 +3058,12 @@
         }
         return attributes;
     }
-    function cssPropertiesToCss(attributes, newLine = true) {
-        const separator = newLine ? "\n" : "";
+    function cssPropertiesToCss(attributes) {
         const str = Object.entries(attributes)
-            .map(([attName, attValue]) => `${attName}: ${attValue};`)
-            .join(separator);
-        return str ? "\n" + str + "\n" : "";
+            .filter(([attName, attValue]) => attValue !== undefined)
+            .map(([attName, attValue]) => `${attName}:${attValue};`)
+            .join(" ");
+        return str;
     }
     function getElementMargins(el) {
         const style = window.getComputedStyle(el);
@@ -3145,15 +3192,13 @@
             return this.props.figure;
         }
         get chartStyle() {
-            return `
-      padding:${this.chartPadding}px;
-      background:${this.backgroundColor};
-    `;
+            return cssPropertiesToCss({
+                padding: `${this.chartPadding}px`,
+                background: this.backgroundColor,
+            });
         }
         get chartContentStyle() {
-            return `
-      height:${this.getDrawableHeight()}px;
-    `;
+            return cssPropertiesToCss({ height: `${this.getDrawableHeight()}px` });
         }
         get chartPadding() {
             return this.state.width * CHART_PADDING_RATIO;
@@ -3482,84 +3527,85 @@
         CommandResult[CommandResult["WillRemoveExistingMerge"] = 2] = "WillRemoveExistingMerge";
         CommandResult[CommandResult["MergeIsDestructive"] = 3] = "MergeIsDestructive";
         CommandResult[CommandResult["CellIsMerged"] = 4] = "CellIsMerged";
-        CommandResult[CommandResult["EmptyUndoStack"] = 5] = "EmptyUndoStack";
-        CommandResult[CommandResult["EmptyRedoStack"] = 6] = "EmptyRedoStack";
-        CommandResult[CommandResult["NotEnoughElements"] = 7] = "NotEnoughElements";
-        CommandResult[CommandResult["NotEnoughSheets"] = 8] = "NotEnoughSheets";
-        CommandResult[CommandResult["MissingSheetName"] = 9] = "MissingSheetName";
-        CommandResult[CommandResult["DuplicatedSheetName"] = 10] = "DuplicatedSheetName";
-        CommandResult[CommandResult["DuplicatedSheetId"] = 11] = "DuplicatedSheetId";
-        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 12] = "ForbiddenCharactersInSheetName";
-        CommandResult[CommandResult["WrongSheetMove"] = 13] = "WrongSheetMove";
-        CommandResult[CommandResult["WrongSheetPosition"] = 14] = "WrongSheetPosition";
-        CommandResult[CommandResult["InvalidAnchorZone"] = 15] = "InvalidAnchorZone";
-        CommandResult[CommandResult["SelectionOutOfBound"] = 16] = "SelectionOutOfBound";
-        CommandResult[CommandResult["TargetOutOfSheet"] = 17] = "TargetOutOfSheet";
-        CommandResult[CommandResult["WrongCutSelection"] = 18] = "WrongCutSelection";
-        CommandResult[CommandResult["WrongPasteSelection"] = 19] = "WrongPasteSelection";
-        CommandResult[CommandResult["WrongPasteOption"] = 20] = "WrongPasteOption";
-        CommandResult[CommandResult["WrongFigurePasteOption"] = 21] = "WrongFigurePasteOption";
-        CommandResult[CommandResult["EmptyClipboard"] = 22] = "EmptyClipboard";
-        CommandResult[CommandResult["EmptyRange"] = 23] = "EmptyRange";
-        CommandResult[CommandResult["InvalidRange"] = 24] = "InvalidRange";
-        CommandResult[CommandResult["InvalidZones"] = 25] = "InvalidZones";
-        CommandResult[CommandResult["InvalidSheetId"] = 26] = "InvalidSheetId";
-        CommandResult[CommandResult["InvalidFigureId"] = 27] = "InvalidFigureId";
-        CommandResult[CommandResult["InputAlreadyFocused"] = 28] = "InputAlreadyFocused";
-        CommandResult[CommandResult["MaximumRangesReached"] = 29] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 30] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 31] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 32] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 33] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 34] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 35] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 36] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 37] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 38] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 39] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 40] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 41] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 42] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 43] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 44] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 45] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 46] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 47] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 48] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 49] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 50] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 51] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 52] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 53] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 54] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 55] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 56] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 57] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 58] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 59] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 60] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 61] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 62] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 63] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 64] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 65] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 66] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 67] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 68] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 69] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 70] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 71] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 72] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 73] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 74] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 75] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 76] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 77] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 78] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 79] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 80] = "NonContinuousTargets";
-        CommandResult[CommandResult["DuplicatedFigureId"] = 81] = "DuplicatedFigureId";
-        CommandResult[CommandResult["InvalidSelectionStep"] = 82] = "InvalidSelectionStep";
+        CommandResult[CommandResult["InvalidTarget"] = 5] = "InvalidTarget";
+        CommandResult[CommandResult["EmptyUndoStack"] = 6] = "EmptyUndoStack";
+        CommandResult[CommandResult["EmptyRedoStack"] = 7] = "EmptyRedoStack";
+        CommandResult[CommandResult["NotEnoughElements"] = 8] = "NotEnoughElements";
+        CommandResult[CommandResult["NotEnoughSheets"] = 9] = "NotEnoughSheets";
+        CommandResult[CommandResult["MissingSheetName"] = 10] = "MissingSheetName";
+        CommandResult[CommandResult["DuplicatedSheetName"] = 11] = "DuplicatedSheetName";
+        CommandResult[CommandResult["DuplicatedSheetId"] = 12] = "DuplicatedSheetId";
+        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 13] = "ForbiddenCharactersInSheetName";
+        CommandResult[CommandResult["WrongSheetMove"] = 14] = "WrongSheetMove";
+        CommandResult[CommandResult["WrongSheetPosition"] = 15] = "WrongSheetPosition";
+        CommandResult[CommandResult["InvalidAnchorZone"] = 16] = "InvalidAnchorZone";
+        CommandResult[CommandResult["SelectionOutOfBound"] = 17] = "SelectionOutOfBound";
+        CommandResult[CommandResult["TargetOutOfSheet"] = 18] = "TargetOutOfSheet";
+        CommandResult[CommandResult["WrongCutSelection"] = 19] = "WrongCutSelection";
+        CommandResult[CommandResult["WrongPasteSelection"] = 20] = "WrongPasteSelection";
+        CommandResult[CommandResult["WrongPasteOption"] = 21] = "WrongPasteOption";
+        CommandResult[CommandResult["WrongFigurePasteOption"] = 22] = "WrongFigurePasteOption";
+        CommandResult[CommandResult["EmptyClipboard"] = 23] = "EmptyClipboard";
+        CommandResult[CommandResult["EmptyRange"] = 24] = "EmptyRange";
+        CommandResult[CommandResult["InvalidRange"] = 25] = "InvalidRange";
+        CommandResult[CommandResult["InvalidZones"] = 26] = "InvalidZones";
+        CommandResult[CommandResult["InvalidSheetId"] = 27] = "InvalidSheetId";
+        CommandResult[CommandResult["InvalidFigureId"] = 28] = "InvalidFigureId";
+        CommandResult[CommandResult["InputAlreadyFocused"] = 29] = "InputAlreadyFocused";
+        CommandResult[CommandResult["MaximumRangesReached"] = 30] = "MaximumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 31] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 32] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 33] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 34] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 35] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 36] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 37] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 38] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 39] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 40] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 41] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 42] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 43] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 44] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 45] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 46] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 47] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 48] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 49] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 50] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 51] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 52] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 53] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 54] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 55] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 56] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 57] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 58] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 59] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 60] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 61] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 62] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 63] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 64] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 65] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 66] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 67] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 68] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 69] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 70] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 71] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 72] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 73] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 74] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 75] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 76] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 77] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 78] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 79] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 80] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -3830,11 +3876,11 @@
         if (definition.dataSets) {
             const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
             if (invalidRanges) {
-                return 31 /* CommandResult.InvalidDataSet */;
+                return 32 /* CommandResult.InvalidDataSet */;
             }
             const zones = definition.dataSets.map(toUnboundedZone);
             if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 31 /* CommandResult.InvalidDataSet */;
+                return 32 /* CommandResult.InvalidDataSet */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -3843,7 +3889,7 @@
         if (definition.labelRange) {
             const invalidLabels = !rangeReference.test(definition.labelRange || "");
             if (invalidLabels) {
-                return 32 /* CommandResult.InvalidLabelRange */;
+                return 33 /* CommandResult.InvalidLabelRange */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -3915,24 +3961,24 @@
 
     const CfTerms = {
         Errors: {
-            [24 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [50 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [51 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [52 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [53 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [54 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [55 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [56 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [46 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [49 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [48 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [47 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [57 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [59 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [58 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [60 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [61 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [23 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            [25 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [51 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [52 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [53 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [54 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [55 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [56 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [57 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [47 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [50 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [49 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [48 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [58 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [60 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [59 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [61 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [62 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [24 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
             Unexpected: _lt("The rule is invalid for an unknown reason"),
         },
         ColorScale: _lt("Color scale"),
@@ -3959,20 +4005,20 @@
         Errors: {
             Unexpected: _lt("The chart definition is invalid for an unknown reason"),
             // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [31 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [32 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            [32 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [33 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
             // SCORECARD CHART ERRORS
-            [33 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [34 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            [34 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [35 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
             // GAUGE CHART ERRORS
-            [35 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [36 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [37 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [38 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [39 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [41 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [42 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+            [36 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [37 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [38 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [39 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [40 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [42 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [43 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
     };
     const NumberFormatTerms = {
@@ -4344,7 +4390,7 @@
 
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 35 /* CommandResult.InvalidGaugeDataRange */
+            ? 36 /* CommandResult.InvalidGaugeDataRange */
             : 0 /* CommandResult.Success */;
     }
     function checkRangeLimits(check, batchValidations) {
@@ -4376,7 +4422,7 @@
     function checkRangeMinBiggerThanRangeMax(definition) {
         if (definition.sectionRule) {
             if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+                return 41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -4385,9 +4431,9 @@
         if (value === "") {
             switch (valueName) {
                 case "rangeMin":
-                    return 36 /* CommandResult.EmptyGaugeRangeMin */;
+                    return 37 /* CommandResult.EmptyGaugeRangeMin */;
                 case "rangeMax":
-                    return 38 /* CommandResult.EmptyGaugeRangeMax */;
+                    return 39 /* CommandResult.EmptyGaugeRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -4396,13 +4442,13 @@
         if (isNaN(value)) {
             switch (valueName) {
                 case "rangeMin":
-                    return 37 /* CommandResult.GaugeRangeMinNaN */;
+                    return 38 /* CommandResult.GaugeRangeMinNaN */;
                 case "rangeMax":
-                    return 39 /* CommandResult.GaugeRangeMaxNaN */;
+                    return 40 /* CommandResult.GaugeRangeMaxNaN */;
                 case "lowerInflectionPointValue":
-                    return 41 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                    return 42 /* CommandResult.GaugeLowerInflectionPointNaN */;
                 case "upperInflectionPointValue":
-                    return 42 /* CommandResult.GaugeUpperInflectionPointNaN */;
+                    return 43 /* CommandResult.GaugeUpperInflectionPointNaN */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -5140,12 +5186,12 @@
 
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 33 /* CommandResult.InvalidScorecardKeyValue */
+            ? 34 /* CommandResult.InvalidScorecardKeyValue */
             : 0 /* CommandResult.Success */;
     }
     function checkBaseline(definition) {
         return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 34 /* CommandResult.InvalidScorecardBaseline */
+            ? 35 /* CommandResult.InvalidScorecardBaseline */
             : 0 /* CommandResult.Success */;
     }
     class ScorecardChart extends AbstractChart {
@@ -5377,6 +5423,7 @@
         transformDefinition: (definition, executed) => BarChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => BarChart.getDefinitionFromContextCreation(context),
         name: "Bar",
+        sequence: 10,
     });
     chartRegistry.add("line", {
         match: (type) => type === "line",
@@ -5386,6 +5433,7 @@
         transformDefinition: (definition, executed) => LineChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => LineChart.getDefinitionFromContextCreation(context),
         name: "Line",
+        sequence: 20,
     });
     chartRegistry.add("pie", {
         match: (type) => type === "pie",
@@ -5395,6 +5443,7 @@
         transformDefinition: (definition, executed) => PieChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => PieChart.getDefinitionFromContextCreation(context),
         name: "Pie",
+        sequence: 30,
     });
     chartRegistry.add("scorecard", {
         match: (type) => type === "scorecard",
@@ -5404,6 +5453,7 @@
         transformDefinition: (definition, executed) => ScorecardChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => ScorecardChart.getDefinitionFromContextCreation(context),
         name: "Scorecard",
+        sequence: 40,
     });
     chartRegistry.add("gauge", {
         match: (type) => type === "gauge",
@@ -5413,6 +5463,7 @@
         transformDefinition: (definition, executed) => GaugeChart.transformDefinition(definition, executed),
         getChartDefinitionFromContextCreation: (context) => GaugeChart.getDefinitionFromContextCreation(context),
         name: "Gauge",
+        sequence: 50,
     });
     const chartComponentRegistry = new Registry();
     chartComponentRegistry.add("line", ChartJsComponent);
@@ -5597,6 +5648,25 @@
             height: rect.height,
         };
     }
+    /**
+     * Iterate over all the children of `el` in the dom tree starting at `el`, depth first.
+     */
+    function* iterateChildren(el) {
+        yield el;
+        if (el.hasChildNodes()) {
+            for (let child of el.childNodes) {
+                yield* iterateChildren(child);
+            }
+        }
+    }
+    function getElementScrollTop(el) {
+        return (el === null || el === void 0 ? void 0 : el.scrollTop) || 0;
+    }
+    function setElementScrollTop(el, scroll) {
+        if (!el)
+            return;
+        el.scrollTop = scroll;
+    }
 
     /**
      * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
@@ -5638,7 +5708,7 @@
             super(...arguments);
             this.popoverRef = owl.useRef("popover");
             this.currentPosition = undefined;
-            this.currentVisibility = undefined;
+            this.currentDisplayValue = undefined;
             this.spreadsheetRect = useSpreadsheetRect();
         }
         setup() {
@@ -5649,23 +5719,22 @@
                 var _a, _b, _c, _d;
                 if (!this.containerRect)
                     throw new Error("Popover container is not defined");
-                this.resetPopoverElStyle();
                 const el = this.popoverRef.el;
+                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
+                const newDisplay = anchor ? "block" : "none";
+                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
+                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
+                }
+                el.style.display = newDisplay;
+                this.currentDisplayValue = newDisplay;
+                if (!anchor)
+                    return;
                 const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
                 const elDims = {
                     width: el.getBoundingClientRect().width,
                     height: el.getBoundingClientRect().height,
                 };
                 const spreadsheetRect = this.spreadsheetRect;
-                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
-                const newVisibility = anchor ? "visible" : "hidden";
-                if (this.currentVisibility !== "hidden" && newVisibility === "hidden") {
-                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
-                }
-                el.style.visibility = newVisibility;
-                this.currentVisibility = newVisibility;
-                if (!anchor)
-                    return;
                 const popoverPositionHelper = this.props.positioning === "BottomLeft"
                     ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
                     : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
@@ -5679,14 +5748,6 @@
                 }
                 this.currentPosition = newPosition;
             });
-        }
-        resetPopoverElStyle() {
-            const el = this.popoverRef.el;
-            if (!el)
-                return;
-            el.style["visibility"] = "visible";
-            el.style["max-height"] = el.style["max-width"] = "";
-            el.style["bottom"] = el.style["top"] = el.style["right"] = el.style["left"] = "";
         }
     }
     Popover.template = "o-spreadsheet-Popover";
@@ -5927,7 +5988,7 @@
             const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
             return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
         }
-        get popover() {
+        get popoverProps() {
             const isRoot = this.props.depth === 1;
             return {
                 anchorRect: {
@@ -5938,6 +5999,9 @@
                 },
                 positioning: "TopRight",
                 verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
+                onPopoverHidden: () => this.closeSubMenu(),
+                onPopoverMoved: () => this.closeSubMenu(),
+                maxHeight: this.menuHeight,
             };
         }
         getColor(menu) {
@@ -6003,7 +6067,7 @@
         openSubMenu(menu, menuIndex) {
             const y = this.subMenuVerticalPosition(menuIndex);
             this.subMenu.position = {
-                x: this.position.x + MENU_WIDTH,
+                x: this.position.x + this.props.depth * MENU_WIDTH,
                 y: y - (this.subMenu.scrollOffset || 0),
             };
             this.subMenu.menuItems = menu.children(this.env);
@@ -6155,7 +6219,7 @@
     function interactiveCut(env) {
         const result = env.model.dispatch("CUT");
         if (!result.isSuccessful) {
-            if (result.isCancelledBecause(18 /* CommandResult.WrongCutSelection */)) {
+            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
                 env.raiseError(_lt("This operation is not allowed with multiple selections."));
             }
         }
@@ -6169,16 +6233,16 @@
     };
     function handlePasteResult(env, result) {
         if (!result.isSuccessful) {
-            if (result.reasons.includes(19 /* CommandResult.WrongPasteSelection */)) {
+            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
                 env.raiseError(PasteInteractiveContent.wrongPasteSelection);
             }
             else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
             }
-            else if (result.reasons.includes(21 /* CommandResult.WrongFigurePasteOption */)) {
+            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
                 env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
             }
-            else if (result.reasons.includes(74 /* CommandResult.FrozenPaneOverlap */)) {
+            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
                 env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
             }
         }
@@ -6196,7 +6260,7 @@
      * Create a function used to create a Chart based on the definition
      */
     function chartFactory(getters) {
-        const builders = chartRegistry.getAll();
+        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
         function createChart(id, definition, sheetId) {
             const builder = builders.find((builder) => builder.match(definition.type));
             if (!builder) {
@@ -6211,7 +6275,7 @@
      * instance
      */
     function chartRuntimeFactory(getters) {
-        const builders = chartRegistry.getAll();
+        const builders = chartRegistry.getAll().sort((a, b) => a.sequence - b.sequence);
         function createRuntimeChart(chart) {
             const builder = builders.find((builder) => builder.match(chart.type));
             if (!builder) {
@@ -6268,6 +6332,7 @@
      * - Else returns a bar chart
      */
     function getSmartChartDefinition(zone, getters) {
+        var _a;
         let dataSetZone = zone;
         if (zone.left !== zone.right) {
             dataSetZone = { ...zone, left: zone.left + 1 };
@@ -6279,7 +6344,7 @@
             return {
                 type: "scorecard",
                 title: "",
-                background: BACKGROUND_CHART_COLOR,
+                background: ((_a = topLeftCell.style) === null || _a === void 0 ? void 0 : _a.fillColor) || undefined,
                 keyValue: zoneToXc(zone),
                 baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
                 baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
@@ -6322,7 +6387,6 @@
                 aggregated: false,
                 labelRange: labelRangeXc,
                 type: "line",
-                background: BACKGROUND_CHART_COLOR,
                 dataSetsHaveTitle,
                 verticalAxisPosition: "left",
                 legendPosition: newLegendPos,
@@ -6333,7 +6397,6 @@
             dataSets,
             labelRange: labelRangeXc,
             type: "bar",
-            background: BACKGROUND_CHART_COLOR,
             stacked: false,
             aggregated: false,
             dataSetsHaveTitle,
@@ -6465,7 +6528,7 @@
                 });
             }
         }
-        if (result.isCancelledBecause(62 /* CommandResult.InvalidSortZone */)) {
+        if (result.isCancelledBecause(63 /* CommandResult.InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
             env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
@@ -6479,13 +6542,13 @@
     };
     function interactiveAddFilter(env, sheetId, target) {
         const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(77 /* CommandResult.FilterOverlap */)) {
+        if (result.isCancelledBecause(78 /* CommandResult.FilterOverlap */)) {
             env.raiseError(AddFilterInteractiveContent.filterOverlap);
         }
-        else if (result.isCancelledBecause(79 /* CommandResult.MergeInFilter */)) {
+        else if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddFilterInteractiveContent.mergeInFilter);
         }
-        else if (result.isCancelledBecause(80 /* CommandResult.NonContinuousTargets */)) {
+        else if (result.isCancelledBecause(81 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
     }
@@ -7415,7 +7478,10 @@
         window.addEventListener("mouseup", _onMouseUp);
         window.addEventListener("dragstart", _onDragStart);
         window.addEventListener("mousemove", _onMouseMove);
-        window.addEventListener("wheel", _onMouseMove);
+        // mouse wheel on window is by default a passive event.
+        // preventDefault() is not allowed in passive event handler.
+        // https://chromestatus.com/feature/6662647093133312
+        window.addEventListener("wheel", _onMouseMove, { passive: false });
     }
     /**
      * Function to be used during a mousedown event, this function allows to
@@ -7475,7 +7541,10 @@
                             break;
                         case -1:
                             colIndex = left - 1;
-                            newTarget = left - 1;
+                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
+                                colIndex--;
+                            }
+                            newTarget = colIndex;
                             break;
                     }
                     offsetX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
@@ -7501,7 +7570,10 @@
                             break;
                         case -1:
                             rowIndex = top - 1;
-                            newTarget = top + edgeScrollInfoY.direction;
+                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
+                                rowIndex--;
+                            }
+                            newTarget = rowIndex;
                             break;
                     }
                     offsetY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
@@ -7657,7 +7729,13 @@
                 right: col,
                 bottom: row,
             });
-            return `bottom: ${height - y + 15}px;left: ${x - 1}px;border: 1px solid ${color};background-color: ${color};${this.props.active ? "opacity:1 !important" : ""}`;
+            return cssPropertiesToCss({
+                bottom: `${height - y + 15}px`,
+                left: `${x - 1}px`,
+                border: `1px solid ${color}`,
+                "background-color": color,
+                opacity: this.props.active ? "opacity:1 !important" : undefined,
+            });
         }
     }
     ClientTag.template = "o-spreadsheet-ClientTag";
@@ -7778,6 +7856,7 @@
         descr.maxArgPossible = repeatingArg ? Infinity : countArg;
         descr.nbrArgRepeating = repeatingArg;
         descr.getArgToFocus = argTargeting(countArg, repeatingArg);
+        descr.hidden = addDescr.hidden || false;
         return descr;
     }
     /**
@@ -14873,21 +14952,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         HYPERLINK: HYPERLINK
     });
 
-    const functions$3 = {
-        database,
-        date,
-        financial,
-        info,
-        lookup,
-        logical,
-        math,
-        misc: misc$1,
-        operators,
-        statistical,
-        text,
-        engineering,
-        web,
-    };
+    const categories = [
+        { name: _lt("Database"), functions: database },
+        { name: _lt("Date"), functions: date },
+        { name: _lt("Financial"), functions: financial },
+        { name: _lt("Info"), functions: info },
+        { name: _lt("Lookup"), functions: lookup },
+        { name: _lt("Logical"), functions: logical },
+        { name: _lt("Math"), functions: math },
+        { name: _lt("Misc"), functions: misc$1 },
+        { name: _lt("Operator"), functions: operators },
+        { name: _lt("Statistical"), functions: statistical },
+        { name: _lt("Text"), functions: text },
+        { name: _lt("Engineering"), functions: engineering },
+        { name: _lt("Web"), functions: web },
+    ];
     const functionNameRegex = /^[A-Z0-9\_\.]+$/;
     //------------------------------------------------------------------------------
     // Function registry
@@ -14935,1831 +15014,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return arg === null || arg === void 0 ? void 0 : arg.value;
     }
     const functionRegistry = new FunctionRegistry();
-    for (let category in functions$3) {
-        const fns = functions$3[category];
+    for (let category of categories) {
+        const fns = category.functions;
         for (let name in fns) {
             const addDescr = fns[name];
-            addDescr.category = category;
+            addDescr.category = addDescr.category || category.name;
             name = name.replace(/_/g, ".");
             functionRegistry.add(name, { isExported: false, ...addDescr });
         }
     }
-
-    /**
-     * Tokenizer
-     *
-     * A tokenizer is a piece of code whose job is to transform a string into a list
-     * of "tokens". For example, "(12+" is converted into:
-     *   [{type: "LEFT_PAREN", value: "("},
-     *    {type: "NUMBER", value: "12"},
-     *    {type: "OPERATOR", value: "+"}]
-     *
-     * As the example shows, a tokenizer does not care about the meaning behind those
-     * tokens. It only cares about the structure.
-     *
-     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
-     * is useful for the composer, which needs to be able to work with incomplete
-     * formulas.
-     */
-    const functions$2 = functionRegistry.content;
-    const POSTFIX_UNARY_OPERATORS = ["%"];
-    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
-    function tokenize(str) {
-        const chars = str.split("");
-        const result = [];
-        while (chars.length) {
-            let token = tokenizeSpace(chars) ||
-                tokenizeMisc(chars) ||
-                tokenizeOperator(chars) ||
-                tokenizeString(chars) ||
-                tokenizeDebugger(chars) ||
-                tokenizeInvalidRange(chars) ||
-                tokenizeNumber(chars) ||
-                tokenizeSymbol(chars);
-            if (!token) {
-                token = { type: "UNKNOWN", value: chars.shift() };
-            }
-            result.push(token);
-        }
-        return result;
-    }
-    function tokenizeDebugger(chars) {
-        if (chars[0] === "?") {
-            chars.shift();
-            return { type: "DEBUGGER", value: "?" };
-        }
-        return null;
-    }
-    const misc = {
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    function tokenizeMisc(chars) {
-        if (chars[0] in misc) {
-            const value = chars.shift();
-            const type = misc[value];
-            return { type, value };
-        }
-        return null;
-    }
-    function startsWith(chars, op) {
-        for (let i = 0; i < op.length; i++) {
-            if (op[i] !== chars[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    function tokenizeOperator(chars) {
-        for (let op of OPERATORS) {
-            if (startsWith(chars, op)) {
-                chars.splice(0, op.length);
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return null;
-    }
-    function tokenizeNumber(chars) {
-        const match = concat(chars).match(formulaNumberRegexp);
-        if (match) {
-            chars.splice(0, match[0].length);
-            return { type: "NUMBER", value: match[0] };
-        }
-        return null;
-    }
-    function tokenizeString(chars) {
-        if (chars[0] === '"') {
-            const startChar = chars.shift();
-            let letters = startChar;
-            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
-                letters += chars.shift();
-            }
-            if (chars[0] === '"') {
-                letters += chars.shift();
-            }
-            return {
-                type: "STRING",
-                value: letters,
-            };
-        }
-        return null;
-    }
-    const separatorRegexp = /\w|\.|!|\$/;
-    /**
-     * A "Symbol" is just basically any word-like element that can appear in a
-     * formula, which is not a string. So:
-     *   A1
-     *   SUM
-     *   CEILING.MATH
-     *   A$1
-     *   Sheet2!A2
-     *   'Sheet 2'!A2
-     *
-     * are examples of symbols
-     */
-    function tokenizeSymbol(chars) {
-        let result = "";
-        // there are two main cases to manage: either something which starts with
-        // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars[0] === "'") {
-            let lastChar = chars.shift();
-            result += lastChar;
-            while (chars[0]) {
-                lastChar = chars.shift();
-                result += lastChar;
-                if (lastChar === "'") {
-                    if (chars[0] && chars[0] === "'") {
-                        lastChar = chars.shift();
-                        result += lastChar;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (lastChar !== "'") {
-                return {
-                    type: "UNKNOWN",
-                    value: result,
-                };
-            }
-        }
-        while (chars[0] && chars[0].match(separatorRegexp)) {
-            result += chars.shift();
-        }
-        if (result.length) {
-            const value = result;
-            const isFunction = value.toUpperCase() in functions$2;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
-            const isReference = value.match(rangeReference);
-            if (isReference) {
-                return { type: "REFERENCE", value };
-            }
-            else {
-                return { type: "SYMBOL", value };
-            }
-        }
-        return null;
-    }
-    const whiteSpaceRegexp = /\s/;
-    function tokenizeSpace(chars) {
-        let length = 0;
-        while (chars[0] && chars[0].match(whiteSpaceRegexp)) {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: " ".repeat(length) };
-        }
-        return null;
-    }
-    function tokenizeInvalidRange(chars) {
-        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
-            chars.splice(0, INCORRECT_RANGE_STRING.length);
-            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
-        }
-        return null;
-    }
-
-    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
-    const UNARY_OPERATORS_PREFIX = ["-", "+"];
-    const UNARY_OPERATORS_POSTFIX = ["%"];
-    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
-    const OP_PRIORITY = {
-        "^": 30,
-        "%": 30,
-        "*": 20,
-        "/": 20,
-        "+": 15,
-        "-": 15,
-        "&": 13,
-        ">": 10,
-        "<>": 10,
-        ">=": 10,
-        "<": 10,
-        "<=": 10,
-        "=": 10,
-    };
-    const FUNCTION_BP = 6;
-    function bindingPower(token) {
-        switch (token.type) {
-            case "NUMBER":
-            case "SYMBOL":
-            case "REFERENCE":
-                return 0;
-            case "COMMA":
-                return 3;
-            case "LEFT_PAREN":
-                return 5;
-            case "RIGHT_PAREN":
-                return 5;
-            case "OPERATOR":
-                return OP_PRIORITY[token.value] || 15;
-        }
-        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
-    }
-    function parsePrefix(current, tokens) {
-        var _a, _b, _c, _d;
-        switch (current.type) {
-            case "DEBUGGER":
-                const next = parseExpression(tokens, 1000);
-                next.debug = true;
-                return next;
-            case "NUMBER":
-                return { type: "NUMBER", value: parseNumber(current.value) };
-            case "STRING":
-                return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                if (tokens.shift().type !== "LEFT_PAREN") {
-                    throw new BadExpressionError(_lt("Wrong function call"));
-                }
-                else {
-                    const args = [];
-                    if (tokens[0] && tokens[0].type !== "RIGHT_PAREN") {
-                        if (tokens[0].type === "COMMA") {
-                            args.push({ type: "UNKNOWN", value: "" });
-                        }
-                        else {
-                            args.push(parseExpression(tokens, FUNCTION_BP));
-                        }
-                        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "COMMA") {
-                            tokens.shift();
-                            const token = tokens[0];
-                            if ((token === null || token === void 0 ? void 0 : token.type) === "RIGHT_PAREN") {
-                                args.push({ type: "UNKNOWN", value: "" });
-                                break;
-                            }
-                            else if ((token === null || token === void 0 ? void 0 : token.type) === "COMMA") {
-                                args.push({ type: "UNKNOWN", value: "" });
-                            }
-                            else {
-                                args.push(parseExpression(tokens, FUNCTION_BP));
-                            }
-                        }
-                    }
-                    const closingToken = tokens.shift();
-                    if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
-                        throw new BadExpressionError(_lt("Wrong function call"));
-                    }
-                    return { type: "FUNCALL", value: current.value, args };
-                }
-            case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
-            case "REFERENCE":
-                if (((_b = tokens[0]) === null || _b === void 0 ? void 0 : _b.value) === ":" && ((_c = tokens[1]) === null || _c === void 0 ? void 0 : _c.type) === "REFERENCE") {
-                    tokens.shift();
-                    const rightReference = tokens.shift();
-                    return {
-                        type: "REFERENCE",
-                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
-                    };
-                }
-                return {
-                    type: "REFERENCE",
-                    value: current.value,
-                };
-            case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
-                }
-                else {
-                    if (current.value) {
-                        if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
-                            throw new UnknownFunctionError(current.value);
-                        }
-                        throw new BadExpressionError(_lt("Invalid formula"));
-                    }
-                    return { type: "STRING", value: current.value };
-                }
-            case "LEFT_PAREN":
-                const result = parseExpression(tokens, 5);
-                if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
-                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
-                }
-                tokens.shift();
-                return result;
-            default:
-                if (current.type === "OPERATOR" && UNARY_OPERATORS_PREFIX.includes(current.value)) {
-                    return {
-                        type: "UNARY_OPERATION",
-                        value: current.value,
-                        operand: parseExpression(tokens, OP_PRIORITY[current.value]),
-                    };
-                }
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-        }
-    }
-    function parseInfix(left, current, tokens) {
-        if (current.type === "OPERATOR") {
-            const bp = bindingPower(current);
-            if (UNARY_OPERATORS_POSTFIX.includes(current.value)) {
-                return {
-                    type: "UNARY_OPERATION",
-                    value: current.value,
-                    operand: left,
-                    postfix: true,
-                };
-            }
-            else {
-                const right = parseExpression(tokens, bp);
-                return {
-                    type: "BIN_OPERATION",
-                    value: current.value,
-                    left,
-                    right,
-                };
-            }
-        }
-        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-    }
-    function parseExpression(tokens, bp) {
-        const token = tokens.shift();
-        if (!token) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        let expr = parsePrefix(token, tokens);
-        while (tokens[0] && bindingPower(tokens[0]) > bp) {
-            expr = parseInfix(expr, tokens.shift(), tokens);
-        }
-        return expr;
-    }
-    /**
-     * Parse an expression (as a string) into an AST.
-     */
-    function parse(str) {
-        return parseTokens(tokenize(str));
-    }
-    function parseTokens(tokens) {
-        tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
-            tokens.splice(0, 1);
-        }
-        const result = parseExpression(tokens, 0);
-        if (tokens.length) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        return result;
-    }
-    /**
-     * Allows to visit all nodes of an AST and apply a mapping function
-     * to nodes of a specific type.
-     * Useful if you want to convert some part of a formula.
-     *
-     * e.g.
-     * ```ts
-     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
-     *
-     * function convertFormulaToExcel(ast: ASTFuncall) {
-     *   // ...
-     *   return modifiedAst
-     * }
-     * ```
-     */
-    function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
-        }
-        switch (ast.type) {
-            case "FUNCALL":
-                return {
-                    ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
-                };
-            case "UNARY_OPERATION":
-                return {
-                    ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
-                };
-            case "BIN_OPERATION":
-                return {
-                    ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
-                };
-            default:
-                return ast;
-        }
-    }
-    /**
-     * Converts an ast formula to the corresponding string
-     */
-    function astToFormula(ast) {
-        switch (ast.type) {
-            case "FUNCALL":
-                const args = ast.args.map((arg) => astToFormula(arg));
-                return `${ast.value}(${args.join(",")})`;
-            case "NUMBER":
-                return ast.value.toString();
-            case "REFERENCE":
-                return ast.value;
-            case "STRING":
-                return `"${ast.value}"`;
-            case "BOOLEAN":
-                return ast.value ? "TRUE" : "FALSE";
-            case "UNARY_OPERATION":
-                return ast.postfix
-                    ? leftOperandToFormula(ast) + ast.value
-                    : ast.value + rightOperandToFormula(ast);
-            case "BIN_OPERATION":
-                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
-            default:
-                return ast.value;
-        }
-    }
-    /**
-     * Convert the left operand of a binary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function leftOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
-        const leftOperator = leftOperation.value;
-        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
-        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
-    }
-    /**
-     * Convert the right operand of a binary or unary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function rightOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
-        const rightPriority = OP_PRIORITY[rightOperation.value];
-        const mainPriority = OP_PRIORITY[mainOperator];
-        let needParenthesis = false;
-        if (rightOperation.type !== "BIN_OPERATION") {
-            needParenthesis = false;
-        }
-        else if (rightPriority < mainPriority) {
-            needParenthesis = true;
-        }
-        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
-            needParenthesis = true;
-        }
-        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        var _a;
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens.push(token);
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens.push(token);
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
-    }
-
-    const functions$1 = functionRegistry.content;
-    const OPERATOR_MAP = {
-        "=": "EQ",
-        "+": "ADD",
-        "-": "MINUS",
-        "*": "MULTIPLY",
-        "/": "DIVIDE",
-        ">=": "GTE",
-        "<>": "NE",
-        ">": "GT",
-        "<=": "LTE",
-        "<": "LT",
-        "^": "POWER",
-        "&": "CONCATENATE",
-    };
-    const UNARY_OPERATOR_MAP = {
-        "-": "UMINUS",
-        "+": "UPLUS",
-        "%": "UNARY.PERCENT",
-    };
-    /**
-     * Takes a list of strings that might be single or multiline
-     * and maps them in a list of single line strings.
-     */
-    function splitCodeLines(codeBlocks) {
-        return codeBlocks
-            .join("\n")
-            .split("\n")
-            .filter((line) => line.trim() !== "");
-    }
-    // this cache contains all compiled function code, grouped by "structure". For
-    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
-    // structural function.
-    // It is only exported for testing purposes
-    const functionCache = {};
-    // -----------------------------------------------------------------------------
-    // COMPILER
-    // -----------------------------------------------------------------------------
-    function compile(formula) {
-        const tokens = rangeTokenize(formula);
-        const { dependencies, constantValues } = formulaArguments(tokens);
-        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
-        if (!functionCache[cacheKey]) {
-            const ast = parseTokens([...tokens]);
-            let nextId = 1;
-            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            if (ast.type === "UNKNOWN") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            const compiledAST = compileAST(ast);
-            const code = splitCodeLines([
-                `// ${cacheKey}`,
-                compiledAST.code,
-                `return ${compiledAST.id};`,
-            ]).join("\n");
-            let baseFunction = new Function("deps", // the dependencies in the current formula
-            "ref", // a function to access a certain dependency at a given index
-            "range", // same as above, but guarantee that the result is in the form of a range
-            "ctx", code);
-            functionCache[cacheKey] = {
-                // @ts-ignore
-                execute: baseFunction,
-            };
-            /**
-             * This function compile the function arguments. It is mostly straightforward,
-             * except that there is a non trivial transformation in one situation:
-             *
-             * If a function argument is asking for a range, and get a cell, we transform
-             * the cell value into a range. This allow the grid model to differentiate
-             * between a cell value and a non cell value.
-             */
-            function compileFunctionArgs(ast) {
-                const functionDefinition = functions$1[ast.value.toUpperCase()];
-                const currentFunctionArguments = ast.args;
-                // check if arguments are supplied in the correct quantities
-                const nbrArg = currentFunctionArguments.length;
-                if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-                }
-                if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-                }
-                const repeatingArg = functionDefinition.nbrArgRepeating;
-                if (repeatingArg > 1) {
-                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
-                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
-                    if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
-                    }
-                }
-                let listArgs = [];
-                for (let i = 0; i < nbrArg; i++) {
-                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
-                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
-                        const currentArg = currentFunctionArguments[i];
-                        const argDefinition = functionDefinition.args[argPosition];
-                        const argTypes = argDefinition.type || [];
-                        // detect when an argument need to be evaluated as a meta argument
-                        const isMeta = argTypes.includes("META");
-                        // detect when an argument need to be evaluated as a lazy argument
-                        const isLazy = argDefinition.lazy;
-                        const hasRange = argTypes.some((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        if (isRangeOnly) {
-                            if (currentArg.type !== "REFERENCE") {
-                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
-                            }
-                        }
-                        const compiledAST = compileAST(currentArg, isLazy, isMeta, hasRange, {
-                            functionName: ast.value.toUpperCase(),
-                            paramIndex: i + 1,
-                        });
-                        listArgs.push(compiledAST);
-                    }
-                }
-                return listArgs;
-            }
-            /**
-             * This function compiles all the information extracted by the parser into an
-             * executable code for the evaluation of the cells content. It uses a cash to
-             * not reevaluate identical code structures.
-             *
-             * The function is sensitive to two parameters “isLazy” and “isMeta”. These
-             * parameters may vary when compiling function arguments:
-             *
-             * - isLazy: In some cases the function arguments does not need to be
-             * evaluated before entering the functions. For example the IF function might
-             * take invalid arguments that do not need to be evaluate and thus should not
-             * create an error. For this we have lazy arguments.
-             *
-             * - isMeta: In some cases the function arguments expects information on the
-             * cell/range other than the associated value(s). For example the COLUMN
-             * function needs to receive as argument the coordinates of a cell rather
-             * than its value. For this we have meta arguments.
-             */
-            function compileAST(ast, isLazy = false, isMeta = false, hasRange = false, referenceVerification = {}) {
-                const codeBlocks = [];
-                let id, fnName, statement;
-                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
-                    if (isMeta) {
-                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
-                    }
-                }
-                if (ast.debug) {
-                    codeBlocks.push("debugger;");
-                }
-                switch (ast.type) {
-                    case "BOOLEAN":
-                        if (!isLazy) {
-                            return { id: `{ value: ${ast.value} }`, code: "" };
-                        }
-                        id = nextId++;
-                        statement = `{ value: ${ast.value} }`;
-                        break;
-                    case "NUMBER":
-                        id = nextId++;
-                        statement = `{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`;
-                        break;
-                    case "STRING":
-                        id = nextId++;
-                        statement = `{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`;
-                        break;
-                    case "REFERENCE":
-                        const referenceIndex = dependencies.indexOf(ast.value);
-                        id = nextId++;
-                        if (hasRange) {
-                            statement = `range(deps[${referenceIndex}])`;
-                        }
-                        else {
-                            statement = `ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`;
-                        }
-                        break;
-                    case "FUNCALL":
-                        id = nextId++;
-                        const args = compileFunctionArgs(ast);
-                        codeBlocks.push(args.map((arg) => arg.code).join("\n"));
-                        fnName = ast.value.toUpperCase();
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${args.map((arg) => arg.id)})`;
-                        break;
-                    case "UNARY_OPERATION": {
-                        id = nextId++;
-                        fnName = UNARY_OPERATOR_MAP[ast.value];
-                        const operand = compileAST(ast.operand, false, false, false, {
-                            functionName: fnName,
-                        });
-                        codeBlocks.push(operand.code);
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${operand.id})`;
-                        break;
-                    }
-                    case "BIN_OPERATION": {
-                        id = nextId++;
-                        fnName = OPERATOR_MAP[ast.value];
-                        const left = compileAST(ast.left, false, false, false, {
-                            functionName: fnName,
-                        });
-                        const right = compileAST(ast.right, false, false, false, {
-                            functionName: fnName,
-                        });
-                        codeBlocks.push(left.code);
-                        codeBlocks.push(right.code);
-                        codeBlocks.push(`ctx.__lastFnCalled = '${fnName}';`);
-                        statement = `ctx['${fnName}'](${left.id}, ${right.id})`;
-                        break;
-                    }
-                    case "UNKNOWN":
-                        if (!isLazy) {
-                            return { id: "undefined", code: "" };
-                        }
-                        id = nextId++;
-                        statement = `undefined`;
-                        break;
-                }
-                if (isLazy) {
-                    const lazyFunction = `const _${id} = () => {\n` +
-                        `\t${splitCodeLines(codeBlocks).join("\n\t")}\n` +
-                        `\treturn ${statement};\n` +
-                        "}";
-                    return { id: `_${id}`, code: lazyFunction };
-                }
-                else {
-                    codeBlocks.push(`let _${id} = ${statement};`);
-                    return { id: `_${id}`, code: codeBlocks.join("\n") };
-                }
-            }
-        }
-        const compiledFormula = {
-            execute: functionCache[cacheKey].execute,
-            dependencies,
-            constantValues,
-            tokens,
-        };
-        return compiledFormula;
-    }
-    /**
-     * Compute a cache key for the formula.
-     * References, numbers and strings are replaced with placeholders because
-     * the compiled formula does not depend on their actual value.
-     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
-     *
-     * Spaces are also ignored to compute the cache key.
-     *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
-     */
-    function compilationCacheKey(tokens, dependencies, constantValues) {
-        return concat(tokens.map((token) => {
-            switch (token.type) {
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    return `|S${constantValues.strings.indexOf(value)}|`;
-                case "NUMBER":
-                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
-                case "REFERENCE":
-                case "INVALID_REFERENCE":
-                    return `|${dependencies.indexOf(token.value)}|`;
-                case "SPACE":
-                    return "";
-                default:
-                    return token.value;
-            }
-        }));
-    }
-    /**
-     * Return formula arguments which are references, strings and numbers.
-     */
-    function formulaArguments(tokens) {
-        const constantValues = {
-            numbers: [],
-            strings: [],
-        };
-        const dependencies = [];
-        for (const token of tokens) {
-            switch (token.type) {
-                case "INVALID_REFERENCE":
-                case "REFERENCE":
-                    dependencies.push(token.value);
-                    break;
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    if (!constantValues.strings.includes(value)) {
-                        constantValues.strings.push(value);
-                    }
-                    break;
-                case "NUMBER": {
-                    const value = parseNumber(token.value);
-                    if (!constantValues.numbers.includes(value)) {
-                        constantValues.numbers.push(value);
-                    }
-                    break;
-                }
-            }
-        }
-        return {
-            dependencies,
-            constantValues,
-        };
-    }
-
-    /**
-     * Add the following information on tokens:
-     * - length
-     * - start
-     * - end
-     */
-    function enrichTokens(tokens) {
-        let current = 0;
-        return tokens.map((x) => {
-            const len = x.value.toString().length;
-            const token = Object.assign({}, x, {
-                start: current,
-                end: current + len,
-                length: len,
-            });
-            current = token.end;
-            return token;
-        });
-    }
-    /**
-     * add on each token the length, start and end
-     * also matches the opening to its closing parenthesis (using the same number)
-     */
-    function mapParenthesis(tokens) {
-        let maxParen = 1;
-        const stack = [];
-        return tokens.map((token) => {
-            if (token.type === "LEFT_PAREN") {
-                stack.push(maxParen);
-                token.parenIndex = maxParen;
-                maxParen++;
-            }
-            else if (token.type === "RIGHT_PAREN") {
-                token.parenIndex = stack.pop();
-            }
-            return token;
-        });
-    }
-    /**
-     * add on each token its parent function and the index corresponding to
-     * its position as an argument of the function.
-     * In this example "=MIN(42,SUM(MAX(1,2),3))":
-     * - the parent function of the token correspond to number 42 is the MIN function
-     * - the argument position of the token correspond to number 42 is 0
-     * - the parent function of the token correspond to number 3 is the SUM function
-     * - the argument position of the token correspond to number 3 is 1
-     */
-    function mapParentFunction(tokens) {
-        let stack = [];
-        let functionStarted = "";
-        const res = tokens.map((token, i) => {
-            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
-                functionStarted = "";
-            }
-            switch (token.type) {
-                case "FUNCTION":
-                    functionStarted = token.value;
-                    break;
-                case "LEFT_PAREN":
-                    stack.push({ parent: functionStarted, argPosition: 0 });
-                    functionStarted = "";
-                    break;
-                case "RIGHT_PAREN":
-                    stack.pop();
-                    break;
-                case "COMMA":
-                    if (stack.length) {
-                        // increment position on current function
-                        stack[stack.length - 1].argPosition++;
-                    }
-                    break;
-            }
-            if (stack.length) {
-                const functionContext = stack[stack.length - 1];
-                if (functionContext.parent) {
-                    token.functionContext = Object.assign({}, functionContext);
-                }
-            }
-            return token;
-        });
-        return res;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the composer.
-     *
-     * @param formula
-     */
-    function composerTokenize(formula) {
-        const tokens = rangeTokenize(formula);
-        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
-    }
-
-    /**
-     * Change the reference types inside the given token, if the token represent a range or a cell
-     *
-     * Eg. :
-     *   A1 => $A$1 => A$1 => $A1 => A1
-     *   A1:$B$1 => $A$1:B$1 => A$1:$B1 => $A1:B1 => A1:$B$1
-     */
-    function loopThroughReferenceType(token) {
-        if (token.type !== "REFERENCE")
-            return token;
-        const [range, sheet] = token.value.split("!").reverse();
-        const [left, right] = range.split(":");
-        const sheetRef = sheet ? `${sheet}!` : "";
-        const updatedLeft = getTokenNextReferenceType(left);
-        const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
-        return { ...token, value: sheetRef + updatedLeft + updatedRight };
-    }
-    /**
-     * Get a new token with a changed type of reference from the given cell token symbol.
-     * Undefined behavior if given a token other than a cell or if the Xc contains a sheet reference
-     *
-     * A1 => $A$1 => A$1 => $A1 => A1
-     */
-    function getTokenNextReferenceType(xc) {
-        switch (getReferenceType(xc)) {
-            case "none":
-                xc = setXcToReferenceType(xc, "colrow");
-                break;
-            case "colrow":
-                xc = setXcToReferenceType(xc, "row");
-                break;
-            case "row":
-                xc = setXcToReferenceType(xc, "col");
-                break;
-            case "col":
-                xc = setXcToReferenceType(xc, "none");
-                break;
-        }
-        return xc;
-    }
-    /**
-     * Returns the given XC with the given reference type.
-     */
-    function setXcToReferenceType(xc, referenceType) {
-        xc = xc.replace(/\$/g, "");
-        let indexOfNumber;
-        switch (referenceType) {
-            case "col":
-                return "$" + xc;
-            case "row":
-                indexOfNumber = xc.search(/[0-9]/);
-                return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
-            case "colrow":
-                indexOfNumber = xc.search(/[0-9]/);
-                xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
-                return "$" + xc;
-            case "none":
-                return xc;
-        }
-    }
-    /**
-     * Return the type of reference used in the given XC of a cell.
-     * Undefined behavior if the XC have a sheet reference
-     */
-    function getReferenceType(xcCell) {
-        if (isColAndRowFixed(xcCell)) {
-            return "colrow";
-        }
-        else if (isColFixed(xcCell)) {
-            return "col";
-        }
-        else if (isRowFixed(xcCell)) {
-            return "row";
-        }
-        return "none";
-    }
-    function isColFixed(xc) {
-        return xc.startsWith("$");
-    }
-    function isRowFixed(xc) {
-        return xc.includes("$", 1);
-    }
-    function isColAndRowFixed(xc) {
-        return xc.startsWith("$") && xc.length > 1 && xc.slice(1).includes("$");
-    }
-
-    /**
-     * BasePlugin
-     *
-     * Since the spreadsheet internal state is quite complex, it is split into
-     * multiple parts, each managing a specific concern.
-     *
-     * This file introduce the BasePlugin, which is the common class that defines
-     * how each of these model sub parts should interact with each other.
-     * There are two kind of plugins: core plugins handling persistent data
-     * and UI plugins handling transient data.
-     */
-    class BasePlugin {
-        constructor(stateObserver, dispatch) {
-            this.history = Object.assign(Object.create(stateObserver), {
-                update: stateObserver.addChange.bind(stateObserver, this),
-                selectCell: () => { },
-            });
-            this.dispatch = dispatch;
-        }
-        /**
-         * Export for excel should be available for all plugins, even for the UI.
-         * In some case, we need to export evaluated value, which is available from
-         * UI plugin only.
-         */
-        exportForExcel(data) { }
-        // ---------------------------------------------------------------------------
-        // Command handling
-        // ---------------------------------------------------------------------------
-        /**
-         * Before a command is accepted, the model will ask each plugin if the command
-         * is allowed.  If all of then return true, then we can proceed. Otherwise,
-         * the command is cancelled.
-         *
-         * There should not be any side effects in this method.
-         */
-        allowDispatch(command) {
-            return 0 /* CommandResult.Success */;
-        }
-        /**
-         * This method is useful when a plugin need to perform some action before a
-         * command is handled in another plugin. This should only be used if it is not
-         * possible to do the work in the handle method.
-         */
-        beforeHandle(command) { }
-        /**
-         * This is the standard place to handle any command. Most of the plugin
-         * command handling work should take place here.
-         */
-        handle(command) { }
-        /**
-         * Sometimes, it is useful to perform some work after a command (and all its
-         * subcommands) has been completely handled.  For example, when we paste
-         * multiple cells, we only want to reevaluate the cell values once at the end.
-         */
-        finalize() { }
-        /**
-         * Combine multiple validation functions into a single function
-         * returning the list of result of every validation.
-         */
-        batchValidations(...validations) {
-            return (toValidate) => validations.map((validation) => validation.call(this, toValidate)).flat();
-        }
-        /**
-         * Combine multiple validation functions. Every validation is executed one after
-         * the other. As soon as one validation fails, it stops and the cancelled reason
-         * is returned.
-         */
-        chainValidations(...validations) {
-            return (toValidate) => {
-                for (const validation of validations) {
-                    let results = validation.call(this, toValidate);
-                    if (!Array.isArray(results)) {
-                        results = [results];
-                    }
-                    const cancelledReasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
-                    if (cancelledReasons.length) {
-                        return cancelledReasons;
-                    }
-                }
-                return 0 /* CommandResult.Success */;
-            };
-        }
-        checkValidations(command, ...validations) {
-            return this.batchValidations(...validations)(command);
-        }
-    }
-    BasePlugin.getters = [];
-
-    /**
-     * UI plugins handle any transient data required to display a spreadsheet.
-     * They can draw on the grid canvas.
-     */
-    class UIPlugin extends BasePlugin {
-        constructor({ getters, stateObserver, dispatch, uiActions, selection }) {
-            super(stateObserver, dispatch);
-            this.getters = getters;
-            this.ui = uiActions;
-            this.selection = selection;
-        }
-        // ---------------------------------------------------------------------------
-        // Grid rendering
-        // ---------------------------------------------------------------------------
-        drawGrid(ctx, layer) { }
-    }
-    UIPlugin.layers = [];
-
-    const CELL_DELETED_MESSAGE = _lt("The cell you are trying to edit has been deleted.");
-    const SelectionIndicator = "␣";
-    class EditionPlugin extends UIPlugin {
-        constructor() {
-            super(...arguments);
-            this.col = 0;
-            this.row = 0;
-            this.mode = "inactive";
-            this.sheetId = "";
-            this.currentContent = "";
-            this.currentTokens = [];
-            this.selectionStart = 0;
-            this.selectionEnd = 0;
-            this.selectionInitialStart = 0;
-            this.initialContent = "";
-            this.previousRef = "";
-            this.previousRange = undefined;
-            this.colorIndexByRange = {};
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "CHANGE_COMPOSER_CURSOR_SELECTION":
-                    return this.validateSelection(this.currentContent.length, cmd.start, cmd.end);
-                case "SET_CURRENT_CONTENT":
-                    if (cmd.selection) {
-                        return this.validateSelection(cmd.content.length, cmd.selection.start, cmd.selection.end);
-                    }
-                    else {
-                        return 0 /* CommandResult.Success */;
-                    }
-                case "START_EDITION":
-                    if (cmd.selection) {
-                        const content = cmd.text || this.getComposerContent(this.getters.getActivePosition());
-                        return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
-                    }
-                    else {
-                        return 0 /* CommandResult.Success */;
-                    }
-                default:
-                    return 0 /* CommandResult.Success */;
-            }
-        }
-        handleEvent(event) {
-            if (this.mode !== "selecting") {
-                return;
-            }
-            switch (event.mode) {
-                case "newAnchor":
-                    this.insertSelectedRange(event.anchor.zone);
-                    break;
-                default:
-                    this.replaceSelectedRanges(event.anchor.zone);
-                    break;
-            }
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "CHANGE_COMPOSER_CURSOR_SELECTION":
-                    this.selectionStart = cmd.start;
-                    this.selectionEnd = cmd.end;
-                    break;
-                case "STOP_COMPOSER_RANGE_SELECTION":
-                    if (this.isSelectingForComposer()) {
-                        this.mode = "editing";
-                    }
-                    break;
-                case "START_EDITION":
-                    this.startEdition(cmd.text, cmd.selection);
-                    this.updateRangeColor();
-                    break;
-                case "STOP_EDITION":
-                    if (cmd.cancel) {
-                        this.cancelEditionAndActivateSheet();
-                        this.resetContent();
-                    }
-                    else {
-                        this.stopEdition();
-                    }
-                    this.colorIndexByRange = {};
-                    break;
-                case "SET_CURRENT_CONTENT":
-                    this.setContent(cmd.content, cmd.selection, true);
-                    this.updateRangeColor();
-                    break;
-                case "REPLACE_COMPOSER_CURSOR_SELECTION":
-                    this.replaceSelection(cmd.text);
-                    break;
-                case "SELECT_FIGURE":
-                    this.cancelEditionAndActivateSheet();
-                    this.resetContent();
-                    break;
-                case "ADD_COLUMNS_ROWS":
-                    this.onAddElements(cmd);
-                    break;
-                case "REMOVE_COLUMNS_ROWS":
-                    if (cmd.dimension === "COL") {
-                        this.onColumnsRemoved(cmd);
-                    }
-                    else {
-                        this.onRowsRemoved(cmd);
-                    }
-                    break;
-                case "START_CHANGE_HIGHLIGHT":
-                    this.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-                    const range = this.getters.getRangeFromRangeData(cmd.range);
-                    const previousRefToken = this.currentTokens
-                        .filter((token) => token.type === "REFERENCE")
-                        .find((token) => {
-                        let value = token.value;
-                        const [xc, sheet] = value.split("!").reverse();
-                        const sheetName = sheet || this.getters.getSheetName(this.sheetId);
-                        const activeSheetId = this.getters.getActiveSheetId();
-                        if (this.getters.getSheetName(activeSheetId) !== sheetName) {
-                            return false;
-                        }
-                        const refRange = this.getters.getRangeFromSheetXC(activeSheetId, xc);
-                        return isEqual(this.getters.expandZone(activeSheetId, refRange.zone), range.zone);
-                    });
-                    this.previousRef = previousRefToken.value;
-                    this.previousRange = this.getters.getRangeFromSheetXC(this.getters.getActiveSheetId(), this.previousRef);
-                    this.selectionInitialStart = previousRefToken.start;
-                    break;
-                case "CHANGE_HIGHLIGHT":
-                    const cmdRange = this.getters.getRangeFromRangeData(cmd.range);
-                    const newRef = this.getRangeReference(cmdRange, this.previousRange.parts);
-                    this.selectionStart = this.selectionInitialStart;
-                    this.selectionEnd = this.selectionInitialStart + this.previousRef.length;
-                    this.replaceSelection(newRef);
-                    this.previousRef = newRef;
-                    this.selectionStart = this.currentContent.length;
-                    this.selectionEnd = this.currentContent.length;
-                    break;
-                case "ACTIVATE_SHEET":
-                    if (!this.currentContent.startsWith("=")) {
-                        this.cancelEdition();
-                        this.resetContent();
-                    }
-                    if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
-                        const activePosition = this.getters.getActivePosition();
-                        const { col, row } = this.getters.getNextVisibleCellPosition({
-                            sheetId: cmd.sheetIdTo,
-                            col: activePosition.col,
-                            row: activePosition.row,
-                        });
-                        const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
-                        this.selection.resetAnchor(this, { cell: { col, row }, zone });
-                    }
-                    break;
-                case "DELETE_SHEET":
-                case "UNDO":
-                case "REDO":
-                    const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
-                    if (!sheetIdExists && this.mode !== "inactive") {
-                        this.sheetId = this.getters.getActiveSheetId();
-                        this.cancelEditionAndActivateSheet();
-                        this.resetContent();
-                        this.ui.notifyUI({
-                            type: "ERROR",
-                            text: CELL_DELETED_MESSAGE,
-                        });
-                    }
-                    break;
-                case "CYCLE_EDITION_REFERENCES":
-                    this.cycleReferences();
-                    break;
-            }
-        }
-        unsubscribe() {
-            this.mode = "inactive";
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        getEditionMode() {
-            return this.mode;
-        }
-        getCurrentContent() {
-            if (this.mode === "inactive") {
-                return this.getComposerContent(this.getters.getActivePosition());
-            }
-            return this.currentContent;
-        }
-        getEditionSheet() {
-            return this.sheetId;
-        }
-        getComposerSelection() {
-            return {
-                start: this.selectionStart,
-                end: this.selectionEnd,
-            };
-        }
-        isSelectingForComposer() {
-            return this.mode === "selecting";
-        }
-        showSelectionIndicator() {
-            return this.isSelectingForComposer() && this.canStartComposerRangeSelection();
-        }
-        getCurrentTokens() {
-            return this.currentTokens;
-        }
-        /**
-         * Return the (enriched) token just before the cursor.
-         */
-        getTokenAtCursor() {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            if (start === end && end === 0) {
-                return undefined;
-            }
-            else {
-                return this.currentTokens.find((t) => t.start <= start && t.end >= end);
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Misc
-        // ---------------------------------------------------------------------------
-        cycleReferences() {
-            const tokens = this.getTokensInSelection();
-            const refTokens = tokens.filter((token) => token.type === "REFERENCE");
-            if (refTokens.length === 0)
-                return;
-            const updatedReferences = tokens
-                .map(loopThroughReferenceType)
-                .map((token) => token.value)
-                .join("");
-            const content = this.currentContent;
-            const start = tokens[0].start;
-            const end = tokens[tokens.length - 1].end;
-            const newContent = content.slice(0, start) + updatedReferences + content.slice(end);
-            const lengthDiff = newContent.length - content.length;
-            const startOfTokens = refTokens[0].start;
-            const endOfTokens = refTokens[refTokens.length - 1].end + lengthDiff;
-            const selection = { start: startOfTokens, end: endOfTokens };
-            // Put the selection at the end of the token if we cycled on a single token
-            if (refTokens.length === 1 && this.selectionStart === this.selectionEnd) {
-                selection.start = selection.end;
-            }
-            this.dispatch("SET_CURRENT_CONTENT", {
-                content: newContent,
-                selection,
-            });
-        }
-        validateSelection(length, start, end) {
-            return start >= 0 && start <= length && end >= 0 && end <= length
-                ? 0 /* CommandResult.Success */
-                : 45 /* CommandResult.WrongComposerSelection */;
-        }
-        onColumnsRemoved(cmd) {
-            if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
-                this.dispatch("STOP_EDITION", { cancel: true });
-                this.ui.notifyUI({
-                    type: "ERROR",
-                    text: CELL_DELETED_MESSAGE,
-                });
-                return;
-            }
-            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "left", [...cmd.elements]);
-            this.col = left;
-            this.row = top;
-        }
-        onRowsRemoved(cmd) {
-            if (cmd.elements.includes(this.row) && this.mode !== "inactive") {
-                this.dispatch("STOP_EDITION", { cancel: true });
-                this.ui.notifyUI({
-                    type: "ERROR",
-                    text: CELL_DELETED_MESSAGE,
-                });
-                return;
-            }
-            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "top", [...cmd.elements]);
-            this.col = left;
-            this.row = top;
-        }
-        onAddElements(cmd) {
-            const { top, left } = updateSelectionOnInsertion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
-            this.col = left;
-            this.row = top;
-        }
-        /**
-         * Enable the selecting mode
-         */
-        startComposerRangeSelection() {
-            if (this.sheetId === this.getters.getActiveSheetId()) {
-                const zone = positionToZone({ col: this.col, row: this.row });
-                this.selection.resetAnchor(this, { cell: { col: this.col, row: this.row }, zone });
-            }
-            this.mode = "selecting";
-            this.selectionInitialStart = this.selectionStart;
-        }
-        /**
-         * start the edition of a cell
-         * @param str the key that is used to start the edition if it is a "content" key like a letter or number
-         * @param selection
-         * @private
-         */
-        startEdition(str, selection) {
-            var _a;
-            const evaluatedCell = this.getters.getActiveCell();
-            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
-                selection = selection || { start: str.length, end: str.length };
-                str = `${str}%`;
-            }
-            const sheetId = this.getters.getActiveSheetId();
-            const { col, row } = this.getters.getActivePosition();
-            this.col = col;
-            this.sheetId = sheetId;
-            this.row = row;
-            this.initialContent = this.getComposerContent({ sheetId, col, row });
-            this.mode = "editing";
-            this.setContent(str || this.initialContent, selection);
-            this.colorIndexByRange = {};
-            const zone = positionToZone({ col: this.col, row: this.row });
-            this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
-                handleEvent: this.handleEvent.bind(this),
-                release: () => {
-                    this.stopEdition();
-                },
-            });
-        }
-        stopEdition() {
-            if (this.mode !== "inactive") {
-                this.cancelEditionAndActivateSheet();
-                const col = this.col;
-                const row = this.row;
-                let content = this.currentContent;
-                const didChange = this.initialContent !== content;
-                if (!didChange) {
-                    return;
-                }
-                if (content) {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
-                    if (content.startsWith("=")) {
-                        const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
-                        const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
-                        const missing = left - right;
-                        if (missing > 0) {
-                            content += concat(new Array(missing).fill(")"));
-                        }
-                    }
-                    else if (cell.link) {
-                        content = markdownLink(content, cell.link.url);
-                    }
-                    this.dispatch("UPDATE_CELL", {
-                        sheetId: this.sheetId,
-                        col,
-                        row,
-                        content,
-                    });
-                }
-                else {
-                    this.dispatch("UPDATE_CELL", {
-                        sheetId: this.sheetId,
-                        content: "",
-                        col,
-                        row,
-                    });
-                }
-                this.setContent("");
-            }
-        }
-        cancelEditionAndActivateSheet() {
-            if (this.mode === "inactive") {
-                return;
-            }
-            this.cancelEdition();
-            const sheetId = this.getters.getActiveSheetId();
-            if (sheetId !== this.sheetId) {
-                this.dispatch("ACTIVATE_SHEET", {
-                    sheetIdFrom: this.getters.getActiveSheetId(),
-                    sheetIdTo: this.sheetId,
-                });
-            }
-        }
-        getComposerContent(position) {
-            const cell = this.getters.getCell(position);
-            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
-                return cell.content;
-            }
-            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
-            switch (type) {
-                case CellValueType.text:
-                case CellValueType.empty:
-                    return value;
-                case CellValueType.boolean:
-                    return formattedValue;
-                case CellValueType.error:
-                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
-                case CellValueType.number:
-                    if (format && isDateTimeFormat(format)) {
-                        return formattedValue;
-                    }
-                    return this.numberComposerContent(value, format);
-            }
-        }
-        numberComposerContent(value, format) {
-            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
-                return `${value * 100}%`;
-            }
-            return numberToString(value);
-        }
-        cancelEdition() {
-            if (this.mode === "inactive") {
-                return;
-            }
-            this.mode = "inactive";
-            this.selection.release(this);
-        }
-        /**
-         * Reset the current content to the active cell content
-         */
-        resetContent() {
-            this.setContent(this.initialContent || "");
-        }
-        setContent(text, selection, raise) {
-            const isNewCurrentContent = this.currentContent !== text;
-            this.currentContent = text;
-            if (selection) {
-                this.selectionStart = selection.start;
-                this.selectionEnd = selection.end;
-            }
-            else {
-                this.selectionStart = this.selectionEnd = text.length;
-            }
-            if (isNewCurrentContent || this.mode !== "inactive") {
-                this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
-                if (this.currentTokens.length > 100) {
-                    if (raise) {
-                        this.ui.notifyUI({
-                            type: "ERROR",
-                            text: _lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"),
-                        });
-                    }
-                }
-            }
-            if (this.canStartComposerRangeSelection()) {
-                this.startComposerRangeSelection();
-            }
-        }
-        insertSelectedRange(zone) {
-            // infer if range selected or selecting range from cursor position
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const ref = this.getZoneReference(zone);
-            if (this.canStartComposerRangeSelection()) {
-                this.insertText(ref, start);
-                this.selectionInitialStart = start;
-            }
-            else {
-                this.insertText("," + ref, start);
-                this.selectionInitialStart = start + 1;
-            }
-        }
-        /**
-         * Replace the current reference selected by the new one.
-         * */
-        replaceSelectedRanges(zone) {
-            const ref = this.getZoneReference(zone);
-            this.replaceText(ref, this.selectionInitialStart, this.selectionEnd);
-        }
-        getZoneReference(zone, fixedParts = [{ colFixed: false, rowFixed: false }]) {
-            const sheetId = this.getters.getActiveSheetId();
-            let selectedXc = this.getters.zoneToXC(sheetId, zone, fixedParts);
-            if (this.getters.getEditionSheet() !== this.getters.getActiveSheetId()) {
-                const sheetName = getComposerSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
-                selectedXc = `${sheetName}!${selectedXc}`;
-            }
-            return selectedXc;
-        }
-        getRangeReference(range, fixedParts = [{ colFixed: false, rowFixed: false }]) {
-            let _fixedParts = [...fixedParts];
-            if (fixedParts.length === 1 && getZoneArea(range.zone) > 1) {
-                _fixedParts.push({ ...fixedParts[0] });
-            }
-            else if (fixedParts.length === 2 && getZoneArea(range.zone) === 1) {
-                _fixedParts.pop();
-            }
-            const newRange = range.clone({ parts: _fixedParts });
-            return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
-        }
-        /**
-         * Replace the current selection by a new text.
-         * The cursor is then set at the end of the text.
-         */
-        replaceSelection(text) {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            this.replaceText(text, start, end);
-        }
-        replaceText(text, start, end) {
-            this.currentContent =
-                this.currentContent.slice(0, start) +
-                    this.currentContent.slice(end, this.currentContent.length);
-            this.insertText(text, start);
-        }
-        /**
-         * Insert a text at the given position.
-         * The cursor is then set at the end of the text.
-         */
-        insertText(text, start) {
-            const content = this.currentContent.slice(0, start) + text + this.currentContent.slice(start);
-            const end = start + text.length;
-            this.dispatch("SET_CURRENT_CONTENT", {
-                content,
-                selection: { start: end, end },
-            });
-        }
-        updateRangeColor() {
-            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
-                return;
-            }
-            const editionSheetId = this.getters.getEditionSheet();
-            const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
-            const colorsToKeep = {};
-            for (const xc of XCs) {
-                if (this.colorIndexByRange[xc] !== undefined) {
-                    colorsToKeep[xc] = this.colorIndexByRange[xc];
-                }
-            }
-            const usedIndexes = new Set(Object.values(colorsToKeep));
-            let currentIndex = 0;
-            const nextIndex = () => {
-                while (usedIndexes.has(currentIndex))
-                    currentIndex++;
-                usedIndexes.add(currentIndex);
-                return currentIndex;
-            };
-            for (const xc of XCs) {
-                const colorIndex = xc in colorsToKeep ? colorsToKeep[xc] : nextIndex();
-                colorsToKeep[xc] = colorIndex;
-            }
-            this.colorIndexByRange = colorsToKeep;
-        }
-        /**
-         * Highlight all ranges that can be found in the composer content.
-         */
-        getComposerHighlights() {
-            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
-                return [];
-            }
-            const editionSheetId = this.getters.getEditionSheet();
-            const rangeColor = (rangeString) => {
-                const colorIndex = this.colorIndexByRange[rangeString];
-                return colors$1[colorIndex % colors$1.length];
-            };
-            return this.getReferencedRanges().map((range) => {
-                const rangeString = this.getters.getRangeString(range, editionSheetId);
-                return {
-                    zone: range.zone,
-                    color: rangeColor(rangeString),
-                    sheetId: range.sheetId,
-                };
-            });
-        }
-        /**
-         * Return ranges currently referenced in the composer
-         */
-        getReferencedRanges() {
-            const editionSheetId = this.getters.getEditionSheet();
-            return this.currentTokens
-                .filter((token) => token.type === "REFERENCE")
-                .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
-        }
-        /**
-         * Function used to determine when composer selection can start.
-         * Three conditions are necessary:
-         * - the previous token is among ["COMMA", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
-         * - the next token is missing or is among ["COMMA", "RIGHT_PAREN", "OPERATOR"]
-         * - Previous and next tokens can be separated by spaces
-         */
-        canStartComposerRangeSelection() {
-            if (this.currentContent.startsWith("=")) {
-                const tokenAtCursor = this.getTokenAtCursor();
-                if (!tokenAtCursor) {
-                    return false;
-                }
-                const tokenIdex = this.currentTokens.map((token) => token.start).indexOf(tokenAtCursor.start);
-                let count = tokenIdex;
-                let currentToken = tokenAtCursor;
-                // check previous token
-                while (!["COMMA", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
-                    POSTFIX_UNARY_OPERATORS.includes(currentToken.value)) {
-                    if (currentToken.type !== "SPACE" || count < 1) {
-                        return false;
-                    }
-                    count--;
-                    currentToken = this.currentTokens[count];
-                }
-                count = tokenIdex + 1;
-                currentToken = this.currentTokens[count];
-                // check next token
-                while (currentToken && !["COMMA", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
-                    if (currentToken.type !== "SPACE") {
-                        return false;
-                    }
-                    count++;
-                    currentToken = this.currentTokens[count];
-                }
-                return true;
-            }
-            return false;
-        }
-        /**
-         * Return all the tokens between selectionStart and selectionEnd.
-         * Includes token that begin right on selectionStart or end right on selectionEnd.
-         */
-        getTokensInSelection() {
-            const start = Math.min(this.selectionStart, this.selectionEnd);
-            const end = Math.max(this.selectionStart, this.selectionEnd);
-            return this.currentTokens.filter((t) => (t.start <= start && t.end >= start) || (t.start >= start && t.start < end));
-        }
-    }
-    EditionPlugin.getters = [
-        "getEditionMode",
-        "isSelectingForComposer",
-        "showSelectionIndicator",
-        "getCurrentContent",
-        "getEditionSheet",
-        "getComposerSelection",
-        "getCurrentTokens",
-        "getTokenAtCursor",
-        "getComposerHighlights",
-    ];
 
     const arrowMap = {
         ArrowDown: "down",
@@ -16831,12 +15094,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 selection.addRange(range);
             }
             else {
-                if (start < 0 || end > this.el.textContent.length) {
-                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${this.el.textContent.length}`);
+                const textLength = this.getText().length;
+                if (start < 0 || end > textLength) {
+                    console.warn(`wrong selection asked start ${start}, end ${end}, text content length ${textLength}`);
                     if (start < 0)
                         start = 0;
-                    if (end > this.el.textContent.length)
-                        end = this.el.textContent.length;
+                    if (end > textLength)
+                        end = textLength;
                 }
                 let startNode = this.findChildAtCharacterIndex(start);
                 let endNode = this.findChildAtCharacterIndex(end);
@@ -16849,36 +15113,36 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * finds the dom element that contains the character at `offset`
          */
         findChildAtCharacterIndex(offset) {
-            let it = this.iterateChildren(this.el);
+            let it = iterateChildren(this.el);
             let current, previous;
             let usedCharacters = offset;
+            let isFirstParagraph = true;
             do {
                 current = it.next();
                 if (!current.done && !current.value.hasChildNodes()) {
                     if (current.value.textContent && current.value.textContent.length < usedCharacters) {
                         usedCharacters -= current.value.textContent.length;
                     }
-                    else {
+                    else if (current.value.textContent &&
+                        current.value.textContent.length >= usedCharacters) {
                         it.return(current.value);
                     }
                     previous = current.value;
                 }
-            } while (!current.done);
+                // One new paragraph = one new line character, except for the first paragraph
+                if (!current.done && current.value.nodeName === "P") {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters--;
+                    }
+                }
+            } while (!current.done && usedCharacters);
             if (current.value) {
                 return { node: current.value, offset: usedCharacters };
             }
             return { node: previous, offset: usedCharacters };
-        }
-        /**
-         * Iterate over the dom tree starting at `el` and over all the children depth first.
-         * */
-        *iterateChildren(el) {
-            yield el;
-            if (el.hasChildNodes()) {
-                for (let child of el.childNodes) {
-                    yield* this.iterateChildren(child);
-                }
-            }
         }
         /**
          * Sets (or Replaces all) the text inside the root element in the form of distinctive
@@ -16887,20 +15151,40 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * Each span will have its own fontcolor and specific class if provided in the HtmlContent object.
          */
         setText(contents) {
+            this.el.innerHTML = "";
             if (contents.length === 0) {
                 return;
             }
-            for (const content of contents) {
-                const span = document.createElement("span");
-                span.innerText = content.value;
-                if (content.color) {
-                    span.style.color = content.color;
+            for (const line of contents) {
+                const p = document.createElement("p");
+                // Empty line
+                if (line.length === 0 || line.every((content) => !content.value && !content.class)) {
+                    p.appendChild(document.createElement("br"));
+                    this.el.appendChild(p);
+                    continue;
                 }
-                if (content.class) {
-                    span.classList.add(content.class);
+                for (const content of line) {
+                    if (!content.value && !content.class) {
+                        continue;
+                    }
+                    const span = document.createElement("span");
+                    span.innerText = content.value;
+                    span.style.color = content.color || "";
+                    if (content.class) {
+                        span.classList.add(content.class);
+                    }
+                    p.appendChild(span);
                 }
-                this.el.appendChild(span);
+                this.el.appendChild(p);
             }
+        }
+        scrollSelectionIntoView() {
+            var _a;
+            const focusedNode = (_a = document.getSelection()) === null || _a === void 0 ? void 0 : _a.focusNode;
+            if (!focusedNode || !this.el.contains(focusedNode))
+                return;
+            const element = focusedNode instanceof HTMLElement ? focusedNode : focusedNode.parentElement;
+            element === null || element === void 0 ? void 0 : element.scrollIntoView({ block: "nearest" });
         }
         /**
          * remove the current selection of the user
@@ -16929,16 +15213,34 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         findSizeBeforeElement(nodeToFind) {
-            let it = this.iterateChildren(this.el);
             let usedCharacters = 0;
+            let it = iterateChildren(this.el);
             let current = it.next();
+            let isFirstParagraph = true;
             while (!current.done && current.value !== nodeToFind) {
                 if (!current.value.hasChildNodes()) {
                     if (current.value.textContent) {
                         usedCharacters += current.value.textContent.length;
                     }
                 }
+                // One new paragraph = one new line character, except for the first paragraph
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        usedCharacters++;
+                    }
+                }
                 current = it.next();
+            }
+            if (current.value !== nodeToFind) {
+                throw new Error("Cannot find the node in the children of the element");
+            }
+            if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
+                usedCharacters++;
             }
             return usedCharacters;
         }
@@ -16950,6 +15252,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 endElement: selection.focusNode || this.el,
                 endSelectionOffset: selection.focusOffset,
             };
+        }
+        getText() {
+            let text = "";
+            let it = iterateChildren(this.el);
+            let current = it.next();
+            let isFirstParagraph = true;
+            while (!current.done) {
+                if (!current.value.hasChildNodes()) {
+                    text += current.value.textContent;
+                }
+                if (current.value.nodeName === "P" ||
+                    (current.value.nodeName === "DIV" && current.value !== this.el) // On paste, the HTML may contain <div> instead of <p>
+                ) {
+                    if (isFirstParagraph) {
+                        isFirstParagraph = false;
+                    }
+                    else {
+                        text += NEWLINE;
+                    }
+                }
+                current = it.next();
+            }
+            return text;
         }
     }
 
@@ -17039,55 +15364,59 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         argToFocus: Number,
     };
 
-    const functions = functionRegistry.content;
+    const functions$2 = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
-    const FunctionColor = "#4a4e4d";
-    const OperatorColor = "#3da4ab";
-    const StringColor = "#00a82d";
-    const SelectionIndicatorColor = "darkgrey";
-    const NumberColor = "#02c39a";
-    const MatchingParenColor = "black";
-    const SelectionIndicatorClass = "selector-flag";
-    const tokenColor = {
-        OPERATOR: OperatorColor,
-        NUMBER: NumberColor,
-        STRING: StringColor,
-        FUNCTION: FunctionColor,
-        DEBUGGER: OperatorColor,
-        LEFT_PAREN: FunctionColor,
-        RIGHT_PAREN: FunctionColor,
-        COMMA: FunctionColor,
+    const selectionIndicatorClass = "selector-flag";
+    const selectionIndicatorColor = "#a9a9a9";
+    const selectionIndicator = "␣";
+    const functionColor = "#4a4e4d";
+    const operatorColor = "#3da4ab";
+    const tokenColors = {
+        OPERATOR: operatorColor,
+        NUMBER: "#02c39a",
+        STRING: "#00a82d",
+        FUNCTION: functionColor,
+        DEBUGGER: operatorColor,
+        LEFT_PAREN: functionColor,
+        RIGHT_PAREN: functionColor,
+        COMMA: functionColor,
+        MATCHING_PAREN: "#000000",
     };
     css /* scss */ `
   .o-composer-container {
-    padding: 0;
-    margin: 0;
-    border: 0;
-    z-index: ${ComponentsImportance.Composer};
-    flex-grow: 1;
-    max-height: inherit;
     .o-composer {
+      overflow-y: auto;
+      overflow-x: hidden;
+      word-break: break-all;
+      padding-right: 2px;
+
+      box-sizing: border-box;
+
       caret-color: black;
       padding-left: 3px;
       padding-right: 3px;
-      word-break: break-all;
-      &:focus {
-        outline: none;
-      }
+      outline: none;
+
       &.unfocusable {
         pointer-events: none;
       }
-      span {
-        white-space: pre;
-        &.${SelectionIndicatorClass}:after {
-          content: "${SelectionIndicator}";
-          color: ${SelectionIndicatorColor};
+
+      p {
+        margin-bottom: 0px;
+
+        span {
+          white-space: pre-wrap;
+          &.${selectionIndicatorClass}:after {
+            content: "${selectionIndicator}";
+            color: ${selectionIndicatorColor};
+          }
         }
       }
     }
+
     .o-composer-assistant {
       position: absolute;
-      margin: 4px;
+      margin: 1px 4px;
       pointer-events: none;
     }
 
@@ -17095,11 +15424,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     .o-formula-assistant-container {
       box-shadow: 0 1px 4px 3px rgba(60, 64, 67, 0.15);
     }
-  }
-
-  /* Custom css to highlight topbar composer on focus */
-  .o-topbar-toolbar .o-composer-container:focus-within {
-    border: 1px solid ${SELECTION_BORDER_COLOR};
   }
 `;
     class Composer extends owl.Component {
@@ -17123,6 +15447,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 argToFocus: 0,
             });
             this.isKeyStillDown = false;
+            this.compositionActive = false;
             // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
             this.shouldProcessInputEvents = false;
             this.tokens = [];
@@ -17142,27 +15467,27 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.props.delimitation && this.props.rect) {
                 const { x: cellX, y: cellY, height: cellHeight } = this.props.rect;
                 const remainingHeight = this.props.delimitation.height - (cellY + cellHeight);
-                let assistantStyle = "";
+                let assistantStyle = {};
                 if (cellY > remainingHeight) {
                     // render top
-                    assistantStyle += `
-          top: -8px;
-          transform: translate(0, -100%);
-        `;
+                    assistantStyle.top = `$-3px`;
+                    assistantStyle.transform = `translate(0, -100%)`;
                 }
                 if (cellX + ASSISTANT_WIDTH > this.props.delimitation.width) {
                     // render left
-                    assistantStyle += `right:0px;`;
+                    assistantStyle.right = `0px`;
                 }
-                return (assistantStyle += `width:${ASSISTANT_WIDTH}px;`);
+                assistantStyle.width = `${ASSISTANT_WIDTH}px`;
+                return cssPropertiesToCss(assistantStyle);
             }
-            return `width:${ASSISTANT_WIDTH}px;`;
+            return cssPropertiesToCss({ width: `${ASSISTANT_WIDTH}px` });
         }
         setup() {
             owl.onMounted(() => {
                 const el = this.composerRef.el;
                 this.contentHelper.updateEl(el);
                 this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
             });
             owl.onWillUnmount(() => {
                 var _a, _b;
@@ -17239,6 +15564,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a;
             ev.preventDefault();
             ev.stopPropagation();
+            if (ev.altKey || ev.ctrlKey) {
+                const selection = this.contentHelper.getCurrentSelection();
+                const currentContent = this.env.model.getters.getCurrentContent();
+                const content = currentContent.slice(0, selection.start) + NEWLINE + currentContent.slice(selection.end);
+                this.env.model.dispatch("SET_CURRENT_CONTENT", {
+                    content,
+                    selection: { start: selection.start + 1, end: selection.start + 1 },
+                });
+                this.processContent();
+                this.contentHelper.scrollSelectionIntoView();
+                return;
+            }
             this.isKeyStillDown = false;
             if (this.autoCompleteState.showProvider) {
                 const autoCompleteValue = (_a = this.autoCompleteState.values[this.autoCompleteState.selectedIndex]) === null || _a === void 0 ? void 0 : _a.text;
@@ -17258,6 +15595,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
             this.processContent();
         }
+        onCompositionStart() {
+            this.compositionActive = true;
+        }
+        onCompositionEnd() {
+            this.compositionActive = false;
+        }
         onKeydown(ev) {
             let handler = this.keyMapping[ev.key];
             if (handler) {
@@ -17267,7 +15610,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ev.stopPropagation();
             }
             const { start, end } = this.contentHelper.getCurrentSelection();
-            if (!this.env.model.getters.isSelectingForComposer()) {
+            if (!this.env.model.getters.isSelectingForComposer() &&
+                !(ev.key === "Enter" && (ev.altKey || ev.ctrlKey))) {
                 this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
                 this.isKeyStillDown = true;
             }
@@ -17280,16 +15624,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return;
             }
             this.env.model.dispatch("STOP_COMPOSER_RANGE_SELECTION");
-            const el = this.composerRef.el;
             this.env.model.dispatch("SET_CURRENT_CONTENT", {
-                content: el.childNodes.length ? el.textContent : "",
+                content: this.contentHelper.getText(),
                 selection: this.contentHelper.getCurrentSelection(),
             });
         }
         onKeyup(ev) {
             this.isKeyStillDown = false;
             if (this.props.focus === "inactive" ||
-                ["Control", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
+                ["Control", "Alt", "Shift", "Tab", "Enter", "F4"].includes(ev.key)) {
                 return;
             }
             if (this.autoCompleteState.showProvider && ["ArrowUp", "ArrowDown"].includes(ev.key)) {
@@ -17317,7 +15660,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         showAutocomplete(searchTerm) {
             this.autoCompleteState.showProvider = true;
-            let values = Object.entries(functionRegistry.content).map(([text, { description }]) => {
+            let values = Object.entries(functionRegistry.content)
+                .filter(([_, { hidden }]) => !hidden)
+                .map(([text, { description }]) => {
                 return {
                     text,
                     description,
@@ -17359,42 +15704,47 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Private
         // ---------------------------------------------------------------------------
         processContent() {
+            if (this.compositionActive) {
+                return;
+            }
+            const oldScroll = getElementScrollTop(this.composerRef.el);
             this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
             this.shouldProcessInputEvents = false;
             if (this.props.focus !== "inactive") {
+                this.contentHelper.el.focus();
                 this.contentHelper.selectRange(0, 0); // move the cursor inside the composer at 0 0.
             }
-            const content = this.getContent();
-            if (content.length !== 0) {
+            const content = this.getContentLines();
+            if (content.length !== 0 && content.length[0] !== 0) {
                 this.contentHelper.setText(content);
                 const { start, end } = this.env.model.getters.getComposerSelection();
                 if (this.props.focus !== "inactive") {
                     // Put the cursor back where it was before the rendering
                     this.contentHelper.selectRange(start, end);
                 }
+                setElementScrollTop(this.composerRef.el, oldScroll);
             }
             this.shouldProcessInputEvents = true;
         }
-        getContent() {
-            let content;
-            const value = this.env.model.getters.getCurrentContent();
+        /**
+         * Get the HTML content corresponding to the current composer token, divided by lines.
+         */
+        getContentLines() {
+            let value = this.env.model.getters.getCurrentContent();
             const isValidFormula = value.startsWith("=") && this.env.model.getters.getCurrentTokens().length > 0;
             if (value === "") {
-                content = [];
+                return [];
             }
             else if (isValidFormula && this.props.focus !== "inactive") {
-                content = this.getColoredTokens();
+                return this.splitHtmlContentIntoLines(this.getColoredTokens());
             }
-            else {
-                content = [{ value }];
-            }
-            return content;
+            return this.splitHtmlContentIntoLines([{ value }]);
         }
         getColoredTokens() {
             const tokens = this.env.model.getters.getCurrentTokens();
             const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
             const result = [];
-            const { start, end } = this.env.model.getters.getComposerSelection();
+            const { end, start } = this.env.model.getters.getComposerSelection();
             for (const token of tokens) {
                 switch (token.type) {
                     case "OPERATOR":
@@ -17402,16 +15752,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "FUNCTION":
                     case "COMMA":
                     case "STRING":
-                        result.push({ value: token.value, color: tokenColor[token.type] || "#000" });
+                        result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
                         break;
                     case "REFERENCE":
-                        const [xc, sheet] = token.value.split("!").reverse();
-                        result.push({ value: token.value, color: this.rangeColor(xc, sheet) || "#000" });
+                        const { xc, sheetName } = splitReference(token.value);
+                        result.push({ value: token.value, color: this.rangeColor(xc, sheetName) || "#000" });
                         break;
                     case "SYMBOL":
                         let value = token.value;
                         if (["TRUE", "FALSE"].includes(value.toUpperCase())) {
-                            result.push({ value: token.value, color: NumberColor });
+                            result.push({ value: token.value, color: tokenColors.NUMBER });
                         }
                         else {
                             result.push({ value: token.value, color: "#000" });
@@ -17424,10 +15774,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             ["LEFT_PAREN", "RIGHT_PAREN"].includes(tokenAtCursor.type) &&
                             tokenAtCursor.parenIndex &&
                             tokenAtCursor.parenIndex === token.parenIndex) {
-                            result.push({ value: token.value, color: MatchingParenColor  });
+                            result.push({ value: token.value, color: tokenColors.MATCHING_PAREN  });
                         }
                         else {
-                            result.push({ value: token.value, color: tokenColor[token.type] || "#000" });
+                            result.push({ value: token.value, color: tokenColors[token.type] || "#000" });
                         }
                         break;
                     default:
@@ -17435,10 +15785,50 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                 }
                 if (this.env.model.getters.showSelectionIndicator() && end === start && end === token.end) {
-                    result[result.length - 1].class = SelectionIndicatorClass;
+                    result[result.length - 1].class = selectionIndicatorClass;
                 }
             }
             return result;
+        }
+        /**
+         * Split an array of HTMLContents into lines. Each NEWLINE character encountered will create a new
+         * line. Contents can be split into multiple parts if they contain multiple NEWLINE characters.
+         */
+        splitHtmlContentIntoLines(contents) {
+            const contentSplitInLines = [];
+            let currentLine = [];
+            for (const content of contents) {
+                if (content.value.includes(NEWLINE)) {
+                    const lines = content.value.split(NEWLINE);
+                    const lastLine = lines.pop();
+                    for (const line of lines) {
+                        currentLine.push({ color: content.color, value: line }); // don't copy class, only last line should keep it
+                        contentSplitInLines.push(currentLine);
+                        currentLine = [];
+                    }
+                    currentLine.push({ ...content, value: lastLine });
+                }
+                else {
+                    currentLine.push(content);
+                }
+            }
+            if (currentLine.length) {
+                contentSplitInLines.push(currentLine);
+            }
+            // Remove useless empty contents
+            const filteredLines = [];
+            for (const line of contentSplitInLines) {
+                if (line.every(this.isContentEmpty)) {
+                    filteredLines.push([line[0]]);
+                }
+                else {
+                    filteredLines.push(line.filter((content) => !this.isContentEmpty(content)));
+                }
+            }
+            return filteredLines;
+        }
+        isContentEmpty(content) {
+            return !(content.value || content.class);
         }
         rangeColor(xc, sheetName) {
             if (this.props.focus === "inactive") {
@@ -17471,7 +15861,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (content.startsWith("=")) {
                 const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
                 if (tokenAtCursor) {
-                    const [xc] = tokenAtCursor.value.split("!").reverse();
+                    const { xc } = splitReference(tokenAtCursor.value);
                     if (tokenAtCursor.type === "FUNCTION" ||
                         (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
                         // initialize Autocomplete Dropdown
@@ -17481,7 +15871,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         // initialize Formula Assistant
                         const tokenContext = tokenAtCursor.functionContext;
                         const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions[parentFunction];
+                        const description = functions$2[parentFunction];
                         const argPosition = tokenContext.argPosition;
                         this.functionDescriptionState.functionName = parentFunction;
                         this.functionDescriptionState.functionDescription = description;
@@ -17538,15 +15928,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onComposerContentFocused: Function,
     };
 
-    const SCROLLBAR_WIDTH = 14;
-    const SCROLLBAR_HIGHT = 15;
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
+    const GRID_CELL_REFERENCE_TOP_OFFSET = 28;
     css /* scss */ `
   div.o-grid-composer {
-    z-index: ${ComponentsImportance.Composer};
+    z-index: ${ComponentsImportance.GridComposer};
     box-sizing: border-box;
     position: absolute;
     border: ${COMPOSER_BORDER_WIDTH}px solid ${SELECTION_BORDER_COLOR};
+
+    display: flex;
+    align-items: center;
+  }
+
+  div.o-cell-reference {
+    position: absolute;
+    z-index: ${ComponentsImportance.GridComposer};
+    background: ${SELECTION_BORDER_COLOR};
+    color: white;
+    font-size: 12px;
+    line-height: 14px;
+    padding: 6px 7px;
+    border-radius: 4px;
   }
 `;
     /**
@@ -17563,13 +15966,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { sheetId, col, row } = this.env.model.getters.getActivePosition();
             this.zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
             this.rect = this.env.model.getters.getVisibleRect(this.zone);
+            this.isCellReferenceVisible = false;
             owl.onMounted(() => {
                 const el = this.gridComposerRef.el;
-                //TODO Should be more correct to have a props that give the parent's clientHeight and clientWidth
-                const maxHeight = el.parentElement.clientHeight - this.rect.y - SCROLLBAR_HIGHT;
-                el.style.maxHeight = (maxHeight + "px");
-                const maxWidth = el.parentElement.clientWidth - this.rect.x - SCROLLBAR_WIDTH;
-                el.style.maxWidth = (maxWidth + "px");
                 this.composerState.rect = {
                     x: this.rect.x,
                     y: this.rect.y,
@@ -17580,6 +15979,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     width: el.parentElement.clientWidth,
                     height: el.parentElement.clientHeight,
                 };
+            });
+            owl.onWillUpdateProps(() => {
+                if (this.isCellReferenceVisible) {
+                    return;
+                }
+                const sheetId = this.env.model.getters.getActiveSheetId();
+                const zone = this.env.model.getters.getSelectedZone();
+                const rect = this.env.model.getters.getVisibleRect(zone);
+                if (!deepEquals(rect, this.rect) ||
+                    sheetId !== this.env.model.getters.getCurrentEditedCell().sheetId) {
+                    this.isCellReferenceVisible = true;
+                }
+            });
+        }
+        get shouldDisplayCellReference() {
+            return this.isCellReferenceVisible;
+        }
+        get cellReference() {
+            const { col, row, sheetId } = this.env.model.getters.getCurrentEditedCell();
+            const prefixSheet = sheetId !== this.env.model.getters.getActiveSheetId();
+            return `${prefixSheet ? getComposerSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
+        }
+        get cellReferenceStyle() {
+            const { x: left, y: top } = this.rect;
+            return cssPropertiesToCss({
+                left: `${left - COMPOSER_BORDER_WIDTH}px`,
+                top: `${top - GRID_CELL_REFERENCE_TOP_OFFSET}px`,
             });
         }
         get containerStyle() {
@@ -17602,29 +16028,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!isFormula) {
                 textAlign = style.align || cell.defaultAlign;
             }
-            return `
-      left: ${left - 1}px;
-      top: ${top}px;
-      min-width: ${width + 2}px;
-      min-height: ${height + 1}px;
-
-      background: ${background};
-      color: ${color};
-
-      font-size: ${fontSizeMap[fontSize]}px;
-      font-weight: ${fontWeight};
-      font-style: ${fontStyle};
-      text-decoration: ${textDecoration};
-
-      text-align: ${textAlign};
-    `;
+            /**
+             * min-size is on the container, not the composer element, because we want to have the same size as the cell by default,
+             * including all the paddings/margins of the composer
+             *
+             * The +-1 are there to include cell borders in the composer sizing/positioning
+             */
+            return cssPropertiesToCss({
+                left: `${left - 1}px`,
+                top: `${top}px`,
+                "min-width": `${width + 1}px`,
+                "min-height": `${height + 1}px`,
+                background,
+                color,
+                "font-size": `${fontSizeMap[fontSize]}px`,
+                "font-weight": String(fontWeight),
+                "font-style": fontStyle,
+                "text-decoration": textDecoration,
+                "text-align": textAlign,
+            });
         }
         get composerStyle() {
-            return `
-      line-height: ${DEFAULT_CELL_HEIGHT}px;
-      max-height: inherit;
-      overflow: hidden;
-    `;
+            const maxHeight = this.props.gridDims.height - this.rect.y;
+            const maxWidth = this.props.gridDims.width - this.rect.x;
+            return cssPropertiesToCss({
+                "max-width": `${maxWidth}px`,
+                "max-height": `${maxHeight}px`,
+            });
         }
     }
     GridComposer.template = "o-spreadsheet-GridComposer";
@@ -17633,6 +16063,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
         onComposerUnmounted: Function,
         onComposerContentFocused: Function,
+        gridDims: Object,
     };
 
     const { Component: Component$1 } = owl__namespace;
@@ -17954,6 +16385,23 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     const autofillModifiersRegistry = new Registry();
     autofillModifiersRegistry
+        .add("ALPHANUMERIC_INCREMENT_MODIFIER", {
+        apply: (rule, data) => {
+            rule.current += rule.increment;
+            const content = `${rule.prefix}${rule.current
+            .toString()
+            .padStart(rule.numberPostfixLength || 0, "0")}`;
+            return {
+                cellData: {
+                    border: data.border,
+                    style: data.cell && data.cell.style,
+                    format: data.cell && data.cell.format,
+                    content,
+                },
+                tooltip: { props: { content } },
+            };
+        },
+    })
         .add("INCREMENT_MODIFIER", {
         apply: (rule, data) => {
             var _a;
@@ -18035,11 +16483,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     });
 
     const autofillRulesRegistry = new Registry();
+    const numberPostfixRegExp = /(\d+)$/;
+    const stringPrefixRegExp = /^(.*\D+)/;
+    const alphaNumericValueRegExp = /^(.*\D+)(\d+)$/;
     /**
-     * Get the consecutive xc that are of type "number" or "date".
+     * Get the consecutive evaluated cells that can pass the filter function (e.g. certain type filter).
      * Return the one which contains the given cell
      */
-    function getGroup(cell, cells) {
+    function getGroup(cell, cells, filter) {
         let group = [];
         let found = false;
         for (let x of cells) {
@@ -18047,8 +16498,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 found = true;
             }
             const cellValue = evaluateLiteral(x === null || x === void 0 ? void 0 : x.content);
-            if (cellValue.type === CellValueType.number) {
-                group.push(cellValue.value);
+            if (filter(cellValue)) {
+                group.push(cellValue);
             }
             else {
                 if (found) {
@@ -18072,6 +16523,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         return averages.reduce((a, b) => a + b, 0) / averages.length;
     }
+    /**
+     * Get the step for a group
+     */
+    function calculateIncrementBasedOnGroup(group) {
+        let increment = 1;
+        if (group.length >= 2) {
+            increment = getAverageIncrement(group) * group.length;
+        }
+        return increment;
+    }
     autofillRulesRegistry
         .add("simple_value_copy", {
         condition: (cell, cells) => {
@@ -18082,6 +16543,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return { type: "COPY_MODIFIER" };
         },
         sequence: 10,
+    })
+        .add("increment_alphanumeric_value", {
+        condition: (cell) => !cell.isFormula &&
+            evaluateLiteral(cell.content).type === CellValueType.text &&
+            alphaNumericValueRegExp.test(cell.content),
+        generateRule: (cell, cells) => {
+            const numberPostfix = parseInt(cell.content.match(numberPostfixRegExp)[0]);
+            const prefix = cell.content.match(stringPrefixRegExp)[0];
+            const numberPostfixLength = cell.content.length - prefix.length;
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.text &&
+                alphaNumericValueRegExp.test(evaluatedCell.value)) // get consecutive alphanumeric cells, no matter what the prefix is
+                .filter((cell) => prefix === cell.value.toString().match(stringPrefixRegExp)[0])
+                .map((cell) => parseInt(cell.value.toString().match(numberPostfixRegExp)[0]));
+            const increment = calculateIncrementBasedOnGroup(group);
+            return {
+                type: "ALPHANUMERIC_INCREMENT_MODIFIER",
+                prefix,
+                current: numberPostfix,
+                increment,
+                numberPostfixLength,
+            };
+        },
+        sequence: 15,
     })
         .add("copy_text", {
         condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.text,
@@ -18100,14 +16584,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         .add("increment_number", {
         condition: (cell) => !cell.isFormula && evaluateLiteral(cell.content).type === CellValueType.number,
         generateRule: (cell, cells) => {
-            const group = getGroup(cell, cells);
-            let increment = 1;
-            if (group.length == 2) {
-                increment = (group[1] - group[0]) * 2;
-            }
-            else if (group.length > 2) {
-                increment = getAverageIncrement(group) * group.length;
-            }
+            const group = getGroup(cell, cells, (evaluatedCell) => evaluatedCell.type === CellValueType.number).map((cell) => Number(cell.value));
+            const increment = calculateIncrementBasedOnGroup(group);
             const evaluation = evaluateLiteral(cell.content);
             return {
                 type: "INCREMENT_MODIFIER",
@@ -19063,7 +17541,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(64 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(65 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
@@ -19239,15 +17717,65 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         action: CREATE_IMAGE,
         isVisible: (env) => env.imageProvider !== undefined,
     })
+        .addChild("insert_function", ["insert"], {
+        name: _lt("Function"),
+        sequence: 60,
+    })
+        .addChild("insert_function_sum", ["insert", "insert_function"], {
+        name: _lt("SUM"),
+        action: (env) => env.startCellEdition(`=SUM(`),
+        sequence: 0,
+    })
+        .addChild("insert_function_average", ["insert", "insert_function"], {
+        name: _lt("AVERAGE"),
+        action: (env) => env.startCellEdition(`=AVERAGE(`),
+        sequence: 10,
+    })
+        .addChild("insert_function_count", ["insert", "insert_function"], {
+        name: _lt("COUNT"),
+        action: (env) => env.startCellEdition(`=COUNT(`),
+        sequence: 20,
+    })
+        .addChild("insert_function_max", ["insert", "insert_function"], {
+        name: _lt("MAX"),
+        action: (env) => env.startCellEdition(`=MAX(`),
+        sequence: 30,
+    })
+        .addChild("insert_function_min", ["insert", "insert_function"], {
+        name: _lt("MIN"),
+        action: (env) => env.startCellEdition(`=MIN(`),
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("categorie_function_all", ["insert", "insert_function"], {
+        name: _lt("All"),
+        sequence: 50,
+    })
+        .addChild("all_function_list", ["insert", "insert_function", "categorie_function_all"], () => {
+        const fnNames = functionRegistry.getKeys();
+        return createFormulaFunctionMenuItems(fnNames);
+    })
+        .addChild("categories_function_list", ["insert", "insert_function"], () => {
+        const functions = functionRegistry.content;
+        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
+        return categories.sort().map((category, i) => {
+            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+            return {
+                name: category,
+                sequence: 60 + i * 10,
+                children: createFormulaFunctionMenuItems(functionsInCategory),
+            };
+        });
+    })
         .addChild("insert_link", ["insert"], {
         name: _lt("Link"),
         separator: true,
-        sequence: 60,
+        sequence: 70,
         action: INSERT_LINK,
     })
         .addChild("insert_sheet", ["insert"], {
         name: _lt("New sheet"),
-        sequence: 70,
+        sequence: 80,
         action: CREATE_SHEET_ACTION,
         separator: true,
     })
@@ -19527,6 +18055,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             action: (env) => setStyle(env, { fontSize: fs.pt }),
         });
     }
+    function createFormulaFunctionMenuItems(fnNames) {
+        return fnNames.sort().map((fnName, i) => {
+            return {
+                name: fnName,
+                sequence: i * 10,
+                action: (env) => env.startCellEdition(`=${fnName}(`),
+            };
+        });
+    }
 
     class OTRegistry extends Registry {
         /**
@@ -19766,11 +18303,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isDatasetInvalid() {
             var _a;
-            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(31 /* CommandResult.InvalidDataSet */));
+            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidDataSet */));
         }
         get isLabelInvalid() {
             var _a;
-            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidLabelRange */));
+            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidLabelRange */));
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart({
@@ -19902,7 +18439,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       }
     }
     .o-separator {
-      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid #e0e2e4;
+      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid ${SEPARATOR_COLOR};
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
     }
@@ -20040,7 +18577,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get magnifyingGlassStyle() {
             const { display, background, left, top } = this.state.style;
-            return `display:${display};${display === "block" ? `background-color:${background};left:${left};top:${top};` : ""}`;
+            return cssPropertiesToCss({
+                display,
+                "background-color": display === "block" ? background : undefined,
+                left,
+                top,
+            });
         }
     }
     ColorPicker.template = "o-spreadsheet-ColorPicker";
@@ -20112,7 +18654,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isDataRangeInvalid() {
             var _a;
-            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(35 /* CommandResult.InvalidGaugeDataRange */));
+            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(36 /* CommandResult.InvalidGaugeDataRange */));
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -20198,28 +18740,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isRangeMinInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(36 /* CommandResult.EmptyGaugeRangeMin */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(37 /* CommandResult.GaugeRangeMinNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(37 /* CommandResult.EmptyGaugeRangeMin */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(38 /* CommandResult.GaugeRangeMinNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         isRangeMaxInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(38 /* CommandResult.EmptyGaugeRangeMax */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(39 /* CommandResult.GaugeRangeMaxNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(39 /* CommandResult.EmptyGaugeRangeMax */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(40 /* CommandResult.GaugeRangeMaxNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(41 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(43 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(42 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         get isUpperInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(42 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(43 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(43 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         updateInflectionPointValue(attr, ev) {
             const sectionRule = deepCopy(this.props.definition.sectionRule);
@@ -20327,11 +18869,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isKeyValueInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidScorecardKeyValue */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.InvalidScorecardKeyValue */));
         }
         get isBaselineInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.InvalidScorecardBaseline */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(35 /* CommandResult.InvalidScorecardBaseline */));
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -20971,7 +19513,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
         }
         get isRangeValid() {
-            return this.state.errors.includes(23 /* CommandResult.EmptyRange */);
+            return this.state.errors.includes(24 /* CommandResult.EmptyRange */);
         }
         errorMessage(error) {
             return CfTerms.Errors[error] || CfTerms.Errors.Unexpected;
@@ -20988,16 +19530,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         getStyle(rule) {
             if (rule.type === "CellIsRule") {
-                const fontWeight = rule.style.bold ? "bold" : "normal";
-                const fontDecoration = getTextDecoration(rule.style);
-                const fontStyle = rule.style.italic ? "italic" : "normal";
-                const color = rule.style.textColor || "none";
-                const backgroundColor = rule.style.fillColor || "none";
-                return `font-weight:${fontWeight};
-               text-decoration:${fontDecoration};
-               font-style:${fontStyle};
-               color:${color};
-               background-color:${backgroundColor};`;
+                return cssPropertiesToCss({
+                    "font-weight": rule.style.bold ? "bold" : "normal",
+                    "text-decoration": getTextDecoration(rule.style),
+                    "font-style": rule.style.italic ? "italic" : "normal",
+                    color: rule.style.textColor || "none",
+                    "background-color": rule.style.fillColor || "none",
+                });
             }
             else if (rule.type === "ColorScaleRule") {
                 const minColor = colorNumberString(rule.minimum.color);
@@ -21033,7 +19572,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.state.currentCF) {
                 const invalidRanges = this.state.currentCF.ranges.some((xc) => !xc.match(rangeReference));
                 if (invalidRanges) {
-                    this.state.errors = [24 /* CommandResult.InvalidRange */];
+                    this.state.errors = [25 /* CommandResult.InvalidRange */];
                     return;
                 }
                 const sheetId = this.env.model.getters.getActiveSheetId();
@@ -21189,11 +19728,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          ****************************************************************************/
         get isValue1Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(50 /* CommandResult.FirstArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(51 /* CommandResult.FirstArgMissing */));
         }
         get isValue2Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(51 /* CommandResult.SecondArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(52 /* CommandResult.SecondArgMissing */));
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -21210,17 +19749,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(57 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(46 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(52 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(58 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(50 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(47 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(53 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(58 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(53 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(48 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(59 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(54 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(49 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(59 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(54 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(60 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(55 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -21269,13 +19808,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(56 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(61 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(47 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(57 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(62 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(55 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(60 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(47 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(56 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(61 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -21805,12 +20344,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const width = viewWidth - left;
             const top = figureY >= y ? y : 0;
             const height = viewHeight - top;
-            return `
-      left: ${left}px;
-      top: ${top}px;
-      width: ${width}px;
-      height: ${height}px
-    `;
+            return cssPropertiesToCss({
+                left: `${left}px`,
+                top: `${top}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+            });
         }
         get inverseViewportPositionStyle() {
             const { x: figureX, y: figureY } = this.props.figure;
@@ -21818,10 +20357,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { x, y } = this.env.model.getters.getMainViewportCoordinates();
             const left = figureX >= x ? -(x + offsetX) : 0;
             const top = figureY >= y ? -(y + offsetY) : 0;
-            return `
-      left: ${left}px;
-      top: ${top}px;
-    `;
+            return cssPropertiesToCss({
+                left: `${left}px`,
+                top: `${top}px`,
+            });
         }
         getBorderWidth() {
             return this.env.isDashboard() ? 0 : this.borderWidth;
@@ -21831,34 +20370,36 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get wrapperStyle() {
             const { x, y, width, height } = this.displayedFigure;
-            return (`top:${y}px;` +
-                `left:${x}px;` +
-                `width:${width}px;` +
-                `height:${height}px;` +
-                `z-index: ${ComponentsImportance.Figure + (this.isSelected ? 1 : 0)}`);
+            return cssPropertiesToCss({
+                left: `${x}px`,
+                top: `${y}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                "z-index": String(ComponentsImportance.Figure + (this.isSelected ? 1 : 0)),
+            });
         }
         getResizerPosition(resizer) {
             const anchorCenteringOffset = (ANCHOR_SIZE - ACTIVE_BORDER_WIDTH) / 2;
-            let style = "";
+            let style = {};
             if (resizer.includes("top")) {
-                style += `top: ${-anchorCenteringOffset}px;`;
+                style.top = `${-anchorCenteringOffset}px`;
             }
             else if (resizer.includes("bottom")) {
-                style += `bottom: ${-anchorCenteringOffset}px;`;
+                style.bottom = `${-anchorCenteringOffset}px`;
             }
             else {
-                style += ` bottom: calc(50% - ${anchorCenteringOffset}px);`;
+                style.bottom = `calc(50% - ${anchorCenteringOffset}px)`;
             }
             if (resizer.includes("left")) {
-                style += `left: ${-anchorCenteringOffset}px;`;
+                style.left = `${-anchorCenteringOffset}px`;
             }
             else if (resizer.includes("right")) {
-                style += `right: ${-anchorCenteringOffset}px;`;
+                style.right = `${-anchorCenteringOffset}px`;
             }
             else {
-                style += ` right: calc(50% - ${anchorCenteringOffset}px);`;
+                style.right = `calc(50% - ${anchorCenteringOffset}px)`;
             }
-            return style;
+            return cssPropertiesToCss(style);
         }
         resize(dirX, dirY, ev) {
             const figure = this.props.figure;
@@ -22167,10 +20708,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             this.gridOverlay = owl.useRef("gridOverlay");
             useCellHovered(this.env, this.gridOverlay, this.props.onCellHovered);
-            owl.useEffect(() => this.props.onGridResized({
-                height: this.gridOverlayEl.clientHeight,
-                width: this.gridOverlayEl.clientWidth,
-            }), () => [this.gridOverlayEl.clientHeight, this.gridOverlayEl.clientWidth]);
+            const resizeObserver = new ResizeObserver(() => {
+                this.props.onGridResized({
+                    height: this.gridOverlayEl.clientHeight,
+                    width: this.gridOverlayEl.clientWidth,
+                });
+            });
+            owl.onMounted(() => {
+                resizeObserver.observe(this.gridOverlayEl);
+            });
             useTouchMove(this.gridOverlay, this.props.onGridMoved, () => {
                 const { offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
                 return offsetScrollbarY > 0;
@@ -22891,12 +21437,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const topValue = isTop ? top : bottom;
             const widthValue = isHorizontal ? right - left : lineWidth;
             const heightValue = isVertical ? bottom - top : lineWidth;
-            return `
-        left:${leftValue}px;
-        top:${topValue}px;
-        width:${widthValue}px;
-        height:${heightValue}px;
-    `;
+            return cssPropertiesToCss({
+                left: `${leftValue}px`,
+                top: `${topValue}px`,
+                width: `${widthValue}px`,
+                height: `${heightValue}px`,
+            });
         }
         onMouseDown(ev) {
             this.props.onMoveHighlight(ev.clientX, ev.clientY);
@@ -22955,11 +21501,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const leftValue = this.isLeft ? rect.x : rect.x + rect.width;
             const topValue = this.isTop ? rect.y : rect.y + rect.height;
-            return `
-      left:${leftValue - AUTOFILL_EDGE_LENGTH / 2}px;
-      top:${topValue - AUTOFILL_EDGE_LENGTH / 2}px;
-      background-color:${this.props.color};
-    `;
+            return cssPropertiesToCss({
+                left: `${leftValue - AUTOFILL_EDGE_LENGTH / 2}px`,
+                top: `${topValue - AUTOFILL_EDGE_LENGTH / 2}px`,
+                backgroundColor: this.props.color,
+            });
         }
         onMouseDown(ev) {
             this.props.onResizeHighlight(this.isLeft, this.isTop);
@@ -23113,8 +21659,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     &.corner {
       right: 0px;
       bottom: 0px;
-      height: ${SCROLLBAR_WIDTH$1}px;
-      width: ${SCROLLBAR_WIDTH$1}px;
+      height: ${SCROLLBAR_WIDTH}px;
+      width: ${SCROLLBAR_WIDTH}px;
       border-top: 1px solid #e2e3e3;
       border-left: 1px solid #e2e3e3;
     }
@@ -23187,7 +21733,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 left: `${this.props.leftOffset + x}px`,
                 bottom: "0px",
-                height: `${SCROLLBAR_WIDTH$1}px`,
+                height: `${SCROLLBAR_WIDTH}px`,
                 right: `0px`,
             };
         }
@@ -23232,7 +21778,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return {
                 top: `${this.props.topOffset + y}px`,
                 right: "0px",
-                width: `${SCROLLBAR_WIDTH$1}px`,
+                width: `${SCROLLBAR_WIDTH}px`,
                 bottom: `0px`,
             };
         }
@@ -23428,12 +21974,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.hoveredCell.row = row;
         }
         get gridOverlayDimensions() {
-            return `
-      top: ${HEADER_HEIGHT}px;
-      left: ${HEADER_WIDTH}px;
-      height: calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH$1}px);
-      width: calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH$1}px);
-    `;
+            return cssPropertiesToCss({
+                top: `${HEADER_HEIGHT}px`,
+                left: `${HEADER_WIDTH}px`,
+                height: `calc(100% - ${HEADER_HEIGHT + SCROLLBAR_WIDTH}px)`,
+                width: `calc(100% - ${HEADER_WIDTH + SCROLLBAR_WIDTH}px)`,
+            });
         }
         onClosePopover() {
             if (this.env.model.getters.hasOpenedPopover()) {
@@ -23539,6 +22085,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onCellDoubleClicked(col, row) {
             const sheetId = this.env.model.getters.getActiveSheetId();
+            ({ col, row } = this.env.model.getters.getMainCellPosition({ sheetId, col, row }));
             const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
             if (cell.type === CellValueType.empty) {
                 this.props.onGridComposerCellFocused();
@@ -24990,16 +23537,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const DPI = 96;
         return Math.round((value * 914400) / DPI);
     }
-    function getRangeSize(xc, defaultSheetIndex, data) {
-        const xcSplit = xc.split("!");
+    function getRangeSize(reference, defaultSheetIndex, data) {
+        let xc = reference;
+        let sheetName = undefined;
+        ({ xc, sheetName } = splitReference(reference));
         let rangeSheetIndex;
-        if (xcSplit.length > 1) {
-            const index = data.sheets.findIndex((sheet) => sheet.name === xcSplit[0]);
+        if (sheetName) {
+            const index = data.sheets.findIndex((sheet) => sheet.name === sheetName);
             if (index < 0) {
-                throw new Error("Unable to find a sheet with the name " + xcSplit[0]);
+                throw new Error("Unable to find a sheet with the name " + sheetName);
             }
             rangeSheetIndex = index;
-            xc = xcSplit[1];
         }
         else {
             rangeSheetIndex = Number(defaultSheetIndex);
@@ -25358,7 +23906,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         if (!link.relTarget && !link.location) {
             warningManager.generateNotSupportedWarning(WarningTypes.BadlyFormattedHyperlink);
         }
-        const url = link.relTarget ? link.relTarget : buildSheetLink(link.location.split("!")[0]);
+        const url = link.relTarget
+            ? link.relTarget
+            : buildSheetLink(splitReference(link.location).sheetName);
         return markdownLink(label, url);
     }
     function getSheetDims(sheet) {
@@ -26925,6 +25475,332 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
 
     /**
+     * Tokenizer
+     *
+     * A tokenizer is a piece of code whose job is to transform a string into a list
+     * of "tokens". For example, "(12+" is converted into:
+     *   [{type: "LEFT_PAREN", value: "("},
+     *    {type: "NUMBER", value: "12"},
+     *    {type: "OPERATOR", value: "+"}]
+     *
+     * As the example shows, a tokenizer does not care about the meaning behind those
+     * tokens. It only cares about the structure.
+     *
+     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
+     * is useful for the composer, which needs to be able to work with incomplete
+     * formulas.
+     */
+    const functions$1 = functionRegistry.content;
+    const POSTFIX_UNARY_OPERATORS = ["%"];
+    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
+    function tokenize(str) {
+        str = replaceSpecialSpaces(str);
+        const chars = str.split("");
+        const result = [];
+        while (chars.length) {
+            let token = tokenizeSpace(chars) ||
+                tokenizeMisc(chars) ||
+                tokenizeOperator(chars) ||
+                tokenizeString(chars) ||
+                tokenizeDebugger(chars) ||
+                tokenizeInvalidRange(chars) ||
+                tokenizeNumber(chars) ||
+                tokenizeSymbol(chars);
+            if (!token) {
+                token = { type: "UNKNOWN", value: chars.shift() };
+            }
+            result.push(token);
+        }
+        return result;
+    }
+    function tokenizeDebugger(chars) {
+        if (chars[0] === "?") {
+            chars.shift();
+            return { type: "DEBUGGER", value: "?" };
+        }
+        return null;
+    }
+    const misc = {
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    function tokenizeMisc(chars) {
+        if (chars[0] in misc) {
+            const value = chars.shift();
+            const type = misc[value];
+            return { type, value };
+        }
+        return null;
+    }
+    function startsWith(chars, op) {
+        for (let i = 0; i < op.length; i++) {
+            if (op[i] !== chars[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    function tokenizeOperator(chars) {
+        for (let op of OPERATORS) {
+            if (startsWith(chars, op)) {
+                chars.splice(0, op.length);
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return null;
+    }
+    function tokenizeNumber(chars) {
+        const match = concat(chars).match(formulaNumberRegexp);
+        if (match) {
+            chars.splice(0, match[0].length);
+            return { type: "NUMBER", value: match[0] };
+        }
+        return null;
+    }
+    function tokenizeString(chars) {
+        if (chars[0] === '"') {
+            const startChar = chars.shift();
+            let letters = startChar;
+            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
+                letters += chars.shift();
+            }
+            if (chars[0] === '"') {
+                letters += chars.shift();
+            }
+            return {
+                type: "STRING",
+                value: letters,
+            };
+        }
+        return null;
+    }
+    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+     * A "Symbol" is just basically any word-like element that can appear in a
+     * formula, which is not a string. So:
+     *   A1
+     *   SUM
+     *   CEILING.MATH
+     *   A$1
+     *   Sheet2!A2
+     *   'Sheet 2'!A2
+     *
+     * are examples of symbols
+     */
+    function tokenizeSymbol(chars) {
+        let result = "";
+        // there are two main cases to manage: either something which starts with
+        // a ', like 'Sheet 2'A2, or a word-like element.
+        if (chars[0] === "'") {
+            let lastChar = chars.shift();
+            result += lastChar;
+            while (chars[0]) {
+                lastChar = chars.shift();
+                result += lastChar;
+                if (lastChar === "'") {
+                    if (chars[0] && chars[0] === "'") {
+                        lastChar = chars.shift();
+                        result += lastChar;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            if (lastChar !== "'") {
+                return {
+                    type: "UNKNOWN",
+                    value: result,
+                };
+            }
+        }
+        while (chars[0] && chars[0].match(separatorRegexp)) {
+            result += chars.shift();
+        }
+        if (result.length) {
+            const value = result;
+            const isFunction = value.toUpperCase() in functions$1;
+            if (isFunction) {
+                return { type: "FUNCTION", value };
+            }
+            const isReference = value.match(rangeReference);
+            if (isReference) {
+                return { type: "REFERENCE", value };
+            }
+            else {
+                return { type: "SYMBOL", value };
+            }
+        }
+        return null;
+    }
+    function tokenizeSpace(chars) {
+        let length = 0;
+        while (chars[0] === NEWLINE) {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: NEWLINE.repeat(length) };
+        }
+        while (chars[0] === " ") {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: " ".repeat(length) };
+        }
+        return null;
+    }
+    function tokenizeInvalidRange(chars) {
+        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
+            chars.splice(0, INCORRECT_RANGE_STRING.length);
+            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
+        }
+        return null;
+    }
+
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
+        },
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.Found]: {},
+    };
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        var _a;
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        const matchedTokens = [];
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens.push(token);
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: concat(matchedTokens.map((token) => token.value)),
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens.push(token);
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula) {
+        const tokens = tokenize(formula);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
+    /**
      * parses a formula (as a string) into the same formula,
      * but with the references to other cells extracted
      *
@@ -27381,6 +26257,94 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             sheets: [createEmptyExcelSheet(INITIAL_SHEET_ID, "Sheet1")],
         };
     }
+
+    /**
+     * BasePlugin
+     *
+     * Since the spreadsheet internal state is quite complex, it is split into
+     * multiple parts, each managing a specific concern.
+     *
+     * This file introduce the BasePlugin, which is the common class that defines
+     * how each of these model sub parts should interact with each other.
+     * There are two kind of plugins: core plugins handling persistent data
+     * and UI plugins handling transient data.
+     */
+    class BasePlugin {
+        constructor(stateObserver, dispatch) {
+            this.history = Object.assign(Object.create(stateObserver), {
+                update: stateObserver.addChange.bind(stateObserver, this),
+                selectCell: () => { },
+            });
+            this.dispatch = dispatch;
+        }
+        /**
+         * Export for excel should be available for all plugins, even for the UI.
+         * In some case, we need to export evaluated value, which is available from
+         * UI plugin only.
+         */
+        exportForExcel(data) { }
+        // ---------------------------------------------------------------------------
+        // Command handling
+        // ---------------------------------------------------------------------------
+        /**
+         * Before a command is accepted, the model will ask each plugin if the command
+         * is allowed.  If all of then return true, then we can proceed. Otherwise,
+         * the command is cancelled.
+         *
+         * There should not be any side effects in this method.
+         */
+        allowDispatch(command) {
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * This method is useful when a plugin need to perform some action before a
+         * command is handled in another plugin. This should only be used if it is not
+         * possible to do the work in the handle method.
+         */
+        beforeHandle(command) { }
+        /**
+         * This is the standard place to handle any command. Most of the plugin
+         * command handling work should take place here.
+         */
+        handle(command) { }
+        /**
+         * Sometimes, it is useful to perform some work after a command (and all its
+         * subcommands) has been completely handled.  For example, when we paste
+         * multiple cells, we only want to reevaluate the cell values once at the end.
+         */
+        finalize() { }
+        /**
+         * Combine multiple validation functions into a single function
+         * returning the list of result of every validation.
+         */
+        batchValidations(...validations) {
+            return (toValidate) => validations.map((validation) => validation.call(this, toValidate)).flat();
+        }
+        /**
+         * Combine multiple validation functions. Every validation is executed one after
+         * the other. As soon as one validation fails, it stops and the cancelled reason
+         * is returned.
+         */
+        chainValidations(...validations) {
+            return (toValidate) => {
+                for (const validation of validations) {
+                    let results = validation.call(this, toValidate);
+                    if (!Array.isArray(results)) {
+                        results = [results];
+                    }
+                    const cancelledReasons = results.filter((result) => result !== 0 /* CommandResult.Success */);
+                    if (cancelledReasons.length) {
+                        return cancelledReasons;
+                    }
+                }
+                return 0 /* CommandResult.Success */;
+            };
+        }
+        checkValidations(command, ...validations) {
+            return this.batchValidations(...validations)(command);
+        }
+    }
+    BasePlugin.getters = [];
 
     /**
      * Core plugins handle spreadsheet data.
@@ -27896,7 +26860,718 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
     BordersPlugin.getters = ["getCellBorder"];
 
-    const nbspRegexp = new RegExp(String.fromCharCode(160), "g");
+    class FunctionCodeBuilder {
+        constructor(scope = new Scope()) {
+            this.scope = scope;
+            this.code = "";
+        }
+        append(...lines) {
+            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
+        }
+        return(expression) {
+            return new FunctionCodeImpl(this.scope, this.code, expression);
+        }
+        toString() {
+            return indentCode(this.code);
+        }
+    }
+    class FunctionCodeImpl {
+        constructor(scope, code, returnExpression) {
+            this.scope = scope;
+            this.returnExpression = returnExpression;
+            this.code = indentCode(code);
+        }
+        toString() {
+            return this.code;
+        }
+        wrapInClosure() {
+            const closureName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(`const ${closureName} = () => {`);
+            code.append(this.code);
+            code.append(`return ${this.returnExpression};`);
+            code.append(`}`);
+            return code.return(closureName);
+        }
+        assignResultToVariable() {
+            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
+                return this;
+            }
+            const variableName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(this.code);
+            code.append(`const ${variableName} = ${this.returnExpression};`);
+            return code.return(variableName);
+        }
+    }
+    class Scope {
+        constructor() {
+            this.nextId = 1;
+            this.declaredVariables = new Set();
+        }
+        nextVariableName() {
+            const name = `_${this.nextId++}`;
+            this.declaredVariables.add(name);
+            return name;
+        }
+        isAlreadyDeclared(name) {
+            return this.declaredVariables.has(name);
+        }
+    }
+    /**
+     * Takes a list of strings that might be single or multiline
+     * and maps them in a list of single line strings.
+     */
+    function splitLines(str) {
+        return str
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
+    }
+    function indentCode(code) {
+        let result = "";
+        let indentLevel = 0;
+        const lines = splitLines(code);
+        for (const line of lines) {
+            if (line.startsWith("}")) {
+                indentLevel--;
+            }
+            result += "\t".repeat(indentLevel) + line + "\n";
+            if (line.endsWith("{")) {
+                indentLevel++;
+            }
+        }
+        return result.trim();
+    }
+
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
+    const UNARY_OPERATORS_PREFIX = ["-", "+"];
+    const UNARY_OPERATORS_POSTFIX = ["%"];
+    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
+    const OP_PRIORITY = {
+        "^": 30,
+        "%": 30,
+        "*": 20,
+        "/": 20,
+        "+": 15,
+        "-": 15,
+        "&": 13,
+        ">": 10,
+        "<>": 10,
+        ">=": 10,
+        "<": 10,
+        "<=": 10,
+        "=": 10,
+    };
+    const FUNCTION_BP = 6;
+    function bindingPower(token) {
+        switch (token.type) {
+            case "NUMBER":
+            case "SYMBOL":
+            case "REFERENCE":
+                return 0;
+            case "COMMA":
+                return 3;
+            case "LEFT_PAREN":
+                return 5;
+            case "RIGHT_PAREN":
+                return 5;
+            case "OPERATOR":
+                return OP_PRIORITY[token.value] || 15;
+        }
+        throw new BadExpressionError(_lt("Unknown token: %s", token.value));
+    }
+    function parsePrefix(current, tokens) {
+        var _a, _b, _c, _d;
+        switch (current.type) {
+            case "DEBUGGER":
+                const next = parseExpression(tokens, 1000);
+                next.debug = true;
+                return next;
+            case "NUMBER":
+                return { type: "NUMBER", value: parseNumber(current.value) };
+            case "STRING":
+                return { type: "STRING", value: removeStringQuotes(current.value) };
+            case "FUNCTION":
+                if (tokens.shift().type !== "LEFT_PAREN") {
+                    throw new BadExpressionError(_lt("Wrong function call"));
+                }
+                else {
+                    const args = [];
+                    if (tokens[0] && tokens[0].type !== "RIGHT_PAREN") {
+                        if (tokens[0].type === "COMMA") {
+                            args.push({ type: "UNKNOWN", value: "" });
+                        }
+                        else {
+                            args.push(parseExpression(tokens, FUNCTION_BP));
+                        }
+                        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "COMMA") {
+                            tokens.shift();
+                            const token = tokens[0];
+                            if ((token === null || token === void 0 ? void 0 : token.type) === "RIGHT_PAREN") {
+                                args.push({ type: "UNKNOWN", value: "" });
+                                break;
+                            }
+                            else if ((token === null || token === void 0 ? void 0 : token.type) === "COMMA") {
+                                args.push({ type: "UNKNOWN", value: "" });
+                            }
+                            else {
+                                args.push(parseExpression(tokens, FUNCTION_BP));
+                            }
+                        }
+                    }
+                    const closingToken = tokens.shift();
+                    if (!closingToken || closingToken.type !== "RIGHT_PAREN") {
+                        throw new BadExpressionError(_lt("Wrong function call"));
+                    }
+                    return { type: "FUNCALL", value: current.value, args };
+                }
+            case "INVALID_REFERENCE":
+                throw new InvalidReferenceError();
+            case "REFERENCE":
+                if (((_b = tokens[0]) === null || _b === void 0 ? void 0 : _b.value) === ":" && ((_c = tokens[1]) === null || _c === void 0 ? void 0 : _c.type) === "REFERENCE") {
+                    tokens.shift();
+                    const rightReference = tokens.shift();
+                    return {
+                        type: "REFERENCE",
+                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
+                    };
+                }
+                return {
+                    type: "REFERENCE",
+                    value: current.value,
+                };
+            case "SYMBOL":
+                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
+                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                }
+                else {
+                    if (current.value) {
+                        if (functionRegex.test(current.value) && ((_d = tokens[0]) === null || _d === void 0 ? void 0 : _d.type) === "LEFT_PAREN") {
+                            throw new UnknownFunctionError(current.value);
+                        }
+                        throw new BadExpressionError(_lt("Invalid formula"));
+                    }
+                    return { type: "STRING", value: current.value };
+                }
+            case "LEFT_PAREN":
+                const result = parseExpression(tokens, 5);
+                if (!tokens.length || tokens[0].type !== "RIGHT_PAREN") {
+                    throw new BadExpressionError(_lt("Unmatched left parenthesis"));
+                }
+                tokens.shift();
+                return result;
+            default:
+                if (current.type === "OPERATOR" && UNARY_OPERATORS_PREFIX.includes(current.value)) {
+                    return {
+                        type: "UNARY_OPERATION",
+                        value: current.value,
+                        operand: parseExpression(tokens, OP_PRIORITY[current.value]),
+                    };
+                }
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+        }
+    }
+    function parseInfix(left, current, tokens) {
+        if (current.type === "OPERATOR") {
+            const bp = bindingPower(current);
+            if (UNARY_OPERATORS_POSTFIX.includes(current.value)) {
+                return {
+                    type: "UNARY_OPERATION",
+                    value: current.value,
+                    operand: left,
+                    postfix: true,
+                };
+            }
+            else {
+                const right = parseExpression(tokens, bp);
+                return {
+                    type: "BIN_OPERATION",
+                    value: current.value,
+                    left,
+                    right,
+                };
+            }
+        }
+        throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+    }
+    function parseExpression(tokens, bp) {
+        const token = tokens.shift();
+        if (!token) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        let expr = parsePrefix(token, tokens);
+        while (tokens[0] && bindingPower(tokens[0]) > bp) {
+            expr = parseInfix(expr, tokens.shift(), tokens);
+        }
+        return expr;
+    }
+    /**
+     * Parse an expression (as a string) into an AST.
+     */
+    function parse(str) {
+        return parseTokens(tokenize(str));
+    }
+    function parseTokens(tokens) {
+        tokens = tokens.filter((x) => x.type !== "SPACE");
+        if (tokens[0].type === "OPERATOR" && tokens[0].value === "=") {
+            tokens.splice(0, 1);
+        }
+        const result = parseExpression(tokens, 0);
+        if (tokens.length) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        return result;
+    }
+    /**
+     * Allows to visit all nodes of an AST and apply a mapping function
+     * to nodes of a specific type.
+     * Useful if you want to convert some part of a formula.
+     *
+     * e.g.
+     * ```ts
+     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
+     *
+     * function convertFormulaToExcel(ast: ASTFuncall) {
+     *   // ...
+     *   return modifiedAst
+     * }
+     * ```
+     */
+    function convertAstNodes(ast, type, fn) {
+        if (type === ast.type) {
+            ast = fn(ast);
+        }
+        switch (ast.type) {
+            case "FUNCALL":
+                return {
+                    ...ast,
+                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                };
+            case "UNARY_OPERATION":
+                return {
+                    ...ast,
+                    operand: convertAstNodes(ast.operand, type, fn),
+                };
+            case "BIN_OPERATION":
+                return {
+                    ...ast,
+                    right: convertAstNodes(ast.right, type, fn),
+                    left: convertAstNodes(ast.left, type, fn),
+                };
+            default:
+                return ast;
+        }
+    }
+    /**
+     * Converts an ast formula to the corresponding string
+     */
+    function astToFormula(ast) {
+        switch (ast.type) {
+            case "FUNCALL":
+                const args = ast.args.map((arg) => astToFormula(arg));
+                return `${ast.value}(${args.join(",")})`;
+            case "NUMBER":
+                return ast.value.toString();
+            case "REFERENCE":
+                return ast.value;
+            case "STRING":
+                return `"${ast.value}"`;
+            case "BOOLEAN":
+                return ast.value ? "TRUE" : "FALSE";
+            case "UNARY_OPERATION":
+                return ast.postfix
+                    ? leftOperandToFormula(ast) + ast.value
+                    : ast.value + rightOperandToFormula(ast);
+            case "BIN_OPERATION":
+                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
+            default:
+                return ast.value;
+        }
+    }
+    /**
+     * Convert the left operand of a binary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function leftOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
+        const leftOperator = leftOperation.value;
+        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
+        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
+    }
+    /**
+     * Convert the right operand of a binary or unary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function rightOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
+        const rightPriority = OP_PRIORITY[rightOperation.value];
+        const mainPriority = OP_PRIORITY[mainOperator];
+        let needParenthesis = false;
+        if (rightOperation.type !== "BIN_OPERATION") {
+            needParenthesis = false;
+        }
+        else if (rightPriority < mainPriority) {
+            needParenthesis = true;
+        }
+        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
+            needParenthesis = true;
+        }
+        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
+    }
+
+    const functions = functionRegistry.content;
+    const OPERATOR_MAP = {
+        "=": "EQ",
+        "+": "ADD",
+        "-": "MINUS",
+        "*": "MULTIPLY",
+        "/": "DIVIDE",
+        ">=": "GTE",
+        "<>": "NE",
+        ">": "GT",
+        "<=": "LTE",
+        "<": "LT",
+        "^": "POWER",
+        "&": "CONCATENATE",
+    };
+    const UNARY_OPERATOR_MAP = {
+        "-": "UMINUS",
+        "+": "UPLUS",
+        "%": "UNARY.PERCENT",
+    };
+    // this cache contains all compiled function code, grouped by "structure". For
+    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
+    // structural function.
+    // It is only exported for testing purposes
+    const functionCache = {};
+    // -----------------------------------------------------------------------------
+    // COMPILER
+    // -----------------------------------------------------------------------------
+    function compile(formula) {
+        const tokens = rangeTokenize(formula);
+        const { dependencies, constantValues } = formulaArguments(tokens);
+        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
+        if (!functionCache[cacheKey]) {
+            const ast = parseTokens([...tokens]);
+            const scope = new Scope();
+            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            if (ast.type === "UNKNOWN") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            const compiledAST = compileAST(ast);
+            const code = new FunctionCodeBuilder();
+            code.append(`// ${cacheKey}`);
+            code.append(compiledAST);
+            code.append(`return ${compiledAST.returnExpression};`);
+            let baseFunction = new Function("deps", // the dependencies in the current formula
+            "ref", // a function to access a certain dependency at a given index
+            "range", // same as above, but guarantee that the result is in the form of a range
+            "ctx", code.toString());
+            functionCache[cacheKey] = {
+                // @ts-ignore
+                execute: baseFunction,
+            };
+            /**
+             * This function compile the function arguments. It is mostly straightforward,
+             * except that there is a non trivial transformation in one situation:
+             *
+             * If a function argument is asking for a range, and get a cell, we transform
+             * the cell value into a range. This allow the grid model to differentiate
+             * between a cell value and a non cell value.
+             */
+            function compileFunctionArgs(ast) {
+                const functionDefinition = functions[ast.value.toUpperCase()];
+                const currentFunctionArguments = ast.args;
+                // check if arguments are supplied in the correct quantities
+                const nbrArg = currentFunctionArguments.length;
+                if (nbrArg < functionDefinition.minArgRequired) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+                }
+                if (nbrArg > functionDefinition.maxArgPossible) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+                }
+                const repeatingArg = functionDefinition.nbrArgRepeating;
+                if (repeatingArg > 1) {
+                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
+                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
+                    if (nbrRepeatingArg % repeatingArg !== 0) {
+                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
+                    }
+                }
+                let compiledArgs = [];
+                for (let i = 0; i < nbrArg; i++) {
+                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
+                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
+                        const currentArg = currentFunctionArguments[i];
+                        const argDefinition = functionDefinition.args[argPosition];
+                        const argTypes = argDefinition.type || [];
+                        // detect when an argument need to be evaluated as a meta argument
+                        const isMeta = argTypes.includes("META");
+                        // detect when an argument need to be evaluated as a lazy argument
+                        const isLazy = argDefinition.lazy;
+                        const hasRange = argTypes.some((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        if (isRangeOnly) {
+                            if (currentArg.type !== "REFERENCE") {
+                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
+                            }
+                        }
+                        const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                            functionName: ast.value.toUpperCase(),
+                            paramIndex: i + 1,
+                        });
+                        compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
+                    }
+                }
+                return compiledArgs;
+            }
+            /**
+             * This function compiles all the information extracted by the parser into an
+             * executable code for the evaluation of the cells content. It uses a cash to
+             * not reevaluate identical code structures.
+             *
+             * The function is sensitive to parameter “isMeta”. This
+             * parameter may vary when compiling function arguments:
+             * isMeta: In some cases the function arguments expects information on the
+             * cell/range other than the associated value(s). For example the COLUMN
+             * function needs to receive as argument the coordinates of a cell rather
+             * than its value. For this we have meta arguments.
+             */
+            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
+                const code = new FunctionCodeBuilder(scope);
+                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
+                    if (isMeta) {
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
+                    }
+                }
+                if (ast.debug) {
+                    code.append("debugger;");
+                }
+                switch (ast.type) {
+                    case "BOOLEAN":
+                        return code.return(`{ value: ${ast.value} }`);
+                    case "NUMBER":
+                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
+                    case "STRING":
+                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
+                    case "REFERENCE":
+                        const referenceIndex = dependencies.indexOf(ast.value);
+                        if (hasRange) {
+                            return code.return(`range(deps[${referenceIndex}])`);
+                        }
+                        else {
+                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
+                        }
+                    case "FUNCALL":
+                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
+                        code.append(...args);
+                        const fnName = ast.value.toUpperCase();
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
+                    case "UNARY_OPERATION": {
+                        const fnName = UNARY_OPERATOR_MAP[ast.value];
+                        const operand = compileAST(ast.operand, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(operand);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
+                    }
+                    case "BIN_OPERATION": {
+                        const fnName = OPERATOR_MAP[ast.value];
+                        const left = compileAST(ast.left, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        const right = compileAST(ast.right, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(left);
+                        code.append(right);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
+                    }
+                    case "UNKNOWN":
+                        return code.return("undefined");
+                }
+            }
+        }
+        const compiledFormula = {
+            execute: functionCache[cacheKey].execute,
+            dependencies,
+            constantValues,
+            tokens,
+        };
+        return compiledFormula;
+    }
+    /**
+     * Compute a cache key for the formula.
+     * References, numbers and strings are replaced with placeholders because
+     * the compiled formula does not depend on their actual value.
+     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
+     *
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
+     */
+    function compilationCacheKey(tokens, dependencies, constantValues) {
+        return concat(tokens.map((token) => {
+            switch (token.type) {
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    return `|S${constantValues.strings.indexOf(value)}|`;
+                case "NUMBER":
+                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
+                case "REFERENCE":
+                case "INVALID_REFERENCE":
+                    return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
+                default:
+                    return token.value;
+            }
+        }));
+    }
+    /**
+     * Return formula arguments which are references, strings and numbers.
+     */
+    function formulaArguments(tokens) {
+        const constantValues = {
+            numbers: [],
+            strings: [],
+        };
+        const dependencies = [];
+        for (const token of tokens) {
+            switch (token.type) {
+                case "INVALID_REFERENCE":
+                case "REFERENCE":
+                    dependencies.push(token.value);
+                    break;
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    if (!constantValues.strings.includes(value)) {
+                        constantValues.strings.push(value);
+                    }
+                    break;
+                case "NUMBER": {
+                    const value = parseNumber(token.value);
+                    if (!constantValues.numbers.includes(value)) {
+                        constantValues.numbers.push(value);
+                    }
+                    break;
+                }
+            }
+        }
+        return {
+            dependencies,
+            constantValues,
+        };
+    }
+
+    /**
+     * Add the following information on tokens:
+     * - length
+     * - start
+     * - end
+     */
+    function enrichTokens(tokens) {
+        let current = 0;
+        return tokens.map((x) => {
+            const len = x.value.toString().length;
+            const token = Object.assign({}, x, {
+                start: current,
+                end: current + len,
+                length: len,
+            });
+            current = token.end;
+            return token;
+        });
+    }
+    /**
+     * add on each token the length, start and end
+     * also matches the opening to its closing parenthesis (using the same number)
+     */
+    function mapParenthesis(tokens) {
+        let maxParen = 1;
+        const stack = [];
+        return tokens.map((token) => {
+            if (token.type === "LEFT_PAREN") {
+                stack.push(maxParen);
+                token.parenIndex = maxParen;
+                maxParen++;
+            }
+            else if (token.type === "RIGHT_PAREN") {
+                token.parenIndex = stack.pop();
+            }
+            return token;
+        });
+    }
+    /**
+     * add on each token its parent function and the index corresponding to
+     * its position as an argument of the function.
+     * In this example "=MIN(42,SUM(MAX(1,2),3))":
+     * - the parent function of the token correspond to number 42 is the MIN function
+     * - the argument position of the token correspond to number 42 is 0
+     * - the parent function of the token correspond to number 3 is the SUM function
+     * - the argument position of the token correspond to number 3 is 1
+     */
+    function mapParentFunction(tokens) {
+        let stack = [];
+        let functionStarted = "";
+        const res = tokens.map((token, i) => {
+            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
+                functionStarted = "";
+            }
+            switch (token.type) {
+                case "FUNCTION":
+                    functionStarted = token.value;
+                    break;
+                case "LEFT_PAREN":
+                    stack.push({ parent: functionStarted, argPosition: 0 });
+                    functionStarted = "";
+                    break;
+                case "RIGHT_PAREN":
+                    stack.pop();
+                    break;
+                case "COMMA":
+                    if (stack.length) {
+                        // increment position on current function
+                        stack[stack.length - 1].argPosition++;
+                    }
+                    break;
+            }
+            if (stack.length) {
+                const functionContext = stack[stack.length - 1];
+                if (functionContext.parent) {
+                    token.functionContext = Object.assign({}, functionContext);
+                }
+            }
+            return token;
+        });
+        return res;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the composer.
+     *
+     * @param formula
+     */
+    function composerTokenize(formula) {
+        const tokens = rangeTokenize(formula);
+        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
     /**
      * Core Plugin
      *
@@ -28219,13 +27894,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return id;
         }
         updateCell(sheetId, col, row, after) {
-            var _a;
             const before = this.getters.getCell({ sheetId, col, row });
             const hasContent = "content" in after || "formula" in after;
             // Compute the new cell properties
-            const afterContent = hasContent
-                ? ((_a = after.content) === null || _a === void 0 ? void 0 : _a.replace(nbspRegexp, "")) || ""
-                : (before === null || before === void 0 ? void 0 : before.content) || "";
+            const afterContent = hasContent ? replaceSpecialSpaces(after === null || after === void 0 ? void 0 : after.content) : (before === null || before === void 0 ? void 0 : before.content) || "";
             let style;
             if (after.style !== undefined) {
                 style = after.style || undefined;
@@ -28340,9 +28012,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
-            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 17 /* CommandResult.TargetOutOfSheet */;
+            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
         }
     }
     CellPlugin.getters = [
@@ -28733,18 +28405,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkValidReordering(cfId, direction, sheetId) {
             if (!this.cfRules[sheetId])
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 70 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 70 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkEmptyRange(cmd) {
-            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 23 /* CommandResult.EmptyRange */;
+            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 24 /* CommandResult.EmptyRange */;
         }
         checkCFRule(cmd) {
             const rule = cmd.cf.rule;
@@ -28780,10 +28452,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(50 /* CommandResult.FirstArgMissing */);
+                        errors.push(51 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(51 /* CommandResult.SecondArgMissing */);
+                        errors.push(52 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -28795,15 +28467,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 52 /* CommandResult.MinNaN */;
+                        return 53 /* CommandResult.MinNaN */;
                     case "max":
-                        return 54 /* CommandResult.MaxNaN */;
+                        return 55 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 53 /* CommandResult.MidNaN */;
+                        return 54 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 55 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 56 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 56 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 57 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28817,15 +28489,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 57 /* CommandResult.MinInvalidFormula */;
+                        return 58 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 59 /* CommandResult.MaxInvalidFormula */;
+                        return 60 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 58 /* CommandResult.MidInvalidFormula */;
+                        return 59 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 60 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 61 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 61 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 62 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28842,7 +28514,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 47 /* CommandResult.LowerBiggerThanUpper */;
+                return 48 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28852,7 +28524,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 46 /* CommandResult.MinBiggerThanMax */;
+                return 47 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28864,7 +28536,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 48 /* CommandResult.MidBiggerThanMax */;
+                return 49 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28876,7 +28548,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 49 /* CommandResult.MinBiggerThanMid */;
+                return 50 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28977,13 +28649,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkFigureExists(sheetId, figureId) {
             var _a;
             if (((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === undefined) {
-                return 69 /* CommandResult.FigureDoesNotExist */;
+                return 70 /* CommandResult.FigureDoesNotExist */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkFigureDuplicate(figureId) {
             if (Object.values(this.figures).find((sheet) => sheet === null || sheet === void 0 ? void 0 : sheet[figureId])) {
-                return 81 /* CommandResult.DuplicatedFigureId */;
+                return 82 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -29082,12 +28754,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 80 /* CommandResult.NonContinuousTargets */;
+                        return 81 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 77 /* CommandResult.FilterOverlap */;
+                            return 78 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -29095,7 +28767,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 79 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -29105,7 +28777,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 79 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -29347,6 +29019,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "DUPLICATE_SHEET":
+                    // make sure the values are computed in case the original sheet is deleted
+                    for (const row of this.sizes[cmd.sheetId].ROW) {
+                        row.computedSize();
+                    }
+                    for (const col of this.sizes[cmd.sheetId].COL) {
+                        col.computedSize();
+                    }
                     this.history.update("sizes", cmd.sheetIdTo, deepCopy(this.sizes[cmd.sheetId]));
                     break;
                 case "DELETE_SHEET":
@@ -29470,7 +29149,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return DEFAULT_CELL_HEIGHT;
             }
             const cell = this.getters.getCell(position);
-            return getDefaultCellHeight(cell === null || cell === void 0 ? void 0 : cell.style);
+            return getDefaultCellHeight(cell);
         }
         /**
          * Get the tallest cell of a row and its size.
@@ -29569,7 +29248,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
                     if (!this.hiddenHeaders[cmd.sheetId]) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
                         ? this.getHiddenColsGroups(cmd.sheetId)
@@ -29579,7 +29258,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         : this.getters.getNumberRows(cmd.sheetId);
                     return (hiddenGroup || []).flat().concat(cmd.elements).length < elements
                         ? 0 /* CommandResult.Success */
-                        : 65 /* CommandResult.TooManyHiddenElements */;
+                        : 66 /* CommandResult.TooManyHiddenElements */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -29742,7 +29421,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_IMAGE":
                     if (this.getters.getFigure(cmd.sheetId, cmd.figureId)) {
-                        return 27 /* CommandResult.InvalidFigureId */;
+                        return 28 /* CommandResult.InvalidFigureId */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -29877,6 +29556,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkValidations(cmd, this.checkDestructiveMerge, this.checkOverlap, this.checkFrozenPanes);
                 case "UPDATE_CELL":
                     return this.checkMergedContentUpdate(cmd);
+                case "REMOVE_MERGE":
+                    return this.checkMergeExists(cmd);
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -30085,7 +29766,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 64 /* CommandResult.MergeOverlap */;
+                        return 65 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -30099,7 +29780,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 74 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -30118,6 +29799,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return 0 /* CommandResult.Success */;
             }
             return 4 /* CommandResult.CellIsMerged */;
+        }
+        checkMergeExists(cmd) {
+            const { sheetId, target } = cmd;
+            for (const zone of target) {
+                const { left, top } = zone;
+                const merge = this.getMerge({ sheetId, col: left, row: top });
+                if (merge === undefined || !isEqual(zone, merge)) {
+                    return 5 /* CommandResult.InvalidTarget */;
+                }
+            }
+            return 0 /* CommandResult.Success */;
         }
         /**
          * Merge the current selection. Note that:
@@ -30175,7 +29867,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { left, top, bottom, right } = zone;
             const merge = this.getMerge({ sheetId, col: left, row: top });
             if (merge === undefined || !isEqual(zone, merge)) {
-                throw new Error(_lt("Invalid merge zone"));
+                return;
             }
             this.history.update("merges", sheetId, merge.id, undefined);
             for (let r = top; r <= bottom; r++) {
@@ -30287,7 +29979,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 25 /* CommandResult.InvalidZones */;
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 26 /* CommandResult.InvalidZones */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30510,16 +30202,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     prefixSheet: false,
                 }, this.getters.getSheetSize);
             }
-            let sheetName = "";
+            let sheetName;
+            let xc = sheetXC;
             let prefixSheet = false;
             if (sheetXC.includes("!")) {
-                [sheetXC, sheetName] = sheetXC.split("!").reverse();
+                ({ xc, sheetName } = splitReference(sheetXC));
                 if (sheetName) {
                     prefixSheet = true;
                 }
             }
-            const zone = toUnboundedZone(sheetXC);
-            const parts = RangeImpl.getRangeParts(sheetXC, zone);
+            const zone = toUnboundedZone(xc);
+            const parts = RangeImpl.getRangeParts(xc, zone);
             const invalidSheetName = sheetName && !this.getters.getSheetIdByName(sheetName) ? sheetName : undefined;
             const sheetId = this.getters.getSheetIdByName(sheetName) || defaultSheetId;
             const rangeInterface = { prefixSheet, zone, sheetId, invalidSheetName, parts };
@@ -30672,7 +30365,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "HIDE_SHEET": {
                     if (this.getVisibleSheetIds().length === 1) {
-                        return 8 /* CommandResult.NotEnoughSheets */;
+                        return 9 /* CommandResult.NotEnoughSheets */;
                     }
                     return 0 /* CommandResult.Success */;
                 }
@@ -30686,7 +30379,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(0, currentIndex)
                             .map((id) => !this.isSheetVisible(id));
                         return leftSheets.every((isHidden) => isHidden)
-                            ? 13 /* CommandResult.WrongSheetMove */
+                            ? 14 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                     else {
@@ -30694,7 +30387,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(currentIndex + 1)
                             .map((id) => !this.isSheetVisible(id));
                         return rightSheets.every((isHidden) => isHidden)
-                            ? 13 /* CommandResult.WrongSheetMove */
+                            ? 14 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                 case "RENAME_SHEET":
@@ -30702,24 +30395,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "DELETE_SHEET":
                     return this.orderedSheetIds.length > 1
                         ? 0 /* CommandResult.Success */
-                        : 8 /* CommandResult.NotEnoughSheets */;
+                        : 9 /* CommandResult.NotEnoughSheets */;
                 case "REMOVE_COLUMNS_ROWS": {
                     const length = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     return length > cmd.elements.length
                         ? 0 /* CommandResult.Success */
-                        : 7 /* CommandResult.NotEnoughElements */;
+                        : 8 /* CommandResult.NotEnoughElements */;
                 }
                 case "FREEZE_ROWS": {
-                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
-                        ? 0 /* CommandResult.Success */
-                        : 73 /* CommandResult.InvalidFreezeQuantity */;
+                    return this.checkValidations(cmd, this.checkRowFreezeQuantity, this.checkRowFreezeOverlapMerge);
                 }
                 case "FREEZE_COLUMNS": {
-                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
-                        ? 0 /* CommandResult.Success */
-                        : 73 /* CommandResult.InvalidFreezeQuantity */;
+                    return this.checkValidations(cmd, this.checkColFreezeQuantity, this.checkColFreezeOverlapMerge);
                 }
                 default:
                     return 0 /* CommandResult.Success */;
@@ -31119,24 +30808,52 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { orderedSheetIds, sheets } = this;
             const name = cmd.name && cmd.name.trim().toLowerCase();
             if (orderedSheetIds.find((id) => { var _a; return ((_a = sheets[id]) === null || _a === void 0 ? void 0 : _a.name.toLowerCase()) === name; })) {
-                return 10 /* CommandResult.DuplicatedSheetName */;
+                return 11 /* CommandResult.DuplicatedSheetName */;
             }
             if (FORBIDDEN_IN_EXCEL_REGEX.test(name)) {
-                return 12 /* CommandResult.ForbiddenCharactersInSheetName */;
+                return 13 /* CommandResult.ForbiddenCharactersInSheetName */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkSheetPosition(cmd) {
             const { orderedSheetIds } = this;
             if (cmd.position > orderedSheetIds.length || cmd.position < 0) {
-                return 14 /* CommandResult.WrongSheetPosition */;
+                return 15 /* CommandResult.WrongSheetPosition */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkRowFreezeQuantity(cmd) {
+            return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
+                ? 0 /* CommandResult.Success */
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
+        }
+        checkColFreezeQuantity(cmd) {
+            return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
+                ? 0 /* CommandResult.Success */
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
+        }
+        checkRowFreezeOverlapMerge(cmd) {
+            const merges = this.getters.getMerges(cmd.sheetId);
+            for (let merge of merges) {
+                if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
+                    return 65 /* CommandResult.MergeOverlap */;
+                }
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkColFreezeOverlapMerge(cmd) {
+            const merges = this.getters.getMerges(cmd.sheetId);
+            for (let merge of merges) {
+                if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
+                    return 65 /* CommandResult.MergeOverlap */;
+                }
             }
             return 0 /* CommandResult.Success */;
         }
         isRenameAllowed(cmd) {
             const name = cmd.name && cmd.name.trim().toLowerCase();
             if (!name) {
-                return 9 /* CommandResult.MissingSheetName */;
+                return 10 /* CommandResult.MissingSheetName */;
             }
             return this.checkSheetName(cmd);
         }
@@ -31442,10 +31159,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         checkSheetExists(cmd) {
             if (cmd.type !== "CREATE_SHEET" && "sheetId" in cmd && this.sheets[cmd.sheetId] === undefined) {
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             }
             else if (cmd.type === "CREATE_SHEET" && this.sheets[cmd.sheetId] !== undefined) {
-                return 11 /* CommandResult.DuplicatedSheetId */;
+                return 12 /* CommandResult.DuplicatedSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31465,13 +31182,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
             }
             if (!zones.every(isZoneValid)) {
-                return 24 /* CommandResult.InvalidRange */;
+                return 25 /* CommandResult.InvalidRange */;
             }
             else if (zones.length && "sheetId" in cmd) {
                 const sheetZone = this.getSheetZone(cmd.sheetId);
                 return zones.every((zone) => isZoneInside(zone, sheetZone))
                     ? 0 /* CommandResult.Success */
-                    : 17 /* CommandResult.TargetOutOfSheet */;
+                    : 18 /* CommandResult.TargetOutOfSheet */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31502,6 +31219,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getSheetZone",
         "getPaneDivisions",
     ];
+
+    /**
+     * UI plugins handle any transient data required to display a spreadsheet.
+     * They can draw on the grid canvas.
+     */
+    class UIPlugin extends BasePlugin {
+        constructor({ getters, stateObserver, dispatch, uiActions, selection }) {
+            super(stateObserver, dispatch);
+            this.getters = getters;
+            this.ui = uiActions;
+            this.selection = selection;
+        }
+        // ---------------------------------------------------------------------------
+        // Grid rendering
+        // ---------------------------------------------------------------------------
+        drawGrid(ctx, layer) { }
+    }
+    UIPlugin.layers = [];
 
     /**
      * https://tomekdev.com/posts/sorting-colors-in-js
@@ -32410,14 +32145,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd)) {
-                        return 78 /* CommandResult.FilterNotFound */;
+                        return 79 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
-            var _a;
             switch (cmd.type) {
                 case "UNDO":
                 case "REDO":
@@ -32444,14 +32178,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DUPLICATE_SHEET":
                     const filterValues = {};
-                    for (const copiedFilter of this.getters.getFilters(cmd.sheetId)) {
-                        const zone = copiedFilter.zoneWithHeaders;
-                        const newFilter = this.getters.getFilter({
-                            sheetId: cmd.sheetIdTo,
+                    for (const newFilter of this.getters.getFilters(cmd.sheetIdTo)) {
+                        const zone = newFilter.zoneWithHeaders;
+                        filterValues[newFilter.id] = this.getFilterValues({
+                            sheetId: cmd.sheetId,
                             col: zone.left,
                             row: zone.top,
                         });
-                        filterValues[newFilter.id] = ((_a = this.filterValues[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[copiedFilter.id]) || [];
                     }
                     this.filterValues[cmd.sheetIdTo] = filterValues;
                     break;
@@ -32971,26 +32704,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkScrollingDirection(cmd);
                 case "RESIZE_SHEETVIEW":
                     return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
-                case "FREEZE_COLUMNS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                            return 64 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
-                case "FREEZE_ROWS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                            return 64 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -33081,6 +32794,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DELETE_SHEET":
                     this.sheetsWithDirtyViewports.delete(cmd.sheetId);
+                    break;
+                case "START_EDITION":
+                    const { col, row } = this.getters.getActivePosition();
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
                     break;
             }
         }
@@ -33319,7 +33036,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 67 /* CommandResult.InvalidViewportSize */;
+                return 68 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33329,7 +33046,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 75 /* CommandResult.ValuesNotChanged */;
+                return 76 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33337,7 +33054,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 68 /* CommandResult.InvalidScrollingDirection */;
+                return 69 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33418,6 +33135,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         resetViewports(sheetId) {
+            if (!this.getters.tryGetSheet(sheetId)) {
+                return;
+            }
             const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
             const nCols = this.getters.getNumberCols(sheetId);
             const nRows = this.getters.getNumberRows(sheetId);
@@ -33598,7 +33318,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 44 /* CommandResult.InvalidAutofillSelection */;
+                    return 45 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -34197,7 +33917,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 71 /* CommandResult.InvalidCellPopover */;
+                        return 72 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -35212,12 +34932,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             box.isFilterHeader = this.getters.isFilterHeader(position);
             const headerIconWidth = box.isFilterHeader ? FILTER_ICON_EDGE_LENGTH + FILTER_ICON_MARGIN : 0;
             /** Content */
-            const text = this.getters.getCellText(position, showFormula);
-            const textWidth = this.getters.getTextWidth(position) + MIN_CELL_TEXT_MARGIN;
-            const wrapping = this.getters.getCellStyle(position).wrapping || "overflow";
-            const multiLineText = wrapping === "wrap"
-                ? this.getters.getCellMultiLineText(position, width - 2 * MIN_CELL_TEXT_MARGIN)
-                : [text];
+            const style = this.getters.getCellComputedStyle(position);
+            const wrapping = style.wrapping || "overflow";
+            const maxWidth = wrapping === "wrap" && !showFormula ? width - 2 * MIN_CELL_TEXT_MARGIN : undefined;
+            const multiLineText = this.getters.getCellMultiLineText(position, maxWidth);
+            const textWidth = Math.max(...multiLineText.map((line) => this.getters.getTextWidth(line, style) + MIN_CELL_TEXT_MARGIN));
             const contentWidth = iconBoxWidth + textWidth + headerIconWidth;
             const align = this.computeCellAlignment(position, contentWidth > width);
             box.content = {
@@ -35256,7 +34975,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "left": {
                         const emptyZoneOnTheLeft = positionToZone({ col: nextColIndex, row });
                         const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheLeft));
-                        if (width < contentWidth || fontSizePX > height) {
+                        if (width < contentWidth || fontSizePX > height || multiLineText.length > 1) {
                             box.clipRect = { x, y, width, height };
                         }
                         break;
@@ -35264,7 +34983,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     case "right": {
                         const emptyZoneOnTheRight = positionToZone({ col: previousColIndex, row });
                         const { x, y, width, height } = this.getters.getVisibleRect(union(zone, emptyZoneOnTheRight));
-                        if (width < contentWidth || fontSizePX > height) {
+                        if (width < contentWidth || fontSizePX > height || multiLineText.length > 1) {
                             box.clipRect = { x, y, width, height };
                         }
                         break;
@@ -35280,7 +34999,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const boxMiddle = box.x + box.width / 2;
                         if (x + width < boxMiddle + halfContentWidth ||
                             x > boxMiddle - halfContentWidth ||
-                            fontSizePX > height) {
+                            fontSizePX > height ||
+                            multiLineText.length > 1) {
                             const clipX = x > boxMiddle - halfContentWidth ? x : boxMiddle - halfContentWidth;
                             const clipWidth = x + width - clipX;
                             box.clipRect = { x: clipX, y, width: clipWidth, height };
@@ -35289,7 +35009,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 }
             }
-            else if (wrapping === "clip" || wrapping === "wrap") {
+            else if (wrapping === "clip" || wrapping === "wrap" || multiLineText.length > 1) {
                 box.clipRect = {
                     x: box.x,
                     y: box.y,
@@ -35372,7 +35092,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
-                        return 29 /* CommandResult.MaximumRangesReached */;
+                        return 30 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
             }
@@ -35436,9 +35156,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     }
                 }
             }
-        }
-        unsubscribe() {
-            this.unfocus();
         }
         // ---------------------------------------------------------------------------
         // Getters || only callable by the parent
@@ -35525,7 +35242,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 .filter((range) => this.getters.isRangeValid(range))
                 .filter((reference) => this.shouldBeHighlighted(this.activeSheet, reference));
             return XCs.map((xc) => {
-                const [, sheetName] = xc.split("!").reverse();
+                const { sheetName } = splitReference(xc);
                 return {
                     zone: this.getters.getRangeFromSheetXC(this.activeSheet, xc).zone,
                     sheetId: (sheetName && this.getters.getSheetIdByName(sheetName)) || this.activeSheet,
@@ -35548,7 +35265,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * the current active sheet.
          */
         shouldBeHighlighted(inputSheetId, reference) {
-            const sheetName = reference.split("!").reverse()[1];
+            const { sheetName } = splitReference(reference);
             const sheetId = this.getters.getSheetIdByName(sheetName);
             const activeSheetId = this.getters.getActiveSheet().id;
             const valid = this.getters.isRangeValid(reference);
@@ -35593,7 +35310,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "FOCUS_RANGE":
                     const index = (_a = this.currentInput) === null || _a === void 0 ? void 0 : _a.getIndex(cmd.rangeId);
                     if (this.focusedInputId === cmd.id && ((_b = this.currentInput) === null || _b === void 0 ? void 0 : _b.focusedRangeIndex) === index) {
-                        return 28 /* CommandResult.InputAlreadyFocused */;
+                        return 29 /* CommandResult.InputAlreadyFocused */;
                     }
                     break;
             }
@@ -35639,9 +35356,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             (_a = this.currentInput) === null || _a === void 0 ? void 0 : _a.handle(cmd);
         }
-        unsubscribe() {
-            this.unfocus();
-        }
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
@@ -35662,13 +35376,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 isFocused: this.focusedInputId === id && this.inputs[id].focusedRangeIndex === index,
             }));
         }
-        isRangeValid(xc) {
-            if (!xc) {
+        isRangeValid(reference) {
+            if (!reference) {
                 return false;
             }
-            const [rangeXc, sheetName] = xc.split("!").reverse();
-            return (rangeXc.match(rangeReference) !== null &&
-                (sheetName === undefined || this.getters.getSheetIdByName(sheetName) !== undefined));
+            const { xc, sheetName } = splitReference(reference);
+            return (xc.match(rangeReference) !== null &&
+                (!sheetName || this.getters.getSheetIdByName(sheetName) !== undefined));
         }
         getSelectionInputValue(id) {
             return this.inputs[id].getSelectionInputValue();
@@ -35765,6 +35479,312 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
+    /*
+     * This file contains the specifics transformations
+     */
+    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
+    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
+    otRegistry.addTransformation("DELETE_SHEET", ["MOVE_RANGES"], transformTargetSheetId);
+    otRegistry.addTransformation("DELETE_FIGURE", ["UPDATE_FIGURE", "UPDATE_CHART"], updateChartFigure);
+    otRegistry.addTransformation("CREATE_SHEET", ["CREATE_SHEET"], createSheetTransformation);
+    otRegistry.addTransformation("ADD_MERGE", ["ADD_MERGE", "REMOVE_MERGE", "CREATE_FILTER_TABLE"], mergeTransformation);
+    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
+    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
+    otRegistry.addTransformation("CREATE_FILTER_TABLE", ["CREATE_FILTER_TABLE", "ADD_MERGE"], createTableTransformation);
+    function transformTargetSheetId(cmd, executed) {
+        const deletedSheetId = executed.sheetId;
+        if (cmd.targetSheetId === deletedSheetId || cmd.sheetId === deletedSheetId) {
+            return undefined;
+        }
+        return cmd;
+    }
+    function updateChartFigure(toTransform, executed) {
+        if (toTransform.id === executed.id) {
+            return undefined;
+        }
+        return toTransform;
+    }
+    function updateChartRangesTransformation(toTransform, executed) {
+        return {
+            ...toTransform,
+            definition: transformDefinition(toTransform.definition, executed),
+        };
+    }
+    function createSheetTransformation(cmd, executed) {
+        var _a;
+        if (cmd.name === executed.name) {
+            return {
+                ...cmd,
+                name: ((_a = cmd.name) === null || _a === void 0 ? void 0 : _a.match(/\d+/))
+                    ? cmd.name.replace(/\d+/, (n) => (parseInt(n) + 1).toString())
+                    : `${cmd.name}~`,
+                position: cmd.position + 1,
+            };
+        }
+        return cmd;
+    }
+    function mergeTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        const target = [];
+        for (const zone1 of cmd.target) {
+            for (const zone2 of executed.target) {
+                if (!overlap(zone1, zone2)) {
+                    target.push({ ...zone1 });
+                }
+            }
+        }
+        if (target.length) {
+            return { ...cmd, target };
+        }
+        return undefined;
+    }
+    function freezeTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        const dimension = cmd.type === "FREEZE_COLUMNS" ? "COL" : "ROW";
+        if (dimension !== executed.dimension) {
+            return cmd;
+        }
+        let quantity = cmd["quantity"];
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            const executedElements = [...executed.elements].sort((a, b) => b - a);
+            for (let removedElement of executedElements) {
+                if (quantity > removedElement) {
+                    quantity--;
+                }
+            }
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            const executedBase = executed.position === "before" ? executed.base - 1 : executed.base;
+            quantity = quantity > executedBase ? quantity + executed.quantity : quantity;
+        }
+        return quantity > 0 ? { ...cmd, quantity } : undefined;
+    }
+    /**
+     * Cancel CREATE_FILTER_TABLE and ADD_MERGE commands if they overlap a filter
+     */
+    function createTableTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        for (const cmdTarget of cmd.target) {
+            for (const executedCmdTarget of executed.target) {
+                if (overlap(executedCmdTarget, cmdTarget)) {
+                    return undefined;
+                }
+            }
+        }
+        return cmd;
+    }
+
+    const transformations = [
+        { match: isSheetDependent, fn: transformSheetId },
+        { match: isTargetDependent, fn: transformTarget },
+        { match: isPositionDependent, fn: transformPosition },
+        { match: isGridDependent, fn: transformDimension },
+        { match: isRangeDependant, fn: transformRangeData },
+    ];
+    /**
+     * Get the result of applying the operation transformations on the given command
+     * to transform based on the executed command.
+     * Let's see a small example:
+     * Given
+     *  - command A: set the content of C1 to "Hello"
+     *  - command B: add a column after A
+     *
+     * If command B has been executed locally and not transmitted (yet) to
+     * other clients, and command A arrives from an other client to be executed locally.
+     * Command A is no longer valid and no longer reflects the user intention.
+     * It needs to be transformed knowing that command B is already executed.
+     * transform(A, B) => set the content of D1 to "Hello"
+     */
+    function transform(toTransform, executed) {
+        const specificTransform = otRegistry.getTransformation(toTransform.type, executed.type);
+        return specificTransform
+            ? specificTransform(toTransform, executed)
+            : genericTransform(toTransform, executed);
+    }
+    /**
+     * Get the result of applying the operation transformations on all the given
+     * commands to transform for each executed commands.
+     */
+    function transformAll(toTransform, executed) {
+        let transformedCommands = [...toTransform];
+        for (const executedCommand of executed) {
+            transformedCommands = transformedCommands
+                .map((cmd) => transform(cmd, executedCommand))
+                .filter(isDefined$1);
+        }
+        return transformedCommands;
+    }
+    /**
+     * Apply all generic transformation based on the characteristic of the given commands.
+     */
+    function genericTransform(cmd, executed) {
+        for (const { match, fn } of transformations) {
+            if (match(cmd)) {
+                const result = fn(cmd, executed);
+                if (result === "SKIP_TRANSFORMATION") {
+                    continue;
+                }
+                if (result === "IGNORE_COMMAND") {
+                    return undefined;
+                }
+                cmd = result;
+            }
+        }
+        return cmd;
+    }
+    function transformSheetId(cmd, executed) {
+        const deleteSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
+        if (cmd.sheetId === deleteSheet) {
+            return "IGNORE_COMMAND";
+        }
+        else if (cmd.type === "CREATE_SHEET" ||
+            executed.type === "CREATE_SHEET" ||
+            cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    function transformTarget(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        const target = [];
+        for (const zone of cmd.target) {
+            const newZone = transformZone(zone, executed);
+            if (newZone) {
+                target.push(newZone);
+            }
+        }
+        if (!target.length) {
+            return "IGNORE_COMMAND";
+        }
+        return { ...cmd, target };
+    }
+    function transformRangeData(cmd, executed) {
+        const ranges = [];
+        const deletedSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
+        for (const range of cmd.ranges) {
+            if (range._sheetId !== executed.sheetId) {
+                ranges.push({ ...range, _zone: range._zone });
+            }
+            else {
+                const newZone = transformZone(range._zone, executed);
+                if (newZone && deletedSheet !== range._sheetId) {
+                    ranges.push({ ...range, _zone: newZone });
+                }
+            }
+        }
+        if (!ranges.length) {
+            return "IGNORE_COMMAND";
+        }
+        return { ...cmd, ranges };
+    }
+    function transformDimension(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
+            if (executed.dimension !== cmd.dimension) {
+                return cmd;
+            }
+            const isUnique = cmd.type === "ADD_COLUMNS_ROWS";
+            const field = isUnique ? "base" : "elements";
+            let elements = isUnique ? [cmd[field]] : cmd[field];
+            if (executed.type === "REMOVE_COLUMNS_ROWS") {
+                elements = elements
+                    .map((element) => {
+                    if (executed.elements.includes(element)) {
+                        return undefined;
+                    }
+                    const executedElements = executed.elements.sort((a, b) => b - a);
+                    for (let removedElement of executedElements) {
+                        if (element > removedElement) {
+                            element--;
+                        }
+                    }
+                    return element;
+                })
+                    .filter(isDefined$1);
+            }
+            if (executed.type === "ADD_COLUMNS_ROWS") {
+                const base = executed.position === "before" ? executed.base - 1 : executed.base;
+                elements = elements.map((el) => (el > base ? el + executed.quantity : el));
+            }
+            if (elements.length) {
+                let result = elements;
+                if (isUnique) {
+                    result = elements[0];
+                }
+                return { ...cmd, [field]: result };
+            }
+            return "IGNORE_COMMAND";
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    /**
+     * Transform a PositionDependentCommand. It could be impacted by a grid command
+     * (Add/remove cols/rows) and a merge
+     */
+    function transformPosition(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
+            return transformPositionWithGrid(cmd, executed);
+        }
+        if (executed.type === "ADD_MERGE") {
+            return transformPositionWithMerge(cmd, executed);
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    /**
+     * Transform a PositionDependentCommand after a grid shape modification. This
+     * transformation consists of updating the position.
+     */
+    function transformPositionWithGrid(cmd, executed) {
+        const field = executed.dimension === "COL" ? "col" : "row";
+        let base = cmd[field];
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            const elements = [...executed.elements].sort((a, b) => b - a);
+            if (elements.includes(base)) {
+                return "IGNORE_COMMAND";
+            }
+            for (let removedElement of elements) {
+                if (base >= removedElement) {
+                    base--;
+                }
+            }
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            if (base > executed.base || (base === executed.base && executed.position === "before")) {
+                base = base + executed.quantity;
+            }
+        }
+        return { ...cmd, [field]: base };
+    }
+    /**
+     * Transform a PositionDependentCommand after a merge. This transformation
+     * consists of checking that the position is not inside the merged zones
+     */
+    function transformPositionWithMerge(cmd, executed) {
+        for (const zone of executed.target) {
+            const sameTopLeft = cmd.col === zone.left && cmd.row === zone.top;
+            if (!sameTopLeft && isInside(cmd.col, cmd.row, zone)) {
+                return "IGNORE_COMMAND";
+            }
+        }
+        return cmd;
+    }
+
     class Revision {
         /**
          * A revision represents a whole client action (Create a sheet, merge a Zone, Undo, ...).
@@ -35822,17 +35842,25 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.clientId = "local";
             this.pendingMessages = [];
             this.waitingAck = false;
+            /**
+             * Flag used to block all commands when an undo or redo is triggered, until
+             * it is accepted on the server
+             */
+            this.waitingUndoRedoAck = false;
             this.isReplayingInitialRevisions = false;
             this.processedRevisions = new Set();
             this.uuidGenerator = new UuidGenerator();
             this.debouncedMove = debounce(this._move.bind(this), DEBOUNCE_TIME);
+        }
+        canApplyOptimisticUpdate() {
+            return !this.waitingUndoRedoAck;
         }
         /**
          * Add a new revision to the collaborative session.
          * It will be transmitted to all other connected clients.
          */
         save(commands, changes) {
-            if (!commands.length || !changes.length)
+            if (!commands.length || !changes.length || !this.canApplyOptimisticUpdate())
                 return;
             const revision = new Revision(this.uuidGenerator.uuidv4(), this.clientId, commands, changes);
             this.revisions.append(revision.id, revision);
@@ -35847,6 +35875,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         undo(revisionId) {
+            this.waitingUndoRedoAck = true;
             this.sendUpdateMessage({
                 type: "REVISION_UNDONE",
                 version: MESSAGE_VERSION,
@@ -35856,6 +35885,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         redo(revisionId) {
+            this.waitingUndoRedoAck = true;
             this.sendUpdateMessage({
                 type: "REVISION_REDONE",
                 version: MESSAGE_VERSION,
@@ -35972,7 +36002,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.onClientLeft(message);
                     break;
                 case "REVISION_REDONE": {
-                    this.waitingAck = false;
                     this.revisions.redo(message.redoneRevisionId, message.nextRevisionId, message.serverRevisionId);
                     this.trigger("revision-redone", {
                         revisionId: message.redoneRevisionId,
@@ -35981,7 +36010,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "REVISION_UNDONE":
-                    this.waitingAck = false;
                     this.revisions.undo(message.undoneRevisionId, message.nextRevisionId, message.serverRevisionId);
                     this.trigger("revision-undone", {
                         revisionId: message.undoneRevisionId,
@@ -35989,7 +36017,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     });
                     break;
                 case "REMOTE_REVISION":
-                    this.waitingAck = false;
                     if (message.serverRevisionId !== this.serverRevisionId) {
                         this.trigger("unexpected-revision-id", { revisionId: message.serverRevisionId });
                         return;
@@ -35998,11 +36025,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const revision = new Revision(message.nextRevisionId, clientId, commands);
                     if (revision.clientId !== this.clientId) {
                         this.revisions.insert(revision.id, revision, message.serverRevisionId);
-                        this.trigger("remote-revision-received", { commands });
+                        const pendingCommands = this.pendingMessages
+                            .filter((msg) => msg.type === "REMOTE_REVISION")
+                            .map((msg) => msg.commands)
+                            .flat();
+                        this.trigger("remote-revision-received", {
+                            commands: transformAll(commands, pendingCommands),
+                        });
                     }
                     break;
                 case "SNAPSHOT_CREATED": {
-                    this.waitingAck = false;
                     const revision = new Revision(message.nextRevisionId, "server", []);
                     this.revisions.insert(revision.id, revision, message.serverRevisionId);
                     this.dropPendingHistoryMessages();
@@ -36070,6 +36102,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         .filter((message) => message.type === "REMOTE_REVISION")
                         .map((message) => message.nextRevisionId);
                     this.trigger("pending-revisions-dropped", { revisionIds });
+                    this.waitingAck = false;
+                    this.waitingUndoRedoAck = false;
                     this.pendingMessages = [];
                     return;
                 }
@@ -36089,11 +36123,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         acknowledge(message) {
+            if (message.type === "REVISION_UNDONE" || message.type === "REVISION_REDONE") {
+                this.waitingUndoRedoAck = false;
+            }
             switch (message.type) {
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
                 case "SNAPSHOT_CREATED":
+                    this.waitingAck = false;
                     this.pendingMessages = this.pendingMessages.filter((msg) => msg.nextRevisionId !== message.nextRevisionId);
                     this.serverRevisionId = message.nextRevisionId;
                     this.processedRevisions.add(message.nextRevisionId);
@@ -36102,6 +36140,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         isAlreadyProcessed(message) {
+            if (message.type === "CLIENT_MOVED" && message.client.id === this.clientId) {
+                return true;
+            }
             switch (message.type) {
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
@@ -36112,6 +36153,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         dropPendingHistoryMessages() {
+            this.waitingUndoRedoAck = false;
             this.pendingMessages = this.pendingMessages.filter(({ type }) => type !== "REVISION_REDONE" && type !== "REVISION_UNDONE");
         }
     }
@@ -36246,7 +36288,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             /*Test the presence of single cells*/
             const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
             if (singleCells) {
-                return 62 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36265,7 +36307,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 62 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36557,7 +36599,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
             }
             return 0 /* CommandResult.Success */;
@@ -36593,7 +36635,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Getters
         // ---------------------------------------------------------------------------
         getCellWidth(position) {
-            let contentWidth = this.getTextWidth(position);
+            const text = this.getCellText(position);
+            const style = this.getters.getCellComputedStyle(position);
+            let contentWidth = this.getTextWidth(text, style);
             const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
@@ -36611,9 +36655,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return contentWidth;
         }
-        getTextWidth(position) {
-            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
-            return computeTextWidth(this.ctx, text, this.getters.getCellComputedStyle(position));
+        getTextWidth(text, style) {
+            return computeTextWidth(this.ctx, text, style);
         }
         getCellText(position, showFormula = false) {
             const cell = this.getters.getCell(position);
@@ -36624,51 +36667,61 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return this.getters.getEvaluatedCell(position).formattedValue;
             }
         }
+        /**
+         * Return the text of a cell, split in multiple lines if needed. The text will be split in multiple
+         * line if it contains NEWLINE characters, or if it's longer than the given width.
+         */
         getCellMultiLineText(position, width) {
             const style = this.getters.getCellStyle(position);
-            const text = this.getters.getCellText(position);
-            const words = text.split(" ");
+            const text = this.getters.getCellText(position, this.getters.shouldShowFormulas());
             const brokenText = [];
-            let textLine = "";
-            let availableWidth = width;
-            for (let word of words) {
-                const splitWord = this.splitWordToSpecificWidth(this.ctx, word, width, style);
-                const lastPart = splitWord.pop();
-                const lastPartWidth = computeTextWidth(this.ctx, lastPart, style);
-                // At this step: "splitWord" is an array composed of parts of word whose
-                // length is at most equal to "width".
-                // Last part contains the end of the word.
-                // Note that: When word length is less than width, then lastPart is equal
-                // to word and splitWord is empty
-                if (splitWord.length) {
-                    if (textLine !== "") {
-                        brokenText.push(textLine);
-                        textLine = "";
-                        availableWidth = width;
-                    }
-                    splitWord.forEach((wordPart) => {
-                        brokenText.push(wordPart);
-                    });
-                    textLine = lastPart;
-                    availableWidth = width - lastPartWidth;
+            for (const line of text.split("\n")) {
+                const words = line.split(" ");
+                if (!width) {
+                    brokenText.push(line);
+                    continue;
                 }
-                else {
-                    // here "lastPart" is equal to "word" and the "word" size is smaller than "width"
-                    const _word = textLine === "" ? lastPart : " " + lastPart;
-                    const wordWidth = computeTextWidth(this.ctx, _word, style);
-                    if (wordWidth <= availableWidth) {
-                        textLine += _word;
-                        availableWidth -= wordWidth;
-                    }
-                    else {
-                        brokenText.push(textLine);
+                let textLine = "";
+                let availableWidth = width;
+                for (let word of words) {
+                    const splitWord = this.splitWordToSpecificWidth(this.ctx, word, width, style);
+                    const lastPart = splitWord.pop();
+                    const lastPartWidth = computeTextWidth(this.ctx, lastPart, style);
+                    // At this step: "splitWord" is an array composed of parts of word whose
+                    // length is at most equal to "width".
+                    // Last part contains the end of the word.
+                    // Note that: When word length is less than width, then lastPart is equal
+                    // to word and splitWord is empty
+                    if (splitWord.length) {
+                        if (textLine !== "") {
+                            brokenText.push(textLine);
+                            textLine = "";
+                            availableWidth = width;
+                        }
+                        splitWord.forEach((wordPart) => {
+                            brokenText.push(wordPart);
+                        });
                         textLine = lastPart;
                         availableWidth = width - lastPartWidth;
                     }
+                    else {
+                        // here "lastPart" is equal to "word" and the "word" size is smaller than "width"
+                        const _word = textLine === "" ? lastPart : " " + lastPart;
+                        const wordWidth = computeTextWidth(this.ctx, _word, style);
+                        if (wordWidth <= availableWidth) {
+                            textLine += _word;
+                            availableWidth -= wordWidth;
+                        }
+                        else {
+                            brokenText.push(textLine);
+                            textLine = lastPart;
+                            availableWidth = width - lastPartWidth;
+                        }
+                    }
                 }
-            }
-            if (textLine !== "") {
-                brokenText.push(textLine);
+                if (textLine !== "") {
+                    brokenText.push(textLine);
+                }
             }
             return brokenText;
         }
@@ -36863,7 +36916,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isCutAllowed(target) {
             if (target.length !== 1) {
-                return 18 /* CommandResult.WrongCutSelection */;
+                return 19 /* CommandResult.WrongCutSelection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36871,13 +36924,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             if (this.operation === "CUT" && (clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== undefined) {
                 // cannot paste only format or only value if the previous operation is a CUT
-                return 20 /* CommandResult.WrongPasteOption */;
+                return 21 /* CommandResult.WrongPasteOption */;
             }
             if (target.length > 1) {
                 // cannot paste if we have a clipped zone larger than a cell and multiple
                 // zones selected
                 if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 19 /* CommandResult.WrongPasteSelection */;
+                    return 20 /* CommandResult.WrongPasteSelection */;
                 }
             }
             const clipboardHeight = this.cells.length;
@@ -36895,7 +36948,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 74 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -37212,7 +37265,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const row of this.cells) {
                 htmlTable += "<tr>";
                 for (const cell of row) {
-                    const cssStyle = cssPropertiesToCss(cellStyleToCss(cell.style), false);
+                    const cssStyle = cssPropertiesToCss(cellStyleToCss(cell.style));
                     const cellText = this.getters.getCellText(cell.position);
                     htmlTable += `<td style="${cssStyle}">` + xmlEscape(cellText) + "</td>";
                 }
@@ -37283,10 +37336,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 72 /* CommandResult.EmptyTarget */;
+                return 73 /* CommandResult.EmptyTarget */;
             }
             if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
-                return 21 /* CommandResult.WrongFigurePasteOption */;
+                return 22 /* CommandResult.WrongFigurePasteOption */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -37441,7 +37494,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return state.isCutAllowed(zones);
                 case "PASTE":
                     if (!this.state) {
-                        return 22 /* CommandResult.EmptyClipboard */;
+                        return 23 /* CommandResult.EmptyClipboard */;
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
@@ -37649,6 +37702,725 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "isPaintingFormat",
     ];
 
+    /**
+     * Change the reference types inside the given token, if the token represent a range or a cell
+     *
+     * Eg. :
+     *   A1 => $A$1 => A$1 => $A1 => A1
+     *   A1:$B$1 => $A$1:B$1 => A$1:$B1 => $A1:B1 => A1:$B$1
+     */
+    function loopThroughReferenceType(token) {
+        if (token.type !== "REFERENCE")
+            return token;
+        const { xc, sheetName } = splitReference(token.value);
+        const [left, right] = xc.split(":");
+        const sheetRef = sheetName ? `${sheetName}!` : "";
+        const updatedLeft = getTokenNextReferenceType(left);
+        const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
+        return { ...token, value: sheetRef + updatedLeft + updatedRight };
+    }
+    /**
+     * Get a new token with a changed type of reference from the given cell token symbol.
+     * Undefined behavior if given a token other than a cell or if the Xc contains a sheet reference
+     *
+     * A1 => $A$1 => A$1 => $A1 => A1
+     */
+    function getTokenNextReferenceType(xc) {
+        switch (getReferenceType(xc)) {
+            case "none":
+                xc = setXcToReferenceType(xc, "colrow");
+                break;
+            case "colrow":
+                xc = setXcToReferenceType(xc, "row");
+                break;
+            case "row":
+                xc = setXcToReferenceType(xc, "col");
+                break;
+            case "col":
+                xc = setXcToReferenceType(xc, "none");
+                break;
+        }
+        return xc;
+    }
+    /**
+     * Returns the given XC with the given reference type.
+     */
+    function setXcToReferenceType(xc, referenceType) {
+        xc = xc.replace(/\$/g, "");
+        let indexOfNumber;
+        switch (referenceType) {
+            case "col":
+                return "$" + xc;
+            case "row":
+                indexOfNumber = xc.search(/[0-9]/);
+                return xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
+            case "colrow":
+                indexOfNumber = xc.search(/[0-9]/);
+                xc = xc.slice(0, indexOfNumber) + "$" + xc.slice(indexOfNumber);
+                return "$" + xc;
+            case "none":
+                return xc;
+        }
+    }
+    /**
+     * Return the type of reference used in the given XC of a cell.
+     * Undefined behavior if the XC have a sheet reference
+     */
+    function getReferenceType(xcCell) {
+        if (isColAndRowFixed(xcCell)) {
+            return "colrow";
+        }
+        else if (isColFixed(xcCell)) {
+            return "col";
+        }
+        else if (isRowFixed(xcCell)) {
+            return "row";
+        }
+        return "none";
+    }
+    function isColFixed(xc) {
+        return xc.startsWith("$");
+    }
+    function isRowFixed(xc) {
+        return xc.includes("$", 1);
+    }
+    function isColAndRowFixed(xc) {
+        return xc.startsWith("$") && xc.length > 1 && xc.slice(1).includes("$");
+    }
+
+    const CELL_DELETED_MESSAGE = _lt("The cell you are trying to edit has been deleted.");
+    class EditionPlugin extends UIPlugin {
+        constructor() {
+            super(...arguments);
+            this.col = 0;
+            this.row = 0;
+            this.mode = "inactive";
+            this.sheetId = "";
+            this.currentContent = "";
+            this.currentTokens = [];
+            this.selectionStart = 0;
+            this.selectionEnd = 0;
+            this.selectionInitialStart = 0;
+            this.initialContent = "";
+            this.previousRef = "";
+            this.previousRange = undefined;
+            this.colorIndexByRange = {};
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "CHANGE_COMPOSER_CURSOR_SELECTION":
+                    return this.validateSelection(this.currentContent.length, cmd.start, cmd.end);
+                case "SET_CURRENT_CONTENT":
+                    if (cmd.selection) {
+                        return this.validateSelection(cmd.content.length, cmd.selection.start, cmd.selection.end);
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                case "START_EDITION":
+                    if (cmd.selection) {
+                        const content = cmd.text || this.getComposerContent(this.getters.getActivePosition());
+                        return this.validateSelection(content.length, cmd.selection.start, cmd.selection.end);
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
+        handleEvent(event) {
+            if (this.mode !== "selecting") {
+                return;
+            }
+            switch (event.mode) {
+                case "newAnchor":
+                    this.insertSelectedRange(event.anchor.zone);
+                    break;
+                default:
+                    this.replaceSelectedRanges(event.anchor.zone);
+                    break;
+            }
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "CHANGE_COMPOSER_CURSOR_SELECTION":
+                    this.selectionStart = cmd.start;
+                    this.selectionEnd = cmd.end;
+                    break;
+                case "STOP_COMPOSER_RANGE_SELECTION":
+                    if (this.isSelectingForComposer()) {
+                        this.mode = "editing";
+                    }
+                    break;
+                case "START_EDITION":
+                    if (this.mode !== "inactive" && cmd.text) {
+                        this.setContent(cmd.text, cmd.selection);
+                    }
+                    else {
+                        this.startEdition(cmd.text, cmd.selection);
+                    }
+                    this.updateRangeColor();
+                    break;
+                case "STOP_EDITION":
+                    if (cmd.cancel) {
+                        this.cancelEditionAndActivateSheet();
+                        this.resetContent();
+                    }
+                    else {
+                        this.stopEdition();
+                    }
+                    this.colorIndexByRange = {};
+                    break;
+                case "SET_CURRENT_CONTENT":
+                    this.setContent(cmd.content, cmd.selection, true);
+                    this.updateRangeColor();
+                    break;
+                case "REPLACE_COMPOSER_CURSOR_SELECTION":
+                    this.replaceSelection(cmd.text);
+                    break;
+                case "SELECT_FIGURE":
+                    this.cancelEditionAndActivateSheet();
+                    this.resetContent();
+                    break;
+                case "ADD_COLUMNS_ROWS":
+                    this.onAddElements(cmd);
+                    break;
+                case "REMOVE_COLUMNS_ROWS":
+                    if (cmd.dimension === "COL") {
+                        this.onColumnsRemoved(cmd);
+                    }
+                    else {
+                        this.onRowsRemoved(cmd);
+                    }
+                    break;
+                case "START_CHANGE_HIGHLIGHT":
+                    this.dispatch("STOP_COMPOSER_RANGE_SELECTION");
+                    const range = this.getters.getRangeFromRangeData(cmd.range);
+                    const previousRefToken = this.currentTokens
+                        .filter((token) => token.type === "REFERENCE")
+                        .find((token) => {
+                        const { xc, sheetName: sheet } = splitReference(token.value);
+                        const sheetName = sheet || this.getters.getSheetName(this.sheetId);
+                        const activeSheetId = this.getters.getActiveSheetId();
+                        if (this.getters.getSheetName(activeSheetId) !== sheetName) {
+                            return false;
+                        }
+                        const refRange = this.getters.getRangeFromSheetXC(activeSheetId, xc);
+                        return isEqual(this.getters.expandZone(activeSheetId, refRange.zone), range.zone);
+                    });
+                    this.previousRef = previousRefToken.value;
+                    this.previousRange = this.getters.getRangeFromSheetXC(this.getters.getActiveSheetId(), this.previousRef);
+                    this.selectionInitialStart = previousRefToken.start;
+                    break;
+                case "CHANGE_HIGHLIGHT":
+                    const cmdRange = this.getters.getRangeFromRangeData(cmd.range);
+                    const newRef = this.getRangeReference(cmdRange, this.previousRange.parts);
+                    this.selectionStart = this.selectionInitialStart;
+                    this.selectionEnd = this.selectionInitialStart + this.previousRef.length;
+                    this.replaceSelection(newRef);
+                    this.previousRef = newRef;
+                    this.selectionStart = this.currentContent.length;
+                    this.selectionEnd = this.currentContent.length;
+                    break;
+                case "ACTIVATE_SHEET":
+                    if (!this.currentContent.startsWith("=")) {
+                        this.cancelEdition();
+                        this.resetContent();
+                    }
+                    if (cmd.sheetIdFrom !== cmd.sheetIdTo) {
+                        const activePosition = this.getters.getActivePosition();
+                        const { col, row } = this.getters.getNextVisibleCellPosition({
+                            sheetId: cmd.sheetIdTo,
+                            col: activePosition.col,
+                            row: activePosition.row,
+                        });
+                        const zone = this.getters.expandZone(cmd.sheetIdTo, positionToZone({ col, row }));
+                        this.selection.resetAnchor(this, { cell: { col, row }, zone });
+                    }
+                    break;
+                case "DELETE_SHEET":
+                case "UNDO":
+                case "REDO":
+                    const sheetIdExists = !!this.getters.tryGetSheet(this.sheetId);
+                    if (!sheetIdExists && this.mode !== "inactive") {
+                        this.sheetId = this.getters.getActiveSheetId();
+                        this.cancelEditionAndActivateSheet();
+                        this.resetContent();
+                        this.ui.notifyUI({
+                            type: "ERROR",
+                            text: CELL_DELETED_MESSAGE,
+                        });
+                    }
+                    break;
+                case "CYCLE_EDITION_REFERENCES":
+                    this.cycleReferences();
+                    break;
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        getEditionMode() {
+            return this.mode;
+        }
+        getCurrentContent() {
+            if (this.mode === "inactive") {
+                return this.getComposerContent(this.getters.getActivePosition());
+            }
+            return this.currentContent;
+        }
+        getEditionSheet() {
+            return this.sheetId;
+        }
+        getComposerSelection() {
+            return {
+                start: this.selectionStart,
+                end: this.selectionEnd,
+            };
+        }
+        getCurrentEditedCell() {
+            return {
+                sheetId: this.sheetId,
+                col: this.col,
+                row: this.row,
+            };
+        }
+        isSelectingForComposer() {
+            return this.mode === "selecting";
+        }
+        showSelectionIndicator() {
+            return this.isSelectingForComposer() && this.canStartComposerRangeSelection();
+        }
+        getCurrentTokens() {
+            return this.currentTokens;
+        }
+        /**
+         * Return the (enriched) token just before the cursor.
+         */
+        getTokenAtCursor() {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            if (start === end && end === 0) {
+                return undefined;
+            }
+            else {
+                return this.currentTokens.find((t) => t.start <= start && t.end >= end);
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Misc
+        // ---------------------------------------------------------------------------
+        cycleReferences() {
+            const tokens = this.getTokensInSelection();
+            const refTokens = tokens.filter((token) => token.type === "REFERENCE");
+            if (refTokens.length === 0)
+                return;
+            const updatedReferences = tokens
+                .map(loopThroughReferenceType)
+                .map((token) => token.value)
+                .join("");
+            const content = this.currentContent;
+            const start = tokens[0].start;
+            const end = tokens[tokens.length - 1].end;
+            const newContent = content.slice(0, start) + updatedReferences + content.slice(end);
+            const lengthDiff = newContent.length - content.length;
+            const startOfTokens = refTokens[0].start;
+            const endOfTokens = refTokens[refTokens.length - 1].end + lengthDiff;
+            const selection = { start: startOfTokens, end: endOfTokens };
+            // Put the selection at the end of the token if we cycled on a single token
+            if (refTokens.length === 1 && this.selectionStart === this.selectionEnd) {
+                selection.start = selection.end;
+            }
+            this.dispatch("SET_CURRENT_CONTENT", {
+                content: newContent,
+                selection,
+            });
+        }
+        validateSelection(length, start, end) {
+            return start >= 0 && start <= length && end >= 0 && end <= length
+                ? 0 /* CommandResult.Success */
+                : 46 /* CommandResult.WrongComposerSelection */;
+        }
+        onColumnsRemoved(cmd) {
+            if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
+                this.dispatch("STOP_EDITION", { cancel: true });
+                this.ui.notifyUI({
+                    type: "ERROR",
+                    text: CELL_DELETED_MESSAGE,
+                });
+                return;
+            }
+            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "left", [...cmd.elements]);
+            this.col = left;
+            this.row = top;
+        }
+        onRowsRemoved(cmd) {
+            if (cmd.elements.includes(this.row) && this.mode !== "inactive") {
+                this.dispatch("STOP_EDITION", { cancel: true });
+                this.ui.notifyUI({
+                    type: "ERROR",
+                    text: CELL_DELETED_MESSAGE,
+                });
+                return;
+            }
+            const { top, left } = updateSelectionOnDeletion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, "top", [...cmd.elements]);
+            this.col = left;
+            this.row = top;
+        }
+        onAddElements(cmd) {
+            const { top, left } = updateSelectionOnInsertion({ left: this.col, right: this.col, top: this.row, bottom: this.row }, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
+            this.col = left;
+            this.row = top;
+        }
+        /**
+         * Enable the selecting mode
+         */
+        startComposerRangeSelection() {
+            if (this.sheetId === this.getters.getActiveSheetId()) {
+                const zone = positionToZone({ col: this.col, row: this.row });
+                this.selection.resetAnchor(this, { cell: { col: this.col, row: this.row }, zone });
+            }
+            this.mode = "selecting";
+            this.selectionInitialStart = this.selectionStart;
+        }
+        /**
+         * start the edition of a cell
+         * @param str the key that is used to start the edition if it is a "content" key like a letter or number
+         * @param selection
+         * @private
+         */
+        startEdition(str, selection) {
+            var _a;
+            const evaluatedCell = this.getters.getActiveCell();
+            if (str && ((_a = evaluatedCell.format) === null || _a === void 0 ? void 0 : _a.includes("%")) && isNumber(str)) {
+                selection = selection || { start: str.length, end: str.length };
+                str = `${str}%`;
+            }
+            const { col, row, sheetId } = this.getters.getActivePosition();
+            this.col = col;
+            this.sheetId = sheetId;
+            this.row = row;
+            this.initialContent = this.getComposerContent({ sheetId, col, row });
+            this.mode = "editing";
+            this.setContent(str || this.initialContent, selection);
+            this.colorIndexByRange = {};
+            const zone = positionToZone({ col: this.col, row: this.row });
+            this.selection.capture(this, { cell: { col: this.col, row: this.row }, zone }, {
+                handleEvent: this.handleEvent.bind(this),
+                release: () => {
+                    this.stopEdition();
+                },
+            });
+        }
+        stopEdition() {
+            if (this.mode !== "inactive") {
+                this.cancelEditionAndActivateSheet();
+                const col = this.col;
+                const row = this.row;
+                let content = this.currentContent;
+                const didChange = this.initialContent !== content;
+                if (!didChange) {
+                    return;
+                }
+                if (content) {
+                    const sheetId = this.getters.getActiveSheetId();
+                    const cell = this.getters.getEvaluatedCell({ sheetId, col: this.col, row: this.row });
+                    if (content.startsWith("=")) {
+                        const left = this.currentTokens.filter((t) => t.type === "LEFT_PAREN").length;
+                        const right = this.currentTokens.filter((t) => t.type === "RIGHT_PAREN").length;
+                        const missing = left - right;
+                        if (missing > 0) {
+                            content += concat(new Array(missing).fill(")"));
+                        }
+                    }
+                    else if (cell.link) {
+                        content = markdownLink(content, cell.link.url);
+                    }
+                    this.dispatch("UPDATE_CELL", {
+                        sheetId: this.sheetId,
+                        col,
+                        row,
+                        content,
+                    });
+                }
+                else {
+                    this.dispatch("UPDATE_CELL", {
+                        sheetId: this.sheetId,
+                        content: "",
+                        col,
+                        row,
+                    });
+                }
+                this.setContent("");
+            }
+        }
+        cancelEditionAndActivateSheet() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.cancelEdition();
+            const sheetId = this.getters.getActiveSheetId();
+            if (sheetId !== this.sheetId) {
+                this.dispatch("ACTIVATE_SHEET", {
+                    sheetIdFrom: this.getters.getActiveSheetId(),
+                    sheetIdTo: this.sheetId,
+                });
+            }
+        }
+        getComposerContent(position) {
+            const cell = this.getters.getCell(position);
+            if (cell === null || cell === void 0 ? void 0 : cell.isFormula) {
+                return cell.content;
+            }
+            const { format, value, type, formattedValue } = this.getters.getEvaluatedCell(position);
+            switch (type) {
+                case CellValueType.text:
+                case CellValueType.empty:
+                    return value;
+                case CellValueType.boolean:
+                    return formattedValue;
+                case CellValueType.error:
+                    return (cell === null || cell === void 0 ? void 0 : cell.content) || "";
+                case CellValueType.number:
+                    if (format && isDateTimeFormat(format)) {
+                        return formattedValue;
+                    }
+                    return this.numberComposerContent(value, format);
+            }
+        }
+        numberComposerContent(value, format) {
+            if (format === null || format === void 0 ? void 0 : format.includes("%")) {
+                return `${value * 100}%`;
+            }
+            return numberToString(value);
+        }
+        cancelEdition() {
+            if (this.mode === "inactive") {
+                return;
+            }
+            this.mode = "inactive";
+            this.selection.release(this);
+        }
+        /**
+         * Reset the current content to the active cell content
+         */
+        resetContent() {
+            this.setContent(this.initialContent || "");
+        }
+        setContent(text, selection, raise) {
+            const isNewCurrentContent = this.currentContent !== text;
+            this.currentContent = text;
+            if (selection) {
+                this.selectionStart = selection.start;
+                this.selectionEnd = selection.end;
+            }
+            else {
+                this.selectionStart = this.selectionEnd = text.length;
+            }
+            if (isNewCurrentContent || this.mode !== "inactive") {
+                this.currentTokens = text.startsWith("=") ? composerTokenize(text) : [];
+                if (this.currentTokens.length > 100) {
+                    if (raise) {
+                        this.ui.notifyUI({
+                            type: "ERROR",
+                            text: _lt("This formula has over 100 parts. It can't be processed properly, consider splitting it into multiple cells"),
+                        });
+                    }
+                }
+            }
+            if (this.canStartComposerRangeSelection()) {
+                this.startComposerRangeSelection();
+            }
+        }
+        insertSelectedRange(zone) {
+            // infer if range selected or selecting range from cursor position
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const ref = this.getZoneReference(zone);
+            if (this.canStartComposerRangeSelection()) {
+                this.insertText(ref, start);
+                this.selectionInitialStart = start;
+            }
+            else {
+                this.insertText("," + ref, start);
+                this.selectionInitialStart = start + 1;
+            }
+        }
+        /**
+         * Replace the current reference selected by the new one.
+         * */
+        replaceSelectedRanges(zone) {
+            const ref = this.getZoneReference(zone);
+            this.replaceText(ref, this.selectionInitialStart, this.selectionEnd);
+        }
+        getZoneReference(zone, fixedParts = [{ colFixed: false, rowFixed: false }]) {
+            const sheetId = this.getters.getActiveSheetId();
+            let selectedXc = this.getters.zoneToXC(sheetId, zone, fixedParts);
+            if (this.getters.getEditionSheet() !== this.getters.getActiveSheetId()) {
+                const sheetName = getComposerSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
+                selectedXc = `${sheetName}!${selectedXc}`;
+            }
+            return selectedXc;
+        }
+        getRangeReference(range, fixedParts = [{ colFixed: false, rowFixed: false }]) {
+            let _fixedParts = [...fixedParts];
+            if (fixedParts.length === 1 && getZoneArea(range.zone) > 1) {
+                _fixedParts.push({ ...fixedParts[0] });
+            }
+            else if (fixedParts.length === 2 && getZoneArea(range.zone) === 1) {
+                _fixedParts.pop();
+            }
+            const newRange = range.clone({ parts: _fixedParts });
+            return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
+        }
+        /**
+         * Replace the current selection by a new text.
+         * The cursor is then set at the end of the text.
+         */
+        replaceSelection(text) {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            this.replaceText(text, start, end);
+        }
+        replaceText(text, start, end) {
+            this.currentContent =
+                this.currentContent.slice(0, start) +
+                    this.currentContent.slice(end, this.currentContent.length);
+            this.insertText(text, start);
+        }
+        /**
+         * Insert a text at the given position.
+         * The cursor is then set at the end of the text.
+         */
+        insertText(text, start) {
+            const content = this.currentContent.slice(0, start) + text + this.currentContent.slice(start);
+            const end = start + text.length;
+            this.dispatch("SET_CURRENT_CONTENT", {
+                content,
+                selection: { start: end, end },
+            });
+        }
+        updateRangeColor() {
+            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
+                return;
+            }
+            const editionSheetId = this.getters.getEditionSheet();
+            const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
+            const colorsToKeep = {};
+            for (const xc of XCs) {
+                if (this.colorIndexByRange[xc] !== undefined) {
+                    colorsToKeep[xc] = this.colorIndexByRange[xc];
+                }
+            }
+            const usedIndexes = new Set(Object.values(colorsToKeep));
+            let currentIndex = 0;
+            const nextIndex = () => {
+                while (usedIndexes.has(currentIndex))
+                    currentIndex++;
+                usedIndexes.add(currentIndex);
+                return currentIndex;
+            };
+            for (const xc of XCs) {
+                const colorIndex = xc in colorsToKeep ? colorsToKeep[xc] : nextIndex();
+                colorsToKeep[xc] = colorIndex;
+            }
+            this.colorIndexByRange = colorsToKeep;
+        }
+        /**
+         * Highlight all ranges that can be found in the composer content.
+         */
+        getComposerHighlights() {
+            if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
+                return [];
+            }
+            const editionSheetId = this.getters.getEditionSheet();
+            const rangeColor = (rangeString) => {
+                const colorIndex = this.colorIndexByRange[rangeString];
+                return colors$1[colorIndex % colors$1.length];
+            };
+            return this.getReferencedRanges().map((range) => {
+                const rangeString = this.getters.getRangeString(range, editionSheetId);
+                return {
+                    zone: range.zone,
+                    color: rangeColor(rangeString),
+                    sheetId: range.sheetId,
+                };
+            });
+        }
+        /**
+         * Return ranges currently referenced in the composer
+         */
+        getReferencedRanges() {
+            const editionSheetId = this.getters.getEditionSheet();
+            return this.currentTokens
+                .filter((token) => token.type === "REFERENCE")
+                .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
+        }
+        /**
+         * Function used to determine when composer selection can start.
+         * Three conditions are necessary:
+         * - the previous token is among ["COMMA", "LEFT_PAREN", "OPERATOR"], and is not a postfix unary operator
+         * - the next token is missing or is among ["COMMA", "RIGHT_PAREN", "OPERATOR"]
+         * - Previous and next tokens can be separated by spaces
+         */
+        canStartComposerRangeSelection() {
+            if (this.currentContent.startsWith("=")) {
+                const tokenAtCursor = this.getTokenAtCursor();
+                if (!tokenAtCursor) {
+                    return false;
+                }
+                const tokenIdex = this.currentTokens.map((token) => token.start).indexOf(tokenAtCursor.start);
+                let count = tokenIdex;
+                let currentToken = tokenAtCursor;
+                // check previous token
+                while (!["COMMA", "LEFT_PAREN", "OPERATOR"].includes(currentToken.type) ||
+                    POSTFIX_UNARY_OPERATORS.includes(currentToken.value)) {
+                    if (currentToken.type !== "SPACE" || count < 1) {
+                        return false;
+                    }
+                    count--;
+                    currentToken = this.currentTokens[count];
+                }
+                count = tokenIdex + 1;
+                currentToken = this.currentTokens[count];
+                // check next token
+                while (currentToken && !["COMMA", "RIGHT_PAREN", "OPERATOR"].includes(currentToken.type)) {
+                    if (currentToken.type !== "SPACE") {
+                        return false;
+                    }
+                    count++;
+                    currentToken = this.currentTokens[count];
+                }
+                return true;
+            }
+            return false;
+        }
+        /**
+         * Return all the tokens between selectionStart and selectionEnd.
+         * Includes token that begin right on selectionStart or end right on selectionEnd.
+         */
+        getTokensInSelection() {
+            const start = Math.min(this.selectionStart, this.selectionEnd);
+            const end = Math.max(this.selectionStart, this.selectionEnd);
+            return this.currentTokens.filter((t) => (t.start <= start && t.end >= start) || (t.start >= start && t.start < end));
+        }
+    }
+    EditionPlugin.getters = [
+        "getEditionMode",
+        "isSelectingForComposer",
+        "showSelectionIndicator",
+        "getCurrentContent",
+        "getEditionSheet",
+        "getComposerSelection",
+        "getCurrentTokens",
+        "getTokenAtCursor",
+        "getComposerHighlights",
+        "getCurrentEditedCell",
+    ];
+
     const selectionStatisticFunctions = [
         {
             name: _lt("Sum"),
@@ -37712,7 +38484,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                 case "MOVE_COLUMNS_ROWS":
                     return this.isMoveElementAllowed(cmd);
@@ -38419,6 +39191,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         offsetX: Number,
         allowOverflow: Boolean,
         onAnimationEnd: Function,
+        style: String,
     };
     class Ripple extends owl.Component {
         constructor() {
@@ -38444,7 +39217,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
             this.state.ripples.push({ rippleRect, id: this.currentId++ });
         }
-        getStyle() {
+        getRippleStyle() {
             const containerEl = this.childContainer.el;
             if (!containerEl || containerEl.childElementCount !== 1 || !containerEl.firstElementChild) {
                 return "";
@@ -38496,6 +39269,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 offsetX: this.props.offsetX || 0,
                 offsetY: this.props.offsetY || 0,
                 allowOverflow: this.props.allowOverflow || false,
+                style: this.getRippleStyle(),
                 onAnimationEnd: () => this.removeRipple(id),
             };
         }
@@ -38531,13 +39305,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         if (name === null || name === originalSheetName)
             return;
         const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
-        if (result.reasons.includes(9 /* CommandResult.MissingSheetName */)) {
+        if (result.reasons.includes(10 /* CommandResult.MissingSheetName */)) {
             env.raiseError(_lt("The sheet name cannot be empty."), errorCallback);
         }
-        else if (result.reasons.includes(10 /* CommandResult.DuplicatedSheetName */)) {
+        else if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
             env.raiseError(_lt("A sheet with the name %s already exists. Please select another name.", name), errorCallback);
         }
-        else if (result.reasons.includes(12 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+        else if (result.reasons.includes(13 /* CommandResult.ForbiddenCharactersInSheetName */)) {
             env.raiseError(_lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")), errorCallback);
         }
     }
@@ -38998,23 +39772,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.env.model.getters.getActiveSheetId();
             const { right } = this.env.model.getters.getSheetZone(sheetId);
             const { end } = this.env.model.getters.getColDimensions(sheetId, right);
-            return `
-      max-width: ${end}px;
-    `;
+            return cssPropertiesToCss({ "max-width": `${end}px` });
         }
         get gridOverlayDimensions() {
-            return `
-      height: 100%;
-      width: 100%
-    `;
+            return cssPropertiesToCss({
+                height: "100%",
+                width: "100%",
+            });
         }
         getCellClickableStyle(coordinates) {
-            return `
-      top: ${coordinates.y}px;
-      left: ${coordinates.x}px;
-      width: ${coordinates.width}px;
-      height: ${coordinates.height}px;
-    `;
+            return cssPropertiesToCss({
+                top: `${coordinates.y}px`,
+                left: `${coordinates.x}px`,
+                width: `${coordinates.width}px`,
+                height: `${coordinates.height}px`,
+            });
         }
         /**
          * Get all the boxes for the cell in the sheet view that are clickable.
@@ -39364,7 +40136,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(79 /* CommandResult.MergeInFilter */)) {
+        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddMergeInteractiveContent.MergeInFilter);
         }
         else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
@@ -39373,6 +40145,44 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
     }
+
+    const COMPOSER_MAX_HEIGHT = 100;
+    css /* scss */ `
+  .o-topbar-composer {
+    height: fit-content;
+    margin-top: -1px;
+    border: 1px solid;
+    z-index: ${ComponentsImportance.TopBarComposer};
+  }
+`;
+    class TopBarComposer extends owl.Component {
+        get composerStyle() {
+            const style = {
+                padding: "5px 0px 5px 8px",
+                "max-height": `${COMPOSER_MAX_HEIGHT}px`,
+                "line-height": "24px",
+            };
+            style.height = this.props.focus === "inactive" ? `${TOPBAR_TOOLBAR_HEIGHT}px` : "fit-content";
+            return cssPropertiesToCss(style);
+        }
+        get containerStyle() {
+            if (this.props.focus === "inactive") {
+                return cssPropertiesToCss({
+                    "border-color": SEPARATOR_COLOR,
+                    "border-right": "none",
+                });
+            }
+            return cssPropertiesToCss({
+                "border-color": SELECTION_BORDER_COLOR,
+            });
+        }
+    }
+    TopBarComposer.template = "o-spreadsheet-TopBarComposer";
+    TopBarComposer.components = { Composer };
+    TopBarComposer.props = {
+        focus: { validate: (value) => ["inactive", "cellFocus", "contentFocus"].includes(value) },
+        onComposerContentFocused: Function,
+    };
 
     const FORMATS = [
         { name: "automatic", text: NumberFormatTerms.Automatic },
@@ -39408,6 +40218,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const CUSTOM_FORMATS = [
         { name: "custom_currency", text: NumberFormatTerms.CustomCurrency, sidePanel: "CustomCurrency" },
     ];
+    const FONT_COLOR = "#4a4f59";
+    const ACTIVE_BG_COLOR = "#E6F4EA";
+    const ACTIVE_FG_COLOR = "#188038";
+    const HOVERED_BG_COLOR = "#f6f7fa";
+    const HOVERED_FG_COLOR = "#000000";
     // -----------------------------------------------------------------------------
     // TopBar
     // -----------------------------------------------------------------------------
@@ -39420,9 +40235,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     font-size: 13px;
     line-height: 1.2;
     user-select: none;
+    font-weight: 500;
+    color: ${FONT_COLOR};
 
     .o-topbar-top {
-      border-bottom: 1px solid #e0e2e4;
+      border-bottom: 1px solid ${SEPARATOR_COLOR};
       display: flex;
       padding: 2px 10px;
       justify-content: space-between;
@@ -39448,10 +40265,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         justify-content: flex-end;
       }
     }
-    /* Toolbar + Cell Content */
+
+    .o-topbar-composer {
+      flex-grow: 1;
+    }
+
+    /* Toolbar */
     .o-topbar-toolbar {
-      border-bottom: 1px solid #e0e2e4;
+      flex-shrink: 0;
       display: flex;
+      height: ${TOPBAR_TOOLBAR_HEIGHT}px;
 
       .o-readonly-toolbar {
         display: flex;
@@ -39460,29 +40283,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         padding-left: 18px;
         padding-right: 18px;
       }
-      .o-composer-container {
-        height: 34px;
-        border: 1px solid #e0e2e4;
-        margin-top: -1px;
-        margin-bottom: -1px;
-      }
 
       /* Toolbar */
       .o-toolbar-tools {
         display: flex;
         flex-shrink: 0;
         margin-left: 16px;
-        color: #333;
         cursor: default;
 
         .o-tool {
           display: flex;
+          justify-content: center;
           align-items: center;
           margin: 2px;
           padding: 0px 3px;
           border-radius: 2px;
           cursor: pointer;
-          min-width: fit-content;
+          min-width: 20px;
+          svg path,
+          polygon,
+          rect {
+            fill: ${FONT_COLOR};
+          }
         }
 
         .o-tool-outlined {
@@ -39493,9 +40315,21 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
           margin-right: 8px;
         }
 
-        .o-tool.active,
+        .o-tool.active {
+          background-color: ${ACTIVE_BG_COLOR};
+          svg path,
+          polygon,
+          rect {
+            fill: ${ACTIVE_FG_COLOR};
+          }
+        }
         .o-tool:not(.o-disabled):hover {
-          background-color: #f1f3f4;
+          background-color: ${HOVERED_BG_COLOR};
+          svg path,
+          polygon,
+          rect {
+            fill: ${HOVERED_FG_COLOR};
+          }
         }
 
         .o-with-color > span {
@@ -39516,7 +40350,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
         .o-divider {
           display: inline-block;
-          border-right: 1px solid #e0e2e4;
+          border-right: 1px solid ${SEPARATOR_COLOR};
           width: 0;
           margin: 0 6px;
         }
@@ -39536,7 +40370,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
           }
 
           .o-text-icon {
-            height: 100%;
             line-height: 30px;
           }
 
@@ -39640,12 +40473,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.fillColor = "#ffffff";
             this.textColor = "#000000";
             this.menus = [];
-            this.composerStyle = `
-    line-height: 34px;
-    padding-left: 8px;
-    height: 34px;
-    background-color: white;
-  `;
         }
         setup() {
             owl.useExternalListener(window, "click", this.onExternalClick);
@@ -39686,7 +40513,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onMenuMouseOver(menu, ev) {
             if (this.isSelectingMenu) {
-                this.toggleContextMenu(menu, ev);
+                this.openMenu(menu, ev);
             }
         }
         toggleDropdownTool(tool, ev) {
@@ -39696,7 +40523,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.openedEl = isOpen ? null : ev.target;
         }
         toggleContextMenu(menu, ev) {
-            this.closeMenus();
+            if (this.state.menuState.isOpen) {
+                this.closeMenus();
+            }
+            else {
+                this.openMenu(menu, ev);
+            }
+        }
+        openMenu(menu, ev) {
             const { left, top, height } = ev.target.getBoundingClientRect();
             this.state.menuState.isOpen = true;
             this.state.menuState.position = { x: left, y: top + height };
@@ -39844,7 +40678,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
     TopBar.template = "o-spreadsheet-TopBar";
-    TopBar.components = { ColorPicker, Menu, Composer };
+    TopBar.components = { ColorPicker, Menu, TopBarComposer };
     TopBar.props = {
         onClick: Function,
         focusComposer: String,
@@ -39926,7 +40760,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       box-sizing: content-box;
     }
     .o-separator {
-      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid #e0e2e4;
+      border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid ${SEPARATOR_COLOR};
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
     }
@@ -39939,7 +40773,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   .o-icon {
     width: ${ICON_EDGE_LENGTH}px;
     height: ${ICON_EDGE_LENGTH}px;
-    opacity: 0.6;
     vertical-align: middle;
   }
 
@@ -39969,8 +40802,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       &.corner {
         right: 0px;
         bottom: 0px;
-        height: ${SCROLLBAR_WIDTH$1}px;
-        width: ${SCROLLBAR_WIDTH$1}px;
+        height: ${SCROLLBAR_WIDTH}px;
+        width: ${SCROLLBAR_WIDTH}px;
         border-top: 1px solid #e2e3e3;
         border-left: 1px solid #e2e3e3;
       }
@@ -40017,6 +40850,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 toggleSidePanel: this.toggleSidePanel.bind(this),
                 _t: Spreadsheet._t,
                 clipboard: this.env.clipboard || instantiateClipboard(),
+                startCellEdition: (content) => this.onGridComposerCellFocused(content),
             });
             owl.useExternalListener(window, "resize", () => this.render(true));
             owl.useExternalListener(window, "beforeunload", this.unbindModelEvents.bind(this));
@@ -40169,312 +41003,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         leave(id) {
             this.listeners = this.listeners.filter((listener) => listener.id !== id);
         }
-    }
-
-    /*
-     * This file contains the specifics transformations
-     */
-    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
-    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
-    otRegistry.addTransformation("DELETE_SHEET", ["MOVE_RANGES"], transformTargetSheetId);
-    otRegistry.addTransformation("DELETE_FIGURE", ["UPDATE_FIGURE", "UPDATE_CHART"], updateChartFigure);
-    otRegistry.addTransformation("CREATE_SHEET", ["CREATE_SHEET"], createSheetTransformation);
-    otRegistry.addTransformation("ADD_MERGE", ["ADD_MERGE", "REMOVE_MERGE", "CREATE_FILTER_TABLE"], mergeTransformation);
-    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
-    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
-    otRegistry.addTransformation("CREATE_FILTER_TABLE", ["CREATE_FILTER_TABLE", "ADD_MERGE"], createTableTransformation);
-    function transformTargetSheetId(cmd, executed) {
-        const deletedSheetId = executed.sheetId;
-        if (cmd.targetSheetId === deletedSheetId || cmd.sheetId === deletedSheetId) {
-            return undefined;
-        }
-        return cmd;
-    }
-    function updateChartFigure(toTransform, executed) {
-        if (toTransform.id === executed.id) {
-            return undefined;
-        }
-        return toTransform;
-    }
-    function updateChartRangesTransformation(toTransform, executed) {
-        return {
-            ...toTransform,
-            definition: transformDefinition(toTransform.definition, executed),
-        };
-    }
-    function createSheetTransformation(cmd, executed) {
-        var _a;
-        if (cmd.name === executed.name) {
-            return {
-                ...cmd,
-                name: ((_a = cmd.name) === null || _a === void 0 ? void 0 : _a.match(/\d+/))
-                    ? cmd.name.replace(/\d+/, (n) => (parseInt(n) + 1).toString())
-                    : `${cmd.name}~`,
-                position: cmd.position + 1,
-            };
-        }
-        return cmd;
-    }
-    function mergeTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        const target = [];
-        for (const zone1 of cmd.target) {
-            for (const zone2 of executed.target) {
-                if (!overlap(zone1, zone2)) {
-                    target.push({ ...zone1 });
-                }
-            }
-        }
-        if (target.length) {
-            return { ...cmd, target };
-        }
-        return undefined;
-    }
-    function freezeTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        const dimension = cmd.type === "FREEZE_COLUMNS" ? "COL" : "ROW";
-        if (dimension !== executed.dimension) {
-            return cmd;
-        }
-        let quantity = cmd["quantity"];
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            const executedElements = [...executed.elements].sort((a, b) => b - a);
-            for (let removedElement of executedElements) {
-                if (quantity > removedElement) {
-                    quantity--;
-                }
-            }
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            const executedBase = executed.position === "before" ? executed.base - 1 : executed.base;
-            quantity = quantity > executedBase ? quantity + executed.quantity : quantity;
-        }
-        return quantity > 0 ? { ...cmd, quantity } : undefined;
-    }
-    /**
-     * Cancel CREATE_FILTER_TABLE and ADD_MERGE commands if they overlap a filter
-     */
-    function createTableTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        for (const cmdTarget of cmd.target) {
-            for (const executedCmdTarget of executed.target) {
-                if (overlap(executedCmdTarget, cmdTarget)) {
-                    return undefined;
-                }
-            }
-        }
-        return cmd;
-    }
-
-    const transformations = [
-        { match: isSheetDependent, fn: transformSheetId },
-        { match: isTargetDependent, fn: transformTarget },
-        { match: isPositionDependent, fn: transformPosition },
-        { match: isGridDependent, fn: transformDimension },
-        { match: isRangeDependant, fn: transformRangeData },
-    ];
-    /**
-     * Get the result of applying the operation transformations on the given command
-     * to transform based on the executed command.
-     * Let's see a small example:
-     * Given
-     *  - command A: set the content of C1 to "Hello"
-     *  - command B: add a column after A
-     *
-     * If command B has been executed locally and not transmitted (yet) to
-     * other clients, and command A arrives from an other client to be executed locally.
-     * Command A is no longer valid and no longer reflects the user intention.
-     * It needs to be transformed knowing that command B is already executed.
-     * transform(A, B) => set the content of D1 to "Hello"
-     */
-    function transform(toTransform, executed) {
-        const specificTransform = otRegistry.getTransformation(toTransform.type, executed.type);
-        return specificTransform
-            ? specificTransform(toTransform, executed)
-            : genericTransform(toTransform, executed);
-    }
-    /**
-     * Get the result of applying the operation transformations on all the given
-     * commands to transform for each executed commands.
-     */
-    function transformAll(toTransform, executed) {
-        let transformedCommands = [...toTransform];
-        for (const executedCommand of executed) {
-            transformedCommands = transformedCommands
-                .map((cmd) => transform(cmd, executedCommand))
-                .filter(isDefined$1);
-        }
-        return transformedCommands;
-    }
-    /**
-     * Apply all generic transformation based on the characteristic of the given commands.
-     */
-    function genericTransform(cmd, executed) {
-        for (const { match, fn } of transformations) {
-            if (match(cmd)) {
-                const result = fn(cmd, executed);
-                if (result === "SKIP_TRANSFORMATION") {
-                    continue;
-                }
-                if (result === "IGNORE_COMMAND") {
-                    return undefined;
-                }
-                cmd = result;
-            }
-        }
-        return cmd;
-    }
-    function transformSheetId(cmd, executed) {
-        const deleteSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
-        if (cmd.sheetId === deleteSheet) {
-            return "IGNORE_COMMAND";
-        }
-        else if (cmd.type === "CREATE_SHEET" ||
-            executed.type === "CREATE_SHEET" ||
-            cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    function transformTarget(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        const target = [];
-        for (const zone of cmd.target) {
-            const newZone = transformZone(zone, executed);
-            if (newZone) {
-                target.push(newZone);
-            }
-        }
-        if (!target.length) {
-            return "IGNORE_COMMAND";
-        }
-        return { ...cmd, target };
-    }
-    function transformRangeData(cmd, executed) {
-        const ranges = [];
-        const deletedSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
-        for (const range of cmd.ranges) {
-            if (range._sheetId !== executed.sheetId) {
-                ranges.push({ ...range, _zone: range._zone });
-            }
-            else {
-                const newZone = transformZone(range._zone, executed);
-                if (newZone && deletedSheet !== range._sheetId) {
-                    ranges.push({ ...range, _zone: newZone });
-                }
-            }
-        }
-        if (!ranges.length) {
-            return "IGNORE_COMMAND";
-        }
-        return { ...cmd, ranges };
-    }
-    function transformDimension(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
-            if (executed.dimension !== cmd.dimension) {
-                return cmd;
-            }
-            const isUnique = cmd.type === "ADD_COLUMNS_ROWS";
-            const field = isUnique ? "base" : "elements";
-            let elements = isUnique ? [cmd[field]] : cmd[field];
-            if (executed.type === "REMOVE_COLUMNS_ROWS") {
-                elements = elements
-                    .map((element) => {
-                    if (executed.elements.includes(element)) {
-                        return undefined;
-                    }
-                    const executedElements = executed.elements.sort((a, b) => b - a);
-                    for (let removedElement of executedElements) {
-                        if (element > removedElement) {
-                            element--;
-                        }
-                    }
-                    return element;
-                })
-                    .filter(isDefined$1);
-            }
-            if (executed.type === "ADD_COLUMNS_ROWS") {
-                const base = executed.position === "before" ? executed.base - 1 : executed.base;
-                elements = elements.map((el) => (el > base ? el + executed.quantity : el));
-            }
-            if (elements.length) {
-                let result = elements;
-                if (isUnique) {
-                    result = elements[0];
-                }
-                return { ...cmd, [field]: result };
-            }
-            return "IGNORE_COMMAND";
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    /**
-     * Transform a PositionDependentCommand. It could be impacted by a grid command
-     * (Add/remove cols/rows) and a merge
-     */
-    function transformPosition(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
-            return transformPositionWithGrid(cmd, executed);
-        }
-        if (executed.type === "ADD_MERGE") {
-            return transformPositionWithMerge(cmd, executed);
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    /**
-     * Transform a PositionDependentCommand after a grid shape modification. This
-     * transformation consists of updating the position.
-     */
-    function transformPositionWithGrid(cmd, executed) {
-        const field = executed.dimension === "COL" ? "col" : "row";
-        let base = cmd[field];
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            const elements = [...executed.elements].sort((a, b) => b - a);
-            if (elements.includes(base)) {
-                return "IGNORE_COMMAND";
-            }
-            for (let removedElement of elements) {
-                if (base >= removedElement) {
-                    base--;
-                }
-            }
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            if (base > executed.base || (base === executed.base && executed.position === "before")) {
-                base = base + executed.quantity;
-            }
-        }
-        return { ...cmd, [field]: base };
-    }
-    /**
-     * Transform a PositionDependentCommand after a merge. This transformation
-     * consists of checking that the position is not inside the merged zones
-     */
-    function transformPositionWithMerge(cmd, executed) {
-        for (const zone of executed.target) {
-            const sameTopLeft = cmd.col === zone.left && cmd.row === zone.top;
-            if (!sameTopLeft && isInside(cmd.col, cmd.row, zone)) {
-                return "IGNORE_COMMAND";
-            }
-        }
-        return cmd;
     }
 
     function inverseCommand(cmd) {
@@ -41283,11 +41811,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * Ids of the revisions which can be redone
              */
             this.redoStack = [];
-            /**
-             * Flag used to block all commands when an undo or redo is triggered, until
-             * it is accepted on the server
-             */
-            this.isWaitingForUndoRedo = false;
             this.session.on("new-local-state-update", this, this.onNewLocalStateUpdate);
             this.session.on("revision-undone", this, ({ commands }) => this.selectiveUndo(commands));
             this.session.on("revision-redone", this, ({ commands }) => this.selectiveRedo(commands));
@@ -41295,22 +41818,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.session.on("snapshot", this, () => {
                 this.undoStack = [];
                 this.redoStack = [];
-                this.isWaitingForUndoRedo = false;
             });
         }
         allowDispatch(cmd) {
-            if (this.isWaitingForUndoRedo) {
-                return 63 /* CommandResult.WaitingSessionConfirmation */;
-            }
             switch (cmd.type) {
                 case "REQUEST_UNDO":
                     if (!this.canUndo()) {
-                        return 5 /* CommandResult.EmptyUndoStack */;
+                        return 6 /* CommandResult.EmptyUndoStack */;
                     }
                     break;
                 case "REQUEST_REDO":
                     if (!this.canRedo()) {
-                        return 6 /* CommandResult.EmptyRedoStack */;
+                        return 7 /* CommandResult.EmptyRedoStack */;
                     }
                     break;
             }
@@ -41333,7 +41852,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!id) {
                 return;
             }
-            this.isWaitingForUndoRedo = true;
             if (type === "UNDO") {
                 this.session.undo(id);
                 this.redoStack.push(id);
@@ -41352,7 +41870,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         drop(revisionIds) {
             this.undoStack = this.undoStack.filter((id) => !revisionIds.includes(id));
             this.redoStack = [];
-            this.isWaitingForUndoRedo = false;
         }
         onNewLocalStateUpdate({ id }) {
             this.undoStack.push(id);
@@ -41363,11 +41880,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         selectiveUndo(commands) {
             this.dispatch("UNDO", { commands });
-            this.isWaitingForUndoRedo = false;
         }
         selectiveRedo(commands) {
             this.dispatch("REDO", { commands });
-            this.isWaitingForUndoRedo = false;
         }
     }
 
@@ -41421,18 +41936,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.observers.find((sub) => sub.owner === owner)) {
                 throw new Error("You are already subscribed forever");
             }
-            if ((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) {
+            if (((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) && this.mainSubscription.owner !== owner) {
                 (_c = (_b = this.mainSubscription.callbacks).release) === null || _c === void 0 ? void 0 : _c.call(_b);
             }
             this.mainSubscription = { owner, callbacks };
         }
         release(owner) {
-            var _a, _b, _c, _d;
+            var _a;
             if (((_a = this.mainSubscription) === null || _a === void 0 ? void 0 : _a.owner) !== owner ||
                 this.observers.find((sub) => sub.owner === owner)) {
                 return;
             }
-            (_d = (_b = this.mainSubscription) === null || _b === void 0 ? void 0 : (_c = _b.callbacks).release) === null || _d === void 0 ? void 0 : _d.call(_c);
             this.mainSubscription = this.defaultSubscription;
         }
         /**
@@ -41539,7 +42053,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         moveAnchorCell(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(82 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
@@ -41585,7 +42099,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         resizeAnchorZone(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(82 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
@@ -41765,20 +42279,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkAnchorZone(anchor) {
             const { cell, zone } = anchor;
             if (!isInside(cell.col, cell.row, zone)) {
-                return 15 /* CommandResult.InvalidAnchorZone */;
+                return 16 /* CommandResult.InvalidAnchorZone */;
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
             const refCol = this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1));
             const refRow = this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1));
             if (refRow === undefined || refCol === undefined) {
-                return 16 /* CommandResult.SelectionOutOfBound */;
+                return 17 /* CommandResult.SelectionOutOfBound */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkAnchorZoneOrThrow(anchor) {
             const result = this.checkAnchorZone(anchor);
-            if (result === 15 /* CommandResult.InvalidAnchorZone */) {
+            if (result === 16 /* CommandResult.InvalidAnchorZone */) {
                 throw new Error(_t("The provided anchor is invalid. The cell must be part of the zone."));
             }
         }
@@ -43547,7 +44061,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const command = { ...payload, type };
                 let status = this.status;
                 if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                    return new DispatchResult(66 /* CommandResult.Readonly */);
+                    return new DispatchResult(67 /* CommandResult.Readonly */);
+                }
+                if (!this.session.canApplyOptimisticUpdate()) {
+                    return new DispatchResult(64 /* CommandResult.WaitingSessionConfirmation */);
                 }
                 switch (status) {
                     case 0 /* Status.Ready */:
@@ -43720,13 +44237,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let command of commands) {
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
-                this.dispatchToHandlers(this.allUIPlugins, command);
+                this.dispatchToHandlers(this.statefulUIPlugins, command);
                 this.status = previousStatus;
             }
             this.finalize();
         }
         setupSession(revisionId) {
             const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => {
+                const result = this.checkDispatchAllowed(command);
+                if (!result.isSuccessful) {
+                    return;
+                }
                 this.isReplayingCommand = true;
                 this.dispatchToHandlers([this.range, ...this.corePlugins, ...this.coreViewsPlugins], command);
                 this.isReplayingCommand = false;
@@ -43907,7 +44428,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         BOTTOMBAR_HEIGHT,
         DEFAULT_CELL_WIDTH,
         DEFAULT_CELL_HEIGHT,
-        SCROLLBAR_WIDTH: SCROLLBAR_WIDTH$1,
+        SCROLLBAR_WIDTH,
     };
     const registries = {
         autofillModifiersRegistry,
@@ -44021,8 +44542,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-01-17T14:55:32.207Z';
-    exports.__info__.hash = '35b1263';
+    exports.__info__.date = '2023-02-01T09:27:33.484Z';
+    exports.__info__.hash = 'dac9cfd';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
