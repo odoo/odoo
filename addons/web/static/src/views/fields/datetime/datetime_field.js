@@ -9,6 +9,13 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class DateTimeField extends Component {
+    setup() {
+        /**
+         * The last value that has been commited to the model.
+         * Not changed in case of invalid field value.
+         */
+        this.lastSetValue = null;
+    }
     get formattedValue() {
         return formatDateTime(this.props.value);
     }
@@ -17,6 +24,13 @@ export class DateTimeField extends Component {
         if (!areDateEquals(this.props.value || "", date)) {
             this.props.update(date);
         }
+    }
+    onDatePickerInput(ev) {
+        this.props.setDirty(ev.target.value !== this.lastSetValue);
+    }
+    onUpdateInput(date) {
+        this.props.setDirty(false);
+        this.lastSetValue = date;
     }
 }
 

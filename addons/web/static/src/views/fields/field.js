@@ -299,4 +299,4 @@ Field.forbiddenAttributeNames = {
     decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
 };
 Field.props = ["fieldInfo?", "*"];
-Field.defaultProps = { fieldInfo: {} };
+Field.defaultProps = { fieldInfo: {}, setDirty: () => {} };
