@@ -6,6 +6,7 @@ import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
+    createFile,
     insertText,
     start,
     startServer,
@@ -1522,5 +1523,42 @@ QUnit.test(
         await openDiscuss(mailChannelId2);
         await click("button:contains(Bla)");
         assert.containsNone(target, ".o-unread");
+    }
+);
+
+QUnit.test(
+    "warning on send with shortcut when attempting to post message with still-uploading attachments",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const mailChannelId1 = pyEnv["mail.channel"].create({ name: "test" });
+        const { openDiscuss } = await start({
+            async mockRPC(route) {
+                if (route === "/mail/attachment/upload") {
+                    // simulates attachment is never finished uploading
+                    await new Promise(() => {});
+                }
+            },
+            services: {
+                notification: makeFakeNotificationService((message, options) => {
+                    assert.strictEqual(message, "Please wait while the file is uploading.");
+                    assert.strictEqual(options.type, "warning", "notification should be a warning");
+                    assert.step("notification");
+                }),
+            },
+        });
+        await openDiscuss(mailChannelId1);
+        const file = await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        });
+        await afterNextRender(() => editInput(target, ".o-mail-composer input[type=file]", [file]));
+        assert.containsOnce(target, ".o-mail-attachment-card");
+        assert.containsOnce(target, ".o-mail-attachment-card.o-mail-is-uploading");
+        assert.containsOnce(target, ".o-mail-composer-send-button");
+
+        // Try to send message
+        triggerHotkey("Enter");
+        assert.verifySteps(["notification"]);
     }
 );

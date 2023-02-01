@@ -7,7 +7,6 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { destroy } from "@web/../tests/helpers/utils";
 
 import { makeTestPromise, file } from "web.test_utils";
@@ -478,79 +477,6 @@ QUnit.module("mail", {}, function () {
                     document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[2].dataset.id,
                     messaging.models["Attachment"].findFromIdentifyingData({ id: 4 }).localId,
                     "should have attachment with id 4 as 3rd attachment"
-                );
-            }
-        );
-
-        QUnit.skipRefactoring(
-            "warning on send with shortcut when attempting to post message with still-uploading attachments",
-            async function (assert) {
-                assert.expect(7);
-
-                const pyEnv = await startServer();
-                const mailChannelId1 = pyEnv["mail.channel"].create({});
-                const { messaging, openDiscuss } = await start({
-                    discuss: {
-                        context: {
-                            active_id: `mail.channel_${mailChannelId1}`,
-                        },
-                    },
-                    async mockRPC(route) {
-                        if (route === "/mail/attachment/upload") {
-                            // simulates attachment is never finished uploading
-                            await new Promise(() => {});
-                        }
-                    },
-                    services: {
-                        notification: makeFakeNotificationService((message, options) => {
-                            assert.strictEqual(
-                                message,
-                                "Please wait while the file is uploading.",
-                                "notification content should be about the uploading file"
-                            );
-                            assert.strictEqual(
-                                options.type,
-                                "warning",
-                                "notification should be a warning"
-                            );
-                            assert.step("notification");
-                        }),
-                    },
-                });
-                await openDiscuss();
-                const file = await createFile({
-                    content: "hello, world",
-                    contentType: "text/plain",
-                    name: "text.txt",
-                });
-                await afterNextRender(() =>
-                    inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [
-                        file,
-                    ])
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_AttachmentCard",
-                    "should have only one attachment"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_AttachmentCard.o-isUploading",
-                    "attachment displayed is being uploaded"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-composer-send-button",
-                    "composer send button should be displayed"
-                );
-
-                // Try to send message
-                document
-                    .querySelector(`.o-mail-composer-textarea`)
-                    .dispatchEvent(new window.KeyboardEvent("keydown", { key: "Enter" }));
-                assert.verifySteps(
-                    ["notification"],
-                    "should have triggered a notification for inability to post message at the moment (some attachments are still being uploaded)"
                 );
             }
         );

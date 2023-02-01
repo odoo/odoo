@@ -340,6 +340,11 @@ export class Composer extends Component {
             this.attachmentUploader?.clear();
             this.props.composer.textInputContent = "";
             el.focus();
+        } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
+            this.env.services.notification.add(
+                this.env._t("Please wait while the file is uploading."),
+                { type: "warning" }
+            );
         }
     }
 
