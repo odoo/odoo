@@ -20,6 +20,8 @@ import { FACET_ICONS } from "./utils/misc";
 import { EventBus, toRaw } from "@odoo/owl";
 const { DateTime } = luxon;
 
+/** @typedef {import("../views/relational_model").OrderTerm} OrderTerm */
+
 /**
  * @typedef {Object} ComparisonDomain
  * @property {DomainListRepr} arrayRepr
@@ -38,7 +40,7 @@ const { DateTime } = luxon;
  * @property {Context} context
  * @property {DomainListRepr} domain
  * @property {string[]} groupBy
- * @property {string[]} orderBy
+ * @property {OrderTerm[]} orderBy
  * @property {boolean} [useSampleModel] to remove?
  */
 
@@ -198,7 +200,7 @@ export class SearchModel extends EventBus {
      * @param {string[]} [config.groupBy=[]]
      * @param {boolean} [config.loadIrFilters=false]
      * @param {boolean} [config.display.searchPanel=true]
-     * @param {string[]} [config.orderBy=[]]
+     * @param {OrderTerm[]} [config.orderBy=[]]
      * @param {string[]} [config.searchMenuTypes=["filter", "groupBy", "favorite"]]
      * @param {Object} [config.state]
      */
@@ -376,7 +378,7 @@ export class SearchModel extends EventBus {
      * @param {Object} [config.context={}]
      * @param {Array} [config.domain=[]]
      * @param {string[]} [config.groupBy=[]]
-     * @param {string[]} [config.orderBy=[]]
+     * @param {OrderTerm[]} [config.orderBy=[]]
      */
     async reload(config = {}) {
         this._reset();
@@ -496,7 +498,7 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * @returns {string[]}
+     * @returns {OrderTerm[]}
      */
     get orderBy() {
         if (!this._orderBy) {
@@ -1801,7 +1803,7 @@ export class SearchModel extends EventBus {
     }
 
     /**
-     * @returns {string[]}
+     * @returns {OrderTerm[]}
      */
     _getOrderBy() {
         const groups = this._getGroups();
@@ -1815,8 +1817,7 @@ export class SearchModel extends EventBus {
                 }
             }
         }
-        orderBy = orderBy.length ? orderBy : this.globalOrderBy;
-        return typeof orderBy === "string" ? [orderBy] : orderBy;
+        return orderBy.length ? orderBy : this.globalOrderBy;
     }
 
     /**
