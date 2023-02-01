@@ -126,8 +126,3 @@ class test_guess_mimetype(BaseCase):
         self.assertEqual(get_extension('filename.not_alnum'), '')
         self.assertEqual(get_extension('filename.with space'), '')
         self.assertEqual(get_extension('filename.notAnExtension'), '')
-
-
-
-if __name__ == '__main__':
-    unittest.main()
