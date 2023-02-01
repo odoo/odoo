@@ -189,7 +189,7 @@ export class DatePicker extends Component {
             };
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
-                    params[prop] = params[prop].isValid ? luxonToMoment(params[prop]) : null;
+                    params[prop] = luxonToMoment(params[prop]);
                 }
             }
             commandOrParams = params;
@@ -220,10 +220,10 @@ export class DatePicker extends Component {
         const options = this.getOptions(useStatic);
         const parsedDate = this.parseValue(value, options)[0];
         this.state.warning = parsedDate && parsedDate > DateTime.local();
-        if (value && !parsedDate) {
-            // Reset to default (= given) date.
-            this.updateInput();
-        }
+        // Always update input.
+        // if the date is invalid, it will reset to default (= given) date.
+        // if the input is a computed date (+5d for instance), it will put the correct date.
+        this.updateInput();
         if (parsedDate !== null && !areDateEquals(this.date, parsedDate)) {
             this.props.onDateTimeChanged(parsedDate);
         }

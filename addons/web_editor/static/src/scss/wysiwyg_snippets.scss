@@ -2570,3 +2570,26 @@ we-button-group.o_grid {
     padding: 0;
     border: $o-we-handle-border-width solid $o-we-accent;
 }
+
+// Highlight of the grid items padding.
+@keyframes highlightPadding {
+    from {
+        border: solid rgba($o-we-handles-accent-color, 0.2);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+    to {
+        border: solid rgba($o-we-handles-accent-color, 0);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+}
+
+.o_we_padding_highlight > .o_grid_item {
+    position: relative;
+
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        animation: highlightPadding 2s;
+        pointer-events: none;
+    }
+}
