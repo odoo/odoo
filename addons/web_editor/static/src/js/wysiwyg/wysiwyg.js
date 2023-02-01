@@ -1928,8 +1928,7 @@ const Wysiwyg = Widget.extend({
             this._updateMediaJustifyButton();
             this._updateFaResizeButtons();
         }
-        const link = getInSelection(this.odooEditor.document, this.customizableLinksSelector);
-        if (isInMedia || (link && link.isContentEditable)) {
+        if (isInMedia) {
             // Handle the media/link's tooltip.
             this.showTooltip = true;
             this.tooltipTimeouts.push(setTimeout(() => {
