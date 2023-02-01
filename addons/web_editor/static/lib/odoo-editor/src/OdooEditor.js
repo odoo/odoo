@@ -305,7 +305,9 @@ export class OdooEditor extends EventTarget {
         this.idSet(editable);
         this._historyStepsActive = true;
         this.historyReset();
-        this.updateDocumentHistoryId();
+        if (this.options.initialHistoryId) {
+            this.historySetInitialId(this.options.initialHistoryId);
+        }
 
         this._pluginCall('sanitizeElement', [editable]);
 
@@ -685,20 +687,14 @@ export class OdooEditor extends EventTarget {
         this._historyIds = [];
     }
     /**
-     * Retrieve the document history id.
+     * Set the initial document history id.
      *
      * To prevent a saving a document with a diverging history, we store the
      * last history id in the first node of the document to the database.
-     * When we set the value of the editor, we need to fetch that node and add
-     * that id to our list of history ids so the server know we come from that
-     * history.
+     * This method provide the initial document history id to the editor.
      */
-    updateDocumentHistoryId() {
-        const historyStepNode = this.editable.querySelector(`[data-last-history-steps]`);
-        if (historyStepNode) {
-            const lastHistoryStep = peek(historyStepNode.getAttribute('data-last-history-steps').split(','));
-            this._historyIds.push(lastHistoryStep);
-        }
+    historySetInitialId(id) {
+        this._historyIds.unshift(id);
     }
     /**
      * Get all the history ids for the current history branch.
