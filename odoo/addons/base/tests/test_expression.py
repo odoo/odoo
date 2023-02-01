@@ -6,8 +6,6 @@ from unittest.mock import patch
 import psycopg2
 
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.fields import Date
-from odoo.models import BaseModel
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
 from odoo.osv import expression
@@ -22,10 +20,12 @@ class TestExpression(SavepointCaseWithUserDemo):
         cls._load_partners_set()
         cls.env['res.currency'].with_context({'active_test': False}).search([('name', 'in', ['EUR', 'USD'])]).write({'active': True})
 
-    def _search(self, model, domain, init_domain=None):
-        sql = model.search(domain, order="id")
-        fil = model.search(init_domain or [], order="id").filtered_domain(domain)
-        self.assertEqual(sql._ids, fil._ids, f"filtered_domain do not match SQL search for domain: {domain}")
+    def _search(self, model, domain, init_domain=None, limit=None, order='id'):
+        if not init_domain:
+            init_domain = []
+        sql = model.search(domain + init_domain, order=order, limit=limit)
+        fil = model.search(init_domain, order=order).filtered(domain, limit=limit)
+        self.assertEqual(sql._ids, fil._ids, f"filtered do not match SQL search for domain: {domain}")
         return sql
 
     def test_00_in_not_in_m2m(self):
@@ -749,6 +749,13 @@ class TestExpression(SavepointCaseWithUserDemo):
         countries = self._search(Country, [('name', '=ilike', 'z%')])
         self.assertTrue(len(countries) == 2, "Must match only countries with names starting with Z (currently 2)")
 
+    def test_filtered_limit(self):
+        Partner = self.env['res.partner']
+        res = self._search(Partner, [('parent_id', '!=', False)], limit=5)
+        self.assertEqual(len(res), 5)
+        res = self._search(Partner, [('parent_id', '!=', False)], limit=1)
+        self.assertEqual(len(res), 1)
+
     def test_translate_search(self):
         Country = self.env['res.country']
         belgium = self.env.ref('base.be')
@@ -771,16 +778,22 @@ class TestExpression(SavepointCaseWithUserDemo):
         """ verify that invalid expressions are refused, even for magic fields """
         Country = self.env['res.country']
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"Invalid field .*"):
             Country.search([('does_not_exist', '=', 'foo')])
 
-        with self.assertRaises(KeyError):
+        with self.assertRaisesRegex(ValueError, r"Invalid field .*"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"Non-relational field .*"):
+            Country.search([('code.id', '=', 'foo')])
+
+        with self.assertRaisesRegex(ValueError, r"Non-relational field .*"):
+            Country.search([]).filtered_domain([('code.id', '=', 'foo')])
+
+        with self.assertRaisesRegex(ValueError, r"Invalid leaf .*"):
             Country.search([('create_date', '>>', 'foo')])
 
-        with self.assertRaises(ValueError):
+        with self.assertRaisesRegex(ValueError, r"Invalid leaf .*"):
             Country.search([]).filtered_domain([('create_date', '>>', 'foo')])
 
         with self.assertRaises(psycopg2.DataError):

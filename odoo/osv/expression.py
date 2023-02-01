@@ -116,9 +116,9 @@ start the server specifying the ``--unaccent`` flag.
 import collections.abc
 import json
 import logging
+import re
 import reprlib
 import traceback
-import warnings
 from datetime import date, datetime, time
 
 from psycopg2.sql import Composable, SQL
@@ -396,6 +396,80 @@ def check_leaf(element, internal=False):
     if not is_operator(element) and not is_leaf(element, internal):
         raise ValueError("Invalid leaf %s" % str(element))
 
+# --------------------------------------------------
+# Python utils
+# --------------------------------------------------
+
+# Functions that always return True or False, accordingly.
+TRUE_FUNCTION = lambda *__: True
+FALSE_FUNCTION = lambda *__: False
+
+# Functions capable of evaluating a domain operator.
+#
+# They take a list of functions as arguments, and return a function that
+# combines them. The functions are evaluated in the order they are given,
+# and all the arguments are passed to them as-is.
+#
+# :param *args: list of functions to combine
+def AND_FUNCTION(*fns):
+    return lambda *args: all(fn(*args) for fn in fns)
+
+def OR_FUNCTION(*fns):
+    return lambda *args: any(fn(*args) for fn in fns)
+
+def NOT_FUNCTION(*fns):
+    return lambda *args: not AND_FUNCTION(*fns)(*args)
+
+# Functions capable of evaluating a domain term operator.
+# To see them in action, see :meth:`BaseModel._filtered_domain_func`.
+#
+# .. note:: The 'like' operator takes a compiled regexp instead and case
+#           sensitivity is handled by the regexp itself.
+#
+# .. note:: The hierarchy operators 'child_of' and 'parent_of' are not
+#           implemented here.
+#
+# :param data: left operand data in a list as returned by `mapped`, with the
+#     exception of recordsets, that are expected to be mapped to their `ids`
+#     or to `(False,)` if empty.
+# :param value: right operand value, normalized as a tuple.
+TERM_OPERATOR_FUNCTIONS = {
+    "=": lambda data, value: value in data,
+    "=?": lambda data, value: value is False or value in data,
+    "<": lambda data, value: any(x is not None and x < value for x in data),
+    "<=": lambda data, value: any(x is not None and x <= value for x in data),
+    ">": lambda data, value: any(x is not None and x > value for x in data),
+    ">=": lambda data, value: any(x is not None and x >= value for x in data),
+    "in": lambda data, value: value and any(x in value for x in data),
+    "like": lambda data, value: any(x and value.search(x) for x in data),
+    "ilike": lambda data, value: any(x and value.search(x) for x in data),
+    "=like": lambda data, value: any(x and value.fullmatch(x) for x in data),
+    "=ilike": lambda data, value: any(x and value.fullmatch(x) for x in data),
+}
+
+# Fill-in the missing negation operators
+for op in list(TERM_OPERATOR_FUNCTIONS):
+    negation = TERM_OPERATORS_NEGATION.get(op)
+    if negation and negation not in TERM_OPERATOR_FUNCTIONS:
+        TERM_OPERATOR_FUNCTIONS[negation] = NOT_FUNCTION(TERM_OPERATOR_FUNCTIONS[op])
+
+
+def compile_like_regex(pattern, ignorecase=False):
+    """Compile a regular expression from a postgres 'LIKE' pattern.
+
+    The search pattern may contain the following special characters:
+
+        '%': matches any number of characters
+        '_': matches exactly one character
+
+    :param str pattern: the search string using postgres 'LIKE' syntax
+    :param ignorecase: whether the regex should be case insensitive
+    """
+    if not pattern:
+        return re.compile(r"")
+    pattern = re.escape(pattern).replace("%", ".*").replace("_", ".")
+    flags = re.IGNORECASE if ignorecase else 0
+    return re.compile(pattern, flags=flags)
 
 # --------------------------------------------------
 # SQL utils
