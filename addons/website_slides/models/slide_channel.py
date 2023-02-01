@@ -677,20 +677,20 @@ class Channel(models.Model):
             'context': local_context,
         }
 
-    def action_add_member(self, **member_values):
+    def _action_add_member(self):
         """ Adds the logged in user in the channel members.
         (see '_action_add_members' for more info)
 
         Returns True if added successfully, False otherwise."""
-        return bool(self._action_add_members(self.env.user.partner_id, **member_values))
+        return bool(self._action_add_members(self.env.user.partner_id))
 
-    def _action_add_members(self, target_partners, **member_values):
+    def _action_add_members(self, target_partners):
         """ Add the target_partner as a member of the channel (to its slide.channel.partner).
         This will make the content (slides) of the channel available to that partner.
 
         Returns the added 'slide.channel.partner's (! as sudo !)
         """
-        to_join = self._filter_add_members(target_partners, **member_values)
+        to_join = self._filter_add_members(target_partners)
         if to_join:
             existing = self.env['slide.channel.partner'].sudo().search([
                 ('channel_id', 'in', self.ids),
@@ -701,7 +701,7 @@ class Channel(models.Model):
                 existing_map[item.channel_id.id].append(item.partner_id.id)
 
             to_create_values = [
-                dict(channel_id=channel.id, partner_id=partner.id, **member_values)
+                dict(channel_id=channel.id, partner_id=partner.id)
                 for channel in to_join
                 for partner in target_partners if partner.id not in existing_map[channel.id]
             ]
@@ -710,7 +710,7 @@ class Channel(models.Model):
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 
-    def _filter_add_members(self, target_partners, **member_values):
+    def _filter_add_members(self, target_partners):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
         on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
         if on_invite:

@@ -76,10 +76,10 @@ class Channel(models.Model):
         action['domain'] = [('product_id', 'in', self.product_id.ids)]
         return action
 
-    def _filter_add_members(self, target_partners, **member_values):
+    def _filter_add_members(self, target_partners):
         """ Overridden to add 'payment' channels to the filtered channels. People
         that can write on payment-based channels can add members. """
-        result = super(Channel, self)._filter_add_members(target_partners, **member_values)
+        result = super(Channel, self)._filter_add_members(target_partners)
         on_payment = self.filtered(lambda channel: channel.enroll == 'payment')
         if on_payment:
             try:
