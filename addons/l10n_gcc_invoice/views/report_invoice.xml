@@ -352,78 +352,76 @@
                 </table>
 
                 <div class="clearfix pt-4 pb-3">
-                    <div id="total" class="row">
-                        <div class="col-6">
-                            <table class="table table-sm" style="page-break-inside: avoid;">
-                                <tr class="border-black o_subtotal">
-                                    <td>
-                                        <strong>
-                                            Subtotal
-                                            /
-                                            الإجمالي الفرعي
-                                        </strong>
-                                    </td>
-                                    <td class="text-end">
-                                        <span t-field="o.amount_untaxed"/>
-                                    </td>
-                                </tr>
-                                <t t-set="tax_totals" t-value="o.tax_totals"/>
-                                <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
-                                    <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
-                                    <t t-call="account.tax_groups_totals"/>
-                                </t>
-                                <tr class="border-black o_total">
-                                    <td>
-                                        <strong>
-                                            Total
-                                            /
-                                            المجموع
-                                        </strong>
-                                    </td>
-                                    <td class="text-end">
-                                        <span class="text-nowrap" t-field="o.amount_total"/>
-                                    </td>
-                                </tr>
+                    <div id="total" class="row float-end w-50">
+                        <table class="table table-sm" style="page-break-inside: avoid;">
+                            <tr class="border-black o_subtotal">
+                                <td>
+                                    <strong>
+                                        Subtotal
+                                        /
+                                        الإجمالي الفرعي
+                                    </strong>
+                                </td>
+                                <td class="text-end">
+                                    <span t-field="o.amount_untaxed"/>
+                                </td>
+                            </tr>
+                            <t t-set="tax_totals" t-value="o.tax_totals"/>
+                            <t t-foreach="tax_totals['subtotals']" t-as="subtotal">
+                                <t t-set="subtotal_to_show" t-value="subtotal['name']"/>
+                                <t t-call="account.tax_groups_totals"/>
+                            </t>
+                            <tr class="border-black o_total">
+                                <td>
+                                    <strong>
+                                        Total
+                                        /
+                                        المجموع
+                                    </strong>
+                                </td>
+                                <td class="text-end">
+                                    <span class="text-nowrap" t-field="o.amount_total"/>
+                                </td>
+                            </tr>
 
-                                <t t-if="print_with_payments">
-                                    <t t-if="o.payment_state != 'invoicing_legacy'">
-                                        <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
-                                        <t t-foreach="payments_vals" t-as="payment_vals">
-                                            <tr class="border-black o_total">
-                                                <td>
-                                                    <i class="row">
-                                                        <div class="col-7 oe_form_field oe_payment_label">
-                                                            Paid on/دفعت في:
-                                                        </div>
-                                                        <div class="col-5 ps-0 oe_form_field oe_payment_label">
-                                                            <t t-out="payment_vals['date']"/>
-                                                        </div>
-                                                    </i>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-out="payment_vals['amount']"
-                                                          t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                                                </td>
-                                            </tr>
-                                        </t>
-                                        <t t-if="len(payments_vals) > 0">
-                                            <tr class="border-black">
-                                                <td>
-                                                    <strong>
-                                                        Amount Due
-                                                        /
-                                                        المبلغ المستحق
-                                                    </strong>
-                                                </td>
-                                                <td class="text-end">
-                                                    <span t-field="o.amount_residual"/>
-                                                </td>
-                                            </tr>
-                                        </t>
+                            <t t-if="print_with_payments">
+                                <t t-if="o.payment_state != 'invoicing_legacy'">
+                                    <t t-set="payments_vals" t-value="o.sudo().invoice_payments_widget and o.sudo().invoice_payments_widget['content'] or []"/>
+                                    <t t-foreach="payments_vals" t-as="payment_vals">
+                                        <tr class="border-black o_total">
+                                            <td>
+                                                <i class="row">
+                                                    <div class="col-7 oe_form_field oe_payment_label">
+                                                        Paid on/دفعت في:
+                                                    </div>
+                                                    <div class="col-5 ps-0 oe_form_field oe_payment_label">
+                                                        <t t-out="payment_vals['date']"/>
+                                                    </div>
+                                                </i>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-out="payment_vals['amount']"
+                                                      t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <t t-if="len(payments_vals) > 0">
+                                        <tr class="border-black">
+                                            <td>
+                                                <strong>
+                                                    Amount Due
+                                                    /
+                                                    المبلغ المستحق
+                                                </strong>
+                                            </td>
+                                            <td class="text-end">
+                                                <span t-field="o.amount_residual"/>
+                                            </td>
+                                        </tr>
                                     </t>
                                 </t>
-                            </table>
-                        </div>
+                            </t>
+                        </table>
                     </div>
                 </div>
 
