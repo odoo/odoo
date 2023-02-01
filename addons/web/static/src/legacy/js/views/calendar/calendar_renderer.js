@@ -514,7 +514,7 @@ return AbstractRenderer.extend({
                     // Detect if the event occurs in just one day
                     // note: add & remove 1 min to avoid issues with 00:00
                     var isSameDayEvent = moment(start).clone().add(1, 'minute').isSame(moment(end).clone().subtract(1, 'minute'), 'day');
-                    if (!event.extendedProps.record.allday && isSameDayEvent) {
+                    if (!event.allDay && isSameDayEvent) {
                         // For month view: do not show background for non allday, single day events
                         element.addClass('o_cw_nobg');
                         if (event.extendedProps.showTime && !self.hideTime) {
@@ -857,7 +857,7 @@ return AbstractRenderer.extend({
         var isSameDayEvent = start.clone().add(1, 'minute').isSame(end.clone().subtract(1, 'minute'), 'day');
 
         // Do not display timing if the event occur across multiple days. Otherwise use user's timing preferences
-        if (!this.hideTime && !eventData.extendedProps.record.allday && isSameDayEvent) {
+        if (!this.hideTime && !eventData.allDay && isSameDayEvent) {
             var dbTimeFormat = this._getDbTimeFormat();
 
             context.eventTime.time = start.clone().format(dbTimeFormat) + ' - ' + end.clone().format(dbTimeFormat);
@@ -876,15 +876,15 @@ return AbstractRenderer.extend({
 
         if (!this.hideDate) {
 
-            if (eventData.extendedProps.record.allday && isSameDayEvent) {
+            if (eventData.allDay && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
-            } else if (eventData.extendedProps.record.allday && !isSameDayEvent) {
+            } else if (eventData.allDay && !isSameDayEvent) {
                 var daysLocaleData = moment.localeData();
                 var days = moment.duration(end.diff(start)).days();
                 context.eventDate.duration = daysLocaleData.relativeTime(days, true, 'dd');
             }
 
-            context.eventDate.date = this._getFormattedDate(start, end, true, eventData.extendedProps.record.allday);
+            context.eventDate.date = this._getFormattedDate(start, end, true, eventData.allDay);
         }
 
         return context;
@@ -948,12 +948,19 @@ return AbstractRenderer.extend({
     _renderYearEventPopover: function (date, events, $el) {
         const groupKeys = [];
         const groupedEvents = {};
+        const records = {};
+        for(const record of this.state.data) {
+            records[record.id] = record;
+        }
         for (const event of events) {
             const start = moment(event.extendedProps.r_start);
             const end = moment(event.extendedProps.r_end);
             const duration = moment.duration(end.diff(start)).asDays();
-            event.extendedProps.record.start_hour = !event.extendedProps.record.allday && duration < 1 ? start.format("HH:mm") : "";
-            const key = this._getFormattedDate(start, end, false, event.extendedProps.record.allday);
+            // get the original record to get the real allDay value as
+            // the fullcalendar year view enforce allDay to true
+            const record = records[event.extendedProps.record.id];
+            event.extendedProps.record.start_hour = !record.allDay && duration < 1 ? start.format("HH:mm") : "";
+            const key = this._getFormattedDate(start, end, false, record.allDay);
             if (!(key in groupedEvents)) {
                 groupedEvents[key] = [];
                 groupKeys.push({
