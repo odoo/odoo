@@ -7527,21 +7527,17 @@ test(`form rendering with groups with col/colspan`, async () => {
     expect(`.group_4 > div.o_wrap_field:eq(0) div.o_cell`).toHaveCount(1);
     expect(`.group_4 > div.o_wrap_field:eq(0) div.o_cell`).toHaveAttribute(
         "style",
-        "grid-column: span 3;width: 75%;"
+        "grid-column: span 3;"
     );
     expect(`.group_4 > div.o_wrap_field:eq(1) div.o_cell`).toHaveCount(2);
     expect(`.group_4 > div.o_wrap_field:eq(1) div.o_cell:eq(0)`).toHaveAttribute(
         "style",
-        "grid-column: span 2;width: 50%;"
-    );
-    expect(`.group_4 > div.o_wrap_field:eq(1) div.o_cell:eq(1)`).toHaveAttribute(
-        "style",
-        "width: 25%;"
+        "grid-column: span 2;"
     );
     expect(`.group_4 > div.o_wrap_field:eq(2) div.o_cell`).toHaveCount(1);
     expect(`.group_4 > div.o_wrap_field:eq(2) div.o_cell`).toHaveAttribute(
         "style",
-        "grid-column: span 4;width: 100%;"
+        "grid-column: span 4;"
     );
 
     // Verify .group_3 content
@@ -7557,42 +7553,22 @@ test(`form rendering with groups with col/colspan`, async () => {
     expect(`.field_group > .o_wrap_field:eq(0) .o_cell:eq(0)`).toHaveClass("o_wrap_label");
     expect(`.field_group > .o_wrap_field:eq(0) .o_cell:eq(1)`).toHaveAttribute(
         "style",
-        "grid-column: span 2;width: 100%;"
+        "grid-column: span 2;"
     );
 
     expect(`.field_group > .o_wrap_field:eq(1) .o_cell`).toHaveCount(2);
-    expect(`.field_group > .o_wrap_field:eq(1) .o_cell:eq(0)`).toHaveAttribute(
-        "style",
-        /width: 33/
-    );
-    expect(`.field_group > .o_wrap_field:eq(1) .o_cell:eq(1)`).toHaveAttribute(
-        "style",
-        /width: 33/
-    );
 
     expect(`.field_group > .o_wrap_field:eq(2) .o_cell`).toHaveCount(2);
     expect(`.field_group > .o_wrap_field:eq(2) .o_cell:eq(0)`).toHaveClass("o_wrap_label");
-    expect(`.field_group > .o_wrap_field:eq(2) .o_cell:eq(1)`).toHaveAttribute(
-        "style",
-        "width: 50%;"
-    );
 
     expect(`.field_group > .o_wrap_field:eq(3) .o_cell`).toHaveCount(1);
     expect(`.field_group > .o_wrap_field:eq(3) .o_cell`).toHaveAttribute(
         "style",
-        "grid-column: span 3;width: 100%;"
+        "grid-column: span 3;"
     );
 
     expect(`.field_group > .o_wrap_field:eq(4) .o_cell`).toHaveCount(3);
-    expect(`.field_group > .o_wrap_field:eq(4) .o_cell:eq(0)`).toHaveAttribute(
-        "style",
-        "width: 50%;"
-    );
     expect(`.field_group > .o_wrap_field:eq(4) .o_cell:eq(1)`).toHaveClass("o_wrap_label");
-    expect(`.field_group > .o_wrap_field:eq(4) .o_cell:eq(2)`).toHaveAttribute(
-        "style",
-        "width: 50%;"
-    );
 });
 
 test(`form rendering innergroup: separator should take one line`, async () => {

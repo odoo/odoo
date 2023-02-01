@@ -25,9 +25,9 @@
 
                 <t t-else="">
                     <div
-                        class="o_cell flex-grow-1 flex-sm-grow-0"
-                        t-attf-style="{{ cell.itemSpan > 1 ? 'grid-column: span ' + cell.itemSpan + ';' : '' }}{{ cell.width ? 'width: ' + cell.width + '%' + ';' : '' }}"
-                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label w-100 text-break text-900' : null }}"
+                        class="o_cell"
+                        t-attf-style="{{ cell.itemSpan > 1 ? 'grid-column: span ' + cell.itemSpan + ';' : '' }}"
+                        t-attf-class="{{ cell.subType === 'label' ? 'o_wrap_label text-break text-900' : null }}"
                         t-if="cell.isVisible">
                         <t t-slot="{{ cell.name }}" />
                     </div>
@@ -40,12 +40,12 @@
 
 <t t-name="web.Form.InnerGroup.ItemComponent">
     <t t-if="cell.props.fieldInfo.field.component.name !== 'BooleanField'">
-        <div class="o_cell o_wrap_label flex-grow-1 flex-sm-grow-0 w-100 text-break text-900">
+        <div class="o_cell o_wrap_label text-break text-900">
             <t t-component="cell.Component" t-if="cell.isVisible" t-props="cell.props"/>
         </div>
         <div
-        class="o_cell o_wrap_input flex-grow-1 flex-sm-grow-0 text-break"
-        t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}{{ cell.width ? 'width: ' + cell.width + '%' + ';' : '' }}">
+        class="o_cell o_wrap_input text-break"
+        t-attf-style="{{ cell.itemSpan -1 > 1 ? 'grid-column: span ' + (cell.itemSpan -1) + ';' : '' }}">
             <t t-slot="{{ cell.name }}"/>
         </div>
     </t>
