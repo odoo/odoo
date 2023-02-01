@@ -182,6 +182,8 @@
         t-on-click.stop="onClick"
         t-on-blur="onBlur"
         t-on-paste.stop=""
+        t-on-compositionstart="onCompositionStart"
+        t-on-compositionend="onCompositionEnd"
       />
 
       <div
@@ -1464,14 +1466,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Menu" owl="1">
-    <Popover
-      t-if="props.menuItems.length"
-      anchorRect="popover.anchorRect"
-      positioning="popover.positioning"
-      verticalOffset="popover.verticalOffset"
-      onPopoverHidden="() => this.closeSubMenu()"
-      onPopoverMoved="() => this.closeSubMenu()"
-      maxHeight="menuHeight">
+    <Popover t-if="props.menuItems.length" t-props="popoverProps">
       <div
         t-ref="menu"
         class="o-menu"
@@ -1644,7 +1639,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -1721,7 +1716,7 @@
           Select a color...
           <span
             title="Background Color"
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="() => this.toggleMenu('backgroundColor', ev)">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -1936,7 +1931,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -2055,7 +2050,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -2209,7 +2204,7 @@
           Select a color...
           <span
             title="Background Color"
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="() => this.openColorPicker('backgroundColor')">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>

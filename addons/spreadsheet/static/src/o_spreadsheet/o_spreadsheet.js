@@ -1338,6 +1338,12 @@
     function isSingleCellReference(xc) {
         return singleCellReference.test(xc);
     }
+    function splitReference(ref) {
+        const parts = ref.split("!");
+        const xc = parts.pop();
+        const sheetName = getUnquotedSheetName(parts.join("!")) || undefined;
+        return { sheetName, xc };
+    }
 
     //------------------------------------------------------------------------------
     /**
@@ -3472,84 +3478,85 @@
         CommandResult[CommandResult["WillRemoveExistingMerge"] = 2] = "WillRemoveExistingMerge";
         CommandResult[CommandResult["MergeIsDestructive"] = 3] = "MergeIsDestructive";
         CommandResult[CommandResult["CellIsMerged"] = 4] = "CellIsMerged";
-        CommandResult[CommandResult["EmptyUndoStack"] = 5] = "EmptyUndoStack";
-        CommandResult[CommandResult["EmptyRedoStack"] = 6] = "EmptyRedoStack";
-        CommandResult[CommandResult["NotEnoughElements"] = 7] = "NotEnoughElements";
-        CommandResult[CommandResult["NotEnoughSheets"] = 8] = "NotEnoughSheets";
-        CommandResult[CommandResult["MissingSheetName"] = 9] = "MissingSheetName";
-        CommandResult[CommandResult["DuplicatedSheetName"] = 10] = "DuplicatedSheetName";
-        CommandResult[CommandResult["DuplicatedSheetId"] = 11] = "DuplicatedSheetId";
-        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 12] = "ForbiddenCharactersInSheetName";
-        CommandResult[CommandResult["WrongSheetMove"] = 13] = "WrongSheetMove";
-        CommandResult[CommandResult["WrongSheetPosition"] = 14] = "WrongSheetPosition";
-        CommandResult[CommandResult["InvalidAnchorZone"] = 15] = "InvalidAnchorZone";
-        CommandResult[CommandResult["SelectionOutOfBound"] = 16] = "SelectionOutOfBound";
-        CommandResult[CommandResult["TargetOutOfSheet"] = 17] = "TargetOutOfSheet";
-        CommandResult[CommandResult["WrongCutSelection"] = 18] = "WrongCutSelection";
-        CommandResult[CommandResult["WrongPasteSelection"] = 19] = "WrongPasteSelection";
-        CommandResult[CommandResult["WrongPasteOption"] = 20] = "WrongPasteOption";
-        CommandResult[CommandResult["WrongFigurePasteOption"] = 21] = "WrongFigurePasteOption";
-        CommandResult[CommandResult["EmptyClipboard"] = 22] = "EmptyClipboard";
-        CommandResult[CommandResult["EmptyRange"] = 23] = "EmptyRange";
-        CommandResult[CommandResult["InvalidRange"] = 24] = "InvalidRange";
-        CommandResult[CommandResult["InvalidZones"] = 25] = "InvalidZones";
-        CommandResult[CommandResult["InvalidSheetId"] = 26] = "InvalidSheetId";
-        CommandResult[CommandResult["InvalidFigureId"] = 27] = "InvalidFigureId";
-        CommandResult[CommandResult["InputAlreadyFocused"] = 28] = "InputAlreadyFocused";
-        CommandResult[CommandResult["MaximumRangesReached"] = 29] = "MaximumRangesReached";
-        CommandResult[CommandResult["InvalidChartDefinition"] = 30] = "InvalidChartDefinition";
-        CommandResult[CommandResult["InvalidDataSet"] = 31] = "InvalidDataSet";
-        CommandResult[CommandResult["InvalidLabelRange"] = 32] = "InvalidLabelRange";
-        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 33] = "InvalidScorecardKeyValue";
-        CommandResult[CommandResult["InvalidScorecardBaseline"] = 34] = "InvalidScorecardBaseline";
-        CommandResult[CommandResult["InvalidGaugeDataRange"] = 35] = "InvalidGaugeDataRange";
-        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 36] = "EmptyGaugeRangeMin";
-        CommandResult[CommandResult["GaugeRangeMinNaN"] = 37] = "GaugeRangeMinNaN";
-        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 38] = "EmptyGaugeRangeMax";
-        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 39] = "GaugeRangeMaxNaN";
-        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 40] = "GaugeRangeMinBiggerThanRangeMax";
-        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 41] = "GaugeLowerInflectionPointNaN";
-        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 42] = "GaugeUpperInflectionPointNaN";
-        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 43] = "GaugeLowerBiggerThanUpper";
-        CommandResult[CommandResult["InvalidAutofillSelection"] = 44] = "InvalidAutofillSelection";
-        CommandResult[CommandResult["WrongComposerSelection"] = 45] = "WrongComposerSelection";
-        CommandResult[CommandResult["MinBiggerThanMax"] = 46] = "MinBiggerThanMax";
-        CommandResult[CommandResult["LowerBiggerThanUpper"] = 47] = "LowerBiggerThanUpper";
-        CommandResult[CommandResult["MidBiggerThanMax"] = 48] = "MidBiggerThanMax";
-        CommandResult[CommandResult["MinBiggerThanMid"] = 49] = "MinBiggerThanMid";
-        CommandResult[CommandResult["FirstArgMissing"] = 50] = "FirstArgMissing";
-        CommandResult[CommandResult["SecondArgMissing"] = 51] = "SecondArgMissing";
-        CommandResult[CommandResult["MinNaN"] = 52] = "MinNaN";
-        CommandResult[CommandResult["MidNaN"] = 53] = "MidNaN";
-        CommandResult[CommandResult["MaxNaN"] = 54] = "MaxNaN";
-        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 55] = "ValueUpperInflectionNaN";
-        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 56] = "ValueLowerInflectionNaN";
-        CommandResult[CommandResult["MinInvalidFormula"] = 57] = "MinInvalidFormula";
-        CommandResult[CommandResult["MidInvalidFormula"] = 58] = "MidInvalidFormula";
-        CommandResult[CommandResult["MaxInvalidFormula"] = 59] = "MaxInvalidFormula";
-        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 60] = "ValueUpperInvalidFormula";
-        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 61] = "ValueLowerInvalidFormula";
-        CommandResult[CommandResult["InvalidSortZone"] = 62] = "InvalidSortZone";
-        CommandResult[CommandResult["WaitingSessionConfirmation"] = 63] = "WaitingSessionConfirmation";
-        CommandResult[CommandResult["MergeOverlap"] = 64] = "MergeOverlap";
-        CommandResult[CommandResult["TooManyHiddenElements"] = 65] = "TooManyHiddenElements";
-        CommandResult[CommandResult["Readonly"] = 66] = "Readonly";
-        CommandResult[CommandResult["InvalidViewportSize"] = 67] = "InvalidViewportSize";
-        CommandResult[CommandResult["InvalidScrollingDirection"] = 68] = "InvalidScrollingDirection";
-        CommandResult[CommandResult["FigureDoesNotExist"] = 69] = "FigureDoesNotExist";
-        CommandResult[CommandResult["InvalidConditionalFormatId"] = 70] = "InvalidConditionalFormatId";
-        CommandResult[CommandResult["InvalidCellPopover"] = 71] = "InvalidCellPopover";
-        CommandResult[CommandResult["EmptyTarget"] = 72] = "EmptyTarget";
-        CommandResult[CommandResult["InvalidFreezeQuantity"] = 73] = "InvalidFreezeQuantity";
-        CommandResult[CommandResult["FrozenPaneOverlap"] = 74] = "FrozenPaneOverlap";
-        CommandResult[CommandResult["ValuesNotChanged"] = 75] = "ValuesNotChanged";
-        CommandResult[CommandResult["InvalidFilterZone"] = 76] = "InvalidFilterZone";
-        CommandResult[CommandResult["FilterOverlap"] = 77] = "FilterOverlap";
-        CommandResult[CommandResult["FilterNotFound"] = 78] = "FilterNotFound";
-        CommandResult[CommandResult["MergeInFilter"] = 79] = "MergeInFilter";
-        CommandResult[CommandResult["NonContinuousTargets"] = 80] = "NonContinuousTargets";
-        CommandResult[CommandResult["DuplicatedFigureId"] = 81] = "DuplicatedFigureId";
-        CommandResult[CommandResult["InvalidSelectionStep"] = 82] = "InvalidSelectionStep";
+        CommandResult[CommandResult["InvalidTarget"] = 5] = "InvalidTarget";
+        CommandResult[CommandResult["EmptyUndoStack"] = 6] = "EmptyUndoStack";
+        CommandResult[CommandResult["EmptyRedoStack"] = 7] = "EmptyRedoStack";
+        CommandResult[CommandResult["NotEnoughElements"] = 8] = "NotEnoughElements";
+        CommandResult[CommandResult["NotEnoughSheets"] = 9] = "NotEnoughSheets";
+        CommandResult[CommandResult["MissingSheetName"] = 10] = "MissingSheetName";
+        CommandResult[CommandResult["DuplicatedSheetName"] = 11] = "DuplicatedSheetName";
+        CommandResult[CommandResult["DuplicatedSheetId"] = 12] = "DuplicatedSheetId";
+        CommandResult[CommandResult["ForbiddenCharactersInSheetName"] = 13] = "ForbiddenCharactersInSheetName";
+        CommandResult[CommandResult["WrongSheetMove"] = 14] = "WrongSheetMove";
+        CommandResult[CommandResult["WrongSheetPosition"] = 15] = "WrongSheetPosition";
+        CommandResult[CommandResult["InvalidAnchorZone"] = 16] = "InvalidAnchorZone";
+        CommandResult[CommandResult["SelectionOutOfBound"] = 17] = "SelectionOutOfBound";
+        CommandResult[CommandResult["TargetOutOfSheet"] = 18] = "TargetOutOfSheet";
+        CommandResult[CommandResult["WrongCutSelection"] = 19] = "WrongCutSelection";
+        CommandResult[CommandResult["WrongPasteSelection"] = 20] = "WrongPasteSelection";
+        CommandResult[CommandResult["WrongPasteOption"] = 21] = "WrongPasteOption";
+        CommandResult[CommandResult["WrongFigurePasteOption"] = 22] = "WrongFigurePasteOption";
+        CommandResult[CommandResult["EmptyClipboard"] = 23] = "EmptyClipboard";
+        CommandResult[CommandResult["EmptyRange"] = 24] = "EmptyRange";
+        CommandResult[CommandResult["InvalidRange"] = 25] = "InvalidRange";
+        CommandResult[CommandResult["InvalidZones"] = 26] = "InvalidZones";
+        CommandResult[CommandResult["InvalidSheetId"] = 27] = "InvalidSheetId";
+        CommandResult[CommandResult["InvalidFigureId"] = 28] = "InvalidFigureId";
+        CommandResult[CommandResult["InputAlreadyFocused"] = 29] = "InputAlreadyFocused";
+        CommandResult[CommandResult["MaximumRangesReached"] = 30] = "MaximumRangesReached";
+        CommandResult[CommandResult["InvalidChartDefinition"] = 31] = "InvalidChartDefinition";
+        CommandResult[CommandResult["InvalidDataSet"] = 32] = "InvalidDataSet";
+        CommandResult[CommandResult["InvalidLabelRange"] = 33] = "InvalidLabelRange";
+        CommandResult[CommandResult["InvalidScorecardKeyValue"] = 34] = "InvalidScorecardKeyValue";
+        CommandResult[CommandResult["InvalidScorecardBaseline"] = 35] = "InvalidScorecardBaseline";
+        CommandResult[CommandResult["InvalidGaugeDataRange"] = 36] = "InvalidGaugeDataRange";
+        CommandResult[CommandResult["EmptyGaugeRangeMin"] = 37] = "EmptyGaugeRangeMin";
+        CommandResult[CommandResult["GaugeRangeMinNaN"] = 38] = "GaugeRangeMinNaN";
+        CommandResult[CommandResult["EmptyGaugeRangeMax"] = 39] = "EmptyGaugeRangeMax";
+        CommandResult[CommandResult["GaugeRangeMaxNaN"] = 40] = "GaugeRangeMaxNaN";
+        CommandResult[CommandResult["GaugeRangeMinBiggerThanRangeMax"] = 41] = "GaugeRangeMinBiggerThanRangeMax";
+        CommandResult[CommandResult["GaugeLowerInflectionPointNaN"] = 42] = "GaugeLowerInflectionPointNaN";
+        CommandResult[CommandResult["GaugeUpperInflectionPointNaN"] = 43] = "GaugeUpperInflectionPointNaN";
+        CommandResult[CommandResult["GaugeLowerBiggerThanUpper"] = 44] = "GaugeLowerBiggerThanUpper";
+        CommandResult[CommandResult["InvalidAutofillSelection"] = 45] = "InvalidAutofillSelection";
+        CommandResult[CommandResult["WrongComposerSelection"] = 46] = "WrongComposerSelection";
+        CommandResult[CommandResult["MinBiggerThanMax"] = 47] = "MinBiggerThanMax";
+        CommandResult[CommandResult["LowerBiggerThanUpper"] = 48] = "LowerBiggerThanUpper";
+        CommandResult[CommandResult["MidBiggerThanMax"] = 49] = "MidBiggerThanMax";
+        CommandResult[CommandResult["MinBiggerThanMid"] = 50] = "MinBiggerThanMid";
+        CommandResult[CommandResult["FirstArgMissing"] = 51] = "FirstArgMissing";
+        CommandResult[CommandResult["SecondArgMissing"] = 52] = "SecondArgMissing";
+        CommandResult[CommandResult["MinNaN"] = 53] = "MinNaN";
+        CommandResult[CommandResult["MidNaN"] = 54] = "MidNaN";
+        CommandResult[CommandResult["MaxNaN"] = 55] = "MaxNaN";
+        CommandResult[CommandResult["ValueUpperInflectionNaN"] = 56] = "ValueUpperInflectionNaN";
+        CommandResult[CommandResult["ValueLowerInflectionNaN"] = 57] = "ValueLowerInflectionNaN";
+        CommandResult[CommandResult["MinInvalidFormula"] = 58] = "MinInvalidFormula";
+        CommandResult[CommandResult["MidInvalidFormula"] = 59] = "MidInvalidFormula";
+        CommandResult[CommandResult["MaxInvalidFormula"] = 60] = "MaxInvalidFormula";
+        CommandResult[CommandResult["ValueUpperInvalidFormula"] = 61] = "ValueUpperInvalidFormula";
+        CommandResult[CommandResult["ValueLowerInvalidFormula"] = 62] = "ValueLowerInvalidFormula";
+        CommandResult[CommandResult["InvalidSortZone"] = 63] = "InvalidSortZone";
+        CommandResult[CommandResult["WaitingSessionConfirmation"] = 64] = "WaitingSessionConfirmation";
+        CommandResult[CommandResult["MergeOverlap"] = 65] = "MergeOverlap";
+        CommandResult[CommandResult["TooManyHiddenElements"] = 66] = "TooManyHiddenElements";
+        CommandResult[CommandResult["Readonly"] = 67] = "Readonly";
+        CommandResult[CommandResult["InvalidViewportSize"] = 68] = "InvalidViewportSize";
+        CommandResult[CommandResult["InvalidScrollingDirection"] = 69] = "InvalidScrollingDirection";
+        CommandResult[CommandResult["FigureDoesNotExist"] = 70] = "FigureDoesNotExist";
+        CommandResult[CommandResult["InvalidConditionalFormatId"] = 71] = "InvalidConditionalFormatId";
+        CommandResult[CommandResult["InvalidCellPopover"] = 72] = "InvalidCellPopover";
+        CommandResult[CommandResult["EmptyTarget"] = 73] = "EmptyTarget";
+        CommandResult[CommandResult["InvalidFreezeQuantity"] = 74] = "InvalidFreezeQuantity";
+        CommandResult[CommandResult["FrozenPaneOverlap"] = 75] = "FrozenPaneOverlap";
+        CommandResult[CommandResult["ValuesNotChanged"] = 76] = "ValuesNotChanged";
+        CommandResult[CommandResult["InvalidFilterZone"] = 77] = "InvalidFilterZone";
+        CommandResult[CommandResult["FilterOverlap"] = 78] = "FilterOverlap";
+        CommandResult[CommandResult["FilterNotFound"] = 79] = "FilterNotFound";
+        CommandResult[CommandResult["MergeInFilter"] = 80] = "MergeInFilter";
+        CommandResult[CommandResult["NonContinuousTargets"] = 81] = "NonContinuousTargets";
+        CommandResult[CommandResult["DuplicatedFigureId"] = 82] = "DuplicatedFigureId";
+        CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -3820,11 +3827,11 @@
         if (definition.dataSets) {
             const invalidRanges = definition.dataSets.find((range) => !rangeReference.test(range)) !== undefined;
             if (invalidRanges) {
-                return 31 /* CommandResult.InvalidDataSet */;
+                return 32 /* CommandResult.InvalidDataSet */;
             }
             const zones = definition.dataSets.map(toUnboundedZone);
             if (zones.some((zone) => zone.top !== zone.bottom && isFullRow(zone))) {
-                return 31 /* CommandResult.InvalidDataSet */;
+                return 32 /* CommandResult.InvalidDataSet */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -3833,7 +3840,7 @@
         if (definition.labelRange) {
             const invalidLabels = !rangeReference.test(definition.labelRange || "");
             if (invalidLabels) {
-                return 32 /* CommandResult.InvalidLabelRange */;
+                return 33 /* CommandResult.InvalidLabelRange */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -3905,24 +3912,24 @@
 
     const CfTerms = {
         Errors: {
-            [24 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
-            [50 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
-            [51 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
-            [52 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
-            [53 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
-            [54 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
-            [55 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
-            [56 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
-            [46 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
-            [49 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
-            [48 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
-            [47 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
-            [57 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
-            [59 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
-            [58 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
-            [60 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
-            [61 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
-            [23 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
+            [25 /* CommandResult.InvalidRange */]: _lt("The range is invalid"),
+            [51 /* CommandResult.FirstArgMissing */]: _lt("The argument is missing. Please provide a value"),
+            [52 /* CommandResult.SecondArgMissing */]: _lt("The second argument is missing. Please provide a value"),
+            [53 /* CommandResult.MinNaN */]: _lt("The minpoint must be a number"),
+            [54 /* CommandResult.MidNaN */]: _lt("The midpoint must be a number"),
+            [55 /* CommandResult.MaxNaN */]: _lt("The maxpoint must be a number"),
+            [56 /* CommandResult.ValueUpperInflectionNaN */]: _lt("The first value must be a number"),
+            [57 /* CommandResult.ValueLowerInflectionNaN */]: _lt("The second value must be a number"),
+            [47 /* CommandResult.MinBiggerThanMax */]: _lt("Minimum must be smaller then Maximum"),
+            [50 /* CommandResult.MinBiggerThanMid */]: _lt("Minimum must be smaller then Midpoint"),
+            [49 /* CommandResult.MidBiggerThanMax */]: _lt("Midpoint must be smaller then Maximum"),
+            [48 /* CommandResult.LowerBiggerThanUpper */]: _lt("Lower inflection point must be smaller than upper inflection point"),
+            [58 /* CommandResult.MinInvalidFormula */]: _lt("Invalid Minpoint formula"),
+            [60 /* CommandResult.MaxInvalidFormula */]: _lt("Invalid Maxpoint formula"),
+            [59 /* CommandResult.MidInvalidFormula */]: _lt("Invalid Midpoint formula"),
+            [61 /* CommandResult.ValueUpperInvalidFormula */]: _lt("Invalid upper inflection point formula"),
+            [62 /* CommandResult.ValueLowerInvalidFormula */]: _lt("Invalid lower inflection point formula"),
+            [24 /* CommandResult.EmptyRange */]: _lt("A range needs to be defined"),
             Unexpected: _lt("The rule is invalid for an unknown reason"),
         },
         ColorScale: _lt("Color scale"),
@@ -3949,20 +3956,20 @@
         Errors: {
             Unexpected: _lt("The chart definition is invalid for an unknown reason"),
             // BASIC CHART ERRORS (LINE | BAR | PIE)
-            [31 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
-            [32 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
+            [32 /* CommandResult.InvalidDataSet */]: _lt("The dataset is invalid"),
+            [33 /* CommandResult.InvalidLabelRange */]: _lt("Labels are invalid"),
             // SCORECARD CHART ERRORS
-            [33 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
-            [34 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
+            [34 /* CommandResult.InvalidScorecardKeyValue */]: _lt("The key value is invalid"),
+            [35 /* CommandResult.InvalidScorecardBaseline */]: _lt("The baseline value is invalid"),
             // GAUGE CHART ERRORS
-            [35 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
-            [36 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
-            [37 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
-            [38 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
-            [39 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
-            [40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
-            [41 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
-            [42 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
+            [36 /* CommandResult.InvalidGaugeDataRange */]: _lt("The data range is invalid"),
+            [37 /* CommandResult.EmptyGaugeRangeMin */]: _lt("A minimum range limit value is needed"),
+            [38 /* CommandResult.GaugeRangeMinNaN */]: _lt("The minimum range limit value must be a number"),
+            [39 /* CommandResult.EmptyGaugeRangeMax */]: _lt("A maximum range limit value is needed"),
+            [40 /* CommandResult.GaugeRangeMaxNaN */]: _lt("The maximum range limit value must be a number"),
+            [41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */]: _lt("Minimum range limit must be smaller than maximum range limit"),
+            [42 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
+            [43 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
     };
     const NumberFormatTerms = {
@@ -4334,7 +4341,7 @@
 
     function isDataRangeValid(definition) {
         return definition.dataRange && !rangeReference.test(definition.dataRange)
-            ? 35 /* CommandResult.InvalidGaugeDataRange */
+            ? 36 /* CommandResult.InvalidGaugeDataRange */
             : 0 /* CommandResult.Success */;
     }
     function checkRangeLimits(check, batchValidations) {
@@ -4366,7 +4373,7 @@
     function checkRangeMinBiggerThanRangeMax(definition) {
         if (definition.sectionRule) {
             if (Number(definition.sectionRule.rangeMin) >= Number(definition.sectionRule.rangeMax)) {
-                return 40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
+                return 41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -4375,9 +4382,9 @@
         if (value === "") {
             switch (valueName) {
                 case "rangeMin":
-                    return 36 /* CommandResult.EmptyGaugeRangeMin */;
+                    return 37 /* CommandResult.EmptyGaugeRangeMin */;
                 case "rangeMax":
-                    return 38 /* CommandResult.EmptyGaugeRangeMax */;
+                    return 39 /* CommandResult.EmptyGaugeRangeMax */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -4386,13 +4393,13 @@
         if (isNaN(value)) {
             switch (valueName) {
                 case "rangeMin":
-                    return 37 /* CommandResult.GaugeRangeMinNaN */;
+                    return 38 /* CommandResult.GaugeRangeMinNaN */;
                 case "rangeMax":
-                    return 39 /* CommandResult.GaugeRangeMaxNaN */;
+                    return 40 /* CommandResult.GaugeRangeMaxNaN */;
                 case "lowerInflectionPointValue":
-                    return 41 /* CommandResult.GaugeLowerInflectionPointNaN */;
+                    return 42 /* CommandResult.GaugeLowerInflectionPointNaN */;
                 case "upperInflectionPointValue":
-                    return 42 /* CommandResult.GaugeUpperInflectionPointNaN */;
+                    return 43 /* CommandResult.GaugeUpperInflectionPointNaN */;
             }
         }
         return 0 /* CommandResult.Success */;
@@ -5130,12 +5137,12 @@
 
     function checkKeyValue(definition) {
         return definition.keyValue && !rangeReference.test(definition.keyValue)
-            ? 33 /* CommandResult.InvalidScorecardKeyValue */
+            ? 34 /* CommandResult.InvalidScorecardKeyValue */
             : 0 /* CommandResult.Success */;
     }
     function checkBaseline(definition) {
         return definition.baseline && !rangeReference.test(definition.baseline)
-            ? 34 /* CommandResult.InvalidScorecardBaseline */
+            ? 35 /* CommandResult.InvalidScorecardBaseline */
             : 0 /* CommandResult.Success */;
     }
     class ScorecardChart extends AbstractChart {
@@ -5625,7 +5632,7 @@
             super(...arguments);
             this.popoverRef = owl.useRef("popover");
             this.currentPosition = undefined;
-            this.currentVisibility = undefined;
+            this.currentDisplayValue = undefined;
             this.spreadsheetRect = useSpreadsheetRect();
         }
         setup() {
@@ -5636,23 +5643,22 @@
                 var _a, _b, _c, _d;
                 if (!this.containerRect)
                     throw new Error("Popover container is not defined");
-                this.resetPopoverElStyle();
                 const el = this.popoverRef.el;
+                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
+                const newDisplay = anchor ? "block" : "none";
+                if (this.currentDisplayValue !== "none" && newDisplay === "none") {
+                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
+                }
+                el.style.display = newDisplay;
+                this.currentDisplayValue = newDisplay;
+                if (!anchor)
+                    return;
                 const propsMaxSize = { width: this.props.maxWidth, height: this.props.maxHeight };
                 const elDims = {
                     width: el.getBoundingClientRect().width,
                     height: el.getBoundingClientRect().height,
                 };
                 const spreadsheetRect = this.spreadsheetRect;
-                const anchor = rectIntersection(this.props.anchorRect, this.containerRect);
-                const newVisibility = anchor ? "visible" : "hidden";
-                if (this.currentVisibility !== "hidden" && newVisibility === "hidden") {
-                    (_b = (_a = this.props).onPopoverHidden) === null || _b === void 0 ? void 0 : _b.call(_a);
-                }
-                el.style.visibility = newVisibility;
-                this.currentVisibility = newVisibility;
-                if (!anchor)
-                    return;
                 const popoverPositionHelper = this.props.positioning === "BottomLeft"
                     ? new BottomLeftPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect)
                     : new TopRightPopoverContext(anchor, this.containerRect, propsMaxSize, spreadsheetRect);
@@ -5666,14 +5672,6 @@
                 }
                 this.currentPosition = newPosition;
             });
-        }
-        resetPopoverElStyle() {
-            const el = this.popoverRef.el;
-            if (!el)
-                return;
-            el.style["visibility"] = "visible";
-            el.style["max-height"] = el.style["max-width"] = "";
-            el.style["bottom"] = el.style["top"] = el.style["right"] = el.style["left"] = "";
         }
     }
     Popover.template = "o-spreadsheet-Popover";
@@ -5910,7 +5908,7 @@
             }
             return 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
         }
-        get popover() {
+        get popoverProps() {
             const isRoot = this.props.depth === 1;
             return {
                 anchorRect: {
@@ -5921,6 +5919,9 @@
                 },
                 positioning: "TopRight",
                 verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
+                onPopoverHidden: () => this.closeSubMenu(),
+                onPopoverMoved: () => this.closeSubMenu(),
+                maxHeight: this.menuHeight,
             };
         }
         getColor(menu) {
@@ -5989,7 +5990,7 @@
         openSubMenu(menu, menuIndex) {
             const y = this.subMenuVerticalPosition(menuIndex);
             this.subMenu.position = {
-                x: this.position.x + MENU_WIDTH,
+                x: this.position.x + this.props.depth * MENU_WIDTH,
                 y: y - (this.subMenu.scrollOffset || 0),
             };
             this.subMenu.menuItems = getMenuChildren(menu, this.env).filter((item) => !item.isVisible || item.isVisible(this.env));
@@ -6140,7 +6141,7 @@
     function interactiveCut(env) {
         const result = env.model.dispatch("CUT");
         if (!result.isSuccessful) {
-            if (result.isCancelledBecause(18 /* CommandResult.WrongCutSelection */)) {
+            if (result.isCancelledBecause(19 /* CommandResult.WrongCutSelection */)) {
                 env.raiseError(_lt("This operation is not allowed with multiple selections."));
             }
         }
@@ -6154,16 +6155,16 @@
     };
     function handlePasteResult(env, result) {
         if (!result.isSuccessful) {
-            if (result.reasons.includes(19 /* CommandResult.WrongPasteSelection */)) {
+            if (result.reasons.includes(20 /* CommandResult.WrongPasteSelection */)) {
                 env.raiseError(PasteInteractiveContent.wrongPasteSelection);
             }
             else if (result.reasons.includes(2 /* CommandResult.WillRemoveExistingMerge */)) {
                 env.raiseError(PasteInteractiveContent.willRemoveExistingMerge);
             }
-            else if (result.reasons.includes(21 /* CommandResult.WrongFigurePasteOption */)) {
+            else if (result.reasons.includes(22 /* CommandResult.WrongFigurePasteOption */)) {
                 env.raiseError(PasteInteractiveContent.wrongFigurePasteOption);
             }
-            else if (result.reasons.includes(74 /* CommandResult.FrozenPaneOverlap */)) {
+            else if (result.reasons.includes(75 /* CommandResult.FrozenPaneOverlap */)) {
                 env.raiseError(PasteInteractiveContent.frozenPaneOverlap);
             }
         }
@@ -6253,6 +6254,7 @@
      * - Else returns a bar chart
      */
     function getSmartChartDefinition(zone, getters) {
+        var _a;
         let dataSetZone = zone;
         if (zone.left !== zone.right) {
             dataSetZone = { ...zone, left: zone.left + 1 };
@@ -6264,7 +6266,7 @@
             return {
                 type: "scorecard",
                 title: "",
-                background: BACKGROUND_CHART_COLOR,
+                background: ((_a = topLeftCell.style) === null || _a === void 0 ? void 0 : _a.fillColor) || undefined,
                 keyValue: zoneToXc(zone),
                 baselineMode: DEFAULT_SCORECARD_BASELINE_MODE,
                 baselineColorUp: DEFAULT_SCORECARD_BASELINE_COLOR_UP,
@@ -6307,7 +6309,6 @@
                 aggregated: false,
                 labelRange: labelRangeXc,
                 type: "line",
-                background: BACKGROUND_CHART_COLOR,
                 dataSetsHaveTitle,
                 verticalAxisPosition: "left",
                 legendPosition: newLegendPos,
@@ -6318,7 +6319,6 @@
             dataSets,
             labelRange: labelRangeXc,
             type: "bar",
-            background: BACKGROUND_CHART_COLOR,
             stacked: false,
             aggregated: false,
             dataSetsHaveTitle,
@@ -6450,7 +6450,7 @@
                 });
             }
         }
-        if (result.isCancelledBecause(62 /* CommandResult.InvalidSortZone */)) {
+        if (result.isCancelledBecause(63 /* CommandResult.InvalidSortZone */)) {
             const { col, row } = anchor;
             env.model.selection.selectZone({ cell: { col, row }, zone });
             env.raiseError(_lt("Cannot sort. To sort, select only cells or only merges that have the same size."));
@@ -6464,13 +6464,13 @@
     };
     function interactiveAddFilter(env, sheetId, target) {
         const result = env.model.dispatch("CREATE_FILTER_TABLE", { target, sheetId });
-        if (result.isCancelledBecause(77 /* CommandResult.FilterOverlap */)) {
+        if (result.isCancelledBecause(78 /* CommandResult.FilterOverlap */)) {
             env.raiseError(AddFilterInteractiveContent.filterOverlap);
         }
-        else if (result.isCancelledBecause(79 /* CommandResult.MergeInFilter */)) {
+        else if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddFilterInteractiveContent.mergeInFilter);
         }
-        else if (result.isCancelledBecause(80 /* CommandResult.NonContinuousTargets */)) {
+        else if (result.isCancelledBecause(81 /* CommandResult.NonContinuousTargets */)) {
             env.raiseError(AddFilterInteractiveContent.nonContinuousTargets);
         }
     }
@@ -7400,7 +7400,10 @@
         window.addEventListener("mouseup", _onMouseUp);
         window.addEventListener("dragstart", _onDragStart);
         window.addEventListener("mousemove", _onMouseMove);
-        window.addEventListener("wheel", _onMouseMove);
+        // mouse wheel on window is by default a passive event.
+        // preventDefault() is not allowed in passive event handler.
+        // https://chromestatus.com/feature/6662647093133312
+        window.addEventListener("wheel", _onMouseMove, { passive: false });
     }
     /**
      * Function to be used during a mousedown event, this function allows to
@@ -7460,7 +7463,10 @@
                             break;
                         case -1:
                             colIndex = left - 1;
-                            newTarget = left - 1;
+                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
+                                colIndex--;
+                            }
+                            newTarget = colIndex;
                             break;
                     }
                     offsetX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
@@ -7486,7 +7492,10 @@
                             break;
                         case -1:
                             rowIndex = top - 1;
-                            newTarget = top + edgeScrollInfoY.direction;
+                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
+                                rowIndex--;
+                            }
+                            newTarget = rowIndex;
                             break;
                     }
                     offsetY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
@@ -15938,9 +15947,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     function loopThroughReferenceType(token) {
         if (token.type !== "REFERENCE")
             return token;
-        const [range, sheet] = token.value.split("!").reverse();
-        const [left, right] = range.split(":");
-        const sheetRef = sheet ? `${sheet}!` : "";
+        const { xc, sheetName } = splitReference(token.value);
+        const [left, right] = xc.split(":");
+        const sheetRef = sheetName ? `${sheetName}!` : "";
         const updatedLeft = getTokenNextReferenceType(left);
         const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
         return { ...token, value: sheetRef + updatedLeft + updatedRight };
@@ -16231,8 +16240,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const previousRefToken = this.currentTokens
                         .filter((token) => token.type === "REFERENCE")
                         .find((token) => {
-                        let value = token.value;
-                        const [xc, sheet] = value.split("!").reverse();
+                        const { xc, sheetName: sheet } = splitReference(token.value);
                         const sheetName = sheet || this.getters.getSheetName(this.sheetId);
                         const activeSheetId = this.getters.getActiveSheetId();
                         if (this.getters.getSheetName(activeSheetId) !== sheetName) {
@@ -16368,7 +16376,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         validateSelection(length, start, end) {
             return start >= 0 && start <= length && end >= 0 && end <= length
                 ? 0 /* CommandResult.Success */
-                : 45 /* CommandResult.WrongComposerSelection */;
+                : 46 /* CommandResult.WrongComposerSelection */;
         }
         onColumnsRemoved(cmd) {
             if (cmd.elements.includes(this.col) && this.mode !== "inactive") {
@@ -17108,6 +17116,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 argToFocus: 0,
             });
             this.isKeyStillDown = false;
+            this.compositionActive = false;
             // we can't allow input events to be triggered while we remove and add back the content of the composer in processContent
             this.shouldProcessInputEvents = false;
             this.tokens = [];
@@ -17243,6 +17252,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.env.model.dispatch("CYCLE_EDITION_REFERENCES");
             this.processContent();
         }
+        onCompositionStart() {
+            this.compositionActive = true;
+        }
+        onCompositionEnd() {
+            this.compositionActive = false;
+        }
         onKeydown(ev) {
             let handler = this.keyMapping[ev.key];
             if (handler) {
@@ -17340,6 +17355,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // Private
         // ---------------------------------------------------------------------------
         processContent() {
+            if (this.compositionActive) {
+                return;
+            }
             this.contentHelper.removeAll(); // removes the content of the composer, to be added just after
             this.shouldProcessInputEvents = false;
             if (this.props.focus !== "inactive") {
@@ -17386,8 +17404,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         result.push({ value: token.value, color: tokenColor[token.type] || "#000" });
                         break;
                     case "REFERENCE":
-                        const [xc, sheet] = token.value.split("!").reverse();
-                        result.push({ value: token.value, color: this.rangeColor(xc, sheet) || "#000" });
+                        const { xc, sheetName } = splitReference(token.value);
+                        result.push({ value: token.value, color: this.rangeColor(xc, sheetName) || "#000" });
                         break;
                     case "SYMBOL":
                         let value = token.value;
@@ -17452,7 +17470,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (content.startsWith("=")) {
                 const tokenAtCursor = this.env.model.getters.getTokenAtCursor();
                 if (tokenAtCursor) {
-                    const [xc] = tokenAtCursor.value.split("!").reverse();
+                    const { xc } = splitReference(tokenAtCursor.value);
                     if (tokenAtCursor.type === "FUNCTION" ||
                         (tokenAtCursor.type === "SYMBOL" && !rangeReference.test(xc))) {
                         // initialize Autocomplete Dropdown
@@ -18988,10 +19006,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             const result = env.model.dispatch("RENAME_SHEET", { sheetId, name });
             if (!result.isSuccessful) {
-                if (result.reasons.includes(10 /* CommandResult.DuplicatedSheetName */)) {
+                if (result.reasons.includes(11 /* CommandResult.DuplicatedSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("A sheet with the name %s already exists. Please select another name.", name));
                 }
-                if (result.reasons.includes(12 /* CommandResult.ForbiddenCharactersInSheetName */)) {
+                if (result.reasons.includes(13 /* CommandResult.ForbiddenCharactersInSheetName */)) {
                     interactiveRenameSheet(env, sheetId, _lt("Some used characters are not allowed in a sheet name (Forbidden characters are %s).", FORBIDDEN_SHEET_CHARS.join(" ")));
                 }
             }
@@ -19068,7 +19086,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
         const result = env.model.dispatch(cmd, { sheetId, quantity: base });
-        if (result.isCancelledBecause(64 /* CommandResult.MergeOverlap */)) {
+        if (result.isCancelledBecause(65 /* CommandResult.MergeOverlap */)) {
             env.raiseError(MergeErrorMessage);
         }
     }
@@ -19771,11 +19789,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isDatasetInvalid() {
             var _a;
-            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(31 /* CommandResult.InvalidDataSet */));
+            return !!((_a = this.state.datasetDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidDataSet */));
         }
         get isLabelInvalid() {
             var _a;
-            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(32 /* CommandResult.InvalidLabelRange */));
+            return !!((_a = this.state.labelsDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidLabelRange */));
         }
         onUpdateDataSetsHaveTitle(ev) {
             this.props.updateChart({
@@ -20117,7 +20135,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isDataRangeInvalid() {
             var _a;
-            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(35 /* CommandResult.InvalidGaugeDataRange */));
+            return !!((_a = this.state.dataRangeDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(36 /* CommandResult.InvalidGaugeDataRange */));
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
@@ -20203,28 +20221,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isRangeMinInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(36 /* CommandResult.EmptyGaugeRangeMin */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(37 /* CommandResult.GaugeRangeMinNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(37 /* CommandResult.EmptyGaugeRangeMin */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(38 /* CommandResult.GaugeRangeMinNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         isRangeMaxInvalid() {
             var _a, _b, _c;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(38 /* CommandResult.EmptyGaugeRangeMax */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(39 /* CommandResult.GaugeRangeMaxNaN */)) ||
-                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(40 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(39 /* CommandResult.EmptyGaugeRangeMax */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(40 /* CommandResult.GaugeRangeMaxNaN */)) ||
+                ((_c = this.state.sectionRuleDispatchResult) === null || _c === void 0 ? void 0 : _c.isCancelledBecause(41 /* CommandResult.GaugeRangeMinBiggerThanRangeMax */)));
         }
         // ---------------------------------------------------------------------------
         // COLOR_SECTION_TEMPLATE
         // ---------------------------------------------------------------------------
         get isLowerInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(41 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(43 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(42 /* CommandResult.GaugeLowerInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         get isUpperInflectionPointInvalid() {
             var _a, _b;
-            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(42 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
-                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(43 /* CommandResult.GaugeLowerBiggerThanUpper */)));
+            return !!(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(43 /* CommandResult.GaugeUpperInflectionPointNaN */)) ||
+                ((_b = this.state.sectionRuleDispatchResult) === null || _b === void 0 ? void 0 : _b.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */)));
         }
         updateInflectionPointValue(attr, ev) {
             const sectionRule = deepCopy(this.props.definition.sectionRule);
@@ -20332,11 +20350,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         get isKeyValueInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(33 /* CommandResult.InvalidScorecardKeyValue */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.InvalidScorecardKeyValue */));
         }
         get isBaselineInvalid() {
             var _a;
-            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(34 /* CommandResult.InvalidScorecardBaseline */));
+            return !!((_a = this.state.keyValueDispatchResult) === null || _a === void 0 ? void 0 : _a.isCancelledBecause(35 /* CommandResult.InvalidScorecardBaseline */));
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
@@ -20976,7 +20994,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return this.env.model.getters.getConditionalFormats(this.env.model.getters.getActiveSheetId());
         }
         get isRangeValid() {
-            return this.state.errors.includes(23 /* CommandResult.EmptyRange */);
+            return this.state.errors.includes(24 /* CommandResult.EmptyRange */);
         }
         errorMessage(error) {
             return CfTerms.Errors[error] || CfTerms.Errors.Unexpected;
@@ -21038,7 +21056,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (this.state.currentCF) {
                 const invalidRanges = this.state.currentCF.ranges.some((xc) => !xc.match(rangeReference));
                 if (invalidRanges) {
-                    this.state.errors = [24 /* CommandResult.InvalidRange */];
+                    this.state.errors = [25 /* CommandResult.InvalidRange */];
                     return;
                 }
                 const sheetId = this.env.model.getters.getActiveSheetId();
@@ -21194,11 +21212,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          ****************************************************************************/
         get isValue1Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(50 /* CommandResult.FirstArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(51 /* CommandResult.FirstArgMissing */));
         }
         get isValue2Invalid() {
             var _a;
-            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(51 /* CommandResult.SecondArgMissing */));
+            return !!((_a = this.state.errors) === null || _a === void 0 ? void 0 : _a.includes(52 /* CommandResult.SecondArgMissing */));
         }
         toggleStyle(tool) {
             const style = this.state.rules.cellIs.style;
@@ -21215,17 +21233,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         isValueInvalid(threshold) {
             switch (threshold) {
                 case "minimum":
-                    return (this.state.errors.includes(57 /* CommandResult.MinInvalidFormula */) ||
-                        this.state.errors.includes(49 /* CommandResult.MinBiggerThanMid */) ||
-                        this.state.errors.includes(46 /* CommandResult.MinBiggerThanMax */) ||
-                        this.state.errors.includes(52 /* CommandResult.MinNaN */));
+                    return (this.state.errors.includes(58 /* CommandResult.MinInvalidFormula */) ||
+                        this.state.errors.includes(50 /* CommandResult.MinBiggerThanMid */) ||
+                        this.state.errors.includes(47 /* CommandResult.MinBiggerThanMax */) ||
+                        this.state.errors.includes(53 /* CommandResult.MinNaN */));
                 case "midpoint":
-                    return (this.state.errors.includes(58 /* CommandResult.MidInvalidFormula */) ||
-                        this.state.errors.includes(53 /* CommandResult.MidNaN */) ||
-                        this.state.errors.includes(48 /* CommandResult.MidBiggerThanMax */));
+                    return (this.state.errors.includes(59 /* CommandResult.MidInvalidFormula */) ||
+                        this.state.errors.includes(54 /* CommandResult.MidNaN */) ||
+                        this.state.errors.includes(49 /* CommandResult.MidBiggerThanMax */));
                 case "maximum":
-                    return (this.state.errors.includes(59 /* CommandResult.MaxInvalidFormula */) ||
-                        this.state.errors.includes(54 /* CommandResult.MaxNaN */));
+                    return (this.state.errors.includes(60 /* CommandResult.MaxInvalidFormula */) ||
+                        this.state.errors.includes(55 /* CommandResult.MaxNaN */));
                 default:
                     return false;
             }
@@ -21274,13 +21292,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         isInflectionPointInvalid(inflectionPoint) {
             switch (inflectionPoint) {
                 case "lowerInflectionPoint":
-                    return (this.state.errors.includes(56 /* CommandResult.ValueLowerInflectionNaN */) ||
-                        this.state.errors.includes(61 /* CommandResult.ValueLowerInvalidFormula */) ||
-                        this.state.errors.includes(47 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(57 /* CommandResult.ValueLowerInflectionNaN */) ||
+                        this.state.errors.includes(62 /* CommandResult.ValueLowerInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 case "upperInflectionPoint":
-                    return (this.state.errors.includes(55 /* CommandResult.ValueUpperInflectionNaN */) ||
-                        this.state.errors.includes(60 /* CommandResult.ValueUpperInvalidFormula */) ||
-                        this.state.errors.includes(47 /* CommandResult.LowerBiggerThanUpper */));
+                    return (this.state.errors.includes(56 /* CommandResult.ValueUpperInflectionNaN */) ||
+                        this.state.errors.includes(61 /* CommandResult.ValueUpperInvalidFormula */) ||
+                        this.state.errors.includes(48 /* CommandResult.LowerBiggerThanUpper */));
                 default:
                     return true;
             }
@@ -22172,10 +22190,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         setup() {
             this.gridOverlay = owl.useRef("gridOverlay");
             useCellHovered(this.env, this.gridOverlay, this.props.onCellHovered);
-            owl.useEffect(() => this.props.onGridResized({
-                height: this.gridOverlayEl.clientHeight,
-                width: this.gridOverlayEl.clientWidth,
-            }), () => [this.gridOverlayEl.clientHeight, this.gridOverlayEl.clientWidth]);
+            const resizeObserver = new ResizeObserver(() => {
+                this.props.onGridResized({
+                    height: this.gridOverlayEl.clientHeight,
+                    width: this.gridOverlayEl.clientWidth,
+                });
+            });
+            owl.onMounted(() => {
+                resizeObserver.observe(this.gridOverlayEl);
+            });
             useTouchMove(this.gridOverlay, this.props.onGridMoved, () => {
                 const { offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
                 return offsetScrollbarY > 0;
@@ -23544,6 +23567,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onCellDoubleClicked(col, row) {
             const sheetId = this.env.model.getters.getActiveSheetId();
+            ({ col, row } = this.env.model.getters.getMainCellPosition({ sheetId, col, row }));
             const cell = this.env.model.getters.getEvaluatedCell({ sheetId, col, row });
             if (cell.type === CellValueType.empty) {
                 this.props.onGridComposerCellFocused();
@@ -24997,16 +25021,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         const DPI = 96;
         return Math.round((value * 914400) / DPI);
     }
-    function getRangeSize(xc, defaultSheetIndex, data) {
-        const xcSplit = xc.split("!");
+    function getRangeSize(reference, defaultSheetIndex, data) {
+        let xc = reference;
+        let sheetName = undefined;
+        ({ xc, sheetName } = splitReference(reference));
         let rangeSheetIndex;
-        if (xcSplit.length > 1) {
-            const index = data.sheets.findIndex((sheet) => sheet.name === xcSplit[0]);
+        if (sheetName) {
+            const index = data.sheets.findIndex((sheet) => sheet.name === sheetName);
             if (index < 0) {
-                throw new Error("Unable to find a sheet with the name " + xcSplit[0]);
+                throw new Error("Unable to find a sheet with the name " + sheetName);
             }
             rangeSheetIndex = index;
-            xc = xcSplit[1];
         }
         else {
             rangeSheetIndex = Number(defaultSheetIndex);
@@ -25365,7 +25390,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         if (!link.relTarget && !link.location) {
             warningManager.generateNotSupportedWarning(WarningTypes.BadlyFormattedHyperlink);
         }
-        const url = link.relTarget ? link.relTarget : buildSheetLink(link.location.split("!")[0]);
+        const url = link.relTarget
+            ? link.relTarget
+            : buildSheetLink(splitReference(link.location).sheetName);
         return markdownLink(label, url);
     }
     function getSheetDims(sheet) {
@@ -28347,9 +28374,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkCellOutOfSheet(sheetId, col, row) {
             const sheet = this.getters.tryGetSheet(sheetId);
             if (!sheet)
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
-            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 17 /* CommandResult.TargetOutOfSheet */;
+            return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
         }
     }
     CellPlugin.getters = [
@@ -28740,18 +28767,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkValidReordering(cfId, direction, sheetId) {
             if (!this.cfRules[sheetId])
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             const ruleIndex = this.cfRules[sheetId].findIndex((cf) => cf.id === cfId);
             if (ruleIndex === -1)
-                return 70 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             const cfIndex2 = direction === "up" ? ruleIndex - 1 : ruleIndex + 1;
             if (cfIndex2 < 0 || cfIndex2 >= this.cfRules[sheetId].length) {
-                return 70 /* CommandResult.InvalidConditionalFormatId */;
+                return 71 /* CommandResult.InvalidConditionalFormatId */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkEmptyRange(cmd) {
-            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 23 /* CommandResult.EmptyRange */;
+            return cmd.ranges.length ? 0 /* CommandResult.Success */ : 24 /* CommandResult.EmptyRange */;
         }
         checkCFRule(cmd) {
             const rule = cmd.cf.rule;
@@ -28787,10 +28814,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const errors = [];
                     const isEmpty = (value) => value === undefined || value === "";
                     if (expectedNumber >= 1 && isEmpty(rule.values[0])) {
-                        errors.push(50 /* CommandResult.FirstArgMissing */);
+                        errors.push(51 /* CommandResult.FirstArgMissing */);
                     }
                     if (expectedNumber >= 2 && isEmpty(rule.values[1])) {
-                        errors.push(51 /* CommandResult.SecondArgMissing */);
+                        errors.push(52 /* CommandResult.SecondArgMissing */);
                     }
                     return errors.length ? errors : 0 /* CommandResult.Success */;
                 }
@@ -28802,15 +28829,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 (threshold.value === "" || isNaN(threshold.value))) {
                 switch (thresholdName) {
                     case "min":
-                        return 52 /* CommandResult.MinNaN */;
+                        return 53 /* CommandResult.MinNaN */;
                     case "max":
-                        return 54 /* CommandResult.MaxNaN */;
+                        return 55 /* CommandResult.MaxNaN */;
                     case "mid":
-                        return 53 /* CommandResult.MidNaN */;
+                        return 54 /* CommandResult.MidNaN */;
                     case "upperInflectionPoint":
-                        return 55 /* CommandResult.ValueUpperInflectionNaN */;
+                        return 56 /* CommandResult.ValueUpperInflectionNaN */;
                     case "lowerInflectionPoint":
-                        return 56 /* CommandResult.ValueLowerInflectionNaN */;
+                        return 57 /* CommandResult.ValueLowerInflectionNaN */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28824,15 +28851,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             catch (error) {
                 switch (thresholdName) {
                     case "min":
-                        return 57 /* CommandResult.MinInvalidFormula */;
+                        return 58 /* CommandResult.MinInvalidFormula */;
                     case "max":
-                        return 59 /* CommandResult.MaxInvalidFormula */;
+                        return 60 /* CommandResult.MaxInvalidFormula */;
                     case "mid":
-                        return 58 /* CommandResult.MidInvalidFormula */;
+                        return 59 /* CommandResult.MidInvalidFormula */;
                     case "upperInflectionPoint":
-                        return 60 /* CommandResult.ValueUpperInvalidFormula */;
+                        return 61 /* CommandResult.ValueUpperInvalidFormula */;
                     case "lowerInflectionPoint":
-                        return 61 /* CommandResult.ValueLowerInvalidFormula */;
+                        return 62 /* CommandResult.ValueLowerInvalidFormula */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -28849,7 +28876,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.lowerInflectionPoint.type) &&
                 rule.lowerInflectionPoint.type === rule.upperInflectionPoint.type &&
                 Number(minValue) > Number(maxValue)) {
-                return 47 /* CommandResult.LowerBiggerThanUpper */;
+                return 48 /* CommandResult.LowerBiggerThanUpper */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28859,7 +28886,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (["number", "percentage", "percentile"].includes(rule.minimum.type) &&
                 rule.minimum.type === rule.maximum.type &&
                 stringToNumber(minValue) >= stringToNumber(maxValue)) {
-                return 46 /* CommandResult.MinBiggerThanMax */;
+                return 47 /* CommandResult.MinBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28871,7 +28898,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.midpoint.type === rule.maximum.type &&
                 stringToNumber(midValue) >= stringToNumber(maxValue)) {
-                return 48 /* CommandResult.MidBiggerThanMax */;
+                return 49 /* CommandResult.MidBiggerThanMax */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28883,7 +28910,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ["number", "percentage", "percentile"].includes(rule.midpoint.type) &&
                 rule.minimum.type === rule.midpoint.type &&
                 stringToNumber(minValue) >= stringToNumber(midValue)) {
-                return 49 /* CommandResult.MinBiggerThanMid */;
+                return 50 /* CommandResult.MinBiggerThanMid */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -28984,13 +29011,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkFigureExists(sheetId, figureId) {
             var _a;
             if (((_a = this.figures[sheetId]) === null || _a === void 0 ? void 0 : _a[figureId]) === undefined) {
-                return 69 /* CommandResult.FigureDoesNotExist */;
+                return 70 /* CommandResult.FigureDoesNotExist */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkFigureDuplicate(figureId) {
             if (Object.values(this.figures).find((sheet) => sheet === null || sheet === void 0 ? void 0 : sheet[figureId])) {
-                return 81 /* CommandResult.DuplicatedFigureId */;
+                return 82 /* CommandResult.DuplicatedFigureId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -29089,12 +29116,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_FILTER_TABLE":
                     if (!areZonesContinuous(...cmd.target)) {
-                        return 80 /* CommandResult.NonContinuousTargets */;
+                        return 81 /* CommandResult.NonContinuousTargets */;
                     }
                     const zone = union(...cmd.target);
                     const checkFilterOverlap = () => {
                         if (this.getFilterTables(cmd.sheetId).some((filter) => overlap(filter.zone, zone))) {
-                            return 77 /* CommandResult.FilterOverlap */;
+                            return 78 /* CommandResult.FilterOverlap */;
                         }
                         return 0 /* CommandResult.Success */;
                     };
@@ -29102,7 +29129,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         const mergesInTarget = this.getters.getMergesInZone(cmd.sheetId, zone);
                         for (let merge of mergesInTarget) {
                             if (overlap(zone, merge)) {
-                                return 79 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                         return 0 /* CommandResult.Success */;
@@ -29112,7 +29139,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     for (let merge of cmd.target) {
                         for (let filterTable of this.getFilterTables(cmd.sheetId)) {
                             if (overlap(filterTable.zone, merge)) {
-                                return 79 /* CommandResult.MergeInFilter */;
+                                return 80 /* CommandResult.MergeInFilter */;
                             }
                         }
                     }
@@ -29354,6 +29381,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "DUPLICATE_SHEET":
+                    // make sure the values are computed in case the original sheet is deleted
+                    for (const row of this.sizes[cmd.sheetId].ROW) {
+                        row.computedSize();
+                    }
+                    for (const col of this.sizes[cmd.sheetId].COL) {
+                        col.computedSize();
+                    }
                     this.history.update("sizes", cmd.sheetIdTo, deepCopy(this.sizes[cmd.sheetId]));
                     break;
                 case "DELETE_SHEET":
@@ -29576,7 +29610,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
                     if (!this.hiddenHeaders[cmd.sheetId]) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
                         ? this.getHiddenColsGroups(cmd.sheetId)
@@ -29586,7 +29620,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         : this.getters.getNumberRows(cmd.sheetId);
                     return (hiddenGroup || []).flat().concat(cmd.elements).length < elements
                         ? 0 /* CommandResult.Success */
-                        : 65 /* CommandResult.TooManyHiddenElements */;
+                        : 66 /* CommandResult.TooManyHiddenElements */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -29749,7 +29783,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "CREATE_IMAGE":
                     if (this.getters.getFigure(cmd.sheetId, cmd.figureId)) {
-                        return 27 /* CommandResult.InvalidFigureId */;
+                        return 28 /* CommandResult.InvalidFigureId */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -29884,6 +29918,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkValidations(cmd, this.checkDestructiveMerge, this.checkOverlap, this.checkFrozenPanes);
                 case "UPDATE_CELL":
                     return this.checkMergedContentUpdate(cmd);
+                case "REMOVE_MERGE":
+                    return this.checkMergeExists(cmd);
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -30092,7 +30128,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 for (const zone2 of target) {
                     if (zone !== zone2 && overlap(zone, zone2)) {
-                        return 64 /* CommandResult.MergeOverlap */;
+                        return 65 /* CommandResult.MergeOverlap */;
                     }
                 }
             }
@@ -30106,7 +30142,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of target) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 74 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -30125,6 +30161,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return 0 /* CommandResult.Success */;
             }
             return 4 /* CommandResult.CellIsMerged */;
+        }
+        checkMergeExists(cmd) {
+            const { sheetId, target } = cmd;
+            for (const zone of target) {
+                const { left, top } = zone;
+                const merge = this.getMerge({ sheetId, col: left, row: top });
+                if (merge === undefined || !isEqual(zone, merge)) {
+                    return 5 /* CommandResult.InvalidTarget */;
+                }
+            }
+            return 0 /* CommandResult.Success */;
         }
         /**
          * Merge the current selection. Note that:
@@ -30182,7 +30229,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { left, top, bottom, right } = zone;
             const merge = this.getMerge({ sheetId, col: left, row: top });
             if (merge === undefined || !isEqual(zone, merge)) {
-                throw new Error(_lt("Invalid merge zone"));
+                return;
             }
             this.history.update("merges", sheetId, merge.id, undefined);
             for (let r = top; r <= bottom; r++) {
@@ -30294,7 +30341,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
             if (cmd.type === "MOVE_RANGES") {
-                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 25 /* CommandResult.InvalidZones */;
+                return cmd.target.length === 1 ? 0 /* CommandResult.Success */ : 26 /* CommandResult.InvalidZones */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -30517,16 +30564,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     prefixSheet: false,
                 }, this.getters.getSheetSize);
             }
-            let sheetName = "";
+            let sheetName;
+            let xc = sheetXC;
             let prefixSheet = false;
             if (sheetXC.includes("!")) {
-                [sheetXC, sheetName] = sheetXC.split("!").reverse();
+                ({ xc, sheetName } = splitReference(sheetXC));
                 if (sheetName) {
                     prefixSheet = true;
                 }
             }
-            const zone = toUnboundedZone(sheetXC);
-            const parts = RangeImpl.getRangeParts(sheetXC, zone);
+            const zone = toUnboundedZone(xc);
+            const parts = RangeImpl.getRangeParts(xc, zone);
             const invalidSheetName = sheetName && !this.getters.getSheetIdByName(sheetName) ? sheetName : undefined;
             const sheetId = this.getters.getSheetIdByName(sheetName) || defaultSheetId;
             const rangeInterface = { prefixSheet, zone, sheetId, invalidSheetName, parts };
@@ -30679,7 +30727,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "HIDE_SHEET": {
                     if (this.getVisibleSheetIds().length === 1) {
-                        return 8 /* CommandResult.NotEnoughSheets */;
+                        return 9 /* CommandResult.NotEnoughSheets */;
                     }
                     return 0 /* CommandResult.Success */;
                 }
@@ -30693,7 +30741,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(0, currentIndex)
                             .map((id) => !this.isSheetVisible(id));
                         return leftSheets.every((isHidden) => isHidden)
-                            ? 13 /* CommandResult.WrongSheetMove */
+                            ? 14 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                     else {
@@ -30701,7 +30749,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                             .slice(currentIndex + 1)
                             .map((id) => !this.isSheetVisible(id));
                         return rightSheets.every((isHidden) => isHidden)
-                            ? 13 /* CommandResult.WrongSheetMove */
+                            ? 14 /* CommandResult.WrongSheetMove */
                             : 0 /* CommandResult.Success */;
                     }
                 case "RENAME_SHEET":
@@ -30709,24 +30757,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "DELETE_SHEET":
                     return this.orderedSheetIds.length > 1
                         ? 0 /* CommandResult.Success */
-                        : 8 /* CommandResult.NotEnoughSheets */;
+                        : 9 /* CommandResult.NotEnoughSheets */;
                 case "REMOVE_COLUMNS_ROWS": {
                     const length = cmd.dimension === "COL"
                         ? this.getNumberCols(cmd.sheetId)
                         : this.getNumberRows(cmd.sheetId);
                     return length > cmd.elements.length
                         ? 0 /* CommandResult.Success */
-                        : 7 /* CommandResult.NotEnoughElements */;
+                        : 8 /* CommandResult.NotEnoughElements */;
                 }
                 case "FREEZE_ROWS": {
-                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
-                        ? 0 /* CommandResult.Success */
-                        : 73 /* CommandResult.InvalidFreezeQuantity */;
+                    return this.checkValidations(cmd, this.checkRowFreezeQuantity, this.checkRowFreezeOverlapMerge);
                 }
                 case "FREEZE_COLUMNS": {
-                    return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
-                        ? 0 /* CommandResult.Success */
-                        : 73 /* CommandResult.InvalidFreezeQuantity */;
+                    return this.checkValidations(cmd, this.checkColFreezeQuantity, this.checkColFreezeOverlapMerge);
                 }
                 default:
                     return 0 /* CommandResult.Success */;
@@ -31126,24 +31170,52 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { orderedSheetIds, sheets } = this;
             const name = cmd.name && cmd.name.trim().toLowerCase();
             if (orderedSheetIds.find((id) => { var _a; return ((_a = sheets[id]) === null || _a === void 0 ? void 0 : _a.name.toLowerCase()) === name; })) {
-                return 10 /* CommandResult.DuplicatedSheetName */;
+                return 11 /* CommandResult.DuplicatedSheetName */;
             }
             if (FORBIDDEN_IN_EXCEL_REGEX.test(name)) {
-                return 12 /* CommandResult.ForbiddenCharactersInSheetName */;
+                return 13 /* CommandResult.ForbiddenCharactersInSheetName */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkSheetPosition(cmd) {
             const { orderedSheetIds } = this;
             if (cmd.position > orderedSheetIds.length || cmd.position < 0) {
-                return 14 /* CommandResult.WrongSheetPosition */;
+                return 15 /* CommandResult.WrongSheetPosition */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkRowFreezeQuantity(cmd) {
+            return cmd.quantity >= 1 && cmd.quantity < this.getNumberRows(cmd.sheetId)
+                ? 0 /* CommandResult.Success */
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
+        }
+        checkColFreezeQuantity(cmd) {
+            return cmd.quantity >= 1 && cmd.quantity < this.getNumberCols(cmd.sheetId)
+                ? 0 /* CommandResult.Success */
+                : 74 /* CommandResult.InvalidFreezeQuantity */;
+        }
+        checkRowFreezeOverlapMerge(cmd) {
+            const merges = this.getters.getMerges(cmd.sheetId);
+            for (let merge of merges) {
+                if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
+                    return 65 /* CommandResult.MergeOverlap */;
+                }
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkColFreezeOverlapMerge(cmd) {
+            const merges = this.getters.getMerges(cmd.sheetId);
+            for (let merge of merges) {
+                if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
+                    return 65 /* CommandResult.MergeOverlap */;
+                }
             }
             return 0 /* CommandResult.Success */;
         }
         isRenameAllowed(cmd) {
             const name = cmd.name && cmd.name.trim().toLowerCase();
             if (!name) {
-                return 9 /* CommandResult.MissingSheetName */;
+                return 10 /* CommandResult.MissingSheetName */;
             }
             return this.checkSheetName(cmd);
         }
@@ -31449,10 +31521,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         checkSheetExists(cmd) {
             if (cmd.type !== "CREATE_SHEET" && "sheetId" in cmd && this.sheets[cmd.sheetId] === undefined) {
-                return 26 /* CommandResult.InvalidSheetId */;
+                return 27 /* CommandResult.InvalidSheetId */;
             }
             else if (cmd.type === "CREATE_SHEET" && this.sheets[cmd.sheetId] !== undefined) {
-                return 11 /* CommandResult.DuplicatedSheetId */;
+                return 12 /* CommandResult.DuplicatedSheetId */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -31472,13 +31544,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
             }
             if (!zones.every(isZoneValid)) {
-                return 24 /* CommandResult.InvalidRange */;
+                return 25 /* CommandResult.InvalidRange */;
             }
             else if (zones.length && "sheetId" in cmd) {
                 const sheetZone = this.getSheetZone(cmd.sheetId);
                 return zones.every((zone) => isZoneInside(zone, sheetZone))
                     ? 0 /* CommandResult.Success */
-                    : 17 /* CommandResult.TargetOutOfSheet */;
+                    : 18 /* CommandResult.TargetOutOfSheet */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -32417,14 +32489,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "UPDATE_FILTER":
                     if (!this.getters.getFilterId(cmd)) {
-                        return 78 /* CommandResult.FilterNotFound */;
+                        return 79 /* CommandResult.FilterNotFound */;
                     }
                     break;
             }
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
-            var _a;
             switch (cmd.type) {
                 case "UNDO":
                 case "REDO":
@@ -32451,14 +32522,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DUPLICATE_SHEET":
                     const filterValues = {};
-                    for (const copiedFilter of this.getters.getFilters(cmd.sheetId)) {
-                        const zone = copiedFilter.zoneWithHeaders;
-                        const newFilter = this.getters.getFilter({
-                            sheetId: cmd.sheetIdTo,
+                    for (const newFilter of this.getters.getFilters(cmd.sheetIdTo)) {
+                        const zone = newFilter.zoneWithHeaders;
+                        filterValues[newFilter.id] = this.getFilterValues({
+                            sheetId: cmd.sheetId,
                             col: zone.left,
                             row: zone.top,
                         });
-                        filterValues[newFilter.id] = ((_a = this.filterValues[cmd.sheetId]) === null || _a === void 0 ? void 0 : _a[copiedFilter.id]) || [];
                     }
                     this.filterValues[cmd.sheetIdTo] = filterValues;
                     break;
@@ -32978,26 +33048,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.checkScrollingDirection(cmd);
                 case "RESIZE_SHEETVIEW":
                     return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
-                case "FREEZE_COLUMNS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.left < cmd.quantity && cmd.quantity <= merge.right) {
-                            return 64 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
-                case "FREEZE_ROWS": {
-                    const sheetId = this.getters.getActiveSheetId();
-                    const merges = this.getters.getMerges(sheetId);
-                    for (let merge of merges) {
-                        if (merge.top < cmd.quantity && cmd.quantity <= merge.bottom) {
-                            return 64 /* CommandResult.MergeOverlap */;
-                        }
-                    }
-                    return 0 /* CommandResult.Success */;
-                }
                 default:
                     return 0 /* CommandResult.Success */;
             }
@@ -33088,6 +33138,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DELETE_SHEET":
                     this.sheetsWithDirtyViewports.delete(cmd.sheetId);
+                    break;
+                case "START_EDITION":
+                    const { col, row } = this.getters.getActivePosition();
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
                     break;
             }
         }
@@ -33326,7 +33380,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         checkPositiveDimension(cmd) {
             if (cmd.width < 0 || cmd.height < 0) {
-                return 67 /* CommandResult.InvalidViewportSize */;
+                return 68 /* CommandResult.InvalidViewportSize */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33336,7 +33390,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 cmd.gridOffsetY === this.gridOffsetY &&
                 cmd.width === width &&
                 cmd.height === height) {
-                return 75 /* CommandResult.ValuesNotChanged */;
+                return 76 /* CommandResult.ValuesNotChanged */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33344,7 +33398,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
             if ((!pane.canScrollHorizontally && offsetX > 0) ||
                 (!pane.canScrollVertically && offsetY > 0)) {
-                return 68 /* CommandResult.InvalidScrollingDirection */;
+                return 69 /* CommandResult.InvalidScrollingDirection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -33425,6 +33479,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         resetViewports(sheetId) {
+            if (!this.getters.tryGetSheet(sheetId)) {
+                return;
+            }
             const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
             const nCols = this.getters.getNumberCols(sheetId);
             const nRows = this.getters.getNumberRows(sheetId);
@@ -33605,7 +33662,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (this.lastCellSelected.col !== undefined && this.lastCellSelected.row !== undefined) {
                         return 0 /* CommandResult.Success */;
                     }
-                    return 44 /* CommandResult.InvalidAutofillSelection */;
+                    return 45 /* CommandResult.InvalidAutofillSelection */;
                 case "AUTOFILL_AUTO":
                     const zone = this.getters.getSelectedZone();
                     return zone.top === zone.bottom
@@ -34204,7 +34261,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         cellPopoverRegistry.get(cmd.popoverType);
                     }
                     catch (error) {
-                        return 71 /* CommandResult.InvalidCellPopover */;
+                        return 72 /* CommandResult.InvalidCellPopover */;
                     }
                     return 0 /* CommandResult.Success */;
                 default:
@@ -35379,7 +35436,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
-                        return 29 /* CommandResult.MaximumRangesReached */;
+                        return 30 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
             }
@@ -35532,7 +35589,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 .filter((range) => this.getters.isRangeValid(range))
                 .filter((reference) => this.shouldBeHighlighted(this.activeSheet, reference));
             return XCs.map((xc) => {
-                const [, sheetName] = xc.split("!").reverse();
+                const { sheetName } = splitReference(xc);
                 return {
                     zone: this.getters.getRangeFromSheetXC(this.activeSheet, xc).zone,
                     sheetId: (sheetName && this.getters.getSheetIdByName(sheetName)) || this.activeSheet,
@@ -35555,7 +35612,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * the current active sheet.
          */
         shouldBeHighlighted(inputSheetId, reference) {
-            const sheetName = reference.split("!").reverse()[1];
+            const { sheetName } = splitReference(reference);
             const sheetId = this.getters.getSheetIdByName(sheetName);
             const activeSheetId = this.getters.getActiveSheet().id;
             const valid = this.getters.isRangeValid(reference);
@@ -35600,7 +35657,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "FOCUS_RANGE":
                     const index = (_a = this.currentInput) === null || _a === void 0 ? void 0 : _a.getIndex(cmd.rangeId);
                     if (this.focusedInputId === cmd.id && ((_b = this.currentInput) === null || _b === void 0 ? void 0 : _b.focusedRangeIndex) === index) {
-                        return 28 /* CommandResult.InputAlreadyFocused */;
+                        return 29 /* CommandResult.InputAlreadyFocused */;
                     }
                     break;
             }
@@ -35669,13 +35726,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 isFocused: this.focusedInputId === id && this.inputs[id].focusedRangeIndex === index,
             }));
         }
-        isRangeValid(xc) {
-            if (!xc) {
+        isRangeValid(reference) {
+            if (!reference) {
                 return false;
             }
-            const [rangeXc, sheetName] = xc.split("!").reverse();
-            return (rangeXc.match(rangeReference) !== null &&
-                (sheetName === undefined || this.getters.getSheetIdByName(sheetName) !== undefined));
+            const { xc, sheetName } = splitReference(reference);
+            return (xc.match(rangeReference) !== null &&
+                (!sheetName || this.getters.getSheetIdByName(sheetName) !== undefined));
         }
         getSelectionInputValue(id) {
             return this.inputs[id].getSelectionInputValue();
@@ -35772,6 +35829,312 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
     }
 
+    /*
+     * This file contains the specifics transformations
+     */
+    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
+    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
+    otRegistry.addTransformation("DELETE_SHEET", ["MOVE_RANGES"], transformTargetSheetId);
+    otRegistry.addTransformation("DELETE_FIGURE", ["UPDATE_FIGURE", "UPDATE_CHART"], updateChartFigure);
+    otRegistry.addTransformation("CREATE_SHEET", ["CREATE_SHEET"], createSheetTransformation);
+    otRegistry.addTransformation("ADD_MERGE", ["ADD_MERGE", "REMOVE_MERGE", "CREATE_FILTER_TABLE"], mergeTransformation);
+    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
+    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
+    otRegistry.addTransformation("CREATE_FILTER_TABLE", ["CREATE_FILTER_TABLE", "ADD_MERGE"], createTableTransformation);
+    function transformTargetSheetId(cmd, executed) {
+        const deletedSheetId = executed.sheetId;
+        if (cmd.targetSheetId === deletedSheetId || cmd.sheetId === deletedSheetId) {
+            return undefined;
+        }
+        return cmd;
+    }
+    function updateChartFigure(toTransform, executed) {
+        if (toTransform.id === executed.id) {
+            return undefined;
+        }
+        return toTransform;
+    }
+    function updateChartRangesTransformation(toTransform, executed) {
+        return {
+            ...toTransform,
+            definition: transformDefinition(toTransform.definition, executed),
+        };
+    }
+    function createSheetTransformation(cmd, executed) {
+        var _a;
+        if (cmd.name === executed.name) {
+            return {
+                ...cmd,
+                name: ((_a = cmd.name) === null || _a === void 0 ? void 0 : _a.match(/\d+/))
+                    ? cmd.name.replace(/\d+/, (n) => (parseInt(n) + 1).toString())
+                    : `${cmd.name}~`,
+                position: cmd.position + 1,
+            };
+        }
+        return cmd;
+    }
+    function mergeTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        const target = [];
+        for (const zone1 of cmd.target) {
+            for (const zone2 of executed.target) {
+                if (!overlap(zone1, zone2)) {
+                    target.push({ ...zone1 });
+                }
+            }
+        }
+        if (target.length) {
+            return { ...cmd, target };
+        }
+        return undefined;
+    }
+    function freezeTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        const dimension = cmd.type === "FREEZE_COLUMNS" ? "COL" : "ROW";
+        if (dimension !== executed.dimension) {
+            return cmd;
+        }
+        let quantity = cmd["quantity"];
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            const executedElements = [...executed.elements].sort((a, b) => b - a);
+            for (let removedElement of executedElements) {
+                if (quantity > removedElement) {
+                    quantity--;
+                }
+            }
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            const executedBase = executed.position === "before" ? executed.base - 1 : executed.base;
+            quantity = quantity > executedBase ? quantity + executed.quantity : quantity;
+        }
+        return quantity > 0 ? { ...cmd, quantity } : undefined;
+    }
+    /**
+     * Cancel CREATE_FILTER_TABLE and ADD_MERGE commands if they overlap a filter
+     */
+    function createTableTransformation(cmd, executed) {
+        if (cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        for (const cmdTarget of cmd.target) {
+            for (const executedCmdTarget of executed.target) {
+                if (overlap(executedCmdTarget, cmdTarget)) {
+                    return undefined;
+                }
+            }
+        }
+        return cmd;
+    }
+
+    const transformations = [
+        { match: isSheetDependent, fn: transformSheetId },
+        { match: isTargetDependent, fn: transformTarget },
+        { match: isPositionDependent, fn: transformPosition },
+        { match: isGridDependent, fn: transformDimension },
+        { match: isRangeDependant, fn: transformRangeData },
+    ];
+    /**
+     * Get the result of applying the operation transformations on the given command
+     * to transform based on the executed command.
+     * Let's see a small example:
+     * Given
+     *  - command A: set the content of C1 to "Hello"
+     *  - command B: add a column after A
+     *
+     * If command B has been executed locally and not transmitted (yet) to
+     * other clients, and command A arrives from an other client to be executed locally.
+     * Command A is no longer valid and no longer reflects the user intention.
+     * It needs to be transformed knowing that command B is already executed.
+     * transform(A, B) => set the content of D1 to "Hello"
+     */
+    function transform(toTransform, executed) {
+        const specificTransform = otRegistry.getTransformation(toTransform.type, executed.type);
+        return specificTransform
+            ? specificTransform(toTransform, executed)
+            : genericTransform(toTransform, executed);
+    }
+    /**
+     * Get the result of applying the operation transformations on all the given
+     * commands to transform for each executed commands.
+     */
+    function transformAll(toTransform, executed) {
+        let transformedCommands = [...toTransform];
+        for (const executedCommand of executed) {
+            transformedCommands = transformedCommands
+                .map((cmd) => transform(cmd, executedCommand))
+                .filter(isDefined$1);
+        }
+        return transformedCommands;
+    }
+    /**
+     * Apply all generic transformation based on the characteristic of the given commands.
+     */
+    function genericTransform(cmd, executed) {
+        for (const { match, fn } of transformations) {
+            if (match(cmd)) {
+                const result = fn(cmd, executed);
+                if (result === "SKIP_TRANSFORMATION") {
+                    continue;
+                }
+                if (result === "IGNORE_COMMAND") {
+                    return undefined;
+                }
+                cmd = result;
+            }
+        }
+        return cmd;
+    }
+    function transformSheetId(cmd, executed) {
+        const deleteSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
+        if (cmd.sheetId === deleteSheet) {
+            return "IGNORE_COMMAND";
+        }
+        else if (cmd.type === "CREATE_SHEET" ||
+            executed.type === "CREATE_SHEET" ||
+            cmd.sheetId !== executed.sheetId) {
+            return cmd;
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    function transformTarget(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        const target = [];
+        for (const zone of cmd.target) {
+            const newZone = transformZone(zone, executed);
+            if (newZone) {
+                target.push(newZone);
+            }
+        }
+        if (!target.length) {
+            return "IGNORE_COMMAND";
+        }
+        return { ...cmd, target };
+    }
+    function transformRangeData(cmd, executed) {
+        const ranges = [];
+        const deletedSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
+        for (const range of cmd.ranges) {
+            if (range._sheetId !== executed.sheetId) {
+                ranges.push({ ...range, _zone: range._zone });
+            }
+            else {
+                const newZone = transformZone(range._zone, executed);
+                if (newZone && deletedSheet !== range._sheetId) {
+                    ranges.push({ ...range, _zone: newZone });
+                }
+            }
+        }
+        if (!ranges.length) {
+            return "IGNORE_COMMAND";
+        }
+        return { ...cmd, ranges };
+    }
+    function transformDimension(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
+            if (executed.dimension !== cmd.dimension) {
+                return cmd;
+            }
+            const isUnique = cmd.type === "ADD_COLUMNS_ROWS";
+            const field = isUnique ? "base" : "elements";
+            let elements = isUnique ? [cmd[field]] : cmd[field];
+            if (executed.type === "REMOVE_COLUMNS_ROWS") {
+                elements = elements
+                    .map((element) => {
+                    if (executed.elements.includes(element)) {
+                        return undefined;
+                    }
+                    const executedElements = executed.elements.sort((a, b) => b - a);
+                    for (let removedElement of executedElements) {
+                        if (element > removedElement) {
+                            element--;
+                        }
+                    }
+                    return element;
+                })
+                    .filter(isDefined$1);
+            }
+            if (executed.type === "ADD_COLUMNS_ROWS") {
+                const base = executed.position === "before" ? executed.base - 1 : executed.base;
+                elements = elements.map((el) => (el > base ? el + executed.quantity : el));
+            }
+            if (elements.length) {
+                let result = elements;
+                if (isUnique) {
+                    result = elements[0];
+                }
+                return { ...cmd, [field]: result };
+            }
+            return "IGNORE_COMMAND";
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    /**
+     * Transform a PositionDependentCommand. It could be impacted by a grid command
+     * (Add/remove cols/rows) and a merge
+     */
+    function transformPosition(cmd, executed) {
+        const transformSheetResult = transformSheetId(cmd, executed);
+        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
+            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
+            return transformPositionWithGrid(cmd, executed);
+        }
+        if (executed.type === "ADD_MERGE") {
+            return transformPositionWithMerge(cmd, executed);
+        }
+        return "SKIP_TRANSFORMATION";
+    }
+    /**
+     * Transform a PositionDependentCommand after a grid shape modification. This
+     * transformation consists of updating the position.
+     */
+    function transformPositionWithGrid(cmd, executed) {
+        const field = executed.dimension === "COL" ? "col" : "row";
+        let base = cmd[field];
+        if (executed.type === "REMOVE_COLUMNS_ROWS") {
+            const elements = [...executed.elements].sort((a, b) => b - a);
+            if (elements.includes(base)) {
+                return "IGNORE_COMMAND";
+            }
+            for (let removedElement of elements) {
+                if (base >= removedElement) {
+                    base--;
+                }
+            }
+        }
+        if (executed.type === "ADD_COLUMNS_ROWS") {
+            if (base > executed.base || (base === executed.base && executed.position === "before")) {
+                base = base + executed.quantity;
+            }
+        }
+        return { ...cmd, [field]: base };
+    }
+    /**
+     * Transform a PositionDependentCommand after a merge. This transformation
+     * consists of checking that the position is not inside the merged zones
+     */
+    function transformPositionWithMerge(cmd, executed) {
+        for (const zone of executed.target) {
+            const sameTopLeft = cmd.col === zone.left && cmd.row === zone.top;
+            if (!sameTopLeft && isInside(cmd.col, cmd.row, zone)) {
+                return "IGNORE_COMMAND";
+            }
+        }
+        return cmd;
+    }
+
     class Revision {
         /**
          * A revision represents a whole client action (Create a sheet, merge a Zone, Undo, ...).
@@ -35829,17 +36192,25 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.clientId = "local";
             this.pendingMessages = [];
             this.waitingAck = false;
+            /**
+             * Flag used to block all commands when an undo or redo is triggered, until
+             * it is accepted on the server
+             */
+            this.waitingUndoRedoAck = false;
             this.isReplayingInitialRevisions = false;
             this.processedRevisions = new Set();
             this.uuidGenerator = new UuidGenerator();
             this.debouncedMove = debounce(this._move.bind(this), DEBOUNCE_TIME);
+        }
+        canApplyOptimisticUpdate() {
+            return !this.waitingUndoRedoAck;
         }
         /**
          * Add a new revision to the collaborative session.
          * It will be transmitted to all other connected clients.
          */
         save(commands, changes) {
-            if (!commands.length || !changes.length)
+            if (!commands.length || !changes.length || !this.canApplyOptimisticUpdate())
                 return;
             const revision = new Revision(this.uuidGenerator.uuidv4(), this.clientId, commands, changes);
             this.revisions.append(revision.id, revision);
@@ -35854,6 +36225,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         undo(revisionId) {
+            this.waitingUndoRedoAck = true;
             this.sendUpdateMessage({
                 type: "REVISION_UNDONE",
                 version: MESSAGE_VERSION,
@@ -35863,6 +36235,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         redo(revisionId) {
+            this.waitingUndoRedoAck = true;
             this.sendUpdateMessage({
                 type: "REVISION_REDONE",
                 version: MESSAGE_VERSION,
@@ -35979,7 +36352,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.onClientLeft(message);
                     break;
                 case "REVISION_REDONE": {
-                    this.waitingAck = false;
                     this.revisions.redo(message.redoneRevisionId, message.nextRevisionId, message.serverRevisionId);
                     this.trigger("revision-redone", {
                         revisionId: message.redoneRevisionId,
@@ -35988,7 +36360,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 }
                 case "REVISION_UNDONE":
-                    this.waitingAck = false;
                     this.revisions.undo(message.undoneRevisionId, message.nextRevisionId, message.serverRevisionId);
                     this.trigger("revision-undone", {
                         revisionId: message.undoneRevisionId,
@@ -35996,7 +36367,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     });
                     break;
                 case "REMOTE_REVISION":
-                    this.waitingAck = false;
                     if (message.serverRevisionId !== this.serverRevisionId) {
                         this.trigger("unexpected-revision-id", { revisionId: message.serverRevisionId });
                         return;
@@ -36005,11 +36375,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const revision = new Revision(message.nextRevisionId, clientId, commands);
                     if (revision.clientId !== this.clientId) {
                         this.revisions.insert(revision.id, revision, message.serverRevisionId);
-                        this.trigger("remote-revision-received", { commands });
+                        const pendingCommands = this.pendingMessages
+                            .filter((msg) => msg.type === "REMOTE_REVISION")
+                            .map((msg) => msg.commands)
+                            .flat();
+                        this.trigger("remote-revision-received", {
+                            commands: transformAll(commands, pendingCommands),
+                        });
                     }
                     break;
                 case "SNAPSHOT_CREATED": {
-                    this.waitingAck = false;
                     const revision = new Revision(message.nextRevisionId, "server", []);
                     this.revisions.insert(revision.id, revision, message.serverRevisionId);
                     this.dropPendingHistoryMessages();
@@ -36077,6 +36452,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         .filter((message) => message.type === "REMOTE_REVISION")
                         .map((message) => message.nextRevisionId);
                     this.trigger("pending-revisions-dropped", { revisionIds });
+                    this.waitingAck = false;
+                    this.waitingUndoRedoAck = false;
                     this.pendingMessages = [];
                     return;
                 }
@@ -36096,11 +36473,15 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         acknowledge(message) {
+            if (message.type === "REVISION_UNDONE" || message.type === "REVISION_REDONE") {
+                this.waitingUndoRedoAck = false;
+            }
             switch (message.type) {
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
                 case "SNAPSHOT_CREATED":
+                    this.waitingAck = false;
                     this.pendingMessages = this.pendingMessages.filter((msg) => msg.nextRevisionId !== message.nextRevisionId);
                     this.serverRevisionId = message.nextRevisionId;
                     this.processedRevisions.add(message.nextRevisionId);
@@ -36109,6 +36490,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         isAlreadyProcessed(message) {
+            if (message.type === "CLIENT_MOVED" && message.client.id === this.clientId) {
+                return true;
+            }
             switch (message.type) {
                 case "REMOTE_REVISION":
                 case "REVISION_REDONE":
@@ -36119,6 +36503,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         dropPendingHistoryMessages() {
+            this.waitingUndoRedoAck = false;
             this.pendingMessages = this.pendingMessages.filter(({ type }) => type !== "REVISION_REDONE" && type !== "REVISION_UNDONE");
         }
     }
@@ -36253,7 +36638,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             /*Test the presence of single cells*/
             const singleCells = positions(zone).some(({ col, row }) => !this.getters.isInMerge({ sheetId, col, row }));
             if (singleCells) {
-                return 62 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36272,7 +36657,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 ];
                 return widthCurrent === widthFirst && heightCurrent === heightFirst;
             })) {
-                return 62 /* CommandResult.InvalidSortZone */;
+                return 63 /* CommandResult.InvalidSortZone */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36564,7 +36949,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
             }
             return 0 /* CommandResult.Success */;
@@ -36870,7 +37255,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isCutAllowed(target) {
             if (target.length !== 1) {
-                return 18 /* CommandResult.WrongCutSelection */;
+                return 19 /* CommandResult.WrongCutSelection */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -36878,13 +37263,13 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             if (this.operation === "CUT" && (clipboardOption === null || clipboardOption === void 0 ? void 0 : clipboardOption.pasteOption) !== undefined) {
                 // cannot paste only format or only value if the previous operation is a CUT
-                return 20 /* CommandResult.WrongPasteOption */;
+                return 21 /* CommandResult.WrongPasteOption */;
             }
             if (target.length > 1) {
                 // cannot paste if we have a clipped zone larger than a cell and multiple
                 // zones selected
                 if (this.cells.length > 1 || this.cells[0].length > 1) {
-                    return 19 /* CommandResult.WrongPasteSelection */;
+                    return 20 /* CommandResult.WrongPasteSelection */;
                 }
             }
             const clipboardHeight = this.cells.length;
@@ -36902,7 +37287,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (const zone of this.getPasteZones(target)) {
                 if ((zone.left < xSplit && zone.right >= xSplit) ||
                     (zone.top < ySplit && zone.bottom >= ySplit)) {
-                    return 74 /* CommandResult.FrozenPaneOverlap */;
+                    return 75 /* CommandResult.FrozenPaneOverlap */;
                 }
             }
             return 0 /* CommandResult.Success */;
@@ -37290,10 +37675,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         isPasteAllowed(target, option) {
             if (target.length === 0) {
-                return 72 /* CommandResult.EmptyTarget */;
+                return 73 /* CommandResult.EmptyTarget */;
             }
             if ((option === null || option === void 0 ? void 0 : option.pasteOption) !== undefined) {
-                return 21 /* CommandResult.WrongFigurePasteOption */;
+                return 22 /* CommandResult.WrongFigurePasteOption */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -37448,7 +37833,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return state.isCutAllowed(zones);
                 case "PASTE":
                     if (!this.state) {
-                        return 22 /* CommandResult.EmptyClipboard */;
+                        return 23 /* CommandResult.EmptyClipboard */;
                     }
                     const pasteOption = cmd.pasteOption || (this._isPaintingFormat ? "onlyFormat" : undefined);
                     return this.state.isPasteAllowed(cmd.target, { pasteOption });
@@ -37719,7 +38104,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         break;
                     }
                     catch (error) {
-                        return 26 /* CommandResult.InvalidSheetId */;
+                        return 27 /* CommandResult.InvalidSheetId */;
                     }
                 case "MOVE_COLUMNS_ROWS":
                     return this.isMoveElementAllowed(cmd);
@@ -38976,7 +39361,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
     function interactiveAddMerge(env, sheetId, target) {
         const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(79 /* CommandResult.MergeInFilter */)) {
+        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
             env.raiseError(AddMergeInteractiveContent.MergeInFilter);
         }
         else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
@@ -39298,7 +39683,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         onMenuMouseOver(menu, ev) {
             if (this.isSelectingMenu) {
-                this.toggleContextMenu(menu, ev);
+                this.openMenu(menu, ev);
             }
         }
         toggleDropdownTool(tool, ev) {
@@ -39308,7 +39693,14 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.openedEl = isOpen ? null : ev.target;
         }
         toggleContextMenu(menu, ev) {
-            this.closeMenus();
+            if (this.state.menuState.isOpen) {
+                this.closeMenus();
+            }
+            else {
+                this.openMenu(menu, ev);
+            }
+        }
+        openMenu(menu, ev) {
             const { left, top, height } = ev.target.getBoundingClientRect();
             this.state.menuState.isOpen = true;
             this.state.menuState.position = { x: left, y: top + height };
@@ -39783,312 +40175,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         leave(id) {
             this.listeners = this.listeners.filter((listener) => listener.id !== id);
         }
-    }
-
-    /*
-     * This file contains the specifics transformations
-     */
-    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
-    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["CREATE_CHART", "UPDATE_CHART"], updateChartRangesTransformation);
-    otRegistry.addTransformation("DELETE_SHEET", ["MOVE_RANGES"], transformTargetSheetId);
-    otRegistry.addTransformation("DELETE_FIGURE", ["UPDATE_FIGURE", "UPDATE_CHART"], updateChartFigure);
-    otRegistry.addTransformation("CREATE_SHEET", ["CREATE_SHEET"], createSheetTransformation);
-    otRegistry.addTransformation("ADD_MERGE", ["ADD_MERGE", "REMOVE_MERGE", "CREATE_FILTER_TABLE"], mergeTransformation);
-    otRegistry.addTransformation("ADD_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
-    otRegistry.addTransformation("REMOVE_COLUMNS_ROWS", ["FREEZE_COLUMNS", "FREEZE_ROWS"], freezeTransformation);
-    otRegistry.addTransformation("CREATE_FILTER_TABLE", ["CREATE_FILTER_TABLE", "ADD_MERGE"], createTableTransformation);
-    function transformTargetSheetId(cmd, executed) {
-        const deletedSheetId = executed.sheetId;
-        if (cmd.targetSheetId === deletedSheetId || cmd.sheetId === deletedSheetId) {
-            return undefined;
-        }
-        return cmd;
-    }
-    function updateChartFigure(toTransform, executed) {
-        if (toTransform.id === executed.id) {
-            return undefined;
-        }
-        return toTransform;
-    }
-    function updateChartRangesTransformation(toTransform, executed) {
-        return {
-            ...toTransform,
-            definition: transformDefinition(toTransform.definition, executed),
-        };
-    }
-    function createSheetTransformation(cmd, executed) {
-        var _a;
-        if (cmd.name === executed.name) {
-            return {
-                ...cmd,
-                name: ((_a = cmd.name) === null || _a === void 0 ? void 0 : _a.match(/\d+/))
-                    ? cmd.name.replace(/\d+/, (n) => (parseInt(n) + 1).toString())
-                    : `${cmd.name}~`,
-                position: cmd.position + 1,
-            };
-        }
-        return cmd;
-    }
-    function mergeTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        const target = [];
-        for (const zone1 of cmd.target) {
-            for (const zone2 of executed.target) {
-                if (!overlap(zone1, zone2)) {
-                    target.push({ ...zone1 });
-                }
-            }
-        }
-        if (target.length) {
-            return { ...cmd, target };
-        }
-        return undefined;
-    }
-    function freezeTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        const dimension = cmd.type === "FREEZE_COLUMNS" ? "COL" : "ROW";
-        if (dimension !== executed.dimension) {
-            return cmd;
-        }
-        let quantity = cmd["quantity"];
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            const executedElements = [...executed.elements].sort((a, b) => b - a);
-            for (let removedElement of executedElements) {
-                if (quantity > removedElement) {
-                    quantity--;
-                }
-            }
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            const executedBase = executed.position === "before" ? executed.base - 1 : executed.base;
-            quantity = quantity > executedBase ? quantity + executed.quantity : quantity;
-        }
-        return quantity > 0 ? { ...cmd, quantity } : undefined;
-    }
-    /**
-     * Cancel CREATE_FILTER_TABLE and ADD_MERGE commands if they overlap a filter
-     */
-    function createTableTransformation(cmd, executed) {
-        if (cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        for (const cmdTarget of cmd.target) {
-            for (const executedCmdTarget of executed.target) {
-                if (overlap(executedCmdTarget, cmdTarget)) {
-                    return undefined;
-                }
-            }
-        }
-        return cmd;
-    }
-
-    const transformations = [
-        { match: isSheetDependent, fn: transformSheetId },
-        { match: isTargetDependent, fn: transformTarget },
-        { match: isPositionDependent, fn: transformPosition },
-        { match: isGridDependent, fn: transformDimension },
-        { match: isRangeDependant, fn: transformRangeData },
-    ];
-    /**
-     * Get the result of applying the operation transformations on the given command
-     * to transform based on the executed command.
-     * Let's see a small example:
-     * Given
-     *  - command A: set the content of C1 to "Hello"
-     *  - command B: add a column after A
-     *
-     * If command B has been executed locally and not transmitted (yet) to
-     * other clients, and command A arrives from an other client to be executed locally.
-     * Command A is no longer valid and no longer reflects the user intention.
-     * It needs to be transformed knowing that command B is already executed.
-     * transform(A, B) => set the content of D1 to "Hello"
-     */
-    function transform(toTransform, executed) {
-        const specificTransform = otRegistry.getTransformation(toTransform.type, executed.type);
-        return specificTransform
-            ? specificTransform(toTransform, executed)
-            : genericTransform(toTransform, executed);
-    }
-    /**
-     * Get the result of applying the operation transformations on all the given
-     * commands to transform for each executed commands.
-     */
-    function transformAll(toTransform, executed) {
-        let transformedCommands = [...toTransform];
-        for (const executedCommand of executed) {
-            transformedCommands = transformedCommands
-                .map((cmd) => transform(cmd, executedCommand))
-                .filter(isDefined$1);
-        }
-        return transformedCommands;
-    }
-    /**
-     * Apply all generic transformation based on the characteristic of the given commands.
-     */
-    function genericTransform(cmd, executed) {
-        for (const { match, fn } of transformations) {
-            if (match(cmd)) {
-                const result = fn(cmd, executed);
-                if (result === "SKIP_TRANSFORMATION") {
-                    continue;
-                }
-                if (result === "IGNORE_COMMAND") {
-                    return undefined;
-                }
-                cmd = result;
-            }
-        }
-        return cmd;
-    }
-    function transformSheetId(cmd, executed) {
-        const deleteSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
-        if (cmd.sheetId === deleteSheet) {
-            return "IGNORE_COMMAND";
-        }
-        else if (cmd.type === "CREATE_SHEET" ||
-            executed.type === "CREATE_SHEET" ||
-            cmd.sheetId !== executed.sheetId) {
-            return cmd;
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    function transformTarget(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        const target = [];
-        for (const zone of cmd.target) {
-            const newZone = transformZone(zone, executed);
-            if (newZone) {
-                target.push(newZone);
-            }
-        }
-        if (!target.length) {
-            return "IGNORE_COMMAND";
-        }
-        return { ...cmd, target };
-    }
-    function transformRangeData(cmd, executed) {
-        const ranges = [];
-        const deletedSheet = executed.type === "DELETE_SHEET" && executed.sheetId;
-        for (const range of cmd.ranges) {
-            if (range._sheetId !== executed.sheetId) {
-                ranges.push({ ...range, _zone: range._zone });
-            }
-            else {
-                const newZone = transformZone(range._zone, executed);
-                if (newZone && deletedSheet !== range._sheetId) {
-                    ranges.push({ ...range, _zone: newZone });
-                }
-            }
-        }
-        if (!ranges.length) {
-            return "IGNORE_COMMAND";
-        }
-        return { ...cmd, ranges };
-    }
-    function transformDimension(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
-            if (executed.dimension !== cmd.dimension) {
-                return cmd;
-            }
-            const isUnique = cmd.type === "ADD_COLUMNS_ROWS";
-            const field = isUnique ? "base" : "elements";
-            let elements = isUnique ? [cmd[field]] : cmd[field];
-            if (executed.type === "REMOVE_COLUMNS_ROWS") {
-                elements = elements
-                    .map((element) => {
-                    if (executed.elements.includes(element)) {
-                        return undefined;
-                    }
-                    const executedElements = executed.elements.sort((a, b) => b - a);
-                    for (let removedElement of executedElements) {
-                        if (element > removedElement) {
-                            element--;
-                        }
-                    }
-                    return element;
-                })
-                    .filter(isDefined$1);
-            }
-            if (executed.type === "ADD_COLUMNS_ROWS") {
-                const base = executed.position === "before" ? executed.base - 1 : executed.base;
-                elements = elements.map((el) => (el > base ? el + executed.quantity : el));
-            }
-            if (elements.length) {
-                let result = elements;
-                if (isUnique) {
-                    result = elements[0];
-                }
-                return { ...cmd, [field]: result };
-            }
-            return "IGNORE_COMMAND";
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    /**
-     * Transform a PositionDependentCommand. It could be impacted by a grid command
-     * (Add/remove cols/rows) and a merge
-     */
-    function transformPosition(cmd, executed) {
-        const transformSheetResult = transformSheetId(cmd, executed);
-        if (transformSheetResult !== "SKIP_TRANSFORMATION") {
-            return transformSheetResult === "IGNORE_COMMAND" ? "IGNORE_COMMAND" : cmd;
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS" || executed.type === "REMOVE_COLUMNS_ROWS") {
-            return transformPositionWithGrid(cmd, executed);
-        }
-        if (executed.type === "ADD_MERGE") {
-            return transformPositionWithMerge(cmd, executed);
-        }
-        return "SKIP_TRANSFORMATION";
-    }
-    /**
-     * Transform a PositionDependentCommand after a grid shape modification. This
-     * transformation consists of updating the position.
-     */
-    function transformPositionWithGrid(cmd, executed) {
-        const field = executed.dimension === "COL" ? "col" : "row";
-        let base = cmd[field];
-        if (executed.type === "REMOVE_COLUMNS_ROWS") {
-            const elements = [...executed.elements].sort((a, b) => b - a);
-            if (elements.includes(base)) {
-                return "IGNORE_COMMAND";
-            }
-            for (let removedElement of elements) {
-                if (base >= removedElement) {
-                    base--;
-                }
-            }
-        }
-        if (executed.type === "ADD_COLUMNS_ROWS") {
-            if (base > executed.base || (base === executed.base && executed.position === "before")) {
-                base = base + executed.quantity;
-            }
-        }
-        return { ...cmd, [field]: base };
-    }
-    /**
-     * Transform a PositionDependentCommand after a merge. This transformation
-     * consists of checking that the position is not inside the merged zones
-     */
-    function transformPositionWithMerge(cmd, executed) {
-        for (const zone of executed.target) {
-            const sameTopLeft = cmd.col === zone.left && cmd.row === zone.top;
-            if (!sameTopLeft && isInside(cmd.col, cmd.row, zone)) {
-                return "IGNORE_COMMAND";
-            }
-        }
-        return cmd;
     }
 
     function inverseCommand(cmd) {
@@ -40897,11 +40983,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
              * Ids of the revisions which can be redone
              */
             this.redoStack = [];
-            /**
-             * Flag used to block all commands when an undo or redo is triggered, until
-             * it is accepted on the server
-             */
-            this.isWaitingForUndoRedo = false;
             this.session.on("new-local-state-update", this, this.onNewLocalStateUpdate);
             this.session.on("revision-undone", this, ({ commands }) => this.selectiveUndo(commands));
             this.session.on("revision-redone", this, ({ commands }) => this.selectiveRedo(commands));
@@ -40909,22 +40990,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.session.on("snapshot", this, () => {
                 this.undoStack = [];
                 this.redoStack = [];
-                this.isWaitingForUndoRedo = false;
             });
         }
         allowDispatch(cmd) {
-            if (this.isWaitingForUndoRedo) {
-                return 63 /* CommandResult.WaitingSessionConfirmation */;
-            }
             switch (cmd.type) {
                 case "REQUEST_UNDO":
                     if (!this.canUndo()) {
-                        return 5 /* CommandResult.EmptyUndoStack */;
+                        return 6 /* CommandResult.EmptyUndoStack */;
                     }
                     break;
                 case "REQUEST_REDO":
                     if (!this.canRedo()) {
-                        return 6 /* CommandResult.EmptyRedoStack */;
+                        return 7 /* CommandResult.EmptyRedoStack */;
                     }
                     break;
             }
@@ -40947,7 +41024,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             if (!id) {
                 return;
             }
-            this.isWaitingForUndoRedo = true;
             if (type === "UNDO") {
                 this.session.undo(id);
                 this.redoStack.push(id);
@@ -40966,7 +41042,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         drop(revisionIds) {
             this.undoStack = this.undoStack.filter((id) => !revisionIds.includes(id));
             this.redoStack = [];
-            this.isWaitingForUndoRedo = false;
         }
         onNewLocalStateUpdate({ id }) {
             this.undoStack.push(id);
@@ -40977,11 +41052,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         selectiveUndo(commands) {
             this.dispatch("UNDO", { commands });
-            this.isWaitingForUndoRedo = false;
         }
         selectiveRedo(commands) {
             this.dispatch("REDO", { commands });
-            this.isWaitingForUndoRedo = false;
         }
     }
 
@@ -41153,7 +41226,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         moveAnchorCell(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(82 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const { col, row } = this.getNextAvailablePosition(direction, step);
             return this.selectCell(col, row);
@@ -41199,7 +41272,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         resizeAnchorZone(direction, step = 1) {
             if (step !== "end" && step <= 0) {
-                return new DispatchResult(82 /* CommandResult.InvalidSelectionStep */);
+                return new DispatchResult(83 /* CommandResult.InvalidSelectionStep */);
             }
             const sheetId = this.getters.getActiveSheetId();
             const anchor = this.anchor;
@@ -41379,20 +41452,20 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         checkAnchorZone(anchor) {
             const { cell, zone } = anchor;
             if (!isInside(cell.col, cell.row, zone)) {
-                return 15 /* CommandResult.InvalidAnchorZone */;
+                return 16 /* CommandResult.InvalidAnchorZone */;
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
             const refCol = this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1));
             const refRow = this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1));
             if (refRow === undefined || refCol === undefined) {
-                return 16 /* CommandResult.SelectionOutOfBound */;
+                return 17 /* CommandResult.SelectionOutOfBound */;
             }
             return 0 /* CommandResult.Success */;
         }
         checkAnchorZoneOrThrow(anchor) {
             const result = this.checkAnchorZone(anchor);
-            if (result === 15 /* CommandResult.InvalidAnchorZone */) {
+            if (result === 16 /* CommandResult.InvalidAnchorZone */) {
                 throw new Error(_t("The provided anchor is invalid. The cell must be part of the zone."));
             }
         }
@@ -43161,7 +43234,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const command = { ...payload, type };
                 let status = this.status;
                 if (this.getters.isReadonly() && !canExecuteInReadonly(command)) {
-                    return new DispatchResult(66 /* CommandResult.Readonly */);
+                    return new DispatchResult(67 /* CommandResult.Readonly */);
+                }
+                if (!this.session.canApplyOptimisticUpdate()) {
+                    return new DispatchResult(64 /* CommandResult.WaitingSessionConfirmation */);
                 }
                 switch (status) {
                     case 0 /* Status.Ready */:
@@ -43334,13 +43410,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             for (let command of commands) {
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
-                this.dispatchToHandlers(this.allUIPlugins, command);
+                this.dispatchToHandlers(this.statefulUIPlugins, command);
                 this.status = previousStatus;
             }
             this.finalize();
         }
         setupSession(revisionId) {
             const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => {
+                const result = this.checkDispatchAllowed(command);
+                if (!result.isSuccessful) {
+                    return;
+                }
                 this.isReplayingCommand = true;
                 this.dispatchToHandlers([this.range, ...this.corePlugins, ...this.coreViewsPlugins], command);
                 this.isReplayingCommand = false;
@@ -43638,8 +43718,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-01-13T12:31:29.023Z';
-    exports.__info__.hash = 'dcff089';
+    exports.__info__.date = '2023-02-01T09:27:02.463Z';
+    exports.__info__.hash = 'eaa12b2';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
