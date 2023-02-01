@@ -72,6 +72,41 @@ $-seen-urls: ();
         $i: $i + 1;
     }
 
+    @include print-variable('paragraph-margin-top', $paragraph-margin-top);
+    @include print-variable('paragraph-margin-bottom', $paragraph-margin-bottom);
+    @include print-variable('h2-line-height', $h2-line-height);
+    @include print-variable('h3-line-height', $h3-line-height);
+    @include print-variable('h4-line-height', $h4-line-height);
+    @include print-variable('h5-line-height', $h5-line-height);
+    @include print-variable('h6-line-height', $h6-line-height);
+    @include print-variable('h1-font-size', $h1-font-size);
+    @include print-variable('h2-font-size', $h2-font-size);
+    @include print-variable('h3-font-size', $h3-font-size);
+    @include print-variable('h4-font-size', $h4-font-size);
+    @include print-variable('h5-font-size', $h5-font-size);
+    @include print-variable('h6-font-size', $h6-font-size);
+    // We cannot rely on $o-theme-hx-font because they contain the list of
+    // fallback fonts (unicode...).
+    $-headings-or-main-font: o-website-value('headings-font') or o-website-value('font');
+    @include print-variable('h2-font', o-website-value('h2-font') or $-headings-or-main-font);
+    @include print-variable('h3-font', o-website-value('h3-font') or $-headings-or-main-font);
+    @include print-variable('h4-font', o-website-value('h4-font') or $-headings-or-main-font);
+    @include print-variable('h5-font', o-website-value('h5-font') or $-headings-or-main-font);
+    @include print-variable('h6-font', o-website-value('h6-font') or $-headings-or-main-font);
+    @include print-variable('headings-line-height', $headings-line-height);
+    @include print-variable('headings-margin-top', $headings-margin-top);
+    @include print-variable('headings-margin-bottom', $headings-margin-bottom);
+    @include print-variable('h2-margin-top', $h2-margin-top);
+    @include print-variable('h3-margin-top', $h3-margin-top);
+    @include print-variable('h4-margin-top', $h4-margin-top);
+    @include print-variable('h5-margin-top', $h5-margin-top);
+    @include print-variable('h6-margin-top', $h6-margin-top);
+    @include print-variable('h2-margin-bottom', $h2-margin-bottom);
+    @include print-variable('h3-margin-bottom', $h3-margin-bottom);
+    @include print-variable('h4-margin-bottom', $h4-margin-bottom);
+    @include print-variable('h5-margin-bottom', $h5-margin-bottom);
+    @include print-variable('h6-margin-bottom', $h6-margin-bottom);
+
     @include print-variable('btn-padding-y', $btn-padding-y);
     @include print-variable('btn-padding-x', $btn-padding-x);
     @include print-variable('btn-font-size', $btn-font-size);
@@ -314,6 +349,63 @@ h5, h6 {
 h6 {
     color: map-get($colors, 'o-cc1-h6');
 }
+
+$heading-font-families: () !default;
+$heading-font-families: map-merge((
+    "h2": $h2-font-family,
+    "h3": $h3-font-family,
+    "h4": $h4-font-family,
+    "h5": $h5-font-family,
+    "h6": $h6-font-family,
+), $heading-font-families);
+$heading-line-heights: () !default;
+$heading-line-heights: map-merge((
+    "h2": $h2-line-height,
+    "h3": $h3-line-height,
+    "h4": $h4-line-height,
+    "h5": $h5-line-height,
+    "h6": $h6-line-height,
+), $heading-line-heights);
+$heading-margin-tops: () !default;
+$heading-margin-tops: map-merge((
+    "h2": $h2-margin-top,
+    "h3": $h3-margin-top,
+    "h4": $h4-margin-top,
+    "h5": $h5-margin-top,
+    "h6": $h6-margin-top,
+), $heading-margin-tops);
+$heading-margin-bottoms: () !default;
+$heading-margin-bottoms: map-merge((
+    "h2": $h2-margin-bottom,
+    "h3": $h3-margin-bottom,
+    "h4": $h4-margin-bottom,
+    "h5": $h5-margin-bottom,
+    "h6": $h6-margin-bottom,
+), $heading-margin-bottoms);
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: $headings-line-height;
+    margin-top: $headings-margin-top;
+    margin-bottom: $headings-margin-bottom;
+}
+@for $index from 2 through 6 {
+    h#{$index} {
+        $hn: 'h#{$index}';
+        @if ($headings-font-family != map-get($heading-font-families, $hn)) {
+            font-family: map-get($heading-font-families, $hn);
+        }
+        @if ($headings-line-height != map-get($heading-line-heights, $hn)) {
+            line-height: map-get($heading-line-heights, $hn);
+        }
+        @if ($headings-margin-top != map-get($heading-margin-tops, $hn)) {
+            margin-top: map-get($heading-margin-tops, $hn);
+        }
+        @if ($headings-margin-bottom != map-get($heading-margin-bottoms, $hn)) {
+            margin-bottom: map-get($heading-margin-bottoms, $hn);
+        }
+    }
+}
+
 .btn {
     @if ($o-theme-buttons-font != $o-theme-font) {
         font-family: $o-theme-buttons-font;
@@ -321,6 +413,10 @@ h6 {
 }
 
 // Texts
+p {
+    margin-top: $paragraph-margin-top;
+}
+
 font[style*='background']:not(.text-gradient),
 font[class*='bg-'] {
     padding: 2px 6px 4px;
@@ -395,6 +491,7 @@ font[class*='bg-'] {
         &.btn-xs { @include button-size(.15rem, .45rem, ($font-size-base * .75), 30px); }
     }
 }
+
 
 // Background Images
 .oe_img_bg {
