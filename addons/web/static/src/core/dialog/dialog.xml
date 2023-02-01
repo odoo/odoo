@@ -9,7 +9,7 @@
                 t-ref="modalRef"
                 >
                 <div class="modal-dialog" t-attf-class="modal-{{props.size}}">
-                    <div class="modal-content" t-att-class="props.contentClass">
+                    <div class="modal-content" t-att-class="props.contentClass" t-att-style="contentStyle">
                         <header t-if="props.header" class="modal-header">
                             <t t-slot="header" close="data.close" isFullscreen="isFullscreen">
                                 <t t-call="web.Dialog.header">
