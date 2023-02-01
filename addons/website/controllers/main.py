@@ -202,7 +202,7 @@ class Website(Home):
             sitemaps.unlink()
 
             pages = 0
-            locs = request.website.with_user(request.website.user_id)._enumerate_pages()
+            locs = request.website.with_context(_filter_duplicate_pages=True).with_user(request.website.user_id)._enumerate_pages()
             while True:
                 values = {
                     'locs': islice(locs, 0, LOC_PER_SITEMAP),
@@ -276,7 +276,7 @@ class Website(Home):
         current_website = request.website
 
         matching_pages = []
-        for page in current_website.search_pages(needle, limit=int(limit)):
+        for page in current_website.with_context(_filter_duplicate_pages=True).search_pages(needle, limit=int(limit)):
             matching_pages.append({
                 'value': page['loc'],
                 'label': 'name' in page and '%s (%s)' % (page['loc'], page['name']) or page['loc'],
@@ -284,7 +284,7 @@ class Website(Home):
         matching_urls = set(map(lambda match: match['value'], matching_pages))
 
         matching_last_modified = []
-        last_modified_pages = current_website._get_website_pages(order='write_date desc', limit=5)
+        last_modified_pages = current_website.with_context(_filter_duplicate_pages=True)._get_website_pages(order='write_date desc', limit=5)
         for url, name in last_modified_pages.mapped(lambda p: (p.url, p.name)):
             if needle.lower() in name.lower() or needle.lower() in url.lower() and url not in matching_urls:
                 matching_last_modified.append({

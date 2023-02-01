@@ -1240,6 +1240,9 @@ class Website(models.Model):
             domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
+        # TODO In 16.0 remove condition on _filter_duplicate_pages.
+        if self.env.context.get('_filter_duplicate_pages'):
+            pages = pages._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):
