@@ -2965,6 +2965,86 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(op_1.date_planned_start, datetime(2022, 10, 20, 12))
         self.assertTrue(op_2.show_json_popover)
 
+    @freeze_time('2023-03-01 12:00')
+    def test_planning_cancelled_workorder(self):
+        """Test when plan start time for workorders, cancelled workorders won't be taken into account.
+        """
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'default_capacity': 1,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 100,
+        })
+        workcenter_2 = self.env['mrp.workcenter'].create({
+            'name': 'wc2',
+            'default_capacity': 1,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 100,
+        })
+        workcenter_3 = self.env['mrp.workcenter'].create({
+            'name': 'wc3',
+            'default_capacity': 1,
+            'time_start': 10,
+            'time_stop': 5,
+            'time_efficiency': 100,
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'ready_to_produce': 'asap',
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': workcenter_1.id, 'time_cycle_manual': 30, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': workcenter_2.id, 'time_cycle_manual': 30, 'sequence': 2}),
+                (0, 0, {'name': 'Gift Wrap Machine', 'workcenter_id': workcenter_3.id, 'time_cycle_manual': 30, 'sequence': 3}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1})
+            ]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_6
+        mo_form.bom_id = bom
+        mo_form.product_qty = 2
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].date_planned_start, datetime(2023, 3, 1, 12, 0))
+        self.assertEqual(mo.workorder_ids[1].date_planned_start, datetime(2023, 3, 1, 13, 15))
+        self.assertEqual(mo.workorder_ids[2].date_planned_start, datetime(2023, 3, 1, 14, 30))
+
+        # wo_1 completely finished
+        mo_form = Form(mo)
+        mo_form.qty_producing = 2
+        mo = mo_form.save()
+        mo.workorder_ids[0].button_start()
+        mo.workorder_ids[0].button_finish()
+        # wo_2, wo_3 partially finished
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        mo.workorder_ids[1].button_start()
+        mo.workorder_ids[1].button_finish()
+        mo.workorder_ids[2].button_start()
+        mo.workorder_ids[2].button_finish()
+
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_backorder.button_plan()
+
+        self.assertEqual(mo_backorder.workorder_ids[0].state, 'cancel')
+        self.assertEqual(mo_backorder.workorder_ids[1].state, 'waiting')
+        self.assertEqual(mo_backorder.workorder_ids[2].state, 'pending')
+        self.assertFalse(mo_backorder.workorder_ids[0].date_planned_start)
+        self.assertEqual(mo_backorder.workorder_ids[1].date_planned_start, datetime(2023, 3, 1, 12, 0))
+        self.assertEqual(mo_backorder.workorder_ids[2].date_planned_start, datetime(2023, 3, 1, 12, 45))
+
     def test_compute_product_id(self):
         """
             Tests the creation of a production order automatically sets the product when the bom is provided,

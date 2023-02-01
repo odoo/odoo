@@ -505,6 +505,8 @@ class MrpWorkorder(models.Model):
         # Plan workorder after its predecessors
         start_date = max(self.production_id.date_planned_start, datetime.now())
         for workorder in self.blocked_by_workorder_ids:
+            if workorder.state in ['done', 'cancel']:
+                continue
             workorder._plan_workorder(replan)
             start_date = max(start_date, workorder.date_planned_finished)
         # Plan only suitable workorders
