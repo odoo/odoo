@@ -1467,3 +1467,60 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "mark channel as seen if last message is visible when switching channels when the previous channel had a more recent last message than the current channel [REQUIRE FOCUS]",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const [mailChannelId1, mailChannelId2] = pyEnv["mail.channel"].create([
+            {
+                channel_member_ids: [
+                    [
+                        0,
+                        0,
+                        {
+                            message_unread_counter: 1,
+                            partner_id: pyEnv.currentPartnerId,
+                        },
+                    ],
+                ],
+                name: "Bla",
+            },
+            {
+                channel_member_ids: [
+                    [
+                        0,
+                        0,
+                        {
+                            message_unread_counter: 1,
+                            partner_id: pyEnv.currentPartnerId,
+                        },
+                    ],
+                ],
+                name: "Blu",
+            },
+        ]);
+        pyEnv["mail.message"].create([
+            {
+                body: "oldest message",
+                model: "mail.channel",
+                res_id: mailChannelId1,
+            },
+            {
+                body: "newest message",
+                model: "mail.channel",
+                res_id: mailChannelId2,
+            },
+        ]);
+        const { openDiscuss } = await start({
+            discuss: {
+                context: {
+                    active_id: `mail.channel_${mailChannelId2}`,
+                },
+            },
+        });
+        await openDiscuss(mailChannelId2);
+        await click("button:contains(Bla)");
+        assert.containsNone(target, ".o-unread");
+    }
+);
