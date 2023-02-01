@@ -1427,6 +1427,14 @@ options.registry.OptionsTab = options.Class.extend({
             action: 'website.theme_install_kanban_action',
         });
     },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async customizeButtonStyle(previewMode, widgetValue, params) {
+        // TODO improve: customize two variables at the same time...
+        await this.customizeWebsiteVariable(previewMode, widgetValue === 'outline', {variable: `btn-${params.button}-outline`});
+        await this.customizeWebsiteVariable(previewMode, widgetValue === 'flat', {variable: `btn-${params.button}-flat`});
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1507,6 +1515,11 @@ options.registry.OptionsTab = options.Class.extend({
         if (methodName === 'customizeGray') {
             // See updateUI override
             return this.grayParams[params.param];
+        }
+        if (methodName === 'customizeButtonStyle') {
+            const isOutline = weUtils.getCSSVariableValue(`btn-${params.button}-outline`);
+            const isFlat = weUtils.getCSSVariableValue(`btn-${params.button}-flat`);
+            return isFlat === "'True'" ? 'flat' : isOutline === "'True'" ? 'outline' : 'fill';
         }
         return this._super(...arguments);
     },

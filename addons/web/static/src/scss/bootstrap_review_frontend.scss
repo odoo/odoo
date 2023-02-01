@@ -42,13 +42,19 @@ $o-btn-border-colors: () !default;
         @include button-outline-variant($-border-color);
     }
 }
+$o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
+$o-btn-outline-border-width-defaults: () !default;
 @each $color, $value in $theme-colors {
     .btn-#{$color} {
         @if index($o-btn-outline-defaults, $color) {
             @extend .btn-outline-#{$color};
+            border-width: map-get($o-btn-outline-border-width-defaults, $color);
         } @else {
             @extend .btn-fill-#{$color};
+            @if index($o-btn-flat-defaults, $color) {
+                @extend .btn.flat;
+            }
         }
     }
 }

@@ -1954,6 +1954,13 @@ $o-selected-color-palettes-names: (
 
 $o-base-website-values-palette: (
     'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
+    'body-line-height': 1.5rem,
+    'headings-line-height': 1.2,
+    'paragraph-margin-top': 0,
+    'paragraph-margin-bottom': 16px,
+    'headings-margin-top': 0,
+    'headings-margin-bottom': 0.5rem,
+
     'google-fonts': null,
     'google-local-fonts': null,
 
@@ -1965,6 +1972,10 @@ $o-base-website-values-palette: (
 
     'btn-primary-outline': false,
     'btn-secondary-outline': false,
+    'btn-primary-flat': false,
+    'btn-secondary-flat': false,
+    'btn-primary-outline-border-width': 1px,
+    'btn-secondary-outline-border-width': 1px,
     'link-underline': 'hover', // 'never' / 'hover' / 'always'
     'btn-ripple': false,
 
@@ -2028,6 +2039,11 @@ $o-base-website-values-palette: (
 $o-font-aliases-to-keys: (
     'base': 'font',
     'headings': 'headings-font',
+    'h2': 'h2-font',
+    'h3': 'h3-font',
+    'h4': 'h4-font',
+    'h5': 'h5-font',
+    'h6': 'h6-font',
     'navbar': 'navbar-font',
     'buttons': 'buttons-font',
 );

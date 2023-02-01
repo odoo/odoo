@@ -1228,15 +1228,20 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         this.inputEl.setAttribute('type', 'text');
         this.inputEl.setAttribute('autocomplete', 'chrome-off');
         this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        this.inputEl.classList.toggle('text-start', !unit && !step);
-        this.inputEl.classList.toggle('text-end', !!unit || !!step);
+        const useNumberAlignment = !!step || !!unit || !!this.el.dataset.fakeUnit || !!this.el.dataset.hideUnit;
+        this.inputEl.classList.toggle('text-start', !useNumberAlignment);
+        this.inputEl.classList.toggle('text-end', useNumberAlignment);
         this.containerEl.appendChild(this.inputEl);
 
-        var unitEl = document.createElement('span');
-        unitEl.textContent = unit;
-        this.containerEl.appendChild(unitEl);
-        if (unit.length > 3) {
-            this.el.classList.add('o_we_large');
+        const showUnit = (!!unit || !!this.el.dataset.fakeUnit) && !this.el.dataset.hideUnit;
+        if (showUnit) {
+            var unitEl = document.createElement('span');
+            const unitText = this.el.dataset.fakeUnit || unit;
+            unitEl.textContent = unitText;
+            this.containerEl.appendChild(unitEl);
+            if (unitText.length > 3) {
+                this.el.classList.add('o_we_large');
+            }
         }
     },
 

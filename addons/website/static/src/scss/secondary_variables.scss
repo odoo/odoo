@@ -269,5 +269,10 @@ $o-theme-font: o-get-font-info('base') !default;
 // one in $o-base-theme-font-configs. This ensures a misconfiguration also does.
 $o-theme-font: $o-theme-font or o-add-unicode-support-font($o-system-fonts);
 $o-theme-headings-font: o-get-font-info('headings') or $o-theme-font !default;
+$o-theme-h2-font: o-get-font-info('h2') or $o-theme-headings-font !default;
+$o-theme-h3-font: o-get-font-info('h3') or $o-theme-headings-font !default;
+$o-theme-h4-font: o-get-font-info('h4') or $o-theme-headings-font !default;
+$o-theme-h5-font: o-get-font-info('h5') or $o-theme-headings-font !default;
+$o-theme-h6-font: o-get-font-info('h6') or $o-theme-headings-font !default;
 $o-theme-navbar-font: o-get-font-info('navbar') or $o-theme-font !default;
 $o-theme-buttons-font: o-get-font-info('buttons') or $o-theme-font !default;

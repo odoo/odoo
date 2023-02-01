@@ -92,15 +92,46 @@ $component-active-color: if($component-active-bg, color-contrast($component-acti
 $font-family-sans-serif: $o-theme-font !default;
 
 $font-size-base: o-website-value('font-size-base') !default;
+// The top paragraph margin is a custom variable.
+$paragraph-margin-top: o-website-value('paragraph-margin-top') !default;
+$paragraph-margin-bottom: o-website-value('paragraph-margin-bottom') !default;
 
-$h1-font-size: $font-size-base * $o-theme-h1-font-size-multiplier !default;
-$h2-font-size: $font-size-base * $o-theme-h2-font-size-multiplier !default;
-$h3-font-size: $font-size-base * $o-theme-h3-font-size-multiplier !default;
-$h4-font-size: $font-size-base * $o-theme-h4-font-size-multiplier !default;
-$h5-font-size: $font-size-base * $o-theme-h5-font-size-multiplier !default;
-$h6-font-size: $font-size-base * $o-theme-h6-font-size-multiplier !default;
+$h1-font-size: o-website-value('h1-font-size') or $font-size-base * $o-theme-h1-font-size-multiplier !default;
+$h2-font-size: o-website-value('h2-font-size') or $font-size-base * $o-theme-h2-font-size-multiplier !default;
+$h3-font-size: o-website-value('h3-font-size') or $font-size-base * $o-theme-h3-font-size-multiplier !default;
+$h4-font-size: o-website-value('h4-font-size') or $font-size-base * $o-theme-h4-font-size-multiplier !default;
+$h5-font-size: o-website-value('h5-font-size') or $font-size-base * $o-theme-h5-font-size-multiplier !default;
+$h6-font-size: o-website-value('h6-font-size') or $font-size-base * $o-theme-h6-font-size-multiplier !default;
 
+// H2~H6 font families are custom variables.
 $headings-font-family: $o-theme-headings-font !default;
+$h2-font-family: $o-theme-h2-font !default;
+$h3-font-family: $o-theme-h3-font !default;
+$h4-font-family: $o-theme-h4-font !default;
+$h5-font-family: $o-theme-h5-font !default;
+$h6-font-family: $o-theme-h6-font !default;
+// H2~H6 line heights are custom variables.
+$headings-line-height: o-website-value('headings-line-height') !default;
+$h2-line-height: o-website-value('h2-line-height') or $headings-line-height !default;
+$h3-line-height: o-website-value('h3-line-height') or $headings-line-height !default;
+$h4-line-height: o-website-value('h4-line-height') or $headings-line-height !default;
+$h5-line-height: o-website-value('h5-line-height') or $headings-line-height !default;
+$h6-line-height: o-website-value('h6-line-height') or $headings-line-height !default;
+// H1~H6 top margins are custom variables.
+$headings-margin-top: o-website-value('headings-margin-top') or 0 !default;
+$h2-margin-top: o-website-value('h2-margin-top') or $headings-margin-top !default;
+$h3-margin-top: o-website-value('h3-margin-top') or $headings-margin-top !default;
+$h4-margin-top: o-website-value('h4-margin-top') or $headings-margin-top !default;
+$h5-margin-top: o-website-value('h5-margin-top') or $headings-margin-top !default;
+$h6-margin-top: o-website-value('h6-margin-top') or $headings-margin-top !default;
+// H2~H6 bottom margins are custom variables.
+$headings-margin-bottom: o-website-value('headings-margin-bottom') !default;
+$h2-margin-bottom: o-website-value('h2-margin-bottom') or $headings-margin-bottom !default;
+$h3-margin-bottom: o-website-value('h3-margin-bottom') or $headings-margin-bottom !default;
+$h4-margin-bottom: o-website-value('h4-margin-bottom') or $headings-margin-bottom !default;
+$h5-margin-bottom: o-website-value('h5-margin-bottom') or $headings-margin-bottom !default;
+$h6-margin-bottom: o-website-value('h6-margin-bottom') or $headings-margin-bottom !default;
+
 $headings-color: o-color('o-cc1-headings') !default;
 
 $lead-font-size: 1.125rem !default;
@@ -175,10 +206,17 @@ $blockquote-margin-y: 0 !default;
 
 // Bootstrap Review
 
+$o-btn-flat-defaults: () !default;
 $o-btn-outline-defaults: () !default;
+$o-btn-outline-border-width-defaults: () !default;
 @each $color in ('primary', 'secondary') {
-    @if o-website-value('btn-#{$color}-outline') {
+    @if o-website-value('btn-#{$color}-flat') {
+        $o-btn-flat-defaults: append($o-btn-flat-defaults, $color);
+    } @else if o-website-value('btn-#{$color}-outline') {
         $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
+        $o-btn-outline-border-width-defaults: map-merge($o-btn-outline-border-width-defaults, (
+            $color: o-website-value('btn-#{$color}-outline-border-width'),
+        ));
     }
 }
 

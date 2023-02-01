@@ -25,9 +25,14 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
         THEME: 'theme',
     }),
     optionsTabStructure: [
-        ['theme-colors', _lt("Theme Colors")],
-        ['theme-options', _lt("Theme Options")],
-        ['website-settings', _lt("Website Settings")],
+        ['theme-colors', _lt("Colors")],
+        ['website-settings', _lt("Website")],
+        ['theme-paragraph', _lt("Paragraph")],
+        ['theme-headings', _lt("Headings")],
+        ['theme-button', _lt("Button")],
+        ['theme-link', _lt("Link")],
+        ['theme-input', _lt("Input Fields")],
+        ['theme-advanced', _lt("Advanced")],
     ],
 
     /**
