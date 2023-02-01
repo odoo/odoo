@@ -571,4 +571,4 @@ class StockWarehouseOrderpoint(models.Model):
         return datetime.combine(self.lead_days_date, time.min)
 
     def _get_orderpoint_products(self):
-        return self.env['product.product'].search([('type', '=', 'product')])
+        return self.env['product.product'].search([('type', '=', 'product'), ('stock_move_ids', '!=', False)])
