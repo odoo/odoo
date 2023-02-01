@@ -1323,9 +1323,10 @@ class MrpProduction(models.Model):
         for workorder in final_workorders:
             workorder._plan_workorder(replan)
 
+        workorders = self.workorder_ids.filtered(lambda w: w.state not in ['done', 'cancel'])
         self.with_context(force_date=True).write({
-            'date_planned_start': min([workorder.leave_id.date_from for workorder in self.workorder_ids]),
-            'date_planned_finished': max([workorder.leave_id.date_to for workorder in self.workorder_ids])
+            'date_planned_start': min([workorder.leave_id.date_from for workorder in workorders]),
+            'date_planned_finished': max([workorder.leave_id.date_to for workorder in workorders])
         })
 
     def button_unplan(self):
