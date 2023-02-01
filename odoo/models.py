@@ -5435,8 +5435,10 @@ class BaseModel(metaclass=MetaModel):
             for field in self._resolve_field_sequence(func):
                 recs = field.mapped(recs)
             return recs
-        else:
+        elif callable(func):
             return self._mapped_func(func)
+        else:
+            raise TypeError("Expected a function or a dot-separated sequence of field names")
 
     def filtered(self, func):
         """Return the records in ``self`` satisfying ``func``.
