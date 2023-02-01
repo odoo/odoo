@@ -122,6 +122,7 @@ const Wysiwyg = Widget.extend({
         if (options.value) {
             this.$editable.html(options.value);
         }
+        const initialHistoryId = options.value && this._getInitialHistoryId(options.value);
         this.$editable.data('wysiwyg', this);
         this.$editable.data('oe-model', options.recordInfo.res_model);
         this.$editable.data('oe-id', options.recordInfo.res_id);
@@ -164,6 +165,7 @@ const Wysiwyg = Widget.extend({
             powerboxFilters: this.options.powerboxFilters || [],
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
+            initialHistoryId,
             getContentEditableAreas: this.options.getContentEditableAreas,
             getReadOnlyAreas: this.options.getReadOnlyAreas,
             getUnremovableElements: this.options.getUnremovableElements,
@@ -2513,6 +2515,58 @@ const Wysiwyg = Widget.extend({
             resetPreSavePromise();
         }
     },
+<<<<<<< HEAD
+||||||| parent of ce160105b79 (temp)
+    /**
+     * When the collaboration is active, ensure that we do not try to save with
+     * a different history branch to the database. If the history is different,
+     * return the database html content.
+     *
+     * See `_historyIds` in `historyReset` in OdooEditor.
+     *
+     * @return {string} The database html content if the history is different.
+     */
+    async _ensureCommonHistory() {
+        if (!this.ptp) return;
+        const historyIds = this.odooEditor.historyGetBranchIds();
+        return this._rpc({
+            route: '/web_editor/ensure_common_history',
+            params: {
+                history_ids: historyIds,
+                model_name: this.options.collaborationChannel.collaborationModelName,
+                field_name: this.options.collaborationChannel.collaborationFieldName,
+                res_id: this.options.collaborationChannel.collaborationResId,
+            },
+        });
+    },
+=======
+    _getInitialHistoryId: function (value) {
+        const matchId = value.match(/data-last-history-steps="([0-9,]*?)"/);
+        return matchId && matchId[1];
+    },
+    /**
+     * When the collaboration is active, ensure that we do not try to save with
+     * a different history branch to the database. If the history is different,
+     * return the database html content.
+     *
+     * See `_historyIds` in `historyReset` in OdooEditor.
+     *
+     * @return {string} The database html content if the history is different.
+     */
+    async _ensureCommonHistory() {
+        if (!this.ptp) return;
+        const historyIds = this.odooEditor.historyGetBranchIds();
+        return this._rpc({
+            route: '/web_editor/ensure_common_history',
+            params: {
+                history_ids: historyIds,
+                model_name: this.options.collaborationChannel.collaborationModelName,
+                field_name: this.options.collaborationChannel.collaborationFieldName,
+                res_id: this.options.collaborationChannel.collaborationResId,
+            },
+        });
+    },
+>>>>>>> ce160105b79 (temp)
     _generateClientId: function () {
         // No need for secure random number.
         return Math.floor(Math.random() * Math.pow(2, 52)).toString();
@@ -2548,8 +2602,18 @@ const Wysiwyg = Widget.extend({
         this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
         this.odooEditor.historyReset();
+<<<<<<< HEAD
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+||||||| parent of ce160105b79 (temp)
+        this.ptp.notifyAllClients('ptp_join');
+=======
+        const initialHistoryId = value && this._getInitialHistoryId(value);
+        if (initialHistoryId) {
+            this.odooEditor.historySetInitialId(initialHistoryId);
+        }
+        this.ptp.notifyAllClients('ptp_join');
+>>>>>>> ce160105b79 (temp)
     },
     /**
      * Set contenteditable=false for all `.o_not_editable` found within node if
