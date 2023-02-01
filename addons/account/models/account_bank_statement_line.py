@@ -344,6 +344,10 @@ class AccountBankStatementLine(models.Model):
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
 
+            #Set the amount to 0 if it's not specified.
+            if 'amount' not in vals:
+                vals['amount'] = 0
+
         st_lines = super().create(vals_list)
 
         for i, st_line in enumerate(st_lines):
