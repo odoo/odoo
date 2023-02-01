@@ -3673,21 +3673,23 @@ export class RelationalModel extends Model {
                     for (const definition of record.definitions) {
                         const propertyFieldName = `${fieldName}.${definition.name}`;
                         let widget = definition.type;
-                        if (definition.type === "many2many") {
-                            if (["res.users", "res.partner"].includes(definition.comodel)) {
-                                widget = "many2many_tags_avatar";
-                            } else {
-                                widget = "many2many_tags";
+                        const propsFromAttrs = {};
+                        if (["many2one", "many2many"].includes(definition.type)) {
+                            if (!definition.comodel) {
+                                continue;
                             }
-                        } else if (
-                            definition.type === "many2one" &&
-                            ["res.users", "res.partner"].includes(definition.comodel)
-                        ) {
-                            widget = "many2one_avatar";
+
+                            if (["res.users", "res.partner"].includes(definition.comodel)) {
+                                widget =
+                                    definition.type === "many2one"
+                                        ? "many2one_avatar"
+                                        : "many2many_tags_avatar";
+                            } else {
+                                widget = definition.type === "many2one" ? widget : "many2many_tags";
+                            }
+                            propsFromAttrs.relation = definition.comodel;
                         }
-                        const propsFromAttrs = ["many2many", "many2one"].includes(definition.type)
-                            ? { relation: definition.comodel }
-                            : {};
+
                         const relatedPropertyField = {
                             id: record.id,
                             fieldName,
