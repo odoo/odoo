@@ -24,7 +24,7 @@ export class ChatterService {
 
     /**
      * @param {import("@mail/new/core/thread_model").Thread} thread
-     * @param {import("@mail/new/core/thread_model").SuggestedRecipient[]} dataList
+     * @param {import("@mail/new/web/suggested_recipient").SuggestedRecipient[]} dataList
      */
     async insertSuggestedRecipients(thread, dataList) {
         const recipients = [];

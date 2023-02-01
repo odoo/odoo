@@ -10,12 +10,12 @@ tour.register(
     [
         {
             content: "Click join",
-            trigger: ".o_WelcomeView_joinButton",
-            extraTrigger: ".o_ThreadView",
+            trigger: ".o-mail-welcome-page-join-button",
+            extraTrigger: ".o-mail-discuss",
         },
         {
             content: "Check that we are on channel page",
-            trigger: ".o_ThreadView",
+            trigger: ".o-mail-discuss",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Clicking on join button did not redirect to channel page");

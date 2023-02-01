@@ -27,7 +27,6 @@ class TestMailPublicPage(HttpCase):
     def test_mail_channel_public_page_as_admin(self):
         self._open_channel_page_as_user('admin')
 
-    @skip('skipRefactoring')
     def test_mail_channel_public_page_as_guest(self):
         self.start_tour(self.channel.invitation_url, "mail/static/tests/tours/mail_channel_as_guest_tour.js")
         guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')

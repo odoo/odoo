@@ -49,7 +49,7 @@ export class ThreadService {
         const type = channel.channel_type;
         const channelType = serverData.channel.channel_type;
         const isAdmin =
-            channelType !== "group" && serverData.create_uid === this.store.user.user?.id;
+            channelType !== "group" && serverData.create_uid === this.store.user?.user?.id;
         const thread = this.insert({
             id,
             model: "mail.channel",

@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
-import { SuggestedRecipient } from "@mail/new/composer/suggested_recipient";
+import { SuggestedRecipient } from "@mail/new/web/suggested_recipient";
 
 /**
  * @typedef {Object} Props

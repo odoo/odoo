@@ -25,7 +25,7 @@ import { useAttachmentUploader } from "@mail/new/attachments/attachment_uploader
 import { useHover, useScrollPosition } from "@mail/new/utils/hooks";
 import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { _t } from "@web/core/l10n/translation";
-import { SuggestedRecipientsList } from "../composer/suggested_recipient_list";
+import { SuggestedRecipientsList } from "./suggested_recipient_list";
 
 /**
  * @typedef {Object} Props

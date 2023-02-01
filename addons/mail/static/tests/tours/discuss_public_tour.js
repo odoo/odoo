@@ -9,12 +9,12 @@ tour.register(
     },
     [
         {
-            trigger: ".o_DiscussPublicView",
-            extraTrigger: ".o_ThreadView",
+            trigger: ".o-mail-discuss-public",
+            extraTrigger: ".o-mail-discuss",
         },
         {
             content: "Check that we are on channel page",
-            trigger: ".o_ThreadView",
+            trigger: ".o-mail-discuss",
             run() {
                 if (!window.location.pathname.startsWith("/discuss/channel")) {
                     console.error("Did not automatically redirect to channel page");

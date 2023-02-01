@@ -7,10 +7,14 @@ import { makeEnv, startServices } from "@web/env";
 // import { session } from "@web/session";
 import { templates } from "@web/core/assets";
 
+import { mapLegacyEnvToWowlEnv } from "@web/legacy/utils";
 // import * as legacySession from "web.session";
 
-import { mount, whenReady } from "@odoo/owl";
+import * as legacyEnv from "web.env";
+import { Component, mount, whenReady } from "@odoo/owl";
 import { DiscussPublic } from "./discuss_public";
+
+Component.env = legacyEnv;
 
 (async function boot() {
     await whenReady();
@@ -33,6 +37,7 @@ import { DiscussPublic } from "./discuss_public";
     // });
     const env = makeEnv();
     await startServices(env);
+    mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
 })();
