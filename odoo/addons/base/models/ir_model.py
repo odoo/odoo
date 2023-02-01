@@ -1755,40 +1755,6 @@ class IrModelAccess(models.Model):
     perm_unlink = fields.Boolean(string='Delete Access')
 
     @api.model
-    def check_groups(self, group):
-        """ Check whether the current user has the given group. """
-        grouparr = group.split('.')
-        if not grouparr:
-            return False
-        self._cr.execute("""SELECT 1 FROM res_groups_users_rel
-                            WHERE uid=%s AND gid IN (
-                                SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
-                         (self._uid, grouparr[0], grouparr[1],))
-        return bool(self._cr.fetchone())
-
-    @api.model
-    def check_group(self, model, mode, group_ids):
-        """ Check if a specific group has the access mode to the specified model"""
-        assert mode in ('read', 'write', 'create', 'unlink'), 'Invalid access mode'
-
-        if isinstance(model, models.BaseModel):
-            assert model._name == 'ir.model', 'Invalid model object'
-            model_name = model.name
-        else:
-            model_name = model
-
-        if isinstance(group_ids, int):
-            group_ids = [group_ids]
-
-        query = """ SELECT 1 FROM ir_model_access a
-                    JOIN ir_model m ON (m.id = a.model_id)
-                    WHERE a.active AND a.perm_{mode} AND
-                        m.model=%s AND (a.group_id IN %s OR a.group_id IS NULL)
-                """.format(mode=mode)
-        self._cr.execute(query, (model_name, tuple(group_ids)))
-        return bool(self._cr.rowcount)
-
-    @api.model
     def group_names_with_access(self, model_name, access_mode):
         """ Return the names of visible groups which have been granted
             ``access_mode`` on the model ``model_name``.
