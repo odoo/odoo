@@ -26,7 +26,7 @@ const { useState } = owl;
  *
  *   // supply the items to the popup and wait for user's response
  *   // when user pressed `confirm` in the popup, the changes he made will be returned by the showPopup function.
- *   const { confirmed, payload: newNames } = await this.showPopup(EditListPopup, {
+ *   const { confirmed, payload: newNames } = await this.popup.add(EditListPopup, {
  *     title: "Can you confirm this item?",
  *     array: names })
  *

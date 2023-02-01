@@ -3,8 +3,7 @@ import core from "web.core";
 var _t = core._t;
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 
 import { Draggable } from "../Misc/Draggable";
 
@@ -44,7 +43,8 @@ export class NumberPopup extends AbstractAwaitablePopup {
                 .replace(".", this.decimalSeparator);
         }
         this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
-        numberBuffer.use({
+        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
             triggerAtEnter: "accept-input",
             triggerAtEscape: "close-this-popup",
@@ -65,7 +65,7 @@ export class NumberPopup extends AbstractAwaitablePopup {
         }
     }
     confirm(event) {
-        if (numberBuffer.get()) {
+        if (this.numberBuffer.get()) {
             super.confirm();
         }
     }
@@ -73,6 +73,6 @@ export class NumberPopup extends AbstractAwaitablePopup {
         this.trigger("numpad-click-input", { key });
     }
     getPayload() {
-        return numberBuffer.get();
+        return this.numberBuffer.get();
     }
 }

@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import { OrderReceipt } from "./OrderReceipt";
 
 import { onMounted, useRef, status } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class ReceiptScreen extends AbstractReceiptScreen {
     static template = "ReceiptScreen";
@@ -16,6 +17,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         useErrorHandlers();
         this.orderReceipt = useRef("order-receipt");
         const order = this.currentOrder;
@@ -57,9 +59,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             this.orderUiState.emailNotice = this.env._t("Email sent.");
         } catch {
             this.orderUiState.emailSuccessful = false;
-            this.orderUiState.emailNotice = this.env._t(
-                "Sending email failed. Please try again."
-            );
+            this.orderUiState.emailNotice = this.env._t("Sending email failed. Please try again.");
         }
     }
     get orderAmountPlusTip() {
@@ -104,7 +104,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.env.pos.removeOrder(this.currentOrder);
         this._addNewOrder();
         const { name, props } = this.nextScreen;
-        this.showScreen(name, props);
+        this.pos.showScreen(name, props);
         if (this.env.pos.config.iface_customer_facing_display) {
             this.env.pos.send_current_order_to_customer_facing_display();
         }

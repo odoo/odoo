@@ -3,7 +3,6 @@
 import core from "web.core";
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
-import { Gui } from "@point_of_sale/js/Gui";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 var _t = core._t;
@@ -366,7 +365,7 @@ export const PaymentAdyen = PaymentInterface.extend({
         if (!title) {
             title = _t("Adyen Error");
         }
-        Gui.showPopup(ErrorPopup, {
+        this.pos.env.services.popup.add(ErrorPopup, {
             title: title,
             body: msg,
         });

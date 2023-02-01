@@ -41,3 +41,9 @@ export function withComputedProperties(obj, sources, descriptor) {
     }
     return obj;
 }
+
+export class Reactive {
+    constructor() {
+        return reactive(this);
+    }
+}

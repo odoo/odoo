@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Gui } from "@point_of_sale/js/Gui";
 import { Order } from "@point_of_sale/js/models";
 import { patch } from "@web/core/utils/patch";
 
@@ -21,7 +20,7 @@ patch(Order.prototype, "pos_sale_product_configurator.Order", {
             if (isProductLoaded) {
                 const quantity = this.get_selected_orderline().get_quantity();
                 const info = await this.pos.getProductInfo(product, quantity);
-                Gui.showPopup(ProductInfoPopup, { info: info, product: product });
+                this.pos.env.services.popup.add(ProductInfoPopup, { info: info, product: product });
             }
         }
     },

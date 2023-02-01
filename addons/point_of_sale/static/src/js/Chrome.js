@@ -4,13 +4,11 @@ import { loadCSS } from "@web/core/assets";
 import { useListener, useBus, useService } from "@web/core/utils/hooks";
 import BarcodeParser from "barcodes.BarcodeParser";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
-import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { WithEnv } from "@web/core/utils/components";
+import { WithEnv, ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 
 // ChromeAdapter imports
@@ -31,7 +29,7 @@ import {
     reactive,
     onWillUnmount,
 } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -40,6 +38,7 @@ export class Chrome extends PosComponent {
     static template = "Chrome"; // FIXME POSREF namespace templates
     setup() {
         this.pos = usePos();
+        this.popup = useService("popup");
         // BEGIN ChromeAdapter
         ProductScreen.sortControlButtons();
         const legacyActionManager = useService("legacy_action_manager");
@@ -59,7 +58,14 @@ export class Chrome extends PosComponent {
         window.posmodel = this.pos.globalState.debug ? reactivePos : this.pos.globalState;
 
         this.wowlEnv = this.env;
-        for (const service of ["pos", "sound", "debug", "pos_notification"]) {
+        for (const service of [
+            "pos",
+            "sound",
+            "debug",
+            "pos_notification",
+            "number_buffer",
+            "popup",
+        ]) {
             env.services[service] = this.wowlEnv.services[service];
         }
 
@@ -83,15 +89,12 @@ export class Chrome extends PosComponent {
 
         super.setup();
         useExternalListener(window, "beforeunload", this._onBeforeUnload);
-        useListener("show-main-screen", this.__showScreen);
-        useListener("show-temp-screen", this.__showTempScreen);
-        useListener("close-temp-screen", this.__closeTempScreen);
         useListener("close-pos", this._closePos);
         useListener("loading-skip-callback", () => this.env.proxy.stop_searching());
         useListener("set-sync-status", this._onSetSyncStatus);
         useListener("connect-to-proxy", this.connect_to_proxy);
         useBus(this.env.posbus, "start-cash-control", this.openCashControl);
-        numberBuffer.activate();
+        useService("number_buffer").activate();
 
         useSubEnv({
             pos: reactive(
@@ -170,7 +173,8 @@ export class Chrome extends PosComponent {
                     ? this.env.pos.config.iface_start_categ_id[0]
                     : 0;
             this.pos.uiState = "READY";
-            this._showStartScreen();
+            const { name, props } = this.startScreen;
+            this.pos.showScreen(name, props);
             setTimeout(() => this._runBackgroundTasks());
         } catch (error) {
             let title = "Unknown Error";
@@ -198,7 +202,7 @@ export class Chrome extends PosComponent {
                 }
             }
 
-            return this.showPopup(ErrorTracebackPopup, { title, body, exitButtonIsShown: true });
+            return this.popup.add(ErrorTracebackPopup, { title, body, exitButtonIsShown: true });
         }
         registry.category("main_components").add("BlockUI", BlockUiFromRegistry);
 
@@ -290,7 +294,7 @@ export class Chrome extends PosComponent {
 
     openCashControl() {
         if (this.shouldShowCashControl()) {
-            this.showPopup(CashOpeningPopup, { keepBehind: true });
+            this.popup.add(CashOpeningPopup, { keepBehind: true });
         }
     }
 
@@ -302,52 +306,6 @@ export class Chrome extends PosComponent {
 
     // EVENT HANDLERS //
 
-    _showStartScreen() {
-        const { name, props } = this.startScreen;
-        this.showScreen(name, props);
-    }
-    _getSavedScreen(order) {
-        return order.get_screen_data();
-    }
-    __showTempScreen(event) {
-        const { name, props, resolve } = event.detail;
-        this.pos.tempScreen = {
-            name,
-            component: registry.category("pos_screens").get(name),
-            props: { ...props, resolve },
-        };
-    }
-    __closeTempScreen() {
-        this.pos.tempScreen = null;
-    }
-    __showScreen({ detail: { name, props = {} } }) {
-        const component = registry.category("pos_screens").get(name);
-        // 1. Set the information of the screen to display.
-        this.pos.mainScreen = { name, component, props };
-
-        // 2. Save the screen to the order.
-        //  - This screen is shown when the order is selected.
-        if (
-            !(component.prototype instanceof IndependentToOrderScreen) &&
-            name !== "ReprintReceiptScreen"
-        ) {
-            this._setScreenData(name, props);
-        }
-    }
-    /**
-     * Set the latest screen to the current order. This is done so that
-     * when the order is selected again, the ui returns to the latest screen
-     * saved in the order.
-     *
-     * @param {string} name Screen name
-     * @param {Object} props props for the Screen component
-     */
-    _setScreenData(name, props) {
-        const order = this.env.pos.get_order();
-        if (order) {
-            order.set_screen_data({ name, props });
-        }
-    }
     async _closePos() {
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
@@ -379,7 +337,7 @@ export class Chrome extends PosComponent {
                               "not close the session before the issue " +
                               "has been resolved."
                       );
-                const { confirmed } = await this.showPopup(ConfirmPopup, {
+                const { confirmed } = await this.popup.add(ConfirmPopup, {
                     title: this.env._t("Offline Orders"),
                     body: reason,
                 });
@@ -473,6 +431,17 @@ export class Chrome extends PosComponent {
     get showCashMoveButton() {
         return this.env.pos && this.env.pos.config && this.env.pos.config.cash_control;
     }
+    /**
+     * Unmounts the tempScreen on error and dispatches the error in a separate
+     * stack so that it can be handled by the error service and display an error
+     * popup.
+     *
+     * @param {any} err the error that was thrown in the temp screen.
+     */
+    onTempScreenError(err) {
+        this.pos.tempScreen = null;
+        Promise.reject(err);
+    }
 }
 Object.defineProperty(Chrome, "components", {
     get() {
@@ -481,6 +450,7 @@ Object.defineProperty(Chrome, "components", {
                 Transition,
                 MainComponentsContainer,
                 WithEnv,
+                ErrorHandler,
                 Navbar,
             },
             PosComponent.components

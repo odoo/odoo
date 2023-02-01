@@ -7,6 +7,8 @@ import { SaleDetailsButton } from "../ChromeWidgets/SaleDetailsButton";
 import { ConfirmPopup } from "./ConfirmPopup";
 import { ErrorPopup } from "./ErrorPopup";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
+import { AlertPopup } from "./AlertPopup";
+import { useService } from "@web/core/utils/hooks";
 
 const { useState } = owl;
 
@@ -16,6 +18,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         this.manualInputCashCount = false;
         this.cashControl = this.env.pos.config.cash_control;
         this.closeSessionClicked = false;
@@ -31,7 +34,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         if (!this.cashControl || !this.hasDifference()) {
             this.closeSession();
         } else if (this.hasUserAuthority()) {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
                 body: this.env._t(
                     "Do you want to accept payments difference and post a profit/loss journal entry?"
@@ -41,7 +44,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                 this.closeSession();
             }
         } else {
-            await this.showPopup(ConfirmPopup, {
+            await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
                 body: _.str.sprintf(
                     this.env._t(
@@ -61,7 +64,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async openDetailsPopup() {
-        const { confirmed, payload } = await this.showPopup(MoneyDetailsPopup, {
+        const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount
                 ? 0
@@ -182,7 +185,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                     throw error;
                 } else {
                     // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                    await this.showPopup(ErrorPopup, {
+                    await this.popup.add(ErrorPopup, {
                         title: this.env._t("Closing session error"),
                         body: this.env._t(
                             "An error has occurred when trying to close the session.\n" +
@@ -201,14 +204,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         let title = "";
 
         if (response.type == "alert") {
-            popupType = "AlertPopup";
+            popupType = AlertPopup;
             title = response.title ? response.title : "";
         } else {
-            popupType = "ErrorPopup";
+            popupType = ErrorPopup;
             title = "Error";
         }
 
-        await this.showPopup(popupType, { title: title, body: response.message });
+        await this.popup.add(popupType, { title: title, body: response.message });
         if (response.redirect) {
             window.location = "/web#action=point_of_sale.action_client_pos_menu";
         }

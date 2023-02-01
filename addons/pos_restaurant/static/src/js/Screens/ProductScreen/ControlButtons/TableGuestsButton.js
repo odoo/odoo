@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
@@ -11,6 +11,7 @@ export class TableGuestsButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
     get currentOrder() {
@@ -20,7 +21,7 @@ export class TableGuestsButton extends PosComponent {
         return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
     }
     async onClick() {
-        const { confirmed, payload: inputNumber } = await this.showPopup(NumberPopup, {
+        const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: this.nGuests,
             cheap: true,
             title: this.env._t("Guests ?"),
@@ -32,7 +33,7 @@ export class TableGuestsButton extends PosComponent {
             // Set the maximum number possible for an integer
             const max_capacity = 2 ** 31 - 1;
             if (guestCount > max_capacity) {
-                await this.showPopup(ErrorPopup, {
+                await this.popup.add(ErrorPopup, {
                     title: this.env._t("Blocked action"),
                     body: _.str.sprintf(
                         this.env._t("You cannot put a number that exceeds %s "),

@@ -2,11 +2,12 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { debounce } from "@web/core/utils/timing";
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { CategoryButton } from "./CategoryButton";
 
 import { onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class ProductsWidgetControlPanel extends PosComponent {
     static components = { CategoryButton };
@@ -15,6 +16,7 @@ export class ProductsWidgetControlPanel extends PosComponent {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.notification = useService("pos_notification");
         this.updateSearch = debounce(this.updateSearch, 100);
         this.state = useState({ searchInput: "", mobileSearchBarIsShown: false });
 
@@ -50,7 +52,7 @@ export class ProductsWidgetControlPanel extends PosComponent {
             return;
         }
         const result = await this.loadProductFromDB();
-        this.showNotification(
+        this.notification.add(
             _.str.sprintf(
                 this.env._t('%s product(s) found for "%s".'),
                 result.length,

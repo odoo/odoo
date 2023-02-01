@@ -3,6 +3,7 @@
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { round_precision as round_pr } from "web.utils";
 import { registry } from "@web/core/registry";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
 
@@ -19,6 +20,7 @@ export class ScaleScreen extends PosComponent {
         this.state = useState({ weight: 0 });
         onMounted(this.onMounted);
         onWillUnmount(this.onWillUnmount);
+        this.pos = usePos();
     }
     onMounted() {
         // start the scale reading
@@ -30,14 +32,14 @@ export class ScaleScreen extends PosComponent {
     }
     back() {
         this.props.resolve({ confirmed: false, payload: null });
-        this.trigger("close-temp-screen");
+        this.pos.closeTempScreen();
     }
     confirm() {
         this.props.resolve({
             confirmed: true,
             payload: { weight: this.state.weight },
         });
-        this.trigger("close-temp-screen");
+        this.pos.closeTempScreen();
     }
     _onHotkeys(event) {
         if (event.key === "Escape") {

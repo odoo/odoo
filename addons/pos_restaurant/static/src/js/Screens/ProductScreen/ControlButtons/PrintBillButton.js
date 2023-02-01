@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
@@ -9,6 +10,7 @@ export class PrintBillButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         useListener("click", this.onClick);
     }
     _isDisabled() {
@@ -16,7 +18,7 @@ export class PrintBillButton extends PosComponent {
         return order.get_orderlines().length === 0;
     }
     onClick() {
-        this.showTempScreen("BillScreen");
+        this.pos.showTempScreen("BillScreen");
     }
 }
 

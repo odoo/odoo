@@ -2,9 +2,8 @@
 
 import { Order } from "@point_of_sale/js/models";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { registry } from "@web/core/registry";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -16,6 +15,7 @@ import { NumpadWidget } from "../ProductScreen/NumpadWidget";
 import { OrderDetails } from "../TicketScreen/OrderDetails";
 import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
 import { SearchBar } from "../../Misc/SearchBar";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { onMounted, onWillUnmount, useState } = owl;
 
@@ -41,6 +41,8 @@ export class TicketScreen extends IndependentToOrderScreen {
 
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.popup = useService("popup");
         useListener("close-screen", this._onCloseScreen);
         useListener("filter-selected", this._onFilterSelected);
         useListener("search", this._onSearch);
@@ -54,7 +56,8 @@ export class TicketScreen extends IndependentToOrderScreen {
         useListener("click-refund-order-uid", this._onClickRefundOrderUid);
         useListener("update-selected-orderline", this._onUpdateSelectedOrderline);
         useListener("do-refund", this._onDoRefund);
-        numberBuffer.use({
+        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
             triggerAtInput: "update-selected-orderline",
         });
@@ -118,14 +121,14 @@ export class TicketScreen extends IndependentToOrderScreen {
                     this._state.ui.selectedOrderlineIds[clickedOrder.backendId] = firstLine.id;
                 }
             }
-            numberBuffer.reset();
+            this.numberBuffer.reset();
         } else {
             this._setOrder(clickedOrder);
         }
     }
     _onCreateNewOrder() {
         this.env.pos.add_new_order();
-        this.showScreen("ProductScreen");
+        this.pos.showScreen("ProductScreen");
     }
     _selectNextOrder(currentOrder) {
         const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
@@ -140,7 +143,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
             order.get_orderlines().length > 0
         ) {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Existing orderlines"),
                 body: _.str.sprintf(
                     this.env._t(
@@ -180,7 +183,7 @@ export class TicketScreen extends IndependentToOrderScreen {
     _onClickOrderline({ detail: orderline }) {
         const order = this.getSelectedSyncedOrder();
         this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
-        numberBuffer.reset();
+        this.numberBuffer.reset();
     }
     _onClickRefundOrderUid({ detail: orderUid }) {
         // Open the refund order.
@@ -193,24 +196,24 @@ export class TicketScreen extends IndependentToOrderScreen {
         const buffer = detail.buffer;
         const order = this.getSelectedSyncedOrder();
         if (!order) {
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
 
         const selectedOrderlineId = this.getSelectedOrderlineId();
         const orderline = order.orderlines.find((line) => line.id == selectedOrderlineId);
         if (!orderline) {
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
 
         const toRefundDetail = this._getToRefundDetail(orderline);
         // When already linked to an order, do not modify the to refund quantity.
         if (toRefundDetail.destinationOrderUid) {
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
 
         const refundableQty = toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
         if (refundableQty <= 0) {
-            return numberBuffer.reset();
+            return this.numberBuffer.reset();
         }
 
         if (buffer == null || buffer == "") {
@@ -218,8 +221,8 @@ export class TicketScreen extends IndependentToOrderScreen {
         } else {
             const quantity = Math.abs(parse.float(buffer));
             if (quantity > refundableQty) {
-                numberBuffer.reset();
-                this.showPopup(ErrorPopup, {
+                this.numberBuffer.reset();
+                this.popup.add(ErrorPopup, {
                     title: this.env._t("Maximum Exceeded"),
                     body: _.str.sprintf(
                         this.env._t(

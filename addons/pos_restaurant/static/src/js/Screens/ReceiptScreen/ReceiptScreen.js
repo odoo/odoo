@@ -1,9 +1,10 @@
 /** @odoo-module */
 
 import { ReceiptScreen } from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptScreen";
-import { usePos } from "@point_of_sale/app/pos_store";
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { patch } from "@web/core/utils/patch";
 import { onWillUnmount } from "@odoo/owl";
+import { FloorScreen } from "@pos_restaurant/js/Screens/FloorScreen/FloorScreen";
 
 patch(ReceiptScreen, "pos_restaurant.ReceiptScreen", {
     showBackToFloorButton: true,
@@ -15,7 +16,7 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
         this.pos = usePos();
         onWillUnmount(() => {
             // When leaving the receipt screen to the floor screen the order is paid and can be removed
-            if (this.pos.mainScreen.name === "FloorScreen") {
+            if (this.pos.mainScreen.component === FloorScreen) {
                 this.env.pos.removeOrder(this.currentOrder);
             }
         });

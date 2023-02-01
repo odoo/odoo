@@ -2,7 +2,7 @@
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
@@ -11,11 +11,12 @@ export class DiscountButton extends PosComponent {
 
     setup() {
         super.setup();
+        this.popup = useService("popup");
         useListener("click", this.onClick);
     }
     async onClick() {
         var self = this;
-        const { confirmed, payload } = await this.showPopup(NumberPopup, {
+        const { confirmed, payload } = await this.popup.add(NumberPopup, {
             title: this.env._t("Discount Percentage"),
             startingValue: this.env.pos.config.discount_pc,
             isInputSelected: true,
@@ -31,7 +32,7 @@ export class DiscountButton extends PosComponent {
         var lines = order.get_orderlines();
         var product = this.env.pos.db.get_product_by_id(this.env.pos.config.discount_product_id[0]);
         if (product === undefined) {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: this.env._t("No discount product found"),
                 body: this.env._t(
                     "The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."

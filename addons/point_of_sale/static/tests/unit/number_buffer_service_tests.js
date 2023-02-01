@@ -1,34 +1,41 @@
 /** @odoo-module */
 
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
-import makeTestEnvironment from "web.test_env";
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
 import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useService } from "@web/core/utils/hooks";
+import { numberBuffer } from "@point_of_sale/app/number_buffer_service";
+import { registry } from "@web/core/registry";
 
-const { useState, xml } = owl;
+import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+
+import { useState, xml } from "@odoo/owl";
 
 QUnit.module("unit tests for NumberBuffer", {
-    before() {},
+    async beforeEach() {
+        registry.category("services").add("number_buffer", numberBuffer);
+        registry.category("services").add("sound", { start: () => ({ play() {} }) });
+    },
 });
 
 QUnit.test("simple fast inputs with capture in between", async function (assert) {
     assert.expect(3);
     const target = testUtils.prepareTarget();
-    const env = makeTestEnvironment();
+    const env = await makeTestEnv();
 
     class Root extends LegacyComponent {
         setup() {
             this.state = useState({ buffer: "" });
-            numberBuffer.activate();
-            numberBuffer.use({
+            this.numberBuffer = useService("number_buffer");
+            this.numberBuffer.activate();
+            this.numberBuffer.use({
                 nonKeyboardInputEvent: "numpad-click-input",
                 state: this.state,
             });
         }
         resetBuffer() {
-            numberBuffer.capture();
-            numberBuffer.reset();
+            this.numberBuffer.capture();
+            this.numberBuffer.reset();
         }
         onClickOne() {
             this.trigger("numpad-click-input", { key: "1" });

@@ -1,11 +1,17 @@
 /** @odoo-module */
 
 import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { ErrorPopup } from "../Popups/ErrorPopup";
 
 export class SaleDetailsButton extends PosComponent {
     static template = "SaleDetailsButton";
+
+    setup() {
+        super.setup(...arguments);
+        this.popup = useService("popup");
+    }
 
     async onClick() {
         // IMPROVEMENT: Perhaps put this logic in a parent component
@@ -25,7 +31,7 @@ export class SaleDetailsButton extends PosComponent {
         );
         const printResult = await this.env.proxy.printer.print_receipt(report);
         if (!printResult.successful) {
-            await this.showPopup(ErrorPopup, {
+            await this.popup.add(ErrorPopup, {
                 title: printResult.message.title,
                 body: printResult.message.body,
             });

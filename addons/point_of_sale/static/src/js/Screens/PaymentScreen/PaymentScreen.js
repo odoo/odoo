@@ -3,9 +3,8 @@
 import { parse } from "web.field_utils";
 import { PosComponent } from "@point_of_sale/js/PosComponent";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
-import { numberBuffer } from "@point_of_sale/js/Misc/NumberBuffer";
 import { registry } from "@web/core/registry";
-import { useListener } from "@web/core/utils/hooks";
+import { useListener, useService } from "@web/core/utils/hooks";
 import utils from "web.utils";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -16,6 +15,7 @@ import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { PaymentScreenNumpad } from "./PaymentScreenNumpad";
 import { PaymentScreenPaymentLines } from "./PaymentScreenPaymentLines";
 import { PaymentScreenStatus } from "./PaymentScreenStatus";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class PaymentScreen extends PosComponent {
     static template = "PaymentScreen";
@@ -27,6 +27,9 @@ export class PaymentScreen extends PosComponent {
 
     setup() {
         super.setup();
+        this.pos = usePos();
+        this.popup = useService("popup");
+        this.notification = useService("pos_notification");
         useListener("delete-payment-line", this.deletePaymentLine);
         useListener("select-payment-line", this.selectPaymentLine);
         useListener("new-payment-line", this.addNewPaymentLine);
@@ -39,14 +42,15 @@ export class PaymentScreen extends PosComponent {
         this.payment_methods_from_config = this.env.pos.payment_methods.filter((method) =>
             this.env.pos.config.payment_method_ids.includes(method.id)
         );
-        numberBuffer.use(this._getNumberBufferConfig);
+        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer.use(this._getNumberBufferConfig);
         useErrorHandlers();
         this.payment_interface = null;
         this.error = false;
     }
 
     showMaxValueError() {
-        this.showPopup(ErrorPopup, {
+        this.popup.add(ErrorPopup, {
             title: this.env._t("Maximum value reached"),
             body: this.env._t(
                 "The amount cannot be higher than the due amount if you don't have a cash payment method configured."
@@ -87,9 +91,12 @@ export class PaymentScreen extends PosComponent {
         // IMPROVEMENT: This code snippet is repeated multiple times.
         // Maybe it's better to create a function for it.
         const currentPartner = this.currentOrder.get_partner();
-        const { confirmed, payload: newPartner } = await this.showTempScreen("PartnerListScreen", {
-            partner: currentPartner,
-        });
+        const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
+            "PartnerListScreen",
+            {
+                partner: currentPartner,
+            }
+        );
         if (confirmed) {
             this.currentOrder.set_partner(newPartner);
             this.currentOrder.updatePricelist(newPartner);
@@ -99,10 +106,10 @@ export class PaymentScreen extends PosComponent {
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
         if (result) {
-            numberBuffer.reset();
+            this.numberBuffer.reset();
             return true;
         } else {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Error"),
                 body: this.env._t("There is already an electronic payment in progress."),
             });
@@ -124,10 +131,10 @@ export class PaymentScreen extends PosComponent {
         ) {
             return;
         }
-        if (numberBuffer.get() === null) {
+        if (this.numberBuffer.get() === null) {
             this.deletePaymentLine({ detail: { cid: this.selectedPaymentLine.cid } });
         } else {
-            this.selectedPaymentLine.set_amount(numberBuffer.getFloat());
+            this.selectedPaymentLine.set_amount(this.numberBuffer.getFloat());
         }
     }
     toggleIsToInvoice() {
@@ -144,7 +151,7 @@ export class PaymentScreen extends PosComponent {
         const change = this.currentOrder.get_change();
         const value = tip === 0 && change > 0 ? change : tip;
 
-        const { confirmed, payload } = await this.showPopup(NumberPopup, {
+        const { confirmed, payload } = await this.popup.add(NumberPopup, {
             title: tip ? this.env._t("Change Tip") : this.env._t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
@@ -156,7 +163,7 @@ export class PaymentScreen extends PosComponent {
     }
     async toggleShippingDatePicker() {
         if (!this.currentOrder.getShippingDate()) {
-            const { confirmed, payload: shippingDate } = await this.showPopup(DatePickerPopup, {
+            const { confirmed, payload: shippingDate } = await this.popup.add(DatePickerPopup, {
                 title: this.env._t("Select the shipping date"),
             });
             if (confirmed) {
@@ -180,12 +187,12 @@ export class PaymentScreen extends PosComponent {
                 .send_payment_cancel(this.currentOrder, cid)
                 .then(function () {
                     self.currentOrder.remove_paymentline(line);
-                    numberBuffer.reset();
+                    this.numberBuffer.reset();
                     self.render(true);
                 });
         } else if (line.get_payment_status() !== "waitingCancel") {
             this.currentOrder.remove_paymentline(line);
-            numberBuffer.reset();
+            this.numberBuffer.reset();
             this.render(true);
         }
     }
@@ -193,13 +200,13 @@ export class PaymentScreen extends PosComponent {
         const { cid } = event.detail;
         const line = this.paymentLines.find((line) => line.cid === cid);
         this.currentOrder.select_paymentline(line);
-        numberBuffer.reset();
+        this.numberBuffer.reset();
         this.render(true);
     }
     async validateOrder(isForceValidate) {
         if (this.env.pos.config.cash_rounding) {
             if (!this.env.pos.get_order().check_paymentlines_rounding()) {
-                this.showPopup(ErrorPopup, {
+                this.popup.add(ErrorPopup, {
                     title: this.env._t("Rounding error in payment lines"),
                     body: this.env._t(
                         "The amount of your payment lines must be rounded to validate the transaction."
@@ -259,7 +266,7 @@ export class PaymentScreen extends PosComponent {
                     syncOrderResult.map((res) => res.id)
                 );
                 if (!postPushResult) {
-                    this.showPopup(ErrorPopup, {
+                    this.popup.add(ErrorPopup, {
                         title: this.env._t("Error: no internet connection."),
                         body: this.env._t(
                             "Some, if not all, post-processing after syncing order failed."
@@ -284,14 +291,14 @@ export class PaymentScreen extends PosComponent {
         } finally {
             // Always show the next screen regardless of error since pos has to
             // continue working even offline.
-            this.showScreen(this.nextScreen);
+            this.pos.showScreen(this.nextScreen);
             // Remove the order from the local storage so that when we refresh the page, the order
             // won't be there
             this.env.pos.db.remove_unpaid_order(this.currentOrder);
 
             // Ask the user to sync the remaining unsynced orders.
             if (!hasError && syncOrderResult && this.env.pos.db.get_orders().length) {
-                const { confirmed } = await this.showPopup(ConfirmPopup, {
+                const { confirmed } = await this.popup.add(ConfirmPopup, {
                     title: this.env._t("Remaining unsynced orders"),
                     body: this.env._t(
                         "There are unsynced orders. Do you want to sync these orders?"
@@ -322,7 +329,7 @@ export class PaymentScreen extends PosComponent {
     }
     async _isOrderValid(isForceValidate) {
         if (this.currentOrder.get_orderlines().length === 0 && this.currentOrder.is_to_invoice()) {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Empty Order"),
                 body: this.env._t(
                     "There must be at least one product in your order before it can be validated and invoiced."
@@ -336,7 +343,7 @@ export class PaymentScreen extends PosComponent {
         );
         if (splitPayments.length && !this.currentOrder.get_partner()) {
             const paymentMethod = splitPayments[0].payment_method;
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Customer Required"),
                 body: _.str.sprintf(
                     this.env._t("Customer is required for %s payment method."),
@@ -353,7 +360,7 @@ export class PaymentScreen extends PosComponent {
             (this.currentOrder.is_to_invoice() || this.currentOrder.getShippingDate()) &&
             !this.currentOrder.get_partner()
         ) {
-            const { confirmed } = await this.showPopup(ConfirmPopup, {
+            const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Please select the Customer"),
                 body: this.env._t(
                     "You need to select the customer before you can invoice or ship an order."
@@ -370,7 +377,7 @@ export class PaymentScreen extends PosComponent {
             this.currentOrder.getShippingDate() &&
             !(partner.name && partner.street && partner.city && partner.country_id)
         ) {
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Incorrect address for shipping"),
                 body: this.env._t("The selected customer needs an address."),
             });
@@ -381,7 +388,7 @@ export class PaymentScreen extends PosComponent {
             this.currentOrder.get_total_with_tax() != 0 &&
             this.currentOrder.get_paymentlines().length === 0
         ) {
-            this.showNotification(this.env._t("Select a payment method to validate the order."));
+            this.notification.add(this.env._t("Select a payment method to validate the order."));
             return false;
         }
 
@@ -391,7 +398,7 @@ export class PaymentScreen extends PosComponent {
 
         if (this.currentOrder.has_not_valid_rounding()) {
             var line = this.currentOrder.has_not_valid_rounding();
-            this.showPopup(ErrorPopup, {
+            this.popup.add(ErrorPopup, {
                 title: this.env._t("Incorrect rounding"),
                 body: this.env._t(
                     "You have to round your payments lines." + line.amount + " is not rounded."
@@ -413,7 +420,7 @@ export class PaymentScreen extends PosComponent {
                 cash = cash || this.env.pos.payment_methods[i].is_cash_count;
             }
             if (!cash) {
-                this.showPopup(ErrorPopup, {
+                this.popup.add(ErrorPopup, {
                     title: this.env._t("Cannot return change without a cash payment method"),
                     body: this.env._t(
                         "There is no cash payment method available in this point of sale to handle the change.\n\n Please pay the exact amount or add a cash payment method in the point of sale configuration"
@@ -429,23 +436,25 @@ export class PaymentScreen extends PosComponent {
             this.currentOrder.get_total_with_tax() > 0 &&
             this.currentOrder.get_total_with_tax() * 1000 < this.currentOrder.get_total_paid()
         ) {
-            this.showPopup(ConfirmPopup, {
-                title: this.env._t("Please Confirm Large Amount"),
-                body:
-                    this.env._t("Are you sure that the customer wants to  pay") +
-                    " " +
-                    this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
-                    " " +
-                    this.env._t("for an order of") +
-                    " " +
-                    this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
-                    " " +
-                    this.env._t('? Clicking "Confirm" will validate the payment.'),
-            }).then(({ confirmed }) => {
-                if (confirmed) {
-                    this.validateOrder(true);
-                }
-            });
+            this.popup
+                .add(ConfirmPopup, {
+                    title: this.env._t("Please Confirm Large Amount"),
+                    body:
+                        this.env._t("Are you sure that the customer wants to  pay") +
+                        " " +
+                        this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
+                        " " +
+                        this.env._t("for an order of") +
+                        " " +
+                        this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
+                        " " +
+                        this.env._t('? Clicking "Confirm" will validate the payment.'),
+                })
+                .then(({ confirmed }) => {
+                    if (confirmed) {
+                        this.validateOrder(true);
+                    }
+                });
             return false;
         }
 
