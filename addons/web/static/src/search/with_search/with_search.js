@@ -73,7 +73,7 @@ WithSearch.props = {
     context: { type: Object, optional: true },
     domain: { type: Array, element: [String, Array], optional: true },
     groupBy: { type: Array, element: String, optional: true },
-    orderBy: { type: Array, element: String, optional: true },
+    orderBy: { type: Array, element: Object, optional: true },
 
     // search view description
     searchViewArch: { type: String, optional: true },
