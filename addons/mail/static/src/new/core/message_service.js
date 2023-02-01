@@ -232,6 +232,12 @@ export class MessageService {
             subtypeDescription,
             type,
         });
+        if (
+            Array.isArray(message.author) &&
+            message.author.some((command) => command.includes("clear"))
+        ) {
+            message.author = undefined;
+        }
         if (data.author?.id) {
             message.author = this.persona.insert({
                 ...data.author,

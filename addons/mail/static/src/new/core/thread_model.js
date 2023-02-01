@@ -141,6 +141,10 @@ export class Thread {
         return ["channel", "group"].includes(this.type);
     }
 
+    get isChatChannel() {
+        return ["chat", "group"].includes(this.type);
+    }
+
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
             return (

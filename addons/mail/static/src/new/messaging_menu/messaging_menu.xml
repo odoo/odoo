@@ -78,7 +78,7 @@
                             <i class="fa fa-mail-reply me-1"/>You
                         </t>
                         <t t-else="">
-                            <t t-esc="preview.mostRecentMsg.author.name"/>
+                            <t t-esc="preview.mostRecentMsg.author?.name"/>
                         </t>:
                     </t>
                 </NotificationItem>
