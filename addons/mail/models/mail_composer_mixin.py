@@ -38,18 +38,24 @@ class MailComposerMixin(models.AbstractModel):
 
     @api.depends('template_id')
     def _compute_subject(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it. When removing the
+        template, reset it. """
         for composer_mixin in self:
-            if composer_mixin.template_id:
+            if composer_mixin.template_id.subject:
                 composer_mixin.subject = composer_mixin.template_id.subject
-            elif not composer_mixin.subject:
+            elif not composer_mixin.template_id:
                 composer_mixin.subject = False
 
     @api.depends('template_id')
     def _compute_body(self):
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it. When removing the
+        template, reset it. """
         for composer_mixin in self:
-            if composer_mixin.template_id:
+            if not tools.is_html_empty(composer_mixin.template_id.body_html):
                 composer_mixin.body = composer_mixin.template_id.body_html
-            elif not composer_mixin.body:
+            elif not composer_mixin.template_id:
                 composer_mixin.body = False
 
     @api.depends('body', 'template_id')
@@ -67,8 +73,9 @@ class MailComposerMixin(models.AbstractModel):
 
     @api.depends('template_id')
     def _compute_lang(self):
-        """ Take value form template when set. When removing the template
-        reset the value to avoid keeping part of template configuration. """
+        """ Computation is coming either from template, either reset. When
+        having a template with a value set, copy it. When removing the
+        template, reset it. """
         for composer_mixin in self:
             if composer_mixin.template_id.lang:
                 composer_mixin.lang = composer_mixin.template_id.lang

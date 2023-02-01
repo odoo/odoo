@@ -79,24 +79,17 @@ class TestMailComposerMixin(TestMailCommon, TestRecipients):
 
         # template with void values: should not force void (TODO)
         composer.template_id = template_void.id
-        self.assertEqual(composer.body, f'<p><br /></p>',
-                         'TODO: should not force void value')
+        self.assertEqual(composer.body, '<p>CustomBody for <t t-out="object.name"/></p>')
         self.assertFalse(composer.body_has_template_value)
         self.assertEqual(composer.lang, template.lang)
-        self.assertEqual(composer.subject, False,
-                         'TODO: should not force void value')
-        # temporarily reput values
-        composer.body = template.body_html
-        composer.subject = template.subject
+        self.assertEqual(composer.subject, 'CustomSubject for {{ object.name }}')
 
         # reset template TOOD should reset
         composer.write({'template_id': False})
-        self.assertEqual(composer.body, self.mail_template.body_html,
-                         'TODO: should reset')
+        self.assertFalse(composer.body)
         self.assertFalse(composer.body_has_template_value)
         self.assertFalse(composer.lang)
-        self.assertEqual(composer.subject, self.mail_template.subject,
-                         'TODO: should reset')
+        self.assertFalse(composer.subject)
 
     @users("employee")
     def test_rendering_custom(self):
