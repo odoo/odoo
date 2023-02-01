@@ -4676,11 +4676,8 @@ class BaseModel(metaclass=MetaModel):
 
         def collect_from_path(model, path):
             # path is a dot-separated sequence of field names
-            for fname in path.split('.'):
-                field = model._fields.get(fname)
-                if not field:
-                    break
-                to_flush[model._name].add(fname)
+            for field in model._resolve_field_sequence(path):
+                to_flush[model._name].add(field.name)
                 if field.type == 'one2many' and field.inverse_name:
                     to_flush[field.comodel_name].add(field.inverse_name)
                     field_domain = field.get_domain_list(model)
@@ -4697,6 +4694,9 @@ class BaseModel(metaclass=MetaModel):
                     collect_from_path(model, field.related)
                 if field.relational:
                     model = self.env[field.comodel_name]
+                # Stop iterating on properties fields, as the path may contain property keys
+                if field.type == 'properties':
+                    break
             # return the model found by traversing all fields (used in collect_from_domain)
             return model
 
@@ -5432,8 +5432,8 @@ class BaseModel(metaclass=MetaModel):
             return self                 # support for an empty path of fields
         if isinstance(func, str):
             recs = self
-            for name in func.split('.'):
-                recs = recs._fields[name].mapped(recs)
+            for field in self._resolve_field_sequence(func):
+                recs = field.mapped(recs)
             return recs
         else:
             return self._mapped_func(func)
@@ -6203,6 +6203,38 @@ class BaseModel(metaclass=MetaModel):
         else:
             self.env.cache.invalidate([(field, records._ids)])
             self.env.remove_to_compute(field, records)
+
+    @api.model
+    def _resolve_field_sequence(self, path):
+        """Resolves a sequence of fields.
+
+        Yields :class:`Field` instances for every field name in the `path`.
+
+        .. example::
+
+            >>> for field in self._resolve_field_sequence("partner_id.country_id.code"):
+            ...     print(field)
+            res.users.partner_id
+            res.partner.country_id
+            res.country.code
+
+        :param path: a dot-separated sequence of field names
+        :return: an iterator over sorted :class:`Field` instances.
+        """
+        parts = path.split(".")
+        model = self.env[self._name]
+        for idx, fname in enumerate(parts):
+            if model is None:
+                raise ValueError(
+                    f"Non-relational field {parts[idx-1]!r} in path {path!r}."
+                )
+            field = model._fields.get(fname)
+            if field is None:
+                raise ValueError(
+                    f"Invalid field {fname!r} in path {path!r}."
+                )
+            yield field
+            model = self.env[field.comodel_name] if field.relational else None
 
     #
     # Generic onchange method
