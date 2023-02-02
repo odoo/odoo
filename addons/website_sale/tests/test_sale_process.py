@@ -4,7 +4,7 @@
 import odoo.tests
 
 from odoo import api
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo, TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website.tools import MockRequest
 
@@ -133,7 +133,7 @@ class TestUi(HttpCaseWithUserDemo):
 
 
 @odoo.tests.tagged('post_install', '-at_install')
-class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
+class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUserPortal):
     ''' The goal of this method class is to test the address management on
         the checkout (new/edit billing/shipping, company_id, website_id..).
     '''
@@ -208,6 +208,9 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         self.demo_user.company_id = self.company_c
         self.demo_partner = self.demo_user.partner_id
 
+        self.portal_user = self.user_portal
+        self.portal_partner = self.portal_user.partner_id
+
     def test_02_demo_address_and_company(self):
         ''' This test ensure that the company_id of the address (partner) is
             correctly set and also, is not wrongly changed.
@@ -229,12 +232,12 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
             self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Logged in user new shipping should not get the company of the sudo() neither the one from it's partner..")
             self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
 
-            # 2. Logged in user, edit billing
+            # 2. Logged in user/internal user, should not edit name or email address of billing
             self.default_address_values['partner_id'] = self.demo_partner.id
-            # Name cannot be changed if there are issued invoices
-            self.default_address_values['name'] = self.demo_partner.name
             self.WebsiteSaleController.address(**self.default_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
+            self.assertNotEqual(self.demo_partner.name, self.default_address_values['name'], "Employee cannot change their name during the checkout process.")
+            self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
 
     def test_03_public_user_address_and_company(self):
         ''' Same as test_02 but with public user '''
@@ -321,3 +324,25 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
         # Different company on the SO and the env user company
         with self.assertRaises(ValueError, msg="Should not be able to create SO with company different than the website company"):
             self._create_so(self.demo_partner.id, self.company_c.id)
+
+    def test_06_portal_user_address_and_company(self):
+        ''' Same as test_03 but with portal user '''
+        self._setUp_multicompany_env()
+        so = self._create_so(self.portal_partner.id)
+
+        env = api.Environment(self.env.cr, self.portal_user.id, {})
+        # change also website env for `sale_get_order` to not change order partner_id
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            # 1. Portal user, new shipping, same with the log in user
+            self.WebsiteSaleController.address(**self.default_address_values)
+            new_shipping = self._get_last_address(self.portal_partner)
+            self.assertTrue(new_shipping.company_id != self.env.user.company_id, "Portal user new shipping should not get the company of the sudo() neither the one from it's partner..")
+            self.assertEqual(new_shipping.company_id, self.website.company_id, ".. but the one from the website.")
+
+            # 2. Portal user, edit billing
+            self.default_address_values['partner_id'] = self.portal_partner.id
+            self.WebsiteSaleController.address(**self.default_address_values)
+            # Name cannot be changed if there are issued invoices
+            self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
