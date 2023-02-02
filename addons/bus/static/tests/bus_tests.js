@@ -347,39 +347,6 @@ QUnit.module('Bus', {
         assert.verifySteps([`initialize_connection - 1`]);
     });
 
-    QUnit.test('Last notification id reset after db change', async function (assert) {
-        const pyEnv = await startServer();
-        let updateLastNotificationDeferred = makeDeferred();
-        patchWebsocketWorkerWithCleanup({
-            _onClientMessage(_, { action, data }) {
-                if (action === 'initialize_connection') {
-                    assert.step(`${action} - ${data['lastNotificationId']}`);
-                    updateLastNotificationDeferred.resolve();
-                }
-                return this._super(...arguments);
-            },
-        });
-        await makeTestEnv();
-        await updateLastNotificationDeferred;
-        // First bus service has never received notifications thus the
-        // default is 0.
-        assert.verifySteps(['initialize_connection - 0']);
-
-        pyEnv['bus.bus']._sendmany([
-            ['lambda', 'notifType', 'beta'],
-            ['lambda', 'notifType', 'beta'],
-        ]);
-        // let the bus service store the last notification id.
-        await nextTick();
-        // dbuuid change should reset last notification id.
-        patchWithCleanup(session, { dbuuid: 'ABCDE-FGHIJ-KLMNO' });
-
-        updateLastNotificationDeferred = makeDeferred();
-        await makeTestEnv();
-        await updateLastNotificationDeferred;
-        assert.verifySteps([`initialize_connection - 0`]);
-    });
-
     QUnit.test('Websocket disconnects upon user log out', async function (assert) {
         // first tab connects to the worker with user logged.
         patchWithCleanup(session, {
@@ -481,6 +448,31 @@ QUnit.module('Bus', {
         env.services["bus_service"].start();
         await websocketCreatedDeferred;
         assert.verifySteps([`${origin.replace("http", "ws")}/websocket`]);
+    });
+
+    QUnit.test("Disconnect on offline, re-connect on online", async function (assert) {
+        patchWebsocketWorkerWithCleanup();
+        const env = await makeTestEnv();
+        env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
+        env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
+        env.services["bus_service"].start();
+        window.dispatchEvent(new Event("offline"));
+        await nextTick();
+        window.dispatchEvent(new Event("online"));
+        await nextTick();
+        assert.verifySteps(["connect", "disconnect", "connect"]);
+    });
+
+    QUnit.test("No disconnect on change offline/online when bus inactive", async function (assert) {
+        patchWebsocketWorkerWithCleanup();
+        const env = await makeTestEnv();
+        env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
+        env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
+        window.dispatchEvent(new Event("offline"));
+        await nextTick();
+        window.dispatchEvent(new Event("online"));
+        await nextTick();
+        assert.verifySteps([]);
     });
 });
 });

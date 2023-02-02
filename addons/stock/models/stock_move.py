@@ -663,6 +663,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         # messages according to the state of the stock.move records.
         receipt_moves_to_reassign = self.env['stock.move']
         move_to_recompute_state = self.env['stock.move']
+        if 'quantity_done' in vals and any(move.state == 'cancel' for move in self):
+            raise UserError(_('You cannot change a cancelled stock move, create a new line instead.'))
         if 'product_uom' in vals and any(move.state == 'done' for move in self):
             raise UserError(_('You cannot change the UoM for a stock move that has been set to \'Done\'.'))
         if 'product_uom_qty' in vals:
@@ -1476,6 +1478,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             taken_quantity = 0
 
         # Find a candidate move line to update or create a new one.
+        serial_move_line_vals = []
         for reserved_quant, quantity in quants:
             to_update = next((line for line in self.move_line_ids if line._reservation_is_updatable(quantity, reserved_quant)), False)
             if to_update:
@@ -1486,9 +1489,11 @@ Please change the quantity done or the rounding precision of your unit of measur
                 to_update.with_context(bypass_reservation_update=True).reserved_uom_qty += uom_quantity
             else:
                 if self.product_id.tracking == 'serial':
-                    self.env['stock.move.line'].create([self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))])
+                    # Move lines with serial tracked product_id cannot be to-update candidates. Delay the creation to speed up candidates search + create.
+                    serial_move_line_vals.extend([self._prepare_move_line_vals(quantity=1, reserved_quant=reserved_quant) for i in range(int(quantity))])
                 else:
                     self.env['stock.move.line'].create(self._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant))
+        self.env['stock.move.line'].create(serial_move_line_vals)
         return taken_quantity
 
     def _should_bypass_reservation(self, forced_location=False):

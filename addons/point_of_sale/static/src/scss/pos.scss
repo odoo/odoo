@@ -1156,7 +1156,7 @@ td {
 .pos .product .product-img img {
     width: 100%;
     height: 100px;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 @media screen and (max-width: 768px) {
@@ -1424,7 +1424,7 @@ td {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    max-width: inherit;
+    width: 100%;
     border: none;
     max-height: 100%;
 }
@@ -1432,6 +1432,7 @@ td {
     display: grid;
     grid-template-rows: auto 1fr;
     border: 10px solid $gray-300;
+    width: 30rem;
 }
 .payment-screen p.title-category {
     margin: 0;
@@ -1502,6 +1503,7 @@ td {
     flex-grow: 1;
     flex-basis: 100%;
     min-height: 60px;
+    overflow: auto;
 }
 .paymentline:active {
     background: black;
@@ -1510,17 +1512,12 @@ td {
 }
 .paymentline .payment-name {
     flex-grow: 1;
-    margin-left: 10px;
-    margin-right: 10px;
     /* make the name of the payment line to be truncated with ellipsis */
     white-space: nowrap;
-    overflow:hidden;
     text-overflow:ellipsis;
     padding: map-get($spacers, 3);
 }
 .paymentline .payment-amount {
-    margin-left: 10px;
-    margin-right: 10px;
     padding: map-get($spacers, 3);
 }
 .paymentline .delete-button {

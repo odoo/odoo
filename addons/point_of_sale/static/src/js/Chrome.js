@@ -192,10 +192,12 @@ odoo.define('point_of_sale.Chrome', function(require) {
             // Basically, preload the images in the background.
             this._preloadImages();
             if (this.env.pos.config.limited_partners_loading && this.env.pos.config.partner_load_background) {
-                this.env.pos.loadPartnersBackground();
+                // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+                reactive(this.env.pos).loadPartnersBackground();
             }
             if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
-                this.env.pos.loadProductsBackground().then(() => {
+                // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+                reactive(this.env.pos).loadProductsBackground().then(() => {
                     this.render(true);
                 });
             }

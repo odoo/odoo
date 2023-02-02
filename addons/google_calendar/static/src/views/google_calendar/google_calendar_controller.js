@@ -19,7 +19,9 @@ patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_con
             [[this.user.userId]],
         );
         const syncResult = await this.model.syncGoogleCalendar();
-        if (["need_auth", "need_config_from_admin"].includes(syncResult.status)) {
+        if (syncResult.status === "need_auth") {
+            window.location.assign(syncResult.url);
+        } else if (syncResult.status === "need_config_from_admin") {
             if (this.isSystemUser) {
                 if (syncResult.status === "need_auth") {
                     this.configureCalendarProviderSync("google");

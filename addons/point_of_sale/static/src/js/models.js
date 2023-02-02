@@ -15,6 +15,7 @@ var QWeb = core.qweb;
 var _t = core._t;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
+const Markup = utils.Markup
 
 const Registries = require('point_of_sale.Registries');
 const { markRaw, reactive } = owl;
@@ -2219,7 +2220,7 @@ class Payment extends PosModel {
             cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
-            ticket: this.ticket,
+            ticket: Markup(this.ticket),
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
@@ -3068,7 +3069,7 @@ class Order extends PosModel {
                 var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
-                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
+                if(rounding_method !== "HALF-UP" && (this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0)) {
                     rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
                 }
 

@@ -31,10 +31,10 @@ class TestItEdi(AccountEdiTestCommon):
         cls.company.vat = 'IT01234560157'
 
         cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
-                'partner_id': cls.company.partner_id.id,
-                'acc_number': 'IT1212341234123412341234123',
-                'bank_name': 'BIG BANK',
-                'bank_bic': 'BIGGBANQ',
+            'partner_id': cls.company.partner_id.id,
+            'acc_number': 'IT1212341234123412341234123',
+            'bank_name': 'BIG BANK',
+            'bank_bic': 'BIGGBANQ',
         })
 
         cls.company.l10n_it_tax_system = "RF01"
@@ -102,6 +102,9 @@ class TestItEdi(AccountEdiTestCommon):
             'price_unit': 800.40,
             'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
         }
+
+        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
+        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
     @classmethod
     def _get_test_file_content(cls, filename):

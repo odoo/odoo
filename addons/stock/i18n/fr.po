@@ -1293,7 +1293,7 @@ msgstr "Le code-barres est valide EAN"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
 msgid "Batch Transfers"
-msgstr "Transferts en Lot"
+msgstr "Transferts par lot"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__reservation_method__by_date
@@ -2849,11 +2849,12 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
-"Appréciez une expérience à haute fréquence avec l'app Code Barre Odoo. Cette"
-" app est très rapide et fonctionne même sans une connection internet stable."
-" Code Barre supporte tous les flux: Ajustement d'inventaire, transferts, "
-"transferts en lot, colisage, etc... Rendez vous dans le menu des apps pour "
-"activer l'interface Code Barre"
+"Appréciez une expérience à haute fréquence avec l'app Code -barres d'Odoo. "
+"Cette app est très rapide et fonctionne même sans une connexion internet "
+"stable. Code-barres prend en charge tous les flux : Ajustement d'inventaire,"
+" transfert par lots, déplacements de lots ou de palettes, vérifications "
+"d'inventaire, etc... Allez-au menu \"Apps\" pour activer l'interface de "
+"Code-barres."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -7083,8 +7084,8 @@ msgid ""
 "Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.\n"
 "        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer."
 msgstr ""
-"Les boîtes réutilisables sont utilisées pour des transferts par lot et sont vidées par la suite afin d'être réutilisées. Dans l'application Code Barre, il suffit de scanner une boîte réutilisable pour ajouter les produits dans cette boîte.\n"
-"Les boîtes jetables ne son't pas réutilisées. Quand on scanne une une boîte jetable dans Code Barre, les produits contenus sont ajoutés au transfert"
+"Les boîtes réutilisables sont utilisées pour des transferts par lot et sont vidées par la suite afin d'être réutilisées. Dans l'application Code-barres, il suffit de scanner une boîte réutilisable pour ajouter les produits dans cette boîte.\n"
+"Les boîtes jetables ne son't pas réutilisées. Quand on scanne une une boîte jetable dans Code-barres, les produits contenus sont ajoutés au transfert"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
@@ -8682,6 +8683,16 @@ msgstr ""
 "conseillé de changer le type de produit car cela peut entraîner des "
 "incohérences. Une meilleure solution pourrait consister à archiver le "
 "produit et à en créer un nouveau à la place."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut être modifiée tant qu'il existe des "
+"quantités de ce produit appartenant à une autre société."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

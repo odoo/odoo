@@ -14,7 +14,6 @@
 # Gert Valdek <gert@airobot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Aveli Kannel <aveli@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
@@ -23,9 +22,10 @@
 # Martin Trigaux, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Patrick-Jordan Kiudorv, 2022
-# Anna, 2023
 # Jana Jaakson, 2023
+# Aveli Kannel <aveli@avalah.ee>, 2023
 # Leaanika Randmets, 2023
+# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:48+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
+"Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr ""
+msgstr "%(lock_type)s lukustamise kuupäev on seatud %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -198,6 +198,8 @@ msgid ""
 "%s has reached its Credit Limit of : %s\n"
 "Total amount due "
 msgstr ""
+"%s on saavutanud enda krediidilimiiti: %s\n"
+"Tasumisele kuuluv kogusumma"
 
 #. module: account
 #. odoo-python
@@ -245,6 +247,8 @@ msgid ""
 ",\n"
 "                                the due date(s) and amount(s) will be:"
 msgstr ""
+",\n"
+"                                tähtajad ja summad on:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -271,7 +275,7 @@ msgstr "-> Vaata osaliselt kinnitatud kirjeid"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid ". Please make sure that this is a wanted behavior."
-msgstr ""
+msgstr "Palun veendu, et see on soovitud tegevus."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -840,6 +844,9 @@ msgid ""
 "                                    Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-muted\" colspan=\"2\">\n"
+"                                    Jäta tühjaks, kui soovite luua uue andmiku selle pangakonto jaoks või vali olemasolev andmik\n"
+"                                </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1229,7 +1236,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "Angmike grupi nimi peab olema unikaalne."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -2597,7 +2604,7 @@ msgstr "Analüütika"
 #, python-format
 msgid ""
 "Any journal item on a payable account must have a due date and vice versa."
-msgstr ""
+msgstr "Tasumata kohustuste konto nõuab maksetähtaega andmike kanderidades."
 
 #. module: account
 #. odoo-python
@@ -2606,7 +2613,7 @@ msgstr ""
 msgid ""
 "Any journal item on a receivable account must have a due date and vice "
 "versa."
-msgstr ""
+msgstr "Tasumata kohustuste konto nõuab maksetähtaega andmike kanderidades."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__applicability
@@ -3414,14 +3421,14 @@ msgstr "Tühistatud arve"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a purchase document in a non purchase journal"
-msgstr ""
+msgstr "Ostuarvet saab luua ainult Ost tüüpi andmikku"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Cannot create a sale document in a non sale journal"
-msgstr ""
+msgstr "Müügiarvet saab luua ainult Müük tüüpi andmikku"
 
 #. module: account
 #. odoo-python
@@ -3557,7 +3564,7 @@ msgstr "Kassavahe Kahjum"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Gain"
-msgstr "Kassa soodustuse juurdekasv"
+msgstr "Kassa soodustuse kasum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
@@ -3569,7 +3576,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Cash Discount Loss"
-msgstr ""
+msgstr "Kassa soodustuse kahjum"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_loss_account_id
@@ -4823,6 +4830,7 @@ msgstr "Müügiarve"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -6540,7 +6548,7 @@ msgstr "Protsendi jaoks sisestage väärtus vahemikus 0-100."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "For this entry to be automatically posted, it required a bill date."
-msgstr ""
+msgstr "Kuupäev on nõutud, et kannet saaks automaatselt kinnitada."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -7925,7 +7933,7 @@ msgstr "on vahemikus"
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__is_complete
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_complete
 msgid "Is Complete"
-msgstr ""
+msgstr "lõpetatud"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__is_mail_template_editor
@@ -8239,7 +8247,7 @@ msgstr "Andmiku vahekonto"
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_code_company_uniq
 msgid "Journal codes must be unique per company."
-msgstr ""
+msgstr "Andmiku lühikood peab olema unikaalne."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_group_list
@@ -10756,7 +10764,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
-msgstr ""
+msgstr "Määra palun maksemeetodi rida enda maksele."
 
 #. module: account
 #. odoo-python
@@ -11775,7 +11783,7 @@ msgstr "Reeglid kokkuleppe mudelile"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__running_balance
 msgid "Running Balance"
-msgstr ""
+msgstr "Jooksev saldo"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
@@ -13580,6 +13588,10 @@ msgid ""
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
 msgstr ""
+"Klient loobub selgesõnaliselt oma standardtingimustest, isegi kui need on "
+"koostatud pärast käesolevaid standardseid müügitingimusi. Selleks, et kõik "
+"erandid oleksid kehtivad, tuleb need eelnevalt kirjalikult ja "
+"selgesõnaliselt heaks kiita."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_account_code_company_uniq
@@ -13883,7 +13895,7 @@ msgstr ""
 #: code:addons/account/models/account_analytic_line.py:0
 #, python-format
 msgid "The journal item is not linked to the correct financial account"
-msgstr ""
+msgstr "Andmiku kanderida ei ole seotud õige finantskontoga"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__fiscalyear_last_day
@@ -14145,6 +14157,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "The selected payment method requires a bank account but none is set on"
 msgstr ""
+"Valitud makseviisi jaoks on vaja pangakontot, kuid ükski pole määratud"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__sequence
@@ -14820,7 +14833,7 @@ msgstr "Järelejäänud kogusumma valuutas"
 #: code:addons/account/static/src/components/tax_totals/tax_totals.xml:0
 #, python-format
 msgid "Total Rounded"
-msgstr ""
+msgstr "Kokku ümardatud"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_total_signed
@@ -15385,6 +15398,7 @@ msgstr "Ostuarve loodud"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit

@@ -1206,6 +1206,36 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["search_count"]);
     });
 
+    QUnit.test("count_limit attrs set in arch", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban limit="2" count_limit="3">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            async mockRPC(route, { method }) {
+                assert.step(method);
+            },
+        });
+
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        await click(target.querySelector(".o_pager_limit"));
+        assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+        assert.verifySteps(["search_count"]);
+    });
+
     QUnit.test(
         "pager, ungrouped, deleting all records from last page should move to previous page",
         async (assert) => {

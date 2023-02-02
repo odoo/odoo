@@ -719,7 +719,7 @@
                 },
                 "D20": {
                     "style": 11,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "D21": {
@@ -763,7 +763,7 @@
                 },
                 "D33": {
                     "style": 10,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "D34": {
@@ -822,7 +822,7 @@
                 "D46": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "D47": {
@@ -881,7 +881,7 @@
                 "D59": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "D60": {
@@ -940,7 +940,7 @@
                 "D72": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "D73": {
@@ -1649,7 +1649,7 @@
                 },
                 "I20": {
                     "style": 11,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "I21": {
@@ -1693,7 +1693,7 @@
                 },
                 "I33": {
                     "style": 10,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "I34": {
@@ -1752,7 +1752,7 @@
                 "I46": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "I47": {
@@ -1811,7 +1811,7 @@
                 "I59": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "I60": {
@@ -1870,7 +1870,7 @@
                 "I72": {
                     "style": 10,
                     "format": 3,
-                    "content": "=_t(\"Amount\")",
+                    "content": "=_t(\"Revenue\")",
                     "border": 2
                 },
                 "I73": {
@@ -2406,7 +2406,7 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "a527960b-0812-4291-baba-f6b4b5280a0d": "sale.sale_menu_root",
+        "a527960b-0812-4291-baba-f6b4b5280a0d": "sale.menu_sale_order",
         "51823220-f22b-4359-8711-579a249c91bb": "sale.menu_sale_quotations",
         "9a38934c-b454-4a4b-88aa-17d1b80dbf5f": "sale.menu_sale_order",
         "67858d0e-b5ba-4a3c-bf9e-c0fceaeedf65": "sale.menu_sale_report",
@@ -2499,6 +2499,14 @@
                     "categ_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "3",
@@ -2542,6 +2550,14 @@
                     "partner_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "4",
@@ -2585,6 +2601,14 @@
                     "country_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "5",
@@ -2628,6 +2652,14 @@
                     "product_tmpl_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "6",
@@ -2664,6 +2696,14 @@
                     "team_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "7",
@@ -2700,6 +2740,14 @@
                     "user_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "8",
@@ -2736,6 +2784,14 @@
                     "source_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "9",
@@ -2772,6 +2828,14 @@
                     "medium_id",
                     "!=",
                     false
+                ], [
+                    "state",
+                    "not in",
+                    [
+                        "draft",
+                        "sent",
+                        "cancel"
+                    ]
                 ]
             ],
             "id": "10",
@@ -2800,7 +2864,15 @@
         "11": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "11",
             "measures": [
                 {
@@ -2820,7 +2892,15 @@
         "12": {
             "colGroupBys": [],
             "context": {},
-            "domain": [],
+            "domain": [[
+                "state",
+                "not in",
+                [
+                    "draft",
+                    "sent",
+                    "cancel"
+                ]
+            ]],
             "id": "12",
             "measures": [
                 {

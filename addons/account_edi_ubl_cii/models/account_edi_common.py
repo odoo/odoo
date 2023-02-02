@@ -267,6 +267,12 @@ class AccountEdiCommon(models.AbstractModel):
             default_journal_id=journal.id,
         )._get_edi_creation() as invoice:
             logs = self._import_fill_invoice_form(journal, tree, invoice, qty_factor)
+
+        # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
+        # In order to support use case where the tax total is adapted for rounding purpose.
+        # This has to be done after the first import in order to let Odoo compute the taxes before overriding if needed.
+        with invoice.with_context(account_predictive_bills_disable_prediction=True)._get_edi_creation() as invoice:
+            self._correct_invoice_tax_amount(tree, invoice)
         if invoice:
             if logs:
                 body = _(
@@ -595,6 +601,9 @@ class AccountEdiCommon(models.AbstractModel):
         invoice_line_form.discount = inv_line_vals['discount']
         invoice_line_form.tax_ids = inv_line_vals['taxes']
         return logs
+
+    def _correct_invoice_tax_amount(self, tree, invoice):
+        pass  # To be implemented by the format if needed
 
     # -------------------------------------------------------------------------
     # Check xml using the free API from Ph. Helger, don't abuse it !

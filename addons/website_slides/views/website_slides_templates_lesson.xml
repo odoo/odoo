@@ -295,7 +295,8 @@
             <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info py-1 px-2" t-esc="tag.name"/>
         </t>
     </div>
-    <div class="oe_structure oe_empty"/>
+    <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1"
+         data-editor-message="BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"/>
     <div t-if="slide.slide_category == 'infographic'" class="o_wslides_lesson_content_type" t-field='slide.image_1920' t-options="{'widget': 'image', 'style': 'width: 100%;'}"/>
     <div t-else="" class="o_wslides_lesson_content_type">
         <div t-if="slide.slide_category == 'document'" class="ratio ratio-4x3 embed-responsive-item mb8" style="height: 600px;">

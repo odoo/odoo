@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for invoice in self:
-            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
+            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa).sudo()
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
 
@@ -91,14 +91,14 @@ class AccountMove(models.Model):
                     if moves:
                         description += ', '.join([move.name for move in moves])
 
-            line_dict = {
+            invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-            }
-            invoice_lines.append(line_dict)
+                'vat_tax': line.tax_ids._l10n_it_filter_kind('vat'),
+            })
         return invoice_lines
 
     def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
@@ -132,6 +132,11 @@ class AccountMove(models.Model):
             }
             tax_lines.append(tax_line_dict)
         return tax_lines
+
+    def _l10n_it_edi_filter_fatturapa_tax_details(self, line, tax_values):
+        """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
+        repartition_line = tax_values['tax_repartition_line']
+        return (repartition_line.factor_percent >= 0 and repartition_line.tax_id.amount >= 0)
 
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
@@ -205,9 +210,7 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
-        tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda base_line, tax_values: tax_values['tax_repartition_line'].factor_percent >= 0
-        )
+        tax_details = self._prepare_edi_tax_details(filter_to_apply=self._l10n_it_edi_filter_fatturapa_tax_details)
 
         company = self.company_id
         partner = self.commercial_partner_id
@@ -363,3 +366,7 @@ class AccountTax(models.Model):
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
                 if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
                     raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+
+    def _l10n_it_filter_kind(self, kind):
+        """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
+        return self if kind == 'vat' else self.env['account.tax']

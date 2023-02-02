@@ -1882,6 +1882,98 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.hasAttrValue(event.parentElement, "colspan", "2", "should appear over two days.");
     });
 
+    QUnit.test("create all day event in month mode: utc-11", async (assert) => {
+        assert.expect(3);
+        patchTimeZone(-660);
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" event_open_popup="1">
+                    <field name="name" />
+                </calendar>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        name: "new event",
+                        start: "2016-12-14",
+                        stop: "2016-12-14",
+                        allday: true,
+                    });
+                }
+            },
+        });
+
+        await clickDate(target, "2016-12-14");
+        await editInput(target, ".o-calendar-quick-create--input", "new event");
+        await click(target, ".o-calendar-quick-create--create-btn");
+
+        const event = findEvent(target, 1);
+        assert.strictEqual(
+            event.textContent.replace(/[\s\n\r]+/g, ""),
+            "newevent",
+            "should display the new event with time and title"
+        );
+
+        const evBox = event.getBoundingClientRect();
+        const dateCell = target.querySelector(`[data-date="2016-12-14"]`);
+        const dtBox = dateCell.getBoundingClientRect();
+        assert.ok(
+            evBox.left >= dtBox.left &&
+                evBox.right <= dtBox.right &&
+                evBox.top >= dtBox.top &&
+                evBox.bottom <= dtBox.bottom,
+            "event should be inside the proper date cell"
+        );
+    });
+
+    QUnit.test("create all day event in year mode: utc-11", async (assert) => {
+        assert.expect(2);
+        patchTimeZone(-660);
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" all_day="allday" mode="year" event_open_popup="1">
+                    <field name="name" />
+                </calendar>
+            `,
+            mockRPC(route, { args, method }) {
+                if (method === "create") {
+                    assert.deepEqual(args[0], {
+                        name: "new event",
+                        start: "2016-12-14",
+                        stop: "2016-12-14",
+                        allday: true,
+                    });
+                }
+            },
+        });
+
+        await clickDate(target, "2016-12-14");
+        await editInput(target, ".o-calendar-quick-create--input", "new event");
+        await click(target, ".o-calendar-quick-create--create-btn");
+
+        const event = findEvent(target, 1);
+        const evBox = event.getBoundingClientRect();
+        const dateCell = target.querySelector(`[data-date="2016-12-14"]`);
+        const dtBox = dateCell.getBoundingClientRect();
+        assert.ok(
+            evBox.left >= dtBox.left &&
+                evBox.right <= dtBox.right &&
+                evBox.top >= dtBox.top &&
+                evBox.bottom <= dtBox.bottom,
+            "event should be inside the proper date cell"
+        );
+    });
+
     QUnit.test(`create event with default context (no quickCreate)`, async (assert) => {
         assert.expect(3);
 
