@@ -1504,6 +1504,11 @@ class AccountMove(models.Model):
     # ONCHANGE METHODS
     # -------------------------------------------------------------------------
 
+    @api.onchange('date')
+    def _onchange_date(self):
+        if not self.is_invoice(True):
+            self.line_ids._inverse_amount_currency()
+
     @api.onchange('invoice_vendor_bill_id')
     def _onchange_invoice_vendor_bill(self):
         if self.invoice_vendor_bill_id:
