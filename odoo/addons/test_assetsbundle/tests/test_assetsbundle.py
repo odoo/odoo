@@ -106,6 +106,13 @@ class FileTouchable(AddonManifestPatched):
 
 
 class TestJavascriptAssetsBundle(FileTouchable):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['ir.attachment'].search([
+            ('url', 'like', f'/web/assets/%/test_assetsbundle.bundle%.%')
+        ]).unlink()
+
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_name = 'test_assetsbundle.bundle1'
