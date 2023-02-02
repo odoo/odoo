@@ -441,20 +441,41 @@ class TestAccountMove(AccountTestInvoicingCommon):
             [
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': 1200.0,
+                    'amount_currency': -1200.0,
                     'debit': 0.0,
-                    'credit': 0.0,
+                    'credit': 400.0,
                 },
                 {
                     'currency_id': self.currency_data['currency'].id,
-                    'amount_currency': -1200.0,
-                    'debit': 0.0,
+                    'amount_currency': 1200.0,
+                    'debit': 400.0,
                     'credit': 0.0,
                 },
             ],
         )
 
-        # Balance and amount currency are totally independant in journal entries if the line has a foreign currency
+        # Change the date to change the currency conversion's rate
+        with Form(move) as move_form:
+            move_form.date = fields.Date.from_string('2017-01-01')
+
+        self.assertRecordValues(
+            move.line_ids.sorted('debit'),
+            [
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': -1200.0,
+                    'debit': 0.0,
+                    'credit': 600.0,
+                },
+                {
+                    'currency_id': self.currency_data['currency'].id,
+                    'amount_currency': 1200.0,
+                    'debit': 600.0,
+                    'credit': 0.0,
+                },
+            ],
+        )
+        # You can change the balance manually without changing the currency amount
         with Form(move) as move_form:
             with move_form.line_ids.edit(0) as line_form:
                 line_form.debit = 200
