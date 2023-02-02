@@ -990,7 +990,7 @@ class MassMailing(models.Model):
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining) or (len(remaining) > 0 and topick == 0):
                 topick = len(remaining)
-            res_ids = random.sample(remaining, topick)
+            res_ids = random.sample(sorted(remaining), topick)
         return res_ids
 
     def _get_remaining_recipients(self):
