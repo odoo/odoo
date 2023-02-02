@@ -8,12 +8,13 @@ import logging
 import re
 from binascii import crc32
 from collections import defaultdict
-from typing import Union
+from typing import Iterable, Optional, Union
 
 import psycopg2
-from psycopg2.sql import SQL, Identifier
 
 _schema = logging.getLogger('odoo.schema')
+
+IDENT_RE = re.compile(r'^[a-z0-9_][a-z0-9_$\-]*$', re.I)
 
 _CONFDELTYPES = {
     'RESTRICT': 'r',
@@ -23,22 +24,130 @@ _CONFDELTYPES = {
     'SET DEFAULT': 'd',
 }
 
+
+class SQL:
+    """ An object that wraps SQL code with its positional parameters, like::
+
+        sql = SQL("UPDATE TABLE foo SET a = %s, b = %s", 'hello', 42)
+        cr.execute(sql)
+
+    The code is given as a format string, and the positional arguments are meant
+    to be merged into it using the string formatting operator. The wrapper is
+    designed to be composable: the positional parameters can be either actual
+    parameters or SQL objects themselves::
+
+        sql = SQL(
+            "UPDATE TABLE %s SET %s",
+            SQL.identifier(tablename),
+            SQL("%s = %s", SQL.identifier(columnname), value),
+        )
+
+    The combined SQL code is given by ``sql.code``, while the corresponding
+    combined parameters are given by the list ``sql.params``. This allows to
+    combine any number of SQL terms without having to separately combine their
+    parameters, which can be tedious, bug-prone, and is the main downside of
+    `psycopg2.sql <https://www.psycopg.org/docs/sql.html>`.
+
+    The second purpose of the wrapper is to discourage SQL injections. Indeed,
+    if ``code`` is a string literal (not a dynamic string), then the SQL object
+    made with ``code`` is guaranteed to be safe, provided the SQL objects
+    within its parameters are themselves safe.
+    """
+    __slots__ = ('__code', '__args')
+
+    # pylint: disable=keyword-arg-before-vararg
+    def __new__(cls, code: Union[str, "SQL"] = "", /, *args):
+        if isinstance(code, SQL):
+            return code
+        # validate the format of code
+        code % tuple("" for arg in args)
+        self = object.__new__(cls)
+        self.__code = code
+        self.__args = args
+        return self
+
+    @property
+    def code(self) -> str:
+        """ Return the combined SQL code string. """
+        return self.__code % tuple(
+            arg.code if isinstance(arg, SQL) else "%s"
+            for arg in self.__args
+        ) if self.__args else self.__code
+
+    @property
+    def params(self) -> list:
+        """ Return the combined SQL code params as a list of values. """
+        result = []
+        for arg in self.__args:
+            if isinstance(arg, SQL):
+                result.extend(arg.params)
+            else:
+                result.append(arg)
+        return result
+
+    def __repr__(self):
+        return f"SQL({', '.join(map(repr, [self.code, *self.params]))})"
+
+    def __bool__(self):
+        return bool(self.__code)
+
+    def __eq__(self, other):
+        return self.code == other.code and self.params == other.params
+
+    def __iter__(self):
+        """ Yields ``self.code`` and ``self.params``. This was introduced for
+        backward compatibility, as it enables to access the SQL and parameters
+        by deconstructing the object::
+
+            sql = SQL(...)
+            code, params = sql
+        """
+        yield self.code
+        yield self.params
+
+    def join(self, args: Iterable) -> "SQL":
+        """ Join SQL objects or parameters with ``self`` as a separator. """
+        args = list(args)
+        # optimizations for special cases
+        if len(args) == 0:
+            return SQL()
+        if len(args) == 1:
+            return args[0]
+        if not self.__args:
+            return SQL(self.__code.join("%s" for arg in args), *args)
+        # general case: alternate args with self
+        items = [self] * (len(args) * 2 - 1)
+        for index, arg in enumerate(args):
+            items[index * 2] = arg
+        return SQL("%s" * len(items), *items)
+
+    @classmethod
+    def identifier(cls, name: str, subname: Optional[str] = None) -> "SQL":
+        """ Return an SQL object that represents an identifier. """
+        assert IDENT_RE.match(name), f"{name!r} invalid for SQL.identifier()"
+        if subname is None:
+            return cls(f'"{name}"')
+        assert IDENT_RE.match(subname), f"{subname!r} invalid for SQL.identifier()"
+        return cls(f'"{name}"."{subname}"')
+
+
 def existing_tables(cr, tablenames):
     """ Return the names of existing tables among ``tablenames``. """
-    query = """
+    cr.execute(SQL("""
         SELECT c.relname
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname IN %s
            AND c.relkind IN ('r', 'v', 'm')
            AND n.nspname = current_schema
-    """
-    cr.execute(query, [tuple(tablenames)])
+    """, tuple(tablenames)))
     return [row[0] for row in cr.fetchall()]
+
 
 def table_exists(cr, tablename):
     """ Return whether the given table exists. """
     return len(existing_tables(cr, {tablename})) == 1
+
 
 class TableKind(enum.Enum):
     Regular = 'r'
@@ -48,19 +157,19 @@ class TableKind(enum.Enum):
     Foreign = 'f'
     Other = None
 
+
 def table_kind(cr, tablename: str) -> Union[TableKind, None]:
     """ Return the kind of a table, if ``tablename`` is a regular or foreign
     table, or a view (ignores indexes, sequences, toast tables, and partitioned
     tables; unlogged tables are considered regular)
     """
-    query = """
+    cr.execute(SQL("""
         SELECT c.relkind, c.relpersistence
           FROM pg_class c
           JOIN pg_namespace n ON (n.oid = c.relnamespace)
          WHERE c.relname = %s
            AND n.nspname = current_schema
-    """
-    cr.execute(query, (tablename,))
+    """, tablename))
     if not cr.rowcount:
         return None
 
@@ -77,6 +186,7 @@ def table_kind(cr, tablename: str) -> Union[TableKind, None]:
         #     "work" with something like an index or sequence
         return TableKind.Other
 
+
 # prescribed column order by type: columns aligned on 4 bytes, columns aligned
 # on 1 byte, columns aligned on 8 bytes(values have been chosen to minimize
 # padding in rows; unknown column types are put last)
@@ -92,25 +202,31 @@ SQL_ORDER_BY_TYPE = defaultdict(lambda: 16, {
     'float8': 9,        # 8 bytes aligned on 8 bytes
 })
 
+
 def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    colspecs = ['id SERIAL NOT NULL'] + [
-        '"{}" {}'.format(columnname, columntype)
-        for columnname, columntype, columncomment in columns
+    colspecs = [
+        SQL('id SERIAL NOT NULL'),
+        *(SQL("%s %s", SQL.identifier(colname), SQL(coltype)) for colname, coltype, _ in columns),
+        SQL('PRIMARY KEY(id)'),
     ]
-    cr.execute('CREATE TABLE "{}" ({}, PRIMARY KEY(id))'.format(tablename, ", ".join(colspecs)))
-
-    queries, params = [], []
+    queries = [
+        SQL("CREATE TABLE %s (%s)", SQL.identifier(tablename), SQL(", ").join(colspecs)),
+    ]
     if comment:
-        queries.append('COMMENT ON TABLE "{}" IS %s'.format(tablename))
-        params.append(comment)
-    for columnname, columntype, columncomment in columns:
-        queries.append('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname))
-        params.append(columncomment)
-    if queries:
-        cr.execute("; ".join(queries), params)
+        queries.append(SQL(
+            "COMMENT ON TABLE %s IS %s",
+            SQL.identifier(tablename), comment,
+        ))
+    for colname, _, colcomment in columns:
+        queries.append(SQL(
+            "COMMENT ON COLUMN %s IS %s",
+            SQL.identifier(tablename, colname), colcomment,
+        ))
+    cr.execute(SQL("; ").join(queries))
 
     _schema.debug("Table %r: created", tablename)
+
 
 def table_columns(cr, tablename):
     """ Return a dict mapping column names to their configuration. The latter is
@@ -119,51 +235,78 @@ def table_columns(cr, tablename):
     # Do not select the field `character_octet_length` from `information_schema.columns`
     # because specific access right restriction in the context of shared hosting (Heroku, OVH, ...)
     # might prevent a postgres user to read this field.
-    query = '''SELECT column_name, udt_name, character_maximum_length, is_nullable
-               FROM information_schema.columns WHERE table_name=%s'''
-    cr.execute(query, (tablename,))
+    cr.execute(SQL(
+        ''' SELECT column_name, udt_name, character_maximum_length, is_nullable
+            FROM information_schema.columns WHERE table_name=%s ''',
+        tablename,
+    ))
     return {row['column_name']: row for row in cr.dictfetchall()}
+
 
 def column_exists(cr, tablename, columnname):
     """ Return whether the given column exists. """
-    query = """ SELECT 1 FROM information_schema.columns
-                WHERE table_name=%s AND column_name=%s """
-    cr.execute(query, (tablename, columnname))
+    cr.execute(SQL(
+        """ SELECT 1 FROM information_schema.columns
+            WHERE table_name=%s AND column_name=%s """,
+        tablename, columnname,
+    ))
     return cr.rowcount
+
 
 def create_column(cr, tablename, columnname, columntype, comment=None):
     """ Create a column with the given type. """
-    coldefault = (columntype.upper()=='BOOLEAN') and 'DEFAULT false' or ''
-    cr.execute('ALTER TABLE "{}" ADD COLUMN "{}" {} {}'.format(tablename, columnname, columntype, coldefault))
+    sql = SQL(
+        "ALTER TABLE %s ADD COLUMN %s %s %s",
+        SQL.identifier(tablename),
+        SQL.identifier(columnname),
+        SQL(columntype),
+        SQL("DEFAULT false" if columntype.upper() == 'BOOLEAN' else ""),
+    )
     if comment:
-        cr.execute('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname), (comment,))
+        sql = SQL("%s; %s", sql, SQL(
+            "COMMENT ON COLUMN %s IS %s",
+            SQL.identifier(tablename, columnname), comment,
+        ))
+    cr.execute(sql)
     _schema.debug("Table %r: added column %r of type %s", tablename, columnname, columntype)
+
 
 def rename_column(cr, tablename, columnname1, columnname2):
     """ Rename the given column. """
-    cr.execute('ALTER TABLE "{}" RENAME COLUMN "{}" TO "{}"'.format(tablename, columnname1, columnname2))
+    cr.execute(SQL(
+        "ALTER TABLE %s RENAME COLUMN %s TO %s",
+        SQL.identifier(tablename),
+        SQL.identifier(columnname1),
+        SQL.identifier(columnname2),
+    ))
     _schema.debug("Table %r: renamed column %r to %r", tablename, columnname1, columnname2)
+
 
 def convert_column(cr, tablename, columnname, columntype):
     """ Convert the column to the given type. """
-    using = f'"{columnname}"::{columntype}'
+    using = SQL("%s::%s", SQL.identifier(columnname), SQL(columntype))
     _convert_column(cr, tablename, columnname, columntype, using)
+
 
 def convert_column_translatable(cr, tablename, columnname, columntype):
     """ Convert the column from/to a 'jsonb' translated field column. """
     drop_index(cr, make_index_name(tablename, columnname), tablename)
     if columntype == "jsonb":
-        using = f"""CASE WHEN "{columnname}" IS NOT NULL THEN jsonb_build_object('en_US', "{columnname}"::varchar) END"""
+        using = SQL(
+            "CASE WHEN %s IS NOT NULL THEN jsonb_build_object('en_US', %s::varchar) END",
+            SQL.identifier(columnname), SQL.identifier(columnname),
+        )
     else:
-        using = f""""{columnname}"->>'en_US'"""
+        using = SQL("%s->>'en_US'", SQL.identifier(columnname))
     _convert_column(cr, tablename, columnname, columntype, using)
 
-def _convert_column(cr, tablename, columnname, columntype, using):
-    query = f'''
-        ALTER TABLE "{tablename}"
-        ALTER COLUMN "{columnname}" DROP DEFAULT,
-        ALTER COLUMN "{columnname}" TYPE {columntype} USING {using}
-    '''
+
+def _convert_column(cr, tablename, columnname, columntype, using: SQL):
+    query = SQL(
+        "ALTER TABLE %s ALTER COLUMN %s DROP DEFAULT, ALTER COLUMN %s TYPE %s USING %s",
+        SQL.identifier(tablename), SQL.identifier(columnname),
+        SQL.identifier(columnname), SQL(columntype), using,
+    )
     try:
         with cr.savepoint(flush=False):
             cr.execute(query, log_exceptions=False)
@@ -172,15 +315,21 @@ def _convert_column(cr, tablename, columnname, columntype, using):
         cr.execute(query)
     _schema.debug("Table %r: column %r changed to type %s", tablename, columnname, columntype)
 
+
 def drop_depending_views(cr, table, column):
     """drop views depending on a field to allow the ORM to resize it in-place"""
     for v, k in get_depending_views(cr, table, column):
-        cr.execute("DROP {0} VIEW IF EXISTS {1} CASCADE".format("MATERIALIZED" if k == "m" else "", v))
+        cr.execute(SQL(
+            "DROP %s IF EXISTS %s CASCADE",
+            SQL("MATERIALIZED VIEW" if k == "m" else "VIEW"),
+            SQL.identifier(v),
+        ))
         _schema.debug("Drop view %r", v)
+
 
 def get_depending_views(cr, table, column):
     # http://stackoverflow.com/a/11773226/75349
-    q = """
+    cr.execute(SQL("""
         SELECT distinct quote_ident(dependee.relname), dependee.relkind
         FROM pg_depend
         JOIN pg_rewrite ON pg_depend.objid = pg_rewrite.oid
@@ -192,13 +341,16 @@ def get_depending_views(cr, table, column):
         AND pg_attribute.attnum > 0
         AND pg_attribute.attname = %s
         AND dependee.relkind in ('v', 'm')
-    """
-    cr.execute(q, [table, column])
+    """, table, column))
     return cr.fetchall()
+
 
 def set_not_null(cr, tablename, columnname):
     """ Add a NOT NULL constraint on the given column. """
-    query = 'ALTER TABLE "{}" ALTER COLUMN "{}" SET NOT NULL'.format(tablename, columnname)
+    query = SQL(
+        "ALTER TABLE %s ALTER COLUMN %s SET NOT NULL",
+        SQL.identifier(tablename), SQL.identifier(columnname),
+    )
     try:
         with cr.savepoint(flush=False):
             cr.execute(query, log_exceptions=False)
@@ -206,53 +358,78 @@ def set_not_null(cr, tablename, columnname):
     except Exception:
         raise Exception("Table %r: unable to set NOT NULL on column %r", tablename, columnname)
 
+
 def drop_not_null(cr, tablename, columnname):
     """ Drop the NOT NULL constraint on the given column. """
-    cr.execute('ALTER TABLE "{}" ALTER COLUMN "{}" DROP NOT NULL'.format(tablename, columnname))
+    cr.execute(SQL(
+        "ALTER TABLE %s ALTER COLUMN %s DROP NOT NULL",
+        SQL.identifier(tablename), SQL.identifier(columnname),
+    ))
     _schema.debug("Table %r: column %r: dropped constraint NOT NULL", tablename, columnname)
+
 
 def constraint_definition(cr, tablename, constraintname):
     """ Return the given constraint's definition. """
-    query = """
+    cr.execute(SQL("""
         SELECT COALESCE(d.description, pg_get_constraintdef(c.oid))
         FROM pg_constraint c
         JOIN pg_class t ON t.oid = c.conrelid
         LEFT JOIN pg_description d ON c.oid = d.objoid
-        WHERE t.relname = %s AND conname = %s;"""
-    cr.execute(query, (tablename, constraintname))
+        WHERE t.relname = %s AND conname = %s
+    """, tablename, constraintname))
     return cr.fetchone()[0] if cr.rowcount else None
+
 
 def add_constraint(cr, tablename, constraintname, definition):
     """ Add a constraint on the given table. """
-    query1 = 'ALTER TABLE "{}" ADD CONSTRAINT "{}" {}'.format(tablename, constraintname, definition)
-    query2 = 'COMMENT ON CONSTRAINT "{}" ON "{}" IS %s'.format(constraintname, tablename)
+    if "%" in definition:
+        definition = definition.replace("%", "%%")
+    query1 = SQL(
+        "ALTER TABLE %s ADD CONSTRAINT %s %s",
+        SQL.identifier(tablename), SQL.identifier(constraintname), SQL(definition),
+    )
+    query2 = SQL(
+        "COMMENT ON CONSTRAINT %s ON %s IS %s",
+        SQL.identifier(constraintname), SQL.identifier(tablename), definition,
+    )
     try:
         with cr.savepoint(flush=False):
             cr.execute(query1, log_exceptions=False)
-            cr.execute(query2, (definition,), log_exceptions=False)
+            cr.execute(query2, log_exceptions=False)
             _schema.debug("Table %r: added constraint %r as %s", tablename, constraintname, definition)
     except Exception:
         raise Exception("Table %r: unable to add constraint %r as %s", tablename, constraintname, definition)
+
 
 def drop_constraint(cr, tablename, constraintname):
     """ drop the given constraint. """
     try:
         with cr.savepoint(flush=False):
-            cr.execute('ALTER TABLE "{}" DROP CONSTRAINT "{}"'.format(tablename, constraintname))
+            cr.execute(SQL(
+                "ALTER TABLE %s DROP CONSTRAINT %s",
+                SQL.identifier(tablename), SQL.identifier(constraintname),
+            ))
             _schema.debug("Table %r: dropped constraint %r", tablename, constraintname)
     except Exception:
         _schema.warning("Table %r: unable to drop constraint %r!", tablename, constraintname)
 
+
 def add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
     """ Create the given foreign key, and return ``True``. """
-    query = 'ALTER TABLE "{}" ADD FOREIGN KEY ("{}") REFERENCES "{}"("{}") ON DELETE {}'
-    cr.execute(query.format(tablename1, columnname1, tablename2, columnname2, ondelete))
+    cr.execute(SQL(
+        "ALTER TABLE %s ADD FOREIGN KEY (%s) REFERENCES %s(%s) ON DELETE %s",
+        SQL.identifier(tablename1), SQL.identifier(columnname1),
+        SQL.identifier(tablename2), SQL.identifier(columnname2),
+        SQL(ondelete),
+    ))
     _schema.debug("Table %r: added foreign key %r references %r(%r) ON DELETE %s",
                   tablename1, columnname1, tablename2, columnname2, ondelete)
     return True
 
+
 def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
-    cr.execute(
+    deltype = _CONFDELTYPES[ondelete.upper()]
+    cr.execute(SQL(
         """
             SELECT fk.conname as name
             FROM pg_constraint AS fk
@@ -266,9 +443,11 @@ def get_foreign_keys(cr, tablename1, columnname1, tablename2, columnname2, ondel
             AND c2.relname = %s
             AND a2.attname = %s
             AND fk.confdeltype = %s
-        """, [tablename1, columnname1, tablename2, columnname2, _CONFDELTYPES[ondelete.upper()]]
-    )
+        """,
+        tablename1, columnname1, tablename2, columnname2, deltype,
+    ))
     return [r[0] for r in cr.fetchall()]
+
 
 def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete):
     """ Update the foreign keys between tables to match the given one, and
@@ -276,15 +455,17 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     """
     # Do not use 'information_schema' here, as those views are awfully slow!
     deltype = _CONFDELTYPES.get(ondelete.upper(), 'a')
-    query = """ SELECT con.conname, c2.relname, a2.attname, con.confdeltype as deltype
-                  FROM pg_constraint as con, pg_class as c1, pg_class as c2,
-                       pg_attribute as a1, pg_attribute as a2
-                 WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
-                   AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
-                   AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
-                   AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
-                   AND c1.relname=%s AND a1.attname=%s """
-    cr.execute(query, (tablename1, columnname1))
+    cr.execute(SQL(
+        """ SELECT con.conname, c2.relname, a2.attname, con.confdeltype as deltype
+              FROM pg_constraint as con, pg_class as c1, pg_class as c2,
+                   pg_attribute as a1, pg_attribute as a2
+             WHERE con.contype='f' AND con.conrelid=c1.oid AND con.confrelid=c2.oid
+               AND array_lower(con.conkey, 1)=1 AND con.conkey[1]=a1.attnum
+               AND array_lower(con.confkey, 1)=1 AND con.confkey[1]=a2.attnum
+               AND a1.attrelid=c1.oid AND a2.attrelid=c2.oid
+               AND c1.relname=%s AND a1.attname=%s """,
+        tablename1, columnname1,
+    ))
     found = False
     for fk in cr.fetchall():
         if not found and fk[1:] == (tablename2, columnname2, deltype):
@@ -294,46 +475,62 @@ def fix_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondele
     if not found:
         return add_foreign_key(cr, tablename1, columnname1, tablename2, columnname2, ondelete)
 
+
 def index_exists(cr, indexname):
     """ Return whether the given index exists. """
-    cr.execute("SELECT 1 FROM pg_indexes WHERE indexname=%s", (indexname,))
+    cr.execute(SQL("SELECT 1 FROM pg_indexes WHERE indexname=%s", indexname))
     return cr.rowcount
+
 
 def check_index_exist(cr, indexname):
     assert index_exists(cr, indexname), f"{indexname} does not exist"
+
 
 def create_index(cr, indexname, tablename, expressions, method='btree', where=''):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
-    args = ', '.join(expressions)
-    if where:
-        where = f' WHERE {where}'
-    cr.execute(f'CREATE INDEX "{indexname}" ON "{tablename}" USING {method} ({args}){where}')
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
+    cr.execute(SQL(
+        "CREATE INDEX %s ON %s USING %s (%s)%s",
+        SQL.identifier(indexname),
+        SQL.identifier(tablename),
+        SQL(method),
+        SQL(", ").join(SQL(expression) for expression in expressions),
+        SQL(" WHERE %s", SQL(where)) if where else SQL(),
+    ))
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+
 
 def create_unique_index(cr, indexname, tablename, expressions):
     """ Create the given index unless it exists. """
     if index_exists(cr, indexname):
         return
-    args = ', '.join(expressions)
-    cr.execute('CREATE UNIQUE INDEX "{}" ON "{}" ({})'.format(indexname, tablename, args))
-    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, args)
+    cr.execute(SQL(
+        "CREATE UNIQUE INDEX %s ON %s (%s)",
+        SQL.identifier(indexname),
+        SQL.identifier(tablename),
+        SQL(", ").join(SQL(expression) for expression in expressions),
+    ))
+    _schema.debug("Table %r: created index %r (%s)", tablename, indexname, ", ".join(expressions))
+
 
 def drop_index(cr, indexname, tablename):
     """ Drop the given index if it exists. """
-    cr.execute('DROP INDEX IF EXISTS "{}"'.format(indexname))
+    cr.execute(SQL("DROP INDEX IF EXISTS %s", SQL.identifier(indexname)))
     _schema.debug("Table %r: dropped index %r", tablename, indexname)
+
 
 def drop_view_if_exists(cr, viewname):
     kind = table_kind(cr, viewname)
     if kind == TableKind.View:
-        cr.execute("DROP VIEW {} CASCADE".format(viewname))
+        cr.execute(SQL("DROP VIEW %s CASCADE", SQL.identifier(viewname)))
     elif kind == TableKind.Materialized:
-        cr.execute("DROP MATERIALIZED VIEW {} CASCADE".format(viewname))
+        cr.execute(SQL("DROP MATERIALIZED VIEW %s CASCADE", SQL.identifier(viewname)))
+
 
 def escape_psql(to_escape):
     return to_escape.replace('\\', r'\\').replace('%', '\%').replace('_', '\_')
+
 
 def pg_varchar(size=0):
     """ Returns the VARCHAR declaration for the provided size:
@@ -351,6 +548,7 @@ def pg_varchar(size=0):
         if size > 0:
             return 'VARCHAR(%d)' % size
     return 'VARCHAR'
+
 
 def reverse_order(order):
     """ Reverse an ORDER BY clause """
@@ -379,20 +577,22 @@ def increment_fields_skiplock(records, *fields):
     for field in fields:
         assert records._fields[field].type == 'integer'
 
-    query = SQL("""
-        UPDATE {table}
-           SET {sets}
-         WHERE id IN (SELECT id FROM {table} WHERE id = ANY(%(ids)s) FOR UPDATE SKIP LOCKED)
-    """).format(
-        table=Identifier(records._table),
-        sets=SQL(', ').join(map(
-            SQL('{0} = COALESCE({0}, 0) + 1').format,
-            map(Identifier, fields)
-        ))
-    )
-
     cr = records._cr
-    cr.execute(query, {'ids': records.ids})
+    tablename = records._table
+    cr.execute(SQL(
+        """
+        UPDATE %s
+           SET %s
+         WHERE id IN (SELECT id FROM %s WHERE id = ANY(%s) FOR UPDATE SKIP LOCKED)
+        """,
+        SQL.identifier(tablename),
+        SQL(', ').join(
+            SQL("%s = COALESCE(%s, 0) + 1", SQL.identifier(field), SQL.identifier(field))
+            for field in fields
+        ),
+        SQL.identifier(tablename),
+        records.ids,
+    ))
     return bool(cr.rowcount)
 
 

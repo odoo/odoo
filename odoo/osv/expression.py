@@ -1440,12 +1440,14 @@ class expression(object):
             params = []
 
         elif operator == 'inselect':
-            query = '(%s."%s" in (%s))' % (table_alias, left, right[0])
-            params = list(right[1])
+            subquery, subparams = right
+            query = '(%s."%s" in (%s))' % (table_alias, left, subquery)
+            params = list(subparams)
 
         elif operator == 'not inselect':
-            query = '(%s."%s" not in (%s))' % (table_alias, left, right[0])
-            params = list(right[1])
+            subquery, subparams = right
+            query = '(%s."%s" not in (%s))' % (table_alias, left, subquery)
+            params = list(subparams)
 
         elif operator in ['in', 'not in']:
             # Two cases: right is a boolean or a list. The boolean case is an

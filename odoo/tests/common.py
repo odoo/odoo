@@ -52,7 +52,7 @@ from odoo.exceptions import AccessError
 from odoo.modules.registry import Registry
 from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
-from odoo.tools import float_compare, single_email_re, profiler, lower_logging
+from odoo.tools import float_compare, single_email_re, profiler, lower_logging, SQL
 from odoo.tools.misc import find_in_path, mute_logger
 
 from . import case
@@ -465,7 +465,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         actual_queries = []
 
         def execute(self, query, params=None, log_exceptions=None):
-            actual_queries.append(query)
+            actual_queries.append(query.code if isinstance(query, SQL) else query)
             return Cursor_execute(self, query, params, log_exceptions)
 
         def get_unaccent_wrapper(cr):
