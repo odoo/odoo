@@ -146,6 +146,7 @@ export class ListRenderer extends Component {
 
                 const nextTh = this.tableRef.el.querySelector("thead th");
                 const toFocus = getElementToFocus(nextTh);
+                // debugger
                 this.focus(toFocus);
                 this.tableRef.el.querySelector("tbody").classList.add("o_keyboard_navigation");
             });
