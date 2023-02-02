@@ -93,7 +93,9 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'attachment_id', string='Attachments',
         compute='_compute_attachment_ids', readonly=False, store=True)
     email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
-    email_add_signature = fields.Boolean(default=True)
+    email_add_signature = fields.Boolean(
+        'Add signature',
+        compute='_compute_email_add_signature', readonly=False, store=True)
     # origin
     email_from = fields.Char(
         'From', compute='_compute_authorship', readonly=False, store=True,
@@ -260,6 +262,18 @@ class MailComposer(models.TransientModel):
                     composer.attachment_ids = attachment_ids
             elif not composer.template_id:
                 composer.attachment_ids = False
+
+    @api.depends('template_id')
+    def _compute_email_add_signature(self):
+        """ When having a template, consider it defines completely body and
+        do not add signature. Without template, add signature by default
+        in comment due to post processing for notification emails. Mailing
+        mode does not handle signature. """
+        for composer in self:
+            if composer.composition_mode == 'mass_mail':
+                composer.email_add_signature = False  # not supported
+            else:
+                composer.email_add_signature = not bool(composer.template_id)
 
     @api.depends('composition_mode', 'email_from', 'model',
                  'res_domain', 'res_ids', 'template_id')
@@ -804,7 +818,7 @@ class MailComposer(models.TransientModel):
             # back on the regular display_name retrieved in ``_notify_by_email_prepare_rendering_context()``.
             model_description = self.env.context.get('model_description')
             values.update(
-                email_add_signature=not bool(self.template_id) and self.email_add_signature,
+                email_add_signature=self.email_add_signature,
                 email_layout_xmlid=self.email_layout_xmlid,
                 force_send=self.force_send,
                 mail_auto_delete=self.auto_delete,
