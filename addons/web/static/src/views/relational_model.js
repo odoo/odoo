@@ -1893,10 +1893,6 @@ export class DynamicRecordList extends DynamicList {
         };
     }
 
-    get quickCreateRecord() {
-        return this.records.find((r) => r.isInQuickCreation);
-    }
-
     // -------------------------------------------------------------------------
     // Public
     // -------------------------------------------------------------------------
@@ -1931,13 +1927,6 @@ export class DynamicRecordList extends DynamicList {
         return record;
     }
 
-    async cancelQuickCreate(force = false) {
-        const record = this.quickCreateRecord;
-        if (record && (force || !record.isDirty)) {
-            this.removeRecord(record);
-        }
-    }
-
     /**
      * @param {Object} [params={}]
      * @param {boolean} [atFirstPosition]
@@ -1956,8 +1945,11 @@ export class DynamicRecordList extends DynamicList {
         await this.model.keepLast.add(this.model.mutex.exec(() => newRecord.load()));
         this.editedRecord = newRecord;
         this.onRemoveNewRecord = await this.onCreateRecord(newRecord);
-
-        return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
+        if (params.isInQuickCreation) {
+            return newRecord;
+        } else {
+            return this.addRecord(newRecord, atFirstPosition ? 0 : this.count);
+        }
     }
 
     /**
@@ -2039,10 +2031,6 @@ export class DynamicRecordList extends DynamicList {
 
     async quickCreate(activeFields, context) {
         await this.model.mutex.getUnlockedDef();
-        const record = this.quickCreateRecord;
-        if (record) {
-            this.removeRecord(record);
-        }
         const rawContext = {
             parent: this.rawContext,
             make: () => makeContext([context, {}]),
@@ -2352,7 +2340,11 @@ export class DynamicGroupList extends DynamicList {
         if (isFolded) {
             await group.toggle();
         }
-        await group.quickCreate(this.quickCreateInfo.activeFields, this.context);
+        group.quickCreateRecord = await group.quickCreate(
+            this.quickCreateInfo.activeFields,
+            this.context
+        );
+        this.model.notify();
     }
 
     /**
@@ -2786,6 +2778,13 @@ export class Group extends DataPoint {
             [`default_${this.groupByField.name}`]: this.getServerValue(),
         };
         return this.list.quickCreate(activeFields, ctx);
+    }
+
+    async cancelQuickCreate(force = false) {
+        if (this.quickCreateRecord && (force || !this.quickCreateRecord.isDirty)) {
+            this.quickCreateRecord = null;
+            this.model.notify();
+        }
     }
 
     /**

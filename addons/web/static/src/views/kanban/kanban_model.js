@@ -287,24 +287,30 @@ class KanbanGroup extends Group {
      * @param {number} index
      * @returns {Promise<Record | false>}
      */
-    async validateQuickCreate() {
-        const record = this.list.quickCreateRecord;
+    async validateQuickCreate(record, mode) {
         let saved = false;
         if (record) {
             saved = await this.model.mutex.exec(async () => {
-                const saved = await record._save({ noReload: true, stayInEdition: true });
-                if (saved) {
-                    this.count++;
-                    if (record.parentActiveFields) {
-                        record.setActiveFields(record.parentActiveFields);
-                        record.parentActiveFields = false;
-                    }
-                    await this.model.reloadRecords(record);
-                    record.switchMode("readonly");
-                    this.addRecord(this.removeRecord(record), 0);
-                }
-                return saved;
+                return await record._save({ noReload: true, stayInEdition: true });
             });
+            if (saved) {
+                if (mode === "add") {
+                    await this.model.root.quickCreate(this);
+                } else {
+                    this.quickCreateRecord = null;
+                }
+                if (record.parentActiveFields) {
+                    record.setActiveFields(record.parentActiveFields);
+                    record.parentActiveFields = false;
+                }
+                await this.model.reloadRecords(record);
+                record.switchMode("readonly");
+                this.addRecord(record, 0);
+                this.model.trigger("group-updated", {
+                    group: this,
+                    withProgressBars: true,
+                });
+            }
         }
         return saved ? record : false;
     }
@@ -605,9 +611,7 @@ export class KanbanModel extends RelationalModel {
                 // example background. Return true so that we don't get sample data instead
                 return true;
             }
-            return this.root.groups.some(
-                (group) => group.count > 0 || group.list.quickCreateRecord
-            );
+            return this.root.groups.some((group) => group.count > 0 || group.quickCreateRecord);
         }
         return this.root.records.length > 0;
     }
