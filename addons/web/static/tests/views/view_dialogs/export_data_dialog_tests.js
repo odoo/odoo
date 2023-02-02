@@ -927,4 +927,49 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         await click(target.querySelector(".o_list_export_xlsx"));
     });
+
+    QUnit.test("Export dialog with duplicated fields", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree>
+                    <field name="foo" string="Foo"/>
+                    <field name="foo" string="duplicate of Foo"/>
+                </tree>`,
+            actionMenus: {},
+            mockRPC(route) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(2)").textContent,
+            "Foo",
+            "first column contains the field"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_list_table th:nth-child(3)").textContent,
+            "duplicate of Foo",
+            "second column contains the duplicated field"
+        );
+
+        await openExportDataDialog();
+        assert.containsOnce(
+            target,
+            ".modal .o_export_field",
+            "there is only one field in export field list."
+        );
+        assert.strictEqual(
+            target.querySelector(".modal .o_export_field").textContent,
+            "Foo",
+            "the field to export corresponds to the field displayed in the list view"
+        );
+    });
 });
