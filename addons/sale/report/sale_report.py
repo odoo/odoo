@@ -27,10 +27,10 @@ class SaleReport(models.Model):
     partner_id = fields.Many2one('res.partner', 'Customer', readonly=True)
     company_id = fields.Many2one('res.company', 'Company', readonly=True)
     user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
-    price_total = fields.Float('Total', readonly=True)
-    price_subtotal = fields.Float('Untaxed Total', readonly=True)
-    untaxed_amount_to_invoice = fields.Float('Untaxed Amount To Invoice', readonly=True)
-    untaxed_amount_invoiced = fields.Float('Untaxed Amount Invoiced', readonly=True)
+    price_total = fields.Monetary('Total', readonly=True)
+    price_subtotal = fields.Monetary('Untaxed Total', readonly=True)
+    untaxed_amount_to_invoice = fields.Monetary('Untaxed Amount To Invoice', readonly=True)
+    untaxed_amount_invoiced = fields.Monetary('Untaxed Amount Invoiced', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', 'Product', readonly=True)
     categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
     nbr = fields.Integer('# of Lines', readonly=True)
@@ -58,12 +58,17 @@ class SaleReport(models.Model):
     volume = fields.Float('Volume', readonly=True)
 
     discount = fields.Float('Discount %', readonly=True)
-    discount_amount = fields.Float('Discount Amount', readonly=True)
+    discount_amount = fields.Monetary('Discount Amount', readonly=True)
+    currency_id = fields.Many2one('res.currency', compute='_compute_currency_id')
     campaign_id = fields.Many2one('utm.campaign', 'Campaign', readonly=True)
     medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True)
     source_id = fields.Many2one('utm.source', 'Source', readonly=True)
 
     order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
+
+    @api.depends_context('allowed_company_ids')
+    def _compute_currency_id(self):
+        self.currency_id = self.env.company.currency_id
 
     def _with_sale(self):
         return ""
