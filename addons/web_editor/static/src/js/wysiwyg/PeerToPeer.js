@@ -140,8 +140,8 @@ const baseNotificationMethods = {
         if (clientInfos.iceCandidateBuffer.length) {
             for (const candidate of clientInfos.iceCandidateBuffer) {
                 await this._addIceCandidate(clientInfos, candidate);
-                clientInfos.iceCandidateBuffer.splice(0);
             }
+            clientInfos.iceCandidateBuffer.splice(0);
         }
         if (description.type === 'offer') {
             const answerDescription = await pc.createAnswer();
