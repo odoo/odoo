@@ -252,6 +252,7 @@ class MrpProduction(models.Model):
     allow_workorder_dependencies = fields.Boolean('Allow Work Order Dependencies')
     show_produce = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce button can be shown')
     show_produce_all = fields.Boolean(compute='_compute_show_produce', help='Technical field to check if produce all button can be shown')
+    is_outdated_bom = fields.Boolean("Outdated BoM", help="The BoM has been updated since creation of the MO")
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per Company!'),
@@ -956,6 +957,12 @@ class MrpProduction(models.Model):
             action['context']['warehouse'] = warehouse.id
         return action
 
+    def action_update_bom(self):
+        for production in self:
+            if production.bom_id:
+                production._link_bom(production.bom_id)
+        self.is_outdated_bom = False
+
     def _get_bom_values(self, ratio=1):
         """ Returns the BoM lines, by-products and operations values needed to
         create a new BoM from this Manufacturing Order.
@@ -963,19 +970,37 @@ class MrpProduction(models.Model):
         :rtype: tuple(dict, dict, dict)
         """
         self.ensure_one()
+
+        def get_uom_and_quantity(move):
+            # Use the BoM line/by-product's UoM if the move is linked to one of them.
+            target_uom = (move.bom_line_id or move.byproduct_id).product_uom_id or move.product_uom
+            # In order to be able to multiply the move quantity by the ratio, we
+            # have to be sure they both express in the same UoM.
+            qty = move.quantity_done or move.product_uom_qty
+            qty = move.product_uom._compute_quantity(qty * ratio, target_uom)
+            return (target_uom, qty)
+
         # BoM lines values.
-        bom_lines_values = [Command.create({
-            'product_id': move_raw.product_id.id,
-            'product_qty': (move_raw.quantity_done or move_raw.product_uom_qty) * ratio,
-            'product_uom_id': move_raw.product_uom.id,
-        }) for move_raw in self.move_raw_ids]
+        bom_lines_values = []
+        for move_raw in self.move_raw_ids:
+            uom, qty = get_uom_and_quantity(move_raw)
+            bom_line_vals = {
+                'product_id': move_raw.product_id.id,
+                'product_qty': qty,
+                'product_uom_id': uom.id,
+            }
+            bom_lines_values.append(Command.create(bom_line_vals))
         # By-Product lines values.
-        byproduct_values = [Command.create({
-            'cost_share': move_byproduct.cost_share,
-            'product_id': move_byproduct.product_id.id,
-            'product_qty': (move_byproduct.quantity_done or move_byproduct.product_uom_qty) * ratio,
-            'product_uom_id': move_byproduct.product_uom.id,
-        }) for move_byproduct in self.move_byproduct_ids]
+        byproduct_values = []
+        for move_byproduct in self.move_byproduct_ids:
+            uom, qty = get_uom_and_quantity(move_byproduct)
+            bom_byproduct_vals = {
+                'cost_share': move_byproduct.cost_share,
+                'product_id': move_byproduct.product_id.id,
+                'product_qty': qty,
+                'product_uom_id': uom.id,
+            }
+            byproduct_values.append(Command.create(bom_byproduct_vals))
         # Operations values.
         operations_values = [Command.create(wo._get_operation_values()) for wo in self.workorder_ids]
         return (bom_lines_values, byproduct_values, operations_values)
@@ -2145,7 +2170,6 @@ class MrpProduction(models.Model):
     def _link_bom(self, bom):
         """ Links the given BoM to the MO. Assigns BoM's lines, by-products and operations
         to the corresponding MO's components, by-products and workorders.
-        This method assumes the production isn't linked to any BoM yet.
         """
         self.ensure_one()
         moves_to_unlink = self.env['stock.move']
@@ -2176,62 +2200,24 @@ class MrpProduction(models.Model):
                    any(att_val.id in product_attribute_ids for att_val in record.bom_product_template_attribute_value_ids)
 
         ratio = self._get_ratio_between_mo_and_bom_quantities(bom)
-        bom_lines = list(bom.bom_line_ids.filtered(filter_by_attributes))
-        bom_byproducts = list(bom.byproduct_ids.filtered(filter_by_attributes))
-        operations = list(bom.operation_ids.filtered(filter_by_attributes))
-
-        # Compares the BoM's lines to the MO's components.
-        for move_raw in self.move_raw_ids:
-            for i, bom_line in enumerate(bom_lines):
-                if bom_line.product_id == move_raw.product_id:
-                    move_raw.bom_line_id = bom_line
-                    move_raw.product_uom_qty = bom_line.product_qty / ratio
-                    move_raw.product_uom = bom_line.product_uom_id
-                    del bom_lines[i]
-                    break
-        # Creates a raw moves for each remaining BoM's lines.
-        raw_moves_values = []
-        for bom_line in bom_lines:
-            raw_move_vals = self._get_move_raw_values(
-                bom_line.product_id,
-                bom_line.product_qty / ratio,
-                bom_line.product_uom_id,
-                bom_line=bom_line
-            )
-            raw_moves_values.append(raw_move_vals)
-        self.move_raw_ids += self.env['stock.move'].create(raw_moves_values)
-
-        # Compares the BoM's and the MO's by-products.
-        for move_byproduct in self.move_byproduct_ids:
-            for i, bom_byproduct in enumerate(bom_byproducts):
-                if bom_byproduct.product_id == move_byproduct.product_id:
-                    move_byproduct.byproduct_id = bom_byproduct
-                    move_byproduct.cost_share = bom_byproduct.cost_share
-                    move_byproduct.product_uom_qty = bom_byproduct.product_qty / ratio
-                    move_byproduct.product_uom = bom_byproduct.product_uom_id
-                    del bom_byproducts[i]
-                    break
-        # For each remaining BoM's by-product, creates a move finished.
-        byproduct_values = []
-        for bom_byproduct in bom_byproducts:
-            qty = bom_byproduct.product_qty / ratio
-            move_byproduct_vals = self._get_move_finished_values(
-                bom_byproduct.product_id.id, qty, bom_byproduct.product_uom_id.id,
-                bom_byproduct.operation_id.id, bom_byproduct.id, bom_byproduct.cost_share
-            )
-            byproduct_values.append(move_byproduct_vals)
-        self.move_finished_ids += self.env['stock.move'].create(byproduct_values)
+        bom_lines_by_id = {(bom_line.id, bom_line.product_id.id): bom_line for bom_line in bom.bom_line_ids.filtered(filter_by_attributes)}
+        bom_byproducts_by_id = {byproduct.id: byproduct for byproduct in bom.byproduct_ids.filtered(filter_by_attributes)}
+        operations_by_id = {operation.id: operation for operation in bom.operation_ids.filtered(filter_by_attributes)}
 
         # Compares the BoM's operations to the MO's workoders.
         for workorder in self.workorder_ids:
-            for i, operation in enumerate(operations):
-                if operation_key_values(operation) == operation_key_values(workorder):
-                    workorder.operation_id = operation
-                    del operations[i]
-                    break
+            operation = operations_by_id.pop(workorder.operation_id.id, False)
+            if not operation:
+                for operation_id in operations_by_id:
+                    _operation = operations_by_id[operation_id]
+                    if operation_key_values(_operation) == operation_key_values(workorder):
+                        operation = operations_by_id.pop(operation_id)
+                        break
+            if operation and workorder.operation_id != operation:
+                workorder.operation_id = operation
         # Creates a workorder for each remaining operation.
         workorders_values = []
-        for operation in operations:
+        for operation in operations_by_id.values():
             workorder_vals = {
                 'name': operation.name,
                 'operation_id': operation.id,
@@ -2243,6 +2229,81 @@ class MrpProduction(models.Model):
             workorders_values.append(workorder_vals)
         self.workorder_ids += self.env['mrp.workorder'].create(workorders_values)
 
+        # Compares the BoM's lines to the MO's components.
+        for move_raw in self.move_raw_ids:
+            bom_line = bom_lines_by_id.pop((move_raw.bom_line_id.id, move_raw.product_id.id), False)
+            # If the move isn't already linked to a BoM lines, search for a compatible line.
+            if not bom_line:
+                for _bom_line in bom_lines_by_id.values():
+                    if move_raw.product_id == _bom_line.product_id:
+                        bom_line = bom_lines_by_id.pop((_bom_line.id, move_raw.product_id.id))
+                        if bom_line:
+                            break
+            move_raw_qty = bom_line and move_raw.product_uom._compute_quantity(
+                move_raw.product_uom_qty * ratio, bom_line.product_uom_id
+            )
+            if bom_line and (
+                    not move_raw.bom_line_id or
+                    move_raw.bom_line_id.bom_id != bom or
+                    move_raw.operation_id != bom_line.operation_id or
+                    bom_line.product_qty != move_raw_qty
+                ):
+                move_raw.bom_line_id = bom_line
+                move_raw.product_id = bom_line.product_id
+                move_raw.product_uom_qty = bom_line.product_qty / ratio
+                move_raw.product_uom = bom_line.product_uom_id
+                if move_raw.operation_id != bom_line.operation_id:
+                    move_raw.operation_id = bom_line.operation_id
+                    move_raw.workorder_id = self.workorder_ids.filtered(lambda wo: wo.operation_id == move_raw.operation_id)
+            elif not bom_line:
+                moves_to_unlink |= move_raw
+        # Creates a raw moves for each remaining BoM's lines.
+        raw_moves_values = []
+        for bom_line in bom_lines_by_id.values():
+            raw_move_vals = self._get_move_raw_values(
+                bom_line.product_id,
+                bom_line.product_qty / ratio,
+                bom_line.product_uom_id,
+                bom_line=bom_line
+            )
+            raw_moves_values.append(raw_move_vals)
+        self.env['stock.move'].create(raw_moves_values)
+
+        # Compares the BoM's and the MO's by-products.
+        for move_byproduct in self.move_byproduct_ids:
+            bom_byproduct = bom_byproducts_by_id.pop(move_byproduct.byproduct_id.id, False)
+            if not bom_byproduct:
+                for _bom_byproduct in bom_byproducts_by_id.values():
+                    if move_byproduct.product_id == _bom_byproduct.product_id:
+                        bom_byproduct = bom_byproducts_by_id.pop(_bom_byproduct.id)
+                        break
+            move_byproduct_qty = bom_byproduct and move_byproduct.product_uom._compute_quantity(
+                move_byproduct.product_uom_qty * ratio, bom_byproduct.product_uom_id
+            )
+            if bom_byproduct and (
+                    not move_byproduct.byproduct_id or
+                    bom_byproduct.product_id != move_byproduct.product_id or
+                    bom_byproduct.product_qty != move_byproduct_qty
+                ):
+                move_byproduct.byproduct_id = bom_byproduct
+                move_byproduct.cost_share = bom_byproduct.cost_share
+                move_byproduct.product_uom_qty = bom_byproduct.product_qty / ratio
+                move_byproduct.product_uom = bom_byproduct.product_uom_id
+            elif not bom_byproduct:
+                moves_to_unlink |= move_byproduct
+        # For each remaining BoM's by-product, creates a move finished.
+        byproduct_values = []
+        for bom_byproduct in bom_byproducts_by_id.values():
+            qty = bom_byproduct.product_qty * ratio
+            move_byproduct_vals = self._get_move_finished_values(
+                bom_byproduct.product_id.id, qty, bom_byproduct.product_uom_id.id,
+                bom_byproduct.operation_id.id, bom_byproduct.id, bom_byproduct.cost_share
+            )
+            byproduct_values.append(move_byproduct_vals)
+        self.move_finished_ids += self.env['stock.move'].create(byproduct_values)
+
+        moves_to_unlink._action_cancel()
+        moves_to_unlink.unlink()
         self.bom_id = bom
 
     @api.model
