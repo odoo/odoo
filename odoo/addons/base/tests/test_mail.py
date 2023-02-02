@@ -16,6 +16,7 @@ from odoo.tools import (
     email_domain_normalize, email_normalize, email_split, email_split_and_format,
     misc, formataddr,
     prepend_html_content,
+    config,
 )
 
 from . import test_mail_examples
@@ -653,7 +654,7 @@ class TestEmailTools(BaseCase):
 
 
 class EmailConfigCase(TransactionCase):
-    @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
+    @patch.dict(config.options, {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
         # ICP setting is more important

@@ -9,6 +9,7 @@ from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
+from odoo.tools import config
 
 
 @tagged('mail_server')
