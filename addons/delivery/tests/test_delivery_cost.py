@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 from odoo.tests import common, Form
 from odoo.tools import float_compare
