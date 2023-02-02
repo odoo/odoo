@@ -294,6 +294,12 @@ class GoogleSync(models.AbstractModel):
         remaining = [email for email in normalized_emails if
                      email not in [partner.email_normalized for partner in partners]]
         if remaining:
+            # ## Cleaning Partner from Double Email in Partner
+            list_email_no_exist = remaining
+            partner_emails = self.env['res.partner'].sudo().search([('email_normalized', 'in', remaining)])
+            for partner in partner_emails:
+                list_email_no_exist.remove(partner.email_normalized)
+                partners += partner
             partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
         return partners
 

@@ -25,6 +25,7 @@ class GoogleCredentials(models.Model):
 
     calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
+    is_valid_email = fields.Boolean('Is Valid Email', default=True)
 
     def _set_auth_tokens(self, access_token, refresh_token, ttl):
         self.write({

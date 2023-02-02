@@ -13,7 +13,8 @@ from odoo.exceptions import UserError
 from odoo.addons.base.models.res_partner import _tz_get
 
 
-MAX_RECURRENT_EVENT = 720
+# MAX_RECURRENT_EVENT = 720
+MAX_RECURRENT_EVENT = 300
 
 SELECT_FREQ_TO_RRULE = {
     'daily': rrule.DAILY,

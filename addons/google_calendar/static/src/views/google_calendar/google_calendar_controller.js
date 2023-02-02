@@ -23,10 +23,22 @@ patch(AttendeeCalendarController.prototype, "google_calendar_google_calendar_con
             window.location.assign(syncResult.url);
         } else if (syncResult.status === "need_config_from_admin") {
             if (this.isSystemUser) {
+                if (syncResult.status === "need_auth") {
+                    this.configureCalendarProviderSync("google");
+                } else if (syncResult.status === "need_config_from_admin") {
+                    this.dialog.add(ConfirmationDialog, {
+                        title: this.env._t("Configuration"),
+                        body: this.env._t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"),
+                        confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
+                    });
+                }
+            } else if (syncResult.status === "need_auth") {
                 this.dialog.add(ConfirmationDialog, {
-                    title: this.env._t("Configuration"),
-                    body: this.env._t("The Google Synchronization needs to be configured before you can use it, do you want to do it now?"),
-                    confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
+                    title: this.env._t("Redirection"),
+                    body: this.env._t("You will be redirected to Google to authorize access to your calendar, do you want to do it now?"),
+                    confirm: () => {
+                        window.location.assign(syncResult.url);
+                    }
                 });
             } else {
                 this.dialog.add(AlertDialog, {

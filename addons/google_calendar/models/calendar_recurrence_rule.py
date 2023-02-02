@@ -91,8 +91,13 @@ class RecurrenceRule(models.Model):
         new_event_values = self.env["calendar.event"]._odoo_values(gevent)
         # We update the attendee status for all events in the recurrence
         google_attendees = gevent.attendees or []
+        if google_attendees:
+            google_attendees = sorted(google_attendees, key=lambda d: d['email'])
         emails = [a.get('email') for a in google_attendees]
+        emails.sort()
         partners = self._get_sync_partner(emails)
+        if partners:
+           partners = sorted(partners, key=lambda d: d['email'])
         existing_attendees = self.calendar_event_ids.attendee_ids
         for attendee in zip(emails, partners, google_attendees):
             email = attendee[0]
