@@ -73,7 +73,7 @@ class User(models.Model):
         ICP = self.env['ir.config_parameter'].sudo()
         import_only = str2bool(ICP.get_param('google_calendar.sync.import_only', default="False"))
         if import_only:
-            return bool(events | synced_events) or bool(recurrences | synced_recurrences)
+            return bool(events or synced_events or recurrences or synced_recurrences)
         # Odoo -> Google
         recurrences = self.env['calendar.recurrence']._get_records_to_sync(full_sync=full_sync)
         recurrences -= synced_recurrences
@@ -83,7 +83,7 @@ class User(models.Model):
         events = self.env['calendar.event']._get_records_to_sync(full_sync=full_sync)
         (events - synced_events).with_context(send_updates=send_updates)._sync_odoo2google(calendar_service)
 
-        return bool(events | synced_events) or bool(recurrences | synced_recurrences)
+        return bool(events or synced_events or recurrences or synced_recurrences)
 
     @api.model
     def _sync_all_google_calendar(self):
