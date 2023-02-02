@@ -17,10 +17,8 @@ export class PartnerDetailsEdit extends PosComponent {
         this.changes = {
             country_id: partner.country_id && partner.country_id[0],
             state_id: partner.state_id && partner.state_id[0],
+            property_product_pricelist: this.setDefaultPricelist(partner)
         };
-        if (!partner.property_product_pricelist) {
-            this.changes["property_product_pricelist"] = this.env.pos.default_pricelist.id;
-        }
 
         onMounted(() => {
             this.env.bus.on("save-partner", this, this.saveChanges);
@@ -30,6 +28,16 @@ export class PartnerDetailsEdit extends PosComponent {
             this.env.bus.off("save-partner", this);
         });
     }
+    setDefaultPricelist(partner) {
+        if (partner.property_product_pricelist) {
+            return partner.property_product_pricelist[0]
+        }
+        else if (this.env.pos.default_pricelist) {
+            return this.env.pos.default_pricelist.id;
+        }
+        return false;
+    }
+
     get partnerImageUrl() {
         // We prioritize image_1920 in the `changes` field because we want
         // to show the uploaded image without fetching new data from the server.
