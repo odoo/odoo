@@ -128,6 +128,20 @@ async function setupMessagingServiceRegistries({
         },
     });
 
+    const OriginalAudio = window.Audio;
+    patchWithCleanup(
+        window,
+        {
+            Audio: function () {
+                const audio = new OriginalAudio();
+                audio.preload = "none";
+                audio.play = () => {};
+                return audio;
+            },
+        },
+        { pure: true }
+    );
+
     const messagingValues = {
         start() {
             return {
