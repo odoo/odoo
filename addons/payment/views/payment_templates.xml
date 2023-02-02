@@ -306,6 +306,7 @@
             - 'currency' - The currency of the transaction, as a `res.currency` record.
             - 'merchant_name' - The merchant name.
             - 'access_token' - The access token used to authenticate the partner.
+            - 'shipping_info_required' - Whether the shipping information is required or not.
             - 'transaction_route' - The route used to create a transaction when the user clicks Pay.
             - 'shipping_address_update_route' - The route where available carriers are computed
                                                 based on the (partial) shipping information
@@ -323,6 +324,7 @@
               t-att-data-merchant-name="merchant_name"
               t-att-data-partner-id="partner_id"
               t-att-data-access-token="payment_access_token"
+              t-att-data-shipping-info-required="shipping_info_required"
               t-att-data-transaction-route="transaction_route"
               t-att-data-shipping-address-update-route="shipping_address_update_route"
               t-att-data-express-checkout-route="express_checkout_route"

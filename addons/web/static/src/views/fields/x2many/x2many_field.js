@@ -185,6 +185,7 @@ export class X2ManyField extends Component {
         props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
         props.editable = !this.props.readonly && editable;
+        props.readonly = this.props.readonly;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
         props.onAdd = (params) => {
             params.editable =
