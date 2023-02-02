@@ -1342,3 +1342,285 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(p1.qty_available, 5.0)
         self.assertEqual(p2.qty_available, 10.0)
         self.assertEqual(p3.qty_available, 10.0)
+
+    def test_bom_updates_mo(self):
+        """ Creates a Manufacturing Order using a BoM, then modifies the BoM.
+        Checks the BoM will be marked as updated in the right situation, and checks the "Update BoM"
+        action update the MO accordingly to the changes done in the BoM.
+        """
+        # Creates a BoM.
+        common_vals = {'type': "product"}
+        finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
+        component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
+        component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
+        component_3 = self.env['product.product'].create(dict(common_vals, name="Bottle"))
+        by_product = self.env['product.product'].create(dict(common_vals, name="Monster's Tears"))
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+        })
+
+        # Creates a MO.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_1 = mo_form.save()
+        self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 1)
+        self.assertEqual(mo_1.is_outdated_bom, False)
+        # Update MO's component quantity.
+        mo_form = Form(mo_1)
+        with mo_form.move_raw_ids.edit(0) as raw_move:
+            raw_move.product_uom_qty = 123
+        mo_1 = mo_form.save()
+        self.assertEqual(mo_1.move_raw_ids[0].product_uom_qty, 123)
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "Making a modification in the MO shouldn't mark the BoM as updated")
+
+        # Now, adds an operation and a by-product in the BoM.
+        bom.byproduct_ids = [Command.create({'product_id': by_product.id, 'product_qty': 2})]
+        bom_byproduct = bom.byproduct_ids
+        bom.operation_ids = [Command.create({
+            'name': "Gently insert the Monster in the Jar",
+            'workcenter_id': self.workcenter_1.id,
+        })]
+        operation = bom.operation_ids
+
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "By-Product and Operation were added to the BoM, it should be marked as updated")
+        # Call "Update BoM" action, it should reset the MO as defined by the BoM.
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
+        self.assertEqual(mo_1.workorder_ids.operation_id.id, operation.id)
+        self.assertEqual(mo_1.move_byproduct_ids.byproduct_id.id, bom_byproduct.id)
+
+        # Now, checks the update works also with confirmed MO.
+        mo_1.action_confirm()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
+        # Updates the BoM again (increase first component quantity).
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(0) as bom_line:
+            bom_line.product_qty += 1
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "BoM line's quantity was update, the BoM should be marked as updated")
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "After 'Update BoM' action, MO's BoM should no longer be marked as updated")
+        self.assertRecordValues(mo_1.move_raw_ids, [
+            {'bom_line_id': bom.bom_line_ids[0].id, 'product_uom_qty': bom.bom_line_ids[0].product_qty},
+            {'bom_line_id': bom.bom_line_ids[1].id, 'product_uom_qty': bom.bom_line_ids[1].product_qty},
+        ])
+        # Updates the BoM again (replace a component by another product).
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(1) as bom_line:
+            bom_line.product_id = component_3
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "A component was changed, BoM should be marked as updated")
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "There should be no difference between the MO and BoM")
+        self.assertRecordValues(mo_1.move_raw_ids, [
+            {'bom_line_id': bom.bom_line_ids[0].id, 'product_id': component_1.id},
+            {'bom_line_id': bom.bom_line_ids[1].id, 'product_id': component_3.id},
+        ])
+
+        # Updates the BoM again (delete a BoM line).
+        bom_form = Form(bom)
+        bom_form.bom_line_ids.remove(1)
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "A component was changed, BoM should be marked as updated")
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False,
+            "There should be no difference between the MO and BoM")
+        self.assertEqual(len(mo_1.move_raw_ids), 1)
+
+        # Updates the BoM by multiplying all its quantities by 3.
+        bom.product_qty *= 3
+        bom.bom_line_ids[0].product_qty *= 3
+        bom.byproduct_ids.product_qty *= 3
+        self.assertEqual(mo_1.is_outdated_bom, True,
+            "Even if the BoM's changes don't imply actual changes for the MO, it should be marked as updated.")
+
+    def test_bom_updates_mo_with_different_uom(self):
+        """ Creates a Manufacturing Order using a BoM and produces 1 dozen of the finished product,
+        then modifies the BoM's component's quantity and update the MO.
+        Checks the MO's raw moves' quantities are correctly updated.
+        """
+        self.env.user.groups_id += self.env.ref('uom.group_uom')
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        uom_dozen = self.env.ref('uom.product_uom_dozen')
+        # Creates a BoM.
+        common_vals = {'type': "product"}
+        finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
+        component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
+        component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+        })
+
+        # Creates a MO.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = uom_dozen
+        mo_1 = mo_form.save()
+        mo_1.action_confirm()
+        self.assertRecordValues(mo_1.move_raw_ids, [{
+            'product_id': component_1.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+        }, {
+            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+        }])
+
+        # Updates the BoM by set the first BoM line's quantity to 2.
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(0) as bom_line:
+            bom_line.product_qty = 2
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True)
+
+        # Call "Update BoM" action, it should update the MO raw moves' quantity accordingly.
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False)
+        self.assertRecordValues(mo_1.move_raw_ids, [{
+            'product_id': component_1.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id,
+        }, {
+            'product_id': component_2.id, 'product_uom_qty': 12, 'product_uom': uom_unit.id,
+        }])
+
+        # Do the same but while changing the raw moves' UoM too.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = uom_dozen
+        with mo_form.move_raw_ids.edit(0) as move_raw:
+            move_raw.product_uom_qty = 2
+            move_raw.product_uom = uom_dozen
+        with mo_form.move_raw_ids.edit(1) as move_raw:
+            move_raw.product_uom_qty = 1
+            move_raw.product_uom = uom_dozen
+        mo_2 = mo_form.save()
+        mo_2.action_confirm()
+        self.assertRecordValues(mo_2.move_raw_ids, [
+            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
+            {'product_id': component_2.id, 'product_uom_qty': 1, 'product_uom': uom_dozen.id}
+        ])
+
+        # Updates the BoM by set the second BoM line's quantity to 2.
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(1) as bom_line:
+            bom_line.product_qty = 2
+        bom = bom_form.save()
+        self.assertEqual(mo_2.is_outdated_bom, True)
+
+        # Call "Update BoM" action, it should update the MO raw moves' quantity accordingly.
+        # import pudb; pudb.set_trace()
+        mo_2.action_update_bom()
+        self.assertEqual(mo_2.is_outdated_bom, False)
+        # As there is a difference for the second component, the quantity should
+        # be updated (resets the UoM from the BoM line's one).
+        self.assertRecordValues(mo_2.move_raw_ids, [
+            {'product_id': component_1.id, 'product_uom_qty': 2, 'product_uom': uom_dozen.id},
+            {'product_id': component_2.id, 'product_uom_qty': 24, 'product_uom': uom_unit.id}
+        ])
+
+    def test_bom_updates_mo_after_updating_operations(self):
+        """ Creates a Manufacturing Order using a BoM with operations and checks the raw moves are
+        correctly linked to the right operation/workorder. Then modifies the BoM and updates the MO
+        and checks the moves' operation/workorder are correctly updated too.
+        """
+        # Creates a BoM.
+        common_vals = {'type': "product"}
+        finished_product = self.env['product.product'].create(dict(common_vals, name="Monster in Jar"))
+        component_1 = self.env['product.product'].create(dict(common_vals, name="Monster"))
+        component_2 = self.env['product.product'].create(dict(common_vals, name="Jar"))
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'bom_line_ids': [Command.create({'product_id': p.id, 'product_qty': 1}) for p in [component_1, component_2]],
+            'operation_ids': [
+                Command.create({'name': 'OP1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 10, 'sequence': 1}),
+                Command.create({'name': 'OP2', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 2}),
+            ],
+        })
+        bom.bom_line_ids[0].operation_id = bom.operation_ids[0].id
+        # Creates a MO and confirms it.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_1 = mo_form.save()
+        mo_1.action_confirm()
+        self.assertRecordValues(mo_1.move_raw_ids, [
+            {'operation_id': bom.operation_ids[0].id, 'workorder_id': mo_1.workorder_ids[0].id},
+            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[1].id},
+        ])
+
+        # Adds a new operation and links BoM's lines to other operations.
+        self.env['mrp.routing.workcenter'].create({
+            'name': 'OP3', 'bom_id': bom.id, 'workcenter_id': self.workcenter_1.id
+        })
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(0) as bom_line:
+            bom_line.operation_id = bom.operation_ids[2]
+        with bom_form.bom_line_ids.edit(1) as bom_line:
+            bom_line.operation_id = bom.operation_ids[0]
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True)
+        # Updates the MO's BoM, its raw moves' operations/workorders should be updated too.
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False)
+        self.assertRecordValues(mo_1.move_raw_ids, [
+            {'operation_id': bom.operation_ids[2].id, 'workorder_id': mo_1.workorder_ids[2].id},
+            {'operation_id': bom.operation_ids[0].id, 'workorder_id': mo_1.workorder_ids[0].id},
+        ])
+
+        # Modifies the BoM's operations again.
+        bom_form = Form(bom)
+        with bom_form.bom_line_ids.edit(0) as bom_line:
+            bom_line.operation_id = self.env['mrp.routing.workcenter']
+        with bom_form.bom_line_ids.edit(1) as bom_line:
+            bom_line.operation_id = self.env['mrp.routing.workcenter']
+        bom = bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True)
+        # Updates the MO's BoM, its raw moves' operations/workorders should be correctly linked.
+        mo_1.action_update_bom()
+        self.assertEqual(mo_1.is_outdated_bom, False)
+        self.assertRecordValues(mo_1.move_raw_ids, [
+            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[2].id},
+            {'operation_id': False, 'workorder_id': mo_1.workorder_ids[2].id},
+        ])
+
+    def test_bom_updates_mo_with_pre_prod_picking(self):
+        """ With a 2-steps config, creates a MO, then updates its BoM by
+        replacing one of its BoM line's product. Updates the MO and checks a new
+        move for this product was created in the MO's picking.
+        """
+        self.env.user.groups_id += self.env.ref('stock.group_adv_location')
+        self.warehouse_1.manufacture_steps = 'pbm'
+
+        # Creates a MO.
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_1
+        mo_form.picking_type_id = self.warehouse_1.manu_type_id
+        mo_1 = mo_form.save()
+        mo_1.action_confirm()
+        picking = mo_1.picking_ids
+        self.assertRecordValues(picking.move_ids, [
+            {'product_id': self.product_2.id, 'product_uom_qty': 2},
+            {'product_id': self.product_1.id, 'product_uom_qty': 4},
+        ])
+
+        # Updates the BoM, then updates the MO.
+        bom_form = Form(self.bom_1)
+        with bom_form.bom_line_ids.edit(0) as bom_line:
+            bom_line.product_id = self.product_3
+        bom_form.save()
+        self.assertEqual(mo_1.is_outdated_bom, True)
+        mo_1.action_update_bom()
+        self.assertRecordValues(picking.move_ids, [
+            {'product_id': self.product_2.id, 'product_uom_qty': 2},  # Ideally, this move should have been deleted but this isn't handled for now.
+            {'product_id': self.product_1.id, 'product_uom_qty': 4},
+            {'product_id': self.product_3.id, 'product_uom_qty': 2},
+        ])
