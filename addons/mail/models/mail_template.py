@@ -71,6 +71,7 @@ class MailTemplate(models.Model):
         column2='ir_actions_report_id',
         string='Dynamic Reports',
         domain="[('model', '=', model)]")
+    email_layout_xmlid = fields.Char('Email Notification Layout', copy=False)
     # options
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                      help="Optional preferred server for outgoing mails. If not set, the highest "
@@ -424,6 +425,8 @@ class MailTemplate(models.Model):
             # technical settings
             if 'auto_delete' in render_fields:
                 values['auto_delete'] = self.auto_delete
+            if 'email_layout_xmlid' in render_fields:
+                values['email_layout_xmlid'] = self.email_layout_xmlid
             if 'mail_server_id' in render_fields:
                 values['mail_server_id'] = self.mail_server_id.id
             if 'model' in render_fields:
@@ -461,6 +464,7 @@ class MailTemplate(models.Model):
             'scheduled_date',  # specific
             # not rendered (static)
             'auto_delete',
+            'email_layout_xmlid',
             'mail_server_id',
             'model',
             'res_id',
@@ -569,6 +573,7 @@ class MailTemplate(models.Model):
         if 'email_from' in values and not values.get('email_from'):
             values.pop('email_from')
         # encapsulate body
+        email_layout_xmlid = email_layout_xmlid or self.email_layout_xmlid
         if email_layout_xmlid and values['body_html']:
             record = self.env[self.model].browse(res_id)
             model = self.env['ir.model']._get(record._name)

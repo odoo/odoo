@@ -95,6 +95,13 @@ class TestMailComposer(TestMailCommon, TestRecipients):
             'scheduled_date': '{{ (object.create_date or datetime.datetime(2022, 12, 26, 18, 0, 0)) + datetime.timedelta(days=2) }}',
         })
 
+        # activate translations
+        cls._activate_multi_lang(
+            layout_arch_db=None,  # use default mail.test_layout
+            test_record=cls.test_records,
+            test_template=cls.template,
+        )
+
     def _get_web_context(self, records, add_web=True, **values):
         """ Helper to generate composer context. Will make tests a bit less
         verbose.
@@ -1332,13 +1339,17 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
         attachs = self.env['ir.attachment'].search([('name', 'in', [a['name'] for a in attachment_data])])
         self.assertEqual(len(attachs), 2)
 
-        for batch_mode, scheduled_date in product(
+        for batch_mode, scheduled_date, email_layout_xmlid in product(
             (False, True, 'domain'),
-            (False, '{{ (object.create_date or datetime.datetime(2022, 12, 26, 18, 0, 0)) + datetime.timedelta(days=2) }}')
+            (False, '{{ (object.create_date or datetime.datetime(2022, 12, 26, 18, 0, 0)) + datetime.timedelta(days=2) }}'),
+            (False, 'mail.test_layout'),
         ):
             with self.subTest(batch_mode=batch_mode, scheduled_date=scheduled_date):
                 batch = bool(batch_mode)
-                self.template.write({'scheduled_date': scheduled_date})
+                self.template.write({
+                    'scheduled_date': scheduled_date,
+                    'email_layout_xmlid': email_layout_xmlid,
+                })
                 test_records = self.test_records if batch else self.test_record
 
                 # ensure initial data
@@ -1361,6 +1372,7 @@ class TestComposerResultsComment(TestMailComposer, CronMixinCase):
                 # open a composer and run it in comment mode
                 composer_form = Form(self.env['mail.compose.message'].with_context(ctx))
                 composer = composer_form.save()
+                self.assertEqual(composer.email_layout_xmlid, email_layout_xmlid)
 
                 # ensure some parameters used afterwards
                 if batch:
