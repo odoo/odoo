@@ -654,12 +654,13 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment':
                     self.assertTrue(composer.auto_delete, 'By default, remove notification emails')
                     self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
+                    self.assertTrue(composer.email_add_signature, 'Default value in comment mode')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
                 else:
                     self.assertFalse(composer.auto_delete, 'By default, keep mailing emails')
                     self.assertFalse(composer.auto_delete_keep_log, 'Emails are not unlinked, logs are already kept')
+                    self.assertFalse(composer.email_add_signature, 'Not supported in mass mailing mode')
                     self.assertFalse(composer.subtype_id)
-                self.assertTrue(composer.email_add_signature)
                 self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                 self.assertEqual(composer.message_type, 'comment')
 
@@ -670,14 +671,14 @@ class TestComposerInternals(TestMailComposer):
                 if composition_mode == 'comment':
                     self.assertTrue(composer.auto_delete)
                     self.assertFalse(composer.auto_delete_keep_log, 'Not used in comment mode')
-                    self.assertTrue(composer.email_add_signature, 'TODO: should be False as template negates this config')
+                    self.assertFalse(composer.email_add_signature, 'Template is considered as complete')
                     self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                     self.assertEqual(composer.message_type, 'comment')
                     self.assertEqual(composer.subtype_id, self.env.ref('mail.mt_comment'))
                 else:
                     self.assertTrue(composer.auto_delete)
                     self.assertTrue(composer.auto_delete_keep_log)
-                    self.assertTrue(composer.email_add_signature, 'TODO: should be False as template negates this config')
+                    self.assertFalse(composer.email_add_signature, 'Template is considered as complete')
                     self.assertEqual(composer.email_layout_xmlid, 'mail.test_layout')
                     self.assertEqual(composer.message_type, 'comment')
                     self.assertFalse(composer.subtype_id)
