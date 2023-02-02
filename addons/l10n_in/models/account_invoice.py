@@ -34,7 +34,8 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
-        for record in self:
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        for record in indian_invoice:
             gst_treatment = record.partner_id.l10n_in_gst_treatment
             if not gst_treatment:
                 gst_treatment = 'unregistered'
@@ -43,6 +44,7 @@ class AccountMove(models.Model):
                 elif record.partner_id.country_id and record.partner_id.country_id.code != 'IN':
                     gst_treatment = 'overseas'
             record.l10n_in_gst_treatment = gst_treatment
+        (self - indian_invoice).l10n_in_gst_treatment = False
 
     @api.depends('partner_id', 'company_id')
     def _compute_l10n_in_state_id(self):
