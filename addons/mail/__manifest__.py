@@ -154,7 +154,6 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'mail.assets_messaging'),
             'mail/static/src/public/*',
             'mail/static/src/services/*.js',
-            ('remove', 'mail/static/src/services/systray_service.js'),
             'mail/static/src/utils/*.js',
             # Framework JS
             'web/static/lib/luxon/luxon.js',

@@ -13,7 +13,6 @@ import { ChatWindowContainer } from "@mail/new/chat/chat_window_container";
 import { MessagingMenu } from "@mail/new/messaging_menu/messaging_menu";
 import { messagingService as newMessagingService } from "@mail/new/core/messaging_service";
 import { messagingService } from "@mail/services/messaging_service";
-import { systrayService } from "@mail/services/systray_service";
 import { makeMessagingToLegacyEnv } from "@mail/utils/make_messaging_to_legacy_env";
 
 import { patch } from "@web/core/utils/patch";
@@ -178,7 +177,6 @@ async function setupMessagingServiceRegistries({
         presence: makeFakePresenceService({
             isOdooFocused: () => true,
         }),
-        systrayService,
         multi_tab: multiTabService,
         ...services,
     };
