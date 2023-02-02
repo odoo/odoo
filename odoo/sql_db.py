@@ -23,11 +23,12 @@ import psycopg2.extensions
 import psycopg2.extras
 from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 from psycopg2.pool import PoolError
-from psycopg2.sql import SQL, Identifier, Composable
+from psycopg2.sql import Composable
 from werkzeug import urls
 
 import odoo
 from . import tools
+from .tools import SQL
 from .tools.func import frame_codeinfo, locked
 
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
@@ -72,10 +73,10 @@ class Savepoint:
     """
     def __init__(self, cr):
         self.name = str(uuid.uuid1())
-        self._name = Identifier(self.name)
+        self._name = SQL.identifier(self.name)
         self._cr = cr
         self.closed = False
-        cr.execute(SQL('SAVEPOINT {}').format(self._name))
+        cr.execute(SQL('SAVEPOINT %s', self._name))
 
     def __enter__(self):
         return self
@@ -88,12 +89,12 @@ class Savepoint:
             self._close(rollback)
 
     def rollback(self):
-        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT {}').format(self._name))
+        self._cr.execute(SQL('ROLLBACK TO SAVEPOINT %s', self._name))
 
     def _close(self, rollback):
         if rollback:
             self.rollback()
-        self._cr.execute(SQL('RELEASE SAVEPOINT {}').format(self._name))
+        self._cr.execute(SQL('RELEASE SAVEPOINT %s', self._name))
         self.closed = True
 
 
@@ -306,10 +307,21 @@ class Cursor(BaseCursor):
 
     def _format(self, query, params=None):
         encoding = psycopg2.extensions.encodings[self.connection.encoding]
-        return self._obj.mogrify(query, params).decode(encoding, 'replace')
+        return self.mogrify(query, params).decode(encoding, 'replace')
+
+    def mogrify(self, query, params=None):
+        if isinstance(query, SQL):
+            assert params is None, "Unexpected parameters for SQL query object"
+            query, params = query.code, query.params
+        return self._obj.mogrify(query, params)
 
     def execute(self, query, params=None, log_exceptions=True):
         global sql_counter
+
+        if isinstance(query, SQL):
+            assert params is None, "Unexpected parameters for SQL query object"
+            query, params = query.code, query.params
+
         if params and not isinstance(params, (tuple, list, dict)):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
