@@ -66,7 +66,7 @@ class ProductProduct(models.Model):
             pricelists = config.available_pricelist_ids
         else:
             pricelists = config.pricelist_id
-        price_per_pricelist_id = pricelists._price_get(self, quantity)
+        price_per_pricelist_id = pricelists._price_get(self, quantity) if pricelists else False
         pricelist_list = [{'name': pl.name, 'price': price_per_pricelist_id[pl.id]} for pl in pricelists]
 
         # Warehouses
