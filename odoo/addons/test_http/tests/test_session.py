@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import json
+import pytz
 from urllib.parse import urlparse
 from unittest.mock import patch
 
@@ -162,3 +164,76 @@ class TestHttpSession(TestHttpBase):
             lang_fr.active = False
             res = self.url_open('/test_http/echo-http-context-lang')
             self.assertEqual(res.text, 'en_US')
+
+    def test_session7_serializable(self):
+        """Tests setting a non-serializable value to the session is prevented
+        The test ensures the warning/exception is raised at the moment the attribute is set,
+        and not simply when the session is being saved in the session store.
+        """
+        session = self.authenticate(None, None)
+        self.assertFalse(session.foo)
+
+        # Values allowed
+        for value in [
+            123,
+            12.3,
+            'foo',
+            (1, 2, 3, 4),
+            [1, 2, 3, 4],
+            set(),
+            {'1234'},
+            datetime.datetime.now(),
+            datetime.date.today(),
+            datetime.time(1, 33, 7),
+            pytz.timezone('UTC'),
+            pytz.timezone('Europe/Brussels'),
+        ]:
+            session.foo = value
+            self.assertEqual(session.foo, value)
+            session.pop('foo')
+            self.assertFalse(session.foo)
+            session['foo'] = value
+            self.assertEqual(session.foo, value)
+            session.pop('foo')
+
+        # Values forbidden by odoo, raising a warning
+        for value in [
+            str,
+            int,
+            float,
+            bool,
+            range,
+            "foo".startswith,
+            datetime.datetime.strftime,
+        ]:
+            with self.assertLogs(level="WARNING"):
+                session['foo'] = value
+            self.assertFalse(session.foo)
+            with self.assertLogs(level="WARNING"):
+                session.foo = value
+            self.assertFalse(session.foo)
+            with self.assertLogs(level="WARNING"):
+                # testing you cannot set a non-serializable value at the creation of the session
+                # e.g. in the __init__ of the session class
+                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
+            with self.assertRaises(TypeError):
+                dict.update(session, foo=value)
+            self.assertFalse(session.foo)
+
+        # Values forbidden by pickle, raising an exception
+        for value in [
+            lambda: 'bar',
+        ]:
+            with self.assertRaises(AttributeError):
+                session['foo'] = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(AttributeError):
+                session.foo = value
+            self.assertFalse(session.foo)
+            with self.assertRaises(AttributeError):
+                # testing you cannot set a non-serializable value at the creation of the session
+                # e.g. in the __init__ of the session class
+                self.assertFalse(odoo.http.root.session_store.session_class({'foo': value}, 1234).foo)
+            with self.assertRaises(TypeError):
+                dict.update(session, foo=value)
+            self.assertFalse(session.foo)
