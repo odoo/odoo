@@ -780,8 +780,8 @@ class MassMailing(models.Model):
             ])
 
             opt_out_records.write({'opt_out': value})
-            message = _('The recipient <strong>unsubscribed from %s</strong> mailing list(s)') \
-                if value else _('The recipient <strong>subscribed to %s</strong> mailing list(s)')
+            message = Markup(_('The recipient <strong>unsubscribed from %s</strong> mailing list(s)')) \
+                if value else Markup(_('The recipient <strong>subscribed to %s</strong> mailing list(s)'))
             for record in records:
                 # filter the list_id by record
                 record_lists = opt_out_records.filtered(lambda rec: rec.contact_id.id == record.id)

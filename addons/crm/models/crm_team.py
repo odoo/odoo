@@ -7,6 +7,7 @@ import random
 import threading
 
 from ast import literal_eval
+from markupsafe import Markup
 
 from odoo import api, exceptions, fields, models, _
 from odoo.osv import expression
@@ -263,13 +264,13 @@ class Team(models.Model):
 
         # format result messages
         logs = self._action_assign_leads_logs(teams_data, members_data)
-        html_message = '<br />'.join(logs)
+        html_message = Markup('<br />').join(logs)
         notif_message = ' '.join(logs)
 
         # log a note in case of manual assign (as this method will mainly be called
         # on singleton record set, do not bother doing a specific message per team)
         log_action = _("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
-        log_message = "<p>%s<br /><br />%s</p>" % (log_action, html_message)
+        log_message = Markup("<p>%s<br /><br />%s</p>") % (log_action, html_message)
         self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
 
         return {

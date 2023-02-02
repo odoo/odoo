@@ -6,7 +6,7 @@ import base64
 from datetime import datetime, timedelta
 from freezegun import freeze_time
 from itertools import product
-from markupsafe import escape
+from markupsafe import escape, Markup
 from unittest.mock import patch
 
 from odoo import tools
@@ -295,7 +295,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         with self.mock_mail_gateway():
             new_notification = test_record.message_notify(
-                body='<p>You have received a notification</p>',
+                body=Markup('<p>You have received a notification</p>'),
                 partner_ids=[self.partner_1.id, self.partner_admin.id, self.partner_employee_2.id],
                 subject='This should be a subject',
             )
@@ -342,7 +342,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         with self.mock_mail_gateway():
             new_notification = test_record.message_notify(
-                body='<p>You have received a notification</p>',
+                body=Markup('<p>You have received a notification</p>'),
                 partner_ids=(self.partner_1 + self.partner_employee).ids,
                 subject='This should be a subject',
             )
@@ -351,7 +351,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         with self.mock_mail_gateway():
             new_notification = test_record.message_notify(
-                body='<p>You have received a notification</p>',
+                body=Markup('<p>You have received a notification</p>'),
                 notify_author=True,
                 partner_ids=(self.partner_1 + self.partner_employee).ids,
                 subject='This should be a subject',
@@ -365,7 +365,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         with self.mock_mail_gateway():
             new_notification = test_record.with_context(mail_notify_author=True).message_notify(
-                body='<p>You have received a notification</p>',
+                body=Markup('<p>You have received a notification</p>'),
                 partner_ids=(self.partner_1 + self.partner_employee).ids,
                 subject='This should be a subject',
             )
@@ -383,7 +383,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         with self.assertRaises(ValueError):
             test_records.message_notify(
-                body='<p>Nice notification content</p>',
+                body=Markup('<p>Nice notification content</p>'),
                 partner_ids=self.partner_employee_2.ids,
                 subject='Notify Subject',
             )
@@ -473,7 +473,7 @@ class TestMessageNotify(TestMessagePostCommon):
                  self.mock_mail_gateway(), \
                  self.assertRaises(ValueError):
                 _new_message = test_record.message_notify(
-                    body='<p>You will not receive a notification</p>',
+                    body=Markup('<p>You will not receive a notification</p>'),
                     partner_ids=self.partner_1.ids,
                     subject='This should not be accepted',
                     **parameters
@@ -481,7 +481,7 @@ class TestMessageNotify(TestMessagePostCommon):
 
         # support of subtype xml id
         new_message = test_record.message_notify(
-            body='<p>You will not receive a notification</p>',
+            body=Markup('<p>You will not receive a notification</p>'),
             partner_ids=self.partner_1.ids,
             subtype_xmlid='mail.mt_note',
         )
@@ -494,7 +494,7 @@ class TestMessageNotify(TestMessagePostCommon):
         people without having a document. """
         with self.mock_mail_gateway():
             new_notification = self.env['mail.thread'].message_notify(
-                body='<p>You have received a notification</p>',
+                body=Markup('<p>You have received a notification</p>'),
                 partner_ids=[self.partner_1.id, self.partner_admin.id, self.partner_employee_2.id],
                 subject='This should be a subject',
             )
@@ -535,7 +535,7 @@ class TestMessageLog(TestMessagePostCommon):
         test_record.message_subscribe(self.partner_employee_2.ids)
 
         new_note = test_record._message_log(
-            body='<p>Labrador</p>',
+            body=Markup('<p>Labrador</p>'),
         )
         self.assertMessageFields(
             new_note,
@@ -559,7 +559,7 @@ class TestMessageLog(TestMessagePostCommon):
 
         new_notes = test_records._message_log_batch(
             bodies=dict(
-                (test_record.id, '<p>Test _message_log_batch</p>')
+                (test_record.id, Markup('<p>Test _message_log_batch</p>'))
                 for test_record in test_records
             ),
         )
@@ -833,7 +833,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
              self.assertMsgWithoutNotifications(), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -880,7 +880,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
              self.mock_mail_gateway(mail_unlink_sent=False), \
              self.capture_triggers(cron_id) as capt:
             msg = test_record.message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -908,7 +908,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         with freeze_time(now), \
              self.assertMsgWithoutNotifications():
             msg = test_record.message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -1086,7 +1086,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 ]
             ), patch.object(MailTestSimple, 'check_access_rights', return_value=True):
             new_msg = self.test_record.with_user(self.user_portal).message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -1095,7 +1095,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         with self.assertRaises(AccessError):
             self.test_record.with_user(self.user_portal).message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -1108,7 +1108,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
 
         with self.mock_mail_gateway():
             parent_msg = test_record.message_post(
-                body='<p>Test</p>',
+                body=Markup('<p>Test</p>'),
                 message_type='comment',
                 subject='Test Subject',
                 subtype_xmlid='mail.mt_comment',
@@ -1121,7 +1121,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                 [{'content': '<p>Test Answer</p>', 'notif': [{'partner': self.partner_1, 'type': 'email'}]}]
             ):
             msg = test_record.message_post(
-                body='<p>Test Answer</p>',
+                body=Markup('<p>Test Answer</p>'),
                 message_type='comment',
                 parent_id=parent_msg.id,
                 partner_ids=[self.partner_1.id],
@@ -1144,7 +1144,7 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         # post a reply to the reply: check parent is the first one
         with self.mock_mail_gateway():
             new_msg = test_record.message_post(
-                body='<p>Test Answer Bis</p>',
+                body=Markup('<p>Test Answer Bis</p>'),
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment',
                 parent_id=msg.id,
@@ -1697,7 +1697,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
 
         with self.mock_mail_gateway():
             test_records[1].message_post(
-                body='<p>Hello</p>',
+                body=Markup('<p>Hello</p>'),
                 email_layout_xmlid='mail.test_layout',
                 message_type='comment',
                 subject='Subject',
@@ -1820,7 +1820,7 @@ class TestMessagePostLang(MailCommon, TestRecipients):
                     with self.mock_mail_gateway(mail_unlink_sent=False), \
                          self.mock_mail_app():
                         record.message_post(
-                            body='<p>Hi there</p>',
+                            body=Markup('<p>Hi there</p>'),
                             email_layout_xmlid=email_layout_xmlid,
                             message_type='comment',
                             subject='TeDeum',

@@ -7,6 +7,7 @@ import logging
 import re
 
 from datetime import datetime
+from markupsafe import escape
 
 from odoo import api, fields, models, _
 from odoo.tools import float_repr, float_compare
@@ -352,7 +353,7 @@ class AccountMove(models.Model):
             })
             with other_invoice._get_edi_creation() as other_invoice:
                 self.env['account.edi.format']._import_fattura_pa(tree, other_invoice)
-                other_invoice.message_post(body=_("Created from attachment in %s", invoice._get_html_link()))
+                other_invoice.message_post(body=escape(_("Created from attachment in %s")) % invoice._get_html_link())
 
         return True
 

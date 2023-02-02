@@ -6,6 +6,7 @@ import logging
 from datetime import date, timedelta
 
 from dateutil.relativedelta import relativedelta, MO
+from markupsafe import Markup
 
 from odoo import api, models, fields, _, exceptions
 from odoo.tools import ustr
@@ -694,21 +695,21 @@ class Challenge(models.Model):
 
                 if rewarded_users:
                     user_names = rewarded_users.name_get()
-                    message_body += _(
-                        "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
+                    message_body += Markup("<br/>") + _(
+                        "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
                         badge_name=challenge.reward_id.name,
                         users=", ".join(name for (user_id, name) in user_names)
                     )
                 else:
-                    message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
+                    message_body += Markup("<br/>") + _("Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 
                 # reward bests
-                reward_message = _("<br/> %(rank)d. %(user_name)s - %(reward_name)s")
+                reward_message = Markup("<br/> %(rank)d. %(user_name)s - %(reward_name)s")
                 if challenge.reward_first_id:
                     (first_user, second_user, third_user) = challenge._get_topN_users(MAX_VISIBILITY_RANKING)
                     if first_user:
                         challenge._reward_user(first_user, challenge.reward_first_id)
-                        message_body += _("<br/>Special rewards were sent to the top competing users. The ranking for this challenge is:")
+                        message_body += Markup("<br/>") + _("Special rewards were sent to the top competing users. The ranking for this challenge is:")
                         message_body += reward_message % {
                             'rank': 1,
                             'user_name': first_user.name,

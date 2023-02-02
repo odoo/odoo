@@ -23,7 +23,7 @@ from email import message_from_string
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
-from markupsafe import Markup
+from markupsafe import Markup, escape
 
 from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError, AccessError
@@ -1353,7 +1353,7 @@ class MailThread(models.AbstractModel):
         for node in to_remove:
             node.getparent().remove(node)
         if postprocessed:
-            body = etree.tostring(root, pretty_print=False, encoding='unicode')
+            body = Markup(etree.tostring(root, pretty_print=False, encoding='unicode'))
         return {'body': body, 'attachments': attachments}
 
     def _message_parse_extract_payload(self, message, message_dict, save_original=False):
@@ -2023,7 +2023,7 @@ class MailThread(models.AbstractModel):
             'model': self._name,
             'res_id': self.id,
             # content
-            'body': body,
+            'body': escape(body),  # escape if text, keep if markup
             'message_type': message_type,
             'parent_id': self._message_compute_parent_id(parent_id),
             'subject': subject or False,
@@ -2485,7 +2485,7 @@ class MailThread(models.AbstractModel):
             'record_name': False,
             'res_id': self.id if self else res_id,
             # content
-            'body': body,
+            'body': escape(body),  # escape if text, keep if markup
             'is_internal': True,
             'message_type': 'user_notification',
             'subject': subject,
@@ -2601,7 +2601,7 @@ class MailThread(models.AbstractModel):
 
         values_list = [dict(base_message_values,
                             res_id=record.id,
-                            body=bodies.get(record.id, ''))
+                            body=escape(bodies.get(record.id, '')))
                        for record in self]
         return self.sudo()._message_create(values_list)
 

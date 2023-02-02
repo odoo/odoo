@@ -7,6 +7,7 @@ import smtplib
 
 from datetime import datetime, timedelta
 from freezegun import freeze_time
+from markupsafe import Markup
 from OpenSSL.SSL import Error as SSLError
 from socket import gaierror, timeout
 from unittest.mock import call, patch
@@ -38,9 +39,9 @@ class TestMailMail(MailCommon):
             'email_from': 'ignasse@example.com',
         }).with_context({})
 
-        cls.test_message = cls.test_record.message_post(body='<p>Message</p>', subject='Subject')
+        cls.test_message = cls.test_record.message_post(body=Markup('<p>Message</p>'), subject='Subject')
         cls.test_mail = cls.env['mail.mail'].create([{
-            'body': '<p>Body</p>',
+            'body': Markup('<p>Body</p>'),
             'email_from': False,
             'email_to': 'test@example.com',
             'is_notification': True,

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import random
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessDenied, AccessError, UserError
@@ -189,23 +190,23 @@ class CrmLead(models.Model):
         return res_partner_ids
 
     def partner_interested(self, comment=False):
-        message = _('<p>I am interested by this lead.</p>')
+        message = Markup('<p>%s</p>') % _('I am interested by this lead.')
         if comment:
-            message += '<p>%s</p>' % html_escape(comment)
+            message += Markup('<p>%s</p>') % comment
         for lead in self:
             lead.message_post(body=message)
             lead.sudo().convert_opportunity(lead.partner_id)  # sudo required to convert partner data
 
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
         if contacted:
-            message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
+            message = Markup('<p>%s</p>') % _('I am not interested by this lead. I contacted the lead.')
         else:
-            message = '<p>%s</p>' % _('I am not interested by this lead. I have not contacted the lead.')
+            message = Markup('<p>%s</p>') % _('I am not interested by this lead. I have not contacted the lead.')
         partner_ids = self.env['res.partner'].search(
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
-            message += '<p>%s</p>' % html_escape(comment)
+            message += Markup('<p>%s</p>') % comment
         self.message_post(body=message)
         values = {
             'partner_assigned_id': False,

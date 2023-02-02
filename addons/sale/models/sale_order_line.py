@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -1017,18 +1018,18 @@ class SaleOrderLine(models.Model):
         orders = self.mapped('order_id')
         for order in orders:
             order_lines = self.filtered(lambda x: x.order_id == order)
-            msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
+            msg = Markup("<b>%s</b><ul>") % _("The ordered quantity has been updated.")
             for line in order_lines:
-                msg += "<li> %s: <br/>" % line.product_id.display_name
+                msg += Markup("<li> %s: <br/>") % line.product_id.display_name
                 msg += _(
                     "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
                     old_qty=line.product_uom_qty,
                     new_qty=values["product_uom_qty"]
-                ) + "<br/>"
+                ) + Markup("<br/>")
                 if line.product_id.type in ('consu', 'product'):
-                    msg += _("Delivered Quantity: %s", line.qty_delivered) + "<br/>"
-                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + "<br/>"
-            msg += "</ul>"
+                    msg += _("Delivered Quantity: %s", line.qty_delivered) + Markup("<br/>")
+                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + Markup("<br/>")
+            msg += Markup("</ul>")
             order.message_post(body=msg)
 
     def _check_line_unlink(self):

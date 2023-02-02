@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
+from markupsafe import Markup
 from unittest.mock import patch
 from uuid import uuid4
 
@@ -407,7 +408,7 @@ class TestPartner(MailCommon):
         p1.message_subscribe(partner_ids=p3.ids)
         p1_act1 = p1.activity_schedule(act_type_xmlid='mail.mail_activity_data_todo')
         p1_msg1 = p1.message_post(
-            body='<p>Log on P1</p>',
+            body=Markup('<p>Log on P1</p>'),
             subtype_id=self.env.ref('mail.mt_comment').id
         )
         self.assertEqual(p1.activity_ids, p1_act1)

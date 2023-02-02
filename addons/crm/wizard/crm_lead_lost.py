@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import fields, models, _
 from odoo.tools.mail import is_html_empty
 
@@ -19,7 +20,7 @@ class CrmLeadLost(models.TransientModel):
         leads = self.env['crm.lead'].browse(self.env.context.get('active_ids'))
         if not is_html_empty(self.lost_feedback):
             leads._track_set_log_message(
-                '<div style="margin-bottom: 4px;"><p>%s:</p>%s<br /></div>' % (
+                Markup('<div style="margin-bottom: 4px;"><p>%s:</p>%s<br /></div>') % (
                     _('Lost Comment'),
                     self.lost_feedback
                 )
