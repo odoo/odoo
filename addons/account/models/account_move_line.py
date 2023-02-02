@@ -1110,6 +1110,12 @@ class AccountMoveLine(models.Model):
         for line in self:
             if line.currency_id == line.company_id.currency_id and line.balance != line.amount_currency:
                 line.balance = line.amount_currency
+            elif (
+                line.currency_id != line.company_id.currency_id
+                and not line.move_id.is_invoice(True)
+                and not self.env.is_protected(self._fields['balance'], line)
+            ):
+                line.balance = line.company_id.currency_id.round(line.amount_currency / line.currency_rate)
 
     @api.onchange('debit')
     def _inverse_debit(self):
