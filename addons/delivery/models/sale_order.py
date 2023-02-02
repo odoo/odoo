@@ -172,7 +172,7 @@ class SaleOrderLine(models.Model):
     recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
 
     def _is_not_sellable_line(self):
-        return self.is_delivery or super(SaleOrderLine, self)._is_not_sellable_line()
+        return self.is_delivery or super()._is_not_sellable_line()
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
@@ -186,7 +186,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.is_delivery:
                 line.order_id.carrier_id = False
-        return super(SaleOrderLine, self).unlink()
+        return super().unlink()
 
     def _is_delivery(self):
         self.ensure_one()
