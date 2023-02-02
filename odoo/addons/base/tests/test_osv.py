@@ -50,12 +50,12 @@ class QueryTestCase(BaseCase):
         alias = query.left_join("product_template__categ_id", "user_id", "res_user", "id", "user_id")
         self.assertEqual(alias, 'product_template__categ_id__user_id')
         # additional implicit join
-        query.add_table('account.account')
+        query.add_table('account_account')
         query.add_where("product_category.expense_account_id = account_account.id")
 
         from_clause, where_clause, where_params = query.get_sql()
         self.assertEqual(from_clause,
-            '"product_product", "product_template", "account.account" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
+            '"product_product", "product_template", "account_account" JOIN "product_category" AS "product_template__categ_id" ON ("product_template"."categ_id" = "product_template__categ_id"."id") LEFT JOIN "res_user" AS "product_template__categ_id__user_id" ON ("product_template__categ_id"."user_id" = "product_template__categ_id__user_id"."id")')
         self.assertEqual(where_clause, "product_product.template_id = product_template.id AND product_category.expense_account_id = account_account.id")
 
     def test_raise_missing_lhs(self):
