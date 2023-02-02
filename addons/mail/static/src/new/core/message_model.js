@@ -63,6 +63,34 @@ export class Message {
     _store;
 
     /**
+     * @returns {string}
+     */
+    get avatarUrl() {
+        if (this.author && (!this.originThread || this.originThread.model !== "mail.channel")) {
+            // TODO FIXME for public user this might not be accessible. task-2223236
+            // we should probably use the correspondig attachment id + access token
+            // or create a dedicated route to get message image, checking the access right of the message
+            return this.author.avatarUrl;
+        } else if (this.author && this.originThread && this.originThread.model === "mail.channel") {
+            return `/mail/channel/${this.originThread.id}/partner/${this.author.id}/avatar_128`;
+        } else if (
+            this.guestAuthor &&
+            (!this.originThread || this.originThread.model !== "mail.channel")
+        ) {
+            return this.guestAuthor.avatarUrl;
+        } else if (
+            this.guestAuthor &&
+            this.originThread &&
+            this.originThread.model === "mail.channel"
+        ) {
+            return `/mail/channel/${this.originThread.id}/guest/${this.guestAuthor.id}/avatar_128?unique=${this.guestAuthor.name}`;
+        } else if (this.type === "email") {
+            return "/mail/static/src/img/email_icon.png";
+        }
+        return "/mail/static/src/img/smiley/avatar.jpg";
+    }
+
+    /**
      * @returns {boolean}
      */
     get editable() {
