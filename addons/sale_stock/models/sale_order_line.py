@@ -125,7 +125,7 @@ class SaleOrderLine(models.Model):
             mto_route = line.order_id.warehouse_id.mto_pull_id.route_id
             if not mto_route:
                 try:
-                    mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Make To Order'))
+                    mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
                 except UserError:
                     # if route MTO not found in ir_model_data, we treat the product as in MTS
                     pass

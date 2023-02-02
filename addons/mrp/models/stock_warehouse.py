@@ -133,7 +133,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'location_dest_id': production_location.id,
                     'location_src_id': location_src.id,
                     'picking_type_id': self.manu_type_id.id
@@ -150,7 +150,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Make To Order')).id,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
                     'name': self._format_rulename(self.lot_stock_id, self.pbm_loc_id, 'MTO'),
                     'location_dest_id': self.pbm_loc_id.id,
                     'location_src_id': self.lot_stock_id.id,
