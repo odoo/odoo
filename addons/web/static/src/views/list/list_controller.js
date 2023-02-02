@@ -3,6 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
+import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { sprintf } from "@web/core/utils/strings";
@@ -338,10 +339,12 @@ export class ListController extends Component {
     }
 
     get defaultExportList() {
-        return this.props.archInfo.columns
-            .filter((col) => col.type === "field")
-            .map((col) => this.props.fields[col.name])
-            .filter((field) => field.exportable !== false);
+        return unique(
+            this.props.archInfo.columns
+                .filter((col) => col.type === "field")
+                .map((col) => this.props.fields[col.name])
+                .filter((field) => field.exportable !== false)
+        );
     }
 
     get display() {
