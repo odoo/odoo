@@ -1865,6 +1865,17 @@ var SnippetsMenu = Widget.extend({
                 $style[0].dataset.dropIn = dropInPatch.join(', ');
             }
 
+            // Fix in stable: before this, modifying a snippet's "bg_filter"
+            // also impacted its child snippets (e.g. Carousel with a
+            // "bg_filter" that contains a snippet with also a "bg_filter").
+            if ($style[0].dataset.optionName === "colorFilter") {
+                const weColorPickerEl = $style[0].querySelector('we-colorpicker');
+                weColorPickerEl.dataset.applyTo = weColorPickerEl.dataset.applyTo
+                    .split(', ')
+                    .map(selector => selector === '.o_we_bg_filter' ? '> .o_we_bg_filter' : selector)
+                    .join(', ');
+            }
+
             var target = $style.data('target');
             var noCheck = $style.data('no-check');
             var optionID = $style.data('js') || $style.data('option-name');  // used in tour js as selector
