@@ -169,7 +169,7 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids', 'currency_id')
     def _compute_amount(self):
         for expense in self:
-            if expense.product_id and not expense.product_has_cost:
+            if expense.product_id and not expense.unit_amount:
                 continue
             taxes = expense._get_taxes(price=expense.unit_amount, quantity=expense.quantity)
             expense.total_amount = taxes['total_included']
