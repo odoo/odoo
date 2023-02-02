@@ -974,7 +974,7 @@ function _getMatchedCSSRules(node, cssRules) {
         }
     };
 
-    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('btn-block'))) {
+    if (processedStyle.display === 'block' && !(node.classList && ['btn-block', 'oe-nested'].some(klass => node.classList.contains(klass)))) {
         delete processedStyle.display;
     }
     if (!processedStyle['box-sizing']) {
