@@ -20,7 +20,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_communication')
     group_payment = fields.Boolean(string="Group Payments", store=True, readonly=False,
         compute='_compute_group_payment',
-        help="Only one payment will be created by partner (bank), instead of one per bill.")
+        help="Only one payment will be created by partner, instead of one per bill.")
     early_payment_discount_mode = fields.Boolean(compute='_compute_early_payment_discount_mode')
     currency_id = fields.Many2one(
         comodel_name='res.currency',

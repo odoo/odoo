@@ -402,10 +402,9 @@ class TestExpenses(TestExpenseCommon):
         sheet.action_sheet_move_create()
         action_data = sheet.action_register_payment()
         wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
-        wizard.group_payment = False
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
-        move = self.env['account.payment'].search(action['domain']).move_id
+        move = self.env['account.payment'].browse(action['res_id']).move_id
         move.button_cancel()
         self.assertEqual(sheet.state, 'done', 'Sheet state must not change when the payment linked to that sheet is canceled')
 
@@ -612,25 +611,23 @@ class TestExpenses(TestExpenseCommon):
         payment_method_line = self.env.company.bank_journal_ids.outbound_payment_method_line_ids.filtered(lambda m: m.code == 'check_printing')
         with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
             wiz_form.payment_method_line_id = payment_method_line
-            wiz_form.group_payment = False
         wizard = wiz_form.save()
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
 
-        payments = self.env[action['res_model']].search(action['domain'])
-        for payment in payments:
-            pages = payment._check_get_pages()
-            stub_line = pages[0]['stub_lines'][:1]
-            self.assertTrue(stub_line)
-            move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
-            self.assertDictEqual(stub_line[0], {
-                'due_date': payment.date.strftime("%m/%d/%Y"),
-                'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
-                'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
-                'amount_residual': '-',
-                'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
-                'currency': self.env.company.currency_id
-            })
+        payment = self.env[action['res_model']].browse(action['res_id'])
+        pages = payment._check_get_pages()
+        stub_line = pages[0]['stub_lines'][:1]
+        self.assertTrue(stub_line)
+        move = self.env[action_data['context']['active_model']].browse(action_data['context']['active_ids'])
+        self.assertDictEqual(stub_line[0], {
+            'due_date': payment.date.strftime("%m/%d/%Y"),
+            'number': ' - '.join([move.name, move.ref] if move.ref else [move.name]),
+            'amount_total': formatLang(self.env, move.amount_total, currency_obj=self.env.company.currency_id),
+            'amount_residual': '-',
+            'amount_paid': formatLang(self.env, payment.amount_total, currency_obj=self.env.company.currency_id),
+            'currency': self.env.company.currency_id
+        })
 
     def test_hr_expense_split(self):
         """

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_expense_account_payment_register_inherited" model="ir.ui.view">
+        <field name="name">account.payment.register.form</field>
+        <field name="model">account.payment.register</field>
+        <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_payment']" position="attributes">
+                <attribute name="invisible">context.get('hide_group_payment')</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

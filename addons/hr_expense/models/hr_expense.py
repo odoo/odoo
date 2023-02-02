@@ -1255,6 +1255,8 @@ class HrExpenseSheet(models.Model):
                 'active_model': 'account.move',
                 'active_ids': self.account_move_id.ids,
                 'default_partner_bank_id': self.employee_id.sudo().bank_account_id.id,
+                'default_group_payment': True,
+                'hide_group_payment': True,
             },
             'target': 'new',
             'type': 'ir.actions.act_window',
