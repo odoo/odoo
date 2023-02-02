@@ -272,6 +272,21 @@ class TestImage(TransactionCase):
         image = img_open(tools.image_process(image_1080_1920_tiff, quality=95))
         self.assertEqual(image.format, 'JPEG', "unsupported format to JPEG")
 
+    def test_17_get_webp_size(self):
+        # Using 32 bytes image headers as data.
+        # Lossy webp: 550x368
+        webp_lossy = b'RIFFhv\x00\x00WEBPVP8 \\v\x00\x00\xd2\xbe\x01\x9d\x01*&\x02p\x01>\xd5'
+        size = tools.get_webp_size(webp_lossy)
+        self.assertEqual((550, 368), size, "Wrong resolution for lossy webp")
+        # Lossless webp: 421x163
+        webp_lossless = b'RIFF\xba\x84\x00\x00WEBPVP8L\xad\x84\x00\x00/\xa4\x81(\x10MHr\x1bI\x92\xa4'
+        size = tools.get_webp_size(webp_lossless)
+        self.assertEqual((421, 163), size, "Wrong resolution for lossless webp")
+        # Extended webp: 800x600
+        webp_extended = b'RIFF\x80\xce\x00\x00WEBPVP8X\n\x00\x00\x00\x10\x00\x00\x00\x1f\x03\x00W\x02\x00AL'
+        size = tools.get_webp_size(webp_extended)
+        self.assertEqual((800, 600), size, "Wrong resolution for extended webp")
+
     def test_20_image_data_uri(self):
         """Test that image_data_uri is working as expected."""
         self.assertEqual(tools.image_data_uri(base64.b64encode(self.img_1x1_png)), 'data:image/png;base64,' + base64.b64encode(self.img_1x1_png).decode('ascii'))
