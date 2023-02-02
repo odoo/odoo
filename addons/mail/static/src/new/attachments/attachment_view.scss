@@ -1,13 +1,13 @@
 .modal {
     @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
-        .o_attachment_preview {
+        .o_attachment_preview_placeholder {
             width: 300px;
         }
     }
 }
 
 @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
-    .o_attachment_preview {
+    .o_attachment_preview_placeholder {
         display: block;
         flex: 1 0 auto;
         overflow: hidden;
@@ -52,7 +52,7 @@
 }
 
 @include media-breakpoint-down(xxl, $o-extra-grid-breakpoints) {
-    .o_attachment_preview {
+    .o_attachment_preview_placeholder {
         display: none;
     }
 }
