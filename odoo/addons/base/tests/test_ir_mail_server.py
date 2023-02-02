@@ -9,6 +9,7 @@ from odoo.addons.base.tests.common import MockSmtplibCase
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
+from odoo.tools import config
 
 
 @tagged('mail_server')
@@ -338,7 +339,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com", "smtp_server": "example.com"})
+    @patch.dict(config.options, {"from_filter": "test.com", "smtp_server": "example.com"})
     def test_mail_server_binary_arguments_domain(self):
         """Test the configuration provided in the odoo-bin arguments.
 
@@ -390,7 +391,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict("odoo.tools.config.options", {"from_filter": "test.com", "smtp_server": "example.com"})
+    @patch.dict(config.options, {"from_filter": "test.com", "smtp_server": "example.com"})
     def test_mail_server_binary_arguments_domain_smtp_session(self):
         """Test the configuration provided in the odoo-bin arguments.
 
@@ -433,7 +434,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict('odoo.tools.config.options', {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
+    @patch.dict(config.options, {'from_filter': 'fake.com', 'smtp_server': 'cli_example.com'})
     def test_mail_server_configuration_cli(self):
         """Check the mail server when the "smtp_authentication" is "cli".
 
@@ -478,7 +479,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict('odoo.tools.config.options', {'from_filter': 'test.com', 'smtp_server': 'example.com'})
+    @patch.dict(config.options, {'from_filter': 'test.com', 'smtp_server': 'example.com'})
     def test_mail_server_mail_default_from_filter(self):
         """Test that the config parameter "mail.default.from_filter" overwrite the odoo-bin
         argument "--from-filter"
