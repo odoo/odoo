@@ -6,7 +6,7 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_icon_tests.js");
 
-        QUnit.skipRefactoring("chat: correspondent is typing", async function (assert) {
+        QUnit.test("chat: correspondent is typing", async function (assert) {
             assert.expect(5);
 
             const pyEnv = await startServer();
@@ -21,60 +21,54 @@ QUnit.module("mail", {}, function () {
                 ],
                 channel_type: "chat",
             });
-            const { messaging, openDiscuss } = await start();
+            const { env, openDiscuss } = await start();
             await openDiscuss();
 
             assert.containsOnce(
                 document.body.querySelector(".o-mail-category-item"),
-                ".o_ThreadIconView",
+                ".o-mail-discuss-sidebar-threadIcon",
                 "should have thread icon in the sidebar"
             );
             assert.containsOnce(
                 document.body,
-                ".o_ThreadIconView_online",
+                ".o-mail-chatwindow-icon-online",
                 "should have thread icon with persona IM status icon 'online'"
             );
 
             // simulate receive typing notification from demo "is typing"
             await afterNextRender(() =>
-                messaging.rpc({
-                    route: "/mail/channel/notify_typing",
-                    params: {
-                        channel_id: mailChannelId1,
-                        context: {
-                            mockedPartnerId: resPartnerId1,
-                        },
-                        is_typing: true,
+                env.services.rpc("/mail/channel/notify_typing", {
+                    channel_id: mailChannelId1,
+                    context: {
+                        mockedPartnerId: resPartnerId1,
                     },
+                    is_typing: true,
                 })
             );
             assert.containsOnce(
                 document.body,
-                ".o_ThreadIconView_typing",
+                ".o-mail-typing-icon",
                 "should have thread icon with partner currently typing"
             );
             assert.strictEqual(
-                document.querySelector(".o_ThreadIconView_typing").title,
+                document.querySelector(".o-mail-typing-icon").title,
                 "Demo is typing...",
                 "title of icon should tell demo is currently typing"
             );
 
             // simulate receive typing notification from demo "no longer is typing"
             await afterNextRender(() =>
-                messaging.rpc({
-                    route: "/mail/channel/notify_typing",
-                    params: {
-                        channel_id: mailChannelId1,
-                        context: {
-                            mockedPartnerId: resPartnerId1,
-                        },
-                        is_typing: false,
+                env.services.rpc("/mail/channel/notify_typing", {
+                    channel_id: mailChannelId1,
+                    context: {
+                        mockedPartnerId: resPartnerId1,
                     },
+                    is_typing: false,
                 })
             );
             assert.containsOnce(
                 document.body,
-                ".o_ThreadIconView_online",
+                ".o-mail-chatwindow-icon-online",
                 "should have thread icon with persona IM status icon 'online' (no longer typing)"
             );
         });
