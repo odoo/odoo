@@ -301,7 +301,7 @@ export class Chatter extends Component {
 
     onPostCallback() {
         if (this.props.hasParentReloadOnMessagePosted) {
-            this.props.reloadParentView();
+            this.reloadParentView();
         }
         this.toggleComposer();
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
