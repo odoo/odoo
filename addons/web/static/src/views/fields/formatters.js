@@ -222,6 +222,7 @@ export function formatFloatFactor(value, options = {}) {
  * @param {Object} [options]
  * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30 otherwise, format like 01:30
  * @param {boolean} [options.displaySeconds] if true, format like ?1:30:00 otherwise, format like ?1:30
+ * @param {string} [options.roundToMin] if true, we will round 59s to 00:01
  * @returns {string}
  */
 export function formatFloatTime(value, options = {}) {
@@ -235,7 +236,13 @@ export function formatFloatTime(value, options = {}) {
     const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
     // Although looking quite overkill, the following line ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = Math.floor(milliSecLeft / 60000);
+    let min = 0;
+    if(options.roundToMin){
+        min = Math.round(milliSecLeft/60000)
+    }
+    else{
+        min = Math.floor(milliSecLeft / 60000);
+    }
     if (min === 60) {
         min = 0;
         hour = hour + 1;

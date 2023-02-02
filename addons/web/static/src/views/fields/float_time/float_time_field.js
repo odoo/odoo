@@ -21,7 +21,7 @@ export class FloatTimeField extends Component {
     }
 
     get formattedValue() {
-        return formatFloatTime(this.props.value);
+        return formatFloatTime(this.props.value, {roundToMin: this.props.roundToMin});
     }
 }
 
@@ -29,6 +29,7 @@ FloatTimeField.template = "web.FloatTimeField";
 FloatTimeField.props = {
     ...standardFieldProps,
     placeholder: { type: String, optional: true },
+    roundToMin: { type: String, optional: true },
 };
 
 FloatTimeField.displayName = _lt("Time");
@@ -38,6 +39,7 @@ FloatTimeField.isEmpty = () => false;
 FloatTimeField.extractProps = ({ attrs }) => {
     return {
         placeholder: attrs.placeholder,
+        roundToMin: attrs.roundToMin,
     };
 };
 

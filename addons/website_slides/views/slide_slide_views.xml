@@ -144,7 +144,7 @@
                                         <field name="user_id" string="Responsible" domain="[('share', '=', False)]" widget="many2one_avatar"/>
                                         <label for="completion_time"/>
                                         <div>
-                                            <field name="completion_time" widget="float_time" class="oe_inline"/>
+                                            <field name="completion_time" widget="float_time"  roundToMin='true' class="oe_inline"/>
                                             <span> hours</span>
                                         </div>
                                         <field name="slide_resource_downloadable" attrs="{'invisible': ['|', ('slide_category', '!=', 'document'), ('source_type', '!=', 'local_file')]}"/>
