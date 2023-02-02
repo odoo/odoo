@@ -590,7 +590,7 @@ async function toInline($editable, cssRules, $iframe) {
                 value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
             }
             image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, image.getAttribute(attributeName));
+            image.style.setProperty(attributeName, value + 'px');
         };
     };
 
