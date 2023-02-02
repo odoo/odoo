@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import ast
-from collections import defaultdict
 import csv
+from collections import defaultdict
 from functools import wraps
 from inspect import getmembers
+
 import logging
 import re
 

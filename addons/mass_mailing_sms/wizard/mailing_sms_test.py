@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import fields, models, _
 from odoo.addons.phone_validation.tools import phone_validation
 
@@ -59,8 +60,8 @@ class MassSMSTest(models.TransientModel):
                 )
 
         if notification_messages:
-            self.mailing_id._message_log(body='<ul>%s</ul>' % ''.join(
-                ['<li>%s</li>' % notification_message for notification_message in notification_messages]
+            self.mailing_id._message_log(body=Markup('<ul>%s</ul>') % ''.join(
+                [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
             ))
 
         return True

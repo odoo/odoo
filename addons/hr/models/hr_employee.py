@@ -8,6 +8,7 @@ from random import choice
 from string import digits
 from werkzeug.urls import url_encode
 from dateutil.relativedelta import relativedelta
+from markupsafe import Markup
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, AccessError
@@ -367,10 +368,9 @@ class HrEmployeePrivate(models.Model):
                 'active_model': 'hr.employee',
                 'menu_id': hr_root_menu.id,
             })
-            onboarding_notes_bodies[employee.id] = _(
+            onboarding_notes_bodies[employee.id] = Markup(_(
                 '<b>Congratulations!</b> May I recommend you to setup an <a href="%s">onboarding plan?</a>',
-                url,
-            )
+            )) % url
         employees._message_log_batch(onboarding_notes_bodies)
         return employees
 

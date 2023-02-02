@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup, escape
+
 from odoo import fields, models, _
 from odoo.tools import html2plaintext
 
@@ -48,9 +50,11 @@ class SlideChannelPartner(models.Model):
         super()._send_completed_mail()
         for scp in self:
             if self.env.user.employee_ids:
-                msg = _('The employee has completed the course <a href="%(link)s">%(course)s</a>',
-                    link=scp.channel_id.website_url,
-                    course=scp.channel_id.name)
+                msg = escape(_('The employee has completed the course %s')) % \
+                    Markup('<a href="%(link)s">%(course)s</a>') % {
+                        'link': scp.channel_id.website_url,
+                        'course': scp.channel_id.name,
+                    }
                 self.env.user.employee_id.message_post(body=msg)
 
 class Channel(models.Model):
@@ -60,7 +64,10 @@ class Channel(models.Model):
         res = super()._action_add_members(target_partners)
         for channel in self:
             channel._message_employee_chatter(
-                _('The employee subscribed to the course <a href="%(link)s">%(course)s</a>', link=channel.website_url, course=channel.name),
+                Markup(_('The employee subscribed to the course <a href="%(link)s">%(course)s</a>')) % {
+                    'link': channel.website_url,
+                    'course': channel.name,
+                },
                 target_partners)
         return res
 
@@ -71,7 +78,10 @@ class Channel(models.Model):
 
         for channel in self:
             channel._message_employee_chatter(
-                _('The employee left the course <a href="%(link)s">%(course)s</a>', link=channel.website_url, course=channel.name),
+                Markup(_('The employee left the course <a href="%(link)s">%(course)s</a>')) % {
+                    'link': channel.website_url,
+                    'course': channel.name,
+                },
                 partners)
         return res
 

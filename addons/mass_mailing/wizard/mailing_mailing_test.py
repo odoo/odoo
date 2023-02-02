@@ -77,17 +77,16 @@ class TestMassMailing(models.TransientModel):
                     _('Test mailing successfully sent to %s', mail_sudo.email_to))
             elif mail_sudo.state == 'exception':
                 notification_messages.append(
-                    _('Test mailing could not be sent to %s:<br>%s',
-                        mail_sudo.email_to,
-                        mail_sudo.failure_reason)
+                    _('Test mailing could not be sent to %s:', mail_sudo.email_to) +
+                    (Markup("<br/>") + mail_sudo.failure_reason)
                 )
 
         # manually delete the emails since we passed 'auto_delete: False'
         mails_sudo.unlink()
 
         if notification_messages:
-            self.mass_mailing_id._message_log(body='<ul>%s</ul>' % ''.join(
-                ['<li>%s</li>' % notification_message for notification_message in notification_messages]
+            self.mass_mailing_id._message_log(body=Markup('<ul>%s</ul>') % ''.join(
+                [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
             ))
 
         return True

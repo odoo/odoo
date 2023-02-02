@@ -8,6 +8,7 @@ from datetime import datetime
 
 import psycopg2
 from dateutil import relativedelta
+from markupsafe import Markup
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -1109,7 +1110,7 @@ class PaymentTransaction(models.Model):
                 ref=self.reference, amount=formatted_amount, provider_name=self.provider_id.name
             )
             if self.state_message:
-                message += "<br />" + _("Error: %s", self.state_message)
+                message += Markup("<br/>") + _("Error: %s", self.state_message)
         else:
             message = _(
                 ("The transaction with reference %(ref)s for %(amount)s is canceled "
@@ -1119,7 +1120,7 @@ class PaymentTransaction(models.Model):
                 provider_name=self.provider_id.name
             )
             if self.state_message:
-                message += "<br />" + _("Reason: %s", self.state_message)
+                message += Markup("<br/>") + _("Reason: %s", self.state_message)
         return message
 
     def _get_last(self):
