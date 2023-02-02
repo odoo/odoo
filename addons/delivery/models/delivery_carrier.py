@@ -3,9 +3,10 @@
 import psycopg2
 import re
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_round
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
 from odoo.exceptions import UserError
+from odoo.tools import float_round
+from odoo.tools.safe_eval import safe_eval
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
