@@ -5,17 +5,20 @@
         <field name="vat">FR91746948785</field>
         <field name="street">Rue Abbé Huet</field>
         <field name="city">Rennes</field>
+        <field name="state_id" ref="base.state_fr_35"/>
         <field name="country_id" ref="base.fr"/>
-        
         <field name="zip">35043</field>
         <field name="phone">+33 6 12 34 56 78</field>
         <field name="email">info@company.frexample.com</field>
         <field name="website">www.frexample.com</field>
+        <field name="siret">12356894100056</field>
     </record>
 
     <record id="demo_company_fr" model="res.company">
         <field name="name">FR Company</field>
         <field name="partner_id" ref="partner_demo_company_fr"/>
+        <field name="siret">12356894100056</field>
+        <field name="ape">1234A</field>
     </record>
 
     <function model="res.company" name="_onchange_country_id">

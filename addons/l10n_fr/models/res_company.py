@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
+
 from odoo import fields, models, api, _
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -19,6 +22,12 @@ class ResCompany(models.Model):
         if not self.vat and not self.country_id:
             return False
         return self.country_id and self.country_id.code in self._get_unalterable_country()
+
+    @api.constrains('ape')
+    def _check_ape_code(self):
+        for company in self:
+            if company.ape and not re.match(r'\d{4}[A-Z]', company.ape):
+                raise ValidationError(_("The APE Code is invalid"))
 
     @api.model_create_multi
     def create(self, vals_list):

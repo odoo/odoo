@@ -152,7 +152,7 @@
                                         </div>
                                         <field name="private_car_plate" />
                                     </group>
-                                    <group string="Family Status">
+                                    <group name="family_status" string="Family Status">
                                         <field name="marital"/>
                                         <field name="spouse_complete_name" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>
                                         <field name="spouse_birthdate" attrs="{'invisible': [('marital', 'not in', ['married', 'cohabitant'])]}"/>

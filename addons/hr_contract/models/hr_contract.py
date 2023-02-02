@@ -38,7 +38,12 @@ class Contract(models.Model):
         'resource.calendar', 'Working Schedule', compute='_compute_employee_contract', store=True, readonly=False,
         default=lambda self: self.env.company.resource_calendar_id.id, copy=False, index=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
-    wage = fields.Monetary('Wage', required=True, tracking=True, help="Employee's monthly gross wage.", group_operator="avg")
+    wage = fields.Monetary('Wage',
+        compute="_compute_wage",
+        readonly=False, store=True,
+        required=True, tracking=True,
+        help="Employee's monthly gross wage.",
+        group_operator="avg")
     contract_wage = fields.Monetary('Contract Wage', compute='_compute_contract_wage')
     notes = fields.Html('Notes')
     state = fields.Selection([
@@ -102,6 +107,10 @@ class Contract(models.Model):
             structure_type_id = self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
         for contract in self:
             contract.structure_type_id = structure_type_id
+
+    def _compute_wage(self):
+        # method to override
+        return
 
     @api.onchange('structure_type_id')
     def _onchange_structure_type_id(self):
