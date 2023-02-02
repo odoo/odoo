@@ -96,10 +96,6 @@ export class Discuss extends Component {
         this.orm.silent.call("mail.message", "mark_all_as_read");
     }
 
-    get hasMemberListFeature() {
-        return ["channel", "group"].includes(this.thread.type);
-    }
-
     get thread() {
         return this.store.threads[this.store.discuss.threadLocalId];
     }

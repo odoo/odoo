@@ -7,4 +7,8 @@ patch(Thread.prototype, "im_livechat", {
     get isChannel() {
         return this.type === "livechat" || this._super();
     },
+
+    get hasMemberList() {
+        return this.type === "livechat" || this._super();
+    },
 });

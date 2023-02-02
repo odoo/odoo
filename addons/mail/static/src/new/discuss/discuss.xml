@@ -35,7 +35,7 @@
                     <button t-if="thread.model === 'mail.channel'" class="btn" t-ref="addUsers" title="Add Users" t-on-click.stop="toggleInviteForm">
                         <i class="fa fa-lg fa-user-plus text-700"/>
                     </button>
-                    <button t-if="hasMemberListFeature" class="btn" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
+                    <button t-if="thread.hasMemberList" class="btn" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
                         <i class="fa fa-lg fa-users text-700"/>
                     </button>
                     <button t-if="thread.type !== 'mailbox'" class="btn" t-ref="settings" title="Show Call Settings" t-on-click="toggleSettings">
@@ -61,7 +61,7 @@
                     <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageHighlight="messageHighlight" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" highlightReplyTo="messageHighlight.highlightMessage" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
                 </div>
-                <ChannelMemberList t-if="hasMemberListFeature and state.activeMode === 'member-list'" thread="thread" className="'o-mail-discuss-channel-member-list flex-shrink-0 border-start'"/>
+                <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === 'member-list'" thread="thread" className="'o-mail-discuss-channel-member-list flex-shrink-0 border-start'"/>
             </div>
         </div>
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="o-mail-discuss-no-thread d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">
