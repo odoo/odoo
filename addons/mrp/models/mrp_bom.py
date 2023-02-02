@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.osv.expression import AND
+from odoo.osv.expression import AND, OR
 from odoo.tools import float_round
 from odoo.tools.misc import clean_context
 
@@ -196,6 +196,26 @@ class MrpBom(models.Model):
             self.env.context = clean_context(self.env.context)
             production = self.env['mrp.production'].browse(parent_production_id)
             production._link_bom(res[0])
+        return res
+
+    def write(self, vals):
+        res = super().write(vals)
+        relevant_fields = ['bom_line_ids', 'byproduct_ids', 'product_tmpl_id', 'product_id', 'product_qty', 'operation_ids']
+        if any(field_name in vals for field_name in relevant_fields):
+            # Searches for MOs using these BoMs to notify them that their BoM has been updated.
+            list_of_domain_by_bom = []
+            for bom in self:
+                domain_by_products = [('product_id', 'in', bom.product_tmpl_id.product_variant_ids.ids)]
+                if bom.product_id:
+                    domain_by_products = [('product_id', '=', bom.product_id.id)]
+                domain_for_confirmed_mo = AND([[('state', '=', 'confirmed')], domain_by_products])
+                # Avoid confirmed MOs if the BoM's product was changed.
+                domain_by_states = OR([[('state', '=', 'draft')], domain_for_confirmed_mo])
+                list_of_domain_by_bom.append(AND([[('bom_id', '=', bom.id)], domain_by_states]))
+            domain = OR(list_of_domain_by_bom)
+            productions = self.env['mrp.production'].search(domain)
+            if productions:
+                productions.is_outdated_bom = True
         return res
 
     def copy(self, default=None):
