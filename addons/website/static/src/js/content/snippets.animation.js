@@ -1220,6 +1220,13 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
         this.$animatedElements = this.$('.o_animate');
+        // Fix for "transform: none" not overriding keyframe transforms on
+        // iPhone 8 and lower.
+        this.forceOverflowXYHidden = false;
+        if (this.$animatedElements[0] && window.getComputedStyle(this.$animatedElements[0]).transform !== 'none') {
+            this._toggleOverflowXYHidden(true);
+            this.forceOverflowXYHidden = true;
+        }
         _.each(this.$animatedElements, el => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
@@ -1310,6 +1317,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Boolean} add
      */
     _toggleOverflowXYHidden(add) {
+        if (this.forceOverflowXYHidden) {
+            return;
+        }
         if (add) {
             this.$scrollingElement[0].classList.add('o_wanim_overflow_xy_hidden');
         } else if (!this.$scrollingElement.find('.o_animating').length) {
