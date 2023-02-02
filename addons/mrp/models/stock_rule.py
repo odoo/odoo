@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, SUPERUSER_ID, _
@@ -39,17 +40,43 @@ class StockRule(models.Model):
 
     @api.model
     def _run_manufacture(self, procurements):
-        productions_values_by_company = defaultdict(list)
+        new_productions_values_by_company = defaultdict(list)
         for procurement, rule in procurements:
             if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
                 # If procurement contains negative quantity, don't create a MO that would be for a negative value.
                 continue
             bom = rule._get_matching_bom(procurement.product_id, procurement.company_id, procurement.values)
 
-            productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
+            mo = self.env['mrp.production']
+            mto_route = self.env['stock.warehouse']._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'))
+            if rule.route_id != mto_route and procurement.origin != 'MPS':
+                gpo = rule.group_propagation_option
+                group = (gpo == 'fixed' and rule.group_id) or \
+                        (gpo == 'propagate' and 'group_id' in procurement.values and procurement.values['group_id']) or False
+                domain = (
+                    ('bom_id', '=', bom.id),
+                    ('state', 'in', ['draft', 'confirmed']),
+                    ('is_planned', '=', False),
+                    ('picking_type_id', '=', rule.picking_type_id.id),
+                    ('company_id', '=', procurement.company_id.id),
+                    ('user_id', '=', False),
+                )
+                if procurement.values.get('orderpoint_id'):
+                    procurement_date = fields.Date.to_date(procurement.values['date_planned']) - relativedelta(days=int(bom.produce_delay))
+                    domain += (('date_deadline', '<=', datetime.combine(procurement_date, datetime.max.time())),)
+                if group:
+                    domain += (('procurement_group_id', '=', group.id),)
+                mo = self.env['mrp.production'].sudo().search(domain, limit=1)
+            if not mo:
+                new_productions_values_by_company[procurement.company_id.id].append(rule._prepare_mo_vals(*procurement, bom))
+            else:
+                self.env['change.production.qty'].with_context(skip_activity=True).create({
+                    'mo_id': mo.id,
+                    'product_qty': mo.product_uom_qty + procurement.product_qty
+                }).change_prod_qty()
 
         note_subtype_id = self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note')
-        for company_id, productions_values in productions_values_by_company.items():
+        for company_id, productions_values in new_productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
             productions.filtered(lambda p: (not p.orderpoint_id and p.move_raw_ids) or\
