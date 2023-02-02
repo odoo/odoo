@@ -1229,7 +1229,7 @@ function _getMatchedCSSRules(node, cssRules) {
         }
     };
 
-    if (processedStyle.display === 'block') {
+    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('oe-nested'))) {
         delete processedStyle.display;
     }
     if (!processedStyle['box-sizing']) {
