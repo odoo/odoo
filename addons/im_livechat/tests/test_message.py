@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase
 
@@ -39,7 +41,7 @@ class TestImLivechatMessage(TransactionCase):
         })
         message = channel_livechat_1.message_post(
             author_id=record_rating.partner_id.id,
-            body="<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s"
+            body=Markup("<img src='%s' alt=':%s/5' style='width:18px;height:18px;float:left;margin-right: 5px;'/>%s")
             % (record_rating.rating_image_url, record_rating.rating, record_rating.feedback),
             rating_id=record_rating.id,
         )

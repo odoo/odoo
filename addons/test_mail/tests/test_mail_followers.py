@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError
 from odoo.tests import tagged, users
@@ -660,7 +662,7 @@ class RecipientsNotificationTest(MailCommon):
                   'status': 'sent', 'type': 'inbox'}],
                 message_info={'content': 'User Choice Notification'}):
             test.message_post(
-                body='<p>User Choice Notification</p>',
+                body=Markup('<p>User Choice Notification</p>'),
                 message_type='comment',
                 partner_ids=shared_partner.ids,
                 subtype_xmlid='mail.mt_comment',

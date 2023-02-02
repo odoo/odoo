@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from datetime import datetime, timedelta
+from markupsafe import Markup
 from psycopg2 import IntegrityError
 from psycopg2.errorcodes import UNIQUE_VIOLATION
 
@@ -238,6 +239,8 @@ class DiscussController(http.Controller):
             thread = channel_member_sudo.channel_id
         else:
             thread = request.env[thread_model].browse(int(thread_id)).exists()
+        if 'body' in post_data:
+            post_data['body'] = Markup(post_data['body'])  # contains HTML such as @mentions
         message_data = thread.message_post(**{key: value for key, value in post_data.items() if key in self._get_allowed_message_post_params()}).message_format()[0]
         if 'temporary_id' in request.context:
             message_data['temporary_id'] = request.context['temporary_id']

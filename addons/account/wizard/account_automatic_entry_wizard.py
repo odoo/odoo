@@ -2,9 +2,11 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
+from odoo.tools.float_utils import float_repr
 
 from collections import defaultdict
 from itertools import groupby
+from markupsafe import Markup, escape
 import json
 
 class AutomaticEntryWizard(models.TransientModel):
@@ -249,7 +251,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
-                    'name': self._format_strings(_('{percent:0.2f}% recognized on {new_date}'), aml.move_id),
+                    'name': self._format_strings(_('{percent}% recognized on {new_date}'), aml.move_id),
                     'debit': reported_credit,
                     'credit': reported_debit,
                     'amount_currency': -reported_amount_currency,
@@ -271,7 +273,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'analytic_distribution': aml.analytic_distribution,
                 }),
                 (0, 0, {
-                    'name': self._format_strings(_('{percent:0.2f}% to recognize on {new_date}'), aml.move_id),
+                    'name': self._format_strings(_('{percent}% to recognize on {new_date}'), aml.move_id),
                     'debit': reported_debit,
                     'credit': reported_credit,
                     'amount_currency': reported_amount_currency,
@@ -350,17 +352,30 @@ class AutomaticEntryWizard(models.TransientModel):
                 accrual_move_lines = accrual_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[accrual_move_offsets[accrual_move]:accrual_move_offsets[accrual_move]+2]
                 accrual_move_offsets[accrual_move] += 2
                 (accrual_move_lines + destination_move_lines).filtered(lambda line: not line.currency_id.is_zero(line.balance)).reconcile()
-            move.message_post(body=self._format_strings(_('Adjusting Entries have been created for this invoice:<ul><li>%(link1)s cancelling '
-                                                          '{percent:.2f}%% of {amount}</li><li>%(link0)s postponing it to {new_date}</li></ul>',
-                                                          link0=self._format_move_link(destination_move),
-                                                          link1=self._format_move_link(accrual_move),
-                                                          ), move, amount))
-            destination_messages += [self._format_strings(_('Adjusting Entry {link}: {percent:.2f}% of {amount} recognized from {date}'), move, amount)]
-            accrual_move_messages[accrual_move] += [self._format_strings(_('Adjusting Entry for {link}: {percent:.2f}% of {amount} recognized on {new_date}'), move, amount)]
+            body = Markup("%(title)s<ul><li>%(link1)s %(second)s</li><li>%(link2)s %(third)s</li></ul>") % {
+                'title': _("Adjusting Entries have been created for this invoice:"),
+                'link1': self._format_move_link(accrual_move),
+                'second': self._format_strings(_("cancelling {percent}%% of {amount}"), move, amount),
+                'link2': self._format_move_link(destination_move),
+                'third': self._format_strings(_("postponing it to {new_date}"), move, amount),
+            }
+            move.message_post(body=body)
+            destination_messages += [
+                self._format_strings(
+                    escape(_("Adjusting Entry {link} {percent}%% of {amount} recognized from {date}")),
+                    move, amount,
+                )
+            ]
+            accrual_move_messages[accrual_move] += [
+                self._format_strings(
+                    escape(_("Adjusting Entry {link} {percent}%% of {amount} recognized on {new_date}")),
+                    move, amount,
+                )
+            ]
 
-        destination_move.message_post(body='<br/>\n'.join(destination_messages))
+        destination_move.message_post(body=Markup('<br/>\n').join(destination_messages))
         for accrual_move, messages in accrual_move_messages.items():
-            accrual_move.message_post(body='<br/>\n'.join(messages))
+            accrual_move.message_post(body=Markup('<br/>\n').join(messages))
 
         # open the generated entries
         action = {
@@ -418,31 +433,41 @@ class AutomaticEntryWizard(models.TransientModel):
 
     # Transfer utils
     def _format_new_transfer_move_log(self, acc_transfer_per_move):
-        format = _("<li>{amount} ({debit_credit}) from {link}, <strong>%(account_source_name)s</strong></li>")
-        rslt = _("This entry transfers the following amounts to <strong>%(destination)s</strong> <ul>", destination=self.destination_account_id.display_name)
-        for move, balances_per_account in acc_transfer_per_move.items():
-            for account, balance in balances_per_account.items():
-                if account != self.destination_account_id:  # Otherwise, logging it here is confusing for the user
-                    rslt += self._format_strings(format, move, balance) % {'account_source_name': account.display_name}
-
-        rslt += '</ul>'
+        transfer_format = Markup("<li>%s, <strong>%%(account_source_name)s</strong></li>") % \
+            _("{amount} ({debit_credit}) from {link}")
+        rslt = Markup(_("This entry transfers the following amounts to %(destination)s") + "<ul>%(transfer_logs)s</ul>") % {
+            'destination': Markup("<strong>%s</strong>") % self.destination_account_id.display_name,
+            'transfer_logs': Markup().join([
+                self._format_strings(transfer_format, move, balance) % {'account_source_name': account.display_name}
+                for move, balances_per_account in acc_transfer_per_move.items()
+                for account, balance in balances_per_account.items()
+                if account != self.destination_account_id  # Otherwise, logging it here is confusing for the user
+            ])
+        }
         return rslt
 
     def _format_transfer_source_log(self, balances_per_account, transfer_move):
-        transfer_format = _("<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to <strong>{account_target_name}</strong> by {link}</li>")
-        content = ''
-        for account, balance in balances_per_account.items():
-            if account != self.destination_account_id:
-                content += self._format_strings(transfer_format, transfer_move, balance) % account.display_name
-        return content and '<ul>' + content + '</ul>' or None
+        if not balances_per_account:
+            return None
+
+        transfer_format = Markup(
+            _("{amount} ({debit_credit}) from %s were transferred to <strong>{account_target_name}</strong> by {link}")
+        )
+
+        return Markup("<ul>%s</ul>") % Markup().join([
+            Markup("<li>%s</li>") % \
+                self._format_strings(transfer_format, transfer_move, balance) % (Markup("<strong>%s</strong>") % account.display_name)
+            for account, balance in balances_per_account.items()
+            if account != self.destination_account_id
+        ])
 
     def _format_move_link(self, move):
         return move._get_html_link()
 
     def _format_strings(self, string, move, amount=None):
         return string.format(
-            label=move.name or 'Adjusting Entry',
-            percent=self.percentage,
+            label=move.name or _('Adjusting Entry'),
+            percent=float_repr(self.percentage, 2),
             name=move.name,
             id=move.id,
             amount=formatLang(self.env, abs(amount), currency_obj=self.company_id.currency_id) if amount else '',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from contextlib import nullcontext
+from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
@@ -589,7 +589,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=1, employee=1):
             record._message_log(
-                body='<p>Test _message_log</p>',
+                body=Markup('<p>Test _message_log</p>'),
                 message_type='comment')
 
     @users('admin', 'employee')
@@ -603,7 +603,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         with self.assertQueryCount(admin=1, employee=1):
             records._message_log_batch(
                 bodies=dict(
-                    (record.id, '<p>Test _message_log</p>')
+                    (record.id, Markup('<p>Test _message_log</p>'))
                     for record in records
                 ),
                 message_type='comment')
@@ -629,7 +629,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=7, employee=7):
             record.message_post(
-                body='<p>Test message_post as log</p>',
+                body=Markup('<p>Test message_post as log</p>'),
                 subtype_xmlid='mail.mt_note',
                 message_type='comment')
 
@@ -640,7 +640,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=7, employee=7):
             record.message_post(
-                body='<p>Test Post Performances basic</p>',
+                body=Markup('<p>Test Post Performances basic</p>'),
                 partner_ids=[],
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
@@ -653,7 +653,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=30, employee=30):
             record.message_post(
-                body='<p>Test Post Performances with an email ping</p>',
+                body=Markup('<p>Test Post Performances with an email ping</p>'),
                 partner_ids=self.customer.ids,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
@@ -665,7 +665,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
 
         with self.assertQueryCount(admin=17, employee=17):
             record.message_post(
-                body='<p>Test Post Performances with an inbox ping</p>',
+                body=Markup('<p>Test Post Performances with an inbox ping</p>'),
                 partner_ids=self.user_test.partner_id.ids,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
@@ -854,7 +854,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         # about 20 (19?) queries per additional customer group
         with self.assertQueryCount(admin=53, employee=52):
             record.message_post(
-                body='<p>Test Post Performances</p>',
+                body=Markup('<p>Test Post Performances</p>'),
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
 
@@ -1311,7 +1311,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         # with self.assertQueryCount(employee=63), enable_logging:
         with self.assertQueryCount(employee=60):
             record_container.with_context({}).message_post(
-                body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
+                body=Markup('<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>'),
                 subject='Test Subject',
                 message_type='notification',
                 subtype_xmlid=None,

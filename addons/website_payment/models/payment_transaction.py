@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import _, fields, models
 
 
@@ -20,8 +21,8 @@ class PaymentTransaction(models.Model):
                 if value:
                     if hasattr(value, 'name'):
                         value = value.name
-                    msg.append('<br/>- %s: %s' % (field_name, value))
-            tx.payment_id._message_log(body=''.join(msg))
+                    msg.append(Markup('<br/>- %s: %s') % (field_name, value))
+            tx.payment_id._message_log(body=Markup().join(msg))
 
     def _send_donation_email(self, is_internal_notification=False, comment=None, recipient_email=None):
         self.ensure_one()

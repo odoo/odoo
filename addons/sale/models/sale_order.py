@@ -3,7 +3,7 @@
 
 from datetime import timedelta
 from itertools import groupby
-from markupsafe import Markup
+from markupsafe import escape
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -989,10 +989,9 @@ class SaleOrder(models.Model):
         self.show_update_fpos = False
 
         if self.partner_id:
-            self.message_post(body=_(
-                "Product taxes have been recomputed according to fiscal position %s.",
+            self.message_post(body=escape(_("Product taxes have been recomputed according to fiscal position %s.")) % \
                 self.fiscal_position_id._get_html_link() if self.fiscal_position_id else "",
-            ))
+            )
 
     def action_update_prices(self):
         self.ensure_one()
@@ -1000,10 +999,8 @@ class SaleOrder(models.Model):
         self._recompute_prices()
 
         if self.pricelist_id:
-            message = _(
-                "Product prices have been recomputed according to pricelist %s.",
-                self.pricelist_id._get_html_link(),
-            )
+            message = escape(_("Product prices have been recomputed according to pricelist %s.")) % \
+                self.pricelist_id._get_html_link()
         else:
             message = _("Product prices have been recomputed.")
         self.message_post(body=message)
@@ -1508,7 +1505,7 @@ class SaleOrder(models.Model):
             order.activity_schedule(
                 'sale.mail_act_sale_upsell',
                 user_id=order.user_id.id or order.partner_id.user_id.id,
-                note=_("Upsell %(order)s for customer %(customer)s", order=order_ref, customer=customer_ref))
+                note=escape(_("Upsell %(order)s for customer %(customer)s")) % {"order":order_ref, "customer":customer_ref})
 
     def _prepare_analytic_account_data(self, prefix=None):
         """ Prepare SO analytic account creation values.

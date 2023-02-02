@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.test_performance import BaseMailPerformance
 from odoo.tests.common import users, warmup
@@ -84,7 +85,7 @@ class TestMailPerformance(BaseMailPerformance):
         with self.assertQueryCount(employee=85):  # tmf: 85
             new_message = record_ticket.message_post(
                 attachment_ids=attachments.ids,
-                body='<p>Test Content</p>',
+                body=Markup('<p>Test Content</p>'),
                 message_type='comment',
                 subject='Test Subject',
                 subtype_xmlid='mail.mt_comment',

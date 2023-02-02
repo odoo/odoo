@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv.expression import AND
@@ -239,7 +241,7 @@ class StockPickingBatch(models.Model):
             if has_no_qty_done(picking):
                 empty_pickings.add(picking.id)
             picking.message_post(
-                body="<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>" % (
+                body=Markup("<b>%s:</b> %s <a href=#id=%s&view_type=form&model=stock.picking.batch>%s</a>") % (
                     _("Transferred by"),
                     _("Batch Transfer"),
                     picking.batch_id.id,

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import Markup
 import json
 
 from odoo import _, api, fields, models
@@ -189,13 +190,13 @@ class StockPicking(models.Model):
             for p in previous_pickings - without_tracking:
                 p.carrier_tracking_ref += "," + res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _(
-            "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s",
-            carrier_name=self.carrier_id.name,
-            ref=self.carrier_tracking_ref,
-            price=self.carrier_price,
-            currency=order_currency.name
-        )
+        msg = _("Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s",
+                carrier_name=self.carrier_id.name,
+                ref=self.carrier_tracking_ref) + \
+              Markup("<br/>") + \
+              _("Cost: %(price).2f %(currency)s",
+                price=self.carrier_price,
+                currency=order_currency.name)
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
 
@@ -234,9 +235,9 @@ class StockPicking(models.Model):
         except ValueError:
             carrier_trackers = self.carrier_tracking_url
         else:
-            msg = "Tracking links for shipment: <br/>"
+            msg = _("Tracking links for shipment:") + Markup("<br/>")
             for tracker in carrier_trackers:
-                msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
+                msg += Markup('<a href="%s">%s</a><br/>') % (tracker[1], tracker[0])
             self.message_post(body=msg)
             return self.env["ir.actions.actions"]._for_xml_id("delivery.act_delivery_trackers_url")
 

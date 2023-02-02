@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from markupsafe import Markup
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import mail_new_test_user, MailCommon
@@ -483,7 +484,7 @@ class TestMessageAccess(MailCommon):
         test_record.message_subscribe((partner_1 | self.user_admin.partner_id).ids)
 
         message = test_record.message_post(
-            body='<p>This is First Message</p>', subject='Subject',
+            body=Markup('<p>This is First Message</p>'), subject='Subject',
             message_type='comment', subtype_xmlid='mail.mt_note')
         # portal user have no rights to read the message
         with self.assertRaises(AccessError):

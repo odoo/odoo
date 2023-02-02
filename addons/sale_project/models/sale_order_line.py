@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import escape
 
 from odoo import api, Command, fields, models, _
 from odoo.tools import format_amount
@@ -67,7 +68,7 @@ class SaleOrderLine(models.Model):
                 line.sudo()._timesheet_service_generation()
                 # if the SO line created a task, post a message on the order
                 if line.task_id and not has_task:
-                    msg_body = _("Task Created (%s): %s", line.product_id.name, line.task_id._get_html_link())
+                    msg_body = escape(_("Task Created (%s): %s")) % (line.product_id.name, line.task_id._get_html_link())
                     line.order_id.message_post(body=msg_body)
         return lines
 
@@ -179,7 +180,10 @@ class SaleOrderLine(models.Model):
         task = self.env['project.task'].sudo().create(values)
         self.write({'task_id': task.id})
         # post message on task
-        task_msg = _("This task has been created from: %s (%s)", self.order_id._get_html_link(), self.product_id.name)
+        task_msg = escape(_("This task has been created from: %s (%s)")) % (
+            self.order_id._get_html_link(),
+            self.product_id.name
+        )
         task.message_post(body=task_msg)
         return task
 

@@ -3,6 +3,7 @@
 import ast
 
 from datetime import date, datetime, timedelta
+from markupsafe import escape
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import UserError
@@ -386,10 +387,7 @@ class MaintenanceRequest(models.Model):
                 new_user_id=request.user_id.id or request.owner_user_id.id or self.env.uid)
             if not updated:
                 if request.equipment_id:
-                    note = _(
-                        'Request planned for %s',
-                        request.equipment_id._get_html_link()
-                    )
+                    note = escape(_('Request planned for %s')) % request.equipment_id._get_html_link()
                 else:
                     note = False
                 request.activity_schedule(

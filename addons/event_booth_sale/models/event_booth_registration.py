@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from odoo import api, fields, models, _
 
 
@@ -61,9 +62,9 @@ class EventBoothRegistration(models.Model):
         self._cancel_pending_registrations()
 
     def _cancel_pending_registrations(self):
-        body = '<p>%(message)s: <ul>%(booth_names)s</ul></p>' % {
+        body = Markup('<p>%(message)s: <ul>%(booth_names)s</ul></p>') % {
             'message': _('Your order has been cancelled because the following booths have been reserved'),
-            'booth_names': ''.join('<li>%s</li>' % booth.display_name for booth in self.event_booth_id)
+            'booth_names': Markup().join(Markup('<li>%s</li>') % booth.display_name for booth in self.event_booth_id)
         }
         other_registrations = self.search([
             ('event_booth_id', 'in', self.event_booth_id.ids),

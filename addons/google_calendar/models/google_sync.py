@@ -7,6 +7,7 @@ from functools import wraps
 from requests import HTTPError
 import pytz
 from dateutil.parser import parse
+from markupsafe import Markup
 
 from odoo import api, fields, models, registry, _
 from odoo.tools import ormcache_context, email_normalize
@@ -210,10 +211,9 @@ class GoogleSync(models.AbstractModel):
                                                                     'reason': reason}
             _logger.error(error_log)
 
-            body = _(
-                "The following event could not be synced with Google Calendar. </br>"
-                "It will not be synced as long at it is not updated.</br>"
-                "%(reason)s", reason=reason)
+            body = _("The following event could not be synced with Google Calendar.") + Markup("<br/>") + \
+                   _("It will not be synced as long at it is not updated.") + Markup("<br/>") + \
+                   reason
 
             if event:
                 event.message_post(

@@ -4,6 +4,7 @@
 
 from collections import defaultdict
 from datetime import timedelta
+from markupsafe import escape
 from operator import itemgetter
 
 from odoo import _, api, Command, fields, models
@@ -740,7 +741,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not documents or not doc_orig:
             return
 
-        msg = _("The deadline has been automatically updated due to a delay on %s.", doc_orig[0]._get_html_link())
+        msg = escape(_("The deadline has been automatically updated due to a delay on %s.") % doc_orig[0]._get_html_link())
         msg_subject = _("Deadline updated due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:

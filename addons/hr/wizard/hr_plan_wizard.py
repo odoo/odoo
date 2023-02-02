@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -94,10 +96,10 @@ class HrPlanWizard(models.TransientModel):
                 activities.add(activity)
 
             if activities:
-                body += '<ul>'
+                body += Markup('<ul>')
                 for activity in activities:
-                    body += '<li>%s</li>' % activity
-                body += '</ul>'
+                    body += Markup('<li>%s</li>') % activity
+                body += Markup('</ul>')
             employee.message_post(body=body)
 
         if len(self.employee_ids) == 1:

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from markupsafe import escape
 
 from odoo import models, fields, api, _
 from odoo.tools.misc import frozendict
@@ -39,7 +40,7 @@ class AccountMove(models.Model):
 
     def _creation_message(self):
         if self.expense_sheet_id:
-            return _("Expense entry created from: %s", self.expense_sheet_id._get_html_link())
+            return escape(_("Expense entry created from: %s")) % self.expense_sheet_id._get_html_link()
         return super()._creation_message()
 
     @api.depends('expense_sheet_id')

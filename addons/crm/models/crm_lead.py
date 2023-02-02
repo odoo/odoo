@@ -7,7 +7,7 @@ import threading
 from ast import literal_eval
 from collections import OrderedDict, defaultdict
 from datetime import date, datetime, timedelta
-from markupsafe import Markup
+from markupsafe import Markup, escape
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -1306,15 +1306,16 @@ class Lead(models.Model):
             duration = _('unknown')
         else:
             duration = self.env['ir.qweb.field.duration'].value_to_html(meeting.duration, {'unit': 'hour'})
-        meet_date = fields.Datetime.from_string(meeting.start)
-        meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meet_date))
-        message = "<p>%s<p>" % Markup(_("Meeting scheduled at %(html_time)s<br/>Subject: %(subject)s<br/>Duration: %(duration)s")) % {
-            'html_time': Markup("<time datetime='%(meeting_start)s+00:00'>%(meeting_user_time)s</time>") % {
-                'meeting_start': meeting.start,
-                'meeting_user_time': meeting_usertime,
-            },
-            'subject': meeting._get_html_link(), # Already Markup valid
-            'duration': duration,
+        meeting_usertime = fields.Datetime.to_string(fields.Datetime.context_timestamp(self, meeting.start))
+        meeting_time = Markup("<time datetime='%(meeting_start)s+00:00'>%(meeting_user_time)s</time>") % {
+            'meeting_start': meeting.start,
+            'meeting_user_time': meeting_usertime,
+        }
+        message = Markup("<p>%(meeting)s<br/>%(subject_string)s %(subject_link)s<br/>%(duration)s<p>") % {
+            'meeting': escape(_("Meeting scheduled at %s")) % meeting_time,
+            'subject_string': _("Subject: "),
+            'subject_link': meeting._get_html_link(),
+            'duration': _("Duration: %s", duration),
         }
         return self.message_post(body=message)
 

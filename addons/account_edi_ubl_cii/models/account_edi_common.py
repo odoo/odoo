@@ -5,6 +5,7 @@ from odoo.tools import float_repr
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
 
+from markupsafe import Markup
 from zeep import Client
 
 # -------------------------------------------------------------------------
@@ -285,13 +286,14 @@ class AccountEdiCommon(models.AbstractModel):
         invoice.move_type = move_type
         logs = self._import_fill_invoice_form(invoice, tree, qty_factor)
         if invoice:
+            body = Markup("<strong>%s</strong>") % \
+                _("Format used to import the invoice: %s",
+                  self.env['ir.model']._get(self._name).name)
+
             if logs:
-                body = _(
-                    "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>",
-                    str(self._description), "</li><li>".join(logs)
-                )
-            else:
-                body = _("<strong>Format used to import the invoice: %s</strong>", str(self._description))
+                body += Markup("<ul>%s</ul>") % \
+                    Markup().join(Markup("<li>%s</li>") % l for l in logs)
+
             invoice.message_post(body=body)
 
         # For UBL, we should override the computed tax amount if it is less than 0.05 different of the one in the xml.
@@ -656,22 +658,24 @@ class AccountEdiCommon(models.AbstractModel):
         for item in response['Result']:
             if item['artifactPath']:
                 report.append(
-                    "<li><font style='color:Blue;'><strong>" + item['artifactPath'] + "</strong></font></li>")
+                    Markup("<li><font style='color:Blue;'><strong>%s</strong></font></li>") % item['artifactPath'])
             for detail in item['Item']:
                 if detail['errorLevel'] == 'WARN':
                     errors_cnt += 1
                     report.append(
-                        "<li><font style='color:Orange;'><strong>" + detail['errorText'] + "</strong></font></li>")
+                        Markup("<li><font style='color:Orange;'><strong>%s</strong></font></li>") % detail['errorText'])
                 elif detail['errorLevel'] == 'ERROR':
                     errors_cnt += 1
                     report.append(
-                        "<li><font style='color:Tomato;'><strong>" + detail['errorText'] + "</strong></font></li>")
+                        Markup("<li><font style='color:Tomato;'><strong>%s</strong></font></li>") % detail['errorText'])
 
         if errors_cnt == 0:
-            invoice.message_post(body=f"<font style='color:Green;'><strong>ECOSIO: All clear for format {ecosio_format}!</strong></font>")
+            invoice.message_post(body=Markup("<font style='color:Green;'><strong>ECOSIO: All clear for format %s!</strong></font>") % ecosio_format)
         else:
             invoice.message_post(
-                body=f"<font style='color:Tomato;'><strong>ECOSIO ERRORS/WARNINGS for format {ecosio_format}</strong></font>: <ul> "
-                     + "\n".join(report) + " </ul>"
+                body=Markup("<font style='color:Tomato;'><strong>ECOSIO ERRORS/WARNINGS for format %s</strong></font>: <ul>%s</<ul>") % (
+                    ecosio_format,
+                    Markup().join(report)
+                )
             )
         return response

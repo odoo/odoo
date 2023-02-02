@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from unittest.mock import patch
 from unittest.mock import DEFAULT
 
@@ -36,7 +37,7 @@ class TestAPI(MailCommon, TestRecipients):
         # post a note
         message = ticket_record.message_post(
             attachment_ids=attachments.ids,
-            body="<p>Initial Body</p>",
+            body=Markup("<p>Initial Body</p>"),
             message_type="comment",
             partner_ids=self.partner_1.ids,
         )
@@ -543,7 +544,7 @@ class TestNoThread(MailCommon, TestRecipients):
                 'subtype': 'mail.mt_note',
             }]):
             _message = self.env['mail.thread'].message_notify(
-                body='<p>Hello Paulo</p>',
+                body=Markup('<p>Hello Paulo</p>'),
                 partner_ids=self.partner_2.ids,
                 subject='Test Notify',
             )

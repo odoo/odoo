@@ -4,6 +4,7 @@
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
+from markupsafe import Markup
 
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -1500,7 +1501,7 @@ class PosSession(models.Model):
                       f"{self.currency_id.round(difference)} " \
                       f"{self.currency_id.symbol if self.currency_id.position == 'after' else ''}<br/>"
         if notes:
-            message += notes.replace('\n', '<br/>')
+            message += notes.replace('\n', Markup('<br/>'))
         if message:
             self.message_post(body=message)
 
@@ -1563,7 +1564,7 @@ class PosSession(models.Model):
         message_content = [f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}']
         if reason:
             message_content.append(f'- Reason: {reason}')
-        self.message_post(body='<br/>\n'.join(message_content))
+        self.message_post(body=Markup('<br/>\n').join(message_content))
 
     def get_onboarding_data(self):
         return {
