@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models
 from odoo.tools.float_utils import float_round
-from odoo.addons.resource.models.resource import HOURS_PER_DAY
+from odoo.addons.resource.models.utils import HOURS_PER_DAY
 
 
 class HrEmployeeBase(models.AbstractModel):
