@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import { _lt } from 'web.core';
-import kanbanExamplesRegistry from 'web.kanban_examples_registry';
+import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { renderToMarkup } from '@web/core/utils/render';
 
@@ -100,5 +99,4 @@ const exampleData = {
     }],
 };
 
-kanbanExamplesRegistry.add('project', exampleData);
 registry.category("kanban_examples").add('project', exampleData);
