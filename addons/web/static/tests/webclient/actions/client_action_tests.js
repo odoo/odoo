@@ -612,14 +612,16 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("test reload client action", async function (assert) {
+        patchWithCleanup(browser.location, {
+            origin: "",
+            hash: "#test=42",
+        });
+
         const webClient = await createWebClient({ serverData });
         patchWithCleanup(webClient.env.services.router, {
             redirect: (url) => {
                 assert.step(url);
             },
-        });
-        patchWithCleanup(browser.location, {
-            origin: "",
         });
 
         await doAction(webClient, {
@@ -649,10 +651,10 @@ QUnit.module("ActionManager", (hooks) => {
             },
         });
         assert.verifySteps([
-            "/web/tests",
-            "/web/tests#action=2",
-            "/web/tests#menu_id=1",
-            "/web/tests#menu_id=2&action=1",
+            "/web/tests?reload=true#test=42",
+            "/web/tests?reload=true#action=2",
+            "/web/tests?reload=true#menu_id=1",
+            "/web/tests?reload=true#menu_id=2&action=1",
         ]);
     });
 });
