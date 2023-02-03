@@ -170,6 +170,10 @@ class PosOrder(models.Model):
         """
         return [('state', '=', 'draft'), ('table_id', 'in', table_ids)]
 
+    def _add_activated_coupon_to_draft_orders(self, table_orders):
+        table_orders = super()._add_activated_coupon_to_draft_orders(table_orders)
+        return table_orders
+
     @api.model
     def get_table_draft_orders(self, table_ids):
         """Generate an object of all draft orders for the given table.
@@ -213,7 +217,7 @@ class PosOrder(models.Model):
             del order['pos_reference']
             del order['create_date']
 
-        return table_orders
+        return self._add_activated_coupon_to_draft_orders(table_orders)
 
     @api.model
     def remove_from_ui(self, server_ids):
