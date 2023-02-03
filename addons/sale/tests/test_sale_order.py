@@ -411,6 +411,43 @@ class TestSaleOrder(SaleCommon):
         })
         self.assertEqual(sale_order.amount_total, 15.41, "")
 
+    def test_correct_pricelist_pulled_from_commercial_partner(self):
+        """ Test that the correct pricelist is pulled from the commercial partner. """
+        Pricelist = self.env['product.pricelist']
+        Pricelist.search([]).action_archive()
+        default_pricelist = Pricelist.create({'name': 'Default Pricelist', 'sequence': 2})
+        restricted_pricelist = Pricelist.create({
+            'name': 'Restricted Pricelist',
+            'sequence': 1,
+            'country_group_ids': [(6, 0, [self.env.ref('base.europe').id])]
+        })
+
+        Partner = self.env['res.partner']
+        commercial_partner = Partner.create({
+            'name': 'Commercial Partner', 'country_id': self.env.ref('base.us').id
+        })
+        child_partner = Partner.create({
+            'name': 'Child Partner',
+            'country_id': self.env.ref('base.us').id,
+            'parent_id': commercial_partner.id,
+        })
+
+        self.assertEqual(commercial_partner.property_product_pricelist, default_pricelist)
+        self.assertEqual(child_partner.property_product_pricelist, default_pricelist)
+
+        restricted_pricelist.country_group_ids = None
+
+        order_form_1 = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form_1.partner_id = commercial_partner
+        so_for_commercial_partner = order_form_1.save()
+        order_form_2 = Form(self.env['sale.order'].with_context(tracking_disable=True))
+        order_form_2.partner_id = child_partner
+        so_for_child_partner = order_form_2.save()
+
+        self.assertRecordValues(
+            so_for_commercial_partner, [{'pricelist_id': restricted_pricelist.id}]
+        )
+        self.assertRecordValues(so_for_child_partner, [{'pricelist_id': restricted_pricelist.id}])
 
 @tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):
