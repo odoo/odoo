@@ -20,6 +20,7 @@ export class ProgressBarField extends Component {
         isCurrentValueEditable: { type: Boolean, optional: true },
         isMaxValueEditable: { type: Boolean, optional: true },
         title: { type: String, optional: true },
+        overflowClass: { type: String, optional: true },
     };
 
     setup() {
@@ -155,6 +156,7 @@ export const progressBarField = {
         isCurrentValueEditable: options.editable && !options.edit_max_value,
         isMaxValueEditable: options.editable && options.edit_max_value,
         title: attrs.title,
+        overflowClass: options.overflow_class || 'bg-secondary',
     }),
 };
 
