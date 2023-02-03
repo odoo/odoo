@@ -1,12 +1,12 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import psycopg2
 import re
 
-from odoo import api, fields, models, registry, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_round
-from odoo.exceptions import UserError
+from odoo import _, api, fields, models, registry, SUPERUSER_ID
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools import float_round
+from odoo.tools.safe_eval import safe_eval
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
 
@@ -40,7 +40,12 @@ class DeliveryCarrier(models.Model):
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
-    delivery_type = fields.Selection([('fixed', 'Fixed Price')], string='Provider', default='fixed', required=True)
+    delivery_type = fields.Selection(
+        [('base_on_rule', 'Based on Rules'), ('fixed', 'Fixed Price')],
+        string='Provider',
+        default='fixed',
+        required=True,
+    )
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
@@ -76,6 +81,10 @@ class DeliveryCarrier(models.Model):
         "Insurance Percentage",
         help="Shipping insurance is a service which may reimburse senders whose parcels are lost, stolen, and/or damaged in transit.",
         default=0
+    )
+
+    price_rule_ids = fields.One2many(
+        'delivery.price.rule', 'carrier_id', 'Pricing Rules', copy=True
     )
 
     _sql_constraints = [
@@ -314,6 +323,120 @@ class DeliveryCarrier(models.Model):
         return False
 
     def fixed_cancel_shipment(self, pickings):
+        raise NotImplementedError()
+
+    # ----------------------------------- #
+    # Based on rule delivery type methods #
+    # ----------------------------------- #
+
+    def base_on_rule_rate_shipment(self, order):
+        carrier = self._match_address(order.partner_shipping_id)
+        if not carrier:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'warning_message': False}
+
+        try:
+            price_unit = self._get_price_available(order)
+        except UserError as e:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': e.args[0],
+                    'warning_message': False}
+
+        price_unit = self._compute_currency(order, price_unit, 'company_to_pricelist')
+
+        return {'success': True,
+                'price': price_unit,
+                'error_message': False,
+                'warning_message': False}
+
+    def _get_conversion_currencies(self, order, conversion):
+        if conversion == 'company_to_pricelist':
+            from_currency, to_currency = order.company_id.currency_id, order.pricelist_id.currency_id
+        elif conversion == 'pricelist_to_company':
+            from_currency, to_currency = order.currency_id, order.company_id.currency_id
+
+        return from_currency, to_currency
+
+    def _compute_currency(self, order, price, conversion):
+        from_currency, to_currency = self._get_conversion_currencies(order, conversion)
+        if from_currency.id == to_currency.id:
+            return price
+        return from_currency._convert(price, to_currency, order.company_id, order.date_order or fields.Date.today())
+
+    def _get_price_available(self, order):
+        self.ensure_one()
+        self = self.sudo()
+        order = order.sudo()
+        total = weight = volume = quantity = 0
+        total_delivery = 0.0
+        for line in order.order_line:
+            if line.state == 'cancel':
+                continue
+            if line.is_delivery:
+                total_delivery += line.price_total
+            if not line.product_id or line.is_delivery:
+                continue
+            if line.product_id.type == "service":
+                continue
+            qty = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            weight += (line.product_id.weight or 0.0) * qty
+            volume += (line.product_id.volume or 0.0) * qty
+            quantity += qty
+        total = (order.amount_total or 0.0) - total_delivery
+
+        total = self._compute_currency(order, total, 'pricelist_to_company')
+        # weight is either,
+        # 1- weight chosen by user in choose.delivery.carrier wizard passed by context
+        # 2- saved weight to use on sale order
+        # 3- total order line weight as fallback
+        weight = self.env.context.get('order_weight') or order.shipping_weight or weight
+        return self._get_price_from_picking(total, weight, volume, quantity)
+
+    def _get_price_dict(self, total, weight, volume, quantity):
+        '''Hook allowing to retrieve dict to be used in _get_price_from_picking() function.
+        Hook to be overridden when we need to add some field to product and use it in variable factor from price rules. '''
+        return {
+            'price': total,
+            'volume': volume,
+            'weight': weight,
+            'wv': volume * weight,
+            'quantity': quantity
+        }
+
+    def _get_price_from_picking(self, total, weight, volume, quantity):
+        price = 0.0
+        criteria_found = False
+        price_dict = self._get_price_dict(total, weight, volume, quantity)
+        if self.free_over and total >= self.amount:
+            return 0
+        for line in self.price_rule_ids:
+            test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
+            if test:
+                price = line.list_base_price + line.list_price * price_dict[line.variable_factor]
+                criteria_found = True
+                break
+        if not criteria_found:
+            raise UserError(_("No price rule matching this order; delivery cost cannot be computed."))
+
+        return price
+
+    def base_on_rule_send_shipping(self, pickings):
+        res = []
+        for p in pickings:
+            carrier = self._match_address(p.partner_id)
+            if not carrier:
+                raise ValidationError(_('There is no matching delivery rule.'))
+            res = res + [{'exact_price': p.carrier_id._get_price_available(p.sale_id) if p.sale_id else 0.0,  # TODO cleanme
+                          'tracking_number': False}]
+        return res
+
+    def base_on_rule_get_tracking_link(self, picking):
+        return False
+
+    def base_on_rule_cancel_shipment(self, pickings):
         raise NotImplementedError()
 
     # -------------------------------- #

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock.tests.test_packing import TestPackingCommon
@@ -48,7 +47,7 @@ class TestPacking(TestPackingCommon):
             'location_dest_id': self.customer_location.id,
             'carrier_id': self.test_carrier.id
         })
-        move_line_paw = self.env['stock.move.line'].create({
+        self.env['stock.move.line'].create({
             'product_id': self.product_aw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
@@ -56,7 +55,7 @@ class TestPacking(TestPackingCommon):
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id
         })
-        move_line_pbw = self.env['stock.move.line'].create({
+        self.env['stock.move.line'].create({
             'product_id': self.product_bw.id,
             'product_uom_id': self.uom_kg.id,
             'picking_id': picking_ship.id,
