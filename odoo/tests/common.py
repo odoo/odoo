@@ -1423,7 +1423,7 @@ class ChromeBrowser:
                 self._websocket_send('DOM.getDocument', params={'depth': 0}, with_future=True),
                 lambda d: self._websocket_send("DOM.querySelector", params={
                     'nodeId': d['root']['nodeId'],
-                    'selector': '.o_legacy_form_view.o_form_editable, .o_form_dirty',
+                    'selector': '.o_form_dirty',
                 }, with_future=True)
             )
             @qs.add_done_callback
