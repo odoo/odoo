@@ -1045,9 +1045,21 @@ class PosOrder(models.Model):
         """This function is here to be overriden"""
         return []
 
+<<<<<<< HEAD
     def _prepare_order_line(self, order_line):
         return order_line
 
+||||||| parent of 3a774661cd1 (temp)
+=======
+    def get_table_draft_orders(self, table_id):
+        """This function is here to be overriden"""
+        return []
+
+    def _add_activated_coupon_to_draft_orders(self, table_orders):
+        """This function is here to be overriden"""
+        return table_orders
+
+>>>>>>> 3a774661cd1 (temp)
     def export_for_ui(self):
         """ Returns a list of dict with each item having similar signature as the return of
             `export_as_JSON` of models.Order. This is useful for back-and-forth communication

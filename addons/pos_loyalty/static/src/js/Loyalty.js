@@ -149,7 +149,131 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
         });
         if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
             this.couponCache = {};
+<<<<<<< HEAD
             // Make sure that the current order has no invalid data.
+||||||| parent of 3a774661cd1 (temp)
+            await super._processData(loadedData);
+            this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
+            this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
+            this.rules = loadedData["loyalty.rule"] || [];
+            this.rewards = loadedData["loyalty.reward"] || [];
+            this._loadLoyaltyData();
+        }
+        _loadLoyaltyData() {
+            this.program_by_id = {};
+            this.reward_by_id = {};
+
+            for (const program of this.programs) {
+                this.program_by_id[program.id] = program;
+                if (program.date_to) {
+                    program.date_to = new Date(program.date_to);
+                }
+                program.rules = [];
+                program.rewards = [];
+            }
+            for (const rule of this.rules) {
+                rule.valid_product_ids = new Set(rule.valid_product_ids);
+                rule.program_id = this.program_by_id[rule.program_id[0]];
+                rule.program_id.rules.push(rule);
+            }
+            for (const reward of this.rewards) {
+                this.reward_by_id[reward.id] = reward;
+                reward.program_id = this.program_by_id[reward.program_id[0]];
+                reward.discount_line_product_id = this.db.get_product_by_id(
+                    reward.discount_line_product_id[0]
+                );
+                reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+                reward.program_id.rewards.push(reward);
+            }
+        }
+        async load_server_data() {
+            await super.load_server_data(...arguments);
+=======
+            await super._processData(loadedData);
+            this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
+            this.programs = loadedData["loyalty.program"] || []; //TODO: rename to `loyaltyPrograms` etc
+            this.rules = loadedData["loyalty.rule"] || [];
+            this.rewards = loadedData["loyalty.reward"] || [];
+            this._loadLoyaltyData();
+        }
+
+        async _getTableOrdersFromServer(tableIds) {
+            const oldOrders = this.orders;
+            const orders = await super._getTableOrdersFromServer(tableIds);
+
+            const oldOrderlinesWithCoupons = [].concat(
+                ...oldOrders.map((oldOrder) =>
+                    oldOrder.orderlines.filter(
+                        (orderline) => orderline.is_reward_line && orderline.coupon_id < 1
+                    )
+                )
+            );
+
+            // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+            if (oldOrderlinesWithCoupons.length) {
+                for (const oldOrderline of oldOrderlinesWithCoupons) {
+                    const matchingOrderline = orders
+                        .flatMap((order) => order.lines.map((line) => line[2]))
+                        .find((line) => line.reward_id === oldOrderline.reward_id);
+
+                    if (matchingOrderline) {
+                        matchingOrderline.coupon_id = nextId;
+                    }
+                }
+
+                for (const order of orders) {
+                    const oldOrder = oldOrders.find((oldOrder) => oldOrder.uid === order.uid);
+
+                    if (oldOrder) {
+                        if (oldOrder.partner && oldOrder.partner.id === order.partner_id) {
+                            order.partner = oldOrder.partner;
+                        }
+
+                        order.couponPointChanges = oldOrder.couponPointChanges;
+
+                        Object.keys(order.couponPointChanges).forEach((index) => {
+                            order.couponPointChanges[nextId] = {
+                                ...order.couponPointChanges[index],
+                            };
+                            order.couponPointChanges[nextId].coupon_id = nextId;
+                            delete order.couponPointChanges[index];
+                        });
+                    }
+                }
+            }
+
+            return orders;
+        }
+        _loadLoyaltyData() {
+            this.program_by_id = {};
+            this.reward_by_id = {};
+
+            for (const program of this.programs) {
+                this.program_by_id[program.id] = program;
+                if (program.date_to) {
+                    program.date_to = new Date(program.date_to);
+                }
+                program.rules = [];
+                program.rewards = [];
+            }
+            for (const rule of this.rules) {
+                rule.valid_product_ids = new Set(rule.valid_product_ids);
+                rule.program_id = this.program_by_id[rule.program_id[0]];
+                rule.program_id.rules.push(rule);
+            }
+            for (const reward of this.rewards) {
+                this.reward_by_id[reward.id] = reward;
+                reward.program_id = this.program_by_id[reward.program_id[0]];
+                reward.discount_line_product_id = this.db.get_product_by_id(
+                    reward.discount_line_product_id[0]
+                );
+                reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+                reward.program_id.rewards.push(reward);
+            }
+        }
+        async load_server_data() {
+            await super.load_server_data(...arguments);
+>>>>>>> 3a774661cd1 (temp)
             if (this.selectedOrder) {
                 this.selectedOrder.invalidCoupons = true;
             }
@@ -341,9 +465,92 @@ patch(Order.prototype, "pos_loyalty.Order", {
                     .filter((program) => program.is_nominative)
                     .map((program) => program.id)
             );
+<<<<<<< HEAD
             for (const [key, pointChange] of Object.entries(this.couponPointChanges)) {
                 if (loyaltyProgramIds.has(pointChange.program_id)) {
                     delete this.couponPointChanges[key];
+||||||| parent of 3a774661cd1 (temp)
+        }
+    };
+Registries.Model.extend(Orderline, PosLoyaltyOrderline);
+
+const PosLoyaltyOrder = (Order) =>
+    class PosLoyaltyOrder extends Order {
+        constructor() {
+            super(...arguments);
+            this._initializePrograms({});
+            // Always start with invalid coupons so that coupon for this
+            // order is properly assigned. @see _checkMissingCoupons
+            this.invalidCoupons = true;
+        }
+        export_as_JSON() {
+            const json = super.export_as_JSON(...arguments);
+            json.disabledRewards = [...this.disabledRewards];
+            json.codeActivatedProgramRules = this.codeActivatedProgramRules;
+            json.codeActivatedCoupons = this.codeActivatedCoupons;
+            json.couponPointChanges = this.couponPointChanges;
+            return json;
+        }
+        init_from_JSON(json) {
+            this.couponPointChanges = json.couponPointChanges;
+            // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+            this.oldCouponMapping = {};
+            if (this.couponPointChanges) {
+                for (const [key, pe] of Object.entries(this.couponPointChanges)) {
+                    if (!this.pos.program_by_id[pe.program_id]) {
+                        // Remove points changes for programs that are not available anymore.
+                        delete this.couponPointChanges[key];
+                        continue;
+                    }
+                    if (pe.coupon_id > 0) {
+                        continue;
+                    }
+                    const newId = nextId--;
+                    delete this.oldCouponMapping[pe.coupon_id];
+                    pe.coupon_id = newId;
+                    this.couponPointChanges[newId] = pe;
+=======
+        }
+    };
+Registries.Model.extend(Orderline, PosLoyaltyOrderline);
+
+const PosLoyaltyOrder = (Order) =>
+    class PosLoyaltyOrder extends Order {
+        constructor() {
+            super(...arguments);
+            this._initializePrograms({});
+            // Always start with invalid coupons so that coupon for this
+            // order is properly assigned. @see _checkMissingCoupons
+            this.invalidCoupons = true;
+        }
+        export_as_JSON() {
+            const json = super.export_as_JSON(...arguments);
+            json.disabledRewards = [...this.disabledRewards];
+            json.codeActivatedProgramRules = this.codeActivatedProgramRules;
+            json.codeActivatedCoupons = this.codeActivatedCoupons;
+            json.couponPointChanges = this.couponPointChanges;
+            return json;
+        }
+        init_from_JSON(json) {
+            this.couponPointChanges = json.couponPointChanges;
+            this.partner = json.partner;
+            // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+            this.oldCouponMapping = {};
+            if (this.couponPointChanges) {
+                for (const [key, pe] of Object.entries(this.couponPointChanges)) {
+                    if (!this.pos.program_by_id[pe.program_id]) {
+                        // Remove points changes for programs that are not available anymore.
+                        delete this.couponPointChanges[key];
+                        continue;
+                    }
+                    if (pe.coupon_id > 0) {
+                        continue;
+                    }
+                    const newId = nextId--;
+                    delete this.oldCouponMapping[pe.coupon_id];
+                    pe.coupon_id = newId;
+                    this.couponPointChanges[newId] = pe;
+>>>>>>> 3a774661cd1 (temp)
                 }
             }
             this._updateRewards();
