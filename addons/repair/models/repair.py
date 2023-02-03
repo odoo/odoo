@@ -280,6 +280,14 @@ class Repair(models.Model):
         return True
 
     def action_repair_cancel(self):
+<<<<<<< HEAD
+||||||| parent of 47d7b404300 (temp)
+        if self.state == 'done':
+            raise UserError(_("You cannot cancel a completed repair order."))
+=======
+        if any(repair.state == 'done' for repair in self):
+            raise UserError(_("You cannot cancel a completed repair order."))
+>>>>>>> 47d7b404300 (temp)
         invoice_to_cancel = self.filtered(lambda repair: repair.invoice_id.state == 'draft').invoice_id
         if invoice_to_cancel:
             invoice_to_cancel.button_cancel()
