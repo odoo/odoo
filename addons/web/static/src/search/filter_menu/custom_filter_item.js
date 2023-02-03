@@ -151,7 +151,7 @@ export class CustomFilterItem extends Component {
         const { filter_searchable } = field;
         return (
             !field.deprecated && field.searchable && FIELD_TYPES[field.type] && field.name !== "id" &&
-            (filter_searchable || true)
+            (filter_searchable !== undefined ? filter_searchable : true)
         );
     }
 

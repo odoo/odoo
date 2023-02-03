@@ -53,7 +53,7 @@ export class GroupByMenu extends Component {
             (type === "many2many" ? store : sortable) &&
             fieldName !== "id" &&
             GROUPABLE_TYPES.includes(type) &&
-            (filter_sortable || true)
+            (filter_sortable !== undefined ? filter_sortable : true)
         );
     }
 
