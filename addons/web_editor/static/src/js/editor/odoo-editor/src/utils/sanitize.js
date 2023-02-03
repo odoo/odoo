@@ -82,19 +82,35 @@ export function areSimilarElements(node, node2) {
 class Sanitize {
     constructor(root) {
         this.root = root;
+        this.parse(root);
+        // Handle unique ids.
         const rootClosestBlock = closestBlock(root);
         if (rootClosestBlock) {
-            // Remove unique ids from checklists and stars. These will be
-            // renewed afterwards.
-            for (const node of rootClosestBlock.querySelectorAll('[id^=checkId-]')) {
-                node.removeAttribute('id');
-            }
-        }
-        this.parse(root);
-        if (rootClosestBlock) {
             // Ensure unique ids on checklists and stars.
-            for (const node of rootClosestBlock.querySelectorAll('.o_checklist > li, .o_stars')) {
-                node.setAttribute('id', `checkId-${Math.floor(new Date() * Math.random())}`);
+            const elementsWithId = [...rootClosestBlock.querySelectorAll('[id^=checkId-]')];
+            const maxId = Math.max(...[0, ...elementsWithId.map(node => +node.getAttribute('id').substring(8))]);
+            let nextId = maxId + 1;
+            const ids = [];
+            for (const node of rootClosestBlock.querySelectorAll('[id^=checkId-], .o_checklist > li, .o_stars')) {
+                if (
+                    !node.classList.contains('o_stars') && (
+                        !node.parentElement.classList.contains('o_checklist') ||
+                        [...node.children].some(child => ['UL', 'OL'].includes(child.nodeName))
+                )) {
+                    // Remove unique ids from checklists and stars from elements
+                    // that are no longer checklist items or stars, and from
+                    // parents of nested lists.
+                    node.removeAttribute('id')
+                } else {
+                    // Add/change IDs where needed, and ensure they're unique.
+                    let id = node.getAttribute('id');
+                    if (!id || ids.includes(id)) {
+                        id = `checkId-${nextId}`;
+                        nextId++;
+                        node.setAttribute('id', id);
+                    }
+                    ids.push(id);
+                }
             }
         }
     }
