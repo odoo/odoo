@@ -2745,7 +2745,7 @@ class Model(models.AbstractModel):
         return [
             'change_default', 'context', 'currency_field', 'definition_record', 'digits', 'domain', 'group_operator', 'groups',
             'help', 'name', 'readonly', 'related', 'relation', 'relation_field', 'required', 'searchable', 'selection', 'size',
-            'sortable', 'store', 'string', 'translate', 'trim', 'type',
+            'sortable', 'store', 'string', 'translate', 'trim', 'type', 'filter_searchable', 'filter_sortable'
         ]
 
     def get_formview_id(self, access_uid=None):

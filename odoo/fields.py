@@ -249,6 +249,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     :param bool default_export_compatible: whether the field must be exported by default in an import-compatible export
 
+    :param bool filter_searchable: whether the field must be visible in custom search dropdown menu
+
+    :param bool filter_sortable: whether the field must be visible in custom group by dropdown menu
+
         .. seealso:: :ref:`Advanced fields/Related fields <reference/fields/related>`
     """
 
@@ -309,6 +313,9 @@ class Field(MetaField('DummyField', (object,), {})):
 
     default_export_compatible = False   # whether the field must be exported by default in an import-compatible export
     exportable = True
+
+    filter_searchable = True            # whether the field must be visible in custom search dropdown menu
+    filter_sortable = True              # whether the field must be visible in custom group by dropdown menu
 
     def __init__(self, string=Default, **kwargs):
         kwargs['string'] = string
@@ -872,6 +879,14 @@ class Field(MetaField('DummyField', (object,), {})):
             field_help = env['ir.model.fields'].get_field_help(model_name)
             return field_help.get(self.name) or self.help
         return self.help
+
+    @property
+    def _description_filter_searchable(self):
+        return self._description_searchable and self.filter_searchable
+
+    @property
+    def _description_filter_sortable(self):
+        return self._description_sortable and self.filter_sortable
 
     def is_editable(self):
         """ Return whether the field can be editable in a view. """

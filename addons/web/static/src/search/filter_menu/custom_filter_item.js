@@ -149,7 +149,7 @@ export class CustomFilterItem extends Component {
      */
     validateField(field) {
         return (
-            !field.deprecated && field.searchable && FIELD_TYPES[field.type] && field.name !== "id"
+            !field.deprecated && field.searchable && FIELD_TYPES[field.type] && field.name !== "id" && field.filter_searchable
         );
     }
 
