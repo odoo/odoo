@@ -549,3 +549,27 @@ class TestTimesheet(TestCommonTimesheet):
             ('hr_timesheet.view_task_project_user_graph_inherited', '//field[@name="planned_hours"]', [None, 'Initially Planned Days']),
             ('hr_timesheet.timesheets_analysis_report_pivot_employee', '//field[@name="unit_amount"]', [None, 'Days Spent']),
         ])
+
+    def test_uom_change_timesheet(self):
+        """
+        We check that we don't over transform the timesheet unit amount when changing
+        the company encoding timesheet uom, we keep it in the project as hours.
+        So it will be transformed only once when encoding the timesheet.
+        """
+        Timesheet = self.env['account.analytic.line']
+        project = self.env['project.project'].create({
+            'name': 'Project',
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        project.allocated_hours = 40.0
+
+        Timesheet.create({
+            'name': 'FirstTimeSheet',
+            'project_id': project.id,
+            'unit_amount': 8,
+            'employee_id': self.empl_employee2.id
+        })
+        self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        self.assertEqual(project.total_timesheet_time, 8, "Total timesheet time should be 8 hours")
+        self.assertEqual(project.timesheet_encode_uom_id.name, 'Days', "Timesheet encode uom should be 'Days'")
