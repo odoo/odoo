@@ -2,7 +2,7 @@
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { browser } from "@web/core/browser/browser";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { many2ManyTagsFieldColorEditable } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
     clickDiscard,
@@ -683,7 +683,7 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "Many2ManyTagsField loads records according to limit defined on widget prototype",
         async function (assert) {
-            patchWithCleanup(Many2ManyTagsField, {
+            patchWithCleanup(many2ManyTagsFieldColorEditable, {
                 limit: 30,
             });
 
@@ -1616,8 +1616,7 @@ QUnit.module("Fields", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch:
-                '<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder"/></form>',
+            arch: '<form><field name="timmy" widget="many2many_tags" placeholder="Placeholder"/></form>',
         });
 
         assert.strictEqual(

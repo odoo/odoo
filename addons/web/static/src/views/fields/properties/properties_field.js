@@ -18,6 +18,19 @@ import { archParseBoolean } from "@web/views/utils";
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
 export class PropertiesField extends Component {
+    static template = "web.PropertiesField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+        PropertyDefinition,
+        PropertyValue,
+    };
+    static props = {
+        ...standardFieldProps,
+        columns: { type: Number, optional: true },
+        hideKanbanOption: { type: Boolean, optional: true },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.orm = useService("orm");
@@ -484,25 +497,14 @@ export class PropertiesField extends Component {
     }
 }
 
-PropertiesField.template = "web.PropertiesField";
-PropertiesField.components = {
-    Dropdown,
-    DropdownItem,
-    PropertyDefinition,
-    PropertyValue,
-};
-PropertiesField.props = {
-    ...standardFieldProps,
-    columns: { type: Number, optional: true },
-    hideKanbanOption: { type: Boolean, optional: true },
-};
-PropertiesField.extractProps = ({ attrs, field }) => {
-    const columns = parseInt(attrs.columns || "1");
-    const hideKanbanOption = archParseBoolean(attrs.hideKanbanOption);
-    return { columns, hideKanbanOption };
+export const propertiesField = {
+    component: PropertiesField,
+    displayName: _lt("Properties"),
+    supportedTypes: ["properties"],
+    extractProps: ({ attrs }) => ({
+        columns: parseInt(attrs.columns || "1"),
+        hideKanbanOption: archParseBoolean(attrs.hideKanbanOption),
+    }),
 };
 
-PropertiesField.displayName = _lt("Properties");
-PropertiesField.supportedTypes = ["properties"];
-
-registry.category("fields").add("properties", PropertiesField);
+registry.category("fields").add("properties", propertiesField);

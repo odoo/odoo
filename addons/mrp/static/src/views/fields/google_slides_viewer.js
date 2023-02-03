@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField, charField } from "@web/views/fields/char/char_field";
 
 const { useState } = owl;
 
@@ -48,6 +48,11 @@ export class SlidesViewer extends CharField {
 }
 
 SlidesViewer.template = "mrp.SlidesViewer";
-SlidesViewer.displayName = _lt("Google Slides Viewer");
 
-registry.category("fields").add("embed_viewer", SlidesViewer);
+export const slidesViewer = {
+    ...charField,
+    component: SlidesViewer,
+    displayName: _lt("Google Slides Viewer"),
+};
+
+registry.category("fields").add("embed_viewer", slidesViewer);

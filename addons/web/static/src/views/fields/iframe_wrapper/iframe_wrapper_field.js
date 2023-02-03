@@ -6,6 +6,11 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component, useEffect, useRef } from "@odoo/owl";
 
 export class IframeWrapperField extends Component {
+    static template = "web.IframeWrapperField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     setup() {
         this.iframeRef = useRef("iframe");
 
@@ -31,12 +36,11 @@ export class IframeWrapperField extends Component {
     }
 }
 
-IframeWrapperField.template = "web.IframeWrapperField";
-IframeWrapperField.props = {
-    ...standardFieldProps,
+export const iframeWrapperField = {
+    component: IframeWrapperField,
+    displayName: _lt("Wrap raw html within an iframe"),
+    // If HTML, don't forget to adjust the sanitize options to avoid stripping most of the metadata
+    supportedTypes: ["text", "html"],
 };
-IframeWrapperField.displayName = _lt("Wrap raw html within an iframe");
-// If HTML, don't forget to adjust the sanitize options to avoid stripping most of the metadata
-IframeWrapperField.supportedTypes = ["text", "html"];
 
-registry.category("fields").add("iframe_wrapper", IframeWrapperField);
+registry.category("fields").add("iframe_wrapper", iframeWrapperField);

@@ -7,6 +7,12 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class PercentPieField extends Component {
+    static template = "web.PercentPieField";
+    static props = {
+        ...standardFieldProps,
+        string: { type: String, optional: true },
+    };
+
     get transform() {
         const rotateDeg = (360 * this.props.value) / 100;
         return {
@@ -17,20 +23,14 @@ export class PercentPieField extends Component {
     }
 }
 
-PercentPieField.template = "web.PercentPieField";
-PercentPieField.props = {
-    ...standardFieldProps,
-    string: { type: String, optional: true },
-};
-
-PercentPieField.displayName = _lt("PercentPie");
-PercentPieField.supportedTypes = ["float", "integer"];
-
-PercentPieField.extractProps = ({ attrs }) => {
-    return {
+export const percentPieField = {
+    component: PercentPieField,
+    displayName: _lt("PercentPie"),
+    supportedTypes: ["float", "integer"],
+    additionalClasses: ["o_field_percent_pie"],
+    extractProps: ({ attrs }) => ({
         string: attrs.string,
-    };
+    }),
 };
-PercentPieField.additionalClasses = ["o_field_percent_pie"];
 
-registry.category("fields").add("percentpie", PercentPieField);
+registry.category("fields").add("percentpie", percentPieField);

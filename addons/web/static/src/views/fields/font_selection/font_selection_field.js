@@ -8,6 +8,12 @@ import { formatSelection } from "../formatters";
 import { Component } from "@odoo/owl";
 
 export class FontSelectionField extends Component {
+    static template = "web.FontSelectionField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     get options() {
         return this.props.record.fields[this.props.name].selection.filter(
             (option) => option[0] !== false && option[1] !== ""
@@ -33,20 +39,14 @@ export class FontSelectionField extends Component {
     }
 }
 
-FontSelectionField.template = "web.FontSelectionField";
-FontSelectionField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-
-FontSelectionField.displayName = _lt("Font Selection");
-FontSelectionField.supportedTypes = ["selection"];
-FontSelectionField.legacySpecialData = "_fetchSpecialRelation";
-
-FontSelectionField.extractProps = ({ attrs }) => {
-    return {
+export const fontSelectionField = {
+    component: FontSelectionField,
+    displayName: _lt("Font Selection"),
+    supportedTypes: ["selection"],
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
+    legacySpecialData: "_fetchSpecialRelation",
 };
 
-registry.category("fields").add("font", FontSelectionField);
+registry.category("fields").add("font", fontSelectionField);

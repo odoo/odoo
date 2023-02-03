@@ -73,12 +73,14 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
     fieldsInfo[viewType] = {};
     for (const [fieldName, fieldDescr] of Object.entries(activeFields)) {
         const views = mapViews(fieldDescr.views, env);
-        const field = fields[fieldName];
         let Widget;
         if (fieldDescr.widget) {
             Widget = fieldRegistry.getAny([`${viewType}.${fieldDescr.widget}`, fieldDescr.widget]);
         } else {
-            Widget = fieldRegistry.getAny([`${viewType}.${field.type}`, field.type]);
+            Widget = fieldRegistry.getAny([
+                `${viewType}.${fields[fieldName].type}`,
+                fields[fieldName].type,
+            ]);
         }
         Widget = Widget || fieldRegistry.get("abstract");
         let domain;
@@ -89,10 +91,9 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
         if (mode && mode.split(",").length !== 1) {
             mode = env.isSmall ? "kanban" : "list";
         }
-        const FieldComponent = fieldDescr.FieldComponent;
         const fieldInfo = {
             Widget, // remove this when we no longer support legacy fields inside wowl views
-            specialData: FieldComponent && FieldComponent.legacySpecialData,
+            specialData: fieldDescr.field && fieldDescr.field.legacySpecialData,
             domain,
             context: fieldDescr.context,
             fieldDependencies: {}, // ??
@@ -106,16 +107,16 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
             __WOWL_FIELD_DESCR__: fieldDescr,
         };
 
-        if (FieldComponent && FieldComponent.limit) {
-            fieldInfo.limit = FieldComponent.limit;
+        if (fieldDescr.field && fieldDescr.field.limit) {
+            fieldInfo.limit = fieldDescr.field.limit;
         }
 
         if (fieldDescr.modifiers && fieldDescr.modifiers.invisible === true) {
             fieldInfo.__no_fetch = true;
         }
 
-        if (!fieldInfo.__no_fetch && FieldComponent && FieldComponent.fieldsToFetch) {
-            let fieldsToFetch = FieldComponent.fieldsToFetch;
+        if (!fieldInfo.__no_fetch && fieldDescr.field && fieldDescr.field.fieldsToFetch) {
+            let fieldsToFetch = fieldDescr.field.fieldsToFetch;
             if (fieldsToFetch instanceof Function) {
                 fieldsToFetch = fieldsToFetch(fieldInfo.__WOWL_FIELD_DESCR__);
             }

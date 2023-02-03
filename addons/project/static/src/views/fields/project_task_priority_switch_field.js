@@ -2,7 +2,7 @@
 
 import { sprintf } from "@web/core/utils/strings";
 import { registry } from "@web/core/registry";
-import { PriorityField } from "@web/views/fields/priority/priority_field";
+import { PriorityField, priorityField } from "@web/views/fields/priority/priority_field";
 import { useCommand } from "@web/core/commands/command_hook";
 import { useState } from "@odoo/owl";
 
@@ -29,4 +29,9 @@ export class PrioritySwitchField extends PriorityField {
     }
 }
 
-registry.category("fields").add("priority_switch", PrioritySwitchField);
+export const prioritySwitchField = {
+    ...priorityField,
+    component: PrioritySwitchField,
+};
+
+registry.category("fields").add("priority_switch", prioritySwitchField);

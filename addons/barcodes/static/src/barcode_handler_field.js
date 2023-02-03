@@ -20,4 +20,8 @@ export class BarcodeHandlerField extends Component {
 BarcodeHandlerField.template = xml``;
 BarcodeHandlerField.props = { ...standardFieldProps };
 
-registry.category("fields").add("barcode_handler", BarcodeHandlerField);
+export const barcodeHandlerField = {
+    component: BarcodeHandlerField,
+};
+
+registry.category("fields").add("barcode_handler", barcodeHandlerField);

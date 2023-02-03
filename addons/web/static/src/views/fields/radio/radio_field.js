@@ -7,6 +7,30 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class RadioField extends Component {
+    static template = "web.RadioField";
+    static props = {
+        ...standardFieldProps,
+        orientation: { type: String, optional: true },
+    };
+    static defaultProps = {
+        orientation: "vertical",
+    };
+
+    static nextId = 0;
+
+    static getItems(fieldName, record) {
+        switch (record.fields[fieldName].type) {
+            case "selection":
+                return record.fields[fieldName].selection;
+            case "many2one": {
+                const value = record.preloadedData[fieldName] || [];
+                return value.map((item) => [item.id, item.display_name]);
+            }
+            default:
+                return [];
+        }
+    }
+
     setup() {
         this.id = `radio_field_${++RadioField.nextId}`;
     }
@@ -43,42 +67,18 @@ export class RadioField extends Component {
     }
 }
 
-RadioField.nextId = 0;
-
-RadioField.template = "web.RadioField";
-RadioField.props = {
-    ...standardFieldProps,
-    orientation: { type: String, optional: true },
-};
-RadioField.defaultProps = {
-    orientation: "vertical",
-};
-
-RadioField.displayName = _lt("Radio");
-RadioField.supportedTypes = ["many2one", "selection"];
-RadioField.legacySpecialData = "_fetchSpecialMany2ones";
-
-RadioField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
-RadioField.extractProps = ({ attrs }) => {
-    return {
+export const radioField = {
+    component: RadioField,
+    displayName: _lt("Radio"),
+    supportedTypes: ["many2one", "selection"],
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    extractProps: ({ attrs }) => ({
         orientation: attrs.options.horizontal ? "horizontal" : "vertical",
-    };
+    }),
+    legacySpecialData: "_fetchSpecialMany2ones",
 };
 
-RadioField.getItems = (fieldName, record) => {
-    switch (record.fields[fieldName].type) {
-        case "selection":
-            return record.fields[fieldName].selection;
-        case "many2one": {
-            const value = record.preloadedData[fieldName] || [];
-            return value.map((item) => [item.id, item.display_name]);
-        }
-        default:
-            return [];
-    }
-};
-
-registry.category("fields").add("radio", RadioField);
+registry.category("fields").add("radio", radioField);
 
 export async function preloadRadio(orm, record, fieldName) {
     const field = record.fields[fieldName];

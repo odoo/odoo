@@ -8,6 +8,12 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component, useState } from "@odoo/owl";
 
 export class PriorityField extends Component {
+    static template = "web.PriorityField";
+    static props = {
+        ...standardFieldProps,
+        tooltipLabel: { type: String, optional: true },
+    };
+
     setup() {
         this.state = useState({
             index: -1,
@@ -50,7 +56,9 @@ export class PriorityField extends Component {
     }
 
     getTooltip(value) {
-        return this.props.tooltipLabel && this.props.tooltipLabel !== value ? `${this.props.tooltipLabel}: ${value}` : value;
+        return this.props.tooltipLabel && this.props.tooltipLabel !== value
+            ? `${this.props.tooltipLabel}: ${value}`
+            : value;
     }
     /**
      * @param {string} value
@@ -65,19 +73,13 @@ export class PriorityField extends Component {
     }
 }
 
-PriorityField.template = "web.PriorityField";
-PriorityField.props = {
-    ...standardFieldProps,
-    tooltipLabel: { type: String, optional: true },
-};
-
-PriorityField.displayName = _lt("Priority");
-PriorityField.supportedTypes = ["selection"];
-
-PriorityField.extractProps = ({ field }) => {
-    return {
+export const priorityField = {
+    component: PriorityField,
+    displayName: _lt("Priority"),
+    supportedTypes: ["selection"],
+    extractProps: ({ field }) => ({
         tooltipLabel: field.string,
-    };
+    }),
 };
 
-registry.category("fields").add("priority", PriorityField);
+registry.category("fields").add("priority", priorityField);

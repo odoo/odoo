@@ -19,10 +19,12 @@ class ActivityException extends Component {
 Object.assign(ActivityException, {
     props: standardFieldProps,
     template: "mail.ActivityException",
+});
+
+registry.category("fields").add("activity_exception", {
+    component: ActivityException,
     fieldDependencies: {
         activity_exception_icon: { type: "char" },
     },
     noLabel: true,
 });
-
-registry.category("fields").add("activity_exception", ActivityException);

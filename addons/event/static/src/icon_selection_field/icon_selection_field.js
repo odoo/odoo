@@ -20,11 +20,13 @@ IconSelectionField.props = {
     icons: Object,
 };
 
-IconSelectionField.displayName = _lt("Icon Selection");
-IconSelectionField.supportedTypes = ["char", "text", "selection"];
+export const iconSelectionField = {
+    component: IconSelectionField,
+    displayName: _lt("Icon Selection"),
+    supportedTypes: ["char", "text", "selection"],
+    extractProps: ({ attrs }) => ({
+        icons: attrs.options,
+    }),
+};
 
-IconSelectionField.extractProps = ({ attrs }) => ({
-    icons: attrs.options,
-});
-
-registry.category("fields").add("event_icon_selection", IconSelectionField);
+registry.category("fields").add("event_icon_selection", iconSelectionField);

@@ -106,17 +106,17 @@ export class ListArchParser extends XMLParser {
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
-                    fieldInfo.FieldComponent.fieldDependencies
+                    fieldInfo.field.fieldDependencies
                 );
                 if (this.isColumnVisible(fieldInfo.modifiers.column_invisible)) {
-                    const label = fieldInfo.FieldComponent.label;
+                    const label = fieldInfo.field.label;
                     columns.push({
                         ...fieldInfo,
                         id: `column_${nextId++}`,
                         className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
                         optional: node.getAttribute("optional") || false,
                         type: "field",
-                        hasLabel: !(fieldInfo.noLabel || fieldInfo.FieldComponent.noLabel),
+                        hasLabel: !(fieldInfo.noLabel || fieldInfo.field.noLabel),
                         label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
                     });
                 }
@@ -210,7 +210,9 @@ export class ListArchParser extends XMLParser {
                 treeAttr.decorations = getDecoration(xmlDoc);
 
                 treeAttr.defaultGroupBy = xmlDoc.getAttribute("default_group_by");
-                treeAttr.defaultOrder = stringToOrderBy(xmlDoc.getAttribute("default_order") || null);
+                treeAttr.defaultOrder = stringToOrderBy(
+                    xmlDoc.getAttribute("default_order") || null
+                );
 
                 // custom open action when clicking on record row
                 const action = xmlDoc.getAttribute("action");

@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
-import { EmojisTextField} from '@mail/views/fields/emojis_text_field/emojis_text_field';
+import {
+    EmojisTextField,
+    emojisTextField,
+} from "@mail/views/fields/emojis_text_field/emojis_text_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
@@ -94,5 +97,15 @@ export class SmsWidget extends EmojisTextField {
     }
 }
 SmsWidget.template = 'sms.SmsWidget';
-SmsWidget.additionalClasses = [...(EmojisTextField.additionalClasses || []), 'o_field_text', 'o_field_text_emojis'];
-registry.category("fields").add("sms_widget", SmsWidget);
+
+export const smsWidget = {
+    ...emojisTextField,
+    component: SmsWidget,
+    additionalClasses: [
+        ...(emojisTextField.additionalClasses || []),
+        "o_field_text",
+        "o_field_text_emojis",
+    ],
+};
+
+registry.category("fields").add("sms_widget", smsWidget);

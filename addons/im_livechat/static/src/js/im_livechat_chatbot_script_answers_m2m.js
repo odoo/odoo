@@ -2,7 +2,10 @@
 
 
 import { registry } from "@web/core/registry";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import {
+    Many2ManyTagsField,
+    many2ManyTagsField,
+} from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 const fieldRegistry = registry.category("fields");
 
@@ -22,4 +25,9 @@ export class ChatbotScriptTriggeringAnswersMany2Many extends Many2ManyTagsField 
     }
 };
 
-fieldRegistry.add("chatbot_triggering_answers_widget", ChatbotScriptTriggeringAnswersMany2Many);
+export const chatbotScriptTriggeringAnswersMany2Many = {
+    ...many2ManyTagsField,
+    component: ChatbotScriptTriggeringAnswersMany2Many,
+};
+
+fieldRegistry.add("chatbot_triggering_answers_widget", chatbotScriptTriggeringAnswersMany2Many);

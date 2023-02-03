@@ -7,6 +7,11 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class BadgeSelectionField extends Component {
+    static template = "web.BadgeSelectionField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     get options() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
@@ -61,18 +66,15 @@ export class BadgeSelectionField extends Component {
     }
 }
 
-BadgeSelectionField.template = "web.BadgeSelectionField";
-BadgeSelectionField.props = {
-    ...standardFieldProps,
+export const badgeSelectionField = {
+    component: BadgeSelectionField,
+    displayName: _lt("Badges"),
+    supportedTypes: ["many2one", "selection"],
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    legacySpecialData: "_fetchSpecialMany2ones",
 };
 
-BadgeSelectionField.displayName = _lt("Badges");
-BadgeSelectionField.supportedTypes = ["many2one", "selection"];
-BadgeSelectionField.legacySpecialData = "_fetchSpecialMany2ones";
-
-BadgeSelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
-
-registry.category("fields").add("selection_badge", BadgeSelectionField);
+registry.category("fields").add("selection_badge", badgeSelectionField);
 
 export function preloadSelection(orm, record, fieldName) {
     const field = record.fields[fieldName];

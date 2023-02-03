@@ -2,7 +2,10 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { KanbanProgressBarField } from "@web/views/fields/progress_bar/kanban_progress_bar_field";
+import {
+    KanbanProgressBarField,
+    kanbanProgressBarField,
+} from "@web/views/fields/progress_bar/kanban_progress_bar_field";
 
 const { useEffect } = owl;
 
@@ -42,4 +45,9 @@ export class SaleProgressBarField extends KanbanProgressBarField {
  */
 SaleProgressBarField.template = "sale.SaleProgressBarField";
 
-registry.category("fields").add("sales_team_progressbar", SaleProgressBarField);
+export const saleProgressBarField = {
+    ...kanbanProgressBarField,
+    component: SaleProgressBarField,
+};
+
+registry.category("fields").add("sales_team_progressbar", saleProgressBarField);

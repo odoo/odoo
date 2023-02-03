@@ -3,6 +3,21 @@
 import { Component } from "@odoo/owl";
 
 export class TagsList extends Component {
+    static template = "web.TagsList";
+    static defaultProps = {
+        className: "",
+        displayBadge: true,
+        displayText: true,
+    };
+    static props = {
+        className: { type: String, optional: true },
+        displayBadge: { type: Boolean, optional: true },
+        displayText: { type: Boolean, optional: true },
+        name: { type: String, optional: true },
+        itemsVisible: { type: Number, optional: true },
+        tags: { type: Object, optional: true },
+    };
+
     get visibleTags() {
         if (this.props.itemsVisible && this.props.tags.length > this.props.itemsVisible) {
             return this.props.tags.slice(0, this.props.itemsVisible - 1);
@@ -24,17 +39,3 @@ export class TagsList extends Component {
         });
     }
 }
-TagsList.template = "web.TagsList";
-TagsList.defaultProps = {
-    className: "",
-    displayBadge: true,
-    displayText: true,
-};
-TagsList.props = {
-    className: { type: String, optional: true },
-    displayBadge: { type: Boolean, optional: true },
-    displayText: { type: Boolean, optional: true },
-    name: { type: String, optional: true },
-    itemsVisible: { type: Number, optional: true },
-    tags: { type: Object, optional: true },
-};

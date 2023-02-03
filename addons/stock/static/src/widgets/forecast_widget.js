@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { FloatField } from "@web/views/fields/float/float_field";
+import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { formatDate } from "@web/core/l10n/dates";
 import { formatFloat } from "@web/views/fields/formatters";
 import { registry } from "@web/core/registry";
@@ -49,4 +49,9 @@ export class ForecastWidgetField extends FloatField {
 }
 ForecastWidgetField.template = "stock.ForecastWidget";
 
-registry.category("fields").add("forecast_widget", ForecastWidgetField);
+export const forecastWidgetField = {
+    ...floatField,
+    component: ForecastWidgetField,
+};
+
+registry.category("fields").add("forecast_widget", forecastWidgetField);

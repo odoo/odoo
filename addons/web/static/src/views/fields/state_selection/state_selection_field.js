@@ -11,6 +11,19 @@ import { formatSelection } from "../formatters";
 import { Component } from "@odoo/owl";
 
 export class StateSelectionField extends Component {
+    static template = "web.StateSelectionField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        ...standardFieldProps,
+        hideLabel: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        hideLabel: false,
+    };
+
     setup() {
         this.colorPrefix = "o_status_";
         this.colors = {
@@ -65,27 +78,14 @@ export class StateSelectionField extends Component {
     }
 }
 
-StateSelectionField.template = "web.StateSelectionField";
-StateSelectionField.components = {
-    Dropdown,
-    DropdownItem,
-};
-StateSelectionField.props = {
-    ...standardFieldProps,
-    hideLabel: { type: Boolean, optional: true },
-};
-StateSelectionField.defaultProps = {
-    hideLabel: false,
-};
-
-StateSelectionField.displayName = _lt("Label Selection");
-StateSelectionField.supportedTypes = ["selection"];
-
-StateSelectionField.extractProps = ({ attrs }) => {
-    return {
+export const stateSelectionField = {
+    component: StateSelectionField,
+    displayName: _lt("Label Selection"),
+    supportedTypes: ["selection"],
+    extractProps: ({ attrs }) => ({
         hideLabel: !!attrs.options.hide_label,
-    };
+    }),
 };
 
-registry.category("fields").add("state_selection", StateSelectionField);
-registry.category("fields").add("list.state_selection", StateSelectionField);
+registry.category("fields").add("state_selection", stateSelectionField);
+registry.category("fields").add("list.state_selection", stateSelectionField);

@@ -14,6 +14,9 @@ import * as BarcodeScanner from "@web/webclient/barcode/barcode_scanner";
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 class CreateConfirmationDialog extends Component {
+    static template = "web.Many2OneField.CreateConfirmationDialog";
+    static components = { Dialog };
+
     get title() {
         return sprintf(this.env._t("New: %s"), this.props.name);
     }
@@ -23,8 +26,6 @@ class CreateConfirmationDialog extends Component {
         this.props.close();
     }
 }
-CreateConfirmationDialog.components = { Dialog };
-CreateConfirmationDialog.template = "web.Many2OneField.CreateConfirmationDialog";
 
 export function m2oTupleFromData(data) {
     const id = data.id;
@@ -39,6 +40,44 @@ export function m2oTupleFromData(data) {
 }
 
 export class Many2OneField extends Component {
+    static template = "web.Many2OneField";
+    static components = {
+        Many2XAutocomplete,
+    };
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+        canOpen: { type: Boolean, optional: true },
+        canCreate: { type: Boolean, optional: true },
+        canWrite: { type: Boolean, optional: true },
+        canQuickCreate: { type: Boolean, optional: true },
+        canCreateEdit: { type: Boolean, optional: true },
+        nameCreateField: { type: String, optional: true },
+        searchLimit: { type: Number, optional: true },
+        relation: { type: String, optional: true },
+        string: { type: String, optional: true },
+        canScanBarcode: { type: Boolean, optional: true },
+        openTarget: {
+            type: String,
+            validate: (v) => ["current", "new"].includes(v),
+            optional: true,
+        },
+    };
+    static defaultProps = {
+        canOpen: true,
+        canCreate: true,
+        canWrite: true,
+        canQuickCreate: true,
+        canCreateEdit: true,
+        nameCreateField: "name",
+        searchLimit: 7,
+        string: "",
+        canScanBarcode: false,
+        openTarget: "current",
+    };
+
+    static SEARCH_MORE_LIMIT = 320;
+
     setup() {
         this.orm = useService("orm");
         this.action = useService("action");
@@ -243,68 +282,31 @@ export class Many2OneField extends Component {
     }
 }
 
-Many2OneField.SEARCH_MORE_LIMIT = 320;
+export const many2OneField = {
+    component: Many2OneField,
+    displayName: _lt("Many2one"),
+    supportedTypes: ["many2one"],
+    extractProps: ({ attrs, field }) => {
+        const canCreate =
+            attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !attrs.options.no_create;
+        return {
+            placeholder: attrs.placeholder,
+            canOpen: !attrs.options.no_open,
+            canCreate,
+            canWrite: attrs.can_write && Boolean(JSON.parse(attrs.can_write)),
+            canQuickCreate: canCreate && !attrs.options.no_quick_create,
+            canCreateEdit: canCreate && !attrs.options.no_create_edit,
+            nameCreateField: attrs.options.create_name_field,
+            canScanBarcode: !!attrs.options.can_scan_barcode,
+            openTarget: attrs.open_target,
 
-Many2OneField.template = "web.Many2OneField";
-Many2OneField.components = {
-    Many2XAutocomplete,
-};
-Many2OneField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-    canOpen: { type: Boolean, optional: true },
-    canCreate: { type: Boolean, optional: true },
-    canWrite: { type: Boolean, optional: true },
-    canQuickCreate: { type: Boolean, optional: true },
-    canCreateEdit: { type: Boolean, optional: true },
-    nameCreateField: { type: String, optional: true },
-    searchLimit: { type: Number, optional: true },
-    relation: { type: String, optional: true },
-    string: { type: String, optional: true },
-    canScanBarcode: { type: Boolean, optional: true },
-    openTarget: { type: String, validate: (v) => ["current", "new"].includes(v), optional: true },
-};
-Many2OneField.defaultProps = {
-    canOpen: true,
-    canCreate: true,
-    canWrite: true,
-    canQuickCreate: true,
-    canCreateEdit: true,
-    nameCreateField: "name",
-    searchLimit: 7,
-    string: "",
-    canScanBarcode: false,
-    openTarget: "current",
+            relation: field.relation,
+            string: attrs.string || field.string,
+        };
+    },
 };
 
-Many2OneField.displayName = _lt("Many2one");
-Many2OneField.supportedTypes = ["many2one"];
-
-Many2OneField.extractProps = ({ attrs, field }) => {
-    const noOpen = Boolean(attrs.options.no_open);
-    const noCreate = Boolean(attrs.options.no_create);
-    const canCreate = attrs.can_create && Boolean(JSON.parse(attrs.can_create)) && !noCreate;
-    const canWrite = attrs.can_write && Boolean(JSON.parse(attrs.can_write));
-    const noQuickCreate = Boolean(attrs.options.no_quick_create);
-    const noCreateEdit = Boolean(attrs.options.no_create_edit);
-    const canScanBarcode = Boolean(attrs.options.can_scan_barcode);
-
-    return {
-        placeholder: attrs.placeholder,
-        canOpen: !noOpen,
-        canCreate,
-        canWrite,
-        canQuickCreate: canCreate && !noQuickCreate,
-        canCreateEdit: canCreate && !noCreateEdit,
-        relation: field.relation,
-        string: attrs.string || field.string,
-        nameCreateField: attrs.options.create_name_field,
-        canScanBarcode: canScanBarcode,
-        openTarget: attrs.open_target,
-    };
-};
-
-registry.category("fields").add("many2one", Many2OneField);
+registry.category("fields").add("many2one", many2OneField);
 // the two following lines are there to prevent the fallback on legacy widgets
-registry.category("fields").add("list.many2one", Many2OneField);
-registry.category("fields").add("kanban.many2one", Many2OneField);
+registry.category("fields").add("list.many2one", many2OneField);
+registry.category("fields").add("kanban.many2one", many2OneField);

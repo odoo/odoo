@@ -6,6 +6,15 @@ import { useService } from "@web/core/utils/hooks";
 
 import { Component, useRef } from "@odoo/owl";
 export class CopyButton extends Component {
+    static template = "web.CopyButton";
+    static props = {
+        className: { type: String, optional: true },
+        copyText: { type: String, optional: true },
+        disabled: { type: Boolean, optional: true },
+        successText: { type: String, optional: true },
+        content: { type: [String, Object], optional: true },
+    };
+
     setup() {
         this.button = useRef("button");
         this.popover = useService("popover");
@@ -40,11 +49,3 @@ export class CopyButton extends Component {
         this.showTooltip();
     }
 }
-CopyButton.template = "web.CopyButton";
-CopyButton.props = {
-    className: { type: String, optional: true },
-    copyText: { type: String, optional: true },
-    disabled: { type: Boolean, optional: true },
-    successText: { type: String, optional: true },
-    content: { type: [String, Object], optional: true },
-};

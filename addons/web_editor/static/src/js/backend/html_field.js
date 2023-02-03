@@ -616,62 +616,64 @@ HtmlField.props = {
     wysiwygOptions: { type: Object },
 };
 
-HtmlField.displayName = _lt("Html");
-HtmlField.supportedTypes = ["html"];
+export const htmlField = {
+    component: HtmlField,
+    displayName: _lt("Html"),
+    supportedTypes: ["html"],
+    extractProps: ({ attrs, field }) => {
+        const wysiwygOptions = {
+            placeholder: attrs.placeholder,
+            noAttachment: attrs.options['no-attachment'],
+            inIframe: Boolean(attrs.options.cssEdit),
+            iframeCssAssets: attrs.options.cssEdit,
+            iframeHtmlClass: attrs.iframeHtmlClass,
+            snippets: attrs.options.snippets,
+            mediaModalParams: {
+                noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,
+                useMediaLibrary: true,
+            },
+            linkForceNewWindow: true,
+            tabsize: 0,
+            height: attrs.options.height,
+            minHeight: attrs.options.minHeight,
+            maxHeight: attrs.options.maxHeight,
+            resizable: 'resizable' in attrs.options ? attrs.options.resizable : false,
+            editorPlugins: [QWebPlugin],
+        };
+        if ('collaborative' in attrs.options) {
+            wysiwygOptions.collaborative = attrs.options.collaborative;
+        }
+        if ('allowCommandImage' in attrs.options) {
+            // Set the option only if it is explicitly set in the view so a default
+            // can be set elsewhere otherwise.
+            wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
+        }
+        if (field.sanitize_tags || (field.sanitize_tags === undefined && field.sanitize)) {
+            wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
+        } else if ('allowCommandVideo' in attrs.options) {
+            // Set the option only if it is explicitly set in the view so a default
+            // can be set elsewhere otherwise.
+            wysiwygOptions.allowCommandVideo = Boolean(attrs.options.allowCommandVideo);
+        }
+        return {
+            isTranslatable: field.translate,
+            fieldName: field.name,
+            codeview: Boolean(odoo.debug && attrs.options.codeview),
+            placeholder: attrs.placeholder,
 
-HtmlField.extractProps = ({ attrs, field }) => {
-    const wysiwygOptions = {
-        placeholder: attrs.placeholder,
-        noAttachment: attrs.options['no-attachment'],
-        inIframe: Boolean(attrs.options.cssEdit),
-        iframeCssAssets: attrs.options.cssEdit,
-        iframeHtmlClass: attrs.iframeHtmlClass,
-        snippets: attrs.options.snippets,
-        mediaModalParams: {
-            noVideos: 'noVideos' in attrs.options ? attrs.options.noVideos : true,
-            useMediaLibrary: true,
-        },
-        linkForceNewWindow: true,
-        tabsize: 0,
-        height: attrs.options.height,
-        minHeight: attrs.options.minHeight,
-        maxHeight: attrs.options.maxHeight,
-        resizable: 'resizable' in attrs.options ? attrs.options.resizable : false,
-        editorPlugins: [QWebPlugin],
-    };
-    if ('collaborative' in attrs.options) {
-        wysiwygOptions.collaborative = attrs.options.collaborative;
-    }
-    if ('allowCommandImage' in attrs.options) {
-        // Set the option only if it is explicitly set in the view so a default
-        // can be set elsewhere otherwise.
-        wysiwygOptions.allowCommandImage = Boolean(attrs.options.allowCommandImage);
-    }
-    if (field.sanitize_tags || (field.sanitize_tags === undefined && field.sanitize)) {
-        wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
-    } else if ('allowCommandVideo' in attrs.options) {
-        // Set the option only if it is explicitly set in the view so a default
-        // can be set elsewhere otherwise.
-        wysiwygOptions.allowCommandVideo = Boolean(attrs.options.allowCommandVideo);
-    }
-    return {
-        isTranslatable: field.translate,
-        fieldName: field.name,
-        codeview: Boolean(odoo.debug && attrs.options.codeview),
-        placeholder: attrs.placeholder,
+            isCollaborative: attrs.options.collaborative,
+            cssReadonlyAssetId: attrs.options.cssReadonly,
+            dynamicPlaceholder: attrs.options.dynamic_placeholder,
+            cssEditAssetId: attrs.options.cssEdit,
+            isInlineStyle: attrs.options['style-inline'],
+            wrapper: attrs.options.wrapper,
 
-        isCollaborative: attrs.options.collaborative,
-        cssReadonlyAssetId: attrs.options.cssReadonly,
-        dynamicPlaceholder: attrs.options.dynamic_placeholder,
-        cssEditAssetId: attrs.options.cssEdit,
-        isInlineStyle: attrs.options['style-inline'],
-        wrapper: attrs.options.wrapper,
-
-        wysiwygOptions,
-    };
+            wysiwygOptions,
+        };
+    },
 };
 
-registry.category("fields").add("html", HtmlField, { force: true });
+registry.category("fields").add("html", htmlField, { force: true });
 
 function stripHistoryIds(value) {
     return value && value.replace(/\sdata-last-history-steps="[^"]*?"/, '') || value;

@@ -12,6 +12,18 @@ const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class ProgressBarField extends Component {
+    static template = "web.ProgressBarField";
+    static props = {
+        ...standardFieldProps,
+        maxValueField: { type: [String, Number], optional: true },
+        currentValueField: { type: String, optional: true },
+        isEditable: { type: Boolean, optional: true },
+        isEditableInReadonly: { type: Boolean, optional: true },
+        isCurrentValueEditable: { type: Boolean, optional: true },
+        isMaxValueEditable: { type: Boolean, optional: true },
+        title: { type: String, optional: true },
+    };
+
     setup() {
         useNumpadDecimal();
         useAutofocus({ refName: "maxValue", selectAll: true });
@@ -139,23 +151,11 @@ export class ProgressBarField extends Component {
     }
 }
 
-ProgressBarField.template = "web.ProgressBarField";
-ProgressBarField.props = {
-    ...standardFieldProps,
-    maxValueField: { type: [String, Number], optional: true },
-    currentValueField: { type: String, optional: true },
-    isEditable: { type: Boolean, optional: true },
-    isEditableInReadonly: { type: Boolean, optional: true },
-    isCurrentValueEditable: { type: Boolean, optional: true },
-    isMaxValueEditable: { type: Boolean, optional: true },
-    title: { type: String, optional: true },
-};
-
-ProgressBarField.displayName = _lt("Progress Bar");
-ProgressBarField.supportedTypes = ["integer", "float"];
-
-ProgressBarField.extractProps = ({ attrs }) => {
-    return {
+export const progressBarField = {
+    component: ProgressBarField,
+    displayName: _lt("Progress Bar"),
+    supportedTypes: ["integer", "float"],
+    extractProps: ({ attrs }) => ({
         maxValueField: attrs.options.max_value,
         currentValueField: attrs.options.current_value,
         isEditable: !attrs.options.readonly && attrs.options.editable,
@@ -165,7 +165,7 @@ ProgressBarField.extractProps = ({ attrs }) => {
             (!attrs.options.edit_max_value || attrs.options.edit_current_value),
         isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
         title: attrs.title,
-    };
+    }),
 };
 
-registry.category("fields").add("progressbar", ProgressBarField);
+registry.category("fields").add("progressbar", progressBarField);
