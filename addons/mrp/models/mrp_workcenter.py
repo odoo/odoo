@@ -9,7 +9,7 @@ from random import randint
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.resource.models.resource import make_aware, Intervals
+from odoo.addons.resource.models.utils import make_aware, Intervals
 from odoo.tools.float_utils import float_compare
 
 

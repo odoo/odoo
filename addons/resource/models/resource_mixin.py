@@ -2,16 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
-from dateutil.relativedelta import relativedelta
 from pytz import utc
 
 from odoo import api, fields, models
-
-
-def timezone_datetime(time):
-    if not time.tzinfo:
-        time = time.replace(tzinfo=utc)
-    return time
+from .utils import timezone_datetime
 
 
 class ResourceMixin(models.AbstractModel):
@@ -80,7 +74,7 @@ class ResourceMixin(models.AbstractModel):
         default['resource_id'] = resource.id
         default['company_id'] = resource.company_id.id
         default['resource_calendar_id'] = resource.calendar_id.id
-        return super(ResourceMixin, self).copy_data(default)
+        return super().copy_data(default)
 
     def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
         """

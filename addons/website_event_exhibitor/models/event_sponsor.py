@@ -6,7 +6,7 @@ from pytz import timezone, utc
 
 from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.resource.models.resource import float_to_time
+from odoo.addons.resource.models.utils import float_to_time
 from odoo.modules.module import get_resource_path
 from odoo.tools import is_html_empty
 from odoo.tools.translate import html_translate

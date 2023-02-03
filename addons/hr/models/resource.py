@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from pytz import utc, timezone
-from datetime import datetime
 
 from odoo import fields, models
-from odoo.addons.resource.models.resource import Intervals
 
 
 class ResourceResource(models.Model):

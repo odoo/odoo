@@ -14,7 +14,7 @@ from odoo.tools import date_utils
 
 from odoo import api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
+from odoo.addons.resource.models.utils import float_to_time, HOURS_PER_DAY
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare, format_date
 from odoo.tools.float_utils import float_round
@@ -1692,7 +1692,11 @@ class HolidaysRequest(models.Model):
 
     def _get_attendances(self, employee, request_date_from, request_date_to):
         resource_calendar_id = employee.resource_calendar_id or self.env.company.resource_calendar_id
-        domain = [('calendar_id', '=', resource_calendar_id.id), ('display_type', '=', False)]
+        domain = [
+            ('calendar_id', '=', resource_calendar_id.id),
+            ('display_type', '=', False),
+            ('day_period', '!=', 'lunch'),
+        ]
         attendances = self.env['resource.calendar.attendance'].read_group(domain,
             ['ids:array_agg(id)', 'hour_from:min(hour_from)', 'hour_to:max(hour_to)',
              'week_type', 'dayofweek', 'day_period'],

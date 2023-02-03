@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import pytz
+
 from collections import defaultdict
 from datetime import datetime, timedelta
 from operator import itemgetter
+from pytz import timezone
 
-import pytz
 from odoo import models, fields, api, exceptions, _
+from odoo.addons.resource.models.utils import Intervals
 from odoo.tools import format_datetime
 from odoo.osv.expression import AND, OR
 from odoo.tools.float_utils import float_is_zero
@@ -43,12 +46,24 @@ class HrAttendance(models.Model):
                 }))
         return result
 
+    def _get_employee_calendar(self):
+        self.ensure_one()
+        return self.employee_id.resource_calendar_id
+
     @api.depends('check_in', 'check_out')
     def _compute_worked_hours(self):
         for attendance in self:
             if attendance.check_out and attendance.check_in:
-                delta = attendance.check_out - attendance.check_in
-                attendance.worked_hours = delta.total_seconds() / 3600.0
+                calendar = attendance._get_employee_calendar()
+                resource = attendance.employee_id.resource_id
+                tz = timezone(calendar.tz)
+                check_in_tz = attendance.check_in.astimezone(tz)
+                check_out_tz = attendance.check_out.astimezone(tz)
+                lunch_intervals = calendar._attendance_intervals_batch(
+                    check_in_tz, check_out_tz, resource, lunch=True)
+                attendance_intervals = Intervals([(check_in_tz, check_out_tz, attendance)]) - lunch_intervals[resource.id]
+                delta = sum((i[1] - i[0]).total_seconds() for i in attendance_intervals)
+                attendance.worked_hours = delta / 3600.0
             else:
                 attendance.worked_hours = False
 
