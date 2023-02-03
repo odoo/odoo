@@ -34,7 +34,6 @@ class PublishSystray extends Component {
             return;
         }
         this.state.processing = true;
-        this.state.published = !this.state.published;
         const { metadata: { mainObject } } = this.website.currentWebsite;
         return this.rpc('/website/publish', {
             id: mainObject.id,
