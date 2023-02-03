@@ -149,6 +149,7 @@ ProgressBarField.props = {
     isCurrentValueEditable: { type: Boolean, optional: true },
     isMaxValueEditable: { type: Boolean, optional: true },
     title: { type: String, optional: true },
+    overflowClass: { type: String, optional: true },
 };
 
 ProgressBarField.displayName = _lt("Progress Bar");
@@ -165,6 +166,7 @@ ProgressBarField.extractProps = ({ attrs }) => {
             (!attrs.options.edit_max_value || attrs.options.edit_current_value),
         isMaxValueEditable: attrs.options.editable && attrs.options.edit_max_value,
         title: attrs.title,
+        overflowClass: attrs.options.overflow_class || "",
     };
 };
 

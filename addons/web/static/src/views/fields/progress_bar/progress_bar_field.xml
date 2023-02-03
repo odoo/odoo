@@ -6,7 +6,9 @@
             <div class="o_progressbar w-100 d-flex align-items-center" t-on-click="onClick">
                 <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
-                    <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
+                    <div class="o_progressbar_complete"
+                        t-att-class="state.currentValue &gt; state.maxValue ? props.overflowClass : ''"
+                        t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
                 <t t-if="isPercentage">
                     <div class="o_progressbar_value" t-esc="formatCurrentValue(true) + '%'"/>
@@ -20,7 +22,9 @@
             <div class="o_progressbar w-100 d-flex align-items-center" t-ref="numpadDecimal">
                 <div t-if="props.title" class="o_progressbar_title"><t t-esc="props.title"/></div>
                 <div class="o_progress" aria-valuemin="0" t-att-aria-valuemax="state.maxValue" t-att-aria-valuenow="state.currentValue">
-                    <div class="o_progressbar_complete" t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
+                    <div class="o_progressbar_complete"
+                        t-att-class="state.currentValue &gt; state.maxValue ? props.overflowClass : ''"
+                        t-att-style="'width: min(' + 100 * state.currentValue / state.maxValue + '%, 100%)'"></div>
                 </div>
                 <t t-if="isPercentage">
                     <div class="d-flex">
