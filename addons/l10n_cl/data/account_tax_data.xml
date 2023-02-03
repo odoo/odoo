@@ -3,8 +3,8 @@
     <!-- Account Tags -->
     <record id="ITAX_19" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA 19% Venta</field>
-        <field name="description">IVA 19% Vta</field>
+        <field name="name">VAT 19% Sale</field>
+        <field name="description">VAT 19% Sale</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">sale</field>
@@ -35,8 +35,8 @@
     </record>
     <record id="OTAX_19" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA 19% Compra</field>
-        <field name="description">IVA 19% Comp</field>
+        <field name="name">VAT 19% Purchase</field>
+        <field name="description">VAT 19% Purchase</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -67,7 +67,7 @@
     </record>
     <record id="I_IU2C" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2020</field>
+        <field name="name">Ret. 2da Category 2020</field>
         <field name="description">Ret. 2da 2020</field>
         <field name="active">False</field>
         <field name="amount">-10.75</field>
@@ -102,7 +102,7 @@
 
     <record id="I_IR2C_2021" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2021</field>
+        <field name="name">Ret. 2da Category 2021</field>
         <field name="description">Ret. 2da 2021</field>
         <field name="active">False</field>
         <field name="amount">-11.5</field>
@@ -141,7 +141,7 @@
 
     <record id="I_IR2C_2022" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2022</field>
+        <field name="name">Ret. 2da Category 2022</field>
         <field name="description">Ret. 2da 2022</field>
         <field name="amount">-12.25</field>
         <field name="sequence" eval="2"/>
@@ -179,7 +179,7 @@
 
     <record id="I_IR2C_2023" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2023</field>
+        <field name="name">Ret. 2da Category 2023</field>
         <field name="description">Ret. 2da 2023</field>
         <field name="amount">-13</field>
         <field name="sequence" eval="2"/>
@@ -217,7 +217,7 @@
 
     <record id="I_IR2C_2024" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2024</field>
+        <field name="name">Ret. 2da Category 2024</field>
         <field name="description">Ret. 2da 2024</field>
         <field name="amount">-13.75</field>
         <field name="sequence" eval="2"/>
@@ -255,7 +255,7 @@
 
     <record id="I_IR2C_2025" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2025</field>
+        <field name="name">Ret. 2da Category 2025</field>
         <field name="description">Ret. 2da 2025</field>
         <field name="amount">-14.5</field>
         <field name="sequence" eval="2"/>
@@ -293,7 +293,7 @@
 
     <record id="I_IR2C_2026" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Ret. 2da Categoría 2026</field>
+        <field name="name">Ret. 2da Category 2026</field>
         <field name="description">Ret. 2da 2026</field>
         <field name="amount">-15.25</field>
         <field name="sequence" eval="2"/>
@@ -331,8 +331,8 @@
 
     <record id="I_RTI" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Retención Total IVA</field>
-        <field name="description">Retención total IVA</field>
+        <field name="name">Total VAT withholding</field>
+        <field name="description">Total VAT withholding</field>
         <field name="amount">-19.00</field>
         <field name="sequence" eval="2"/>
         <field name="amount_type">percent</field>
@@ -364,8 +364,8 @@
     </record>
     <record id="especifico_compra" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Específico Compra</field>
-        <field name="description">Espec. Comp</field>
+        <field name="name">Specific Purchase</field>
+        <field name="description">Specific purchase</field>
         <field name="amount">63</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -389,8 +389,8 @@
     </record>
     <record id="iva_activo_fijo" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% Activo Fijo</field>
-        <field name="description">IVA 19% ActF</field>
+        <field name="name">VAT Purchase 19% Fixed Assets</field>
+        <field name="description">VAT 19% fixed assets</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -422,8 +422,8 @@
     </record>
     <record id="iva_activo_fijo_uso_comun" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% Act. Fijo Uso Común</field>
-        <field name="description">IVA 19% ActFUC</field>
+        <field name="name">VAT Purchase 19% Fixed Assets Common Use</field>
+        <field name="description">VAT 19% fixed assets common use</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -455,8 +455,8 @@
     </record>
     <record id="iva_activo_fijo_uso_no_recup" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% Activo Fijo No Recup</field>
-        <field name="description">IVA 19% ActFNR</field>
+        <field name="name">VAT Purchase 19% Fixed Assets Not Recoverable</field>
+        <field name="description">VAT 19% fixed assets non-recoverable use</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -488,8 +488,8 @@
     </record>
     <record id="ila_a_100_p" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Beb. Analc. 10% (Compras)</field>
-        <field name="description">ILA C 10%</field>
+        <field name="name">Beb. Analc. 10% (Purchases)</field>
+        <field name="description">ILA P 10%</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">27</field>
@@ -521,8 +521,8 @@
     </record>
     <record id="ila_a_180_p" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Beb. Analc 18% (Compras)</field>
-        <field name="description">ILA C 18%</field>
+        <field name="name">Beb. Analc 18% (Purchases)</field>
+        <field name="description">ILA P 18%</field>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">26</field>
@@ -554,8 +554,8 @@
     </record>
     <record id="ila_v_205_p" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Vinos (Compras)</field>
-        <field name="description">ILA C 20.5%</field>
+        <field name="name">Wines (Shopping)</field>
+        <field name="description">ILA P 20.5%</field>
         <field name="amount">20.5</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">25</field>
@@ -587,8 +587,8 @@
     </record>
     <record id="ila_l_315_p" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Licores 31.5% (Compras)</field>
-        <field name="description">ILA C 31.5%</field>
+        <field name="name">Liquors 31.5% (Purchases)</field>
+        <field name="description">ILA P 31.5%</field>
         <field name="amount">31.5</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">24</field>
@@ -620,8 +620,8 @@
     </record>
     <record id="ila_a_100_s" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Beb. Analc. 10% (Ventas)</field>
-        <field name="description">ILA V 10%</field>
+        <field name="name">Beb. Analc. 10% (Sales)</field>
+        <field name="description">ILA S 10%</field>
         <field name="amount">10</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">27</field>
@@ -653,8 +653,8 @@
     </record>
     <record id="ila_a_180_s" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Beb. Analc 18% (Ventas)</field>
-        <field name="description">ILA V 18%</field>
+        <field name="name">Beb. Analc 18% (Sales)</field>
+        <field name="description">ILA S 18%</field>
         <field name="amount">18</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">26</field>
@@ -686,8 +686,8 @@
     </record>
     <record id="ila_v_205_s" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Vinos (Ventas)</field>
-        <field name="description">ILA V 20.5%</field>
+        <field name="name">Wines (Sales)</field>
+        <field name="description">ILA S 20.5%</field>
         <field name="amount">20.5</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">25</field>
@@ -719,8 +719,8 @@
     </record>
     <record id="ila_l_315_s" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">Licores 31.5% (Ventas)</field>
-        <field name="description">ILA V 31.5%</field>
+        <field name="name">Liquors 31.5% (Sales)</field>
+        <field name="description">ILA S 31.5%</field>
         <field name="amount">31.5</field>
         <field name="amount_type">percent</field>
         <field name="l10n_cl_sii_code">24</field>
@@ -752,8 +752,8 @@
     </record>
     <record id="iva_compra_no_recup" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% No Recup.</field>
-        <field name="description">IVA 19% NoR</field>
+        <field name="name">VAT Purchase 19% Non-recoverable</field>
+        <field name="description">VAT 19% non-recoverable purchase</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -785,8 +785,8 @@
     </record>
     <record id="iva_compra_uso_comun" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% Uso Común</field>
-        <field name="description">IVA 19% CUC</field>
+        <field name="name">VAT Purchase 19% Common Use</field>
+        <field name="description">VAT 19% purchase for public use</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
@@ -818,8 +818,8 @@
     </record>
     <record id="iva_supermercado_recup" model="account.tax.template">
         <field name="chart_template_id" ref="cl_chart_template"/>
-        <field name="name">IVA Compra 19% Superm.</field>
-        <field name="description">IVA 19% SupMRec</field>
+        <field name="name">VAT Purchase 19% Supermarket</field>
+        <field name="description">VAT 19% supermarket recup</field>
         <field name="amount">19</field>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
