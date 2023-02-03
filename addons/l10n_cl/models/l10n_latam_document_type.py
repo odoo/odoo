@@ -7,6 +7,9 @@ class L10nLatamDocumentType(models.Model):
 
     _inherit = 'l10n_latam.document.type'
 
+    name = fields.Char("Name", translate=True)
+    report_name = fields.Char("Report name", translate=True)
+
     internal_type = fields.Selection(
         selection_add=[
             ('invoice', 'Invoices'),
