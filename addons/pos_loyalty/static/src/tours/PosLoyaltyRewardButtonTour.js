@@ -130,3 +130,17 @@ PosLoyalty.check.orderTotalIs('4.81');
 PosLoyalty.exec.finalizeOrder('Cash', '10');
 
 Tour.register('PosLoyaltyFreeProductTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.exec.addOrderline('Test Product A', '1');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.hasRewardLine('Free Product - Test Product A', '-11.50', '1.00');
+
+Tour.register('PosLoyaltyFreeProductTour2', { test: true, url: '/pos/web' }, getSteps());
