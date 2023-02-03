@@ -538,4 +538,26 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["Show error message"], "The error message was shown correctly");
         }
     );
+
+    QUnit.test(
+        "ProgressBarField: color is correctly set when value > max value",
+        async function (assert) {
+            serverData.models.partner.records[0].float_field = 101;
+            await makeView({
+                serverData,
+                type: "form",
+                resModel: "partner",
+                arch: `
+                    <form>
+                        <field name="float_field" widget="progressbar" options="{'overflow_class': 'bg-warning'}"/>
+                    </form>`,
+                resId: 1,
+            });
+
+            assert.containsOnce(
+                target, ".o_progressbar .bg-warning",
+                "As the value has excedded the max value, the color should be set to bg-warning"
+            );
+        }
+    );
 });
