@@ -6,7 +6,7 @@ _logger = logging.getLogger(__name__)
 
 class TagsSelector(object):
     """ Test selector based on tags. """
-    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:/(\w*))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
+    filter_spec_re = re.compile(r'^([+-]?)(\*|\w*)(?:\/([\w\/]*(?:.py)?))?(?::(\w*))?(?:\.(\w*))?$')  # [-][tag][/module][:class][.method]
 
     def __init__(self, spec):
         """ Parse the spec to determine tags to include and exclude. """
@@ -29,7 +29,11 @@ class TagsSelector(object):
             elif not tag or tag == '*':
                 # '*' indicates all tests (instead of 'standard' tests only)
                 tag = None
-            test_filter = (tag, module, klass, method)
+            module_path = None
+            if module and (module.endswith('.py')):
+                module_path = module[:-3].replace('/', '.')
+                module = None
+            test_filter = (tag, module, klass, method, module_path)
 
             if is_include:
                 self.include.add(test_filter)
@@ -53,10 +57,12 @@ class TagsSelector(object):
         test_method = test._testMethodName
 
         def _is_matching(test_filter):
-            (tag, module, klass, method) = test_filter
+            (tag, module, klass, method, module_path) = test_filter
             if tag and tag not in test_tags:
                 return False
-            elif module and module != test_module:
+            elif module_path and not test.__module__.endswith(module_path):
+                return False
+            elif not module_path and module and module != test_module:
                 return False
             elif klass and klass != test_class:
                 return False

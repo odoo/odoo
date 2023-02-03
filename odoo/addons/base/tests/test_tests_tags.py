@@ -121,92 +121,97 @@ class TestSelector(TransactionCase):
         """Test the parser part of the TagsSelector class"""
 
         tags = TagsSelector('+slow')
-        self.assertEqual({('slow', None, None, None),}, tags.include)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('+slow,nightly')
-        self.assertEqual({('slow', None, None, None), ('nightly', None, None, None)}, tags.include)
+        self.assertEqual({('slow', None, None, None, None), ('nightly', None, None, None, None)}, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('+slow,-standard')
-        self.assertEqual({('slow', None, None, None),}, tags.include)
-        self.assertEqual({('standard', None, None, None),}, tags.exclude)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)
 
         # same with space after the comma
         tags = TagsSelector('+slow, -standard')
-        self.assertEqual({('slow', None, None, None),}, tags.include)
-        self.assertEqual({('standard', None, None, None),}, tags.exclude)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)
 
         # same with space before and after the comma
         tags = TagsSelector('+slow , -standard')
-        self.assertEqual({('slow', None, None, None), }, tags.include)
-        self.assertEqual({('standard', None, None, None), }, tags.exclude)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)
 
         tags = TagsSelector('+slow ,-standard,+js')
-        self.assertEqual({('slow', None, None, None),('js', None, None, None)}, tags.include)
-        self.assertEqual({('standard', None, None, None),}, tags.exclude)
+        self.assertEqual({('slow', None, None, None, None), ('js', None, None, None, None)}, tags.include)
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)
 
         # without +
         tags = TagsSelector('slow, ')
-        self.assertEqual({('slow', None, None, None), }, tags.include)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         # duplicates
         tags = TagsSelector('+slow,-standard, slow,-standard ')
-        self.assertEqual({('slow', None, None, None), }, tags.include)
-        self.assertEqual({('standard', None, None, None), }, tags.exclude)
+        self.assertEqual({('slow', None, None, None, None), }, tags.include)
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)
 
         tags = TagsSelector('')
         self.assertEqual(set(), tags.include)
         self.assertEqual(set(), tags.exclude)
 
-        tags = TagsSelector('/module') # all standard test of a module
-        self.assertEqual({('standard', 'module', None, None), }, tags.include)
+        tags = TagsSelector('/module')  # all standard test of a module
+        self.assertEqual({('standard', 'module', None, None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
-        tags = TagsSelector('*/module') # all tests of a module
-        self.assertEqual({(None, 'module', None, None), }, tags.include)
+        tags = TagsSelector('/module/tests/test_file.py')  # all standard test of a module
+        self.assertEqual({('standard', None, None, None, 'module.tests.test_file'), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
-        tags = TagsSelector(':class') # all standard test of a class
-        self.assertEqual({('standard', None, 'class', None), }, tags.include)
+        tags = TagsSelector('*/module')  # all tests of a module
+        self.assertEqual({(None, 'module', None, None, None), }, tags.include)
+        self.assertEqual(set(), tags.exclude)
+
+        tags = TagsSelector(':class')  # all standard test of a class
+        self.assertEqual({('standard', None, 'class', None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('.method')
-        self.assertEqual({('standard', None, None, 'method'), }, tags.include)
+        self.assertEqual({('standard', None, None, 'method', None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector(':class.method')
-        self.assertEqual({('standard', None, 'class', 'method'), }, tags.include)
+        self.assertEqual({('standard', None, 'class', 'method', None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('/module:class.method')  # only a specific test func in a module (standard)
-        self.assertEqual({('standard', 'module', 'class', 'method'), }, tags.include)
+        self.assertEqual({('standard', 'module', 'class', 'method', None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('*/module:class.method')  # only a specific test func in a module
-        self.assertEqual({(None, 'module', 'class', 'method'), }, tags.include)
+        self.assertEqual({(None, 'module', 'class', 'method', None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('-/module:class.method')  # disable a specific test func in a module
-        self.assertEqual({('standard', None, None, None), }, tags.include) # all strandard
-        self.assertEqual({(None, 'module', 'class', 'method'), }, tags.exclude) # exept the test func
+        self.assertEqual({('standard', None, None, None, None), }, tags.include)  # all strandard
+        self.assertEqual({(None, 'module', 'class', 'method', None), }, tags.exclude)  # exept the test func
 
         tags = TagsSelector('-*/module:class.method') 
-        self.assertEqual({('standard', None, None, None), }, tags.include)
-        self.assertEqual({(None, 'module', 'class', 'method'), }, tags.exclude)
+        self.assertEqual({('standard', None, None, None, None), }, tags.include)
+        self.assertEqual({(None, 'module', 'class', 'method', None), }, tags.exclude)
 
         tags = TagsSelector('tag/module')
-        self.assertEqual({('tag', 'module', None, None), }, tags.include)
+        self.assertEqual({('tag', 'module', None, None, None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
         tags = TagsSelector('tag.method')
-        self.assertEqual({('tag', None, None, 'method'), }, tags.include)
+        self.assertEqual({('tag', None, None, 'method', None), }, tags.include)
         self.assertEqual(set(), tags.exclude)
 
-        tags = TagsSelector('*/module,-standard') # all non standard test of a module
-        self.assertEqual({(None, 'module', None, None), }, tags.include)  # all in module
-        self.assertEqual({('standard', None, None, None), }, tags.exclude)  # exept standard ones
+        tags = TagsSelector('*/module,-standard')  # all non standard test of a module
+        self.assertEqual({(None, 'module', None, None, None), }, tags.include)  # all in module
+        self.assertEqual({('standard', None, None, None, None), }, tags.exclude)  # exept standard ones
+
 
 @tagged('nodatabase')
 class TestSelectorSelection(TransactionCase):
