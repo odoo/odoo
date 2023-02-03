@@ -18,7 +18,6 @@ var AbstractField = require('web.AbstractField');
 var basic_fields = require('web.basic_fields');
 var relational_fields = require('web.relational_fields');
 var registry = require('web.field_registry');
-var special_fields = require('web.special_fields');
 
 // Basic fields
 registry
@@ -30,7 +29,6 @@ registry
     .add('datetime', basic_fields.FieldDateTime)
     .add('daterange', basic_fields.FieldDateRange)
     .add('remaining_days', basic_fields.RemainingDays)
-    .add('domain', basic_fields.FieldDomain)
     .add('text', basic_fields.FieldText)
     .add('list.text', basic_fields.ListFieldText)
     .add('html', basic_fields.FieldText)
@@ -73,30 +71,13 @@ registry
 
 // Relational fields
 registry
-    .add('selection', relational_fields.FieldSelection)
-    .add('radio', relational_fields.FieldRadio)
-    .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
-    .add('many2one_barcode', relational_fields.Many2oneBarcode)
-    .add('list.many2one', relational_fields.ListFieldMany2One)
-    .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2one_avatar', relational_fields.Many2OneAvatar)
-    .add('many2many', relational_fields.FieldMany2Many)
-    .add('many2many_binary', relational_fields.FieldMany2ManyBinaryMultiFiles)
     .add('many2many_tags', relational_fields.FieldMany2ManyTags)
     .add('many2many_tags_avatar', relational_fields.FieldMany2ManyTagsAvatar)
     .add('kanban.many2many_tags_avatar', relational_fields.KanbanMany2ManyTagsAvatar)
     .add('list.many2many_tags_avatar', relational_fields.ListMany2ManyTagsAvatar)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
-    .add('kanban.many2many_tags', relational_fields.KanbanFieldMany2ManyTags)
-    .add('many2many_checkboxes', relational_fields.FieldMany2ManyCheckBoxes)
-    .add('one2many', relational_fields.FieldOne2Many)
-    .add('statusbar', relational_fields.FieldStatus)
-    .add('reference', relational_fields.FieldReference)
-    .add('font', relational_fields.FieldSelectionFont);
+    .add('radio', relational_fields.FieldRadio);
 
-// Special fields
-registry
-    .add('timezone_mismatch', special_fields.FieldTimezoneMismatch)
-    .add('iframe_wrapper', special_fields.IframeWrapper)
 });

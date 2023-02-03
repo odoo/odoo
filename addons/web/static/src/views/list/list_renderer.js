@@ -347,7 +347,7 @@ export class ListRenderer extends Component {
     }
 
     get canResequenceRows() {
-        if (!this.props.list.canResequence() || this.props.readonly) {
+        if (!this.props.list.canResequence()) {
             return false;
         }
         const orderBy = this.props.list.orderBy;
@@ -1917,7 +1917,6 @@ ListRenderer.props = [
     "editable?",
     "noContentHelp?",
     "nestedKeyOptionalFieldsData?",
-    "readonly?",
 ];
 ListRenderer.defaultProps = { hasSelectors: false, cycleOnTab: true };
 

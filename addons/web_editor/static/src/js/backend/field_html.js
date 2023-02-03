@@ -12,8 +12,6 @@ import {
     getAdjacentNextSiblings,
     getRangePosition
 } from '../editor/odoo-editor/src/utils/utils';
-// must wait for web/ to add the default html widget, otherwise it would override the web_editor one
-import 'web._field_registry';
 import "@web/views/fields/html/html_field"; // make sure the html field file has first been executed.
 
 var _lt = core._lt;

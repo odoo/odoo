@@ -25,13 +25,9 @@ odoo.define('web._view_registry', function (require) {
    * would produce cyclic dependencies.
    */
 
-  var FormView = require('web.FormView');
-  var KanbanView = require('web.KanbanView');
   var ListView = require('web.ListView');
   var view_registry = require('web.view_registry');
 
   view_registry
-    .add('form', FormView)
     .add('list', ListView)
-    .add('kanban', KanbanView);
 });

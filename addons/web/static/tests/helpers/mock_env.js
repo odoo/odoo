@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
-import FormController from "web.FormController";
 import { SERVICES_METADATA } from "../../src/env";
 import { registerCleanup } from "./cleanup";
 import { makeMockServer } from "./mock_server";
@@ -116,14 +115,6 @@ export async function makeTestEnv(config = {}) {
     if (config.serverData || config.mockRPC || config.activateMockServer) {
         await makeMockServer(config.serverData, config.mockRPC);
     }
-
-    // remove the multi-click delay for the quick edit in form views
-    // todo: move this elsewhere (setup?)
-    const initialQuickEditDelay = FormController.prototype.multiClickTime;
-    FormController.prototype.multiClickTime = 0;
-    registerCleanup(() => {
-        FormController.prototype.multiClickTime = initialQuickEditDelay;
-    });
 
     let env = makeEnv();
     await startServices(env);

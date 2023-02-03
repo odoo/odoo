@@ -176,7 +176,6 @@
             'web/static/src/legacy/js/fields/basic_fields_owl.js',
             'web/static/src/legacy/js/fields/field_utils.js',
             'web/static/src/legacy/js/fields/relational_fields.js',
-            'web/static/src/legacy/js/fields/special_fields.js',
             'web/static/src/legacy/js/fields/field_registry.js',
             'web/static/src/legacy/js/fields/field_registry_owl.js',
             'web/static/src/legacy/js/fields/field_utils.js',
