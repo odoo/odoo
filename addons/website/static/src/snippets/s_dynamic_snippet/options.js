@@ -154,6 +154,10 @@ const dynamicSnippetOptions = options.Class.extend({
             model_name: this.modelNameFilter,
             search_domain: this.contextualFilterDomain,
         }});
+        if (!dynamicFilters.length) {
+            // Additional modules are needed for dynamic filters to be defined.
+            return;
+        }
         for (let index in dynamicFilters) {
             this.dynamicFilters[dynamicFilters[index].id] = dynamicFilters[index];
         }
