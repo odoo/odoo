@@ -852,9 +852,10 @@ class Website(models.Model):
                 dependency_records = _handle_views_and_pages(dependency_records)
             if dependency_records:
                 model_name = self.env['ir.model']._display_name_for([model])[0]['display_name']
+                field_name = Model.fields_get()[column]['string']
                 dependencies.setdefault(model_name, [])
                 dependencies[model_name] += [{
-                    'field_name': Model.fields_get()[column]['string'],
+                    'field_name': field_name,
                     'record_name': rec.display_name,
                     'link': 'website_url' in rec and rec.website_url or f'/web#id={rec.id}&view_type=form&model={model}',
                     'model_name': model_name,
