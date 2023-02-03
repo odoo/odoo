@@ -6,6 +6,9 @@ registry.category("web_tour.tours").add('shop_editor', {
     test: true,
     url: '/shop?enable_editor=1',
     steps: [{
+    trigger: '#oe_snippets.o_loaded',
+    content: "Wait for the editor to be loaded"
+}, {
     content: "Click on pricelist dropdown",
     trigger: "iframe div.o_pricelist_dropdown a[data-bs-toggle=dropdown]",
 }, {
