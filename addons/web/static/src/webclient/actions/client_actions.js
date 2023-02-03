@@ -55,14 +55,24 @@ function reload(env, action) {
     const { router } = env.services;
     const route = { ...router.current };
 
-    route.hash = {};
-    if (menu_id) {
-        route.hash.menu_id = menu_id;
-    }
-    if (action_id) {
-        route.hash.action = action_id;
+    if (menu_id || action_id) {
+        route.hash = {};
+        if (menu_id) {
+            route.hash.menu_id = menu_id;
+        }
+        if (action_id) {
+            route.hash.action = action_id;
+        }
     }
 
+    // We want to force location.assign(...) (in router.redirect(...)) to do a page reload.
+    // To do this, we need to make sure that the url is different.
+    route.search = { ...route.search };
+    if ("reload" in route.search) {
+        delete route.search.reload;
+    } else {
+        route.search.reload = true;
+    }
     const url = browser.location.origin + routeToUrl(route);
 
     env.bus.trigger("CLEAR-CACHES");
@@ -79,6 +89,7 @@ function home(env, action) {
     const { wait } = action.params || {};
     const url = "/" + (browser.location.search || "");
     env.services.router.redirect(url, wait);
+    browser.location.reload(url);
 }
 
 registry.category("actions").add("home", home);
