@@ -1607,7 +1607,7 @@ const Wysiwyg = Widget.extend({
         }
         const fonts = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        if (!this.lastMediaClicked) {
+        if (!this.lastMediaClicked && fonts && fonts.length) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = fonts[0];
