@@ -23,3 +23,4 @@ Andrea Patusso andrea.patusso@rapsodoo.com https://github.com/AndreaPatusso
 Valentina Maltese valentina.maltese@rapsodoo.com https://github.com/ValentinaMal
 Tommaso Bellelli tommaso.bellelli@rapsodoo.com https://github.com/tommasobellelli
 Saydigital info@rapsodoo.com https://github.com/saydigital
+Valerio Belcastro valerio.belcastro@rapsodoo.com https://github.com/valeriobelcastro
