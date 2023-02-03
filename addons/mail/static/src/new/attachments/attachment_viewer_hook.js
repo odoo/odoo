@@ -9,8 +9,8 @@ let id = 1;
 export function useAttachmentViewer() {
     const attachmentViewerId = `mail.attachment_viewer${id++}`;
     /**
-     * @param {import("@mail/new/core/attachment_model").Attachment} attachment
-     * @param {import("@mail/new/core/attachment_model").Attachment[]} attachments
+     * @param {import("@mail/new/attachments/attachment_model").Attachment} attachment
+     * @param {import("@mail/new/attachments/attachment_model").Attachment[]} attachments
      */
     function open(attachment, attachments = [attachment]) {
         if (!attachment.isViewable) {

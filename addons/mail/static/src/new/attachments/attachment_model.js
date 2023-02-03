@@ -67,7 +67,10 @@ export class Attachment {
     }
 
     get isViewable() {
-        return this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube;
+        return (
+            (this.isText || this.isImage || this.isVideo || this.isPdf || this.isUrlYoutube) &&
+            !this.uploading
+        );
     }
 
     get imageUrl() {

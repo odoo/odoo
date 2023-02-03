@@ -108,6 +108,14 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
         }
         uploadingAttachmentIds.delete(tmpId);
         abortByAttachmentId.delete(tmpId);
+        if (upload.xhr.status === 413) {
+            notification.add("File too large", { type: "danger" });
+            return;
+        }
+        if (upload.xhr.status !== 200) {
+            notification.add("Server error", { type: "danger" });
+            return;
+        }
         const response = JSON.parse(upload.xhr.response);
         if (response.error) {
             notification.add(response.error, { type: "danger" });
