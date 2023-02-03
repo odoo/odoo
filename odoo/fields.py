@@ -2164,7 +2164,8 @@ class Datetime(Field):
         """
         assert isinstance(timestamp, datetime), 'Datetime instance expected'
         tz_name = record._context.get('tz') or record.env.user.tz
-        utc_timestamp = pytz.utc.localize(timestamp, is_dst=False)  # UTC = no DST
+        local_tz = pytz.timezone(tz_name)
+        utc_timestamp = timestamp.replace(tzinfo=pytz.utc).astimezone(local_tz)
         if tz_name:
             try:
                 context_tz = pytz.timezone(tz_name)
