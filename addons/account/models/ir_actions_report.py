@@ -17,7 +17,7 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         invoices = self.env['account.move'].browse(res_ids)
-        if any(x.move_type not in ('in_invoice', 'in_receipt') for x in invoices):
+        if any(x.move_type not in ('in_invoice', 'in_refund') for x in invoices):
             raise UserError(_("You can only print the original document for vendor bills."))
 
         original_attachments = invoices.message_main_attachment_id
