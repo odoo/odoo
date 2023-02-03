@@ -7,13 +7,13 @@
         <field name="model">res.partner</field>
         <field name="arch" type="xml">
             <field name="street2" position="attributes">
-                <attribute name="placeholder">Datos adic. dirección y Ciudad</attribute>
+                <attribute name="placeholder">Additional data address and city</attribute>
             </field>
             <field name="city" position="attributes">
-                <attribute name="placeholder">Comuna</attribute>
+                <attribute name="placeholder">Commune</attribute>
             </field>
             <field name="state_id" position="attributes">
-                <attribute name="placeholder">Región</attribute>
+                <attribute name="placeholder">Region</attribute>
             </field>
             <field name="vat" position="after">
                 <field name="l10n_cl_sii_taxpayer_type" attrs="{'readonly': [('parent_id', '!=', False)], 'invisible': [('fiscal_country_codes', 'not ilike', 'CL')]}"/>

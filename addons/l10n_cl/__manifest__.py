@@ -12,6 +12,7 @@ Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.
     'website': 'https://www.odoo.com/documentation/master/applications/finance/accounting/fiscal_localizations/localizations/chile.html',
     'category': 'Accounting/Localizations/Account Charts',
     'depends': [
+        'l10n_multilang',
         'contacts',
         'base_vat',
         'l10n_latam_base',
