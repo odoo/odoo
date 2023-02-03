@@ -28,14 +28,6 @@ const { DateTime } = luxon;
 let datePickerId = 0;
 
 /**
- * @param {string} format
- * @returns {boolean}
- */
-function isValidStaticFormat(format) {
-    return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
-}
-
-/**
  * @param {Function} fn
  * @returns {[any, null] | [null, Error]}
  */
@@ -124,10 +116,18 @@ export class DatePicker extends Component {
     // Protected
     //---------------------------------------------------------------------
 
+    /**
+     * @param {string} format
+     * @returns {boolean}
+     */
+    isValidStaticFormat(format) {
+        return /^[\d\s\/.,:-]+$/.test(DateTime.local().toFormat(format));
+    }
+
     getOptions(useStatic = false) {
         return {
             format:
-                !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
+                !useStatic || this.isValidStaticFormat(this.format) ? this.format : this.staticFormat,
             locale: this.props.locale || (this.date && this.date.locale),
         };
     }
@@ -180,7 +180,7 @@ export class DatePicker extends Component {
      */
     bootstrapDateTimePicker(commandOrParams) {
         if (typeof commandOrParams === "object") {
-            const format = isValidStaticFormat(this.format) ? this.format : this.staticFormat;
+            const format = this.isValidStaticFormat(this.format) ? this.format : this.staticFormat;
             const params = {
                 ...commandOrParams,
                 date: this.date || null,

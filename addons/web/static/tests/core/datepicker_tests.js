@@ -495,6 +495,22 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.verifySteps(["datetime-changed"]);
     });
 
+    QUnit.test("Datepicker works with dots and commas in format", async (assert) => {
+        assert.expect(2);
+
+        await mountPicker(DateTimePicker, {
+            date: DateTime.fromFormat("10/03/2023 13:14:27", "dd/MM/yyyy HH:mm:ss"),
+            format: "dd.MM,yyyy",
+        });
+        let input = target.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "10.03,2023");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "10.03,2023");
+    });
+
     QUnit.test("custom filter date", async function (assert) {
         assert.expect(3);
         class MockedSearchModel extends ActionModel {
