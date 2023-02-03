@@ -765,3 +765,53 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosCouponTour5",
             login="accountman",
         )
+
+    def test_loyalty_program_using_same_product(self):
+        """
+        - Create a loyalty program giving free product A for 30 points
+        - Trigger the condition of the program using the same product A
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "list_price": 10,
+            "available_in_pos": True,
+        })
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 10,
+                'minimum_amount': 5,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'required_points': 30,
+                'reward_product_id': self.product_a.id,
+                'reward_product_qty': 1,
+            })],
+        })
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': self.loyalty_program.id,
+            'points': 30,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyFreeProductTour2",
+            login="accountman",
+        )
