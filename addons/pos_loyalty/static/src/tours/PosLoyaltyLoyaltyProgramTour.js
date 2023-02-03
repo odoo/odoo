@@ -136,7 +136,7 @@ ProductScreen.do.clickPartnerButton();
 // This deselects the customer.
 PosLoyalty.do.unselectPartner();
 PosLoyalty.check.customerIs("Customer");
-PosLoyalty.check.orderTotalIs("3.20");
+PosLoyalty.check.orderTotalIs("6.40");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
 registry.category("web_tour.tours").add("PosLoyaltyLoyaltyProgram2", { test: true, url: "/pos/web", steps: getSteps() });
