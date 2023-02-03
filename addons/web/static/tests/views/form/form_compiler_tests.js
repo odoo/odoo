@@ -417,15 +417,19 @@ QUnit.module("Form Renderer", (hooks) => {
     QUnit.test("render field with placeholder", async (assert) => {
         assert.expect(1);
 
-        class CharField extends owl.Component {
-            setup() {
-                assert.strictEqual(this.props.placeholder, "e.g. Contact's Name or //someinfo...");
-            }
-        }
-        CharField.template = owl.xml`<div/>`;
-        CharField.extractProps = ({ attrs }) => ({ placeholder: attrs.placeholder });
-
-        registry.category("fields").add("char", CharField, { force: true });
+        const charField = {
+            component: class CharField extends owl.Component {
+                static template = owl.xml`<div/>`;
+                setup() {
+                    assert.strictEqual(
+                        this.props.placeholder,
+                        "e.g. Contact's Name or //someinfo..."
+                    );
+                }
+            },
+            extractProps: ({ attrs }) => ({ placeholder: attrs.placeholder }),
+        };
+        registry.category("fields").add("char", charField, { force: true });
 
         serverData.views = {
             "partner,1,form": /*xml*/ `

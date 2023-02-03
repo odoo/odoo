@@ -19,4 +19,6 @@ class OpenMoveWidget extends Component {
 }
 
 OpenMoveWidget.template = "account.OpenMoveWidget";
-registry.category("fields").add("open_move_widget", OpenMoveWidget);
+registry.category("fields").add("open_move_widget", {
+    component: OpenMoveWidget,
+});

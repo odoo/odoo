@@ -10,6 +10,11 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class RemainingDaysField extends Component {
+    static template = "web.RemainingDaysField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     get hasTime() {
         return this.props.type === "datetime";
     }
@@ -42,12 +47,10 @@ export class RemainingDaysField extends Component {
     }
 }
 
-RemainingDaysField.template = "web.RemainingDaysField";
-RemainingDaysField.props = {
-    ...standardFieldProps,
+export const remainingDaysField = {
+    component: RemainingDaysField,
+    displayName: _lt("Remaining Days"),
+    supportedTypes: ["date", "datetime"],
 };
 
-RemainingDaysField.displayName = _lt("Remaining Days");
-RemainingDaysField.supportedTypes = ["date", "datetime"];
-
-registry.category("fields").add("remaining_days", RemainingDaysField);
+registry.category("fields").add("remaining_days", remainingDaysField);

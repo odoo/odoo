@@ -12,6 +12,23 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class StatusBarField extends Component {
+    static template = "web.StatusBarField";
+    static components = {
+        Dropdown,
+        DropdownItem,
+    };
+    static props = {
+        ...standardFieldProps,
+        canCreate: { type: Boolean, optional: true },
+        canWrite: { type: Boolean, optional: true },
+        displayName: { type: String, optional: true },
+        isDisabled: { type: Boolean, optional: true },
+        visibleSelection: { type: Array, optional: true },
+    };
+    static defaultProps = {
+        visibleSelection: [],
+    };
+
     setup() {
         if (this.props.record.activeFields[this.props.name].viewType === "form") {
             const commandName = sprintf(
@@ -78,7 +95,9 @@ export class StatusBarField extends Component {
     get currentName() {
         switch (this.type) {
             case "many2one": {
-                const item = this.options.find((item) => this.props.value && item.id === this.props.value[0]);
+                const item = this.options.find(
+                    (item) => this.props.value && item.id === this.props.value[0]
+                );
                 return item ? item.display_name : "";
             }
             case "selection": {
@@ -188,42 +207,24 @@ export class StatusBarField extends Component {
     }
 }
 
-StatusBarField.template = "web.StatusBarField";
-StatusBarField.defaultProps = {
-    visibleSelection: [],
-};
-StatusBarField.props = {
-    ...standardFieldProps,
-    canCreate: { type: Boolean, optional: true },
-    canWrite: { type: Boolean, optional: true },
-    displayName: { type: String, optional: true },
-    isDisabled: { type: Boolean, optional: true },
-    visibleSelection: { type: Array, optional: true },
-};
-StatusBarField.components = {
-    Dropdown,
-    DropdownItem,
-};
-
-StatusBarField.displayName = _lt("Status");
-StatusBarField.supportedTypes = ["many2one", "selection"];
-StatusBarField.legacySpecialData = "_fetchSpecialStatus";
-
-StatusBarField.isEmpty = (record, fieldName) => {
-    return record.model.env.isSmall ? !record.data[fieldName] : false;
-};
-StatusBarField.extractProps = ({ attrs, field }) => {
-    return {
+export const statusBarField = {
+    component: StatusBarField,
+    displayName: _lt("Status"),
+    supportedTypes: ["many2one", "selection"],
+    isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
+    legacySpecialData: "_fetchSpecialStatus",
+    extractProps: ({ attrs, field }) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
-        displayName: field.string,
         isDisabled: !attrs.options.clickable,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
-    };
+
+        displayName: field.string,
+    }),
 };
 
-registry.category("fields").add("statusbar", StatusBarField);
+registry.category("fields").add("statusbar", statusBarField);
 
 export async function preloadStatusBar(orm, record, fieldName) {
     const fieldNames = ["id", "display_name"];

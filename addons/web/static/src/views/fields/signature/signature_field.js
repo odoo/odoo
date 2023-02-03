@@ -13,6 +13,16 @@ import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 const placeholder = "/web/static/img/placeholder.png";
 
 export class SignatureField extends Component {
+    static template = "web.SignatureField";
+    static props = {
+        ...standardFieldProps,
+        defaultFont: { type: String },
+        fullName: { type: String, optional: true },
+        height: { type: Number, optional: true },
+        previewImage: { type: String, optional: true },
+        width: { type: Number, optional: true },
+    };
+
     setup() {
         this.displaySignatureRatio = 3;
 
@@ -124,24 +134,15 @@ export class SignatureField extends Component {
     }
 }
 
-SignatureField.template = "web.SignatureField";
-SignatureField.props = {
-    ...standardFieldProps,
-    defaultFont: { type: String },
-    fullName: { type: String, optional: true },
-    height: { type: Number, optional: true },
-    previewImage: { type: String, optional: true },
-    width: { type: Number, optional: true },
-};
-SignatureField.extractProps = ({ attrs }) => {
-    const { options, width, height } = attrs;
-    return {
+export const signatureField = {
+    component: SignatureField,
+    extractProps: ({ attrs }) => ({
         defaultFont: attrs.options.default_font || "",
         fullName: attrs.options.full_name,
-        height: options.size ? options.size[1] || undefined : height,
+        height: attrs.options.size ? attrs.options.size[1] || undefined : attrs.height,
         previewImage: attrs.options.preview_image,
-        width: options.size ? options.size[0] || undefined : width,
-    };
+        width: attrs.options.size ? attrs.options.size[0] || undefined : attrs.width,
+    }),
 };
 
-registry.category("fields").add("signature", SignatureField);
+registry.category("fields").add("signature", signatureField);

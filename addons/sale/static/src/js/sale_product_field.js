@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from '@web/core/registry';
-import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 
 export class SaleOrderLineProductField extends Many2OneField {
 
@@ -109,4 +109,9 @@ export class SaleOrderLineProductField extends Many2OneField {
 
 SaleOrderLineProductField.template = "sale.SaleProductField";
 
-registry.category("fields").add("sol_product_many2one", SaleOrderLineProductField);
+export const saleOrderLineProductField = {
+    ...many2OneField,
+    component: SaleOrderLineProductField,
+};
+
+registry.category("fields").add("sol_product_many2one", saleOrderLineProductField);

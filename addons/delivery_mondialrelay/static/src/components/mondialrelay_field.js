@@ -88,4 +88,8 @@ export class MondialRelayField extends Component {
 }
 MondialRelayField.template = xml`<div t-if="enabled" t-ref="root"/>`;
 
-registry.category("fields").add("mondialrelay_relay", MondialRelayField);
+export const mondialRelayField = {
+    component: MondialRelayField,
+};
+
+registry.category("fields").add("mondialrelay_relay", mondialRelayField);

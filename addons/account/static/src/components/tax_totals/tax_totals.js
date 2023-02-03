@@ -186,4 +186,8 @@ TaxTotalsComponent.props = {
     ...standardFieldProps,
 };
 
-registry.category("fields").add("account-tax-totals-field", TaxTotalsComponent);
+export const taxTotalsComponent = {
+    component: TaxTotalsComponent,
+};
+
+registry.category("fields").add("account-tax-totals-field", taxTotalsComponent);

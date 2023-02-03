@@ -28,4 +28,6 @@ class ShowGroupedList extends Component {
 ShowGroupedList.template = "account.GroupedListTemplate";
 ShowGroupedList.components = { ListGroup };
 
-registry.category("fields").add("grouped_view_widget", ShowGroupedList);
+registry.category("fields").add("grouped_view_widget", {
+    component: ShowGroupedList,
+});

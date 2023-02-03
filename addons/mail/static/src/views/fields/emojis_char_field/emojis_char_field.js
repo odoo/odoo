@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField, charField } from "@web/views/fields/char/char_field";
 import { patch } from "@web/core/utils/patch";
 import MailEmojisMixin from "@mail/js/emojis_mixin";
 import { EmojisFieldCommon } from "@mail/views/fields/emojis_field_common/emojis_field_common";
@@ -23,5 +23,11 @@ patch(EmojisCharField.prototype, "emojis_char_field_mail_mixin", MailEmojisMixin
 patch(EmojisCharField.prototype, "emojis_char_field_field_mixin", EmojisFieldCommon);
 EmojisCharField.template = "mail.EmojisCharField";
 EmojisCharField.components = { ...CharField.components };
-EmojisCharField.additionalClasses = [...(CharField.additionalClasses || []), "o_field_text"];
-registry.category("fields").add("char_emojis", EmojisCharField);
+
+export const emojisCharField = {
+    ...charField,
+    component: EmojisCharField,
+    additionalClasses: [...(charField.additionalClasses || []), "o_field_text"],
+};
+
+registry.category("fields").add("char_emojis", emojisCharField);

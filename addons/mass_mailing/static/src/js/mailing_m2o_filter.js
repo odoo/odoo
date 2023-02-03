@@ -3,7 +3,7 @@
 import { registry } from '@web/core/registry';
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { useService } from "@web/core/utils/hooks";
-import { Many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
 import Domain from 'web.Domain';
 
 const { useState, useEffect } = owl;
@@ -149,12 +149,15 @@ FieldMany2OneMailingFilter.defaultProps = {
     domain_field: "mailing_domain",
     model_field: "mailing_model_id",
 };
-FieldMany2OneMailingFilter.extractProps = ({ field, attrs }) => {
-    return {
-        ...Many2OneField.extractProps({ field, attrs }),
-        domain_field: attrs.options.domain_field,
-        model_field: attrs.options.model_field,
-    }
+
+export const fieldMany2OneMailingFilter = {
+    ...many2OneField,
+    component: FieldMany2OneMailingFilter,
+    extractProps: (params) => ({
+        ...many2OneField.extractProps(params),
+        domain_field: params.attrs.options.domain_field,
+        model_field: params.attrs.options.model_field,
+    }),
 };
 
-registry.category('fields').add('mailing_filter', FieldMany2OneMailingFilter);
+registry.category("fields").add("mailing_filter", fieldMany2OneMailingFilter);

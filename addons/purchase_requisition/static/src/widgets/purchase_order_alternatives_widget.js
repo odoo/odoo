@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { ListRenderer } from "@web/views/list/list_renderer";
 
 
@@ -43,4 +43,9 @@ FieldMany2ManyAltPOs.components = {
    ListRenderer: FieldMany2ManyAltPOsRenderer,
 };
 
-registry.category("fields").add("many2many_alt_pos", FieldMany2ManyAltPOs);
+export const fieldMany2ManyAltPOs = {
+    ...x2ManyField,
+    component: FieldMany2ManyAltPOs,
+};
+
+registry.category("fields").add("many2many_alt_pos", fieldMany2ManyAltPOs);

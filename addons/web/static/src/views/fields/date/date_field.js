@@ -10,6 +10,19 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class DateField extends Component {
+    static template = "web.DateField";
+    static components = {
+        DatePicker,
+    };
+    static props = {
+        ...standardFieldProps,
+        pickerOptions: { type: Object, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        pickerOptions: {},
+    };
+
     setup() {
         /**
          * The last value that has been commited to the model.
@@ -17,6 +30,7 @@ export class DateField extends Component {
          */
         this.lastSetValue = null;
     }
+
     get isDateTime() {
         return this.props.record.fields[this.props.name].type === "datetime";
     }
@@ -44,27 +58,14 @@ export class DateField extends Component {
     }
 }
 
-DateField.template = "web.DateField";
-DateField.components = {
-    DatePicker,
-};
-DateField.props = {
-    ...standardFieldProps,
-    pickerOptions: { type: Object, optional: true },
-    placeholder: { type: String, optional: true },
-};
-DateField.defaultProps = {
-    pickerOptions: {},
-};
-
-DateField.displayName = _lt("Date");
-DateField.supportedTypes = ["date", "datetime"];
-
-DateField.extractProps = ({ attrs }) => {
-    return {
+export const dateField = {
+    component: DateField,
+    displayName: _lt("Date"),
+    supportedTypes: ["date", "datetime"],
+    extractProps: ({ attrs }) => ({
         pickerOptions: attrs.options.datepicker,
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("date", DateField);
+registry.category("fields").add("date", dateField);

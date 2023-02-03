@@ -21,6 +21,14 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { Component } from "@odoo/owl";
 
 export class X2ManyField extends Component {
+    static template = "web.X2ManyField";
+    static components = { Pager, KanbanRenderer, ListRenderer, ViewButton };
+    static props = {
+        ...standardFieldProps,
+        addLabel: { type: String, optional: true },
+        editable: { type: String, optional: true },
+    };
+
     setup() {
         this.activeField = this.props.record.activeFields[this.props.name];
         this.field = this.props.record.fields[this.props.name];
@@ -244,21 +252,16 @@ export class X2ManyField extends Component {
         }
     }
 }
-X2ManyField.components = { Pager, KanbanRenderer, ListRenderer, ViewButton };
-X2ManyField.props = {
-    ...standardFieldProps,
-    addLabel: { type: String, optional: true },
-    editable: { type: String, optional: true },
-};
-X2ManyField.supportedTypes = ["one2many", "many2many"];
-X2ManyField.displayName = _lt("Relational table");
-X2ManyField.template = "web.X2ManyField";
-X2ManyField.useSubView = true;
-X2ManyField.extractProps = ({ attrs }) => {
-    return {
+
+export const x2ManyField = {
+    component: X2ManyField,
+    displayName: _lt("Relational table"),
+    supportedTypes: ["one2many", "many2many"],
+    useSubView: true,
+    extractProps: ({ attrs }) => ({
         addLabel: attrs["add-label"],
-    };
+    }),
 };
 
-registry.category("fields").add("one2many", X2ManyField);
-registry.category("fields").add("many2many", X2ManyField);
+registry.category("fields").add("one2many", x2ManyField);
+registry.category("fields").add("many2many", x2ManyField);

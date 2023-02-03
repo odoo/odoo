@@ -16,8 +16,11 @@ export class JsonPopOver extends Component {
     }
 }
 
-JsonPopOver.displayName = _lt("Json Popup");
-JsonPopOver.supportedTypes = ["char"];
+export const jsonPopOver = {
+    component: JsonPopOver,
+    displayName: _lt("Json Popup"),
+    supportedTypes: ["char"],
+};
 
 export class PopOverLeadDays extends JsonPopOver {
     setup() {
@@ -50,8 +53,18 @@ export class PopOverLeadDays extends JsonPopOver {
 
 PopOverLeadDays.template = "stock.leadDays";
 
+export const popOverLeadDays = {
+    ...jsonPopOver,
+    component: PopOverLeadDays,
+};
+registry.category("fields").add("lead_days_widget", popOverLeadDays);
+
 export class ReplenishmentHistoryWidget extends JsonPopOver {}
 ReplenishmentHistoryWidget.template = "stock.replenishmentHistory";
 
-registry.category("fields").add("lead_days_widget", PopOverLeadDays);
-registry.category("fields").add("replenishment_history_widget", ReplenishmentHistoryWidget);
+export const replenishmentHistoryWidget = {
+    ...jsonPopOver,
+    component: ReplenishmentHistoryWidget,
+};
+
+registry.category("fields").add("replenishment_history_widget", replenishmentHistoryWidget);

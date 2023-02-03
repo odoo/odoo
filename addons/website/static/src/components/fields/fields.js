@@ -48,20 +48,23 @@ class PageUrlField extends Component {
         this.props.update(this.state);
     }
 }
+
 PageUrlField.components = {Switch, PageDependencies};
 PageUrlField.template = 'website.PageUrlField';
 PageUrlField.props = {
     ...standardFieldProps,
     placeholder: {type: String, optional: true},
 };
-PageUrlField.extractProps = ({attrs}) => {
-    return {
-        placeholder: attrs.placeholder,
-    };
-};
-PageUrlField.supportedTypes = ['char'];
 
-registry.category("fields").add("page_url", PageUrlField);
+const pageUrlField = {
+    component: PageUrlField,
+    supportedTypes: ['char'],
+    extractProps: ({ attrs }) => ({
+        placeholder: attrs.placeholder,
+    }),
+};
+
+registry.category("fields").add("page_url", pageUrlField);
 
 /**
  * Displays 'Selection' field's values as images to select.
@@ -86,16 +89,19 @@ export class ImageRadioField extends Component {
         this.props.update(value);
     }
 }
-ImageRadioField.supportedTypes = ['selection'];
+
 ImageRadioField.template = 'website.FieldImageRadio';
 ImageRadioField.props = {
     ...standardFieldProps,
     images: {type: Array, element: String},
 };
-ImageRadioField.extractProps = ({attrs}) => {
-    return {
+
+export const imageRadioField = {
+    component: ImageRadioField,
+    supportedTypes: ['selection'],
+    extractProps: ({ attrs }) => ({
         images: attrs.options.images,
-    };
+    }),
 };
 
-registry.category("fields").add("image_radio", ImageRadioField);
+registry.category("fields").add("image_radio", imageRadioField);

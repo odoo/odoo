@@ -7,6 +7,12 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class SelectionField extends Component {
+    static template = "web.SelectionField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+    };
+
     get options() {
         switch (this.props.record.fields[this.props.name].type) {
             case "many2one":
@@ -63,24 +69,18 @@ export class SelectionField extends Component {
     }
 }
 
-SelectionField.template = "web.SelectionField";
-SelectionField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-};
-
-SelectionField.displayName = _lt("Selection");
-SelectionField.supportedTypes = ["many2one", "selection"];
-SelectionField.legacySpecialData = "_fetchSpecialRelation";
-
-SelectionField.isEmpty = (record, fieldName) => record.data[fieldName] === false;
-SelectionField.extractProps = ({ attrs }) => {
-    return {
+export const selectionField = {
+    component: SelectionField,
+    displayName: _lt("Selection"),
+    supportedTypes: ["many2one", "selection"],
+    legacySpecialData: "_fetchSpecialRelation",
+    isEmpty: (record, fieldName) => record.data[fieldName] === false,
+    extractProps: ({ attrs }) => ({
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("selection", SelectionField);
+registry.category("fields").add("selection", selectionField);
 
 export function preloadSelection(orm, record, fieldName) {
     const field = record.fields[fieldName];

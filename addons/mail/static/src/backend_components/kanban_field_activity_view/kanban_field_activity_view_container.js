@@ -78,6 +78,14 @@ export class KanbanFieldActivityViewContainer extends Component {
 }
 
 Object.assign(KanbanFieldActivityViewContainer, {
+    props: {
+        ...standardFieldProps,
+    },
+    template: "mail.KanbanFieldActivityViewContainer",
+});
+
+export const kanbanFieldActivityViewContainer = {
+    component: KanbanFieldActivityViewContainer,
     fieldDependencies: {
         activity_exception_decoration: { type: "selection" },
         activity_exception_icon: { type: "char" },
@@ -86,10 +94,6 @@ Object.assign(KanbanFieldActivityViewContainer, {
         activity_type_icon: { type: "char" },
         activity_type_id: { type: "many2one", relation: "mail.activity.type" },
     },
-    props: {
-        ...standardFieldProps,
-    },
-    template: "mail.KanbanFieldActivityViewContainer",
-});
+};
 
-registry.category("fields").add("kanban_activity", KanbanFieldActivityViewContainer);
+registry.category("fields").add("kanban_activity", kanbanFieldActivityViewContainer);

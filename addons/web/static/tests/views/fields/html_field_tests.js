@@ -3,7 +3,7 @@
 import { click, editInput, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
-import { HtmlField } from "@web/views/fields/html/html_field";
+import { htmlField } from "@web/views/fields/html/html_field";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { session } from "@web/session";
 
@@ -32,7 +32,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         setupViewRegistries();
 
         // Explicitly removed by web_editor, we need to add it back
-        registry.category("fields").add("html", HtmlField, { force: true });
+        registry.category("fields").add("html", htmlField, { force: true });
     });
 
     QUnit.module("HtmlField");

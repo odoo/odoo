@@ -88,11 +88,13 @@ GaugeField.props = {
     title: { type: String },
 };
 
-GaugeField.extractProps = ({ attrs, field }) => {
-    return {
+export const gaugeField = {
+    component: GaugeField,
+    extractProps: ({ attrs, field }) => ({
         maxValueField: attrs.options.max_field,
+
         title: attrs.options.title || field.string,
-    };
+    }),
 };
 
-registry.category("fields").add("gauge", GaugeField);
+registry.category("fields").add("gauge", gaugeField);

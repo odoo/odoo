@@ -12,6 +12,22 @@ import { TranslationButton } from "../translation_button";
 import { Component, onMounted, onWillUnmount, useEffect, useRef } from "@odoo/owl";
 
 export class TextField extends Component {
+    static template = "web.TextField";
+    static components = {
+        TranslationButton,
+    };
+    static props = {
+        ...standardFieldProps,
+        isTranslatable: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
+        dynamicPlaceholder: { type: Boolean, optional: true },
+        rowCount: { type: Number, optional: true },
+    };
+    static defaultProps = {
+        dynamicPlaceholder: false,
+        rowCount: 2,
+    };
+
     setup() {
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
@@ -105,40 +121,27 @@ export class TextField extends Component {
     }
 }
 
-TextField.template = "web.TextField";
-TextField.components = {
-    TranslationButton,
-};
-TextField.defaultProps = {
-    dynamicPlaceholder: false,
-    rowCount: 2,
-};
-TextField.props = {
-    ...standardFieldProps,
-    isTranslatable: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
-    dynamicPlaceholder: { type: Boolean, optional: true },
-    rowCount: { type: Number, optional: true },
-};
-
-TextField.displayName = _lt("Multiline Text");
-TextField.supportedTypes = ["html", "text"];
-
-TextField.extractProps = ({ attrs, field }) => {
-    const props = {
-        isTranslatable: field.translate,
+export const textField = {
+    component: TextField,
+    displayName: _lt("Multiline Text"),
+    supportedTypes: ["html", "text"],
+    extractProps: ({ attrs, field }) => ({
         placeholder: attrs.placeholder,
         dynamicPlaceholder: attrs.options.dynamic_placeholder,
-    };
-    if (attrs.rows) {
-        props.rowCount = parseInteger(attrs.rows);
-    }
-    return props;
+        rowCount: attrs.rows && parseInteger(attrs.rows),
+
+        isTranslatable: field.translate,
+    }),
 };
 
-registry.category("fields").add("text", TextField);
+registry.category("fields").add("text", textField);
 
 export class ListTextField extends TextField {
+    static defaultProps = {
+        ...super.defaultProps,
+        rowCount: 1,
+    };
+
     get minimumHeight() {
         return 0;
     }
@@ -146,9 +149,10 @@ export class ListTextField extends TextField {
         return this.props.rowCount;
     }
 }
-ListTextField.defaultProps = {
-    ...TextField.defaultProps,
-    rowCount: 1,
+
+export const listTextField = {
+    ...textField,
+    component: ListTextField,
 };
 
-registry.category("fields").add("list.text", ListTextField);
+registry.category("fields").add("list.text", listTextField);

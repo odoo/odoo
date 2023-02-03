@@ -2,16 +2,20 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
-import { BooleanField } from "../boolean/boolean_field";
+import { booleanField, BooleanField } from "../boolean/boolean_field";
 
 export class BooleanToggleField extends BooleanField {
+    static template = "web.BooleanToggleField";
+
     get isReadonly() {
         return this.props.record.isReadonly(this.props.name);
     }
 }
 
-BooleanToggleField.template = "web.BooleanToggleField";
+export const booleanToggleField = {
+    ...booleanField,
+    component: BooleanToggleField,
+    displayName: _lt("Toggle"),
+};
 
-BooleanToggleField.displayName = _lt("Toggle");
-
-registry.category("fields").add("boolean_toggle", BooleanToggleField);
+registry.category("fields").add("boolean_toggle", booleanToggleField);

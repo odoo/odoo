@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { registry } from "@web/core/registry";
 
 import { CommonSkillsListRenderer } from "../views/skills_list_renderer";
@@ -41,4 +41,9 @@ SkillsX2ManyField.components = {
     ListRenderer: SkillsListRenderer,
 };
 
-registry.category("fields").add("skills_one2many", SkillsX2ManyField);
+export const skillsX2ManyField = {
+    ...x2ManyField,
+    component: SkillsX2ManyField,
+};
+
+registry.category("fields").add("skills_one2many", skillsX2ManyField);

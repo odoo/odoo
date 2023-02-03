@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import {Field} from '@web/views/fields/field';
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
@@ -49,7 +48,7 @@ class HrOrgChartPopover extends Component {
 }
 HrOrgChartPopover.template = 'hr_org_chart.hr_orgchart_emp_popover';
 
-export class HrOrgChart extends Field {
+export class HrOrgChart extends Component {
     async setup() {
         super.setup();
 
@@ -143,4 +142,8 @@ HrOrgChart.components = {
 
 HrOrgChart.template = 'hr_org_chart.hr_org_chart';
 
-registry.category("fields").add("hr_org_chart", HrOrgChart);
+export const hrOrgChart = {
+    component: HrOrgChart,
+};
+
+registry.category("fields").add("hr_org_chart", hrOrgChart);

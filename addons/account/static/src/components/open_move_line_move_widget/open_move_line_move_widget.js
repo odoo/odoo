@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
+import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class LineOpenMoveWidget extends Many2OneField {
     async openAction() {
@@ -10,4 +10,9 @@ class LineOpenMoveWidget extends Many2OneField {
     }
 }
 
-registry.category("fields").add("line_open_move_widget", LineOpenMoveWidget);
+export const lineOpenMoveWidget = {
+    ...many2OneField,
+    component: LineOpenMoveWidget,
+};
+
+registry.category("fields").add("line_open_move_widget", lineOpenMoveWidget);

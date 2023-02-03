@@ -4450,8 +4450,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("one2many with CREATE onchanges correctly refreshed", async function (assert) {
         let delta = 0;
         const fieldRegistry = registry.category("fields");
-        for (const [name, Field] of fieldRegistry.getEntries()) {
-            class DeltaField extends Field {
+        for (const [name, field] of fieldRegistry.getEntries()) {
+            class DeltaField extends field.component {
                 setup() {
                     super.setup();
                     owl.onWillStart(() => {
@@ -4462,7 +4462,7 @@ QUnit.module("Fields", (hooks) => {
                     });
                 }
             }
-            fieldRegistry.add(name, DeltaField, { force: true });
+            fieldRegistry.add(name, { ...field, component: DeltaField }, { force: true });
         }
         let deactiveOnchange = true;
 

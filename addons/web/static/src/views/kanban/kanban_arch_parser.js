@@ -120,7 +120,7 @@ export class KanbanArchParser extends XMLParser {
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
-                    fieldInfo.FieldComponent.fieldDependencies
+                    fieldInfo.field.fieldDependencies
                 );
             }
             if (node.tagName === "widget") {

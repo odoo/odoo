@@ -8,6 +8,11 @@ import { Component } from "@odoo/owl";
 const formatters = registry.category("formatters");
 
 export class BadgeField extends Component {
+    static template = "web.BadgeField";
+    static props = {
+        ...standardFieldProps,
+    };
+
     get formattedValue() {
         const formatter = formatters.get(this.props.type);
         return formatter(this.props.value, {
@@ -25,12 +30,10 @@ export class BadgeField extends Component {
     }
 }
 
-BadgeField.template = "web.BadgeField";
-BadgeField.props = {
-    ...standardFieldProps,
+export const badgeField = {
+    component: BadgeField,
+    displayName: _lt("Badge"),
+    supportedTypes: ["selection", "many2one", "char"],
 };
 
-BadgeField.displayName = _lt("Badge");
-BadgeField.supportedTypes = ["selection", "many2one", "char"];
-
-registry.category("fields").add("badge", BadgeField);
+registry.category("fields").add("badge", badgeField);

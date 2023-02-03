@@ -9,7 +9,7 @@ import { loadBundle, loadJS } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
-import { HtmlField } from "@web_editor/js/backend/html_field";
+import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
 import { getWysiwygClass } from 'web_editor.loader';
 import { device } from 'web.config';
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
@@ -584,16 +584,16 @@ MassMailingHtmlField.props = {
     iframeHtmlClass: { type: String, optional: true },
 };
 
-MassMailingHtmlField.displayName = _lt("Email");
-MassMailingHtmlField.extractProps = (...args) => {
-    const [{ attrs }] = args;
-    const htmlProps = HtmlField.extractProps(...args);
-    return {
-        ...htmlProps,
-        filterTemplates: attrs.options.filterTemplates,
-        inlineField: attrs.options['inline-field'],
-        iframeHtmlClass: attrs['iframeHtmlClass'],
-    };
+export const massMailingHtmlField = {
+    ...htmlField,
+    component: MassMailingHtmlField,
+    displayName: _lt("Email"),
+    extractProps: (params) => ({
+        ...htmlField.extractProps(params),
+        filterTemplates: params.attrs.options.filterTemplates,
+        inlineField: params.attrs.options['inline-field'],
+        iframeHtmlClass: params.attrs['iframeHtmlClass'],
+    }),
 };
 
-registry.category("fields").add("mass_mailing_html", MassMailingHtmlField);
+registry.category("fields").add("mass_mailing_html", massMailingHtmlField);

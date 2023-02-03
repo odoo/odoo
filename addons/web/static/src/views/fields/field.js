@@ -50,17 +50,17 @@ function getFieldClassFromRegistry(fieldType, widget, viewType, jsClass) {
         return fieldRegistry.get(fieldType);
     }
 
-    return DefaultField;
+    return { component: DefaultField };
 }
 
-export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo) {
+export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     const modifiers = fieldInfo.modifiers || {};
     const readonly = evalDomain(modifiers.readonly, record.evalContext);
     const inEdit = record.isInEdition;
 
     let empty = !record.isVirtual;
-    if ("isEmpty" in FieldComponent) {
-        empty = empty && FieldComponent.isEmpty(record, fieldName);
+    if ("isEmpty" in field) {
+        empty = empty && field.isEmpty(record, fieldName);
     } else {
         empty = empty && !record.data[fieldName];
     }
@@ -75,17 +75,17 @@ export function fieldVisualFeedback(FieldComponent, record, fieldName, fieldInfo
 
 export class Field extends Component {
     setup() {
-        this.FieldComponent = this.props.fieldInfo.FieldComponent;
-        if (!this.FieldComponent) {
+        this.field = this.props.fieldInfo.field;
+        if (!this.field) {
             const fieldType = this.props.record.fields[this.props.name].type;
-            this.FieldComponent = getFieldClassFromRegistry(fieldType, this.props.type);
+            this.field = getFieldClassFromRegistry(fieldType, this.props.type);
         }
     }
 
     get classNames() {
         const { class: _class, fieldInfo, name, record } = this.props;
         const { readonly, required, invalid, empty } = fieldVisualFeedback(
-            this.FieldComponent,
+            this.field,
             record,
             name,
             fieldInfo
@@ -99,8 +99,8 @@ export class Field extends Component {
             [`o_field_${this.type}`]: true,
             [_class]: Boolean(_class),
         };
-        if (this.FieldComponent.additionalClasses) {
-            for (const cls of this.FieldComponent.additionalClasses) {
+        if (this.field.additionalClasses) {
+            for (const cls of this.field.additionalClasses) {
                 classNames[cls] = true;
             }
         }
@@ -139,10 +139,10 @@ export class Field extends Component {
             decorationMap[decoName] = value;
         }
 
-        let propsFromAttrs = fieldInfo.propsFromAttrs;
+        let propsFromAttrs = fieldInfo.propsFromAttrs || {};
         if (this.props.attrs) {
-            const extractProps = this.FieldComponent.extractProps || (() => ({}));
-            propsFromAttrs = extractProps({
+            const extractProps = this.field.extractProps || (() => ({}));
+            propsFromAttrs = extractProps.call(this.field, {
                 field,
                 attrs: {
                     ...this.props.attrs,
@@ -202,18 +202,18 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
-    const field = fields[name];
     const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
+    const field = getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
         viewType,
         context: node.getAttribute("context") || "{}",
-        string: node.getAttribute("string") || field.string,
+        string: node.getAttribute("string") || fields[name].string,
         help: node.getAttribute("help"),
         widget,
         modifiers,
         onChange: archParseBoolean(node.getAttribute("on_change")),
-        FieldComponent: getFieldClassFromRegistry(fields[name].type, widget, viewType, jsClass),
+        field,
         forceSave: archParseBoolean(node.getAttribute("force_save")),
         decorations: {}, // populated below
         noLabel: archParseBoolean(node.getAttribute("nolabel")),
@@ -244,26 +244,26 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 
     if (viewType !== "kanban") {
         // FIXME WOWL: find a better solution
-        const extractProps = fieldInfo.FieldComponent.extractProps || (() => ({}));
-        fieldInfo.propsFromAttrs = extractProps({
-            field,
+        const extractProps = field.extractProps || (() => ({}));
+        fieldInfo.propsFromAttrs = extractProps.call(field, {
+            field: fields[name],
             attrs: { ...fieldInfo.rawAttrs, options: fieldInfo.options },
         });
     }
 
-    if (X2M_TYPES.includes(field.type)) {
+    if (X2M_TYPES.includes(fields[name].type)) {
         const views = {};
         for (const child of node.children) {
             const viewType = child.tagName === "tree" ? "list" : child.tagName;
             const { ArchParser } = viewRegistry.get(viewType);
             const xmlSerializer = new XMLSerializer();
             const subArch = xmlSerializer.serializeToString(child);
-            const archInfo = new ArchParser().parse(subArch, models, field.relation);
+            const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
             views[viewType] = {
                 ...archInfo,
-                fields: models[field.relation],
+                fields: models[fields[name].relation],
             };
-            fieldInfo.relatedFields = models[field.relation];
+            fieldInfo.relatedFields = models[fields[name].relation];
         }
 
         let viewMode = node.getAttribute("mode");
@@ -279,10 +279,10 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             viewMode = viewMode.replace("tree", "list");
         }
         fieldInfo.viewMode = viewMode;
-        fieldInfo.relation = field.relation; // not really necessary
+        fieldInfo.relation = fields[name].relation; // not really necessary
         fieldInfo.views = views;
 
-        let fieldsToFetch = fieldInfo.FieldComponent.fieldsToFetch;
+        let fieldsToFetch = field.fieldsToFetch;
         if (fieldsToFetch) {
             if (fieldsToFetch instanceof Function) {
                 fieldsToFetch = fieldsToFetch(fieldInfo);

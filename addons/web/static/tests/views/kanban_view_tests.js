@@ -855,24 +855,26 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("field with widget and attributes in kanban", async (assert) => {
         assert.expect(1);
 
-        class MyField extends Component {
-            setup() {
-                if (this.props.record.resId === 1) {
-                    assert.deepEqual(this.props.attrs, {
-                        name: "int_field",
-                        widget: "my_field",
-                        str: "some string",
-                        bool: "true",
-                        num: "4.5",
-                        options: {},
-                        field_id: "int_field",
-                    });
+        const myField = {
+            component: class MyField extends Component {
+                static template = xml`<span/>`;
+                setup() {
+                    if (this.props.record.resId === 1) {
+                        assert.deepEqual(this.props.attrs, {
+                            name: "int_field",
+                            widget: "my_field",
+                            str: "some string",
+                            bool: "true",
+                            num: "4.5",
+                            options: {},
+                            field_id: "int_field",
+                        });
+                    }
                 }
-            }
-        }
-        MyField.template = xml`<span/>`;
-        MyField.extractProps = ({ attrs }) => ({ attrs });
-        registry.category("fields").add("my_field", MyField);
+            },
+            extractProps: ({ attrs }) => ({ attrs }),
+        };
+        registry.category("fields").add("my_field", myField);
 
         await makeView({
             type: "kanban",
@@ -897,14 +899,17 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("field with widget and dynamic attributes in kanban", async (assert) => {
-        class MyField extends Component {}
-        MyField.template = xml`<span/>`;
-        MyField.extractProps = ({ attrs }) => {
-            assert.step(
-                `${attrs["dyn-bool"]}/${attrs["interp-str"]}/${attrs["interp-str2"]}/${attrs["interp-str3"]}`
-            );
+        const myField = {
+            component: class MyField extends Component {
+                static template = xml`<span/>`;
+            },
+            extractProps: ({ attrs }) => {
+                assert.step(
+                    `${attrs["dyn-bool"]}/${attrs["interp-str"]}/${attrs["interp-str2"]}/${attrs["interp-str3"]}`
+                );
+            },
         };
-        registry.category("fields").add("my_field", MyField);
+        registry.category("fields").add("my_field", myField);
 
         await makeView({
             type: "kanban",
@@ -11875,12 +11880,15 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("fieldDependencies support for fields", async (assert) => {
-        class CustomField extends Component {}
-        CustomField.fieldDependencies = {
-            int_field: { type: "integer" },
+        const customField = {
+            component: class CustomField extends Component {
+                static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            },
+            fieldDependencies: {
+                int_field: { type: "integer" },
+            },
         };
-        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
-        registry.category("fields").add("custom_field", CustomField);
+        registry.category("fields").add("custom_field", customField);
 
         await makeView({
             resModel: "partner",
@@ -11905,12 +11913,15 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "fieldDependencies support for fields: dependence on a relational field",
         async (assert) => {
-            class CustomField extends Component {}
-            CustomField.fieldDependencies = {
-                product_id: { type: "many2one", relation: "product" },
+            const customField = {
+                component: class CustomField extends Component {
+                    static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+                },
+                fieldDependencies: {
+                    product_id: { type: "many2one", relation: "product" },
+                },
             };
-            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
-            registry.category("fields").add("custom_field", CustomField);
+            registry.category("fields").add("custom_field", customField);
 
             await makeView({
                 resModel: "partner",

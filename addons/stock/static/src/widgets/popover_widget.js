@@ -46,7 +46,12 @@ export class PopoverWidgetField extends Component {
     }
 }
 
-PopoverWidgetField.supportedTypes = ['char'];
 PopoverWidgetField.template = 'stock.popoverButton';
 PopoverWidgetField.components = { Popover: PopoverComponent }
-registry.category("fields").add("popover_widget", PopoverWidgetField);
+
+export const popoverWidgetField = {
+    component: PopoverWidgetField,
+    supportedTypes: ['char'],
+};
+
+registry.category("fields").add("popover_widget", popoverWidgetField);

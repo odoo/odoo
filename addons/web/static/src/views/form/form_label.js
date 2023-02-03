@@ -9,7 +9,7 @@ import { Component } from "@odoo/owl";
 export class FormLabel extends Component {
     get className() {
         const { invalid, empty, readonly } = fieldVisualFeedback(
-            this.props.fieldInfo.FieldComponent,
+            this.props.fieldInfo.field,
             this.props.record,
             this.props.fieldName,
             this.props.fieldInfo

@@ -16,4 +16,8 @@ class FieldIframePreview extends Component {
 }
 FieldIframePreview.template = 'website.iframeWidget';
 
-registry.category('fields').add('iframe', FieldIframePreview);
+export const fieldIframePreview = {
+    component: FieldIframePreview,
+};
+
+registry.category("fields").add("iframe", fieldIframePreview);

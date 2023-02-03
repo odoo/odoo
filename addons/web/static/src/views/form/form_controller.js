@@ -42,7 +42,7 @@ export async function loadSubViews(
             continue; // no need to fetch the sub view if the field is always invisible
         }
 
-        if (!fieldInfo.FieldComponent.useSubView) {
+        if (!fieldInfo.field.useSubView) {
             continue; // the FieldComponent used to render the field doesn't need a sub view
         }
 

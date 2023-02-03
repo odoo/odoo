@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { ProgressBarField } from "./progress_bar_field";
+import { progressBarField, ProgressBarField } from "./progress_bar_field";
 
 export class KanbanProgressBarField extends ProgressBarField {
     onClick() {
@@ -11,4 +11,9 @@ export class KanbanProgressBarField extends ProgressBarField {
     }
 }
 
-registry.category("fields").add("kanban.progressbar", KanbanProgressBarField);
+export const kanbanProgressBarField = {
+    ...progressBarField,
+    component: KanbanProgressBarField,
+};
+
+registry.category("fields").add("kanban.progressbar", kanbanProgressBarField);

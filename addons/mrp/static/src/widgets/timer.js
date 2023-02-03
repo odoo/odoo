@@ -84,7 +84,6 @@ export class MrpTimer extends Component {
     }
 }
 
-MrpTimer.supportedTypes = ["float"];
 MrpTimer.props = {
     ...standardFieldProps,
     duration: { type: Number, optional: true },
@@ -93,5 +92,10 @@ MrpTimer.props = {
 };
 MrpTimer.template = "mrp.MrpTimer";
 
-registry.category("fields").add("mrp_timer", MrpTimer);
+export const mrpTimer = {
+    component: MrpTimer,
+    supportedTypes: ["float"],
+};
+
+registry.category("fields").add("mrp_timer", mrpTimer);
 registry.category("formatters").add("mrp_timer", formatMinutes);

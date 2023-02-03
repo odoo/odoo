@@ -32,7 +32,7 @@ export class FormArchParser extends XMLParser {
                 addFieldDependencies(
                     activeFields,
                     models[modelName],
-                    fieldInfo.FieldComponent.fieldDependencies
+                    fieldInfo.field.fieldDependencies
                 );
                 return false;
             } else if (node.tagName === "div" && node.classList.contains("oe_chatter")) {

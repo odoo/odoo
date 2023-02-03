@@ -11,6 +11,15 @@ const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 export class DateRangeField extends Component {
+    static template = "web.DateRangeField";
+    static props = {
+        ...standardFieldProps,
+        relatedEndDateField: { type: String, optional: true },
+        relatedStartDateField: { type: String, optional: true },
+        formatType: { type: String, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.root = useRef("root");
@@ -138,24 +147,17 @@ export class DateRangeField extends Component {
         this.isPickerShown = false;
     }
 }
-DateRangeField.template = "web.DateRangeField";
-DateRangeField.props = {
-    ...standardFieldProps,
-    relatedEndDateField: { type: String, optional: true },
-    relatedStartDateField: { type: String, optional: true },
-    formatType: { type: String, optional: true },
-    placeholder: { type: String, optional: true },
-};
 
-DateRangeField.supportedTypes = ["date", "datetime"];
-
-DateRangeField.extractProps = ({ attrs, field }) => {
-    return {
+export const dateRangeField = {
+    component: DateRangeField,
+    supportedTypes: ["date", "datetime"],
+    extractProps: ({ attrs, field }) => ({
         relatedEndDateField: attrs.options.related_end_date,
         relatedStartDateField: attrs.options.related_start_date,
-        formatType: attrs.options.format_type || field.type,
         placeholder: attrs.placeholder,
-    };
+
+        formatType: attrs.options.format_type || field.type,
+    }),
 };
 
-registry.category("fields").add("daterange", DateRangeField);
+registry.category("fields").add("daterange", dateRangeField);

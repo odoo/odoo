@@ -2,8 +2,8 @@
 
 import { patch } from "@web/core/utils/patch";
 import { debounce } from "@web/core/utils/timing";
-import { CharField } from "@web/views/fields/char/char_field";
-import { TextField } from '@web/views/fields/text/text_field';
+import { CharField, charField } from "@web/views/fields/char/char_field";
+import { TextField, textField } from "@web/views/fields/text/text_field";
 import { archParseBoolean } from "@web/views/utils";
 
 const { useEffect } = owl;
@@ -24,7 +24,7 @@ const onchangeOnKeydownMixin = {
             const triggerOnChange = debounce(this.triggerOnChange, this.props.keydownDebounceDelay);
             useEffect(() => {
                 if (input.el) {
-                    input.el.addEventListener('keydown', triggerOnChange.bind(this));
+                    input.el.addEventListener("keydown", triggerOnChange.bind(this));
                 }
             });
         }
@@ -32,12 +32,12 @@ const onchangeOnKeydownMixin = {
 
     triggerOnChange() {
         const input = this.input || this.textareaRef;
-        input.el.dispatchEvent(new Event('change'));
-    }
+        input.el.dispatchEvent(new Event("change"));
+    },
 };
 
-patch(CharField.prototype, 'char_field_onchange_on_keydown', onchangeOnKeydownMixin);
-patch(TextField.prototype, 'text_field_onchange_on_keydown', onchangeOnKeydownMixin);
+patch(CharField.prototype, "char_field_onchange_on_keydown", onchangeOnKeydownMixin);
+patch(TextField.prototype, "text_field_onchange_on_keydown", onchangeOnKeydownMixin);
 
 CharField.props = {
     ...CharField.props,
@@ -51,18 +51,22 @@ TextField.props = {
     keydownDebounceDelay: { type: Number, optional: true },
 };
 
-const charExtractProps = CharField.extractProps;
-CharField.extractProps = ({ attrs, field }) => {
-    return Object.assign(charExtractProps({ attrs, field }), {
+const charExtractProps = charField.extractProps;
+charField.extractProps = (attrs) => {
+    return Object.assign(charExtractProps(attrs), {
         onchangeOnKeydown: archParseBoolean(attrs.onchange_on_keydown),
-        keydownDebounceDelay: attrs.keydown_debounce_delay ? Number(attrs.keydown_debounce_delay) : 2000,
+        keydownDebounceDelay: attrs.keydown_debounce_delay
+            ? Number(attrs.keydown_debounce_delay)
+            : 2000,
     });
 };
 
-const textExtractProps = TextField.extractProps;
-TextField.extractProps = ({ attrs, field }) => {
-    return Object.assign(textExtractProps({ attrs, field }), {
-        onchangeOnKeydown: archParseBoolean(attrs.onchange_on_keydown),
-        keydownDebounceDelay: attrs.keydown_debounce_delay ? Number(attrs.keydown_debounce_delay) : 2000,
+const textExtractProps = textField.extractProps;
+textField.extractProps = (params) => {
+    return Object.assign(textExtractProps(params), {
+        onchangeOnKeydown: archParseBoolean(params.attrs.onchange_on_keydown),
+        keydownDebounceDelay: params.attrs.keydown_debounce_delay
+            ? Number(params.attrs.keydown_debounce_delay)
+            : 2000,
     });
 };

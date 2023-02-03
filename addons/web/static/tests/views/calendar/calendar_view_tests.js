@@ -1421,7 +1421,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     QUnit.test(`render popover with widget which has specialData attribute`, async (assert) => {
         assert.expect(3);
 
-        fieldRegistry.add("specialWidget", CharField);
+        fieldRegistry.add("specialWidget", { component: CharField });
         preloadedDataRegistry.add("specialWidget", {
             loadOnTypes: ["char"],
             preload: () => {
@@ -4484,7 +4484,7 @@ QUnit.module("Views", ({ beforeEach }) => {
             }
         }
         DeferredWidget.template = owl.xml``;
-        fieldRegistry.add("deferred_widget", DeferredWidget);
+        fieldRegistry.add("deferred_widget", { component: DeferredWidget });
         registerCleanup(() => fieldRegistry.remove("deferred_widget"));
 
         await makeView({

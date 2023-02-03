@@ -15,10 +15,18 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 class CopyClipboardField extends Component {
+    static template = "web.CopyClipboardField";
+    static props = {
+        ...standardFieldProps,
+        string: { type: String, optional: true },
+        disabledExpr: { type: String, optional: true },
+    };
+
     setup() {
         this.copyText = this.props.string || this.env._t("Copy");
         this.successText = this.env._t("Copied");
     }
+
     get copyButtonClassName() {
         return `o_btn_${this.props.type}_copy btn-sm`;
     }
@@ -34,47 +42,68 @@ class CopyClipboardField extends Component {
         return Boolean(evaluated);
     }
 }
-CopyClipboardField.template = "web.CopyClipboardField";
-CopyClipboardField.props = {
-    ...standardFieldProps,
-    string: { type: String, optional: true },
-    disabledExpr: { type: String, optional: true },
-};
-CopyClipboardField.extractProps = ({ attrs }) => {
-    return {
-        string: attrs.string,
-        disabledExpr: attrs.disabled,
-    };
-};
 
 export class CopyClipboardButtonField extends CopyClipboardField {
+    static template = "web.CopyClipboardButtonField";
+    static components = { CopyButton };
+
     get copyButtonClassName() {
         return `o_btn_${this.props.type}_copy rounded-2`;
     }
 }
-CopyClipboardButtonField.template = "web.CopyClipboardButtonField";
-CopyClipboardButtonField.components = { CopyButton };
-CopyClipboardButtonField.displayName = _lt("Copy to Clipboard");
 
-registry.category("fields").add("CopyClipboardButton", CopyClipboardButtonField);
+export class CopyClipboardCharField extends CopyClipboardField {
+    static components = { Field: CharField, CopyButton };
+}
 
-export class CopyClipboardCharField extends CopyClipboardField {}
-CopyClipboardCharField.components = { Field: CharField, CopyButton };
-CopyClipboardCharField.displayName = _lt("Copy Text to Clipboard");
-CopyClipboardCharField.supportedTypes = ["char"];
+export class CopyClipboardTextField extends CopyClipboardField {
+    static components = { Field: TextField, CopyButton };
+}
 
-registry.category("fields").add("CopyClipboardChar", CopyClipboardCharField);
+export class CopyClipboardURLField extends CopyClipboardField {
+    static components = { Field: UrlField, CopyButton };
+}
 
-export class CopyClipboardTextField extends CopyClipboardField {}
-CopyClipboardTextField.components = { Field: TextField, CopyButton };
-CopyClipboardTextField.displayName = _lt("Copy Multiline Text to Clipboard");
-CopyClipboardTextField.supportedTypes = ["text"];
+// ----------------------------------------------------------------------------
 
-registry.category("fields").add("CopyClipboardText", CopyClipboardTextField);
+function extractProps({ attrs }) {
+    return {
+        string: attrs.string,
+        disabledExpr: attrs.disabled,
+    };
+}
 
-export class CopyClipboardURLField extends CopyClipboardField {}
-CopyClipboardURLField.components = { Field: UrlField, CopyButton };
-CopyClipboardURLField.displayName = _lt("Copy URL to Clipboard");
-CopyClipboardURLField.supportedTypes = ["char"];
+export const copyClipboardButtonField = {
+    component: CopyClipboardButtonField,
+    displayName: _lt("Copy to Clipboard"),
+    extractProps,
+};
 
-registry.category("fields").add("CopyClipboardURL", CopyClipboardURLField);
+registry.category("fields").add("CopyClipboardButton", copyClipboardButtonField);
+
+export const copyClipboardCharField = {
+    component: CopyClipboardCharField,
+    displayName: _lt("Copy Text to Clipboard"),
+    supportedTypes: ["char"],
+    extractProps,
+};
+
+registry.category("fields").add("CopyClipboardChar", copyClipboardCharField);
+
+export const copyClipboardTextField = {
+    component: CopyClipboardTextField,
+    displayName: _lt("Copy Multiline Text to Clipboard"),
+    supportedTypes: ["text"],
+    extractProps,
+};
+
+registry.category("fields").add("CopyClipboardText", copyClipboardTextField);
+
+export const copyClipboardURLField = {
+    component: CopyClipboardURLField,
+    displayName: _lt("Copy URL to Clipboard"),
+    supportedTypes: ["char"],
+    extractProps,
+};
+
+registry.category("fields").add("CopyClipboardURL", copyClipboardURLField);

@@ -11,6 +11,15 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component, onWillStart, onWillUpdateProps, useEffect, useRef } from "@odoo/owl";
 
 export class AceField extends Component {
+    static template = "web.AceField";
+    static props = {
+        ...standardFieldProps,
+        mode: { type: String, optional: true },
+    };
+    static defaultProps = {
+        mode: "qweb",
+    };
+
     setup() {
         this.aceEditor = null;
         this.editorRef = useRef("editor");
@@ -110,22 +119,13 @@ export class AceField extends Component {
     }
 }
 
-AceField.template = "web.AceField";
-AceField.props = {
-    ...standardFieldProps,
-    mode: { type: String, optional: true },
-};
-AceField.defaultProps = {
-    mode: "qweb",
-};
-
-AceField.displayName = _lt("Ace Editor");
-AceField.supportedTypes = ["text"];
-
-AceField.extractProps = ({ attrs }) => {
-    return {
+export const aceField = {
+    component: AceField,
+    displayName: _lt("Ace Editor"),
+    supportedTypes: ["text"],
+    extractProps: ({ attrs }) => ({
         mode: attrs.options.mode,
-    };
+    }),
 };
 
-registry.category("fields").add("ace", AceField);
+registry.category("fields").add("ace", aceField);
