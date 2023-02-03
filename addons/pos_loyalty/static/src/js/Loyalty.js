@@ -1046,9 +1046,10 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 if (reward.reward_type === "discount" && totalIsZero) {
                     continue;
                 }
+                let unclaimedQty;
                 if (reward.reward_type === "product" && !reward.multi_product) {
                     const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const unclaimedQty = this._computeUnclaimedFreeProductQty(
+                    unclaimedQty = this._computeUnclaimedFreeProductQty(
                         reward,
                         couponProgram.coupon_id,
                         product,
@@ -1061,6 +1062,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 result.push({
                     coupon_id: couponProgram.coupon_id,
                     reward: reward,
+                    potentialQty: unclaimedQty,
                 });
             }
         }
