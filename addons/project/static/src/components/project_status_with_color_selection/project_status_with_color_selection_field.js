@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { SelectionField } from '@web/views/fields/selection/selection_field';
+import { SelectionField, selectionField } from '@web/views/fields/selection/selection_field';
 import { registry } from '@web/core/registry';
 
 import { STATUS_COLORS, STATUS_COLOR_PREFIX } from '../../utils/project_utils';
@@ -22,4 +22,9 @@ export class ProjectStatusWithColorSelectionField extends SelectionField {
 }
 ProjectStatusWithColorSelectionField.template = 'project.ProjectStatusWithColorSelectionField';
 
-registry.category('fields').add('status_with_color', ProjectStatusWithColorSelectionField);
+export const projectStatusWithColorSelectionField = {
+    ...selectionField,
+    component: ProjectStatusWithColorSelectionField,
+};
+
+registry.category("fields").add("status_with_color", projectStatusWithColorSelectionField);

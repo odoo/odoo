@@ -2,7 +2,7 @@
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { Many2OneField } from "../many2one/many2one_field";
+import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
@@ -11,6 +11,18 @@ function valuesEqual(a, b) {
 }
 
 export class ReferenceField extends Component {
+    static template = "web.ReferenceField";
+    static components = {
+        Many2OneField,
+    };
+    static props = {
+        ...Many2OneField.props,
+        hideModelSelector: { type: Boolean, optional: true },
+    };
+    static defaultProps = {
+        ...Many2OneField.defaultProps,
+    };
+
     setup() {
         this.state = useState({
             resModel: this.relation,
@@ -107,36 +119,24 @@ export class ReferenceField extends Component {
     }
 }
 
-ReferenceField.template = "web.ReferenceField";
-ReferenceField.components = {
-    Many2OneField,
-};
-ReferenceField.props = {
-    ...Many2OneField.props,
-    hideModelSelector: { type: Boolean, optional: true },
-};
-ReferenceField.defaultProps = {
-    ...Many2OneField.defaultProps,
-};
+export const referenceField = {
+    component: ReferenceField,
+    displayName: _lt("Reference"),
+    supportedTypes: ["reference", "char"],
+    legacySpecialData: "_fetchSpecialReference",
+    extractProps: (params) => ({
+        /*
+        1 - <field name="ref" options="{'model_field': 'model_id'}" />
+        2 - <field name="ref" options="{'hide_model': True}" />
+        3 - <field name="ref" options="{'model_field': 'model_id' 'hide_model': True}" />
+        4 - <field name="ref"/>
 
-ReferenceField.displayName = _lt("Reference");
-ReferenceField.supportedTypes = ["reference", "char"];
-ReferenceField.legacySpecialData = "_fetchSpecialReference";
-
-ReferenceField.extractProps = ({ attrs, field }) => {
-    /*
-    1 - <field name="ref" options="{'model_field': 'model_id'}" />
-    2 - <field name="ref" options="{'hide_model': True}" />
-    3 - <field name="ref" options="{'model_field': 'model_id' 'hide_model': True}" />
-    4 - <field name="ref"/>
-
-    We want to display the model selector only in the 4th case.
-    */
-    const displayModelSelector = !attrs.options["hide_model"] && !attrs.options["model_field"];
-    return {
-        ...Many2OneField.extractProps({ attrs, field }),
-        hideModelSelector: !displayModelSelector,
-    };
+        We want to display the model selector only in the 4th case.
+        */
+        ...many2OneField.extractProps(params),
+        hideModelSelector:
+            !!params.attrs.options["hide_model"] || !!params.attrs.options["model_field"],
+    }),
 };
 
-registry.category("fields").add("reference", ReferenceField);
+registry.category("fields").add("reference", referenceField);

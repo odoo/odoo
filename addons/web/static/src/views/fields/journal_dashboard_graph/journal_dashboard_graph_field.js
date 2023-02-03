@@ -9,6 +9,12 @@ import { useService } from "@web/core/utils/hooks";
 import { Component, onWillStart, useEffect, useRef } from "@odoo/owl";
 
 export class JournalDashboardGraphField extends Component {
+    static template = "web.JournalDashboardGraphField";
+    static props = {
+        ...standardFieldProps,
+        graphType: String,
+    };
+
     setup() {
         this.chart = null;
         this.cookies = useService("cookie");
@@ -145,18 +151,12 @@ export class JournalDashboardGraphField extends Component {
     }
 }
 
-JournalDashboardGraphField.template = "web.JournalDashboardGraphField";
-JournalDashboardGraphField.props = {
-    ...standardFieldProps,
-    graphType: String,
-};
-
-JournalDashboardGraphField.supportedTypes = ["text"];
-
-JournalDashboardGraphField.extractProps = ({ attrs }) => {
-    return {
+export const journalDashboardGraphField = {
+    component: JournalDashboardGraphField,
+    supportedTypes: ["text"],
+    extractProps: ({ attrs }) => ({
         graphType: attrs.graph_type,
-    };
+    }),
 };
 
-registry.category("fields").add("dashboard_graph", JournalDashboardGraphField);
+registry.category("fields").add("dashboard_graph", journalDashboardGraphField);

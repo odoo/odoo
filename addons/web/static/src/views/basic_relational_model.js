@@ -232,8 +232,7 @@ export class Record extends DataPoint {
                 }
             }
 
-            const isSet =
-                activeField && activeField.FieldComponent && activeField.FieldComponent.isSet;
+            const isSet = activeField && activeField.field && activeField.field.isSet;
 
             if (this.isRequired(fieldName) && isSet && !isSet(this.data[fieldName])) {
                 this.setInvalidField(fieldName);

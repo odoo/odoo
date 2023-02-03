@@ -4,7 +4,10 @@ import { registry } from "@web/core/registry";
 import { useOpenMany2XRecord } from "@web/views/fields/relational_utils";
 import { sprintf } from "@web/core/utils/strings";
 
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import {
+    Many2ManyTagsField,
+    many2ManyTagsField,
+} from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/views/fields/many2many_tags/tags_list";
 
 import { onMounted, onWillUpdateProps } from "@odoo/owl";
@@ -87,10 +90,13 @@ FieldMany2ManyTagsEmail.components = {
     TagsList: FieldMany2ManyTagsEmailTagsList,
 };
 
-FieldMany2ManyTagsEmail.fieldsToFetch = (fieldInfo) => {
-    return [...Many2ManyTagsField.fieldsToFetch(fieldInfo), { name: "email", type: "char" }];
+export const fieldMany2ManyTagsEmail = {
+    ...many2ManyTagsField,
+    component: FieldMany2ManyTagsEmail,
+    fieldsToFetch: (fieldInfo) => {
+        return [...many2ManyTagsField.fieldsToFetch(fieldInfo), { name: "email", type: "char" }];
+    },
+    additionalClasses: ["o_field_many2many_tags"],
 };
 
-FieldMany2ManyTagsEmail.additionalClasses = ["o_field_many2many_tags"];
-
-registry.category("fields").add("many2many_tags_email", FieldMany2ManyTagsEmail);
+registry.category("fields").add("many2many_tags_email", fieldMany2ManyTagsEmail);

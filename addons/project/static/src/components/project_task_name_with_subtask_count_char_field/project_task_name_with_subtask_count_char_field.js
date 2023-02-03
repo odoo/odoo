@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from '@web/core/registry';
-import { CharField } from '@web/views/fields/char/char_field';
+import { CharField, charField } from '@web/views/fields/char/char_field';
 import { formatChar } from '@web/views/fields/formatters';
 
 class ProjectTaskNameWithSubtaskCountCharField extends CharField {
@@ -12,4 +12,7 @@ class ProjectTaskNameWithSubtaskCountCharField extends CharField {
 
 ProjectTaskNameWithSubtaskCountCharField.template = 'project.ProjectTaskNameWithSubtaskCountCharField';
 
-registry.category('fields').add('name_with_subtask_count', ProjectTaskNameWithSubtaskCountCharField);
+registry.category("fields").add("name_with_subtask_count", {
+    ...charField,
+    component: ProjectTaskNameWithSubtaskCountCharField,
+});

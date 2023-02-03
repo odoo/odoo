@@ -1,7 +1,11 @@
 /** @odoo-module */
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { PopoverComponent, PopoverWidgetField } from '@stock/widgets/popover_widget';
+import {
+    PopoverComponent,
+    PopoverWidgetField,
+    popoverWidgetField,
+} from "@stock/widgets/popover_widget";
 
 class  StockRescheculingPopoverComponent extends PopoverComponent {
     setup(){
@@ -37,4 +41,7 @@ StockRescheculingPopover.components = {
     Popover: StockRescheculingPopoverComponent
 }
 
-registry.category("fields").add("stock_rescheduling_popover", StockRescheculingPopover);
+registry.category("fields").add("stock_rescheduling_popover", {
+    ...popoverWidgetField,
+    component: StockRescheculingPopover,
+});

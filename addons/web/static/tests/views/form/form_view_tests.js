@@ -585,7 +585,7 @@ QUnit.module("Views", (hooks) => {
                 return def;
             }
         }
-        fieldRegistry.add("asyncwidget", AsyncField);
+        fieldRegistry.add("asyncwidget", { component: AsyncField });
 
         const viewProm = makeView({
             type: "form",
@@ -691,10 +691,10 @@ QUnit.module("Views", (hooks) => {
         // (int_field) in our case, isn't in the form view. This test ensures that we can open
         // the form view in this situation.
         class MyField extends CharField {}
-        MyField.fieldDependencies = {
-            int_field: { type: "integer" },
-        };
-        fieldRegistry.add("my_widget", MyField);
+        fieldRegistry.add("my_widget", {
+            component: MyField,
+            fieldDependencies: { int_field: { type: "integer" } },
+        });
         serverData.models.partner.records[1].p = [1];
         await makeView({
             type: "form",
@@ -3135,7 +3135,7 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        fieldRegistry.add("asyncwidget", AsyncField);
+        fieldRegistry.add("asyncwidget", { component: AsyncField });
 
         await makeView({
             type: "form",
@@ -3563,12 +3563,14 @@ QUnit.module("Views", (hooks) => {
                 assert.strictEqual(this.props.horizontal, true);
             }
         }
-        MyField.extractProps = function ({ attrs }) {
-            assert.deepEqual(attrs.options, { horizontal: true });
-            return { horizontal: attrs.options.horizontal };
-        };
         MyField.template = owl.xml`<div>ok</div>`;
-        fieldRegistry.add("my_field", MyField);
+        fieldRegistry.add("my_field", {
+            component: MyField,
+            extractProps: function ({ attrs }) {
+                assert.deepEqual(attrs.options, { horizontal: true });
+                return { horizontal: attrs.options.horizontal };
+            },
+        });
 
         await makeView({
             type: "form",
@@ -12565,12 +12567,15 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("fieldDependencies support for fields", async (assert) => {
         serverData.models.partner.records = [{ id: 1, int_field: 2 }];
 
-        class CustomField extends Component {}
-        CustomField.fieldDependencies = {
-            int_field: { type: "integer" },
+        const customField = {
+            component: class CustomField extends Component {
+                static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            },
+            fieldDependencies: {
+                int_field: { type: "integer" },
+            },
         };
-        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
-        registry.category("fields").add("custom_field", CustomField);
+        registry.category("fields").add("custom_field", customField);
 
         await makeView({
             type: "form",
@@ -12592,12 +12597,15 @@ QUnit.module("Views", (hooks) => {
         async (assert) => {
             serverData.models.partner.records[0].product_id = 37;
 
-            class CustomField extends Component {}
-            CustomField.fieldDependencies = {
-                product_id: { type: "many2one", relation: "product" },
+            const customField = {
+                component: class CustomField extends Component {
+                    static template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
+                },
+                fieldDependencies: {
+                    product_id: { type: "many2one", relation: "product" },
+                },
             };
-            CustomField.template = xml`<span t-esc="props.record.data.product_id[1]"/>`;
-            registry.category("fields").add("custom_field", CustomField);
+            registry.category("fields").add("custom_field", customField);
 
             await makeView({
                 type: "form",

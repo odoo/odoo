@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField, charField } from "@web/views/fields/char/char_field";
 import { registry } from "@web/core/registry";
 
 import { useService } from "@web/core/utils/hooks";
@@ -27,4 +27,10 @@ export class ApplicantCharField extends CharField {
     }
 }
 ApplicantCharField.template = "hr_recruitment.ApplicantCharField";
-registry.category("fields").add("applicant_char", ApplicantCharField);
+
+export const applicantCharField = {
+    ...charField,
+    component: ApplicantCharField,
+};
+
+registry.category("fields").add("applicant_char", applicantCharField);

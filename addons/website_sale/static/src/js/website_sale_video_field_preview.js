@@ -7,4 +7,8 @@ const { Component }  = owl;
 export class FieldVideoPreview extends Component {}
 FieldVideoPreview.template = 'website_sale.FieldVideoPreview';
 
-registry.category("fields").add("video_preview", FieldVideoPreview);
+export const fieldVideoPreview = {
+    component: FieldVideoPreview,
+};
+
+registry.category("fields").add("video_preview", fieldVideoPreview);

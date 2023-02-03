@@ -12,6 +12,19 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class DomainField extends Component {
+    static template = "web.DomainField";
+    static components = {
+        DomainSelector,
+    };
+    static props = {
+        ...standardFieldProps,
+        editInDialog: { type: Boolean, optional: true },
+        resModel: { type: String, optional: true },
+    };
+    static defaultProps = {
+        editInDialog: false,
+    };
+
     setup() {
         this.orm = useService("orm");
         this.state = useState({
@@ -126,28 +139,15 @@ export class DomainField extends Component {
     }
 }
 
-DomainField.template = "web.DomainField";
-DomainField.components = {
-    DomainSelector,
-};
-DomainField.props = {
-    ...standardFieldProps,
-    editInDialog: { type: Boolean, optional: true },
-    resModel: { type: String, optional: true },
-};
-DomainField.defaultProps = {
-    editInDialog: false,
-};
-
-DomainField.displayName = _lt("Domain");
-DomainField.supportedTypes = ["char"];
-
-DomainField.isEmpty = () => false;
-DomainField.extractProps = ({ attrs }) => {
-    return {
+export const domainField = {
+    component: DomainField,
+    displayName: _lt("Domain"),
+    supportedTypes: ["char"],
+    isEmpty: () => false,
+    extractProps: ({ attrs }) => ({
         editInDialog: attrs.options.in_dialog,
         resModel: attrs.options.model,
-    };
+    }),
 };
 
-registry.category("fields").add("domain", DomainField);
+registry.category("fields").add("domain", domainField);

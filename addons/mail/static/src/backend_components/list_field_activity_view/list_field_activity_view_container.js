@@ -78,6 +78,14 @@ export class ListFieldActivityViewContainer extends Component {
 }
 
 Object.assign(ListFieldActivityViewContainer, {
+    props: {
+        ...standardFieldProps,
+    },
+    template: "mail.ListFieldActivityViewContainer",
+});
+
+export const listFieldActivityViewContainer = {
+    component: ListFieldActivityViewContainer,
     fieldDependencies: {
         activity_exception_decoration: { type: "selection" },
         activity_exception_icon: { type: "char" },
@@ -86,10 +94,6 @@ Object.assign(ListFieldActivityViewContainer, {
         activity_type_icon: { type: "char" },
         activity_type_id: { type: "many2one", relation: "mail.activity.type" },
     },
-    props: {
-        ...standardFieldProps,
-    },
-    template: "mail.ListFieldActivityViewContainer",
-});
+};
 
-registry.category("fields").add("list_activity", ListFieldActivityViewContainer);
+registry.category("fields").add("list_activity", listFieldActivityViewContainer);

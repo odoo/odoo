@@ -10,6 +10,16 @@ import { FileUploader } from "../file_handler";
 import { Component, onWillUpdateProps, useState } from "@odoo/owl";
 
 export class PdfViewerField extends Component {
+    static template = "web.PdfViewerField";
+    static components = {
+        FileUploader,
+    };
+    static props = {
+        ...standardFieldProps,
+        fileNameField: { type: String, optional: true },
+        previewImage: { type: String, optional: true },
+    };
+
     setup() {
         this.notification = useService("notification");
         this.state = useState({
@@ -75,24 +85,14 @@ export class PdfViewerField extends Component {
     }
 }
 
-PdfViewerField.template = "web.PdfViewerField";
-PdfViewerField.components = {
-    FileUploader,
-};
-PdfViewerField.props = {
-    ...standardFieldProps,
-    fileNameField: { type: String, optional: true },
-    previewImage: { type: String, optional: true },
-};
-
-PdfViewerField.displayName = _lt("PDF Viewer");
-PdfViewerField.supportedTypes = ["binary"];
-
-PdfViewerField.extractProps = ({ attrs }) => {
-    return {
+export const pdfViewerField = {
+    component: PdfViewerField,
+    displayName: _lt("PDF Viewer"),
+    supportedTypes: ["binary"],
+    extractProps: ({ attrs }) => ({
         fileNameField: attrs.filename,
         previewImage: attrs.options.preview_image,
-    };
+    }),
 };
 
-registry.category("fields").add("pdf_viewer", PdfViewerField);
+registry.category("fields").add("pdf_viewer", pdfViewerField);

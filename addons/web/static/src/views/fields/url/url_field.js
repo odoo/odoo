@@ -8,6 +8,14 @@ import { standardFieldProps } from "../standard_field_props";
 import { Component } from "@odoo/owl";
 
 export class UrlField extends Component {
+    static template = "web.UrlField";
+    static props = {
+        ...standardFieldProps,
+        placeholder: { type: String, optional: true },
+        text: { type: String, optional: true },
+        websitePath: { type: Boolean, optional: true },
+    };
+
     setup() {
         useInputField({ getValue: () => this.props.value || "" });
     }
@@ -26,27 +34,26 @@ export class UrlField extends Component {
     }
 }
 
-UrlField.template = "web.UrlField";
-UrlField.props = {
-    ...standardFieldProps,
-    placeholder: { type: String, optional: true },
-    text: { type: String, optional: true },
-    websitePath: { type: Boolean, optional: true },
-};
-
-UrlField.displayName = _lt("URL");
-UrlField.supportedTypes = ["char"];
-
-UrlField.extractProps = ({ attrs }) => {
-    return {
+export const urlField = {
+    component: UrlField,
+    displayName: _lt("URL"),
+    supportedTypes: ["char"],
+    extractProps: ({ attrs }) => ({
         text: attrs.text,
         websitePath: attrs.options.website_path,
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-class FormUrlField extends UrlField {}
-FormUrlField.template = "web.FormUrlField";
+registry.category("fields").add("url", urlField);
 
-registry.category("fields").add("url", UrlField);
-registry.category("fields").add("form.url", FormUrlField);
+class FormUrlField extends UrlField {
+    static template = "web.FormUrlField";
+}
+
+export const formUrlField = {
+    ...urlField,
+    component: FormUrlField,
+};
+
+registry.category("fields").add("form.url", formUrlField);

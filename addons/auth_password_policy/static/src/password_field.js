@@ -30,8 +30,6 @@ export class PasswordField extends Component {
         this.recommendations = recommendations;
     }
 }
-PasswordField.displayName = _lt("Password");
-PasswordField.supportedTypes = ["char"];
 PasswordField.props = standardFieldProps;
 PasswordField.components = { Meter };
 PasswordField.template = xml`
@@ -46,4 +44,10 @@ PasswordField.template = xml`
 </t>
 `;
 
-registry.category("fields").add("password_meter", PasswordField);
+export const passwordField = {
+    component: PasswordField,
+    displayName: _lt("Password"),
+    supportedTypes: ["char"],
+};
+
+registry.category("fields").add("password_meter", passwordField);

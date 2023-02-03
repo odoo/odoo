@@ -5,7 +5,7 @@ import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useChildRef } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { CharField } from "@web/views/fields/char/char_field";
+import { CharField, charField } from "@web/views/fields/char/char_field";
 import { useInputField } from "@web/views/fields/input_field_hook";
 import { loadJS } from "@web/core/assets";
 
@@ -97,4 +97,9 @@ PartnerAutoCompleteCharField.components = {
     AutoComplete,
 };
 
-registry.category("fields").add("field_partner_autocomplete", PartnerAutoCompleteCharField);
+export const partnerAutoCompleteCharField = {
+    ...charField,
+    component: PartnerAutoCompleteCharField,
+};
+
+registry.category("fields").add("field_partner_autocomplete", partnerAutoCompleteCharField);

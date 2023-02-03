@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { FloatField } from "@web/views/fields/float/float_field";
+import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 
 const { useEffect, useRef } = owl;
@@ -41,4 +41,9 @@ export class CountedQuantityWidgetField extends FloatField {
     }
 }
 
-registry.category("fields").add("counted_quantity_widget", CountedQuantityWidgetField);
+export const countedQuantityWidgetField = {
+    ...floatField,
+    component: CountedQuantityWidgetField,
+};
+
+registry.category("fields").add("counted_quantity_widget", countedQuantityWidgetField);

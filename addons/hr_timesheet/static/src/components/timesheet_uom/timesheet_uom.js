@@ -30,7 +30,7 @@ export class TimesheetUOM extends Component {
     }
 
     get timesheetComponent() {
-        return registry.category("fields").get(this.timesheetWidget, FloatFactorField);
+        return registry.category("fields").get(this.timesheetWidget, { component: FloatFactorField }).component;
     }
 
     get timesheetComponentProps() {
@@ -53,4 +53,8 @@ TimesheetUOM.template = "hr_timesheet.TimesheetUOM";
 
 TimesheetUOM.components = { FloatFactorField, FloatToggleField, FloatTimeField };
 
-registry.category("fields").add("timesheet_uom", TimesheetUOM);
+export const timesheetUOM = {
+    component: TimesheetUOM,
+};
+
+registry.category("fields").add("timesheet_uom", timesheetUOM);

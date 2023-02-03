@@ -4,7 +4,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { registry } from "@web/core/registry";
 import { patch } from '@web/core/utils/patch';
 import { useX2ManyCrud, useOpenX2ManyRecord, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
-import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 const fieldRegistry = registry.category("fields");
 
@@ -96,7 +96,12 @@ export class ChatbotStepsOne2many extends X2ManyField {
     }
 };
 
-fieldRegistry.add("chatbot_steps_one2many", ChatbotStepsOne2many);
+export const chatbotStepsOne2many = {
+    ...x2ManyField,
+    component: ChatbotStepsOne2many,
+};
+
+fieldRegistry.add("chatbot_steps_one2many", chatbotStepsOne2many);
 
 ChatbotStepsOne2many.components = {
     ...X2ManyField.components,

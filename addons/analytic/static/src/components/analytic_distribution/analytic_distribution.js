@@ -573,15 +573,11 @@ export class AnalyticDistribution extends Component {
     }
 }
 AnalyticDistribution.template = "analytic.AnalyticDistribution";
-AnalyticDistribution.supportedTypes = ["char", "text"];
 AnalyticDistribution.components = {
     AnalyticAutoComplete,
     TagsList,
 }
 
-AnalyticDistribution.fieldDependencies = {
-    analytic_precision: { type: 'integer' },
-}
 AnalyticDistribution.props = {
     ...standardFieldProps,
     business_domain: { type: String, optional: true },
@@ -591,15 +587,21 @@ AnalyticDistribution.props = {
     force_applicability: { type: String, optional: true },
     allow_save: { type: Boolean },
 }
-AnalyticDistribution.extractProps = ({ field, attrs }) => {
-    return {
+
+export const analyticDistribution = {
+    component: AnalyticDistribution,
+    supportedTypes: ["char", "text"],
+    fieldDependencies: {
+        analytic_precision: { type: "integer" },
+    },
+    extractProps: ({ attrs }) => ({
         business_domain: attrs.options.business_domain,
         account_field: attrs.options.account_field,
         product_field: attrs.options.product_field,
         business_domain_compute: attrs.business_domain_compute,
         force_applicability: attrs.options.force_applicability,
-        allow_save: !Boolean(attrs.options.disable_save),
-    };
+        allow_save: !attrs.options.disable_save,
+    }),
 };
 
-registry.category("fields").add("analytic_distribution", AnalyticDistribution);
+registry.category("fields").add("analytic_distribution", analyticDistribution);

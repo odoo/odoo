@@ -12,6 +12,20 @@ import { session } from "@web/session";
 import { Component } from "@odoo/owl";
 
 export class MonetaryField extends Component {
+    static template = "web.MonetaryField";
+    static props = {
+        ...standardFieldProps,
+        currencyField: { type: String, optional: true },
+        inputType: { type: String, optional: true },
+        useFieldDigits: { type: Boolean, optional: true },
+        hideSymbol: { type: Boolean, optional: true },
+        placeholder: { type: String, optional: true },
+    };
+    static defaultProps = {
+        hideSymbol: false,
+        inputType: "text",
+    };
+
     setup() {
         useInputField({
             getValue: () => this.formattedValue,
@@ -62,31 +76,17 @@ export class MonetaryField extends Component {
     }
 }
 
-MonetaryField.template = "web.MonetaryField";
-MonetaryField.props = {
-    ...standardFieldProps,
-    currencyField: { type: String, optional: true },
-    inputType: { type: String, optional: true },
-    useFieldDigits: { type: Boolean, optional: true },
-    hideSymbol: { type: Boolean, optional: true },
-    placeholder: { type: String, optional: true },
-};
-MonetaryField.defaultProps = {
-    hideSymbol: false,
-    inputType: "text",
-};
-
-MonetaryField.supportedTypes = ["monetary", "float"];
-MonetaryField.displayName = _lt("Monetary");
-
-MonetaryField.extractProps = ({ attrs }) => {
-    return {
+export const monetaryField = {
+    component: MonetaryField,
+    supportedTypes: ["monetary", "float"],
+    displayName: _lt("Monetary"),
+    extractProps: ({ attrs }) => ({
         currencyField: attrs.options.currency_field,
         inputType: attrs.type,
         useFieldDigits: attrs.options.field_digits,
         hideSymbol: attrs.options.no_symbol,
         placeholder: attrs.placeholder,
-    };
+    }),
 };
 
-registry.category("fields").add("monetary", MonetaryField);
+registry.category("fields").add("monetary", monetaryField);

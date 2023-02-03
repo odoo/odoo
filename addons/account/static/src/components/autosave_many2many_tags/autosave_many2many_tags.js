@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { Many2ManyTagsField, many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 const { onWillUpdateProps } = owl;
 
@@ -46,4 +46,9 @@ export class AutosaveMany2ManyTagsField extends Many2ManyTagsField {
     }
 }
 
-registry.category("fields").add("autosave_many2many_tags", AutosaveMany2ManyTagsField);
+export const autosaveMany2ManyTagsField = {
+    ...many2ManyTagsField,
+    component: AutosaveMany2ManyTagsField,
+};
+
+registry.category("fields").add("autosave_many2many_tags", autosaveMany2ManyTagsField);

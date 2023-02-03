@@ -36,6 +36,23 @@ export function imageCacheKey(value) {
 }
 
 export class ImageField extends Component {
+    static template = "web.ImageField";
+    static components = {
+        FileUploader,
+    };
+    static props = {
+        ...standardFieldProps,
+        enableZoom: { type: Boolean, optional: true },
+        zoomDelay: { type: Number, optional: true },
+        previewImage: { type: String, optional: true },
+        acceptedFileExtensions: { type: String, optional: true },
+        width: { type: Number, optional: true },
+        height: { type: Number, optional: true },
+    };
+    static defaultProps = {
+        acceptedFileExtensions: "image/*",
+    };
+
     setup() {
         this.notification = useService("notification");
         this.isMobile = isMobileOS();
@@ -111,32 +128,14 @@ export class ImageField extends Component {
     }
 }
 
-ImageField.template = "web.ImageField";
-ImageField.components = {
-    FileUploader,
-};
-ImageField.props = {
-    ...standardFieldProps,
-    enableZoom: { type: Boolean, optional: true },
-    zoomDelay: { type: Number, optional: true },
-    previewImage: { type: String, optional: true },
-    acceptedFileExtensions: { type: String, optional: true },
-    width: { type: Number, optional: true },
-    height: { type: Number, optional: true },
-};
-ImageField.defaultProps = {
-    acceptedFileExtensions: "image/*",
-};
-
-ImageField.displayName = _lt("Image");
-ImageField.supportedTypes = ["binary"];
-
-ImageField.fieldDependencies = {
-    write_date: { type: "datetime" },
-};
-
-ImageField.extractProps = ({ attrs }) => {
-    return {
+export const imageField = {
+    component: ImageField,
+    displayName: _lt("Image"),
+    supportedTypes: ["binary"],
+    fieldDependencies: {
+        write_date: { type: "datetime" },
+    },
+    extractProps: ({ attrs }) => ({
         enableZoom: attrs.options.zoom,
         zoomDelay: attrs.options.zoom_delay,
         previewImage: attrs.options.preview_image,
@@ -149,8 +148,8 @@ ImageField.extractProps = ({ attrs }) => {
             attrs.options.size && Boolean(attrs.options.size[1])
                 ? attrs.options.size[1]
                 : attrs.height,
-    };
+    }),
 };
 
-registry.category("fields").add("image", ImageField);
-registry.category("fields").add("kanban.image", ImageField); // FIXME WOWL: s.t. we don't use the legacy one
+registry.category("fields").add("image", imageField);
+registry.category("fields").add("kanban.image", imageField); // FIXME WOWL: s.t. we don't use the legacy one

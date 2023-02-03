@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { FloatField } from "@web/views/fields/float/float_field";
+import { FloatField, floatField } from "@web/views/fields/float/float_field";
 import { registry } from "@web/core/registry";
 import { formatFloat } from "@web/views/fields/formatters";
 
@@ -44,6 +44,11 @@ export class MrpShouldConsumeOwl extends FloatField {
 } 
 
 MrpShouldConsumeOwl.template = "mrp.ShouldConsume";
-MrpShouldConsumeOwl.displayName = "MRP Should Consume";
 
-registry.category("fields").add("mrp_should_consume", MrpShouldConsumeOwl);
+export const mrpShouldConsumeOwl = {
+    ...floatField,
+    component: MrpShouldConsumeOwl,
+    displayName: "MRP Should Consume",
+};
+
+registry.category("fields").add("mrp_should_consume", mrpShouldConsumeOwl);

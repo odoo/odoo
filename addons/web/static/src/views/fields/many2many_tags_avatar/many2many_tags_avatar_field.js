@@ -2,10 +2,19 @@
 
 import { registry } from "@web/core/registry";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
-import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import {
+    many2ManyTagsField,
+    Many2ManyTagsField,
+} from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "../many2many_tags/tags_list";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
+    static template = "web.Many2ManyTagsAvatarField";
+    static components = {
+        Many2XAutocomplete,
+        TagsList,
+    };
+
     get tags() {
         return super.tags.map((tag) => ({
             ...tag,
@@ -15,13 +24,12 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     }
 }
 
-Many2ManyTagsAvatarField.template = "web.Many2ManyTagsAvatarField";
-Many2ManyTagsAvatarField.components = {
-    Many2XAutocomplete,
-    TagsList,
+export const many2ManyTagsAvatarField = {
+    ...many2ManyTagsField,
+    component: Many2ManyTagsAvatarField,
 };
 
-registry.category("fields").add("many2many_tags_avatar", Many2ManyTagsAvatarField);
+registry.category("fields").add("many2many_tags_avatar", many2ManyTagsAvatarField);
 
 export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
     get itemsVisible() {
@@ -36,5 +44,10 @@ export class ListKanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField
     }
 }
 
-registry.category("fields").add("list.many2many_tags_avatar", ListKanbanMany2ManyTagsAvatarField);
-registry.category("fields").add("kanban.many2many_tags_avatar", ListKanbanMany2ManyTagsAvatarField);
+export const listKanbanMany2ManyTagsAvatarField = {
+    ...many2ManyTagsAvatarField,
+    component: ListKanbanMany2ManyTagsAvatarField,
+};
+
+registry.category("fields").add("list.many2many_tags_avatar", listKanbanMany2ManyTagsAvatarField);
+registry.category("fields").add("kanban.many2many_tags_avatar", listKanbanMany2ManyTagsAvatarField);

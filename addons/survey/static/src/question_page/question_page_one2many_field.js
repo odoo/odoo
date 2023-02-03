@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useOpenX2ManyRecord, useX2ManyCrud, X2ManyFieldDialog } from "@web/views/fields/relational_utils";
 import { patch } from '@web/core/utils/patch';
 import { useService } from "@web/core/utils/hooks";
-import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
 
 const { useSubEnv } = owl;
 
@@ -127,4 +127,9 @@ QuestionPageOneToManyField.defaultProps = {
     editable: "bottom",
 };
 
-registry.category("fields").add("question_page_one2many", QuestionPageOneToManyField);
+export const questionPageOneToManyField = {
+    ...x2ManyField,
+    component: QuestionPageOneToManyField,
+};
+
+registry.category("fields").add("question_page_one2many", questionPageOneToManyField);

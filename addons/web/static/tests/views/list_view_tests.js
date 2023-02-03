@@ -10,7 +10,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
-import { TextField } from "@web/views/fields/text/text_field";
+import { textField } from "@web/views/fields/text/text_field";
 import { ListController } from "@web/views/list/list_controller";
 import { DynamicRecordList, DynamicGroupList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
@@ -1123,15 +1123,21 @@ QUnit.module("Views", (hooks) => {
 
     QUnit.test("column names (noLabel, label, string and default)", async function (assert) {
         const fieldRegistry = registry.category("fields");
-        const CharField = fieldRegistry.get("char");
+        const charField = fieldRegistry.get("char");
 
-        class NoLabelCharField extends CharField {}
-        NoLabelCharField.noLabel = true;
-        fieldRegistry.add("nolabel_char", NoLabelCharField);
+        class NoLabelCharField extends charField.component {}
+        fieldRegistry.add("nolabel_char", {
+            ...charField,
+            component: NoLabelCharField,
+            noLabel: true,
+        });
 
-        class LabelCharField extends CharField {}
-        LabelCharField.label = "Some static label";
-        fieldRegistry.add("label_char", LabelCharField);
+        class LabelCharField extends charField.component {}
+        fieldRegistry.add("label_char", {
+            ...charField,
+            component: LabelCharField,
+            label: "Some static label",
+        });
 
         await makeView({
             type: "list",
@@ -11711,7 +11717,7 @@ QUnit.module("Views", (hooks) => {
         "editable form alongside html field: click out to unselect the row",
         async function (assert) {
             // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
-            registry.category("fields").add("html", TextField, { force: true });
+            registry.category("fields").add("html", textField, { force: true });
 
             await makeView({
                 type: "form",
@@ -14732,9 +14738,9 @@ QUnit.module("Views", (hooks) => {
 
         const def = makeDeferred();
         const fieldRegistry = registry.category("fields");
-        const CharField = fieldRegistry.get("char");
+        const charField = fieldRegistry.get("char");
 
-        class AsyncCharField extends CharField {
+        class AsyncCharField extends charField.component {
             setup() {
                 super.setup();
                 onWillStart(async () => {
@@ -14743,7 +14749,7 @@ QUnit.module("Views", (hooks) => {
                 });
             }
         }
-        fieldRegistry.add("asyncwidget", AsyncCharField);
+        fieldRegistry.add("asyncwidget", { component: AsyncCharField });
 
         await makeView({
             type: "list",
@@ -15916,7 +15922,7 @@ QUnit.module("Views", (hooks) => {
         "selecting a row after another one containing a table within an html field should be the correct one",
         async function (assert) {
             // FIXME WOWL hack: add back the text field as html field removed by web_editor html_field file
-            registry.category("fields").add("html", TextField, { force: true });
+            registry.category("fields").add("html", textField, { force: true });
             serverData.models.foo.fields.html = { string: "HTML field", type: "html" };
             serverData.models.foo.records[0].html = `
                 <table class="table table-bordered">
@@ -16210,12 +16216,15 @@ QUnit.module("Views", (hooks) => {
     QUnit.test("fieldDependencies support for fields", async (assert) => {
         serverData.models.foo.records = [{ id: 1, int_field: 2 }];
 
-        class CustomField extends Component {}
-        CustomField.fieldDependencies = {
-            int_field: { type: "integer" },
+        const customField = {
+            component: class CustomField extends Component {
+                static template = xml`<span t-esc="props.record.data.int_field"/>`;
+            },
+            fieldDependencies: {
+                int_field: { type: "integer" },
+            },
         };
-        CustomField.template = xml`<span t-esc="props.record.data.int_field"/>`;
-        registry.category("fields").add("custom_field", CustomField);
+        registry.category("fields").add("custom_field", customField);
 
         await makeView({
             resModel: "foo",
@@ -16234,12 +16243,15 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "fieldDependencies support for fields: dependence on a relational field",
         async (assert) => {
-            class CustomField extends Component {}
-            CustomField.fieldDependencies = {
-                m2o: { type: "many2one", relation: "bar" },
+            const customField = {
+                component: class CustomField extends Component {
+                    static template = xml`<span t-esc="props.record.data.m2o[0]"/>`;
+                },
+                fieldDependencies: {
+                    m2o: { type: "many2one", relation: "bar" },
+                },
             };
-            CustomField.template = xml`<span t-esc="props.record.data.m2o[0]"/>`;
-            registry.category("fields").add("custom_field", CustomField);
+            registry.category("fields").add("custom_field", customField);
 
             await makeView({
                 resModel: "foo",

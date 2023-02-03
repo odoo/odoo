@@ -34,3 +34,4 @@ export class SendSMSButton extends Component {
     }
 };
 SendSMSButton.template = "sms.SendSMSButton";
+SendSMSButton.props = ["*"];
