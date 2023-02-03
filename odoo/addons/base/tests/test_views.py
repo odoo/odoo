@@ -3205,6 +3205,9 @@ class TestViews(ViewCase):
             'A <graph> can only contains <field> nodes, found a <label>'
         )
 
+    def test_graph_attributes(self):
+        self.assertValid('<graph string="Graph" cumulated="1" ><field name="model" type="row"/><field name="inherit_id" type="measure"/></graph>')
+
     def test_view_ref(self):
         view = self.assertValid(
             """

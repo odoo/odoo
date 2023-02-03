@@ -590,7 +590,7 @@ async function toInline($editable, cssRules, $iframe) {
                 value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
             }
             image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, image.getAttribute(attributeName));
+            image.style.setProperty(attributeName, value + 'px');
         };
     };
 
@@ -1235,7 +1235,7 @@ function _getMatchedCSSRules(node, cssRules) {
         }
     };
 
-    if (processedStyle.display === 'block') {
+    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('oe-nested'))) {
         delete processedStyle.display;
     }
     if (!processedStyle['box-sizing']) {

@@ -630,3 +630,39 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="accountman")
+
+    def test_rounding_half_up(self):
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 0.5,
+            'rounding_method': 'HALF-UP',
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.2',
+            'available_in_pos': True,
+            'list_price': 1.2,
+            'taxes_id': False,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.25',
+            'available_in_pos': True,
+            'list_price': 1.25,
+            'taxes_id': False,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 1.4',
+            'available_in_pos': True,
+            'list_price': 1.4,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="accountman")

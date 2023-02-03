@@ -1499,6 +1499,12 @@ class MrpProduction(models.Model):
             if finish_moves and not finish_moves.quantity_done:
                 finish_moves._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
                 finish_moves.move_line_ids.lot_id = order.lot_producing_id
+            # workorder duration need to be set to calculate the price of the product
+            for workorder in order.workorder_ids:
+                if workorder.state not in ('done', 'cancel'):
+                    workorder.duration_expected = workorder._get_duration_expected()
+                if workorder.duration == 0.0:
+                    workorder.duration = workorder.duration_expected * order.qty_produced/order.product_qty
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
@@ -1787,11 +1793,7 @@ class MrpProduction(models.Model):
             'state': 'done',
             'product_uom_qty': 0.0,
         })
-        diff_per_production = {}
         for production in self:
-            diff_per_production[production] = 1
-            if production.qty_produced != production.product_qty:
-                diff_per_production[production] = production.qty_produced/production.product_qty
             production.write({
                 'date_finished': fields.Datetime.now(),
                 'product_qty': production.qty_produced,
@@ -1799,12 +1801,6 @@ class MrpProduction(models.Model):
                 'is_locked': True,
                 'state': 'done',
             })
-
-        for workorder in self.workorder_ids:
-            if workorder.state not in ('done', 'cancel'):
-                workorder.duration_expected = workorder._get_duration_expected()
-            if workorder.duration == 0.0:
-                workorder.duration = workorder.duration_expected * diff_per_production[workorder.production_id]
 
         if not backorders:
             if self.env.context.get('from_workorder'):

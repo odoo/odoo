@@ -710,6 +710,19 @@ export class OdooEditor extends EventTarget {
             return false;
         }
 
+        // If the common ancestor is in a nested list, make sure to sanitize
+        // that list's parent <li> instead, so there is enough context to
+        // potentially merge sibling nested lists
+        // (eg, <ol>
+        //          <li class="oe-nested"><ul>...</ul></li>
+        //          <li class="oe-nested"><ul>...</ul></li>
+        //      </ol>: these two lists should be merged together so the common
+        // ancestor should be the <ol> element).
+        const nestedListAncestor = closestElement(commonAncestor, '.oe-nested');
+        if (nestedListAncestor && nestedListAncestor.parentElement) {
+            commonAncestor = nestedListAncestor.parentElement;
+        }
+
         // sanitize and mark current position as sanitized
         sanitize(commonAncestor);
         this._pluginCall('sanitizeElement', [commonAncestor]);
@@ -3268,7 +3281,9 @@ export class OdooEditor extends EventTarget {
 
     _onClipboardCut(clipboardEvent) {
         this._onClipboardCopy(clipboardEvent);
+        this._recordHistorySelection();
         this.deleteRange();
+        this.historyStep();
     }
     _onClipboardCopy(clipboardEvent) {
         if (!this.isSelectionInEditable()) {
