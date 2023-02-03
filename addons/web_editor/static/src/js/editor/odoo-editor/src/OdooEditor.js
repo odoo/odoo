@@ -691,7 +691,8 @@ export class OdooEditor extends EventTarget {
         this._columnUi.remove();
     }
 
-    resetContent(value = '<p><br></p>') {
+    resetContent(value) {
+        value = value || '<p><br></p>';
         this.editable.innerHTML = value;
         this.sanitize();
         this.historyStep(true);
