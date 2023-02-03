@@ -48,12 +48,12 @@ export class GroupByMenu extends Component {
      * @returns {boolean}
      */
     validateField(fieldName, field) {
-        const { sortable, store, type } = field;
+        const { sortable, store, type, filter_sortable } = field;
         return (
             (type === "many2many" ? store : sortable) &&
             fieldName !== "id" &&
             GROUPABLE_TYPES.includes(type) &&
-            field.filter_sortable
+            (filter_sortable || true)
         );
     }
 
