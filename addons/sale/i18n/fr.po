@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -858,7 +858,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>Date de commande :</strong>"
+msgstr "<strong>Date de la commande :</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -1215,10 +1215,11 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
-"Boostez vos ventes avec plusieurs types de programmes : Coupons, Promotions,"
-" Carte Cadeau, Fidélité. Des conditions spécifiques peuvent être fixées "
-"(produits, clients, montant minimum d'achat, période). Les récompenses "
-"peuvent être des remises (% ou montant) ou des produits gratuits."
+"Boostez vos ventes avec plusieurs types de programmes : Bons de réduction, "
+"Promotions, Carte Cadeau, Fidélité. Des conditions spécifiques peuvent être "
+"fixées (produits, clients, montant minimum d'achat, période). Les "
+"récompenses peuvent être des remises (% ou montant) ou des produits "
+"gratuits."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_account_bank_statement_line__campaign_id
@@ -1429,7 +1430,7 @@ msgstr "Code pays"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_loyalty
 msgid "Coupons & Loyalty"
-msgstr "Coupons & Fidélité"
+msgstr "Bons de réduction & Fidélité"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_quotation
@@ -2533,8 +2534,8 @@ msgstr "Pièce jointe principale"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
-"Gérez les promotions, coupons, cartes de fidélité, cartes-cadeaux &amp; "
-"eWallets"
+"Gérez les promotions, bons de réduction, cartes de fidélité, cartes-cadeaux "
+"&amp; eWallets"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2916,7 +2917,12 @@ msgstr "Date de la commande"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
-msgstr "Date de commande : "
+msgstr "Date de la commande : "
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
+msgstr "Date de la commande : 365 derniers jours"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3354,8 +3360,10 @@ msgid "Quotation Sent"
 msgstr "Devis envoyé"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "La validité de l'offre est requise et doit être supérieure à 0."
 

@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Maidu Targama <m.targama@gmail.com>, 2022
+# Martin Talts <martin.t@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Marek Pontus, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
-# Martin Talts <martin.t@avalah.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
@@ -24,9 +24,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -65,7 +65,7 @@ msgstr "%d päeva eest"
 #: code:addons/web/static/src/legacy/js/core/translation.js:0
 #, python-format
 msgid "%d hours ago"
-msgstr "%d tunni eest"
+msgstr "%d tund(i) tagasi"
 
 #. module: web
 #. odoo-javascript
@@ -490,13 +490,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "KÕIK"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr "ALT"
 
 #. module: web
 #. odoo-javascript
@@ -2870,7 +2863,7 @@ msgstr "Kanban"
 #: code:addons/web/static/src/views/kanban/kanban_column_examples_dialog.js:0
 #, python-format
 msgid "Kanban Examples"
-msgstr "Kanban näited.."
+msgstr "Kanban toru näidised"
 
 #. module: web
 #. odoo-javascript
@@ -4777,7 +4770,7 @@ msgstr "Vaata detaile"
 #: code:addons/web/static/src/views/kanban/kanban_column_quick_create.xml:0
 #, python-format
 msgid "See examples"
-msgstr "See examples"
+msgstr "Vaata näidiseid siit"
 
 #. module: web
 #. odoo-javascript
@@ -4966,7 +4959,7 @@ msgstr "Jaga kõigi kasutajatega"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5180,11 +5173,10 @@ msgstr "Tekst"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Maksu ID-kood. Täitke see, kui kontaktile kohaldatakse riiklikke makse. "
-"Kasutatakse mõnedes juriidilistes avaldustes."
 
 #. module: web
 #. odoo-python
@@ -6227,13 +6219,6 @@ msgstr "allalaadimine..."
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "nt. Globaalsed ärilahendused"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr "expandText"
 
 #. module: web
 #. odoo-javascript

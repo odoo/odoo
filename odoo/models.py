@@ -132,34 +132,6 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def merge_trigger_trees(trees: list, select=bool) -> dict:
-    """ Merge trigger trees list into a final tree. The function ``select`` is
-    called on every field to determine which fields should be kept in the tree
-    nodes. This enables to discard some fields from the tree nodes.
-    """
-    result_tree = {}                        # the resulting tree
-    root_fields = OrderedSet()              # the fields in the root node
-    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
-
-    for tree in trees:
-        for key, val in tree.items():
-            if key is None:
-                root_fields.update(val)
-            else:
-                subtrees_to_merge[key].append(val)
-
-    # the root node contains the collected fields for which select is true
-    root_node = [field for field in root_fields if select(field)]
-    if root_node:
-        result_tree[None] = root_node
-
-    for key, subtrees in subtrees_to_merge.items():
-        subtree = merge_trigger_trees(subtrees, select)
-        if subtree:
-            result_tree[key] = subtree
-
-    return result_tree
-
 
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
@@ -3669,7 +3641,6 @@ class BaseModel(metaclass=MetaModel):
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
-        records_to_inverse = {}                     # {field: records}
         fnames_modifying_relations = []
         protected = set()
         check_company = False
@@ -3688,10 +3659,7 @@ class BaseModel(metaclass=MetaModel):
                     # order to avoid an inconsistent update.
                     self[fname]
                 determine_inverses[field.inverse].append(field)
-                # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
-                # TODO: check whether still necessary
-                records_to_inverse[field] = self.filtered('id')
-            if field in self.pool.fields_modifying_relations:
+            if self.pool.is_modifying_relations(field):
                 fnames_modifying_relations.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
@@ -5998,61 +5966,55 @@ class BaseModel(metaclass=MetaModel):
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        fields = [self._fields[fname] for fname in fnames]
-        field_triggers = self.pool.field_triggers
-        trees = [field_triggers[field] for field in fields if field in field_triggers]
 
-        if not trees:
-            return
-
+        # The fields' trigger trees are merged in order to evaluate all triggers
+        # at once. For non-stored computed fields, `_modified_triggers` might
+        # traverse the tree (at the cost of extra queries) only to know which
+        # records to invalidate in cache. But in many cases, most of these
+        # fields have no data in cache, so they can be ignored from the start.
+        # This allows us to discard subtrees from the merged tree when they
+        # only contain such fields.
         cache = self.env.cache
-
-        # Merge dependency trees to evaluate all triggers at once.
-        # For non-stored computed fields, `_modified_triggers` might traverse
-        # the tree (at the cost of extra queries) only to know which records to
-        # invalidate in cache. But in many cases, most of these fields have no
-        # data in cache, so they can be ignored from the start. This allows us
-        # to discard subtrees from the merged tree when they only contain such
-        # fields.
-        tree = merge_trigger_trees(
-            trees,
+        tree = self.pool.get_trigger_tree(
+            [self._fields[fname] for fname in fnames],
             select=lambda field: (field.compute and field.store) or cache.contains_field(field),
         )
+        if not tree:
+            return
 
-        if tree:
-            # determine what to compute (through an iterator)
-            tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+        # determine what to compute (through an iterator)
+        tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
-            # When called after modification, one should traverse backwards
-            # dependencies by taking into account all fields already known to be
-            # recomputed.  In that case, we mark fieds to compute as soon as
-            # possible.
-            #
-            # When called before modification, one should mark fields to compute
-            # after having inversed all dependencies.  This is because we
-            # determine what currently depends on self, and it should not be
-            # recomputed before the modification!
-            if before:
-                tocompute = list(tocompute)
+        # When called after modification, one should traverse backwards
+        # dependencies by taking into account all fields already known to be
+        # recomputed.  In that case, we mark fieds to compute as soon as
+        # possible.
+        #
+        # When called before modification, one should mark fields to compute
+        # after having inversed all dependencies.  This is because we
+        # determine what currently depends on self, and it should not be
+        # recomputed before the modification!
+        if before:
+            tocompute = list(tocompute)
 
-            # process what to compute
-            for field, records, create in tocompute:
-                records -= self.env.protected(field)
-                if not records:
-                    continue
-                if field.compute and field.store:
-                    if field.recursive:
-                        recursively_marked = self.env.not_to_compute(field, records)
-                    self.env.add_to_compute(field, records)
-                else:
-                    # Don't force the recomputation of compute fields which are
-                    # not stored as this is not really necessary.
-                    if field.recursive:
-                        recursively_marked = records & self.env.cache.get_records(records, field)
-                    self.env.cache.invalidate([(field, records._ids)])
-                # recursively trigger recomputation of field's dependents
+        # process what to compute
+        for field, records, create in tocompute:
+            records -= self.env.protected(field)
+            if not records:
+                continue
+            if field.compute and field.store:
                 if field.recursive:
-                    recursively_marked.modified([field.name], create)
+                    recursively_marked = self.env.not_to_compute(field, records)
+                self.env.add_to_compute(field, records)
+            else:
+                # Don't force the recomputation of compute fields which are
+                # not stored as this is not really necessary.
+                if field.recursive:
+                    recursively_marked = records & self.env.cache.get_records(records, field)
+                self.env.cache.invalidate([(field, records._ids)])
+            # recursively trigger recomputation of field's dependents
+            if field.recursive:
+                recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
@@ -6063,53 +6025,52 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # first yield what to compute
-        for field in tree.get(None, ()):
+        for field in tree.root:
             yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
-        for key, val in tree.items():
-            if key is None:
-                continue
-            elif create and key.type in ('many2one', 'many2one_reference'):
+        for field, subtree in tree.items():
+            if create and field.type in ('many2one', 'many2one_reference'):
                 # upon creation, no other record has a reference to self
                 continue
-            else:
-                # val is another tree of dependencies
-                model = self.env[key.model_name]
-                for invf in model.pool.field_inverses[key]:
-                    # use an inverse of field without domain
-                    if not (invf.type in ('one2many', 'many2many') and invf.domain):
-                        if invf.type == 'many2one_reference':
-                            rec_ids = set()
-                            for rec in self:
-                                try:
-                                    if rec[invf.model_field] == key.model_name:
-                                        rec_ids.add(rec[invf.name])
-                                except MissingError:
-                                    continue
-                            records = model.browse(rec_ids)
-                        else:
-                            try:
-                                records = self[invf.name]
-                            except MissingError:
-                                records = self.exists()[invf.name]
 
-                        # TODO: find a better fix
-                        if key.model_name == records._name:
-                            if not any(self._ids):
-                                # if self are new, records should be new as well
-                                records = records.browse(it and NewId(it) for it in records._ids)
-                            break
-                else:
-                    new_records = self.filtered(lambda r: not r.id)
-                    real_records = self - new_records
-                    records = model.browse()
-                    if real_records:
-                        records = model.search([(key.name, 'in', real_records.ids)], order='id')
-                    if new_records:
-                        cache_records = self.env.cache.get_records(model, key)
-                        records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                yield from records._modified_triggers(val)
+            # subtree is another tree of dependencies
+            model = self.env[field.model_name]
+            for invf in model.pool.field_inverses[field]:
+                # use an inverse of field without domain
+                if not (invf.type in ('one2many', 'many2many') and invf.domain):
+                    if invf.type == 'many2one_reference':
+                        rec_ids = OrderedSet()
+                        for rec in self:
+                            try:
+                                if rec[invf.model_field] == field.model_name:
+                                    rec_ids.add(rec[invf.name])
+                            except MissingError:
+                                continue
+                        records = model.browse(rec_ids)
+                    else:
+                        try:
+                            records = self[invf.name]
+                        except MissingError:
+                            records = self.exists()[invf.name]
+
+                    # TODO: find a better fix
+                    if field.model_name == records._name:
+                        if not any(self._ids):
+                            # if self are new, records should be new as well
+                            records = records.browse(it and NewId(it) for it in records._ids)
+                        break
+            else:
+                new_records = self.filtered(lambda r: not r.id)
+                real_records = self - new_records
+                records = model.browse()
+                if real_records:
+                    records = model.search([(field.name, 'in', real_records.ids)], order='id')
+                if new_records:
+                    cache_records = self.env.cache.get_records(model, field)
+                    records |= cache_records.filtered(lambda r: set(r[field.name]._ids) & set(self._ids))
+
+            yield from records._modified_triggers(subtree)
 
     @api.model
     def recompute(self, fnames=None, records=None):
@@ -6188,23 +6149,13 @@ class BaseModel(metaclass=MetaModel):
     # Generic onchange method
     #
 
-    @classmethod
-    def _dependent_fields(cls, field):
-        """ Return an iterator on the fields that depend on ``field``. """
-        def traverse(node):
-            for key, val in node.items():
-                if key is None:
-                    yield from val
-                else:
-                    yield from traverse(val)
-        return traverse(cls.pool.field_triggers.get(field, {}))
-
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the
             presence of ``other_fields``.
         """
         return (field.name in self._onchange_methods) or any(
-            dep in other_fields for dep in self._dependent_fields(field.base_field)
+            dep in other_fields
+            for dep in self.pool.get_dependent_fields(field.base_field)
         )
 
     def _onchange_eval(self, field_name, onchange, result):
