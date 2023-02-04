@@ -1,18 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * product_margin
+# 	* product_margin
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Hamid Darabi, 2023
+# Martin Trigaux, 2023
+# Hanna Kheradroosta, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-09-18 09:49+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,37 +36,37 @@ msgstr ""
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "# Purchased"
-msgstr ""
+msgstr "# خریداری شده"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Analysis Criteria"
-msgstr ""
+msgstr "تحلیل خصوصیت"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr ""
+msgstr "متوسط قیمت در فاکتورهای مشتری"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
-msgid "Avg. Price in Vendor Bills "
+msgid "Avg. Price in Vendor Bills"
 msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Purchase Unit Price"
-msgstr ""
+msgstr "متوسط قیمت واحد خریداری شده"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Sale Unit Price"
-msgstr ""
+msgstr "متوسط قیمت واحد فروش شده"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Avg. Unit Price"
-msgstr ""
+msgstr "متوسط قیمت واحد"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -73,7 +76,7 @@ msgstr "لغو"
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Catalog Price"
-msgstr ""
+msgstr "کاتالوک قیمت"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_uid
@@ -83,7 +86,7 @@ msgstr "ایجاد شده توسط"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__create_date
 msgid "Created on"
-msgstr "ایجاد شده در"
+msgstr "ایجادشده در"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__display_name
@@ -91,30 +94,30 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
 msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin
 msgid "Expected Margin"
-msgstr ""
+msgstr "حاشیه مورد انتظار"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__expected_margin_rate
 msgid "Expected Margin (%)"
-msgstr ""
+msgstr "حاشیه مورد انتظار (%)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sale_expected
 msgid "Expected Sale"
-msgstr ""
+msgstr "فروش مورد انتظار"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin
 msgid "Expected Sale - Normal Cost"
-msgstr ""
+msgstr "فروش مورد انتظار - هزینه معمول"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sales_gap
@@ -145,12 +148,12 @@ msgstr "شناسه"
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__invoice_state
 #: model:ir.model.fields,field_description:product_margin.field_product_product__invoice_state
 msgid "Invoice State"
-msgstr ""
+msgstr "وضعیت فاکتور"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin____last_update
 msgid "Last Modified on"
-msgstr "آخرین تغییر در"
+msgstr "آخرین اصلاح در"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_uid
@@ -160,7 +163,7 @@ msgstr "آخرین تغییر توسط"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_date
 msgid "Last Updated on"
-msgstr "آخرین به روز رسانی در"
+msgstr "آخرین بروز رسانی در"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_from
@@ -175,17 +178,17 @@ msgstr ""
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Margins"
-msgstr "حاشیه‌سود"
+msgstr "حاشیه ها"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__normal_cost
 msgid "Normal Cost"
-msgstr ""
+msgstr "هزینه معمول"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr ""
+msgstr "هزینه معمول - هزینه کل"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -193,29 +196,24 @@ msgid "Open Margins"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
 msgstr ""
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
 msgstr "پرداخت شد"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "محصول"
-
-#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
-msgstr ""
+msgstr "حاشیه محصول"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -223,7 +221,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 #, python-format
 msgid "Product Margins"
-msgstr ""
+msgstr "حاشیه‌های محصول"
+
+#. module: product_margin
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product Variant"
+msgstr "گونه محصول"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -243,7 +246,7 @@ msgstr "خریدها"
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Sales"
-msgstr "فروش"
+msgstr "اصناف مرتبط (سقف‌کاذب، شرکتهای BMS, مجری تاسیسات ...)"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__sales_gap
@@ -254,7 +257,7 @@ msgstr ""
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
 msgid "Standard Price"
-msgstr ""
+msgstr "قیمت استاندارد"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
@@ -292,7 +295,7 @@ msgstr ""
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "به"
+msgstr "تا"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
@@ -304,7 +307,7 @@ msgstr "هزینه کل"
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Margin"
-msgstr ""
+msgstr "مجموع حاشیه"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin_rate

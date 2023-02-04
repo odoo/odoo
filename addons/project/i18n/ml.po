@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Niyas Raphy, 2023\n"
 "Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
@@ -525,6 +525,11 @@ msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr ""
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr ""
@@ -671,7 +676,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task_type__active
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__active
 msgid "Active"
-msgstr ""
+msgstr "ആക്റ്റീവ്"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_ids
@@ -1390,7 +1395,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_unarchive_wizard
 msgid "Confirm"
-msgstr ""
+msgstr "സ്ഥിരീകരിക്കുക"
 
 #. module: project
 #. odoo-python
@@ -1662,7 +1667,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__daily
 msgid "Daily"
-msgstr ""
+msgstr "ഡെയ്‌ലി "
 
 #. module: project
 #. odoo-javascript
@@ -2252,6 +2257,7 @@ msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr ""
@@ -2876,6 +2882,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr ""
@@ -3046,12 +3053,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
 msgid "Members"
-msgstr ""
+msgstr "മെംബേർസ് "
 
 #. module: project
 #: model:ir.model,name:project.model_ir_ui_menu
 msgid "Menu"
-msgstr ""
+msgstr "മെനു"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
@@ -3905,6 +3912,11 @@ msgid "Project Collaborators"
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
 msgstr ""
@@ -3997,11 +4009,6 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
 msgstr ""
 
 #. module: project
@@ -4720,6 +4727,7 @@ msgid "Show Project on Dashboard"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -4917,7 +4925,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "Summary"
-msgstr ""
+msgstr "സംഗ്രഹം"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__sun
@@ -4929,7 +4937,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__sun
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__sun
 msgid "Sunday"
-msgstr ""
+msgstr "ഞായറാഴ്ച"
 
 #. module: project
 #. odoo-javascript
@@ -5344,7 +5352,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_week__third
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_week__third
 msgid "Third"
-msgstr ""
+msgstr "മൂന്നാമത്"
 
 #. module: project
 #. odoo-python
@@ -5353,7 +5361,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_3
 #, python-format
 msgid "This Month"
-msgstr ""
+msgstr "ഈ മാസം"
 
 #. module: project
 #. odoo-python
@@ -5362,7 +5370,7 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_2
 #, python-format
 msgid "This Week"
-msgstr ""
+msgstr "ഈ ആഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__recurrence_update__subsequent
@@ -5403,7 +5411,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__thu
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__thu
 msgid "Thursday"
-msgstr ""
+msgstr "വ്യാഴാഴ്ച"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5430,7 +5438,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_update__name
 #, python-format
 msgid "Title"
-msgstr ""
+msgstr "തലക്കെട്ട്"
 
 #. module: project
 #. odoo-javascript
@@ -5472,10 +5480,11 @@ msgstr ""
 #: model:project.task.type,name:project.project_personal_stage_demo_1
 #, python-format
 msgid "Today"
-msgstr ""
+msgstr "ഇന്ന്"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr ""
@@ -5541,7 +5550,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__tue
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__tue
 msgid "Tuesday"
-msgstr ""
+msgstr "ചൊവ്വാഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__bimonthly
@@ -5798,7 +5807,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_weekday__wed
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_weekday__wed
 msgid "Wednesday"
-msgstr ""
+msgstr "ബുധനാഴ്ച"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__weekly
@@ -5809,7 +5818,7 @@ msgstr "വീക്‌ലി"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr ""
+msgstr "ആഴ്ചകൾ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -5868,13 +5877,13 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__yearly
 msgid "Yearly"
-msgstr ""
+msgstr "വർഷം തോറും"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__year
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
-msgstr ""
+msgstr "വർഷങ്ങൾ"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit

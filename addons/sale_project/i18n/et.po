@@ -17,9 +17,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -30,6 +30,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -50,6 +51,7 @@ msgstr ""
 "            "
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
@@ -71,11 +73,25 @@ msgstr ""
 "  - Laoliikumised: kogus tuleb kinnitatud korjetest\n"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
 msgstr "Kõik artikklid on laetud"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Delivered Quantity (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Milestones"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -105,7 +121,7 @@ msgid "Customer"
 msgstr "Klient"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Delivered"
@@ -152,12 +168,14 @@ msgid "Invoice Count"
 msgstr "Arve kogus"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "Arveldage tellitud kogused kohe peale teenuse müüki."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -170,6 +188,7 @@ msgstr ""
 "aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -180,6 +199,7 @@ msgstr ""
 "olemasolevasse projekti, et jälgida kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -190,6 +210,7 @@ msgstr ""
 "tühi project, et jälgida kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -200,6 +221,7 @@ msgstr ""
 "müügitellimuse ridadel). "
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -212,6 +234,7 @@ msgstr ""
 "müügitellimuse rea jaoks, et jälgida kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -224,6 +247,7 @@ msgstr ""
 "kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -236,12 +260,14 @@ msgstr ""
 "kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
 msgstr "Esitage eesmärkide eest arve kui need on saavutatud."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -253,6 +279,7 @@ msgstr ""
 "aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -263,6 +290,7 @@ msgstr ""
 "olemasolevasse projekti, et jälgida kulutatud aega."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -278,13 +306,14 @@ msgid "Invoice your time and material to customers"
 msgstr "Arveldage klientidele kulunud aega ja materjale"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Invoiced"
 msgstr "Arveldatud"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -312,7 +341,7 @@ msgid "Journal Item"
 msgstr "Andmiku kanderida"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Load more"
@@ -331,6 +360,7 @@ msgstr ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
@@ -347,6 +377,7 @@ msgid "Milestone Count"
 msgstr "Eesmärkide arv"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -355,6 +386,7 @@ msgid "Milestones"
 msgstr "Eesmärgid"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New"
@@ -397,13 +429,14 @@ msgstr ""
 "          „Müügitellimuse projekt”: kasutab müügitellimuse loodud projekti, kui see on määratletud, või loob valitud malli alusel uue projekti."
 
 #. module: sale_project
-#: code:addons/sale_project/models/project.py:0
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
 msgstr "Muud tulud"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -417,6 +450,13 @@ msgid ""
 msgstr ""
 "Protsent tellitud kogusest, mis tarnitakse automaatselt peale eesmärkide "
 "saavutamist."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Prepaid/Fixed Price"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -464,6 +504,7 @@ msgid "Project's sale order"
 msgstr "Projekti müügitellimus"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -498,7 +539,7 @@ msgid "Sale Order Count"
 msgstr "Müügitellimuste arv"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales"
@@ -510,7 +551,9 @@ msgid "Sales & Invoicing"
 msgstr "Müük ja arveldamine"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
@@ -527,6 +570,7 @@ msgid "Sales Order Id"
 msgstr "Müügitellimuse ID"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
@@ -558,7 +602,8 @@ msgstr ""
 "Eemaldage müügitellimuse artikkel, et see ülesanne ei oleks arveldatav. Samuti saate muuta või eemaldada iga tööajaarvestuse kirje eraldi."
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -571,6 +616,7 @@ msgid "Sales Order Line"
 msgstr "Müügitellimuse rida"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
@@ -597,18 +643,21 @@ msgid "Sales order to which the task is linked."
 msgstr "Müügitellimus, millega ülesanne on seotud."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
 msgstr "Otsi arvelt"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Otsi müügitellimusest"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
@@ -626,7 +675,7 @@ msgid "Service Invoicing Policy"
 msgstr "Teenuse arvelduse meetod"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
@@ -639,6 +688,7 @@ msgid "Task"
 msgstr "Ülesanne"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
@@ -666,6 +716,7 @@ msgid "Tasks associated to this sale"
 msgstr "Ülesanded, mis on seotud selle müügiga"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -674,6 +725,7 @@ msgid ""
 msgstr "Tootel %s ei tohiks olla globaalset projekti, kuna see loob projekti."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -684,6 +736,7 @@ msgstr ""
 "projekti."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -694,6 +747,7 @@ msgstr ""
 "projektis."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
@@ -716,6 +770,7 @@ msgid "Vendor Bill Count"
 msgstr "Ostuarvete arv"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -723,6 +778,7 @@ msgid "Vendor Bills"
 msgstr "Ostuarved"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid ""

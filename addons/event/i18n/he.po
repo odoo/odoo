@@ -22,9 +22,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Roy Sayag, 2022\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
@@ -46,30 +46,35 @@ msgid "# Sent"
 msgstr "# נשלח"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (%(count)s seats remaining)"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%(event_name)s (Sold out)"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (%(count)s seats remaining)"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "%(ticket_name)s (Sold out)"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "%s (copy)"
@@ -100,12 +105,14 @@ msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
 msgstr "'כרטיס עמוד מלא - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid ""
@@ -539,11 +546,11 @@ msgid ""
 "\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <!-- GOOGLE MAPS LINK -->\n"
-"                    <table t-if=\"event_address and location\" style=\"width:100%;\"><tr><td>\n"
+"                    <table t-if=\"event_address\" style=\"width:100%;\"><tr><td>\n"
 "                        <div>\n"
 "                            <i class=\"fa fa-map-marker\"/>\n"
 "                            <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
-"                               See location on Google Maps\n"
+"                                See location on Google Maps\n"
 "                            </a>\n"
 "                        </div>\n"
 "                    </td></tr></table>\n"
@@ -757,12 +764,12 @@ msgid ""
 "\n"
 "                <tr><td valign=\"top\" style=\"font-size: 14px;\">\n"
 "                    <!-- GOOGLE MAPS LINK -->\n"
-"                    <t t-if=\"event_address\">\n"
+"                    <t t-if=\"event_address and location\">\n"
 "                        <table style=\"width:100%;\"><tr><td>\n"
 "                            <div>\n"
 "                                <i class=\"fa fa-map-marker\"/>\n"
 "                                <a t-attf-href=\"https://maps.google.com/maps?q={{ location }}\" target=\"new\">\n"
-"                                   See location on Google Maps\n"
+"                                    See location on Google Maps\n"
 "                                </a>\n"
 "                            </div>\n"
 "                        </td></tr></table>\n"
@@ -912,7 +919,7 @@ msgid "Announced"
 msgstr "מפורסם"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Apply change."
@@ -1048,15 +1055,8 @@ msgid "Before the event"
 msgstr "לפני האירוע"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_stage.py:0
-#: model:event.event,legend_blocked:event.event_0
-#: model:event.event,legend_blocked:event.event_1
-#: model:event.event,legend_blocked:event.event_2
-#: model:event.event,legend_blocked:event.event_3
-#: model:event.event,legend_blocked:event.event_4
-#: model:event.event,legend_blocked:event.event_5
-#: model:event.event,legend_blocked:event.event_6
-#: model:event.event,legend_blocked:event.event_7
 #: model:event.stage,legend_blocked:event.event_stage_announced
 #: model:event.stage,legend_blocked:event.event_stage_booked
 #: model:event.stage,legend_blocked:event.event_stage_cancelled
@@ -1191,6 +1191,7 @@ msgid "Company"
 msgstr "חברה"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Compose Email"
@@ -1324,12 +1325,14 @@ msgid "Culture"
 msgstr "תרבות"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Customer"
 msgstr "לקוח"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Customer Email"
@@ -1546,6 +1549,7 @@ msgid "Event Responsible"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_mail.py:0
 #, python-format
 msgid ""
@@ -1680,7 +1684,6 @@ msgstr "כרטיס לאירוע"
 #. module: event
 #: model:ir.actions.server,name:event.event_mail_scheduler_ir_actions_server
 #: model:ir.cron,cron_name:event.event_mail_scheduler
-#: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
 msgstr "אירוע: מתזמן דוא\"ל"
 
@@ -1933,7 +1936,7 @@ msgid "Great Reno Ballon Race"
 msgstr "מירוץ הכדורים הפורחים של רינו"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Great! Now all you have to do is wait for your attendees to show up!"
@@ -2032,7 +2035,7 @@ msgid "Icon"
 msgstr "סמל"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/icon_selection_field/icon_selection_field.js:0
 #, python-format
 msgid "Icon Selection"
@@ -2090,15 +2093,8 @@ msgid "Important ticket information"
 msgstr "מידע חשוב על כרטיסים"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_stage.py:0
-#: model:event.event,legend_normal:event.event_0
-#: model:event.event,legend_normal:event.event_1
-#: model:event.event,legend_normal:event.event_2
-#: model:event.event,legend_normal:event.event_3
-#: model:event.event,legend_normal:event.event_4
-#: model:event.event,legend_normal:event.event_5
-#: model:event.event,legend_normal:event.event_6
-#: model:event.event,legend_normal:event.event_7
 #: model:event.stage,legend_normal:event.event_stage_announced
 #: model:event.stage,legend_normal:event.event_stage_booked
 #: model:event.stage,legend_normal:event.event_stage_cancelled
@@ -2121,6 +2117,7 @@ msgid "Introduction, CRM, Sales Management"
 msgstr "הקדמה, ניהול קשרי לקוחות, ניהול מכירות"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "Invalid event / ticket choice"
@@ -2266,7 +2263,7 @@ msgid "Late Activities"
 msgstr "פעילויות באיחור"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Let's create your first <b>event</b>."
@@ -2481,6 +2478,7 @@ msgid "No Attendees yet!"
 msgstr "עדיין אין משתתפים!"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "None"
@@ -2506,7 +2504,7 @@ msgid "Nothing Scheduled yet!"
 msgstr "לא תוזמן עדיין!"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Now that your event is ready, click here to move it to another stage."
@@ -2582,7 +2580,7 @@ msgid "Online Ticketing"
 msgstr "מכירת כרטיסים מקוונת"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Open date range picker. Pick a Start date for your event"
@@ -2612,6 +2610,7 @@ msgstr ""
 "פרחים ופטריות."
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "Operation not supported."
@@ -2704,15 +2703,8 @@ msgid "Quiz on Tracks"
 msgstr "חידון על מסלולים"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_stage.py:0
-#: model:event.event,legend_done:event.event_0
-#: model:event.event,legend_done:event.event_1
-#: model:event.event,legend_done:event.event_2
-#: model:event.event,legend_done:event.event_3
-#: model:event.event,legend_done:event.event_4
-#: model:event.event,legend_done:event.event_5
-#: model:event.event,legend_done:event.event_6
-#: model:event.event,legend_done:event.event_7
 #: model:event.stage,legend_done:event.event_stage_announced
 #: model:event.stage,legend_done:event.event_stage_booked
 #: model:event.stage,legend_done:event.event_stage_cancelled
@@ -2723,7 +2715,7 @@ msgid "Ready for Next Stage"
 msgstr "מוכן לשלב הבא"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
@@ -2736,6 +2728,7 @@ msgid "Red Kanban Label"
 msgstr "תווית קנבן אדומה"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #: code:addons/event/models/event_ticket.py:0
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -2790,6 +2783,7 @@ msgid "Registration Survey"
 msgstr "סקר הרשמה"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid "Registration for %s"
@@ -3139,6 +3133,7 @@ msgstr ""
 "ביותר."
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "The closing date cannot be earlier than the beginning date."
@@ -3171,6 +3166,7 @@ msgid ""
 msgstr "רהיטי OpenWood המשובחים מגיעים אליכם הביתה בקולקציה חדשה לגמרי"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid ""
@@ -3191,6 +3187,7 @@ msgid "The safety of our attendees and our aeronauts comes first !"
 msgstr "הבטיחות של המשתתפים שלנו ושל האווירונאוטים שלנו קודמת לכל!"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
 msgid ""
@@ -3199,6 +3196,7 @@ msgid ""
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_ticket.py:0
 #, python-format
@@ -3231,7 +3229,7 @@ msgid "This information will be printed on your tickets."
 msgstr "מידע זה יודפס על הכרטיסים שלך."
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This is the <b>name</b> your guests will see when registering."
@@ -3256,6 +3254,7 @@ msgstr ""
 "האייקוניים ביותר בכל הזמנים!"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
@@ -3287,7 +3286,7 @@ msgid "Ticket Type"
 msgstr "סוג כרטיס"
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
@@ -3424,7 +3423,7 @@ msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr "השתמש בקטגוריות של תגי אירועים כדי לסווג ולארגן את תגי האירוע שלך."
 
 #. module: event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
@@ -3449,6 +3448,7 @@ msgid "VIP"
 msgstr "VIP"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_event.py:0
 #: code:addons/event/models/event_event.py:0
 #, python-format
@@ -3466,6 +3466,7 @@ msgid "Venue (formatted for one line uses)"
 msgstr ""
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_mail.py:0
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
@@ -3518,16 +3519,6 @@ msgstr "שבועות"
 #: model_terms:event.event,description:event.event_0
 msgid "What's new?"
 msgstr "מה חדש?"
-
-#. module: event
-#. openerp-web
-#: code:addons/event/static/src/js/tours/event_tour.js:0
-#, python-format
-msgid ""
-"When will your event take place? <b>Select</b> the start and end dates "
-"<b>and click Apply</b>."
-msgstr ""
-"מתי האירוע שלכם יתקיים?<b>בחר</b>תאריכי התחלה וסיום<b>ולחץ על החל</b>."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__is_ongoing
@@ -3616,24 +3607,28 @@ msgid "events@yourcompany.com"
 msgstr "events@yourcompany.com"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "in %d days"
 msgstr "בעוד %d ימים"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "next month"
 msgstr "חודש הבא"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "next week"
 msgstr "שבוע הבא"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "on %(date)s"
@@ -3659,12 +3654,14 @@ msgid "to"
 msgstr "ל"
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "today"
 msgstr "היום "
 
 #. module: event
+#. odoo-python
 #: code:addons/event/models/event_registration.py:0
 #, python-format
 msgid "tomorrow"

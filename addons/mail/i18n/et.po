@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Marek Pontus, 2022
+# Martin Talts <martin.t@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
-# Martin Talts <martin.t@avalah.ee>, 2022
 # Wanradt Koell <wanradt@gmail.com>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
@@ -25,9 +25,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -876,11 +876,6 @@ msgid "<strong>Original note:</strong>"
 msgstr "<strong>Algne märkus:</strong>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Soovitatud tegevused</strong>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -1462,8 +1457,8 @@ msgid "Animals & Nature"
 msgstr "Loomad & loodus"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -5664,14 +5659,12 @@ msgstr "Meili mall, mis kasutab seda meiliserverit"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr ""
 
@@ -6528,14 +6521,12 @@ msgstr "Teavituse tüüp"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr ""
 
@@ -6871,13 +6862,6 @@ msgstr "Ava vestlus"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/models/message_view.js:0
-#, python-format
-msgid "Open profile"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
@@ -6889,6 +6873,13 @@ msgstr "Ava konverents: %s"
 #, python-format
 msgid "Open in Discuss"
 msgstr "Ava vestluses"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr ""
 
 #. module: mail
 #. odoo-python
@@ -7433,7 +7424,6 @@ msgstr "Kirjastaja garantiileping"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Väljaandja: uuenda teavitust"
 
@@ -7611,6 +7601,11 @@ msgstr "Saaja nimi"
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Saajad"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -9010,11 +9005,10 @@ msgstr "Brauser keelas täisekraanirežiimi"
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Maksu ID-kood. Täitke see, kui kontaktile kohaldatakse riiklikke makse. "
-"Kasutatakse mõnedes juriidilistes avaldustes."
 
 #. module: mail
 #. odoo-javascript
@@ -16252,8 +16246,8 @@ msgid "doctor"
 msgstr "doctor"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

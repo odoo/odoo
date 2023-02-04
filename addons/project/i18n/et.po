@@ -25,9 +25,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -655,6 +655,11 @@ msgstr "<span class=\"o_stat_text\">Viimane hinnang</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Alamülesanded</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -2457,6 +2462,7 @@ msgstr "Reede"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Tulevased tegevused"
@@ -3116,6 +3122,7 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Hilinenud tegevused"
@@ -4009,7 +4016,7 @@ msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
 msgstr ""
-"Planeerige ressursside jaotamine projektide lõikes ja prognoosige tähtaegu "
+"Planeeri ressursside jaotamine projektide lõikes ja prognoosi tähtaegu "
 "täpsemalt"
 
 #. module: project
@@ -4186,6 +4193,11 @@ msgid "Project Collaborators"
 msgstr "Projekti koostööpartnerid"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
+msgstr "Projekti värv"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
 msgid "Project Count"
 msgstr "Projektide loendus"
@@ -4279,11 +4291,6 @@ msgstr "Projekti värskendused"
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
 msgstr "Projekti nähtavus"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
-msgstr "Projekti värv"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -5011,6 +5018,7 @@ msgid "Show Project on Dashboard"
 msgstr "Näita projekti töölaual"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr ""
@@ -5799,6 +5807,7 @@ msgstr "Täna"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Tänased tegevused"
@@ -6141,7 +6150,7 @@ msgstr "Iganädalane"
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_unit__week
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__week
 msgid "Weeks"
-msgstr "Nädalad"
+msgstr "nädal(at)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
@@ -6412,7 +6421,7 @@ msgstr "nt. igakuine ülevaade"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
 msgid "e.g. Office Party"
-msgstr "nt. kontoripidu"
+msgstr "nt. Uue programmi juurutamine"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form

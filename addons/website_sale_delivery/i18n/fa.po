@@ -1,17 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_delivery
+# 	* website_sale_delivery
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Hamid Darabi, 2023
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Hanna Kheradroosta, 2023
+# Hamed Mohammadi <hamed@dehongi.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:57+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,7 +24,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_shipping_method
 msgid "<b>Shipping Method: </b>"
 msgstr ""
 
@@ -31,6 +35,18 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid "Anonymous express checkout partner for order %s"
+msgstr ""
+
+#. module: website_sale_delivery
+#: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__can_publish
+msgid "Can Publish"
+msgstr "می تواند منتشر کند"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery
@@ -44,20 +60,13 @@ msgstr "کشور"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "DHL Delivery Methods"
+msgid "DHL Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__amount_delivery
 msgid "Delivery Amount"
 msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
-#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "Delivery Methods"
-msgstr "روش های تحویل"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
@@ -71,11 +80,6 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
-msgid "Description"
-msgstr "توصیف"
-
-#. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
 msgstr ""
 
@@ -86,52 +90,48 @@ msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "Easypost Delivery Methods"
+msgid "Easypost Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "FedEx Delivery Methods"
+msgid "FedEx Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
+#. openerp-web
+#: code:addons/website_sale_delivery/static/src/js/website_sale_delivery.js:0
+#, python-format
 msgid "Free"
 msgstr "رایگان"
 
 #. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__has_delivery
-msgid "Has an order line set for delivery"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__has_delivery
-msgid "Has delivery"
-msgstr ""
-
-#. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__is_published
-msgid "Is published"
+msgid "Is Published"
+msgstr "منتشر شده است"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:44
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that there is already a transaction for your order, you can not "
+"change the delivery method anymore"
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,field_description:website_sale_delivery.field_sale_order__website_order_line
-msgid "Order Lines displayed on Website"
-msgstr ""
-
-#. module: website_sale_delivery
-#: model:ir.model.fields,help:website_sale_delivery.field_sale_order__website_order_line
-msgid ""
-"Order Lines to be displayed on the website. They should not be used for "
-"computation purpose."
 msgstr ""
 
 #. module: website_sale_delivery
@@ -142,12 +142,17 @@ msgstr "منتشر شده"
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "محدود کردن انتشار به این وبسایت."
 
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "سفارش فروش"
+
+#. module: website_sale_delivery
+#: model:ir.model,name:website_sale_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "سطر سفارش‌فروش"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.payment_delivery_methods
@@ -155,7 +160,14 @@ msgid "Select to compute delivery rate"
 msgstr ""
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:43
+#: model:ir.model,name:website_sale_delivery.model_delivery_carrier
+#: model:ir.ui.menu,name:website_sale_delivery.menu_ecommerce_delivery
+#: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
+msgid "Shipping Methods"
+msgstr "روش ارسال"
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid "Sorry, we are unable to ship your order"
 msgstr ""
@@ -168,22 +180,17 @@ msgstr "مبلغ بدون مالیات."
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_delivery_carrier__website_url
 msgid "The full URL to access the document through the website."
-msgstr ""
-
-#. module: website_sale_delivery
-#: model_terms:ir.ui.view,arch_db:website_sale_delivery.sale_order_portal_content_inherit_sale_stock_inherit_website_sale_delivery
-msgid "Tracking:"
-msgstr ""
+msgstr "آدرس URL کامل برای دسترسی سند در وبسایت."
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "USPS Delivery Methods"
+msgid "USPS Shipping Methods"
 msgstr ""
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "قابل دید در وبسایت حاضر"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_id
@@ -197,5 +204,5 @@ msgstr "URL وبسایت"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
-msgid "bpost Delivery Methods"
+msgid "bpost Shipping Methods"
 msgstr ""

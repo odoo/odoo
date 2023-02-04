@@ -7,16 +7,16 @@
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2022
 # Noma Yuki, 2022
 # Martin Trigaux, 2022
-# Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -389,14 +389,30 @@ msgstr "<span>オーダ</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid "<span>Process Checkout</span>"
-msgstr "<span>チェックアウトする</span>"
+msgid ""
+"<span>Proceed to Checkout</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Process Checkout</span>\n"
-"                                                <span class=\"fa fa-chevron-right\"/>"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Sign In</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Sign In</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -2193,7 +2209,7 @@ msgstr "前に移動"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_multimedia
 msgid "Multimedia"
-msgstr ""
+msgstr "マルチメディア"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2217,7 +2233,7 @@ msgstr "名称"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Name (A-Z)"
-msgstr ""
+msgstr "名称 (A-Z)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__name_short
@@ -2298,7 +2314,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "次の検索に結果が見つかりませんでした:「"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__none
@@ -2314,7 +2330,7 @@ msgstr "なし"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_pages_kanban_view
 msgid "Not Published"
-msgstr ""
+msgstr "未公開"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__not_done
@@ -3077,7 +3093,7 @@ msgstr "削除"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Remove all"
-msgstr ""
+msgstr "全てを削除"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -3322,7 +3338,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
 msgid "Seo name"
-msgstr "Seo名"
+msgstr "SEO名"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
@@ -3504,6 +3520,7 @@ msgstr "ソース"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid "Specify unit"
 msgstr ""

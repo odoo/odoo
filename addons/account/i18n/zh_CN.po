@@ -19,9 +19,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Benson <Benson.Dr@Gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1252,6 +1252,11 @@ msgid ""
 msgstr ""
 "<strong>此币种已用于生成会计分录。</strong><br/>\n"
 "                                                                               现在更改其舍入因子不会更改对以前分录的舍入;可能导致与新的不一致。"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
+msgid "<strong>Total Rounded</strong>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2787,11 +2792,6 @@ msgid "Attach a file"
 msgstr "添加附件"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
-msgid "Attachment"
-msgstr "附件"
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
@@ -2806,6 +2806,7 @@ msgid "Attachment Count"
 msgstr "附件计数"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
 #: model:ir.model.fields,field_description:account.field_account_move__attachment_ids
@@ -4858,6 +4859,7 @@ msgstr "客户结算单"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__out_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -5143,6 +5145,7 @@ msgstr "专用支付顺序"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
+#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "默认科目"
 
@@ -10703,13 +10706,6 @@ msgstr "期间比较"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid "Please create new accounts from the Chart of Accounts menu."
-msgstr "请从科目表功能创建新科目."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10719,6 +10715,13 @@ msgid ""
 msgstr ""
 "请检查这些税费. 它们可能已经过时了. 我们并没有更新它. "
 "事实上，它们与本地化模块原始版本的税金并不完全匹配.<br/>您可能想要封存归档或调整它们.<br/><ul>"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid "Please create new accounts from the Chart of Accounts menu."
+msgstr "请从科目表功能创建新科目."
 
 #. module: account
 #. odoo-python
@@ -13405,6 +13408,15 @@ msgstr "支付期限必须有一个余额行。"
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
 msgid "The account %s (%s) is deprecated."
 msgstr "科目 %s (%s) 是废弃的."
 
@@ -14592,6 +14604,15 @@ msgstr "对于销售订单和客户结算单而言，该支付条件将代替默
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid ""
@@ -14690,6 +14711,7 @@ msgstr "今天的活动"
 #: model:ir.model.fields,field_description:account.field_account_move_line__price_total
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_report_view_tree
+#: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_tree
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -15333,6 +15355,7 @@ msgstr "供应商账单已创建"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_analytic_account.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model:ir.model.fields.selection,name:account.selection__res_company__quick_edit_mode__in_invoices
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
@@ -15925,15 +15948,6 @@ msgstr "不能删除链接到已发布分录的项目。"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"You cannot delete this entry, as it has already consumed a sequence number "
-"and is not the last one in the chain. You should probably revert it instead."
-msgstr "您不能删除此分录，因为它已经消耗了一个序列号并且不是相应链中的最后一个. 您可能应该要还原它."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid ""
@@ -16517,24 +16531,6 @@ msgstr "目的日记账"
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "上级公司"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid ""
-"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
-"incompatible with its category : %s."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/product.py:0
-#, python-format
-msgid ""
-"This product is already being used in posted Journal Entries.\n"
-"If you want to change its Unit of Measure, please archive this product and create a new one."
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form

@@ -5,18 +5,18 @@
 # Translators:
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
 # Shaima Safar <shaima.safar@open-inside.com>, 2022
-# Martin Trigaux, 2022
 # Hassan Najm <hassannjm@gmail.com>, 2023
 # Niyas Raphy, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,6 +54,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ms-1 me-1\"> ( </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -61,6 +63,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
 "class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('product_has_tax', '=', False)]}\" "
+"class=\"oe_inline o_form_label ms-1 me-3\"> ) </span>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -245,6 +249,11 @@ msgstr "يجب أن يحتوي تقرير النفقات على بنود من ن
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution
 msgid "Analytic"
 msgstr "تحليلي"
+
+#. module: hr_expense
+#: model:ir.model,name:hr_expense.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "الحساب التحليلي"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
@@ -547,7 +556,7 @@ msgstr "دفتر يومية المحاسبة الافتراضي للنفقات �
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Default accounting journal for expenses paid by the company."
-msgstr ""
+msgstr "دفتر يومية المحاسبة الافتراضي للنفقات المدفوعة من قبل الشركة. "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_department
@@ -619,7 +628,7 @@ msgstr "مسودة"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_actions_my_all
 msgid "Drag and drop files to create expenses"
-msgstr ""
+msgstr "قم بسحب وإفلات الملفات لإنشاء النفقات "
 
 #. module: hr_expense
 #. odoo-python
@@ -889,7 +898,7 @@ msgstr "النفقات حسب التاريخ "
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Expenses must have the same To Reimburse status."
-msgstr ""
+msgstr "يجب أن يكون لكافة النفقات نفس حالة \"بانتظار إعادة الأموال\". "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1316,7 +1325,7 @@ msgstr "لا توجد أي بيانات بعد! "
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "No expense categories found. Let's create one!"
-msgstr ""
+msgstr "لم يتم العثور على فئات نفقات. فلنقم بإنشاء واحدة! "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
@@ -1873,7 +1882,7 @@ msgstr "دفتر اليومية الافتراضي للشركة المستخدم
 #: model:ir.model.fields,help:hr_expense.field_res_config_settings__expense_journal_id
 msgid ""
 "The company's default journal used when an employee expense is created."
-msgstr ""
+msgstr "دفتر اليومية الافتراضي للشركة المستخدم عند إنشاء نفقات الموظف. "
 
 #. module: hr_expense
 #. odoo-python
@@ -1954,6 +1963,7 @@ msgstr ""
 msgid ""
 "This note will be shown to users when they select this expense product."
 msgstr ""
+"سيتم إظهار هذه الملاحظة للمستخدمين عندما يقومون بتحديد منتج النفقة هذا. "
 
 #. module: hr_expense
 #: model:digest.tip,name:hr_expense.digest_tip_hr_expense_0
@@ -2004,7 +2014,7 @@ msgstr "الإجمالي بالعملة "
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__untaxed_amount
 msgid "Total Untaxed Amount In Currency"
-msgstr ""
+msgstr "إجمالي المبلغ غير شامل الضريبة بالعملة "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_split_wizard__total_amount_original
@@ -2122,12 +2132,16 @@ msgid ""
 "company at fixed cost like allowances for mileage, per diem, accommodation "
 "or meal."
 msgstr ""
+"عندما تختلف تكلفة منتج نفقة عن 0، لن يتمكن الشخص الذي يستخدم هذا المنتج من "
+"تغيير مبلغ النفقة، وإنما الكمية فقط. استخدم تكلفة تختلف عن 0 لفئات النفقات "
+"الممولة من قِبَل الشركة بتكلفة ثابتة كمصروف مسافات السيارة والبدل اليومي "
+"والمسكن والوجبات. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_tax
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__product_has_tax
 msgid "Whether tax is defined on a selected product"
-msgstr ""
+msgstr "ما إذا كانت الضريبة محددة في منتج محدد أم لا "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__wizard_id
@@ -2242,7 +2256,7 @@ msgstr "لا يمكنك الإبلاغ عن مصروفات موظفين مختل
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr ""
+msgstr "لا يمكنك إعداد تقرير عن النفقات دون ذكر المبلغ! "
 
 #. module: hr_expense
 #. odoo-python
@@ -2256,7 +2270,7 @@ msgstr "لا يمكنك الإبلاغ عن نفس البند مرتين!"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You have no expense to report"
-msgstr ""
+msgstr "لا تملك أي نفقات لإعداد تقرير عنها "
 
 #. module: hr_expense
 #. odoo-python

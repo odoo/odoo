@@ -7,15 +7,16 @@
 # keecome <7017511@qq.com>, 2022
 # digitalliuzg8888, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1275,6 +1276,13 @@ msgid "Forbidden values on non-accountable purchase order line"
 msgstr "禁止在不可计算的采购订单行项上有值"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/account_invoice.py:0
+#, python-format
+msgid "From %s document"
+msgstr ""
+
+#. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
 msgid "Fully Billed"
 msgstr "已完全开单"
@@ -2138,6 +2146,8 @@ msgid ""
 msgstr "采购订单在订单确认后您想要采购订单时可以修改"
 
 #. module: purchase
+#. odoo-python
+#: code:addons/purchase/models/analytic_account.py:0
 #: model:ir.actions.act_window,name:purchase.purchase_form_action
 #: model:ir.ui.menu,name:purchase.menu_purchase_form_action
 #: model_terms:ir.ui.view,arch_db:purchase.account_analytic_account_view_form_purchase
@@ -2147,6 +2157,7 @@ msgstr "采购订单在订单确认后您想要采购订单时可以修改"
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_bill_union_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
+#, python-format
 msgid "Purchase Orders"
 msgstr "采购订单"
 
@@ -3034,7 +3045,7 @@ msgstr "用户"
 msgid ""
 "Value: 'avg_days_to_purchase' should only be used to show an average. If you"
 " are seeing this message then it is being accessed incorrectly."
-msgstr ""
+msgstr "值: 'avg_days_to_purchase'应仅用于显示平均值。如果出现此消息，则表示错误访问。"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

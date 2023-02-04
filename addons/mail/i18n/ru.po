@@ -22,17 +22,17 @@
 # Collex100, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # Martin Trigaux, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Alena Vlasova, 2022
 # valmasone, 2023
+# Alena Vlasova, 2023
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: valmasone, 2023\n"
+"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -192,7 +192,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s from %s"
-msgstr "%s из %s"
+msgstr "%s от %s"
 
 #. module: mail
 #. odoo-javascript
@@ -272,7 +272,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr ", Enter чтобы"
 
 #. module: mail
 #. odoo-javascript
@@ -838,6 +838,9 @@ msgid ""
 "'=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the "
 "document and</span>"
 msgstr ""
+"<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Подписчики этой "
+"записи и</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -857,11 +860,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
 msgstr "<strong>Исходная заметка:</strong>"
-
-#. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Рекомендуемые действия</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1014,7 +1012,7 @@ msgstr "Токен доступа"
 #: code:addons/mail/static/src/models/thread.js:0
 #, python-format
 msgid "Access restricted to group \"%(groupFullName)s\""
-msgstr ""
+msgstr "Доступ ограничен для группы \"%(groupFullName)s\""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_category
@@ -1063,7 +1061,7 @@ msgstr "Действия над входящей почтой"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Activate Full Screen"
-msgstr ""
+msgstr "Развернуть на весь экран"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -1441,8 +1439,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1899,7 +1897,7 @@ msgstr "Отклонено"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Browser default"
-msgstr ""
+msgstr "По умолчанию"
 
 #. module: mail
 #. odoo-javascript
@@ -1972,7 +1970,7 @@ msgstr "Камера выключена"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
 msgid "Can Cancel"
-msgstr ""
+msgstr "Можно отменить"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
@@ -2126,7 +2124,7 @@ msgstr "Измените цвет фона для действий этого т
 #: code:addons/mail/static/src/components/tracking_value/tracking_value.xml:0
 #, python-format
 msgid "Changed"
-msgstr "изменено"
+msgstr "Изменено"
 
 #. module: mail
 #. odoo-javascript
@@ -2801,7 +2799,7 @@ msgstr "Дни"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Deactivate Full Screen"
-msgstr ""
+msgstr "Свернуть в окно"
 
 #. module: mail
 #. odoo-javascript
@@ -3021,7 +3019,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 #, python-format
 msgid "Disconnect"
-msgstr ""
+msgstr "Отключиться"
 
 #. module: mail
 #. odoo-javascript
@@ -3954,7 +3952,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_template__email_from
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__email_from
 msgid "From"
-msgstr "Из"
+msgstr "От"
 
 #. module: mail
 #. odoo-javascript
@@ -3983,7 +3981,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "Full composer"
-msgstr "полный автор"
+msgstr "Полный редактор"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__default_display_mode__video_full_screen
@@ -5413,7 +5411,7 @@ msgstr "Загрузить еще"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr ""
+msgstr "Использовать шаблон"
 
 #. module: mail
 #. odoo-javascript
@@ -5640,14 +5638,12 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr "Почта: диспетчер очередей сообщений электронной почты"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr "Почта: служба Fetchmail"
 
@@ -6515,14 +6511,12 @@ msgstr ""
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr ""
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr ""
 
@@ -6860,13 +6854,6 @@ msgstr "Открыть чат"
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/models/message_view.js:0
-#, python-format
-msgid "Open profile"
-msgstr "Открыть профиль"
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
@@ -6878,6 +6865,13 @@ msgstr ""
 #, python-format
 msgid "Open in Discuss"
 msgstr "Открыть в обсуждении"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "Открыть профиль"
 
 #. module: mail
 #. odoo-python
@@ -7331,7 +7325,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Powered by"
-msgstr "На базе"
+msgstr "Сформировано системой"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__previous_type_ids
@@ -7429,7 +7423,6 @@ msgstr "Издательский гарантийный договор"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Издатель: оповещение об обновлении"
 
@@ -7538,7 +7531,7 @@ msgstr "Читать далее"
 #: code:addons/mail/static/src/models/notification.js:0
 #, python-format
 msgid "Ready"
-msgstr "Можно производить"
+msgstr "Готово"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__ready
@@ -7607,6 +7600,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Получатели"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -8129,7 +8127,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/emoji_search_bar_view.js:0
 #, python-format
 msgid "Search an emoji"
-msgstr ""
+msgstr "Поиск эмодзи"
 
 #. module: mail
 #. odoo-javascript
@@ -8543,7 +8541,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Smileys & Emotion"
-msgstr ""
+msgstr "Смайлики и эмотиконы"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_view_form
@@ -8934,7 +8932,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
 msgid "Template description"
-msgstr ""
+msgstr "Описание шаблона"
 
 #. module: mail
 #. odoo-python
@@ -9009,11 +9007,10 @@ msgstr "Полноэкранный режим заблокирован в бра
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Идентификационный номер налогоплательщика. Заполните его, если контакт "
-"подлежит налогообложению. Используется в некоторых официальных отчетах."
 
 #. module: mail
 #. odoo-javascript
@@ -9220,6 +9217,8 @@ msgstr "Это поле нечувствительно."
 #: model:ir.model.fields,help:mail.field_mail_template__description
 msgid "This field is used for internal description of the template's usage."
 msgstr ""
+"Это поле используется только внутри системы для описания случаев "
+"использования шаблона."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_blacklist__email_normalized
@@ -13337,7 +13336,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "cancel"
-msgstr "отмена"
+msgstr "отмены"
 
 #. module: mail
 #. odoo-javascript
@@ -16256,8 +16255,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -17067,7 +17066,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "escape to"
-msgstr ""
+msgstr "Escape для"
 
 #. module: mail
 #. odoo-javascript
@@ -29428,7 +29427,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "save"
-msgstr ""
+msgstr "сохранить"
 
 #. module: mail
 #. odoo-javascript
