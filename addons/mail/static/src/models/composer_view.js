@@ -564,6 +564,7 @@ Model({
             };
 
             const action = {
+                name: this.composer.isLog ? this.env._t("Log note") : this.env._t("Compose Email"),
                 type: "ir.actions.act_window",
                 res_model: "mail.compose.message",
                 view_mode: "form",
