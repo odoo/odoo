@@ -20,13 +20,13 @@
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
 # Pouya Malekinejad <pouya.malekinejad@gmail.com>, 2020
 # Martin Trigaux, 2021
-# rahim agh <rahim.aghareb@gmail.com>, 2021
-# Far Har <fhari1234@gmail.com>, 2021
+# Farid Hariri <fhari1234@gmail.com>, 2021
 # M.Hossein S.Farvashani <Farvashani@gmail.com>, 2021
 # Mostafa Barmshory <mostafa.barmshory@gmail.com>, 2022
 # Hanna Kheradroosta, 2022
 # Mohsen Mohammadi <iammohsen.123@gmail.com>, 2022
 # Hamed Mohammadi <hamed@dehongi.com>, 2022
+# rahim agh <rahim.aghareb@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -34,7 +34,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2022\n"
+"Last-Translator: rahim agh <rahim.aghareb@gmail.com>, 2023\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -836,7 +836,7 @@ msgstr "<strong>شرکت:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>تاریخ سند بستانکار:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1034,6 +1034,14 @@ msgid ""
 msgstr ""
 "نوع سند برای ثبت تراکنش های همه داده حسابداری استفاده می‌شود\n"
 "                که مربوط به به کارهای روزمره است."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "A line of this move is using a deprecated account, you cannot post it."
+msgstr ""
+"یکی از سطر های این انتقال، یک حساب نامعتبر است، شما نمی‌توانید این ارسال را "
+"انجام دهید."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -6635,6 +6643,7 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"سند بدهکار و سند بستانکار می‌بایست حداقل یک سطر جایگزینی مالیات داشته باشند "
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -6877,7 +6886,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "It was previously '%(previous)s' and it is now '%(now)s'."
-msgstr ""
+msgstr "این مقدار قبلاً '%(previous)s' بود و الان '%(now)s' است."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -9173,7 +9182,7 @@ msgstr "درصد"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Percentage can only be set for Change Period method"
-msgstr ""
+msgstr "درصد فقط می‌تواند برای روش تغییر دوره، تعیین شود"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -9793,7 +9802,7 @@ msgstr "اجزاء تهاتر"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
-msgstr ""
+msgstr "سابقه نمی‌تواند پاک شود. این شریک در حسابداری استفاده شده است"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10857,7 +10866,7 @@ msgstr ""
 #. module: account
 #: model:res.groups,name:account.group_account_readonly
 msgid "Show Accounting Features - Readonly"
-msgstr ""
+msgstr "نمایش ویژگی‌های حسابداری - فقط خواندنی"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__show_decimal_separator
@@ -12192,7 +12201,7 @@ msgstr ""
 msgid ""
 "The amount in foreign currency must be set if the amount is not equal to "
 "zero."
-msgstr ""
+msgstr "اگر مقدار صفر نیست، مقدار به واحد پولی خارجی باید تعیین شود."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -12221,7 +12230,7 @@ msgstr ""
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The amount of a statement line can't be equal to zero."
-msgstr ""
+msgstr "مقدار یک ردیف صورتحساب نمی‌تواند مساوی صفر باشد."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -12719,6 +12728,8 @@ msgid ""
 "The recipient bank account link to this invoice is archived.\n"
 "So you cannot confirm the invoice."
 msgstr ""
+"لینک به رسید پرداخت حساب بانکی این فاکتور، بایگانی شد.\n"
+"بنابراین نمی‌توانید فاکتور را تایید کنید."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner_category_ids
@@ -13299,6 +13310,16 @@ msgstr ""
 "استفاده خواهد شد"
 
 #. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
+"این محصول در مدخل‌های روزانه ارسال شده است. اگر می‌خواهید واحد اندازه گیری "
+"آن را تغییر دهید، لطفا این محصول را بایگانی کنید و محصول جدیدی بسازید."
+
+#. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "This reconciliation model has created no entry so far"
@@ -13606,6 +13627,8 @@ msgid ""
 "Unable to mix any taxes being price included with taxes affecting the base "
 "amount but not included in price."
 msgstr ""
+"امکان ترکیب مالیات‌هایی که شامل قیمت هستند با مالیات‌هایی که روی قیمت پایه "
+"اثر می‌گذارند اما در قیمت نهایی در نظر گرفته نشده‌اند، وجود ندارد."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -14972,6 +14995,16 @@ msgid "the parent company"
 msgstr "شرکت مادر"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
+"واحد اندازه گیری (UoM) %s که برای محصول %s انتخاب کرده‌اید با دسته‌بندی آن "
+"هماهنگ نیست:%s."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "to"
@@ -14999,3 +15032,24 @@ msgid ""
 "An analytic default requires an analytic account or an analytic tag used for"
 " analytic distribution."
 msgstr ""
+"یک پیشفرض تحلیلی نیازمند به حداقل یک حساب تحلیلی و یا یک برچسب تحلیلی است که"
+" برای توزیح تحلیل استفاده می‌شود."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr "مالیات‌های شما به روز رسانی شد!"
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+"لطفاً این مالیات‌ها را کنترل کنید. ممکن تاریخ آن‌ها گذشته باشد. ما آن‌ها را "
+"آپدیت نکرده‌ایم، این‌ها دقیقا با مالیات‌های تعریف شده در نسخه کاژول محلی "
+"سازی، هماهنگ نیستد.<br/> شما ممکن بخواهید آن‌ها را به‌روزرسانی یا بایگانی "
+"کنید.<br/><ul>"
