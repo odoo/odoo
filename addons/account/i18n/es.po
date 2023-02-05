@@ -2416,7 +2416,7 @@ msgstr "Condición del importe"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_currency
 msgid "Amount Currency"
-msgstr "Moneda del importe"
+msgstr "Importe en moneda"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
@@ -2525,10 +2525,10 @@ msgid ""
 "                account). The annual accounts of a company are required by law\n"
 "                to disclose a certain amount of information."
 msgstr ""
-"Una cuenta es la parte de un libro contable que permite\n"
-"                a tu empresa registrar todo tipo de transacciones de débito y crédito.\n"
+"Una cuenta es la parte de un libro mayor que permite\n"
+"                a su empresa registrar todo tipo de transacciones de débito y crédito.\n"
 "                Las compañías presentan sus cuentas anuales principalmente en dos partes:\n"
-"                la hoja de balance general y el estado de resultados (ganancias y pérdidas)\n"
+"                el balance de situación y la cuenta de pérdidas y ganancias\n"
 "              Las cuentas anuales son requeridas por ley a las empresas\n"
 "                para revelar cierta cantidad de información."
 
@@ -4857,6 +4857,7 @@ msgid "Customer Invoice"
 msgstr "Factura de cliente"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -10436,6 +10437,10 @@ msgid ""
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
 msgstr ""
+"Revise por favor estos impuestos. Puede que estén desfasados. No se han "
+"actualizado automáticamente. En efecto, no coinciden con los impuestos de la"
+" versión original del módulo de localización.<br/>Tal vez quiera archivarlos"
+" o adaptarlos.<br/><ul>"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12804,7 +12809,7 @@ msgstr "Impuestos vencidos"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Tax Excluded"
-msgstr "Impuestos no incluidos"
+msgstr "Base imponible"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__tax_exigibility
@@ -13062,7 +13067,7 @@ msgstr "Impuestos a aplicar"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_excluded
 msgid "Tax-Excluded"
-msgstr "Impuestos no incluidos"
+msgstr "Base imponible"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_config_settings__show_line_subtotals_tax_selection__tax_included
@@ -15083,6 +15088,8 @@ msgid ""
 "This product is already being used in posted Journal Entries.\n"
 "If you want to change its Unit of Measure, please archive this product and create a new one."
 msgstr ""
+"Este producto ya está siendo utilizado en asientos contables publicados.\n"
+"Si desea cambiar su unidad de medida, archívelo y cree uno nuevo en su lugar."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -15808,6 +15815,7 @@ msgid "Vendor Bill Created"
 msgstr "Factura de proveedor creada"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16770,7 +16778,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Your taxes have been updated !"
-msgstr ""
+msgstr "¡Sus impuestos han sido actualizados!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -17094,6 +17102,8 @@ msgid ""
 "The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
 "incompatible with its category : %s."
 msgstr ""
+"La unidad de medida (UdM) \"%s\" que seleccionó para el producto \"%s\" no "
+"es compatible con su categoría: %s."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban
