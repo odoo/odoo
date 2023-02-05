@@ -342,6 +342,7 @@ class PosSession(models.Model):
                 else:
                     raise e
 
+            balance = 0.0
             try:
                 balance = sum(self.move_id.line_ids.mapped('balance'))
                 self.move_id._check_balanced()
