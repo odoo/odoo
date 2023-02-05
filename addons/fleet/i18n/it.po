@@ -13,8 +13,7 @@
 # Paolo Valier, 2020
 # Franco Tampieri <franco@tampieri.info>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -496,7 +495,7 @@ msgstr "Costo da pagare una sola volta, alla creazione del contratto"
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__cost_subtype_id
 msgid "Cost type purchased with this cost"
-msgstr "Tipo di spesa"
+msgstr "Tipologia di costo acquistata con questo costo"
 
 #. module: fleet
 #: model:ir.ui.menu,name:fleet.menu_fleet_reporting_costs
@@ -606,19 +605,21 @@ msgstr "Data"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__date
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__date
 msgid "Date when the cost has been executed"
-msgstr "Data del sostenimento del costo"
+msgstr "Data di sostenimento del costo"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__start_date
 msgid "Date when the coverage of the contract begins"
-msgstr "Data di inizio copertura del contratto"
+msgstr "Data di inizio della copertura del contratto"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_contract__expiration_date
 msgid ""
 "Date when the coverage of the contract expirates (by default, one year after"
 " begin date)"
-msgstr "Data di fine copertura del contratto (durata predefinita, un anno)"
+msgstr ""
+"Data di scadenza della copertura del contratto (predefinita un anno dalla "
+"data di inizio)"
 
 #. module: fleet
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle__acquisition_date
@@ -961,7 +962,7 @@ msgstr "Sostituzione valvola di controllo riscaldamento"
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_27
 msgid "Heater Core Replacement"
-msgstr "Sostituzione del nucleo del riscaldatore"
+msgstr "Sostituzione radiatore riscaldamento"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_28
@@ -1217,7 +1218,7 @@ msgstr ""
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_11
 msgid "Management Fee"
-msgstr "Spesa di gestione"
+msgstr "Onere di gestione"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__manager_id
@@ -1473,7 +1474,7 @@ msgstr "Registro contachilometri per un veicolo"
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer
 #: model:ir.model.fields,help:fleet.field_fleet_vehicle_log_services__odometer_id
 msgid "Odometer measure of the vehicle at the moment of this log"
-msgstr "Misura contachilometri del veicolo alla registrazione"
+msgstr "Misura del contachilometri del veicolo al momento della registrazione"
 
 #. module: fleet
 #: model:ir.actions.act_window,name:fleet.fleet_vehicle_odometer_action
@@ -1535,12 +1536,12 @@ msgstr "Ricambio sensore ossigeno"
 #: model:ir.model.fields,field_description:fleet.field_res_partner__plan_to_change_car
 #: model:ir.model.fields,field_description:fleet.field_res_users__plan_to_change_car
 msgid "Plan To Change Car"
-msgstr "Piano per cambiare auto"
+msgstr "Piano per cambio auto"
 
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_search
 msgid "Planned for Change"
-msgstr "Pianificato per il cambiamento"
+msgstr "Pianificato per cambio"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__power
@@ -1789,7 +1790,7 @@ msgstr "Fase"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_log_contract_view_form
 msgid "Start Contract"
-msgstr "Inizio contratto"
+msgstr "Avvia contratto"
 
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle_assignation_log__date_start
@@ -1932,7 +1933,7 @@ msgstr "Spese totali (IVA esclusa)"
 #. module: fleet
 #: model:ir.model.fields,field_description:fleet.field_fleet_vehicle__contract_renewal_total
 msgid "Total of contracts due or overdue minus one"
-msgstr "Totale dei contratti in scadenza o in ritardo meno uno"
+msgstr "Totale dei contratti in scadenza o scaduti meno uno"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_service_18
@@ -2161,7 +2162,7 @@ msgstr "Data avviso"
 #. module: fleet
 #: model_terms:ir.ui.view,arch_db:fleet.fleet_vehicle_view_kanban
 msgid "Warning: renewal due soon"
-msgstr "Avviso: rinnovo fissato a breve"
+msgstr "Avviso: rinnovo a breve"
 
 #. module: fleet
 #: model:fleet.service.type,name:fleet.type_service_50

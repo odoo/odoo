@@ -915,7 +915,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Dati spese non autorizzate per il Belgio\n"
+"        Dati spese non deducibili per il Belgio\n"
 "    "
 
 #. module: base
@@ -2830,7 +2830,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Criterio di cassa per resoconti contabili\n"
+"Criterio di cassa per rendiconti contabili\n"
 "=====================================\n"
 "    "
 
@@ -4076,7 +4076,7 @@ msgstr ""
 "\n"
 "In molte nazioni la nota di debito viene utilizzata come incremento degli importi di una fattura esistente \n"
 "o, in alcuni casi specifici, per annullare una nota di credito. \n"
-"È come una normale fattura, ma è necessario tenere traccia del collegamento con la fattura originale.  \n"
+"È come una normale fattura, ma è necessario tenere traccia del collegamento con la fattura di origine.  \n"
 "Utilizza una procedura guidata simile a quella della nota di credito.\n"
 "    "
 
@@ -10634,7 +10634,7 @@ msgstr "Austria - Rendiconti contabili"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at_reports
 msgid "Austrian Financial Reports"
-msgstr ""
+msgstr "Rendiconti finanziari austriaci"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_at
@@ -11140,7 +11140,7 @@ msgstr "Belgio - Rendiconti contabili"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_disallowed_expenses
 msgid "Belgium - Disallowed Expenses Data"
-msgstr "Belgio - Dati spese non autorizzate"
+msgstr "Belgio - Dati spese non deducibili"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_edi
@@ -11366,7 +11366,7 @@ msgstr "Modulo Bridge per configurare un Twitter Wall sul tuo evento"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_social
 msgid "Bridge module to push notifications to event attendees"
-msgstr "Modulo ponte per inviare notifiche ai partecipanti di un evento"
+msgstr "Modulo ponte per inviare notifiche push ai partecipanti di un evento"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
@@ -11663,7 +11663,7 @@ msgstr "A cascata"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
 msgid "Cash Basis Accounting Reports"
-msgstr "Resoconti contabili criterio di cassa"
+msgstr "Rendiconti contabili criterio di cassa"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -13395,7 +13395,7 @@ msgstr ""
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Date unit"
-msgstr "Unità data"
+msgstr "Unità di data"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13410,8 +13410,8 @@ msgid ""
 "Date unit used for the rounding. The value must be smaller than 'hour' if "
 "you use the digital formatting."
 msgstr ""
-"Unità di data utilizzata per l'arrotondamento. Il valore deve essere "
-"inferiore a 'ora' se usate la formattazione digitale."
+"Unità di data utilizzata per l'arrotondamento. Se viene utilizzata la "
+"formattazione digitale, il valore deve essere inferiore a \"ora\"."
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -13721,8 +13721,8 @@ msgid ""
 "Determines where the currency symbol should be placed after or before the "
 "amount."
 msgstr ""
-"Determina dove il simbolo di valuta dovrebbe essere posizionato: prima o "
-"dopo l'ammontare."
+"Determina se il simbolo di valuta deve essere posizionato prima o dopo "
+"l'importo."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_country__name_position
@@ -13730,8 +13730,8 @@ msgid ""
 "Determines where the customer/company name should be placed, i.e. after or "
 "before the address."
 msgstr ""
-"Determina dove il nome del cliente o dell'azienda deve essere posizionato, "
-"ossia prima o dopo l'indirizzo."
+"Determina dove deve essere posizionato il nome cliente/azienda, es. prima o "
+"dopo l'indirizzo."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -13777,12 +13777,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses
 msgid "Disallowed Expenses"
-msgstr "Spese non autorizzate"
+msgstr "Spese non deducibili"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_disallowed_expenses_fleet
 msgid "Disallowed Expenses on Fleets"
-msgstr "Spese non autorizzate nei parchi veicoli"
+msgstr "Spese non deducibili nei parchi veicoli"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -13809,7 +13809,7 @@ msgstr "Comunicazioni"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Display"
-msgstr "Visualizza"
+msgstr "Visualizzazione"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field__unknown__display_name
@@ -14781,8 +14781,8 @@ msgid ""
 "Example: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
 "GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
 msgstr ""
-"Esempio: GLOBAL_RULE_1 AND GLOBAL_RULE_2 AND ( (GROUP_A_RULE_1 OR "
-"GROUP_A_RULE_2) OR (GROUP_B_RULE_1 OR GROUP_B_RULE_2) )"
+"Esempio: REGOLA_GLOBALE_1 AND REGOLA_GLOBALE_2 AND ( (GRUPPO_A_REGOLA_1 OR "
+"GRUPPO_A_REGOLA_2) OR (GRUPPO_B_REGOLA_1 OR GRUPPO_B_REGOLA_2) )"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -16257,7 +16257,9 @@ msgstr "Gruppo di contatti"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "Group-specific rules are combined together with a logical OR operator"
-msgstr "Le regole specifiche del gruppo vengono unite con un operatore OR"
+msgstr ""
+"Le regole specifiche per un gruppo vengono unite insieme con un operatore "
+"logico OR"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -17611,7 +17613,7 @@ msgstr "Note interne"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_translation__src
 msgid "Internal Source"
-msgstr "Riferimento interno"
+msgstr "Sorgente interna"
 
 #. module: base
 #: model:res.groups,name:base.group_user
@@ -18139,7 +18141,7 @@ msgstr "LGPL versione 3"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
 msgid "Lithuania - Accounting Reports"
-msgstr ""
+msgstr "Lituania - Rendiconti contabili"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -19217,12 +19219,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses
 msgid "Manage disallowed expenses"
-msgstr "Gestione spese non autorizzate"
+msgstr "Gestione spese non deducibili"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr "Gestione spese non autorizzate nei parchi veicoli"
+msgstr "Gestione spese non deducibili nei parchi veicoli"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
@@ -23853,7 +23855,7 @@ msgstr "Ordini di acquisto, offerte e contratti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_track_social
 msgid "Push notification to track listeners"
-msgstr "Invio notifiche a chi ascolta le sessioni"
+msgstr "Invio notifiche push a chi ascolta le sessioni"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
@@ -24096,13 +24098,13 @@ msgstr "Raleway"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__rate
 msgid "Rate"
-msgstr "Valore"
+msgstr "Tasso"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__rate_ids
 #: model_terms:ir.ui.view,arch_db:base.view_currency_form
 msgid "Rates"
-msgstr "Tariffe"
+msgstr "Tassi"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_access__perm_read
@@ -25037,7 +25039,7 @@ msgstr "Programma gli incontri dei dipendenti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_social
 msgid "Schedule push notifications on attendees"
-msgstr "Programma l'invio di notifiche ai partecipanti"
+msgstr "Programma l'invio di notifiche push ai partecipanti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
@@ -25881,7 +25883,7 @@ msgstr ""
 msgid ""
 "Specify if missed occurrences should be executed when the server restarts."
 msgstr ""
-"Specifica se le occorrenze mancate devono essere eseguite al riavvio del "
+"Specifica se le occorrenze mancanti devono essere eseguite al riavvio del "
 "server."
 
 #. module: base
@@ -29314,9 +29316,9 @@ msgid ""
 "If the timezone is not set, UTC (Coordinated Universal Time) is used.\n"
 "Anywhere else, time values are computed according to the time offset of your web client."
 msgstr ""
-"Quando si stampano i documenti e si esportano/importano dati, gli orari sono calcolati in base a questo fuso orario.\n"
-"Se questo non è impostato, viene usato il GMT (Ora Media Di Greenwich).\n"
-"In qualunque altra parte, l'orario è calcolato in base regolazione dell'ora del client web."
+"Nella stampa di documenti e nell'esportazione/importazione di dati, gli orari vengono calcolati in base a questo fuso orario.\n"
+"Se non impostato, viene usato UTC (tempo coordinato universale).\n"
+"In tutte le altre parti, i valori temporali sono calcolati in base alla differenza di fuso orario del client web."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.sequence_view

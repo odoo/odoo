@@ -11,8 +11,8 @@
 # Luigi Di Naro <gigidn@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
-# Friederike Fasterling-Nesselbosch, 2021
+# Friederike Fasterling-Nesselbosch, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,13 +20,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: web_editor
 #. openerp-web
@@ -270,7 +270,7 @@ msgstr "Rapporto di forma"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_web_editor_assets
 msgid "Assets Utils"
-msgstr ""
+msgstr "Utilità asset"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_attachment
@@ -287,7 +287,7 @@ msgstr "URL allegato"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Autoconvert to relative link"
-msgstr ""
+msgstr "Autoconverti in link relativo"
 
 #. module: web_editor
 #. openerp-web
@@ -521,7 +521,7 @@ msgstr "Personalizzato"
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Custom %s"
-msgstr ""
+msgstr "Blocco %s personalizzato"
 
 #. module: web_editor
 #. openerp-web
@@ -557,7 +557,7 @@ msgstr "Predefinito + arrotondato"
 #: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Delete %s"
-msgstr ""
+msgstr "Elimina %s"
 
 #. module: web_editor
 #. openerp-web
@@ -693,7 +693,7 @@ msgstr ""
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
 msgid "Expected "
-msgstr "Atteso"
+msgstr "Atteso:"
 
 #. module: web_editor
 #. openerp-web
@@ -729,7 +729,7 @@ msgstr "Filtro"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippets
 msgid "First Panel"
-msgstr ""
+msgstr "Primo pannello"
 
 #. module: web_editor
 #. openerp-web
@@ -796,6 +796,13 @@ msgstr "Dimensione carattere"
 
 #. module: web_editor
 #. openerp-web
+#: code:addons/web_editor/static/src/js/editor/snippets.editor.js:0
+#, python-format
+msgid "For technical reasons, this block cannot be dropped here"
+msgstr "Per ragioni tecniche, qui non è possibile rilasciare il blocco"
+
+#. module: web_editor
+#. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Format"
@@ -839,6 +846,8 @@ msgstr ""
 #, python-format
 msgid "Give a relevant name to your file to optimize search engine results."
 msgstr ""
+"Per ottimizzare i risultati dei motori di ricerca assegnare al file un nome "
+"pertinente."
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_http
@@ -1022,7 +1031,7 @@ msgstr "Anteprima immagine"
 #. module: web_editor
 #: model:ir.model.fields,field_description:web_editor.field_ir_attachment__image_src
 msgid "Image Src"
-msgstr ""
+msgstr "Fonte immagine"
 
 #. module: web_editor
 #. openerp-web
@@ -1082,6 +1091,12 @@ msgstr "Inserisci video"
 #, python-format
 msgid "Install"
 msgstr "Installa"
+
+#. module: web_editor
+#: code:addons/web_editor/models/ir_ui_view.py:0
+#, python-format
+msgid "Invalid field value for %s: %s"
+msgstr "Valore campo non valido per %s: %s"
 
 #. module: web_editor
 #. openerp-web
@@ -1203,7 +1218,7 @@ msgstr "Link"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Link Label"
-msgstr "Etichetta collegamento"
+msgstr "Etichetta link"
 
 #. module: web_editor
 #. openerp-web
@@ -1332,7 +1347,7 @@ msgstr "Solo file SCSS personalizzati"
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Only Page SCSS Files"
-msgstr ""
+msgstr "Solo file SCSS della pagina"
 
 #. module: web_editor
 #. openerp-web
@@ -1369,14 +1384,14 @@ msgstr "Ottimizza"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Optimized"
-msgstr ""
+msgstr "Ottimizzata"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Or choose a preset:"
-msgstr ""
+msgstr "O seleziona una preimpostazione:"
 
 #. module: web_editor
 #. openerp-web
@@ -1465,17 +1480,17 @@ msgstr "Primario"
 #. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__c
 msgid "Qu'est-ce qu'il fout ce maudit pancake, tabernacle ?"
-msgstr ""
+msgstr "Che diavolo sta facendo quel dannato pancake, maledizione ?"
 
 #. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__a
 msgid "Qu'il n'est pas arrivé à Toronto"
-msgstr ""
+msgstr "Che non è arrivato a Toronto"
 
 #. module: web_editor
 #: model:ir.model.fields.selection,name:web_editor.selection__web_editor_converter_test__selection_str__b
 msgid "Qu'il était supposé arriver à Toronto"
-msgstr ""
+msgstr "Che doveva arrivare a Toronto"
 
 #. module: web_editor
 #. openerp-web
@@ -1573,7 +1588,7 @@ msgstr "Campo QWeb monetario"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_relative
 msgid "Qweb Field Relative"
-msgstr ""
+msgstr "Campo QWeb relativo"
 
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_qweb_field_selection
@@ -1609,14 +1624,14 @@ msgstr "Ripeti"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reduce the quality as much as possible to increase performance."
-msgstr ""
+msgstr "Per aumentare le prestazioni ridurre il più possibile la qualità."
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Reduce the size as much as possible to increase performance."
-msgstr ""
+msgstr "Per aumentare le prestazioni ridurre il più possibile la dimensione."
 
 #. module: web_editor
 #. openerp-web
@@ -1665,7 +1680,7 @@ msgstr "Sostituisci contenuto"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "Reset"
-msgstr "Azzera"
+msgstr "Ripristina"
 
 #. module: web_editor
 #. openerp-web
@@ -1708,7 +1723,7 @@ msgstr "Ridimensiona al 25%"
 #: code:addons/web_editor/static/src/xml/wysiwyg.xml:0
 #, python-format
 msgid "Resizing is not supported for images of type"
-msgstr ""
+msgstr "Ridimensionamento non supportato per immagini di tipo"
 
 #. module: web_editor
 #. openerp-web
@@ -1772,7 +1787,7 @@ msgstr "Salva e installa"
 #: code:addons/web_editor/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save and Reload"
-msgstr ""
+msgstr "Salva e ricarica"
 
 #. module: web_editor
 #. openerp-web
@@ -2028,7 +2043,7 @@ msgstr "Colori del tema"
 #: code:addons/web_editor/static/src/xml/snippets.xml:0
 #, python-format
 msgid "This block is outdated"
-msgstr ""
+msgstr "Questo blocco è obsoleto"
 
 #. module: web_editor
 #. openerp-web
@@ -2038,6 +2053,8 @@ msgid ""
 "This change needs to reload the page, this will save all your changes and "
 "reload the page, are you sure you want to proceed?"
 msgstr ""
+"Questa modifica richiede il ricaricamento della pagina. Verranno salvate "
+"tutte le modifiche e la pagina verrà ricaricata. Proseguire veramente?"
 
 #. module: web_editor
 #. openerp-web
@@ -2100,7 +2117,7 @@ msgid ""
 "To make changes, drop this block and use the new options in the last "
 "version."
 msgstr ""
-"Per fare delle modifiche, abbandona questo blocco e usa le nuove opzioni "
+"Per apportare modifiche, rilascia questo blocco e usa le nuove opzioni "
 "dell'ultima versione."
 
 #. module: web_editor
@@ -2111,8 +2128,8 @@ msgid ""
 "To save a snippet, we need to save all your previous modifications and "
 "reload the page."
 msgstr ""
-"Per salvare uno snippet, dobbiamo salvare tutte le modifiche precedenti e "
-"ricaricare la pagina."
+"Per salvare uno snippet è necessario salvare tutte le precedenti modifiche e"
+" ricaricare la pagina."
 
 #. module: web_editor
 #. openerp-web
@@ -2193,7 +2210,7 @@ msgstr "Annulla"
 #: code:addons/web_editor/static/src/js/common/ace.js:0
 #, python-format
 msgid "Unexpected "
-msgstr ""
+msgstr "Non atteso:"
 
 #. module: web_editor
 #. openerp-web
@@ -2267,14 +2284,14 @@ msgstr "Con la riproduzione automatica abilitata i video vengono silenziati"
 #. module: web_editor
 #: model:ir.model,name:web_editor.model_ir_ui_view
 msgid "View"
-msgstr "Visualizza"
+msgstr "Vista"
 
 #. module: web_editor
 #. openerp-web
 #: code:addons/web_editor/static/src/xml/ace.xml:0
 #, python-format
 msgid "Views and Assets bundles"
-msgstr ""
+msgstr "Viste e asset insieme"
 
 #. module: web_editor
 #. openerp-web
@@ -2413,7 +2430,7 @@ msgstr "automatica"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "darken"
-msgstr ""
+msgstr "scurisci"
 
 #. module: web_editor
 #. openerp-web
@@ -2424,11 +2441,14 @@ msgid ""
 "this image by choosing it again in the media-dialog or reuploading it "
 "(double click on the image)"
 msgstr ""
+"A causa di limiti tecnici, le impostazioni di ottimizzazione per questa "
+"immagine possono essere cambiate solo scegliendola di nuovo nella finestra "
+"di dialogo multimediale oppure ricaricandola (doppio clic sull'immagine)"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "exclusion"
-msgstr ""
+msgstr "esclusione"
 
 #. module: web_editor
 #. openerp-web
@@ -2447,17 +2467,17 @@ msgstr "https://www.odoo.com/mydocument"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "lighten"
-msgstr ""
+msgstr "schiarisci"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "multiply"
-msgstr ""
+msgstr "moltiplica"
 
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "overlay"
-msgstr ""
+msgstr "sovrapponi"
 
 #. module: web_editor
 #. openerp-web
@@ -2470,7 +2490,7 @@ msgstr "px"
 #. module: web_editor
 #: model_terms:ir.ui.view,arch_db:web_editor.snippet_options_image_optimization_widgets
 msgid "screen"
-msgstr ""
+msgstr "scherma"
 
 #. module: web_editor
 #. openerp-web

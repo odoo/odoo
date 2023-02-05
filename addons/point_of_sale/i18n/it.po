@@ -12,9 +12,8 @@
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2021
-# francesco.foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-09 16:49+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -276,7 +275,7 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Un identificatore univoco globale per questa configurazione del POS, usato "
+"Un identificativo univoco globale per questa configurazione del POS, usato "
 "per evitare conflitti nei dati generati dal client."
 
 #. module: point_of_sale
@@ -702,7 +701,7 @@ msgstr "Ritorna all'elenco"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
-msgstr ""
+msgstr "Backspace"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -2406,7 +2405,7 @@ msgstr "La mancia è già presente?"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__is_change
 msgid "Is this payment change?"
-msgstr ""
+msgstr "È il resto di un pagamento?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_tax.py:0
@@ -2577,7 +2576,7 @@ msgstr "Lampada a led"
 #: model:product.product,name:point_of_sale.letter_tray
 #: model:product.template,name:point_of_sale.letter_tray_product_template
 msgid "Letter Tray"
-msgstr ""
+msgstr "Portacorrispondenza"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -2799,7 +2798,7 @@ msgstr "Tipologia prossima attività"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "Next Order List"
-msgstr ""
+msgstr "Elenco ordini successivi"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3428,9 +3427,11 @@ msgstr "Numero prelievi"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr "Prelievo Punto Vendita"
+msgstr "- Prelievo POS"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Pickings"
@@ -3772,7 +3773,7 @@ msgstr "Confermato"
 #: code:addons/point_of_sale/static/src/xml/Screens/OrderManagementScreen/OrderManagementControlPanel.xml:0
 #, python-format
 msgid "Previous Order List"
-msgstr "Elenco ordini precedente"
+msgstr "Elenco ordini precedenti"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3848,7 +3849,7 @@ msgstr "Stampa ricevuta"
 #, python-format
 msgid "Print a report with all the sales of the current PoS Session"
 msgstr ""
-"Stampa un rendiconto di tutte le vendite della sessione corrente del POS"
+"Stampa un rendiconto con tutte le vendite della sessione corrente del POS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4649,7 +4650,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Mancano alcuni numeri di serie/lotto"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5895,8 +5896,8 @@ msgid ""
 "You are trying to sell products with serial/lot numbers, but some of them are not set.\n"
 "Would you like to proceed anyway?"
 msgstr ""
-"Stai cercando di vendere prodotti con numeri di serie/lotto, ma alcuni di essi non sono impostati.\n"
-"Vuoi procedere comunque?"
+"Si sta tentando di vendere prodotti con numeri di serie/lotto, ma alcuni di essi non sono impostati.\n"
+"Procedere comunque?"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

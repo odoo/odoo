@@ -8,8 +8,9 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
-# trendspotter, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +33,9 @@ msgid ""
 "company-specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o mr8\" title=\"Values set here are "
+"company-specific.\" aria-label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -41,7 +45,7 @@ msgstr "Účet"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.pos_config_view_form
 msgid "Add tip through payment terminal (Adyen)"
-msgstr ""
+msgstr "Přidat tip přes platební terminál (Adyen)"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
@@ -73,12 +77,12 @@ msgstr "Adyen chyba"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
 msgid "Adyen Latest Diagnosis"
-msgstr ""
+msgstr "Nejnovější diagnóza Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_response
 msgid "Adyen Latest Response"
-msgstr ""
+msgstr "Nejnovější odpověď Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_payout_id
@@ -88,7 +92,7 @@ msgstr "Adyen výplata"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "Adyen Store"
-msgstr ""
+msgstr "Adyen Store"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_id
@@ -98,12 +102,12 @@ msgstr "Adyen terminal"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_terminal_identifier
 msgid "Adyen Terminal Identifier"
-msgstr ""
+msgstr "Terminální identifikátor Adyen"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_test_mode
 msgid "Adyen Test Mode"
-msgstr ""
+msgstr "Testovací režim Adyen"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
@@ -113,19 +117,19 @@ msgstr "Účet Adyen pro platformy"
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_store
 msgid "Adyen for Platforms Store"
-msgstr ""
+msgstr "Adyen pro platformy obchodů"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_terminal
 msgid "Adyen for Platforms Terminal"
-msgstr ""
+msgstr "Terminál Adyen pro platformy"
 
 #. module: pos_adyen
 #. openerp-web
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occured. Message from Adyen: %s"
-msgstr ""
+msgstr "Došlo k neočekávané chybě. Zpráva od Adyen: %s"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
@@ -137,7 +141,7 @@ msgstr "Požádat zákazníky o spropitné"
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
-msgstr ""
+msgstr "Autentizace služby selhala. Zkontrolujte přihlašovací údaje Adyen."
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__city
@@ -245,7 +249,7 @@ msgstr "Název"
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Order a Terminal"
-msgstr ""
+msgstr "Objednat si terminál"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__terminal_ids
@@ -263,12 +267,13 @@ msgstr "Telefonní číslo"
 msgid ""
 "Please configure a tip product for POS %s to support tipping with Adyen."
 msgstr ""
+"Nakonfigurujte produkt špičky pro POS %s, který podporuje vyklápění s Adyen."
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/adyen_account.py:0
 #, python-format
 msgid "Please create a store first."
-msgstr ""
+msgstr "Nejprve vytvořte obchod."
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_pos_config
@@ -310,12 +315,12 @@ msgstr "Kód státu"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__store_id
 msgid "Store"
-msgstr ""
+msgstr "Obchod"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_account_view_form
 msgid "Stores"
-msgstr ""
+msgstr "Obchody"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__street
@@ -340,7 +345,7 @@ msgstr "Technické pole použité k určení, zda je terminál stále připojen.
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__terminal_ids
 msgid "Terminal"
-msgstr ""
+msgstr "Terminál"
 
 #. module: pos_adyen
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
@@ -349,9 +354,15 @@ msgid "Terminal %s is already used on payment method %s."
 msgstr "Terminál %s se již používá při platbě %s."
 
 #. module: pos_adyen
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr "Terminál %s se již používá ve společnosti %s při platbě %s."
+
+#. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__terminal_uuid
 msgid "Terminal ID"
-msgstr ""
+msgstr "ID terminálu"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__country_code
@@ -389,6 +400,8 @@ msgid ""
 "Used when connecting to Adyen: https://docs.adyen.com/user-management/how-"
 "to-get-the-api-key/#description"
 msgstr ""
+"Použito při připojení k Adyen: https://docs.adyen.com/user-management/how-"
+"to-get-the-api-key/#description"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
