@@ -12,7 +12,7 @@ class SaleOrderTemplate(models.Model):
         string="Website Description",
         translate=html_translate,
         sanitize_overridable=True,
-        sanitize_attributes=False,
+        restricted_attributes=False,
         sanitize_form=False)
 
     def action_open_template(self):

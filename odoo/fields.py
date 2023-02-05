@@ -31,7 +31,7 @@ from .tools import (
     float_repr, float_round, float_compare, float_is_zero, human_size,
     pg_varchar, ustr, OrderedSet, pycompat, sql, date_utils, unique,
     image_process, merge_sequences, SQL_ORDER_BY_TYPE, is_list_of, has_list_types,
-    html_normalize, html_sanitize,
+    html_compare, html_sanitize,
 )
 from .tools import DEFAULT_SERVER_DATE_FORMAT as DATE_FORMAT
 from .tools import DEFAULT_SERVER_DATETIME_FORMAT as DATETIME_FORMAT
@@ -1917,7 +1917,7 @@ class Html(_String):
         the users part of the `base.group_sanitize_override` group (default: ``False``)
     :param bool sanitize_tags: whether to sanitize tags
         (only a white list of attributes is accepted, default: ``True``)
-    :param bool sanitize_attributes: whether to sanitize attributes
+    :param bool restricted_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
     :param bool strip_style: whether to strip style attributes
@@ -1929,7 +1929,7 @@ class Html(_String):
     sanitize = True                     # whether value must be sanitized
     sanitize_overridable = False        # whether the sanitation can be bypassed by the users part of the `base.group_sanitize_override` group
     sanitize_tags = True                # whether to sanitize tags (only a white list of attributes is accepted)
-    sanitize_attributes = True          # whether to sanitize attributes (only a white list of attributes is accepted)
+    restricted_attributes = True        # whether to restrict more the list of safe attributes or not
     sanitize_style = False              # whether to sanitize style attributes
     sanitize_form = True                # whether to sanitize forms
     strip_style = False                 # whether to strip style attributes (removed and therefore not sanitized)
@@ -1949,14 +1949,14 @@ class Html(_String):
 
     _related_sanitize = property(attrgetter('sanitize'))
     _related_sanitize_tags = property(attrgetter('sanitize_tags'))
-    _related_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+    _related_restricted_attributes = property(attrgetter('restricted_attributes'))
     _related_sanitize_style = property(attrgetter('sanitize_style'))
     _related_strip_style = property(attrgetter('strip_style'))
     _related_strip_classes = property(attrgetter('strip_classes'))
 
     _description_sanitize = property(attrgetter('sanitize'))
     _description_sanitize_tags = property(attrgetter('sanitize_tags'))
-    _description_sanitize_attributes = property(attrgetter('sanitize_attributes'))
+    _description_restricted_attributes = property(attrgetter('restricted_attributes'))
     _description_sanitize_style = property(attrgetter('sanitize_style'))
     _description_strip_style = property(attrgetter('strip_style'))
     _description_strip_classes = property(attrgetter('strip_classes'))
@@ -1977,7 +1977,7 @@ class Html(_String):
         sanitize_vals = {
             'silent': True,
             'sanitize_tags': self.sanitize_tags,
-            'sanitize_attributes': self.sanitize_attributes,
+            'restricted_attributes': self.restricted_attributes,
             'sanitize_style': self.sanitize_style,
             'sanitize_form': self.sanitize_form,
             'strip_style': self.strip_style,
@@ -1990,13 +1990,12 @@ class Html(_String):
 
             original_value = record[self.name]
             if original_value:
-                # Note that sanitize also normalize
                 original_value_sanitized = html_sanitize(original_value, **sanitize_vals)
-                original_value_normalized = html_normalize(original_value)
 
+                # could have been emptied by the sanitizer
                 if (
                     not original_value_sanitized  # sanitizer could empty it
-                    or original_value_normalized != original_value_sanitized
+                    or not html_compare(original_value_sanitized, original_value)
                 ):
                     # The field contains element(s) that would be removed if
                     # sanitized. It means that someone who was part of a group

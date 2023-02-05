@@ -136,8 +136,8 @@ class TestMessageValues(TestMailCommon):
         self.assertEqual(len(msg.attachment_ids), 1)
         self.assertEqual(
             msg.body,
-            '<p>taratata <img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"> '
-            '<img src="/web/image/{attachment.id}?access_token={attachment.access_token}" alt="image0" width="2"></p>'.format(attachment=msg.attachment_ids[0])
+            '<p>taratata <img alt="image0" src="/web/image/{attachment.id}?access_token={attachment.access_token}" width="2" /> '
+            '<img alt="image0" src="/web/image/{attachment.id}?access_token={attachment.access_token}" width="2" /></p>'.format(attachment=msg.attachment_ids[0])
         )
 
     @mute_logger('odoo.models.unlink')

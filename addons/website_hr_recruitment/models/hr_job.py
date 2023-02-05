@@ -19,7 +19,7 @@ class Job(models.Model):
         'Website description', translate=html_translate,
         default=_get_default_website_description, prefetch=False,
         sanitize_overridable=True,
-        sanitize_attributes=False, sanitize_form=False)
+        restricted_attributes=False, sanitize_form=False)
     job_details = fields.Html(
         'Process Details',
         translate=True,

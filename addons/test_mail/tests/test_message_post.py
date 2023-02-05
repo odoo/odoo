@@ -1277,7 +1277,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # check notifications have been sent
         self.assertMailNotifications(new_message, [{
-            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
+            'content': f'<p>Body for: {test_record.name}<a>link</a></p>',
             'message_type': 'comment',
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},
@@ -1318,7 +1318,7 @@ class TestMessagePostHelpers(TestMessagePostCommon):
 
         # check notifications have been sent
         self.assertMailNotifications(new_message, [{
-            'content': f'<p>Body for: {test_record.name}<a href="">link</a></p>',
+            'content': f'<p>Body for: {test_record.name}<a>link</a></p>',
             'message_type': 'notification',
             'notif': [
                 {'partner': self.partner_1, 'type': 'email'},
