@@ -26,6 +26,8 @@ msgid ""
 "specific.\" aria-label=\"Values set here are company-specific.\" "
 "groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"此值仅针对当前公司。\" aria-"
+"label=\"此值仅针对当前公司。\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -45,14 +47,14 @@ msgstr "联系人"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "财政状况"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
-msgstr ""
+msgstr "如果勾选此复选框，则在欧洲 VIES 服务无法验证合同的增值税号码时，您将无法保存联系人。"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
@@ -93,27 +95,27 @@ msgstr ""
 msgid ""
 "The country detected for this foreign VAT number does not match the one set "
 "on this fiscal position."
-msgstr ""
+msgstr "该外国增值税号检测到的国家与该财政状况上设定的国家不一致。"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "验证增值税号码"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "使用欧洲 VIES 服务验证增值税号码"
 
 #. module: base_vat
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
-msgstr ""
+msgstr "财政状况[%s]"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"
-msgstr ""
+msgstr "业务伙伴[%s]"

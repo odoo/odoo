@@ -23,7 +23,7 @@ msgstr ""
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr ""
+msgstr "%s: Tiempo personal"
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -39,26 +39,35 @@ msgid ""
 "Contracts:\n"
 "%s"
 msgstr ""
+"No se puede establecer un permiso en varios contratos con diferentes horarios de trabajo.\n"
+"\n"
+"Cree un tiempo personal para cada contrato.\n"
+"\n"
+"Tiempo personal:\n"
+"%s\n"
+"\n"
+"Contratos:\n"
+"%s"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_contract
 msgid "Employee Contract"
-msgstr ""
+msgstr "Contrato de empleado"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry
 msgid "HR Work Entry"
-msgstr ""
+msgstr "Entrada de trabajo de RRHH"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_work_entry_type
 msgid "HR Work Entry Type"
-msgstr ""
+msgstr "Tipo de entrada de trabajo de RRHH"
 
 #. module: hr_work_entry_holidays
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_holidays.work_entry_type_leave_form_inherit
 msgid "Payroll"
-msgstr ""
+msgstr "Nómina"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry__leave_state
@@ -73,6 +82,10 @@ msgid ""
 "The status is 'Refused', when time off request is refused by manager.\n"
 "The status is 'Approved', when time off request is approved by manager."
 msgstr ""
+"Se establece el estado como 'Para enviar', cuando se crea una solicitud de tiempo personal.\n"
+"Se establece el estado como 'Para aprobar', cuando el usuario confirma la solicitud de tiempo personal.\n"
+"Se establece el estado como 'Rechazado', cuando el gerente rechaza la solicitud de tiempo personal.\n"
+"Se establece el estado como 'Aprobado', cuando el gerente aprueba la solicitud de tiempo personal."
 
 #. module: hr_work_entry_holidays
 #: code:addons/hr_work_entry_holidays/models/hr_leave.py:0
@@ -81,6 +94,8 @@ msgid ""
 "There is no employee set on the time off. Please make sure you're logged in "
 "the correct company."
 msgstr ""
+"No se estableció a ningún empleado en tiempo libre. Asegúrese de haber "
+"iniciado sesión en la empresa correcta."
 
 #. module: hr_work_entry_holidays
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave
@@ -92,14 +107,14 @@ msgstr "Tiempo personal"
 #: model:ir.model,name:hr_work_entry_holidays.model_hr_leave_type
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Time Off Type"
-msgstr "Tipo de tiempo libre"
+msgstr "Tipo de tiempo personal"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,field_description:hr_work_entry_holidays.field_hr_leave_type__work_entry_type_id
 msgid "Work Entry Type"
-msgstr ""
+msgstr "Tipo de entrada de trabajo"
 
 #. module: hr_work_entry_holidays
 #: model:ir.model.fields,help:hr_work_entry_holidays.field_hr_work_entry_type__leave_type_ids
 msgid "Work entry used in the payslip."
-msgstr ""
+msgstr "Entrada de trabajo utilizada en la nómina."

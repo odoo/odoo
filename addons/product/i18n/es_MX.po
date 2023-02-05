@@ -221,8 +221,7 @@ msgid ""
 "Customer Invoice/Credit Note"
 msgstr ""
 "La descripción del producto que le quiera dar a sus clientes. Esta "
-"descripción se copiará en todas las órdenes de venta, órdenes de entrega y "
-"facturas/notas de crédito de los clientes."
+"descripción se copiará a cada pedido de venta, albarán y factura de cliente."
 
 #. module: product
 #. odoo-python
@@ -255,8 +254,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación de Inventario.\n"
-"Un producto consumible es un producto para el que no se gestionan las existencias.\n"
+"Un producto almacenable es un producto para el que gestiona sus existencias. Debe tener instalada la aplicación de inventario.\n"
+"Un producto consumible es un producto para el que no se gestionan sus existencias.\n"
 "Un servicio es un producto no material."
 
 #. module: product
@@ -292,7 +291,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_exception_decoration
 #: model:ir.model.fields,field_description:product.field_product_template__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad de excepción"
+msgstr "Decoración de la actividad  de excepción"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_state
@@ -410,7 +409,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product.field_product_product__message_attachment_count
 #: model:ir.model.fields,field_description:product.field_product_template__message_attachment_count
 msgid "Attachment Count"
-msgstr "Número de archivos adjuntos"
+msgstr "Nº de archivos adjuntos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__name
@@ -520,7 +519,7 @@ msgstr "Listas de precios básicas"
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_1024_be_zoomed
 #: model:ir.model.fields,field_description:product.field_product_template__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr "Se puede ampliar la imagen 1024"
+msgstr "Puede agrandarse la imagen 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__can_image_variant_1024_be_zoomed
@@ -636,7 +635,7 @@ msgstr "Condiciones"
 #. module: product
 #: model:ir.model,name:product.model_res_config_settings
 msgid "Config Settings"
-msgstr "Ajustes de configuración"
+msgstr "Opciones de configuración"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -695,7 +694,7 @@ msgstr "Cantidad contenida"
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
 msgid "Cost"
-msgstr "Costo"
+msgstr "Coste"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
@@ -722,7 +721,7 @@ msgstr "Crear una nueva lista de precios"
 #: model_terms:ir.actions.act_window,help:product.product_template_action
 #: model_terms:ir.actions.act_window,help:product.product_template_action_all
 msgid "Create a new product"
-msgstr "Crear nuevo producto"
+msgstr "Crear un nuevo producto"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_normal_action
@@ -788,7 +787,7 @@ msgstr "Metros cúbicos"
 #: model:ir.model.fields,field_description:product.field_product_template__currency_id
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__currency_id
 msgid "Currency"
-msgstr "Divisa"
+msgstr "Moneda"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute_custom_value__custom_value
@@ -928,7 +927,7 @@ msgstr "Mostrar lista de precios"
 #: model:ir.model.fields,field_description:product.field_product_attribute_value__display_type
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__display_type
 msgid "Display Type"
-msgstr "Cómo mostrar en pantalla"
+msgstr "Tipo de pantalla"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_label_layout__print_format__dymo
@@ -949,7 +948,7 @@ msgstr "Cada valor debe definirse una sola vez por atributo y por producto."
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__date_end
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__date_end
 msgid "End Date"
-msgstr "Fecha de finalización"
+msgstr "Fecha final"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__date_end
@@ -1023,7 +1022,7 @@ msgstr "Seguidores"
 #: model:ir.model.fields,field_description:product.field_product_product__message_partner_ids
 #: model:ir.model.fields,field_description:product.field_product_template__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (contactos)"
+msgstr "Seguidores (Contactos)"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
@@ -1155,14 +1154,13 @@ msgstr "Icono para indicar una actividad de excepción."
 #: model:ir.model.fields,help:product.field_product_product__message_needaction
 #: model:ir.model.fields,help:product.field_product_template__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
+msgstr "Si está marcado hay nuevos mensajes que requieren su atención."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__message_has_error
 #: model:ir.model.fields,help:product.field_product_template__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si se encuentra seleccionado, algunos mensajes tienen error de envío."
+msgstr "Si se encuentra marcado, algunos mensajes tienen error de envío."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_id
@@ -1189,31 +1187,31 @@ msgstr "Si no está marcado, permitirá ocultar el producto sin eliminarlo."
 #: model:ir.model.fields,field_description:product.field_product_product__image_1920
 #: model:ir.model.fields,field_description:product.field_product_template__image_1920
 msgid "Image"
-msgstr "Imagen"
+msgstr "Image"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_1024
 #: model:ir.model.fields,field_description:product.field_product_template__image_1024
 msgid "Image 1024"
-msgstr "Imagen 1024"
+msgstr "Image 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_128
 #: model:ir.model.fields,field_description:product.field_product_template__image_128
 msgid "Image 128"
-msgstr "Imagen 128"
+msgstr "Image 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_256
 #: model:ir.model.fields,field_description:product.field_product_template__image_256
 msgid "Image 256"
-msgstr "Imagen 256"
+msgstr "Image 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_512
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
-msgstr "Imagen 512"
+msgstr "Image 512"
 
 #. module: product
 #. odoo-python
@@ -1261,8 +1259,7 @@ msgstr "Referencia interna"
 #: model:ir.model.fields,help:product.field_product_product__barcode
 msgid "International Article Number used for product identification."
 msgstr ""
-"Número de artículo internacional que se utiliza para la identificación de "
-"producto."
+"Número de artículo internacional usado para la identificación de producto."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -1372,7 +1369,7 @@ msgstr "Logística"
 #: model:ir.model.fields,field_description:product.field_product_product__message_main_attachment_id
 #: model:ir.model.fields,field_description:product.field_product_template__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Archivo adjunto principal"
+msgstr "Archivos adjuntos principales"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_template_attribute_value__exclude_for
@@ -1413,7 +1410,7 @@ msgstr "Margen máx. de precio"
 #: model:ir.model.fields,field_description:product.field_product_product__message_has_error
 #: model:ir.model.fields,field_description:product.field_product_template__message_has_error
 msgid "Message Delivery error"
-msgstr "Error de envío de mensaje"
+msgstr "Error de entrega del mensaje"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_ids
@@ -1480,7 +1477,7 @@ msgstr "Siguiente evento en el calendario de actividades."
 #: model:ir.model.fields,field_description:product.field_product_product__activity_date_deadline
 #: model:ir.model.fields,field_description:product.field_product_template__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Fecha límite de la siguiente actividad"
+msgstr "Siguiente plazo de actividad"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_summary
@@ -1492,7 +1489,7 @@ msgstr "Resumen de la siguiente actividad"
 #: model:ir.model.fields,field_description:product.field_product_product__activity_type_id
 #: model:ir.model.fields,field_description:product.field_product_template__activity_type_id
 msgid "Next Activity Type"
-msgstr "Tipo de la siguiente actividad"
+msgstr "Siguiente tipo de actividad"
 
 #. module: product
 #. odoo-python
@@ -1550,7 +1547,7 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:product.field_product_product__message_has_error_counter
 #: model:ir.model.fields,help:product.field_product_template__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Número de mensajes con error de envío"
+msgstr "Número de mensajes con error de entrega"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__pricelist_item_count
@@ -1755,7 +1752,7 @@ msgstr "Lista de precios:"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_product_pricelist
 #: model:ir.model.fields,field_description:product.field_res_country_group__pricelist_ids
 msgid "Pricelists"
-msgstr "Listas de precios"
+msgstr "Lista de precios"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_pricelist_setting
@@ -1885,7 +1882,7 @@ msgstr "Paquetes de productos"
 #: model:ir.model.fields,field_description:product.field_product_packaging__name
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_form_view
 msgid "Product Packaging"
-msgstr "Empaquetado del producto"
+msgstr "Embalaje del producto"
 
 #. module: product
 #: model:ir.actions.report,name:product.report_product_packaging
@@ -1897,7 +1894,7 @@ msgstr "Embalaje del producto (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Empaquetados del producto"
+msgstr "Embalajes del producto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
@@ -1937,7 +1934,7 @@ msgstr "Exclusión de atributos del modelo del producto"
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_line
 msgid "Product Template Attribute Line"
-msgstr "Línea de atributos de la plantilla de productos"
+msgstr "Linea de atributo de la plantilla de producto"
 
 #. module: product
 #: model:ir.model,name:product.model_product_template_attribute_value
@@ -1979,7 +1976,7 @@ msgstr "Unidad de medida del producto"
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
 #: model_terms:ir.ui.view,arch_db:product.product_normal_form_view
 msgid "Product Variant"
-msgstr "Variante de producto"
+msgstr "Variantes de producto"
 
 #. module: product
 #. odoo-python
@@ -2237,7 +2234,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Show all records which has next action date is before today"
 msgstr ""
-"Mostrar todos los registros cuya fecha próxima de acción es anterior a hoy"
+"Mostrar todos los registros que tienen la próxima fecha de acción antes de "
+"hoy"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist__discount_policy__without_discount
@@ -2322,14 +2320,14 @@ msgid ""
 "Planned: Future activities."
 msgstr ""
 "Estado basado en actividades\n"
-"Vencida: la fecha límite ya pasó\n"
-"Hoy: la fecha límite es hoy\n"
-"Planeada: futuras actividades."
+"Vencida: ya pasó la fecha límite\n"
+"Hoy: hoy es la fecha límite\n"
+"Planificada: actividades futuras."
 
 #. module: product
 #: model:ir.model,name:product.model_product_supplierinfo
 msgid "Supplier Pricelist"
-msgstr "Lista de precios del proveedor"
+msgstr "Tarifa de proveedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__name
@@ -2413,7 +2411,7 @@ msgstr "El tipo de visualización utilizado en el configurador del producto."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "El primero en la secuencia es el aplicado de forma predeterminada."
+msgstr "El primero en la secuencia es el aplicado por defecto."
 
 #. module: product
 #. odoo-python
@@ -2695,7 +2693,7 @@ msgstr "Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr "Número de variantes"
+msgstr "Contador de variantes"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -2785,7 +2783,7 @@ msgstr "Información del proveedor"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_supplierinfo_type_action
 msgid "Vendor Pricelists"
-msgstr "Listas de precio del proveedor"
+msgstr "Listas de precios del proveedor"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_code
@@ -2828,12 +2826,12 @@ msgstr "Etiqueta de unidad de medida de volumen"
 #: code:addons/product/models/uom_uom.py:0
 #, python-format
 msgid "Warning!"
-msgstr "¡Advertencia!"
+msgstr "¡Alerta!"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
 msgid "Warnings"
-msgstr "Advertencias"
+msgstr "Avisos"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -2851,7 +2849,7 @@ msgstr "Unidad de medida de peso"
 #: model:ir.model.fields,field_description:product.field_product_product__weight_uom_name
 #: model:ir.model.fields,field_description:product.field_product_template__weight_uom_name
 msgid "Weight unit of measure label"
-msgstr "Etiqueta de unidad de medida de peso"
+msgstr "Etiqueta de la unidad de medida de peso"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__write_date

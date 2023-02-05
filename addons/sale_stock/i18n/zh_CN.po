@@ -3,7 +3,6 @@
 # 	* sale_stock
 # 
 # Translators:
-# Tony Peng <umingpeng@gmail.com>, 2023
 # 陕西_jack, 2023
 # digitalliuzg8888, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
@@ -97,7 +96,7 @@ msgstr ""
 "根据产品配置，交货数量可以通过机制自动计算：\n"
 " - 手动：在线手动输入数量\n"
 " - 费用分析：数量是来自过账费用的数量总和\n"
-" - 工时表：数量是与此销售线相关联的任务记录的时数\n"
+" - 时间表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
 
 #. module: sale_stock
@@ -124,7 +123,7 @@ msgstr "尽快"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Availability"
-msgstr "可用"
+msgstr "可用量"
 
 #. module: sale_stock
 #. odoo-javascript
@@ -200,7 +199,7 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
-"你能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
+"您能承诺给客户的交货日期，通过服务产品的订单明细行的最小前置时间计算。一旦发货，订单的发货策略将会被考虑来决定是使用订单明细行的最小或最大前置时间。"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -244,7 +243,7 @@ msgstr "销售订单发生异常:"
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s):"
-msgstr "异常(多个):"
+msgstr "异常:"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
@@ -275,7 +274,7 @@ msgstr "预测预计日期"
 #: code:addons/sale_stock/static/src/widgets/qty_at_date_widget.xml:0
 #, python-format
 msgid "Forecasted Stock"
-msgstr "预测的库存"
+msgstr "预测库存"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
@@ -607,7 +606,7 @@ msgstr "尽快运送产品，并退回订单"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
 msgid "Shipping Policy"
-msgstr "送货政策"
+msgstr "送货策略"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -737,7 +736,7 @@ msgstr "已取消"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "天"
+msgstr "天数"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

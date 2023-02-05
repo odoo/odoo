@@ -216,8 +216,9 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"Descrizione del prodotto da trasmettere ai clienti. Viene copiata su tutti "
-"gli ordini di vendita/consegna e sulle fatture/note di credito dei clienti."
+"Una descrizione del prodotto da mostrare ai clienti. La descrizione sarà "
+"inserita in ogni ordine di vendita, ordine di spedizione e fatturazione/nota"
+" di credito del cliente."
 
 #. module: product
 #. odoo-python
@@ -248,9 +249,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un prodotto stoccabile è un prodotto per il quale vengono gestite le giacenze. Deve essere installata l'applicazione magazzino.\n"
-"Un prodotto di consumo è un prodotto per il quale non vengono gestite le giacenze.\n"
-"Un servizio è un prodotto fornito in modo immateriale."
+"Un prodotto stoccabile è un prodotto per il quale gestisci lo stock. L'applicazione magazzino deve essere installata\n"
+"Un prodotto di consumo è un prodotto per il quale lo stock non è gestito.\n"
+"Un servizio è un prodotto non materiale che fornisci."
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction
@@ -371,7 +372,7 @@ msgstr "Applicato a"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__applied_on
 msgid "Apply On"
-msgstr "Applica a"
+msgstr "Applicare A"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_pricelist_view
@@ -437,7 +438,7 @@ msgstr "Valore attributo"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_exclusion__value_ids
 #: model_terms:ir.ui.view,arch_db:product.product_attribute_view_form
 msgid "Attribute Values"
-msgstr "Valori attributo"
+msgstr "Valori attributi"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.attribute_action
@@ -719,7 +720,7 @@ msgstr "Crea un nuovo prodotto"
 #: model_terms:ir.actions.act_window,help:product.product_normal_action_sell
 #: model_terms:ir.actions.act_window,help:product.product_variant_action
 msgid "Create a new product variant"
-msgstr "Crea una nuova variante prodotto"
+msgstr "Crea una nuova variante di prodotto"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__create_uid
@@ -757,7 +758,7 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_line__create_date
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__create_date
 msgid "Created on"
-msgstr "Creato da"
+msgstr "Data creazione"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__res_config_settings__product_volume_volume_in_cubic_feet__1
@@ -808,8 +809,7 @@ msgstr "Listino prezzi in %(currency)s predefinito"
 #: model:ir.model.fields,help:product.field_product_product__uom_id
 #: model:ir.model.fields,help:product.field_product_template__uom_id
 msgid "Default unit of measure used for all stock operations."
-msgstr ""
-"Unità di misura predefinita usata per tutte le operazioni di magazzino."
+msgstr "Unità di misura predefinita per ogni operazione di stoccaggio."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__uom_po_id
@@ -857,7 +857,7 @@ msgstr "Determina l'ordine di visualizzazione"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_label_layout_form
 msgid "Discard"
-msgstr "Scarta"
+msgstr "Abbandona"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__percentage
@@ -1034,7 +1034,7 @@ msgstr ""
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__print_format
 msgid "Format"
-msgstr "Formatta"
+msgstr "Formato"
 
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__compute_price__formula
@@ -1187,25 +1187,25 @@ msgstr "Immagine"
 #: model:ir.model.fields,field_description:product.field_product_product__image_1024
 #: model:ir.model.fields,field_description:product.field_product_template__image_1024
 msgid "Image 1024"
-msgstr "Immagine a 1024"
+msgstr "Immagine 1024"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_128
 #: model:ir.model.fields,field_description:product.field_product_template__image_128
 msgid "Image 128"
-msgstr "Immagine a 128"
+msgstr "Immagine 128"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_256
 #: model:ir.model.fields,field_description:product.field_product_template__image_256
 msgid "Image 256"
-msgstr "Immagine a 256"
+msgstr "Immagine 256"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_512
 #: model:ir.model.fields,field_description:product.field_product_template__image_512
 msgid "Image 512"
-msgstr "Immagine a 512"
+msgstr "Immagine 512"
 
 #. module: product
 #. odoo-python
@@ -1584,12 +1584,12 @@ msgstr "Imballaggio"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_id
 msgid "Parent Category"
-msgstr "Categoria primaria"
+msgstr "Categoria madre"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_category__parent_path
 msgid "Parent Path"
-msgstr "Percorso primario"
+msgstr "Percorso padre"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__percent_price
@@ -1760,7 +1760,7 @@ msgstr "I listini prezzi sono gestiti su"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Pricing"
-msgstr "Tariffazione"
+msgstr "Definizione prezzi"
 
 #. module: product
 #. odoo-javascript
@@ -1887,7 +1887,7 @@ msgstr "Imballaggio prodotto (PDF)"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_stock_packaging
 #: model_terms:ir.ui.view,arch_db:product.product_packaging_tree_view
 msgid "Product Packagings"
-msgstr "Imballaggi prodotto"
+msgstr "Imballaggi prodotti"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
@@ -2189,7 +2189,7 @@ msgstr "Prezzo  di vendita"
 #. module: product
 #: model:ir.model.fields.selection,name:product.selection__product_attribute__display_type__select
 msgid "Select"
-msgstr "Seleziona"
+msgstr "Selezione a discesa"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__sequence
@@ -2682,7 +2682,7 @@ msgstr "Variante"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_variant_count
 msgid "Variant Count"
-msgstr "Numero varianti"
+msgstr "Conteggio variabile"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__image_variant_1920
@@ -3118,4 +3118,4 @@ msgstr "modello prodotto."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "to"
-msgstr "a"
+msgstr "al"

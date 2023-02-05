@@ -3,8 +3,8 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
@@ -25,12 +25,12 @@ msgstr ""
 #: code:addons/hr_work_entry/models/hr_employee.py:0
 #, python-format
 msgid "%s work entries"
-msgstr ""
+msgstr "%s werkboekingen"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "<span class=\"ml8\">Hours</span>"
-msgstr ""
+msgstr "<span class=\"ml8\">Uren</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -49,12 +49,12 @@ msgstr "Gearchiveerd"
 #. module: hr_work_entry
 #: model:hr.work.entry.type,name:hr_work_entry.work_entry_type_attendance
 msgid "Attendance"
-msgstr ""
+msgstr "Aanwezigheid"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_tree
 msgid "Beginning"
-msgstr ""
+msgstr "Begin"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__cancelled
@@ -67,6 +67,8 @@ msgid ""
 "Careful, the Code is used in many references, changing it could lead to "
 "unwanted changes."
 msgstr ""
+"Let op, de Code wordt in veel verwijzingen gebruikt, het wijzigen ervan kan "
+"leiden tot ongewenste wijzigingen."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
@@ -92,12 +94,12 @@ msgstr "Conflict"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Conflicting"
-msgstr ""
+msgstr "Conflicterend"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__conflict
 msgid "Conflicts"
-msgstr ""
+msgstr "Conflicten"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__create_uid
@@ -116,7 +118,7 @@ msgstr "Aangemaakt op"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Current Month"
-msgstr ""
+msgstr "Huidige maand"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -187,6 +189,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the work "
 "entry type without removing it."
 msgstr ""
+"Als het actief veld is uitgezet kun je de werkboeking verbergen zonder het "
+"te verwijderen."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee____last_update
@@ -212,7 +216,7 @@ msgstr "Laatst bijgewerkt op"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__user_id
 msgid "Me"
-msgstr ""
+msgstr "Ik"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__name
@@ -223,7 +227,7 @@ msgstr "Naam"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Note: Validated work entries cannot be modified."
-msgstr ""
+msgstr "Opmerking: Bevestigde werkboekingen kunnen niet worden gewijzigd."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
@@ -239,12 +243,12 @@ msgstr "Resource verlof detail"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
 msgid "Search Work Entry"
-msgstr ""
+msgstr "Zoek werkboeking"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_search
 msgid "Search Work Entry Type"
-msgstr ""
+msgstr "Zoek werkboekingsoort"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__sequence
@@ -256,7 +260,7 @@ msgstr "Reeks"
 #: code:addons/hr_work_entry/static/src/xml/work_entry_templates.xml:0
 #, python-format
 msgid "Solve conflicts first"
-msgstr ""
+msgstr "Los eerst conflicten op"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_search
@@ -266,7 +270,7 @@ msgstr "Startdatum"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_start_before_end
 msgid "Starting time should be before end time."
-msgstr ""
+msgstr "Starttijd moet voor eindtijd liggen."
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__state
@@ -277,11 +281,12 @@ msgstr "Status"
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry_type_unique_work_entry_code
 msgid "The same code cannot be associated to multiple work entry types."
 msgstr ""
+"Dezelfde code kan niet worden gekoppeld aan meerdere typen werkboeking."
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Time Off Options"
-msgstr ""
+msgstr "Verlof opties"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__date_stop
@@ -297,13 +302,13 @@ msgstr "Type"
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 #, python-format
 msgid "Undefined"
-msgstr ""
+msgstr "Niet gedefinieerd"
 
 #. module: hr_work_entry
 #: code:addons/hr_work_entry/models/hr_work_entry.py:0
 #, python-format
 msgid "Undefined Type"
-msgstr ""
+msgstr "Ongedefinieerd Type"
 
 #. module: hr_work_entry
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__validated
@@ -313,7 +318,7 @@ msgstr "Goedgekeurd"
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entries_no_validated_conflict
 msgid "Validated work entries cannot overlap"
-msgstr ""
+msgstr "Bevestigde werkboekingen mogen elkaar niet overlappen"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_attendance
@@ -328,7 +333,7 @@ msgstr "Werk boekingen"
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_user_work_entry_employee
 msgid "Work Entries Employees"
-msgstr ""
+msgstr "Werk boekingen werknemers"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_action
@@ -336,12 +341,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_calendar
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry"
-msgstr ""
+msgstr "Werkboeking"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
 msgid "Work Entry Name"
-msgstr ""
+msgstr "Naam werkboeking"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__work_entry_type_id
@@ -355,19 +360,21 @@ msgstr "Soort werkboeking"
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_type_view_form
 msgid "Work Entry Type Name"
-msgstr ""
+msgstr "Naam soort werkboeking"
 
 #. module: hr_work_entry
 #: model:ir.actions.act_window,name:hr_work_entry.hr_work_entry_type_action
 msgid "Work Entry Types"
-msgstr ""
+msgstr "Soorten werkboekingen"
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_work_entry__work_entry_has_end
 msgid "Work entry must end. Please define an end date or a duration."
 msgstr ""
+"Het invoeren van het werk moet eindigen. Definieer een einddatum of een "
+"duur."
 
 #. module: hr_work_entry
 #: model:ir.model.constraint,message:hr_work_entry.constraint_hr_user_work_entry_employee_user_id_employee_id_unique
 msgid "You cannot have the same employee twice."
-msgstr ""
+msgstr "Je kunt niet twee keer dezelfde werknemer hebben."

@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Christophe Klopfert, 2023
-# Jolien De Paepe, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 10:54+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3026,6 +3026,19 @@ msgid ""
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+"\n"
+"Inde - Facturation électronique\n"
+"==============================\n"
+"Pour soumettre la facturation via l'API au gouvernement,\n"
+"nous utilisons \"Tera Software Limited\" comme TPS\n"
+"\n"
+"Étape 1 : Vous devez d'abord créer un nom d'utilisateur et un mot de passe API dans le portail de facturation électronique.\n"
+"Étape 2 : Passez à la société liée à ce numéro TPS\n"
+"Étape 3 : Définissez ce nom d'utilisateur et mot de passe dans Odoo (Allez à : Facturation/Comptabilité -> Configuration -> Paramètres -> Factures clients ou rechercher \"facture électronique\" dans la barre de recherche)\n"
+"Étape 4 : Répétez les étapes 1, 2 et 3 pour tous les numéros d'identification TPS que vous avez dans Odoo. Si vous avez une multi-société avec le même numéro TPS, effectuez la première étape pour la première société uniquement.\n"
+"\n"
+"Pour la création d'un nom d'utilisateur et mot de passe de l'API, veuillez consulter ce document : <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
@@ -3042,6 +3055,17 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
+"\n"
+"Indian - E-waybill\n"
+"====================================\n"
+"Pour soumettre la facture électronique au gouvernement via l'API,.\n"
+"nous utilisons \"Tera Software Limited\" comme TPS\n"
+"\n"
+"Étape 1 : Vous devez d'abord créer un nom d'utilisateur et un mot de passe API dans le portail E-waybill.\n"
+"Étape 2 : Passez à la société liée à ce numéro TPS.\n"
+"Étape 3 : Définissez ce nom d'utilisateur et ce mot de passe dans Odoo (Allez à Facturation/Comptabilité -> Configuration -> Paramètres -> Facture électronique en Inde ou recherchez \"E-waybill\" dans la barre de recherche).\n"
+"Étape 4 : Répétez les étapes 1, 2 et 3 pour tous les numéros d'identification TPS que vous avez dans Odoo. Si vous avez une multi-société avec le même numéro TPS, effectuez l'étape 1 pour la première société uniquement.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -3080,6 +3104,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Facturer avec un code QR UPI\n"
+"==============================\n"
+"Ce module ajoute un code QR dans le rapport de facture pour le paiement UPI, permettant d'effectuer le paiement via n'importe quelle application UPI.\n"
+"\n"
+"Pour imprimer le code QR UPI, ajoutez l'identifiant UPI dans la société et cochez \"Codes QR\" dans la configuration\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -4230,6 +4261,12 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"Rapport de taxes TCS/TDS pour l'Inde\n"
+"====================================\n"
+"\n"
+"Ce module ajoute les rapports de taxes TCS et TDS et charge les taxes correspondantes dans la société indienne.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -5962,6 +5999,11 @@ msgid ""
 "This module adds the price difference account. Used in standard perpetual valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Module de comptabilité WMS\n"
+"============================\n"
+"Ce module ajoute le compte d'écart de prix. Utilisé dans la valorisation permanente standard.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -6900,6 +6942,9 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: fonction de journalisation pour "
+"enregistrer des informations de débogage dans le tableau "
+"<code>ir.logging</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -14923,7 +14968,7 @@ msgstr "Profil IR"
 #. module: base
 #: model:res.country,vat_label:base.nz
 msgid "IRD/GST"
-msgstr ""
+msgstr "IRD/TPS"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
@@ -15384,7 +15429,7 @@ msgstr "Inde - Facturation électronique"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_edi_ewaybill
 msgid "Indian - E-waybill"
-msgstr ""
+msgstr "Inde - E-waybill"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
@@ -15409,12 +15454,12 @@ msgstr "Inde – Rapport sur le stock (TPS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
 msgid "Indian - TCS/TDS Accounting Report and Taxes"
-msgstr ""
+msgstr "Inde - Rapports comptables TCS/TDS et taxes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_upi
 msgid "Indian - UPI"
-msgstr ""
+msgstr "Inde - UPI"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__company_type__person
@@ -25159,6 +25204,8 @@ msgstr "Comptabilité - Thailande"
 #, python-format
 msgid "The \"%s\" action cannot be selected as home action."
 msgstr ""
+"L'action \"%s\" ne peut pas être sélectionnée comme une action de page "
+"d'accueil."
 
 #. module: base
 #. odoo-python

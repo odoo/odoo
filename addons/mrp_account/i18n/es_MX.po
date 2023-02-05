@@ -32,7 +32,7 @@ msgstr "Cuenta analítica"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Línea analítica"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__analytic_account_id
@@ -40,6 +40,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take        place "
 "for financial management of the manufacturing order."
 msgstr ""
+"Cuenta analítica en la que se producirán los asientos de costos e ingresos"
+"        para la gestión financiera de la orden de fabricación."
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
@@ -47,6 +49,8 @@ msgid ""
 "Analytic account in which cost and revenue entries will take place for "
 "financial management of the manufacturing order."
 msgstr ""
+"Cuenta analítica en la que se producirán los asientos de costos e ingresos "
+"para la gestión financiera de la orden de fabricación."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -57,12 +61,12 @@ msgstr "Lista de materiales"
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Bills of Materials"
-msgstr ""
+msgstr "Lista de materiales"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr ""
+msgstr "Número de listas de materiales"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -76,7 +80,7 @@ msgstr "Categoría"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr ""
+msgstr "Calcular precio de LdM"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -86,16 +90,18 @@ msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
 msgstr ""
+"Calcule el precio del producto usando productos y operaciones de la lista de"
+" materiales relacionadas, solo para los productos fabricados."
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr ""
+msgstr "Costo registrado"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr ""
+msgstr "Costo unitario adicional"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
@@ -105,23 +111,23 @@ msgstr "Apunte de diario"
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Orden de fabricación"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 msgid "Manufacturing Orders"
-msgstr ""
+msgstr "Órdenes de fabricación"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 msgid "Manufacturing Orders Count"
-msgstr ""
+msgstr "Número de órdenes de fabricación"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
-msgstr ""
+msgstr "Línea de cuenta analítica de orden de fabricación"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -129,6 +135,8 @@ msgid ""
 "Posts analytical accounting entries in real time for both component and "
 "operational costs."
 msgstr ""
+"Publique asientos contables analíticos en tiempo real tanto para componentes"
+" como costos operacionales."
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -148,7 +156,7 @@ msgstr "Orden de producción"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
-msgstr ""
+msgstr "Mostrar valoración"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_stock_move
@@ -163,49 +171,49 @@ msgstr "Regla de existencias"
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited
 msgid "Valuation"
-msgstr ""
+msgstr "Valoración"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
 msgid "Wc Analytic Account Line"
-msgstr ""
+msgstr "Línea de cuenta analítica de centro de trabajo"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr ""
+msgstr "Centro de trabajo"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_routing_workcenter
 msgid "Work Center Usage"
-msgstr ""
+msgstr "Uso del centro de producción"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workorder
 msgid "Work Order"
-msgstr ""
+msgstr "Orden de trabajo"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workorder_count
 msgid "Work Order Count"
-msgstr ""
+msgstr "Número de órdenes de trabajo"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr ""
+msgstr "Registro de productividad del centro de trabajo"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids
 msgid "Workcenters"
-msgstr ""
+msgstr "Centros de trabajo"
 
 #. module: mrp_account
 #. odoo-python
 #: code:addons/mrp_account/models/stock_move.py:0
 #, python-format
 msgid "[Raw] %s"
-msgstr ""
+msgstr "[Materia prima] %s"
 
 #. module: mrp_account
 #. odoo-python
@@ -213,4 +221,4 @@ msgstr ""
 #: code:addons/mrp_account/models/mrp_workorder.py:0
 #, python-format
 msgid "[WC] %s"
-msgstr ""
+msgstr "[Centro de trabajo] %s"

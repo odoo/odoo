@@ -658,7 +658,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_cover
 msgid "<font style=\"font-size: 62px; font-weight: bold;\">Catchy Headline</font>"
 msgstr ""
-"<font style=\"font-size: 62px; font-weight: bold;\">Título ocurrente</font>"
+"<font style=\"font-size: 62px; font-weight: bold;\">Titular pegadizo</font>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_picture
@@ -1470,7 +1470,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #, python-format
 msgid "Add"
-msgstr "Añadir"
+msgstr "Agregar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2193,7 +2193,7 @@ msgstr "Blog"
 #: code:addons/website/static/src/systray_items/new_content.js:0
 #, python-format
 msgid "Blog Post"
-msgstr "Publicación del blog"
+msgstr "Publicación de blog"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_news
@@ -2534,7 +2534,7 @@ msgstr "Compruebe su conexión y vuelva a intentarlo"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Checkbox"
-msgstr "Casilla de verificación"
+msgstr "Casilla"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -2610,7 +2610,7 @@ msgstr "Clásico"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 msgid "Clean"
-msgstr "Limpiar"
+msgstr "Claro"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -2686,7 +2686,7 @@ msgstr "Haga clic para seleccionar"
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
-msgstr "Bloquear"
+msgstr "Cerrar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
@@ -4278,8 +4278,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
-"Campo desde el que se origina la vista.\n"
-"                                                          Útil para resetear (completamente) vistas rotas o para leer el arco des de archivos en dev-xml."
+"Campo desde donde se origina la vista.\n"
+"                                                          Útil para restablecer (completamente) vistas rotas o para leer el arch desde archivos en el modo dev-xml."
 
 #. module: website
 #: model:ir.model,name:website.model_ir_binary
@@ -4427,7 +4427,7 @@ msgstr "Girar sobre eje Y"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Float"
-msgstr "Flota"
+msgstr "Flotante"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
@@ -5535,7 +5535,7 @@ msgstr "Clave API inválida. El siguiente error fue devuelto por Google:"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Iris Joe, CFO"
-msgstr "Iris Joe, director financiero"
+msgstr "Iris Joe, CFO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -6224,7 +6224,7 @@ msgstr "Estilo de marcador"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Marketplace"
-msgstr "Marketplace"
+msgstr "Mercado"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -6336,7 +6336,7 @@ msgstr "Metadatos"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Mich Stark, COO"
-msgstr "Mich Stark, director de operaciones"
+msgstr "Mich Stark, COO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -7026,10 +7026,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
-"Solo aplica si esta vista hereda de otra (inherit_id no es False/Null).\n"
+"Solo aplica si esta vista hereda de otra (inherit_id is not False/Null).\n"
 "\n"
-"* Si tiene extensión (predeterminado), cuando esta vista es solicitada, se busca hacia arriba la vista primaria más cercana (vía inherit_id), entonces todas las vistas heredando de ellas con el modelo de esta vista, aplicarán estos cambios.\n"
-"* Si la vista primaria más cercana es totalmente resuelta (incluso si usa un modelo diferente al de ésta), entonces se aplican las especificaciones de herencia (<xpath/>), y el resultado se usa como si fuera de la vista actual.\n"
+"* Si tiene extensión (predeterminado), cuando se solicita esta vista, se busca\n"
+"la vista primaria más cercana (via inherit_id), y luego se aplican todas las vistas\n"
+"que hereden de ella\n"
+"* Si es primario, la vista primaria más cercana se resuelve completamente (incluso si utiliza un\n"
+"modelo diferente a este), y más tarde se aplican las especificaciones de herencia\n"
+"(<xpath/>) y el resultado se utiliza como si fuera la arquitectura real\n"
+"de la vista.\n"
 
 #. module: website
 #. odoo-javascript
@@ -7426,7 +7431,7 @@ msgstr "Portafolio"
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Position"
-msgstr "Puesto"
+msgstr "Posición"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -7599,7 +7604,7 @@ msgstr "Promociones"
 #. module: website
 #: model:ir.ui.menu,name:website.menu_page_properties
 msgid "Properties"
-msgstr "Características"
+msgstr "Propiedades"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__partner_id
@@ -7704,7 +7709,7 @@ msgstr "Calificación"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Re-order"
-msgstr "Volver a ordenar"
+msgstr "Reordenar"
 
 #. module: website
 #. odoo-javascript
@@ -7789,7 +7794,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_asset__directive__remove
 #, python-format
 msgid "Remove"
-msgstr "Eliminar"
+msgstr "Remover"
 
 #. module: website
 #. odoo-javascript
@@ -7818,7 +7823,7 @@ msgstr "Remover pestaña"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Remove all"
-msgstr "Eliminar todo"
+msgstr "Remover todo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
@@ -7838,7 +7843,7 @@ msgstr "Reportes"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Required"
-msgstr "Obligatorio"
+msgstr "Requerido"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -8114,7 +8119,7 @@ msgstr "Desplazarse hacia abajo a la siguiente sección"
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 #, python-format
 msgid "Search"
-msgstr "Buscar"
+msgstr "Búsqueda"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -8163,7 +8168,7 @@ msgstr "Buscar en"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 msgid "Search..."
-msgstr "Búsqueda…"
+msgstr "Buscar…"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -8257,7 +8262,7 @@ msgstr "Envíenos un mensaje"
 #: model:ir.model.fields,field_description:website.field_website_page__seo_name
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__seo_name
 msgid "Seo name"
-msgstr "Nombre de SEO"
+msgstr "Nombre SEO"
 
 #. module: website
 #. odoo-javascript
@@ -8482,7 +8487,7 @@ msgstr "Iniciar sesión"
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__connected
 msgid "Signed In"
-msgstr "Registrados"
+msgstr "Inició sesión"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_site
@@ -8526,7 +8531,7 @@ msgstr "Saltar y empezar desde cero"
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Slide"
-msgstr "Diapositiva"
+msgstr "Deslizar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -9516,7 +9521,7 @@ msgstr "Alternar navegación"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Tony Fred, CEO"
-msgstr "Tony Fred, director ejecutivo"
+msgstr "Tony Fred, CEO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -9563,7 +9568,7 @@ msgstr "Número total de visitas en páginas rastreadas"
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
 #: model:ir.model.fields,field_description:website.field_website_page__track
 msgid "Track"
-msgstr "Grabación"
+msgstr "Rastrear"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -9597,7 +9602,7 @@ msgstr "Contenido traducido"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Trigger"
-msgstr "Activador"
+msgstr "Activar"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__configurator_done
@@ -10319,7 +10324,7 @@ msgstr "Le ayudaremos a iniciar el proceso"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Web Visitors"
-msgstr "Visitantes del sitio web"
+msgstr "Visitantes de la web"
 
 #. module: website
 #. odoo-javascript
@@ -10577,7 +10582,7 @@ msgstr "Título meta del sitio web"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Imagen del Open Graph del sitio web"
+msgstr "Imagen Open Graph del sitio"
 
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
