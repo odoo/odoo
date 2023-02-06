@@ -12,6 +12,7 @@ var config = require('web.config');
 var core = require('web.core');
 var datepicker = require('web.datepicker');
 var deprecatedFields = require('web.basic_fields.deprecated');
+var dom = require('web.dom');
 var framework = require('web.framework');
 var py_utils = require('web.py_utils');
 var session = require('web.session');
