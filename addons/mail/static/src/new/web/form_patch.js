@@ -48,6 +48,7 @@ patch(FormController.prototype, "mail/new", {
         this.hasAttachment = false;
         const xmlAttachment = archXml.querySelector("div.o_attachment_preview");
         if (xmlAttachment) {
+            xmlAttachment.remove();
             this.hasAttachment = true;
         }
 
