@@ -329,6 +329,8 @@ class HolidaysType(models.Model):
                                     if leave_duration > 0:
                                         # There are not enough allocation for the number of leaves
                                         days_consumed[False]['virtual_remaining_leaves'] -= leave_duration
+                                        # Hack to make sure that a sum of several allocations does not hide an error
+                                        days_consumed['error']['virtual_remaining_leaves'] -= leave_duration
                                 else:
                                     days_consumed[False]['virtual_leaves_taken'] += leave_duration
                                     if leave.state == 'validate':
@@ -401,6 +403,10 @@ class HolidaysType(models.Model):
 
         for employee_id in allocations_days_consumed:
             for holiday_status_id in allocations_days_consumed[employee_id]:
+                if allocations_days_consumed[employee_id][holiday_status_id].get('error'):
+                    for leave_key in leave_keys:
+                        result[employee_id][holiday_status_id if isinstance(holiday_status_id, int) else holiday_status_id.id][leave_key] = allocations_days_consumed[employee_id][holiday_status_id]['error'][leave_key]
+                    continue
                 for allocation in allocations_days_consumed[employee_id][holiday_status_id]:
                     if allocation and allocation.date_to and (allocation.date_to < date or allocation.date_from > date):
                         continue
