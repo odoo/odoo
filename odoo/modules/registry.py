@@ -6,7 +6,7 @@
 """
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, contextmanager
+from contextlib import closing, contextmanager, nullcontext
 from functools import partial
 from operator import attrgetter
 
@@ -155,7 +155,10 @@ class Registry(Mapping):
         self.loaded_xmlids = set()
 
         self.db_name = db_name
-        self._db = odoo.sql_db.db_connect(db_name)
+        self._db = odoo.sql_db.db_connect(db_name, readonly=False)
+        self._db_readonly = None
+        if config['db_replica_host'] is not False or config['test_enable']:  # by default, only use readonly pool if we have a db_replica_host defined. Allows to have an empty replica host for testing
+            self._db_readonly = odoo.sql_db.db_connect(db_name, readonly=True)
 
         # cursor for test mode; None means "normal" mode
         self.test_cr = None
@@ -838,14 +841,14 @@ class Registry(Mapping):
         cache_sequences = dict(zip(_CACHES_BY_KEY, cache_sequences_values))
         return registry_sequence, cache_sequences
 
-    def check_signaling(self):
+    def check_signaling(self, cr=None):
         """ Check whether the registry has changed, and performs all necessary
         operations to update the registry. Return an up-to-date registry.
         """
         if self.in_test_mode():
             return self
 
-        with closing(self.cursor()) as cr:
+        with nullcontext(cr) if cr is not None else closing(self.cursor()) as cr:
             db_registry_sequence, db_cache_sequences = self.get_sequences(cr)
             changes = ''
             # Check if the model registry must be reloaded
@@ -947,14 +950,18 @@ class Registry(Mapping):
         Registry._lock = Registry._saved_lock
         Registry._saved_lock = None
 
-    def cursor(self):
+    def cursor(self, /, readonly=False):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock)
-        return self._db.cursor()
+            return TestCursor(self.test_cr, self.test_lock, readonly)
+
+        connection = self._db
+        if readonly and self._db_readonly is not None:
+            connection = self._db_readonly
+        return connection.cursor()
 
 
 class DummyRLock(object):

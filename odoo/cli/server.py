@@ -65,6 +65,10 @@ def report_configuration():
     port = config['db_port'] or os.environ.get('PGPORT', 'default')
     user = config['db_user'] or os.environ.get('PGUSER', 'default')
     _logger.info('database: %s@%s:%s', user, host, port)
+    replica_host = config['db_replica_host']
+    replica_port = config['db_replica_port']
+    if replica_host is not False or replica_port:
+        _logger.info('replica database: %s@%s:%s', user, replica_host or 'default', replica_port or 'default')
 
 def rm_pid_file(main_pid):
     config = odoo.tools.config

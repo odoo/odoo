@@ -12,37 +12,46 @@ Application developers mostly know this module thanks to the
 :func:`~odoo.http.route`: method decorator. Together they are used to
 register methods responsible of delivering web content to matching URLS.
 
-Those two are only the tip of the iceberg, below is an ascii graph that
+Those two are only the tip of the iceberg, below is a call graph that
 shows the various processing layers each request passes through before
-ending at the @route decorated endpoint. Hopefully, this graph and the
-attached function descriptions will help you understand this module.
+ending at the @route decorated endpoint. Hopefully, this call graph and
+the attached function descriptions will help you understand this module.
 
 Here be dragons:
 
     Application.__call__
-        +-> Request._serve_static
-        |
-        +-> Request._serve_nodb
-        |   -> App.nodb_routing_map.match
-        |   -> Dispatcher.pre_dispatch
-        |   -> Dispatcher.dispatch
-        |      -> route_wrapper
-        |         -> endpoint
-        |   -> Dispatcher.post_dispatch
-        |
-        +-> Request._serve_db
-            -> model.retrying
-               -> Request._serve_ir_http
-                  -> env['ir.http']._match
-                  -> env['ir.http']._authenticate
-                  -> env['ir.http']._pre_dispatch
-                     -> Dispatcher.pre_dispatch
-                  -> Dispatcher.dispatch
-                     -> env['ir.http']._dispatch
-                        -> route_wrapper
-                           -> endpoint
-                  -> env['ir.http']._post_dispatch
-                     -> Dispatcher.post_dispatch
+        if path is like '/<module>/static/<path>':
+            Request._serve_static
+
+        elif not request.db:
+            Request._serve_nodb
+                App.nodb_routing_map.match
+                Dispatcher.pre_dispatch
+                Dispatcher.dispatch
+                    route_wrapper
+                        endpoint
+                Dispatcher.post_dispatch
+
+        else:
+            Request._serve_db
+                env['ir.http']._match
+
+                if not match:
+                    Request._transactioning
+                        model.retrying
+                            env['ir.http']._serve_fallback
+                            env['ir.http']._post_dispatch
+                else:
+                    Request._transactioning
+                        model.retrying
+                            env['ir.http']._authenticate
+                            env['ir.http']._pre_dispatch
+                            Dispatcher.pre_dispatch
+                            Dispatcher.dispatch
+                                env['ir.http']._dispatch
+                                    route_wrapper
+                                        endpoint
+                            env['ir.http']._post_dispatch
 
 Application.__call__
   WSGI entry point, it sanitizes the request, it wraps it in a werkzeug
@@ -66,21 +75,22 @@ Request._serve_nodb
 
 Request._serve_db
   Handle all requests that are not static when it is possible to connect
-  to a database. It opens a session and initializes the ORM before
-  forwarding the request to ``retrying`` and ``_serve_ir_http``.
+  to a database. It opens a registry on the database and then delegates
+  most of the effort the the ``ir.http`` abstract model. This model acts
+  as a module-aware middleware, its implementation in ``base`` is merely
+  more than just delegating to Dispatcher.
 
-service.model.retrying
-  Protect against SQL serialisation errors (when two different
-  transactions write on the same record), when such an error occurs this
-  function resets the session and the environment then re-dispatches the
-  request.
+Request._transactioning & service.model.retrying
+  Manage the cursor, the environment and exceptions that occured while
+  executing the underlying function. They recover from various
+  exceptions such as serialization errors and writes in read-only
+  transactions. They catches all other exceptions and attach a http
+  response to them (e.g. 500 - Internal Server Error)
 
-Request._serve_ir_http
-  Delegate most of the effort to the ``ir.http`` abstract model which
-  itself calls RequestDispatch back. ``ir.http`` grants modularity in
-  the http stack. The notable difference with nodb is that there is an
-  authentication layer and a mechanism to serve pages that are not
-  accessible through controllers.
+ir.http._match
+  Match the controller endpoint that correspond to the request path.
+  Beware that there is an important override for portal and website
+  inside of the ``http_routing`` module.
 
 ir.http._authenticate
   Ensure the user on the current environment fulfill the requirement of
@@ -99,6 +109,11 @@ ir.http._dispatch/Dispatcher.dispatch
 ir.http._post_dispatch/Dispatcher.post_dispatch
   Post process the response returned by the controller endpoint. Used to
   inject various headers such as Content-Security-Policy.
+
+ir.http._handle_error
+  Not present in the call-graph, is called for un-managed exceptions (SE
+  or RO) that occured inside of ``Request._transactioning``. It returns
+  a http response that wraps the error that occured.
 
 route_wrapper, closure of the http.route decorator
   Sanitize the request parameters, call the route endpoint and
@@ -696,6 +711,9 @@ def route(route=None, **routing):
     :param bool csrf: Whether CSRF protection should be enabled for the
         route. Enabled by default for ``'http'``-type requests, disabled
         by default for ``'json'``-type requests.
+    :param Union[bool, Callable[[registry, request], bool]] readonly:
+        Whether this endpoint should open a cursor on a read-only
+        replica instead of (by default) the primary read/write database.
     :param Callable[[Exception], Response] handle_params_access_error:
         Implement a custom behavior if an error occurred when retrieving the record
         from the URL parameters (access error or missing error).
@@ -800,7 +818,6 @@ def _generate_routing_rules(modules, nodb_only, converters=None):
                 'auth': 'user',
                 'methods': None,
                 'routes': [],
-                'readonly': False,
             }
 
             for cls in unique(reversed(type(ctrl).mro()[:-2])):  # ancestors first
@@ -840,10 +857,10 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
     """Verify and complete the route definition.
 
     * Ensure 'type' is defined on each method's own routing.
-    * also ensure overrides don't change the routing type.
+    * Ensure overrides don't change the routing type or the read/write mode
 
     :param submethod: route method
-    :param dict merged_routing: accumulated routing values (defaults + submethod ancestor methods)
+    :param dict merged_routing: accumulated routing values
     """
     default_type = submethod.original_routing.get('type', 'http')
     routing_type = merged_routing.setdefault('type', default_type)
@@ -853,6 +870,19 @@ def _check_and_complete_route_definition(controller_cls, submethod, merged_routi
             f'{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}',
             routing_type)
     submethod.original_routing['type'] = routing_type
+
+    default_auth = submethod.original_routing.get('auth', merged_routing['auth'])
+    default_mode = submethod.original_routing.get('readonly', default_auth == 'none')
+    parent_readonly = merged_routing.setdefault('readonly', default_mode)
+    child_readonly = submethod.original_routing.get('readonly')
+    if child_readonly not in (None, parent_readonly):
+        _logger.warning(
+            "The endpoint %s made the route %s altough its parent was defined as %s. Setting the route read/write.",
+            f'{controller_cls.__module__}.{controller_cls.__name__}.{submethod.__name__}',
+            'readonly' if child_readonly else 'read/write',
+            'readonly' if parent_readonly else 'read/write',
+        )
+        submethod.original_routing['readonly'] = False
 
 # =========================================================
 # Session
@@ -1697,63 +1727,79 @@ class Request:
         Prepare the user session and load the ORM before forwarding the
         request to ``_serve_ir_http``.
         """
-        try:
-            self.registry = Registry(self.db).check_signaling()
-        except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
-            # psycopg2 error or attribute error while constructing
-            # the registry. That means either
-            #  - the database probably does not exists anymore, or
-            #  - the database is corrupted, or
-            #  - the database version doesn't match the server version.
-            # So remove the database from the cookie
-            self.db = None
-            self.session.db = None
-            root.session_store.save(self.session)
-            if request.httprequest.path == '/web':
-                # Internal Server Error
-                raise
-            else:
-                return self._serve_nodb()
-
-        with contextlib.closing(self.registry.cursor()) as cr:
-            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
-            threading.current_thread().uid = self.env.uid
+        rule = None
+        registry = Registry(self.db)
+        with contextlib.closing(registry.cursor(readonly=True)) as cr:
             try:
-                return service_model.retrying(self._serve_ir_http, self.env)
-            except Exception as exc:
-                if isinstance(exc, HTTPException) and exc.code is None:
-                    raise  # bubble up to odoo.http.Application.__call__
-                exc.error_response = self.registry['ir.http']._handle_error(exc)
-                raise
+                self.registry = registry.check_signaling(cr)
+            except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+                # psycopg2 error or attribute error while constructing
+                # the registry. That means either
+                #  - the database probably does not exists anymore, or
+                #  - the database is corrupted, or
+                #  - the database version doesn't match the server version.
+                # So remove the database from the cookie
+                self.db = None
+                self.session.db = None
+                root.session_store.save(self.session)
+                if request.httprequest.path == '/web':
+                    # Internal Server Error
+                    raise
+                else:
+                    return self._serve_nodb()
+            ir_http = self.registry['ir.http']
+            self.env = odoo.api.Environment(cr, self.session.uid, self.session.context)
+            with contextlib.suppress(NotFound):
+                rule, args = ir_http._match(self.httprequest.path)
+        if not rule:
+            # _serve_fallback can be readwrite in some rare case, imagine a website.page were the qweb contains insert/update
+            # could be interresting to add a field on website.page to define if it is read/write or not and maybe retry just this part or open another cursor?
+            # todo write a test
+            # also, we need to _handle_error inside _transactioning to se the same cursor, will be close in other case
+            def _serve_fallback():
+                self.params = self.get_http_params()  # todo move outside _serve_fallback
+                request.params = request.get_http_params()
+                response = ir_http._serve_fallback()
+                if response:
+                    self.registry['ir.http']._post_dispatch(response)
+                    return response
+                return self.registry['ir.http']._handle_error(NotFound())
 
-    def _serve_ir_http(self):
-        """
-        Delegate most of the processing to the ir.http model that is
-        extensible by applications.
-        """
-        ir_http = self.registry['ir.http']
+            return self._transactioning(_serve_fallback, readonly=True)
+        else:
+            ro = rule.endpoint.routing['readonly']
+            if callable(ro):
+                ro = ro(registry, request)
 
-        try:
-            rule, args = ir_http._match(self.httprequest.path)
-            if rule.endpoint.routing['no_db']:
-                self.env.cr.close()
-                self.env = None
-        except NotFound:
-            self.params = self.get_http_params()
-            response = ir_http._serve_fallback()
-            if response:
-                self.dispatcher.post_dispatch(response)
-                return response
-            raise
+            def _serve_ir_http():
+                return self._serve_ir_http(rule, args)
 
+            return self._transactioning(_serve_ir_http, readonly=ro)
+
+    def _serve_ir_http(self, rule, args):
         self._set_request_dispatcher(rule)
-        ir_http._authenticate(rule.endpoint)
-        ir_http._pre_dispatch(rule, args)
+        self.registry['ir.http']._authenticate(rule.endpoint)
+        self.registry['ir.http']._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
-        # the registry can have been reniewed by dispatch
         self.registry['ir.http']._post_dispatch(response)
         return response
 
+    def _transactioning(self, func, readonly):
+        for readonly_cr in (True, False) if readonly else (False,):
+            with contextlib.closing(self.registry.cursor(readonly=readonly_cr)) as cr:
+                self.env = self.env(cr=cr)
+                try:
+                    return service_model.retrying(func, env=self.env)
+                except psycopg2.errors.ReadOnlySqlTransaction as exc:
+                    _logger.warning("%s, retrying with a read/write cursor", exc.args[0].rstrip(), exc_info=True)
+                    continue
+                except Exception as exc:
+                    if isinstance(exc, HTTPException) and exc.code is None:
+                        raise  # bubble up to odoo.http.Application.__call__
+                    if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
+                        raise  # bubble up to werkzeug.debug.DebuggedApplication
+                    exc.error_response = self.registry['ir.http']._handle_error(exc)
+                    raise
 
 # =========================================================
 # Core type-specialized dispatchers

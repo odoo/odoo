@@ -286,6 +286,7 @@ class Cursor(BaseCursor):
         self._closed = False   # real initialization value
         # See the docstring of this class.
         self.connection.set_isolation_level(ISOLATION_LEVEL_REPEATABLE_READ)
+        self.connection.set_session(readonly=pool.readonly)
 
         self.cache = {}
         self._now = None
@@ -495,6 +496,10 @@ class Cursor(BaseCursor):
     def closed(self):
         return self._closed or self._cnx.closed
 
+    @property
+    def readonly(self):
+        return bool(self._cnx.readonly)
+
     def now(self):
         """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
         if self._now is None:
@@ -525,14 +530,18 @@ class TestCursor(BaseCursor):
         +------------------------+---------------------------------------------------+
     """
     _cursors_stack = []
-    def __init__(self, cursor, lock):
+    def __init__(self, cursor, lock, readonly):
         super().__init__()
         self._now = None
         self._closed = False
         self._cursor = cursor
+        self.readonly = readonly
         # we use a lock to serialize concurrent requests
         self._lock = lock
         self._lock.acquire()
+        last_cursor = self._cursors_stack and self._cursors_stack[-1]
+        if last_cursor and last_cursor.readonly and not readonly and last_cursor._savepoint:
+            raise Exception('Opening a read/write test cursor from a readonly one')
         self._cursors_stack.append(self)
         # in order to simulate commit and rollback, the cursor maintains a
         # savepoint at its last commit, the savepoint is created lazily
@@ -544,6 +553,9 @@ class TestCursor(BaseCursor):
             # savepoint queries in the query counts, profiler, ...
             # Those queries are tests artefacts and should be invisible.
             self._savepoint = Savepoint(self._cursor._obj)
+            if self.readonly:
+                # this will simulate a readonly connection
+                self._cursor._obj.execute('SET TRANSACTION READ ONLY')  # use _obj to avoid impacting query count and profiler.
 
     def execute(self, *args, **kwargs):
         assert not self._closed, "Cannot use a closed cursor"
@@ -560,14 +572,13 @@ class TestCursor(BaseCursor):
             tos = self._cursors_stack.pop()
             if tos is not self:
                 _logger.warning("Found different un-closed cursor when trying to close %s: %s", self, tos)
-
             self._lock.release()
 
     def commit(self):
         """ Perform an SQL `COMMIT` """
         self.flush()
         if self._savepoint:
-            self._savepoint.close(rollback=False)
+            self._savepoint.close(rollback=self.readonly)
             self._savepoint = None
         self.clear()
         self.prerollback.clear()
@@ -580,7 +591,8 @@ class TestCursor(BaseCursor):
         self.postcommit.clear()
         self.prerollback.run()
         if self._savepoint:
-            self._savepoint.rollback()
+            self._savepoint.close(rollback=True)
+            self._savepoint = None
         self.postrollback.run()
 
     def __getattr__(self, name):
@@ -616,15 +628,21 @@ class ConnectionPool(object):
         The connections are *not* automatically closed. Only a close_db()
         can trigger that.
     """
-    def __init__(self, maxconn=64):
+    def __init__(self, maxconn=64, readonly=False):
         self._connections = []
         self._maxconn = max(maxconn, 1)
+        self._readonly = readonly
         self._lock = threading.Lock()
 
     def __repr__(self):
         used = len([1 for c, u, _ in self._connections[:] if u])
         count = len(self._connections)
-        return "ConnectionPool(used=%d/count=%d/max=%d)" % (used, count, self._maxconn)
+        mode = 'read-only' if self._readonly else 'read/write'
+        return f"ConnectionPool({mode};used={used}/count={count}/max={self._maxconn})"
+
+    @property
+    def readonly(self):
+        return self._readonly
 
     def _debug(self, msg, *args):
         _logger_conn.debug(('%r ' + msg), self, *args)
@@ -690,6 +708,7 @@ class ConnectionPool(object):
             raise
         self._connections.append([result, True, 0])
         self._debug('Create new connection backend PID %d', result.get_backend_pid())
+
         return result
 
     @locked
@@ -759,7 +778,7 @@ class Connection(object):
         raise NotImplementedError()
     __nonzero__ = __bool__
 
-def connection_info_for(db_or_uri):
+def connection_info_for(db_or_uri, readonly=False):
     """ parse the given `db_or_uri` and return a 2-tuple (dbname, connection_params)
 
     Connection params are either a dictionary with a single key ``dsn``
@@ -768,6 +787,8 @@ def connection_info_for(db_or_uri):
     (dsn) from
 
     :param str db_or_uri: database name or postgres dsn
+    :param bool readonly: used to load
+        the default configuration from ``db_`` or ``db_replica_``.
     :rtype: (str, dict)
     """
     if 'ODOO_PGAPPNAME' in os.environ:
@@ -789,33 +810,39 @@ def connection_info_for(db_or_uri):
     connection_info = {'database': db_or_uri, 'application_name': app_name}
     for p in ('host', 'port', 'user', 'password', 'sslmode'):
         cfg = tools.config['db_' + p]
+        if readonly:
+            cfg = tools.config.get('db_replica_' + p, cfg)
         if cfg:
             connection_info[p] = cfg
 
     return db_or_uri, connection_info
 
 _Pool = None
+_Pool_readonly = None
 
-def db_connect(to, allow_uri=False):
-    global _Pool
-    if _Pool is None:
-        _Pool = ConnectionPool(int(
-            odoo.evented and tools.config['db_maxconn_gevent']
-            or tools.config['db_maxconn']
-        ))
+def db_connect(to, allow_uri=False, readonly=False):
+    global _Pool, _Pool_readonly  # noqa: PLW0603 (global-statement)
 
-    db, info = connection_info_for(to)
+    maxconn = odoo.evented and tools.config['db_maxconn_gevent'] or tools.config['db_maxconn']
+    if _Pool is None and not readonly:
+        _Pool = ConnectionPool(int(maxconn), readonly=False)
+    if _Pool_readonly is None and readonly:
+        _Pool_readonly = ConnectionPool(int(maxconn), readonly=True)
+
+    db, info = connection_info_for(to, readonly)
     if not allow_uri and db != to:
         raise ValueError('URI connections not allowed')
-    return Connection(_Pool, db, info)
+    return Connection(_Pool_readonly if readonly else _Pool, db, info)
 
 def close_db(db_name):
     """ You might want to call odoo.modules.registry.Registry.delete(db_name) along this function."""
-    global _Pool
     if _Pool:
         _Pool.close_all(connection_info_for(db_name)[1])
+    if _Pool_readonly:
+        _Pool_readonly.close_all(connection_info_for(db_name)[1])
 
 def close_all():
-    global _Pool
     if _Pool:
         _Pool.close_all()
+    if _Pool_readonly:
+        _Pool_readonly.close_all()
