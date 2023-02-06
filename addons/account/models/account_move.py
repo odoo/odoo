@@ -22,6 +22,7 @@ from odoo.tools import (
     email_split,
     float_compare,
     float_is_zero,
+    float_repr,
     format_amount,
     format_date,
     formatLang,
@@ -34,7 +35,7 @@ from odoo.tools import (
 _logger = logging.getLogger(__name__)
 
 
-MAX_HASH_VERSION = 2
+MAX_HASH_VERSION = 3
 
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
@@ -2690,7 +2691,7 @@ class AccountMove(models.Model):
         hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
         if hash_version == 1:
             return ['date', 'journal_id', 'company_id']
-        elif hash_version == MAX_HASH_VERSION:
+        elif hash_version in (2, 3):
             return ['name', 'date', 'journal_id', 'company_id']
         raise NotImplementedError(f"hash_version={hash_version} doesn't exist")
 
@@ -2724,9 +2725,12 @@ class AccountMove(models.Model):
     @api.depends_context('hash_version')
     def _compute_string_to_hash(self):
         def _getattrstring(obj, field_str):
+            hash_version = self._context.get('hash_version', MAX_HASH_VERSION)
             field_value = obj[field_str]
             if obj._fields[field_str].type == 'many2one':
                 field_value = field_value.id
+            if obj._fields[field_str].type == 'monetary' and hash_version >= 3:
+                return float_repr(field_value, obj.currency_id.decimal_places)
             return str(field_value)
 
         for move in self:
