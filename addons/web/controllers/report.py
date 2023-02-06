@@ -3,11 +3,7 @@
 import json
 import logging
 
-import werkzeug
 import werkzeug.exceptions
-import werkzeug.utils
-import werkzeug.wrappers
-import werkzeug.wsgi
 from werkzeug.urls import url_parse
 
 from odoo import http
