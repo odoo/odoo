@@ -92,7 +92,7 @@ function insert(editor, data, isText = true) {
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
         // Grab the content of the first child block and isolate it.
-        if (isBlock(fakeEl.firstChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.lastChild.nodeName)) {
+        if (isBlock(fakeEl.firstChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.firstChild.nodeName)) {
             fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
             fakeEl.firstElementChild.remove();
         }
