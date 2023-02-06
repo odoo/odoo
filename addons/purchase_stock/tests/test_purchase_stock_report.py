@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from datetime import timedelta
 from odoo.tests.common import Form
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.stock.tests.test_report import TestReportsCommon
+from odoo.tools import format_date
 
 
 class TestPurchaseStockReports(TestReportsCommon):
@@ -170,6 +171,27 @@ class TestPurchaseStockReports(TestReportsCommon):
                     self.assertTrue(line['is_matched'], "The corresponding PO line should be matched in the forecast report.")
                 else:
                     self.assertFalse(line['is_matched'], "A line of the forecast report not linked to the PO shoud not be matched.")
+
+    def test_report_forcast_4_purchase_order_delayed(self):
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner
+        with po_form.order_line.new() as line:
+            line.product_id = self.product
+            line.product_qty = 5
+        po = po_form.save()
+        po.button_confirm()
+        original_date_planned = po.date_planned
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertEqual(lines[0]['document_in'].id, po.id)
+        self.assertEqual(lines[0]['receipt_date'], format_date(self.env, po.date_planned))
+        # Update date_planned on PO will update date_deadline on picking
+        po_form = Form(po)
+        po_form.date_planned = po.date_planned + timedelta(days=15)
+        po_form.save()
+        self.assertNotEqual(po.date_planned, original_date_planned)
+        self.assertEqual(po.picking_ids.move_lines.date_deadline, po.date_planned)
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+        self.assertEqual(lines[0]['receipt_date'], format_date(self.env, po.date_planned))
 
     def test_approval_and_forecasted_qty(self):
         """
