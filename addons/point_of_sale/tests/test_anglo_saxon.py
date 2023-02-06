@@ -222,3 +222,73 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         line = pos_order_pos0.account_move.line_ids.filtered(lambda l: l.debit and l.account_id == self.category.property_account_expense_categ_id)
         self.assertEqual(pos_order_pos0.account_move.journal_id, self.pos_config.invoice_journal_id)
         self.assertEqual(line.debit, 27, 'As it is a fifo product, the move\'s value should be 5*5 + 2*1')
+
+    def test_cogs_with_ship_later_no_invoicing(self):
+        # This test will check that the correct journal entries are created when a product in real time valuation
+        # is sold using the ship later option and no invoice is created in a company using anglo-saxon
+        self.pos_config.open_session_cb(check_coa=False)
+        current_session = self.pos_config.current_session_id
+        self.cash_journal.loss_account_id = self.account
+        current_session.set_cashbox_pos(0, None)
+
+        # I create a PoS order with 1 unit of New product at 450 EUR
+        self.pos_order_pos0 = self.PosOrder.create({
+            'company_id': self.company.id,
+            'partner_id': self.partner.id,
+            'pricelist_id': self.company.partner_id.property_product_pricelist.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'to_invoice': False,
+            'to_ship': True,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 1.0,
+                'price_subtotal': 450,
+                'price_subtotal_incl': 450,
+            })],
+            'amount_total': 450,
+            'amount_tax': 0,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        # I make a payment to fully pay the order
+        context_make_payment = {"active_ids": [self.pos_order_pos0.id], "active_id": self.pos_order_pos0.id}
+        self.pos_make_payment_0 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': 450.0,
+            'payment_method_id': self.cash_payment_method.id,
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos0.id}
+        self.pos_make_payment_0.with_context(context_payment).check()
+
+        # I close the current session to generate the journal entries
+        current_session_id = self.pos_config.current_session_id
+        current_session_id._check_pos_session_balance()
+        current_session_id.post_closing_cash_details(450.0)
+        current_session_id.close_session_from_ui()
+        self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
+
+        current_session.picking_ids.move_ids_without_package.quantity_done = 1
+        current_session.picking_ids.button_validate()
+
+        # I test that the generated journal entries are correct.
+        account_output = self.category.property_stock_account_output_categ_id
+        expense_account = self.category.property_account_expense_categ_id
+        aml = current_session._get_related_account_moves().line_ids
+        aml_output = aml.filtered(lambda l: l.account_id.id == account_output.id)
+        aml_expense = aml.filtered(lambda l: l.account_id.id == expense_account.id)
+
+        #Check the lines created after the picking validation
+        self.assertEqual(aml_output[1].debit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].credit, self.product.standard_price, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        #Check the lines created by the PoS session
+        self.assertEqual(aml_output[0].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_output[0].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[1].credit, 0.0, "Cost of Good Sold entry missing or mismatching")
+        self.assertEqual(aml_expense[1].debit, 0.0, "Cost of Good Sold entry missing or mismatching")
