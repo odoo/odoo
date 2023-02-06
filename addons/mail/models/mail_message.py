@@ -663,6 +663,8 @@ class Message(models.Model):
     def unlink(self):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        # the cache of the related document doesn't need to be invalidate (see @_invalidate_documents)
+        # because the unlink method invalidates the whole cache anyway
         if not self:
             return True
         self.check_access_rule('unlink')
@@ -674,8 +676,6 @@ class Message(models.Model):
         for elem in self:
             for partner in elem.partner_ids & partners_with_user:
                 messages_by_partner[partner] |= elem
-            if elem.is_thread_message():
-                elem._invalidate_documents()
 
         # Notify front-end of messages deletion for partners having a user
         if messages_by_partner:
