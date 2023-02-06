@@ -105,41 +105,6 @@ const timesheetUomService = {
             }
         }
 
-        /**
-         * Binding depending on Company Preference
-         *
-         * determine wich widget will be the timesheet one.
-         * Simply match the 'timesheet_uom' widget key with the correct
-         * implementation (float_time, float_toggle, ...). The default
-         * value will be 'float_factor'.
-         **/
-        const widgetName = timesheetUomInfo.widget || 'float_factor';
-
-        let FieldTimesheetUom = null;
-
-        if (widgetName === 'float_toggle') {
-            FieldTimesheetUom = FieldTimesheetToggle;
-        } else if (widgetName === 'float_time') {
-            FieldTimesheetUom = FieldTimesheetTime;
-        } else {
-            FieldTimesheetUom = (
-                fieldRegistry.get(widgetName) &&
-                fieldRegistry.get(widgetName).extend({ })
-            ) || FieldTimesheetFactor;
-        }
-        fieldRegistry.add('timesheet_uom', FieldTimesheetUom);
-
-        // widget timesheet_uom_no_toggle is the same as timesheet_uom but without toggle.
-        // We can modify easly huge amount of days.
-        let FieldTimesheetUomWithoutToggle = null;
-        if (widgetName === 'float_toggle') {
-            FieldTimesheetUomWithoutToggle = FieldTimesheetFactor;
-        } else {
-            FieldTimesheetUomWithoutToggle = FieldTimesheetTime;
-        }
-        fieldRegistry.add('timesheet_uom_no_toggle', FieldTimesheetUomWithoutToggle);
-
-
         // bind the formatter and parser method, and tweak the options
         const _tweak_options = (options) => {
             if (!_.contains(options, 'factor')) {

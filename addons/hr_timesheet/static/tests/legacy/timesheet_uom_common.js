@@ -3,7 +3,6 @@ odoo.define("hr_timesheet.timesheet_uom_tests_env", function (require) {
 
 const session = require('web.session');
 const { createView } = require("web.test_utils");
-const ListView = require('web.ListView');
 const { timesheetUomService } = require('hr_timesheet.timesheet_uom');
 const { makeTestEnv } = require("@web/../tests/helpers/mock_env");
 const { registry } = require("@web/core/registry");
@@ -176,18 +175,7 @@ function SetupTimesheetUOMWidgetsTestEnvironment () {
     this.createView = async function (options) {
         const sessionToApply = options && options.session || { };
         await this.patchSessionAndStartServices(sessionToApply);
-        return await createView(Object.assign(
-            {
-                View: ListView,
-                data: this.data,
-                model: 'account.analytic.line',
-                arch: `
-                    <tree>
-                        <field name="unit_amount" widget="timesheet_uom"/>
-                    </tree>`,
-            },
-            options || { },
-        ));
+        return await createView(options || { });
     };
 };
 
