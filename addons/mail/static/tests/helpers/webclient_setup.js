@@ -67,6 +67,7 @@ function getCreateXHR() {
         let response = "";
         let route = "";
         const self = this;
+        xhr.status = 200;
         patch(xhr, "mail", {
             open(method, dest) {
                 route = dest;
