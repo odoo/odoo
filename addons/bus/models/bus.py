@@ -218,11 +218,12 @@ class ImDispatch:
         self.started = True
         return self
 
-dispatch = None
+
+# Partially undo a2ed3d3d5bdb6025a1ba14ad557a115a86413e65
+# IMDispatch has a lazy start, so we could initialize it anyway
+# And this avoids the Bus unavailable error messages
+dispatch = ImDispatch()
 stop_event = threading.Event()
-if not odoo.multi_process or odoo.evented:
-    # We only use the event dispatcher in threaded and gevent mode
-    dispatch = ImDispatch()
-    if servermod.server:
-        servermod.server.on_stop(stop_event.set)
-        servermod.server.on_stop(dispatch.wakeup_workers)
+if servermod.server:
+    servermod.server.on_stop(stop_event.set)
+    servermod.server.on_stop(dispatch.wakeup_workers)
