@@ -16,6 +16,10 @@ function dataUrlToBlob(data, type) {
 
 let nextId = -1;
 
+/**
+ * @param {import("@mail/new/core/thread_model").Thread} pThread
+ * @param {import("@mail/new/core/message_model").Message} message
+ */
 export function useAttachmentUploader(pThread, message, isPending = false) {
     const component = useComponent();
     const { bus, upload } = useService("file_upload");

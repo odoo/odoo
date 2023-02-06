@@ -499,7 +499,6 @@ export class ThreadService {
                 !thread.message_needaction_counter &&
                 !thread.serverData.group_based_subscription;
         }
-        this.insertComposer({ thread });
     }
 
     /**
@@ -522,6 +521,7 @@ export class ThreadService {
         let thread = new Thread(this.store, data);
         thread = this.store.threads[thread.localId] = thread;
         this.update(thread, data);
+        this.insertComposer({ thread });
         return thread;
     }
 

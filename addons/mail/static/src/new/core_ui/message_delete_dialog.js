@@ -12,6 +12,7 @@ export class MessageDeleteDialog extends Component {
     static template = "mail.message.delete";
 
     setup() {
+        /** @type {import("@mail/new/core/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
         this.title = _t("Confirmation");
     }

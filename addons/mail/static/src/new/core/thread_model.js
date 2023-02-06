@@ -40,7 +40,7 @@ export class Thread {
     invitedPartners = [];
     /** @type {integer} */
     chatPartnerId;
-    /** @type {Composer} */
+    /** @type {import("@mail/new/composer/composer_model").Composer} */
     composer;
     counter = 0;
     /** @type {string} */

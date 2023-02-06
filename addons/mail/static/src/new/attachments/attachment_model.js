@@ -16,7 +16,7 @@ export class Attachment {
     /** @type {boolean} */
     uploading;
 
-    /** @type {{import("@mail/new/core/thread_model").Thread} */
+    /** @type {import("@mail/new/core/thread_model").Thread} */
     get originThread() {
         return this._store.threads[this.originThreadLocalId];
     }

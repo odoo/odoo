@@ -5,7 +5,7 @@ export class Composer {
     message;
     /** @type {string} */
     textInputContent;
-    /** @type {Thread} */
+    /** @type {import("@mail/new/core/thread_model").Thread */
     thread;
     /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
     selection = {
@@ -13,9 +13,9 @@ export class Composer {
         end: 0,
         direction: "none",
     };
-    /** @type {Boolean} */
+    /** @type {boolean} */
     forceCursorMove;
-    /** @typedef {'message' | 'note'| false} */
+    /** @typedef {'message' | 'note' | false} */
     type;
     /** @type {import("@mail/new/core/store_service").Store} */
     _store;
