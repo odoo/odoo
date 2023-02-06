@@ -5,6 +5,7 @@ import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { createLocalId } from "@mail/new/utils/misc";
 import { removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
+import { _t } from "@web/core/l10n/translation";
 
 function dataUrlToBlob(data, type) {
     const binData = window.atob(data);
@@ -109,11 +110,11 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
         uploadingAttachmentIds.delete(tmpId);
         abortByAttachmentId.delete(tmpId);
         if (upload.xhr.status === 413) {
-            notification.add("File too large", { type: "danger" });
+            notification.add(_t("File too large"), { type: "danger" });
             return;
         }
         if (upload.xhr.status !== 200) {
-            notification.add("Server error", { type: "danger" });
+            notification.add(_t("Server error"), { type: "danger" });
             return;
         }
         const response = JSON.parse(upload.xhr.response);
