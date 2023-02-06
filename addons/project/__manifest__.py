@@ -153,7 +153,6 @@
             'web/static/src/legacy/backend_utils.js',
             'web/static/src/legacy/utils.js',
             'web/static/src/legacy/web_client.js',
-            'web/static/src/legacy/js/_deprecated/data.js',
             'web/static/src/legacy/js/chrome/*',
             'web/static/src/legacy/js/components/*',
             'web/static/src/legacy/js/control_panel/*',
