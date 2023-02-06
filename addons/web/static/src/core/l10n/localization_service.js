@@ -11,16 +11,17 @@ const { Settings } = luxon;
 
 /** @type {[RegExp, string][]} */
 const NUMBERING_SYSTEMS = [
-    [/^ar-(sa|sy|001)$/i, "arab"],
-    [/^bn/i, "beng"],
-    [/^bo/i, "tibt"],
-    // [/^fa/i, "Farsi (Persian)"], // No numberingSystem found in Intl
-    // [/^(hi|mr|ne)/i, "Hindi"], // No numberingSystem found in Intl
-    // [/^my/i, "Burmese"], // No numberingSystem found in Intl
-    [/^pa-in/i, "guru"],
-    [/^ta/i, "tamldec"],
-    [/.*/i, "latn"],
+    [/^ar-(sa|sy|001)$/i, "arab", "iso8601"],
+    [/^bn/i, "beng", "iso8601"],
+    [/^bo/i, "tibt", "iso8601"],
+    [/^fa/i, "persian", "persian"],
+    // [/^(hi|mr|ne)/i, "Hindi", "iso8601"], // No numberingSystem found in Intl
+    // [/^my/i, "Burmese", "iso8601"], // No numberingSystem found in Intl
+    [/^pa-in/i, "guru", "iso8601"],
+    [/^ta/i, "tamldec", "iso8601"],
+    [/.*/i, "latn", "iso8601"],
 ];
+
 
 export const localizationService = {
     dependencies: ["user"],
@@ -63,9 +64,10 @@ export const localizationService = {
             // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
             const locale = lang === "sr@latin" ? "sr-Latn-RS" : lang.replace(/_/g, "-");
             Settings.defaultLocale = locale;
-            for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
+            for (const [re, numberingSystem, outputCalendar] of NUMBERING_SYSTEMS) {
                 if (re.test(locale)) {
                     Settings.defaultNumberingSystem = numberingSystem;
+                    Settings.defaultOutputCalendar = outputCalendar;
                     break;
                 }
             }
