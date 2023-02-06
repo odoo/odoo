@@ -746,7 +746,7 @@ class AccountMoveLine(models.Model):
             line.reconciled = (
                 comp_curr.is_zero(line.amount_residual)
                 and foreign_curr.is_zero(line.amount_residual_currency)
-                and (line.matched_debit_ids or line.matched_credit_ids)
+                and line.move_id.state not in ('draft', 'cancel')
             )
 
     @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund')
@@ -1713,6 +1713,17 @@ class AccountMoveLine(models.Model):
             recon_debit_amount = remaining_debit_amount
             recon_credit_amount = -remaining_credit_amount
 
+        # Check if there is something left to reconcile. Move to the next loop iteration if not.
+        skip_reconciliation = False
+        if recon_currency.is_zero(recon_debit_amount):
+            res['debit_vals'] = None
+            skip_reconciliation = True
+        if recon_currency.is_zero(recon_credit_amount):
+            res['credit_vals'] = None
+            skip_reconciliation = True
+        if skip_reconciliation:
+            return res
+
         # ==== Match both lines together and compute amounts to reconcile ====
 
         # Determine which line is fully matched by the other.
@@ -1859,9 +1870,9 @@ class AccountMoveLine(models.Model):
         credit_vals['amount_residual'] = remaining_credit_amount
         credit_vals['amount_residual_currency'] = remaining_credit_amount_curr
 
-        if recon_currency.is_zero(recon_debit_amount) or debit_fully_matched:
+        if debit_fully_matched:
             res['debit_vals'] = None
-        if recon_currency.is_zero(recon_credit_amount) or credit_fully_matched:
+        if credit_fully_matched:
             res['credit_vals'] = None
         return res
 
@@ -1871,9 +1882,8 @@ class AccountMoveLine(models.Model):
         Note: The order of records in self is important because the journal items will be reconciled using this order.
         :return: a tuple of 1) list of vals for partial reconciliation creation, 2) the list of vals for the exchange difference entries to be created
         '''
-        debit_vals_list = iter([x for x in vals_list if x['balance'] > 0.0 or x['amount_currency'] > 0.0 and not x['reconciled']])
-        credit_vals_list = iter([x for x in vals_list if x['balance'] < 0.0 or x['amount_currency'] < 0.0 and not x['reconciled']])
-        void_vals_list = iter([x for x in vals_list if not x['balance'] and not x['amount_currency'] and not x['reconciled']])
+        debit_vals_list = iter([x for x in vals_list if x['balance'] > 0.0 or x['amount_currency'] > 0.0])
+        credit_vals_list = iter([x for x in vals_list if x['balance'] < 0.0 or x['amount_currency'] < 0.0])
         debit_vals = None
         credit_vals = None
 
@@ -1889,13 +1899,13 @@ class AccountMoveLine(models.Model):
 
             # Move to the next available debit line.
             if not debit_vals:
-                debit_vals = next(debit_vals_list, None) or next(void_vals_list, None)
+                debit_vals = next(debit_vals_list, None)
                 if not debit_vals:
                     break
 
             # Move to the next available credit line.
             if not credit_vals:
-                credit_vals = next(void_vals_list, None) or next(credit_vals_list, None)
+                credit_vals = next(credit_vals_list, None)
                 if not credit_vals:
                     break
 
@@ -1927,7 +1937,6 @@ class AccountMoveLine(models.Model):
                 'company': line.company_id,
                 'currency': line.currency_id,
                 'date': line.date,
-                'reconciled': line.reconciled,
             }
             for line in self
         ])
