@@ -5,8 +5,8 @@ import io
 import base64
 
 from PIL import Image
+from werkzeug.urls import url_quote
 
-from odoo.http import content_disposition
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -103,7 +103,8 @@ class TestImage(HttpCase):
         })
 
         res = self.url_open(f'/web/image/{att.id}')
-        self.assertEqual(res.headers['Content-Disposition'], 'inline; filename="foo-l\'eb _ a\\"!r\\".gif"; filename*=UTF-8\'\'f%C3%B4%E2%98%BAo-l%27%C3%A9b%20_%20a%22%21r%22.gif')
+        expected_ufilename = url_quote(att.name.replace('\n', '_').replace('\r', '_'))
+        self.assertEqual(res.headers['Content-Disposition'], r"""inline; filename="foo-l'eb _ a\"!r\".gif"; filename*=UTF-8''""" + expected_ufilename)
         res.raise_for_status()
 
         res = self.url_open(f'/web/image/{att.id}/custom_invalid_name\nis-ok.gif')
