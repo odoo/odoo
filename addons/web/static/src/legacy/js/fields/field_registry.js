@@ -31,8 +31,6 @@ registry
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
     .add('text', basic_fields.FieldText)
-    .add('email', basic_fields.FieldEmail)
-    .add('phone', basic_fields.FieldPhone)
     .add('url', basic_fields.UrlWidget)
     .add('binary', basic_fields.FieldBinaryFile)
     .add('monetary', basic_fields.FieldMonetary)

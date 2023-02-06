@@ -1633,115 +1633,6 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     },
 });
 
-var FieldEmail = InputField.extend({
-    description: _lt("Email"),
-    className: 'o_field_email',
-    events: _.extend({}, InputField.prototype.events, {
-        'click': '_onClickLink',
-    }),
-    prefix: 'mailto',
-    supportedFieldTypes: ['char'],
-    isQuickEditable: true,
-
-    /**
-     * In readonly, emails should be a link, not a span.
-     *
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.tagName = this.mode === 'readonly' ? 'div' : 'input';
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Returns the associated link.
-     *
-     * @override
-     */
-    getFocusableElement: function () {
-        return this.mode === 'readonly' ? this.$el.find('a') : this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * In readonly, emails should be a mailto: link with proper formatting.
-     *
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        if (this.value) {
-            this.el.innerHTML = '';
-            this.el.classList.add("o_form_uri", "o_text_overflow");
-            const anchorEl = Object.assign(document.createElement('a'), {
-                text: this.value,
-                href: `${this.prefix}:${this.value}`,
-            });
-            this.el.appendChild(anchorEl);
-        }
-    },
-    /**
-     * Trim the value input by the user.
-     *
-     * @override
-     * @private
-     * @param {any} value
-     * @param {Object} [options]
-     */
-    _setValue: function (value, options) {
-        if (this.field.trim) {
-            value = value.trim();
-        }
-        return this._super(value, options);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Prevent the URL click from opening the record (when used on a list).
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickLink: function (ev) {
-        if (ev.target.matches("a")) {
-            ev.stopImmediatePropagation();
-        }
-    },
-});
-
-var FieldPhone = FieldEmail.extend({
-    description: _lt("Phone"),
-    className: 'o_field_phone',
-    prefix: 'tel',
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     * @private
-     */
-    _renderReadonly: function () {
-        this._super();
-
-        // This class should technically be there in case of a very very long
-        // phone number, but it breaks the o_row mechanism, which is more
-        // important right now.
-        this.$el.removeClass('o_text_overflow');
-    },
-});
-
 var UrlWidget = InputField.extend({
     description: _lt("URL"),
     className: 'o_field_url',
@@ -2080,7 +1971,6 @@ var FieldToggleBoolean = AbstractField.extend({
 return {
     TranslatableFieldMixin: TranslatableFieldMixin,
     DebouncedField: DebouncedField,
-    FieldEmail: FieldEmail,
     FieldBinaryFile: FieldBinaryFile,
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBoolean: FieldBoolean,
@@ -2095,7 +1985,6 @@ return {
     FieldPercentage: FieldPercentage,
     FieldInteger: FieldInteger,
     FieldMonetary: FieldMonetary,
-    FieldPhone: FieldPhone,
     FieldText: FieldText,
     FieldToggleBoolean: FieldToggleBoolean,
     InputField: InputField,
