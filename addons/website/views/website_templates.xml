@@ -46,13 +46,11 @@
             'data-can-publish': 'can_publish' in main_object.fields_get() and main_object.can_publish,
             'data-editable-in-backend': edit_in_backend or ('website_published' in main_object.fields_get() and main_object._name != 'website.page'),
         })"/>
-        <!-- TODO investigate: data-oe-company-name seems like dead code -->
         <t t-if="editable or translatable" t-set="nothing" t-value="html_data.update({
             'data-editable': '1' if editable else None,
             'data-translatable': '1' if translatable else None,
             'data-view-xmlid': xmlid,
             'data-viewid': viewid,
-            'data-oe-company-name': res_company.name,
         })"/>
     </xpath>
 
