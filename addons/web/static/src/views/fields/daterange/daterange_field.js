@@ -125,7 +125,7 @@ export class DateRangeField extends Component {
         const dates = [start, end].map(momentToLuxon);
         await this.updateRange(dates[0], dates[1]);
         const input = document.querySelector(
-            `.o_field_daterange[name='${this.relatedDateRangeField}'] input`
+            `.o_field_daterange[name='${this.props.name}'] input`
         );
         const target = window.$(input).data("daterangepicker");
         target.setStartDate(picker.startDate);
