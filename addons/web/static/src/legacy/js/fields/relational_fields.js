@@ -16,7 +16,6 @@ odoo.define('web.relational_fields', function (require) {
 var AbstractField = require('web.AbstractField');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
-var data = require('web.data');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 const { FormViewDialog } = require("@web/views/view_dialogs/form_view_dialog");
@@ -668,7 +667,7 @@ var FieldMany2One = AbstractField.extend({
             result[1] = displayName;
             return {
                 id,
-                label: escape(displayName) || data.noDisplayContent,
+                label: escape(displayName) || `<em class="text-warning">${escape(_t("Unnamed"))}</em>`,
                 value: displayName,
                 name: displayName,
             };
