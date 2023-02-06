@@ -124,6 +124,7 @@
         menuItems="menuState.menuItems"
         maxHeight="menuMaxHeight"
         onClose="() => this.closeMenu()"
+        menuId="menuState.menuId"
       />
     </div>
   </t>
@@ -285,7 +286,7 @@
         t-on-mousewheel.stop=""
         t-on-input="onInput"
         t-on-keyup="onKeyup"
-        t-on-click.stop="onClick"
+        t-on-click="onClick"
         t-on-blur="onBlur"
         t-on-paste.stop=""
         t-on-compositionstart="onCompositionStart"
@@ -483,75 +484,65 @@
   </t>
 
   <t t-name="o-spreadsheet-FigureComponent" owl="1">
-    <div
-      class="o-figure-parent position-absolute pe-none"
-      t-att-class="{'overflow-hidden': !dnd.isActive}"
-      t-att-style="containerStyle">
+    <div class="o-figure-wrapper pe-auto" t-att-style="wrapperStyle">
       <div
-        class="o-figure-viewport-inverse w-0 h-0 overflow-visible position-absolute"
-        t-att-style="inverseViewportPositionStyle">
-        <div class="o-figure-wrapper pe-auto" t-att-style="wrapperStyle">
-          <div
-            class="o-figure w-100 h-100"
-            t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
-            t-att-class="{'o-dragging': dnd.isActive}"
-            t-ref="figure"
-            t-att-style="figureStyle"
-            tabindex="0"
-            t-on-keydown="(ev) => this.onKeyDown(ev)"
-            t-on-keyup.stop="">
-            <t
-              t-component="figureRegistry.get(props.figure.tag).Component"
-              t-key="props.figure.id"
-              onFigureDeleted="props.onFigureDeleted"
-              figure="displayedFigure"
-            />
-          </div>
-          <t t-if="isSelected">
-            <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
-            <div
-              class="o-fig-resizer o-top"
-              t-att-style="this.getResizerPosition('top')"
-              t-on-mousedown="(ev) => this.resize(0,-1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-topRight"
-              t-att-style="this.getResizerPosition('top right')"
-              t-on-mousedown="(ev) => this.resize(1,-1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-right"
-              t-att-style="this.getResizerPosition('right')"
-              t-on-mousedown="(ev) => this.resize(1,0, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottomRight"
-              t-att-style="this.getResizerPosition('bottom right')"
-              t-on-mousedown="(ev) => this.resize(1,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottom"
-              t-att-style="this.getResizerPosition('bottom')"
-              t-on-mousedown="(ev) => this.resize(0,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottomLeft"
-              t-att-style="this.getResizerPosition('bottom left')"
-              t-on-mousedown="(ev) => this.resize(-1,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-left"
-              t-att-style="this.getResizerPosition('left')"
-              t-on-mousedown="(ev) => this.resize(-1,0, ev)"
-            />
-            <div
-              class="o-fig-resizer o-topLeft"
-              t-att-style="this.getResizerPosition('top left')"
-              t-on-mousedown="(ev) => this.resize(-1,-1, ev)"
-            />
-          </t>
-        </div>
+        class="o-figure w-100 h-100"
+        t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
+        t-ref="figure"
+        t-att-style="figureStyle"
+        tabindex="0"
+        t-on-keydown="(ev) => this.onKeyDown(ev)"
+        t-on-keyup.stop="">
+        <t
+          t-component="figureRegistry.get(props.figure.tag).Component"
+          t-key="props.figure.id"
+          onFigureDeleted="props.onFigureDeleted"
+          figure="props.figure"
+        />
       </div>
+      <t t-if="isSelected">
+        <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
+        <div
+          class="o-fig-anchor o-top"
+          t-att-style="this.getResizerPosition('top')"
+          t-on-mousedown="(ev) => this.clickAnchor(0,-1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-topRight"
+          t-att-style="this.getResizerPosition('top right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,-1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-right"
+          t-att-style="this.getResizerPosition('right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,0, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottomRight"
+          t-att-style="this.getResizerPosition('bottom right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottom"
+          t-att-style="this.getResizerPosition('bottom')"
+          t-on-mousedown="(ev) => this.clickAnchor(0,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottomLeft"
+          t-att-style="this.getResizerPosition('bottom left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-left"
+          t-att-style="this.getResizerPosition('left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,0, ev)"
+        />
+        <div
+          class="o-fig-anchor o-topLeft"
+          t-att-style="this.getResizerPosition('top left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,-1, ev)"
+        />
+      </t>
     </div>
   </t>
 
@@ -586,8 +577,25 @@
 
   <t t-name="o-spreadsheet-FiguresContainer" owl="1">
     <div>
-      <t t-foreach="getVisibleFigures()" t-as="figure" t-key="figure.id">
-        <FigureComponent onFigureDeleted="this.props.onFigureDeleted" figure="figure"/>
+      <t t-foreach="containers" t-as="container" t-key="container.type">
+        <div
+          class="o-figure-container position-absolute pe-none overflow-hidden"
+          t-att-style="container.style"
+          t-att-data-id="container.type + 'Container'">
+          <div
+            class="o-figure-viewport-inverse w-0 h-0 overflow-visible position-absolute"
+            t-att-style="container.inverseViewportStyle">
+            <t t-foreach="container.figures" t-as="figure" t-key="figure.id">
+              <FigureComponent
+                onFigureDeleted="this.props.onFigureDeleted"
+                figure="figure"
+                style="getFigureStyle(figure)"
+                onMouseDown="(ev) => this.startDraggingFigure(figure, ev)"
+                onClickAnchor="(dirX, dirY, ev) => this.startResize(figure, dirX, dirY, ev)"
+              />
+            </t>
+          </div>
+        </div>
       </t>
     </div>
   </t>
@@ -1171,22 +1179,50 @@
       />
     </svg>
   </t>
-  <t t-name="o-spreadsheet-Icon.ALIGN_MIDDLE" owl="1">
-    <svg class="o-icon">
-      <path
-        fill="#000000"
-        d="M9.5,3 L7,3 L7,0 L5,0 L5,3 L2.5,3 L6,6.5 L9.5,3 L9.5,3 Z M0,8 L0,10 L12,10 L12,8 L0,8 L0,8 Z M2.5,15 L5,15 L5,18 L7,18 L7,15 L9.5,15 L6,11.5 L2.5,15 L2.5,15 Z"
-        transform="translate(3)"
-      />
+  <t t-name="o-spreadsheet-Icon.ALIGN_TOP" owl="1">
+    <svg class="o-icon align-top" width="20" height="20">
+      <rect x="3" y="2" width="12" height="2"/>
+      <rect x="8" y="9" width="2" height="7"/>
+      <polygon points="5.5 9 12.5 9 9 5.5"/>
     </svg>
   </t>
-  <t t-name="o-spreadsheet-Icon.TEXT_WRAPPING" owl="1">
-    <svg class="o-icon">
+  <t t-name="o-spreadsheet-Icon.ALIGN_MIDDLE" owl="1">
+    <svg class="o-icon align-middle" width="20" height="20">
+      <polygon points="12.5 3 10 3 10 0 8 0 8 3 5.5 3 9 6.5"/>
+      <polygon points="5.5 15 8 15 8 18 10 18 10 15 12.5 15 9 11.5"/>
+      <rect x="3" y="8" width="12" height="2"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ALIGN_BOTTOM" owl="1">
+    <svg class="o-icon align-bottom" width="20" height="20">
+      <rect x="3" y="14" width="12" height="2"/>
+      <rect x="8" y="2" width="2" height="7"/>
+      <polygon points="5.5 9 12.5 9 9 12.5"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.WRAPPING_OVERFLOW" owl="1">
+    <svg class="o-icon wrapping-overflow" width="20" height="20">
+      <rect x="2" y="2" width="2" height="14"/>
+      <rect x="9" y="2" width="2" height="4"/>
+      <rect x="9" y="12" width="2" height="4"/>
+      <polygon points="13 8 6 8 6 10 13 10 13 12 16 9 13 6"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.WRAPPING_WRAP" owl="1">
+    <svg class="o-icon wrapping-wrap" width="20" height="20">
+      <rect x="2" y="2" width="2" height="14"/>
+      <rect x="14" y="2" width="2" height="14"/>
       <path
-        fill="#000000"
-        d="M14,0 L0,0 L0,2 L14,2 L14,0 Z M0,12 L4,12 L4,10 L0,10 L0,12 Z M11.5,5 L0,5 L0,7 L11.75,7 C12.58,7 13.25,7.67 13.25,8.5 C13.25,9.33 12.58,10 11.75,10 L9,10 L9,8 L6,11 L9,14 L9,12 L11.5,12 C13.43,12 15,10.43 15,8.5 C15,6.57 13.43,5 11.5,5 Z"
-        transform="translate(2 3)"
+        d="M6,5 L6,7 L9.75,7 C10.5,7 11.25,7.67 11.25,8.5 C11.25,9.25 10.5,10 9.75,10 L8,10 L8,12 L9.5,12 C11.5,12 13,10.5 13,8.5 C13,6.5 11.5,5 9.5,5 L6,5 Z"
       />
+      <polygon points="8 10 8 8 5 11 8 14 8 12"/>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.WRAPPING_CLIP" owl="1">
+    <svg class="o-icon wrapping-clip" width="20" height="20">
+      <rect x="2" y="2" width="2" height="14"/>
+      <rect x="14" y="2" width="2" height="14"/>
+      <rect x="6" y="8" width="8" height="2"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.BORDERS" owl="1">
@@ -1649,6 +1685,7 @@
         maxHeight="props.maxHeight"
         onMenuClicked="props.onMenuClicked"
         onClose="() => this.close()"
+        menuId="props.menuId"
       />
     </Popover>
   </t>
@@ -3368,7 +3405,7 @@
               <div
                 class="o-tool o-dropdown-button"
                 title="Horizontal align"
-                t-on-click="(ev) => this.toggleDropdownTool('alignTool', ev)">
+                t-on-click="(ev) => this.toggleDropdownTool('horizontalAlignTool', ev)">
                 <span>
                   <t t-if="style.align === 'right'">
                     <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
@@ -3383,23 +3420,101 @@
                 </span>
               </div>
               <div
-                t-if="state.activeTool === 'alignTool'"
+                t-if="state.activeTool === 'horizontalAlignTool'"
                 class="o-dropdown-content"
                 t-on-click.stop="">
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
-                  t-on-click="(ev) => this.toggleAlign('left', ev)">
+                  t-on-click="() => this.toggleHorizontalAlign('left')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_LEFT"/>
                 </div>
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
-                  t-on-click="(ev) => this.toggleAlign('center', ev)">
+                  t-on-click="() => this.toggleHorizontalAlign('center')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_CENTER"/>
                 </div>
                 <div
                   class="o-dropdown-item o-dropdown-align-item"
-                  t-on-click="(ev) => this.toggleAlign('right', ev)">
+                  t-on-click="() => this.toggleHorizontalAlign('right')">
                   <t t-call="o-spreadsheet-Icon.ALIGN_RIGHT"/>
+                </div>
+              </div>
+            </div>
+            <div class="o-dropdown">
+              <div
+                class="o-tool o-dropdown-button"
+                title="Vertical align"
+                t-on-click="(ev) => this.toggleDropdownTool('verticalAlignTool', ev)">
+                <span>
+                  <t t-if="style.verticalAlign === 'top'">
+                    <t t-call="o-spreadsheet-Icon.ALIGN_TOP"/>
+                  </t>
+                  <t t-elif="style.verticalAlign === 'bottom'">
+                    <t t-call="o-spreadsheet-Icon.ALIGN_BOTTOM"/>
+                  </t>
+                  <t t-else="">
+                    <t t-call="o-spreadsheet-Icon.ALIGN_MIDDLE"/>
+                  </t>
+                  <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+                </span>
+              </div>
+              <div
+                t-if="state.activeTool === 'verticalAlignTool'"
+                class="o-dropdown-content"
+                t-on-click.stop="">
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleVerticalAlign('top')">
+                  <t t-call="o-spreadsheet-Icon.ALIGN_TOP"/>
+                </div>
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleVerticalAlign('middle')">
+                  <t t-call="o-spreadsheet-Icon.ALIGN_MIDDLE"/>
+                </div>
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleVerticalAlign('bottom')">
+                  <t t-call="o-spreadsheet-Icon.ALIGN_BOTTOM"/>
+                </div>
+              </div>
+            </div>
+            <div class="o-dropdown">
+              <div
+                class="o-tool o-dropdown-button"
+                title="Text wrapping"
+                t-on-click="(ev) => this.toggleDropdownTool('textWrappingTool', ev)">
+                <span>
+                  <t t-if="style.wrapping === 'wrap'">
+                    <t t-call="o-spreadsheet-Icon.WRAPPING_WRAP"/>
+                  </t>
+                  <t t-elif="style.wrapping === 'clip'">
+                    <t t-call="o-spreadsheet-Icon.WRAPPING_CLIP"/>
+                  </t>
+                  <t t-else="">
+                    <t t-call="o-spreadsheet-Icon.WRAPPING_OVERFLOW"/>
+                  </t>
+                  <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+                </span>
+              </div>
+              <div
+                t-if="state.activeTool === 'textWrappingTool'"
+                class="o-dropdown-content"
+                t-on-click.stop="">
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleTextWrapping('overflow')">
+                  <t t-call="o-spreadsheet-Icon.WRAPPING_OVERFLOW"/>
+                </div>
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleTextWrapping('wrap')">
+                  <t t-call="o-spreadsheet-Icon.WRAPPING_WRAP"/>
+                </div>
+                <div
+                  class="o-dropdown-item o-dropdown-align-item"
+                  t-on-click="() => this.toggleTextWrapping('clip')">
+                  <t t-call="o-spreadsheet-Icon.WRAPPING_CLIP"/>
                 </div>
               </div>
             </div>
