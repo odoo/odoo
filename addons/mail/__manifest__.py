@@ -258,6 +258,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/views/fields/many2many_tags/tags_list.*',
 
             'mail/static/src/new/**/*',
+            'web/static/tests/legacy/helpers/test_utils_file.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',

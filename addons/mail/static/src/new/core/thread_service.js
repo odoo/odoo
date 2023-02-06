@@ -580,12 +580,12 @@ export class ThreadService {
         const validMentions = this.store.user
             ? this.message.getMentionsFromText(rawMentions, body)
             : undefined;
-        const partner_ids = validMentions.partners.map((partner) => partner.id);
+        const partner_ids = validMentions?.partners.map((partner) => partner.id);
         if (!isNote) {
             const recipientIds = thread.suggestedRecipients
                 .filter((recipient) => recipient.persona && recipient.checked)
                 .map((recipient) => recipient.persona.id);
-            partner_ids.push(...recipientIds);
+            partner_ids?.push(...recipientIds);
         }
         const params = {
             post_data: {
@@ -609,11 +609,16 @@ export class ThreadService {
             const tmpId = lastMessageId + 0.01;
             const tmpData = {
                 id: tmpId,
-                author: { id: this.store.self.id },
                 attachments: attachments,
                 res_id: thread.id,
                 model: "mail.channel",
             };
+            if (this.store.user) {
+                tmpData.author = this.store.self;
+            }
+            if (this.store.guest) {
+                tmpData.guestAuthor = this.store.self;
+            }
             if (parentId) {
                 tmpData.parentMessage = this.store.messages[parentId];
             }
