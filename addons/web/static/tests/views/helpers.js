@@ -107,9 +107,9 @@ export function setupViewRegistries() {
         { force: true }
     );
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
-    serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
-    serviceRegistry.add("dialog", dialogService), { force: true };
-    serviceRegistry.add("popover", popoverService), { force: true };
+    serviceRegistry.add("localization", makeFakeLocalizationService(), { force: true });
+    serviceRegistry.add("dialog", dialogService, { force: true });
+    serviceRegistry.add("popover", popoverService, { force: true });
     serviceRegistry.add("company", fakeCompanyService);
     serviceRegistry.add("command", commandService);
 }
