@@ -329,25 +329,38 @@ class PosGlobalState extends PosModel {
 
     // reload the list of partner, returns as a promise that resolves if there were
     // updated partners, and fails if not
-    load_new_partners(){
-        return new Promise((resolve, reject)  => {
-            var domain = this.prepare_new_partners_domain();
-            this.env.services.rpc({
-                model: 'pos.session',
-                method: 'get_pos_ui_res_partner_by_params',
-                args: [[odoo.pos_session_id], {domain}],
-            }, {
-                timeout: 3000,
-                shadow: true,
-            })
-            .then(partners => {
-                if (this.addPartners(partners)) {   // check if the partners we got were real updates
-                    resolve();
-                } else {
-                    reject('Failed in updating partners.');
-                }
-            }, function (type, err) { reject(); });
-        });
+    async load_new_partners(){
+        let search_params = { domain: this.prepare_new_partners_domain() };
+        if (this.env.pos.config.limited_partners_loading) {
+            search_params['order'] = 'write_date desc';
+            if (this.env.pos.config.partner_load_background) {
+                search_params['limit'] = this.env.pos.config.limited_partners_amount || 1;
+            }
+            else {
+                search_params['limit'] = 1;
+            }
+        }
+        let partners = await this.env.services.rpc({
+            model: 'pos.session',
+            method: 'get_pos_ui_res_partner_by_params',
+            args: [[odoo.pos_session_id], search_params],
+        }, {
+            timeout: 3000,
+            shadow: true,
+        })
+        if (this.env.pos.config.partner_load_background) {
+            this.loadPartnersBackground(
+                search_params['domain'],
+                this.env.pos.config.limited_partners_amount || 1,
+                'write_date desc'
+            );
+        }
+        if (this.addPartners(partners)){
+            return true
+        }
+        else{
+            return false
+        }
     }
 
     setSelectedCategoryId(categoryId) {
@@ -504,7 +517,7 @@ class PosGlobalState extends PosModel {
             page += 1;
         } while(products.length == this.config.limited_products_amount);
     }
-    async loadPartnersBackground() {
+    async loadPartnersBackground(domain=[], offset=0, order=false) {
         // Start at the first page since the first set of loaded partners are not actually in the
         // same order as this background loading procedure.
         let i = 0;
@@ -516,8 +529,10 @@ class PosGlobalState extends PosModel {
                 args: [
                     [odoo.pos_session_id],
                     {
+                        domain: domain,
                         limit: this.config.limited_partners_amount,
-                        offset: this.config.limited_partners_amount * i,
+                        offset: offset + this.config.limited_partners_amount * i,
+                        order: order,
                     },
                 ],
                 context: this.env.session.user_context,
@@ -3069,8 +3084,8 @@ class Order extends PosModel {
                 var rounding_method = this.pos.cash_rounding[0].rounding_method;
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
-                if(rounding_method !== "HALF-UP" && (this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0)) {
-                    rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
+                if(this.get_total_with_tax() < 0 && remaining > 0 || this.get_total_with_tax() > 0 && remaining < 0) {
+                    rounding_method = rounding_method.endsWith("UP") ? "DOWN" : rounding_method;
                 }
 
                 remaining *= sign;

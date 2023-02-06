@@ -4,17 +4,18 @@
 # 
 # Translators:
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# digitalliuzg8888, 2022
-# Martin Trigaux, 2022
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Emily Jia <eji@odoo.com>, 2023
+# Martin Trigaux, 2023
+# digitalliuzg8888, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: digitalliuzg8888, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -654,7 +655,7 @@ msgstr "POS的内部确认。"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
 #, python-format
 msgid "An unknown error prevents us from getting closing information."
-msgstr ""
+msgstr "未知错误阻止我们获取关闭信息。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -662,7 +663,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
 #, python-format
 msgid "An unknown error prevents us from loading product information."
-msgstr ""
+msgstr "未知错误阻止我们加载产品信息。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -865,7 +866,7 @@ msgstr "结束前的差异"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "Billing address:"
-msgstr "账单地址"
+msgstr "账单地址:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_bill_form
@@ -3245,7 +3246,7 @@ msgstr "杂项"
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
 msgid "Missing barcode nomenclature"
-msgstr ""
+msgstr "缺少条码命名规则"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3363,6 +3364,11 @@ msgstr "新会话"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "报纸架"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "下一个活动日历事件"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -4264,6 +4270,8 @@ msgid ""
 "Please close and validate the following open PoS Sessions before modifying this payment method.\n"
 "Open sessions: %s"
 msgstr ""
+"在修改此付款方式前，请关闭并验证以下打开的销售点（PoS）会话。\n"
+"打开会话：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4725,7 +4733,7 @@ msgstr "打印收据"
 msgid ""
 "Print a QR code on the receipt to allow the user to easily request the "
 "invoice for an order."
-msgstr "在收据上打印一个二维码，让用户轻松索取订单的结算"
+msgstr "在收据上打印二维码，以便用户轻松索取订单发票。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6060,7 +6068,7 @@ msgstr "营业点仅支持“添加舍入明细”舍入策略."
 msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
-msgstr ""
+msgstr "如果未配置现金付款方式，则金额不得高于到期应付金额。"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6444,7 +6452,7 @@ msgstr "本门店未设收银机。"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "There is no product linked to your PoS"
-msgstr ""
+msgstr "没有产品链接到您的 PoS"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7115,7 +7123,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "您只能使用一种现金付款方式。"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7126,6 +7134,8 @@ msgid ""
 "pricelist, or create a pos.order in a python test with Form tool, or edit "
 "the form view in studio if no PoS order exist"
 msgstr ""
+"您不能：从后端界面创建 pos 订单，或取消设置价目表，或使用表单工具在 python 测试中创建 "
+"pos.order，或者在工作室中编辑表单视图（如果不存在 PoS 订单）"
 
 #. module: point_of_sale
 #. odoo-python

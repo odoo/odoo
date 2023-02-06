@@ -32,7 +32,9 @@
    }
 
    .o_field_widget {
-      width: 50%;
+      @include media-breakpoint-up(md) {
+         width: 50%;
+      }
       flex: 0 0 auto;
 
       &.o_field_many2manytags > .o_field_widget {
@@ -162,7 +164,9 @@
 
                .o_settings_container {
                    max-width: map-get($grid-breakpoints, lg); // Provide a maximum container size to ensure readability
-                   @include o-base-settings-horizontal-padding(0);
+                   @include media-breakpoint-up(md) {
+                        @include o-base-settings-horizontal-padding(0);
+                   }
                    margin-bottom: 24px;
 
                    .o_form_label + .fa, .o_form_label + .o_doc_link {
