@@ -8,12 +8,11 @@ import time
 import requests
 import werkzeug.exceptions
 import werkzeug.urls
-import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
 
-from odoo.http import request
+from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.web_editor.tools import get_video_url_data
@@ -138,7 +137,7 @@ class Web_Editor(http.Controller):
         # output image
         output = io.BytesIO()
         outimage.save(output, format="PNG")
-        response = werkzeug.wrappers.Response()
+        response = Response()
         response.mimetype = 'image/png'
         response.data = output.getvalue()
         response.headers['Cache-Control'] = 'public, max-age=604800'
