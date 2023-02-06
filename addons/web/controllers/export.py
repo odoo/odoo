@@ -336,6 +336,9 @@ class Export(http.Controller):
                         continue
             if not field.get('exportable', True):
                 continue
+            # We don't need to send that attribute since fields are already filtered
+            if 'exportable' in field:
+                del field['exportable']
 
             ident = prefix + ('/' if prefix else '') + field_name
             val = ident
@@ -464,6 +467,11 @@ class ExportFormat(object):
     def from_group_data(self, fields, groups):
         raise NotImplementedError()
 
+    def filter_exportable_fields(self, model, fields):
+        model_fields = model.fields_get()
+        non_exportable_fields = list({k: v for (k, v) in model_fields.items() if v.get('exportable') is False}.keys())
+        return list(filter(lambda e: e['name'] not in non_exportable_fields, fields))
+
     def base(self, data):
         params = json.loads(data)
         model, fields, ids, domain, import_compat = \
@@ -472,12 +480,13 @@ class ExportFormat(object):
         Model = request.env[model].with_context(import_compat=import_compat, **params.get('context', {}))
         if not Model._is_an_ordinary_table():
             fields = [field for field in fields if field['name'] != 'id']
-
-        field_names = [f['name'] for f in fields]
+        # prevent exposure of non-exportable fields
+        filtered_fields = self.filter_exportable_fields(Model, fields)
+        field_names = [f['name'] for f in filtered_fields]
         if import_compat:
             columns_headers = field_names
         else:
-            columns_headers = [val['label'].strip() for val in fields]
+            columns_headers = [val['label'].strip() for val in filtered_fields]
 
         groupby = params.get('groupby')
         if not import_compat and groupby:
@@ -491,10 +500,9 @@ class ExportFormat(object):
             for leaf in groups_data:
                 tree.insert_leaf(leaf)
 
-            response_data = self.from_group_data(fields, tree)
+            response_data = self.from_group_data(filtered_fields, tree)
         else:
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
-
             export_data = records.export_data(field_names).get('datas', [])
             response_data = self.from_data(columns_headers, export_data)
 

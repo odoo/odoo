@@ -98,7 +98,7 @@ QUnit.module("ViewDialogs", (hooks) => {
                 },
                 {
                     children: false,
-                    field_type: "char",
+                    field_type: "boolean",
                     id: "bar",
                     relation_field: null,
                     required: false,
@@ -461,20 +461,20 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         assert.containsNone(
             firstField.querySelector(
-                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
-                ".o_expand_parent",
-                "available fields are limited to 2 levels of subfields"
-            )
+                ".o_export_tree_item .o_export_tree_item .o_export_tree_item:nth-child(3)"
+            ),
+            ".o_expand_parent",
+            "available fields are limited to 2 levels of subfields"
         );
 
         await triggerEvent(
             target,
-            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            ".o_export_tree_item .o_export_tree_item .o_export_tree_item:nth-child(2)",
             "dblclick"
         );
         assert.hasClass(
             firstField.querySelector(
-                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids'] .o_add_field"
+                ".o_export_tree_item .o_export_tree_item .o_export_tree_item:nth-child(2) .o_add_field"
             ),
             "o_inactive",
             "field has been added by double clicking on it and cannot be added anymore"
@@ -485,7 +485,8 @@ QUnit.module("ViewDialogs", (hooks) => {
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Foo", "Company", "Activities"]
         );
-        await triggerEvent(target, ".o_export_tree_item[data-field_id='activity_ids']", "dblclick");
+
+        await triggerEvent(target, ".o_export_tree_item:first-child", "dblclick");
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_right_field_panel .o_export_field")),
             ["Foo", "Company", "Activities"],
@@ -507,7 +508,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
         await click(
             firstField.querySelector(
-                ".o_export_tree_item[data-field_id='activity_ids/partner_ids/name'] .o_add_field"
+                ".o_export_tree_item .o_export_tree_item .o_export_tree_item:nth-child(3) .o_add_field"
             )
         );
         assert.deepEqual(
@@ -603,54 +604,11 @@ QUnit.module("ViewDialogs", (hooks) => {
         });
 
         await openExportDataDialog();
-        await click(target, "[data-field_id='activity_ids']");
+        await click(target, ".o_export_tree_item:first-child");
         assert.hasClass(
-            target.querySelector("[data-field_id='activity_ids/mail_template_ids'] span"),
+            target.querySelector(".o_export_tree_item .o_export_tree_item span"),
             "o_expand_parent",
             "many2many element is expandable"
-        );
-    });
-
-    QUnit.test("Export dialog: export list with 'exportable: false'", async function (assert) {
-        serverData.models.partner.fields.not_exportable = {
-            string: "Not exportable",
-            type: "char",
-            exportable: false,
-        };
-        serverData.models.partner.fields.exportable = { string: "Exportable", type: "char" };
-
-        await makeView({
-            serverData,
-            type: "list",
-            resModel: "partner",
-            arch: `<tree export_xlsx="1">
-                <field name="foo"/>
-                <field name="not_exportable"/>
-                <field name="exportable"/>
-            </tree>`,
-            actionMenus: {},
-            mockRPC(route, args) {
-                if (route === "/web/export/formats") {
-                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
-                }
-                if (route === "/web/export/get_fields") {
-                    if (!args.parent_field) {
-                        return Promise.resolve(fetchedFields.root);
-                    }
-                    if (args.prefix === "partner_ids") {
-                        assert.step("fetch fields for 'partner_ids'");
-                    }
-                    return Promise.resolve(fetchedFields[args.prefix]);
-                }
-            },
-        });
-
-        await openExportDataDialog();
-        assert.containsN(target, ".o_export_field", 2, "only two fields are selected in the list");
-        assert.strictEqual(
-            target.querySelector(".o_fields_list").textContent,
-            "FooExportable",
-            "values are the correct ones"
         );
     });
 
@@ -871,6 +829,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                     <field name="bar"/>
                 </tree>`,
             domain: [["bar", "!=", "glou"]],
+            mockRPC(route) {
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));
@@ -923,6 +886,11 @@ QUnit.module("ViewDialogs", (hooks) => {
                 </tree>`,
             groupBy: ["foo", "bar"],
             domain: [["bar", "!=", "glou"]],
+            mockRPC(route) {
+                if (route === "/web/export/get_fields") {
+                    return Promise.resolve(fetchedFields.root);
+                }
+            },
         });
 
         await click(target.querySelector(".o_list_export_xlsx"));

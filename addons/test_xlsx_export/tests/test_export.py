@@ -391,3 +391,14 @@ class TestGroupedExport(XlsxCreatorCase):
             ['    86420.864 (1)','86420.86'],
             ['1'                ,'86420.86'],
         ])
+
+    def test_exportable_fields(self):
+        values = [
+                {'int_sum': 1, 'exportable_field': 'good', 'non_exportable_field': 'bad'},
+        ]
+        export = self.export(values, fields=['int_sum', 'exportable_field', 'non_exportable_field'])
+
+        self.assertExportEqual(export, [
+            ['Int Sum', 'Exportable Field'],
+            ['1', 'good'],
+        ])

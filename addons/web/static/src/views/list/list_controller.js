@@ -4,7 +4,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { DynamicRecordList } from "@web/views/relational_model";
-import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
@@ -312,13 +311,9 @@ export class ListController extends Component {
         return list.isGrouped ? list.nbTotalRecords : list.count;
     }
 
-    get defaultExportList() {
-        return unique(
-            this.props.archInfo.columns
-                .filter((col) => col.type === "field")
-                .map((col) => this.props.fields[col.name])
-                .filter((field) => field.exportable !== false)
-        );
+    async getDefaultExportList() {
+        const fields = await this.getExportedFields(this.props.resModel);
+        return fields.filter((e) => this.props.archInfo.columns.find((i) => i.name === e.id));
     }
 
     get display() {
@@ -366,7 +361,7 @@ export class ListController extends Component {
         });
     }
 
-    async getExportedFields(model, import_compat, parentParams) {
+    async getExportedFields(model, import_compat = false, parentParams = {}) {
         return await this.rpc("/web/export/get_fields", {
             ...parentParams,
             model,
@@ -380,9 +375,10 @@ export class ListController extends Component {
      * @private
      */
     async onExportData() {
+        const defaultExportList = await this.getDefaultExportList();
         const dialogProps = {
             context: this.props.context,
-            defaultExportList: this.defaultExportList,
+            defaultExportList,
             download: this.downloadExport.bind(this),
             getExportedFields: this.getExportedFields.bind(this),
             root: this.model.root,
@@ -395,7 +391,8 @@ export class ListController extends Component {
      * @private
      */
     async onDirectExportData() {
-        await this.downloadExport(this.defaultExportList, false, "xlsx");
+        const defaultExportList = await this.getDefaultExportList();
+        await this.downloadExport(defaultExportList, false, "xlsx");
     }
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

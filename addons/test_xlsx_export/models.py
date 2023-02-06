@@ -27,6 +27,8 @@ class GroupOperator(models.Model):
     bool_or = fields.Boolean(group_operator='bool_or')
     many2one = fields.Many2one('export.integer')
     one2many = fields.One2many('export.group_operator.one2many', 'parent_id')
+    exportable_field = fields.Char(exportable=True)
+    non_exportable_field = fields.Char(exportable=False)
 
 class GroupOperatorO2M(models.Model):
     _name = 'export.group_operator.one2many'
