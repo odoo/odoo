@@ -126,6 +126,8 @@ class ProductProduct(models.Model):
             domain.append(('create_date', '<=', to_date))
         groups = self.env['stock.valuation.layer']._read_group(domain, ['value:sum', 'quantity:sum'], ['product_id'])
         products = self.browse()
+        # Browse all products and compute products' quantities_dict in batch.
+        self.env['product.product'].browse([group['product_id'][0] for group in groups]).sudo(False).mapped('qty_available')
         for group in groups:
             product = self.browse(group['product_id'][0])
             value_svl = company_id.currency_id.round(group['value'])
