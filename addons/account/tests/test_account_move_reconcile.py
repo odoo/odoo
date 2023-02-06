@@ -330,6 +330,29 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     {'reconciled': False},
                 ])
 
+    def test_invoice_draft_fully_paid_if_zero(self):
+        """ Tests that Invoices with zero balance are marked as paid and reconciled
+        """
+        zero_invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+        })
+        self.assertRecordValues(zero_invoice, [{
+            'state': 'draft',
+            'payment_state': 'not_paid',
+            'amount_total': 0.0,
+        }])
+        self.assertTrue(zero_invoice.line_ids.reconciled)
+
+        zero_invoice.action_post()
+        self.assertRecordValues(zero_invoice, [{
+            'state': 'posted',
+            'payment_state': 'paid',
+            'amount_total': 0.0,
+        }])
+        self.assertTrue(zero_invoice.line_ids.reconciled)
+
     def test_reconcile_lines_corner_case_1_zero_balance_same_foreign_currency(self):
         """ Test the reconciliation of lines having a zero balance in different currencies. In that case, the reconciliation should not be full until
         an additional move is added with the right foreign currency amount. """
