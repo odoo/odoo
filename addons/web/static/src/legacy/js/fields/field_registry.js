@@ -27,7 +27,6 @@ registry
     .add('boolean', basic_fields.FieldBoolean)
     .add('date', basic_fields.FieldDate)
     .add('datetime', basic_fields.FieldDateTime)
-    .add('daterange', basic_fields.FieldDateRange)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
     .add('text', basic_fields.FieldText)

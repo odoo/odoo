@@ -8,7 +8,6 @@ odoo.define('web.basic_fields', function (require) {
  */
 
 var AbstractField = require('web.AbstractField');
-var config = require('web.config');
 var core = require('web.core');
 var datepicker = require('web.datepicker');
 var dom = require('web.dom');
@@ -17,7 +16,6 @@ var py_utils = require('web.py_utils');
 var session = require('web.session');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
-var time = require('web.time');
 
 var _t = core._t;
 var _lt = core._lt;
@@ -747,211 +745,6 @@ var FieldChar = InputField.extend(TranslatableFieldMixin, {
             value = value.trim();
         }
         return this._super(value, options);
-    },
-});
-
-var FieldDateRange = InputField.extend({
-    className: 'o_field_date_range',
-    tagName: 'span',
-    jsLibs: [
-        '/web/static/lib/daterangepicker/daterangepicker.js',
-        '/web/static/src/legacy/js/libs/daterangepicker.js',
-    ],
-    supportedFieldTypes: ['date', 'datetime'],
-    isQuickEditable: true,
-    /**
-     * @override
-     */
-    init: function () {
-        this._super.apply(this, arguments);
-        this.formatType = this.nodeOptions.format_type || this.formatType;
-        this.isDateField = this.formatType === 'date';
-        this.dateRangePickerOptions = _.defaults(
-            {},
-            this.nodeOptions.picker_options || {},
-            {
-                timePicker: !this.isDateField,
-                timePicker24Hour: _t.database.parameters.time_format.search('%H') !== -1,
-                autoUpdateInput: false,
-                timePickerIncrement: 5,
-                locale: {
-                    applyLabel: _t('Apply'),
-                    cancelLabel: _t('Cancel'),
-                    format: this.isDateField ? time.getLangDateFormat() : time.getLangDatetimeFormat(),
-                },
-            }
-        );
-        this.relatedEndDate = this.nodeOptions.related_end_date;
-        this.relatedStartDate = this.nodeOptions.related_start_date;
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (this.$pickerContainer) {
-            this.$pickerContainer.remove();
-        }
-        if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
-        }
-        this._super.apply(this, arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Field widget is valid if value entered can convered to date/dateime value
-     * while parsing input value to date/datetime throws error then widget considered
-     * invalid
-     *
-     * @override
-     */
-    isValid: function () {
-        const value = this.mode === "readonly" ? this.value : this.$input.val();
-        try {
-            return field_utils.parse[this.formatType](value, this.field, { timezone: true }) || true;
-        } catch {
-            return false;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Return the date written in the input, in UTC.
-     *
-     * @private
-     * @returns {Moment|false}
-     */
-    _getValue: function () {
-        try {
-            // user may enter manual value in input and it may not be parsed as date/datetime value
-            this.removeInvalidClass();
-            return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
-        } catch {
-            this.setInvalidClass();
-            return false;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     * @param {Event} ev
-     * @param {Object} picker
-     */
-    _applyChanges: function (ev, picker) {
-        var changes = {};
-        var displayStartDate = field_utils.format[this.formatType](picker.startDate, {}, {timezone: false});
-        var displayEndDate = field_utils.format[this.formatType](picker.endDate, {}, {timezone: false});
-        var changedStartDate = picker.startDate;
-        var changedEndDate = picker.endDate;
-        if (this.isDateField) {
-            // In date mode, the library will give moment object of start and end date having
-            // time at 00:00:00. So, Odoo will consider it as UTC. To fix this added browser
-            // timezone offset in dates to get a correct selected date.
-            changedStartDate = picker.startDate.add(session.getTZOffset(picker.startDate), 'minutes');
-            changedEndDate = picker.endDate.startOf('day').add(session.getTZOffset(picker.endDate), 'minutes');
-        }
-        if (this.relatedEndDate) {
-            this.$el.val(displayStartDate);
-            changes[this.name] = this._parseValue(changedStartDate);
-            changes[this.relatedEndDate] = this._parseValue(changedEndDate);
-        }
-        if (this.relatedStartDate) {
-            this.$el.val(displayEndDate);
-            changes[this.name] = this._parseValue(changedEndDate);
-            changes[this.relatedStartDate] = this._parseValue(changedStartDate);
-        }
-        this.trigger_up('field_changed', {
-            dataPointID: this.dataPointID,
-            viewType: this.viewType,
-            changes: changes,
-        });
-    },
-    /**
-     * @override
-     */
-    _renderEdit: function () {
-        this._super.apply(this, arguments);
-        var self = this;
-        var startDate;
-        var endDate;
-        if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
-        }
-        if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
-        }
-        this.dateRangePickerOptions.startDate = startDate || moment();
-        this.dateRangePickerOptions.endDate = endDate || moment();
-
-        this.$el.daterangepicker(this.dateRangePickerOptions);
-        this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
-        this.$el.on('show.daterangepicker', this._onDateRangePickerShow.bind(this));
-        this.$el.on('hide.daterangepicker', this._onDateRangePickerHide.bind(this));
-        this.$el.off('keyup.daterangepicker');
-        this.$pickerContainer = this.$el.data('daterangepicker').container;
-
-        // Prevent from leaving the edition of a row in editable list view
-        this.$pickerContainer.on('click', function (ev) {
-            ev.stopPropagation();
-            if ($(ev.target).hasClass('applyBtn')) {
-                self.$el.data('daterangepicker').hide();
-            }
-        });
-
-        // Prevent bootstrap from focusing on modal (which breaks hours drop-down in firefox)
-        this.$pickerContainer.on('focusin.bs.modal', 'select', function (ev) {
-            ev.stopPropagation();
-        });
-    },
-
-    /**
-     * @private
-     * @override
-     */
-     _quickEdit: function () {
-        if (this.$el) {
-            this.$el.click()
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Unbind the scroll event handler when the daterangepicker is closed.
-     *
-     * @private
-     */
-    _onDateRangePickerHide() {
-        if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
-        }
-    },
-    /**
-     * Bind the scroll event handle when the daterangepicker is open.
-     *
-     * @private
-     */
-    _onDateRangePickerShow() {
-        this._onScroll = ev => {
-            if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
-                this.$el.data('daterangepicker').hide();
-            }
-        };
-        window.addEventListener('scroll', this._onScroll, true);
     },
 });
 
@@ -1976,7 +1769,6 @@ return {
     FieldChar: FieldChar,
     FieldDate: FieldDate,
     FieldDateTime: FieldDateTime,
-    FieldDateRange: FieldDateRange,
     FieldFloat: FieldFloat,
     FieldFloatTime: FieldFloatTime,
     FieldFloatFactor: FieldFloatFactor,
