@@ -26,6 +26,28 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'default_code': 'PROD_ORDER',
             'taxes_id': False,
         })
+        cls.product_order_other_price = cls.env['product.product'].create({
+            'name': "Zed+ Antivirus",
+            'standard_price': 240.0,
+            'list_price': 290.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'purchase_method': 'purchase',
+            'default_code': 'PROD_ORDER',
+            'taxes_id': False,
+        })
+        cls.product_order_var_name = cls.env['product.product'].create({
+            'name': "Zed+ Antivirus Var Name",
+            'standard_price': 235.0,
+            'list_price': 280.0,
+            'type': 'consu',
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+            'purchase_method': 'purchase',
+            'default_code': 'PROD_ORDER_VAR_NAME',
+            'taxes_id': False,
+        })
         cls.service_deliver = cls.env['product.product'].create({
             'name': "Cost-plus Contract",
             'standard_price': 200.0,
@@ -650,53 +672,121 @@ class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertEqual(invoice.amount_total, po.amount_total)
 
-    def test_subset_total_match_prefer_purchase(self):
+    def test_subset_total_match_from_ocr(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
         invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=True)
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
         additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
         self.assertTrue(additional_unmatch_po_line.id in invoice.line_ids.purchase_line_id.ids)
         self.assertTrue(invoice.line_ids.filtered(lambda l: l.purchase_line_id == additional_unmatch_po_line).quantity == 0)
 
-    def test_subset_total_match_reject_purchase(self):
+    def test_subset_match_from_edi_full(self):
+        """An invoice totally matches a purchase order line by line
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 2)
+        for line in invoice_lines:
+            self.assertTrue(line.purchase_line_id in po.order_line)
+        self.assertEqual(invoice.amount_total, po.amount_total)
+
+    def test_subset_match_from_edi_partial_po(self):
+        """A line of the invoice totally matches a 1-line purchase order
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.service_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 2)
+        for line in po.order_line:
+            self.assertTrue(line in invoice_lines.purchase_line_id)
+
+    def test_subset_match_from_edi_partial_inv(self):
+        """An invoice totally matches some purchase order line
+        """
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
 
         invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
-        additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
-        self.assertTrue(additional_unmatch_po_line.id not in invoice.line_ids.purchase_line_id.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 1)
+        for line in invoice_lines:
+            self.assertTrue(line.purchase_line_id in po.order_line)
 
-    def test_po_match_prefer_purchase(self):
+    def test_subset_match_from_edi_same_unit_price(self):
+        """An invoice matches some purchase order line by unit price
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order_var_name, self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 1)
+        for line in invoice_lines:
+            self.assertTrue(line.purchase_line_id in po.order_line)
+
+    def test_subset_match_from_edi_and_diff_unit_price(self):
+        """An invoice matches some purchase order line but not another one because of a unit price difference
+        """
+        po = self.init_purchase(confirm=True, products=[self.product_order_var_name, self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order, self.product_order_other_price])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        invoice_lines = invoice.line_ids.filtered(lambda l: l.price_unit)
+        self.assertEqual(len(invoice_lines), 2)
+        for line in invoice_lines:
+            if (line.product_id == self.product_order):
+                self.assertTrue(line.purchase_line_id in po.order_line)
+            else:
+                self.assertFalse(line.purchase_line_id in po.order_line)
+
+
+    def test_po_match_from_ocr(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
         invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=True)
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=True)
 
         self.assertTrue(invoice.id in po.invoice_ids.ids)
 
-    def test_po_match_reject_purchase(self):
+    def test_no_match_same_reference(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
         invoice._find_and_set_purchase_orders(
-            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
         self.assertTrue(invoice.id not in po.invoice_ids.ids)
-        self.assertNotEqual(invoice.amount_total, po.amount_total)
 
     def test_no_match(self):
         po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
         invoice = self.init_invoice('in_invoice', products=[self.product_a])
 
         invoice._find_and_set_purchase_orders(
-            ['other_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
+            ['other_reference'], invoice.partner_id.id, invoice.amount_total, from_ocr=False)
 
         self.assertTrue(invoice.id not in po.invoice_ids.ids)

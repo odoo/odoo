@@ -3484,7 +3484,7 @@ class AccountMove(models.Model):
 
         return to_post
 
-    def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, prefer_purchase_line=False, timeout=10):
+    def _find_and_set_purchase_orders(self, po_references, partner_id, amount_total, from_ocr=False, timeout=10):
         # hook to be used with purchase, so that vendor bills are sync/autocompleted with purchase orders
         self.ensure_one()
 
