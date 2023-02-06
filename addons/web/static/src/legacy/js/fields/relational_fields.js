@@ -424,16 +424,12 @@ var FieldMany2One = AbstractField.extend({
             resModel: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
-            // _createContext: this._createContext.bind(this),
             dynamicFilters: dynamicFilters || [],
             title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
-            // initial_ids: ids,
-            // initial_view: view,
             multiSelect: false,
             noCreate: !self.can_create,
-            // kanban_view_ref: this.attrs.kanban_view_ref,
             onSelected: function (records) {
-                self.reinitialize(records[0]);
+                self.reinitialize({ id: records[0] });
             },
             onClose: function () {
                 self.activate();
@@ -697,7 +693,17 @@ var FieldMany2One = AbstractField.extend({
                     action: () => {
                         // Input value is cleared and the form popup opens
                         this.el.querySelector(':scope input').value = "";
-                        return this._searchCreatePopup('form', false, valueContext);
+                        owl.Component.env.services.dialog.add(FormViewDialog, {
+                            title: _t("Create: ") + this.string,
+                            resModel: this.field.relation,
+                            context: { ...this.record.getContext(this.recordParams), ...valueContext },
+                            onRecordSaved: (record) => {
+                                this.reinitialize({
+                                    id: record.resId,
+                                    display_name: record.data.display_name || record.data.name,
+                                });
+                            },
+                        });
                     },
                     classname: 'o_m2o_dropdown_option',
                 });
@@ -1113,8 +1119,8 @@ var FieldMany2ManyTags = AbstractField.extend({
             return _.extend({}, options, {
                 domain: domain.concat(["!", ["id", "in", self.value.res_ids]]),
                 multiSelect: true,
-                onSelect: function (records) {
-                    m2mRecords.push(...records);
+                onSelected: function (recordIds) {
+                    m2mRecords.push(...recordIds.map((id) => { return { id } }));
                 },
                 onClose: function () {
                     self.many2one.reinitialize(m2mRecords);
