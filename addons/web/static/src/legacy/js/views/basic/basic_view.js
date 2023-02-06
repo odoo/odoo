@@ -15,7 +15,6 @@ var BasicController = require('web.BasicController');
 var BasicModel = require('web.BasicModel');
 var config = require('web.config');
 var fieldRegistry = require('web.field_registry');
-var fieldRegistryOwl = require('web.field_registry_owl');
 var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
@@ -88,8 +87,7 @@ var BasicView = AbstractView.extend({
         if (attrs.widget === "boolean" || (!attrs.widget && field.type === "boolean")) {
             FieldWidget = fieldRegistry.getAny([viewType + ".boolean", "boolean"]);
         } else if (attrs.widget) {
-            FieldWidget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]) ||
-                fieldRegistryOwl.getAny([viewType + "." + attrs.widget, attrs.widget]);
+            FieldWidget = fieldRegistry.getAny([viewType + "." + attrs.widget, attrs.widget]);
             if (!FieldWidget) {
                 console.warn("Missing widget: ", attrs.widget, " for field", attrs.name, "of type", field.type);
             }
@@ -99,7 +97,6 @@ var BasicView = AbstractView.extend({
             FieldWidget = fieldRegistry.get('kanban.many2many_tags');
         }
         return FieldWidget ||
-            fieldRegistryOwl.getAny([viewType + "." + field.type, field.type, "abstract"]) ||
             fieldRegistry.getAny([viewType + "." + field.type, field.type, "abstract"]);
     },
     /**
