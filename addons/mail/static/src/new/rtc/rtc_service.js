@@ -1165,17 +1165,7 @@ export class Rtc {
             session.channelId = channelMember.channel.id;
         }
         if (channelMember) {
-            this.thread.insertChannelMember({
-                id: channelMember.id,
-                persona: this.persona.insert({
-                    ...channelMember.persona.partner,
-                    ...channelMember.persona.guest,
-                    type: channelMember.persona.partner ? "partner" : "guest",
-                    channelId: channelMember.persona.guest && channelMember.channel.id,
-                }),
-                threadId: channelMember.channel.id,
-            });
-            session.channelMemberId = channelMember.id;
+            session.channelMemberId = this.thread.insertChannelMember(channelMember).id;
         }
         this.store.rtcSessions[session.id] = session;
         // return reactive version

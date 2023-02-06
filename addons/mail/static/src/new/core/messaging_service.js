@@ -555,16 +555,7 @@ export class Messaging {
                     if (!channel) {
                         return;
                     }
-                    const member = this.thread.insertChannelMember({
-                        id: notif.payload.id,
-                        persona: this.persona.insert({
-                            ...notif.payload.persona.partner,
-                            ...notif.payload.persona.guest,
-                            type: notif.payload.persona.partner ? "partner" : "guest",
-                            channelId: notif.payload.persona.guest ? channel.id : null,
-                        }),
-                        threadId: channel.id,
-                    });
+                    const member = this.thread.insertChannelMember(notif.payload);
                     if (member.persona === this.store.self) {
                         return;
                     }

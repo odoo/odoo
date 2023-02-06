@@ -19,6 +19,8 @@ export class Persona {
     type;
     /** @type {string} */
     name;
+    /** @type {{ code: string, id: number, name: string}|undefined} */
+    country;
     /** @type {string} */
     email;
     /** @type {Array | undefined} */

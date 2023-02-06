@@ -81,24 +81,9 @@ export class ThreadService {
         }
         thread.memberCount = results["memberCount"];
         for (const channelMember of channelMembers) {
-            if (channelMember.persona?.partner) {
+            if (channelMember.persona || channelMember.partner) {
                 this.insertChannelMember({
-                    id: channelMember.id,
-                    persona: this.persona.insert({
-                        ...channelMember.persona.partner,
-                        type: "partner",
-                    }),
-                    threadId: thread.id,
-                });
-            }
-            if (channelMember.persona?.guest) {
-                this.insertChannelMember({
-                    id: channelMember.id,
-                    persona: this.persona.insert({
-                        ...channelMember.persona.guest,
-                        type: "guest",
-                        channelId: thread.id,
-                    }),
+                    ...channelMember,
                     threadId: thread.id,
                 });
             }
@@ -434,36 +419,23 @@ export class ThreadService {
                 thread.invitingRtcSessionId = serverData.rtcInvitingSession.id;
                 this.store.ringingThreads.push(thread.localId);
             }
-            if ("channel" in serverData && thread.type === "chat") {
-                for (const elem of serverData.channel.channelMembers[0][1]) {
-                    this.persona.insert({ ...elem.persona.partner, type: "partner" });
-                    if (
-                        elem.persona.partner.id !== thread._store.user.id ||
-                        (serverData.channel.channelMembers[0][1].length === 1 &&
-                            elem.persona.partner.id === thread._store.user.id)
-                    ) {
-                        thread.chatPartnerId = elem.persona.partner.id;
-                    }
-                }
+            if (thread.type === "chat" && serverData.channel) {
                 thread.customName = serverData.channel.custom_channel_name;
             }
-            if (
-                thread.type === "group" &&
-                serverData.channel &&
-                serverData.channel.channelMembers
-            ) {
-                serverData.channel.channelMembers[0][1].forEach((elem) => {
-                    if (elem.persona?.partner) {
-                        this.persona.insert({ ...elem.persona.partner, type: "partner" });
+            if (serverData.channel?.channelMembers) {
+                for (const member of serverData.channel.channelMembers[0][1]) {
+                    this.insertChannelMember(member);
+                    if (thread.type !== "chat") {
+                        continue;
                     }
-                    if (elem.persona?.guest) {
-                        this.persona.insert({
-                            ...elem.persona.guest,
-                            type: "guest",
-                            channelId: serverData.channel.id,
-                        });
+                    if (
+                        member.persona.partner.id !== thread._store.user?.id ||
+                        (serverData.channel.channelMembers[0][1].length === 1 &&
+                            member.persona.partner.id === thread._store.user?.id)
+                    ) {
+                        thread.chatPartnerId = member.persona.partner.id;
                     }
-                });
+                }
             }
             if ("rtcSessions" in serverData) {
                 // FIXME this prevents cyclic dependencies between mail.thread and mail.rtc
@@ -556,8 +528,13 @@ export class ThreadService {
         }
         Object.assign(channelMember, {
             id: data.id,
-            persona: data.persona,
-            threadId: data.threadId ?? channelMember.threadId ?? data?.channel.id,
+            persona: this.persona.insert({
+                ...(data.persona.partner ?? data.persona.guest),
+                type: data.persona.guest ? "guest" : "partner",
+                country: data.persona.partner?.country,
+                channelId: data.persona.guest ? data.channel.id : null,
+            }),
+            threadId: data.threadId ?? channelMember.threadId ?? data.channel.id,
         });
         if (channelMember.thread && !channelMember.thread.channelMembers.includes(channelMember)) {
             channelMember.thread.channelMembers.push(channelMember);
