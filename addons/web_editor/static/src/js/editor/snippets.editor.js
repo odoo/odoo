@@ -1869,6 +1869,20 @@ var SnippetsMenu = Widget.extend({
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+        this.invisibleDOMPanelEl = document.createElement('div');
+        this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
+        this.invisibleDOMPanelEl.appendChild(
+            $('<div/>', {
+                text: _t('Invisible Elements'),
+                class: 'o_panel_header',
+            })[0]
+        );
+
+        // Prepare snippets editor environment
+        this.$snippetEditorArea = $('<div/>', {
+            id: 'oe_manipulators',
+        });
+        this.$body.prepend(this.$snippetEditorArea);
 
         // Add tooltips on we-title elements whose text overflows and on all
         // elements with available tooltip text. Note that the tooltips of the
@@ -1899,6 +1913,7 @@ var SnippetsMenu = Widget.extend({
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
+            defs.push(this._updateInvisibleDOM());
             await this._loadSnippetsTemplates();
             this.$el.find('.o_we_website_top_actions').removeClass('d-none');
             this.$('.o_snippet_search_filter').addClass('d-none');
@@ -1912,14 +1927,6 @@ var SnippetsMenu = Widget.extend({
             this.$('#o-we-editor-table-container').addClass('d-none');
             return Promise.all(defs);
         }
-        this.invisibleDOMPanelEl = document.createElement('div');
-        this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
-        this.invisibleDOMPanelEl.appendChild(
-            $('<div/>', {
-                text: _t('Invisible Elements'),
-                class: 'o_panel_header',
-            })[0]
-        );
 
         this.emptyOptionsTabContent = document.createElement('div');
         this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
@@ -1931,12 +1938,6 @@ var SnippetsMenu = Widget.extend({
             await this._loadSnippetsTemplates(this.options.invalidateSnippetCache);
             await this._updateInvisibleDOM();
         })());
-
-        // Prepare snippets editor environment
-        this.$snippetEditorArea = $('<div/>', {
-            id: 'oe_manipulators',
-        });
-        this.$body.prepend(this.$snippetEditorArea);
 
         // Active snippet editor on click in the page
         this.$document.on('click.snippets_menu', '*', this._onClick);
@@ -2489,8 +2490,14 @@ var SnippetsMenu = Widget.extend({
                 },
             });
             const invisibleSelector = `.o_snippet_invisible, ${isMobile ? '.o_snippet_mobile_invisible' : '.o_snippet_desktop_invisible'}`;
-            const $invisibleSnippets = globalSelector.all().find(invisibleSelector).addBack(invisibleSelector);
+            const $selector = this.options.enableTranslation ? this.$body : globalSelector.all();
+            let $invisibleSnippets = $selector.find(invisibleSelector).addBack(invisibleSelector);
 
+            if (this.options.enableTranslation) {
+                // In translate mode, we do not want to be able to activate a
+                // hidden header or footer.
+                $invisibleSnippets = $invisibleSnippets.not("header, footer");
+            }
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
             // descendantPerSnippet: a map with its keys set to invisible
@@ -2576,6 +2583,12 @@ var SnippetsMenu = Widget.extend({
      *          (might be async when an editor must be created)
      */
     _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions) {
+        if (this.options.enableTranslation) {
+            // In translate mode, do not activate the snippet when enabling its
+            // corresponding invisible element. Indeed, in translate mode, we
+            // only want to toggle its visibility.
+            return;
+        }
         if (this._blockPreviewOverlays && previewMode) {
             return;
         }
@@ -2832,7 +2845,11 @@ var SnippetsMenu = Widget.extend({
 
         // Prepare the functions
         const functions = {};
-        if (noCheck) {
+        // In translate mode, it is only possible to modify text content but not
+        // the structure of the snippets. For this reason, the "Editable area"
+        // are only the text zones and they should not be used inside functions
+        // such as "is", "closest" and "all".
+        if (noCheck || this.options.enableTranslation) {
             functions.is = function ($from) {
                 return $from.is(selector) && $from.filter(filterFunc).length !== 0;
             };
