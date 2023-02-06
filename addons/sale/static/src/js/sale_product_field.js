@@ -2,12 +2,14 @@
 
 import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { useService } from "@web/core/utils/hooks";
 
 export class SaleOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
         const { update } = this;
+        this.productConfiguratorService = useService('saleProductConfiguratorService');
         this.update = async (value) => {
             await update(value);
             let newValue = false;
@@ -44,6 +46,14 @@ export class SaleOrderLineProductField extends Many2OneField {
                     this._onProductUpdate();
                 }
             };
+        }
+
+        if(!this.props.record.data.id) { // new record -> trigger configuration if necessary
+            if (this.props.record.data.product_template_id) {
+                this._onProductTemplateUpdate();
+            } else if (this.props.record.data.product_id) {
+                this._onProductUpdate();
+            }
         }
     }
 
@@ -92,8 +102,30 @@ export class SaleOrderLineProductField extends Many2OneField {
         }
     }
 
-    async _onProductTemplateUpdate() { }
-    async _onProductUpdate() { } // event_booth_sale, event_sale, sale_renting
+    _onProductUpdate() {
+        const configureProduct = this._configureProduct();
+        if (configureProduct) {
+            this.productConfiguratorService.configureProduct(configureProduct);
+        }
+    }
+
+    _onBoothProductUpdate(){
+        const configureBoothProduct = this._configureBoothProduct();
+        if (configureBoothProduct) {
+            this.productConfiguratorService.configureProduct(configureBoothProduct);
+        }
+    }
+
+    _onProductTemplateUpdate() {
+        const configureProductTemplate = this._configureProductTemplate();
+        if (configureProductTemplate) {
+            this.productConfiguratorService.configureProduct(configureProductTemplate);
+        }
+    }
+
+    _configureProduct() { return false; } // event_booth_sale, event_sale, sale_renting
+    _configureBoothProduct(){ return false; } //event_booth_sale
+    _configureProductTemplate() { return false; }
 
     onEditConfiguration() {
         if (this.isConfigurableLine) {
