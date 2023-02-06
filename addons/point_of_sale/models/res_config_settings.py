@@ -37,7 +37,6 @@ class ResConfigSettings(models.TransientModel):
     module_pos_six = fields.Boolean(string="Six Payment Terminal", help="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.")
     update_stock_quantities = fields.Selection(related="company_id.point_of_sale_update_stock_quantities", readonly=False)
     account_default_pos_receivable_account_id = fields.Many2one(string='Default Account Receivable (PoS)', related='company_id.account_default_pos_receivable_account_id', readonly=False)
-    is_default_pricelist_displayed = fields.Boolean(compute="_compute_pos_pricelist_id", compute_sudo=True)
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', related='company_id.nomenclature_id', readonly=False)
 
     # pos.config fields
@@ -260,9 +259,6 @@ class ResConfigSettings(models.TransientModel):
                 else:
                     res_config.pos_available_pricelist_ids = res_config.pos_config_id.available_pricelist_ids
                     res_config.pos_pricelist_id = res_config.pos_config_id.pricelist_id
-
-            # TODO: Remove this field in master because it's always True.
-            res_config.is_default_pricelist_displayed = True
 
     @api.depends('pos_available_pricelist_ids', 'pos_use_pricelist')
     def _compute_pos_allowed_pricelist_ids(self):
