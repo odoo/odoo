@@ -2403,11 +2403,18 @@ class AccountMoveLine(models.Model):
                         results['exchange_partials'] += exchange_diff_partials
 
             # ==== Create the full reconcile ====
-            results['full_reconcile'] = self.env['account.full.reconcile'].create({
-                'exchange_move_id': exchange_move and exchange_move.id,
-                'partial_reconcile_ids': [(6, 0, involved_partials.ids)],
-                'reconciled_line_ids': [(6, 0, involved_lines.ids)],
-            })
+            results['full_reconcile'] = self.env['account.full.reconcile'] \
+                .with_context(
+                    skip_invoice_sync=True,
+                    skip_invoice_line_sync=True,
+                    skip_account_move_synchronization=True,
+                    check_move_validity=False,
+                ) \
+                .create({
+                    'exchange_move_id': exchange_move and exchange_move.id,
+                    'partial_reconcile_ids': [Command.set(involved_partials.ids)],
+                    'reconciled_line_ids': [Command.set(involved_lines.ids)],
+                })
 
             # === Cash basis rounding autoreconciliation ===
             # In case a cash basis rounding difference line got created for the transition account, we reconcile it with the corresponding lines
