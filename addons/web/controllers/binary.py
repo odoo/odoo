@@ -17,7 +17,7 @@ import odoo
 import odoo.modules.registry
 from odoo import http, _
 from odoo.exceptions import AccessError, UserError
-from odoo.http import request
+from odoo.http import request, Response
 from odoo.modules import get_resource_path
 from odoo.tools import file_open, file_path, replace_exceptions
 from odoo.tools.mimetypes import guess_mimetype
@@ -241,8 +241,14 @@ class Binary(http.Controller):
                         imgext = '.' + mimetype.split('/')[1]
                         if imgext == '.svg+xml':
                             imgext = '.svg'
-                        response = send_file(image_data, request.httprequest.environ,
-                                             download_name=imgname + imgext, mimetype=mimetype, last_modified=row[1])
+                        response = send_file(
+                            image_data,
+                            request.httprequest.environ,
+                            download_name=imgname + imgext,
+                            mimetype=mimetype,
+                            last_modified=row[1],
+                            response_class=Response,
+                        )
                     else:
                         response = http.Stream.from_path(placeholder('nologo.png')).get_response()
             except Exception:
