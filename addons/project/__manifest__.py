@@ -163,7 +163,6 @@
             'web/static/src/legacy/js/core/context.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/fields/abstract_field.js',
-            'web/static/src/legacy/js/fields/abstract_field_owl.js',
             'web/static/src/legacy/js/fields/basic_fields.js',
             'web/static/src/legacy/js/fields/field_utils.js',
             'web/static/src/legacy/js/fields/relational_fields.js',
