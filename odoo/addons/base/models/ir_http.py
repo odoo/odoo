@@ -177,8 +177,8 @@ class IrHttp(models.AbstractModel):
 
         # Replace uid placeholder by the current request.env.uid
         for key, val in list(args.items()):
-            if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
-                args[key] = val.with_user(request.env.uid)
+            if isinstance(val, models.BaseModel):
+                args[key] = val.with_env(request.env)
 
         # verify the default language set in the context is valid,
         # otherwise fallback on the company lang, english or the first

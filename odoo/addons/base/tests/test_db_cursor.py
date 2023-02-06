@@ -47,6 +47,26 @@ class TestRealCursor(BaseCase):
         with registry().cursor() as cr:
             self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
 
+    def test_cursor_keeps_readwriteness(self):
+        with registry().cursor('read/write') as cr:
+            self.assertFalse(cr.connection.readonly)
+            cr.execute("SELECT 1")
+            cr.rollback()
+            self.assertFalse(cr.connection.readonly)
+            cr.execute("SELECT 1")
+            cr.commit()
+            self.assertFalse(cr.connection.readonly)
+
+        with registry().cursor('read-only') as cr:
+            self.assertTrue(cr.connection.readonly)
+            cr.execute("SELECT 1")
+            cr.rollback()
+            self.assertTrue(cr.connection.readonly)
+            cr.execute("SELECT 1")
+            cr.commit()
+            self.assertTrue(cr.connection.readonly)
+
+
 class TestTestCursor(common.TransactionCase):
     def setUp(self):
         super().setUp()

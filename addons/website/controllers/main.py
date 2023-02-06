@@ -107,7 +107,8 @@ class Website(Home):
         # Check for controller
         if homepage_url and homepage_url != '/':
             try:
-                return request._serve_ir_http()
+                rule, args = request.env['ir.http']._match(homepage_url)
+                return request._serve_ir_http(rule, args)
             except (AccessError, NotFound, SessionExpiredException):
                 pass
 

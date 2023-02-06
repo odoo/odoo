@@ -281,7 +281,7 @@ class WebsiteVisitor(models.Model):
         else:
             visitor = Visitor.search([('access_token', '=', access_token)])
 
-        if not force_create and visitor and not visitor.timezone:
+        if not force_create and not self.env.cr.readonly and visitor and not visitor.timezone:
             tz = self._get_visitor_timezone()
             if tz:
                 visitor._update_visitor_timezone(tz)

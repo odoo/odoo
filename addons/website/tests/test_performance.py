@@ -8,7 +8,7 @@ from contextlib import nullcontext
 from odoo.tools import mute_logger
 from odoo.tests.common import HttpCase, tagged
 
-EXTRA_REQUEST = 2 - 1
+EXTRA_REQUEST = 2 * 3 - 1
 """ During tests, the query on 'base_registry_signaling, base_cache_signaling'
 won't be executed on hot state, but new queries related to the test cursor will
 be added:
@@ -17,6 +17,9 @@ be added:
     cr.execute(...)
     cr.commit() # RELEASE
     cr.close()
+
+Times 3 as there are 3 transactions per request (match + dispatch/handle_error
++ post_dispatch)
 """
 
 

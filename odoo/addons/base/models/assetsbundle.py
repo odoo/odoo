@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import re
+import sys
 import textwrap
 import uuid
 
@@ -29,6 +30,7 @@ from rjsmin import jsmin as rjsmin
 from odoo import release, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.modules.module import get_resource_path
+from odoo.sql_db import TestCursor
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler,
     apply_inheritance_specs)
@@ -313,6 +315,23 @@ class AssetsBundle(object):
 
         :return the ir.attachment records for a given bundle.
         """
+        try:
+            if self.env.registry.in_test_mode() and isinstance(self.env.cr, TestCursor):
+                # Grant read/write on test cursors, we don't want tests to
+                # fail only because printing a report had the side effect of
+                # generating an asset
+                with self.env.cr.allow_readwrite():
+                    return self._save_attachment(extension, content)
+            else:
+                return self._save_attachment(extension, content)
+        except psycopg2.errors.ReadOnlySqlTransaction as exc:
+            if sys.version_info >= (3, 11):
+                exc.add_note(f"couldn't save asset generated for {self.name}")
+            else:
+                _logger.warning("couldn't save asset generated for %s", self.name)
+            raise
+
+    def _save_attachment(self, extension, content):
         assert extension in ('js', 'min.js', 'js.map', 'css', 'min.css', 'css.map', 'xml', 'min.xml')
         ira = self.env['ir.attachment']
 

@@ -1,6 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import html
+
+import odoo
 from odoo.tests import tagged
 from odoo.tests.common import new_test_user
 from odoo.tools import mute_logger
@@ -64,3 +66,43 @@ class TestHttpModels(TestHttpBase):
         res = self.url_open(f'/test_http/{milky_way.id}/9999')  # unknown gate
         self.assertEqual(res.status_code, 400)
         self.assertIn("The goa'uld destroyed the gate", html.unescape(res.text))
+
+    def test_models4_stargate_setname(self):
+        milky_way = self.env.ref('test_http.milky_way')
+
+
+        milky_way.invalidate_recordset()
+        res = self.url_open(f'/test_http/{milky_way.id}/setname-rw', {
+            'name': "Wilky May",
+            'csrf_token': odoo.http.Request.csrf_token(self),
+        })
+        res.raise_for_status()
+
+        milky_way.invalidate_recordset()
+        self.assertEqual(milky_way.name, "Wilky May")
+
+    def test_models5_stargate_setname_readonly(self):
+        milky_way = self.env.ref('test_http.milky_way')
+
+        self.assertEqual(milky_way.name, "Milky Way")
+
+        with self.assertLogs('odoo.http', 'WARNING') as capture_http,\
+             self.assertLogs('odoo.sql_db', 'WARNING') as capture_sql_db:
+            res = self.url_open(f'/test_http/{milky_way.id}/setname-ro', {
+                'name': "Wilky May",
+                'csrf_token': odoo.http.Request.csrf_token(self),
+            })
+            res.raise_for_status()
+
+        milky_way.invalidate_recordset()
+        self.assertEqual(milky_way.name, "Wilky May")
+        self.assertEqual(capture_http.output, [
+            "WARNING:odoo.http:cannot execute UPDATE in a read-only transaction, retrying with a read/write cursor",
+        ])
+        self.assertEqual(
+            # capture_sql_db.ouput contains the full Stack info, we don't want it
+            [rec.msg % rec.args for rec in capture_sql_db.records],
+            ["""\
+bad query: UPDATE "test_http_galaxy" SET "name" = %s, "write_date" = %s, "write_uid" = %s WHERE id IN %s
+ERROR: cannot execute UPDATE in a read-only transaction"""]
+        )

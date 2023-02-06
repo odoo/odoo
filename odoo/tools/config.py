@@ -252,8 +252,12 @@ class configmanager(object):
         group.add_option("--pg_path", dest="pg_path", help="specify the pg executable path")
         group.add_option("--db_host", dest="db_host", my_default=False,
                          help="specify the database host")
+        group.add_option("--db_replica_host", dest="db_replica_host", my_default=False,
+                         help="specify the replica host")
         group.add_option("--db_port", dest="db_port", my_default=False,
                          help="specify the database port", type="int")
+        group.add_option("--db_replica_port", dest="db_replica_port", my_default=False,
+                         help="specify the replica port", type="int")
         group.add_option("--db_sslmode", dest="db_sslmode", type="choice", my_default='prefer',
                          choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'],
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")

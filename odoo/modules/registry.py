@@ -144,7 +144,8 @@ class Registry(Mapping):
         self.loaded_xmlids = set()
 
         self.db_name = db_name
-        self._db = odoo.sql_db.db_connect(db_name)
+        self._db = odoo.sql_db.db_connect(db_name, mode='read/write')
+        self._db_readonly = odoo.sql_db.db_connect(db_name, mode='read-only')
 
         # cursor for test mode; None means "normal" mode
         self.test_cr = None
@@ -926,14 +927,16 @@ class Registry(Mapping):
         Registry._lock = Registry._saved_lock
         Registry._saved_lock = None
 
-    def cursor(self):
+    def cursor(self, mode='read/write'):
         """ Return a new cursor for the database. The cursor itself may be used
             as a context manager to commit/rollback and close automatically.
         """
+        assert mode in ('read/write', 'read-only')
         if self.test_cr is not None:
             # in test mode we use a proxy object that uses 'self.test_cr' underneath
-            return TestCursor(self.test_cr, self.test_lock)
-        return self._db.cursor()
+            return TestCursor(self.test_cr, self.test_lock, mode == 'read-only')
+
+        return (self._db_readonly if mode == 'read-only' else self._db).cursor()
 
 
 class DummyRLock(object):

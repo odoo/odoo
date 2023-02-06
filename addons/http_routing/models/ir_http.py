@@ -572,6 +572,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _frontend_pre_dispatch(cls):
+        request.lang = request.lang.with_env(request.env)
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
             request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
