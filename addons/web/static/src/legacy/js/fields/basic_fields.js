@@ -19,7 +19,6 @@ var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var time = require('web.time');
 
-var qweb = core.qweb;
 var _t = core._t;
 var _lt = core._lt;
 

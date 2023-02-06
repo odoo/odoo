@@ -16,14 +16,9 @@ const utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
-const WidgetWrapper = require("web.WidgetWrapper");
-
-const { Component } = require("@odoo/owl");
 
 var qweb = core.qweb;
 const _t = core._t;
-
-const { status } = require("@odoo/owl");
 
 var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
     custom_events: {
@@ -769,13 +764,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
 
         // Prepare widget rendering and save the related promise
         var $el = $('<div>');
-        let def;
-        if (legacy) {
-            def = widget._widgetRenderAndInsert(function () {});
-        } else {
-            def = widget.mount(document.createDocumentFragment());
-        }
-
+        const def = widget._widgetRenderAndInsert(function () {});
         this.defs.push(def);
 
         // Update the modifiers registration by associating the widget and by

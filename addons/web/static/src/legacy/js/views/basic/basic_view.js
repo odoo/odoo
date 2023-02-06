@@ -19,8 +19,6 @@ var pyUtils = require('web.py_utils');
 var utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
 
-const { Component } = require("@odoo/owl");
-
 var BasicView = AbstractView.extend({
     config: _.extend({}, AbstractView.prototype.config, {
         Model: BasicModel,
