@@ -226,10 +226,10 @@ QUnit.test("chatter: drop attachments", async function (assert) {
     ];
     await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
     assert.containsOnce(target, ".o-dropzone");
-    assert.containsNone(target, ".o-mail-attachment-image");
+    assert.containsNone(target, ".o-mail-attachment-card");
 
     await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), files));
-    assert.containsN(target, ".o-mail-attachment-image", 2);
+    assert.containsN(target, ".o-mail-attachment-card", 2);
 
     await afterNextRender(() => dragenterFiles(document.querySelector(".o-mail-chatter")));
     files = [
@@ -240,7 +240,7 @@ QUnit.test("chatter: drop attachments", async function (assert) {
         }),
     ];
     await afterNextRender(() => dropFiles(document.querySelector(".o-dropzone"), files));
-    assert.containsN(target, ".o-mail-attachment-image", 3);
+    assert.containsN(target, ".o-mail-attachment-card", 3);
 });
 
 QUnit.test(

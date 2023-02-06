@@ -32,9 +32,9 @@ QUnit.test("simplest layout", async function (assert) {
     await openDiscuss(channelId);
     assert.containsOnce(target, ".o-mail-message .o-mail-attachment-list");
     assert.hasAttrValue($(target).find(".o-mail-attachment-card"), "title", "test.txt");
-    assert.containsOnce(target, ".o-mail-attachment-image");
-    assert.hasClass($(".o-mail-attachment-image"), "o_image"); // required for mimetype.scss style
-    assert.hasAttrValue($(".o-mail-attachment-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
+    assert.containsOnce(target, ".o-mail-attachment-card-image");
+    assert.hasClass($(".o-mail-attachment-card-image"), "o_image"); // required for mimetype.scss style
+    assert.hasAttrValue($(".o-mail-attachment-card-image"), "data-mimetype", "text/plain"); // required for mimetype.scss style
     assert.containsN(target, ".o-mail-attachment-card-aside button", 2);
     assert.containsOnce(target, ".o-mail-attachment-card-aside-unlink");
     assert.containsOnce(target, ".o-mail-attachment-card-aside button[title='Download']");

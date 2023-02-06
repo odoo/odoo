@@ -47,8 +47,8 @@ QUnit.test("no conflicts between file uploads", async function (assert) {
         contentType: "text/plain",
     });
     await afterNextRender(() => editInput(target, ".o-mail-chat-window input[type=file]", file2));
-    assert.containsOnce(target, ".o-mail-chatter .o-mail-attachment-image");
-    assert.containsOnce(target, ".o-mail-chat-window .o-mail-attachment-image");
+    assert.containsOnce(target, ".o-mail-chatter .o-mail-attachment-card");
+    assert.containsOnce(target, ".o-mail-chat-window .o-mail-attachment-card");
 });
 
 QUnit.test("Attachment shows spinner during upload", async function (assert) {

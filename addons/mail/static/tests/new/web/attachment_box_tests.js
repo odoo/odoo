@@ -96,7 +96,7 @@ QUnit.test("remove attachment should ask for confirmation", async function (asse
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    assert.containsOnce(target, ".o-mail-attachment-image");
+    assert.containsOnce(target, ".o-mail-attachment-card");
     assert.containsOnce(target, "button[title='Remove']");
 
     await click("button[title='Remove']");
@@ -140,7 +140,7 @@ QUnit.test("view attachments", async function (assert) {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    await click('.o-mail-attachment-card[aria-label="Blah.txt"] .o-mail-attachment-image');
+    await click('.o-mail-attachment-card[aria-label="Blah.txt"] .o-mail-attachment-card-image');
     assert.containsOnce(target, ".o-mail-attachment-viewer");
     assert.strictEqual($(target).find(".o-mail-attachment-viewer-name").text(), "Blah.txt");
     assert.containsOnce(target, ".o-mail-attachment-viewer-buttonNavigationNext");
