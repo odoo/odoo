@@ -66,6 +66,7 @@ export class Thread {
     status = "new";
     /** @type {ScrollPosition} */
     scrollPosition = new ScrollPosition();
+    showOnlyVideo = false;
     typingMemberIds = [];
     /** @type {import("@mail/new/core/store_service").Store} */
     _store;

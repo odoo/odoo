@@ -7,8 +7,10 @@ export class UserSettings {
     id;
 
     constructor(env, services) {
-        this.rpc = services.rpc;
+        this.orm = services.orm;
         this.user = services.user;
+        this.hasCanvasFilterSupport =
+            typeof document.createElement("canvas").getContext("2d").filter !== "undefined";
     }
     /**
      * @param {Object} settings: the old model-style command with the settings from the server
@@ -152,12 +154,6 @@ export class UserSettings {
             key: key || false,
         };
     }
-    // could be in component that needs it, to refactor when used
-    pushToTalkKeyToString() {
-        const { shiftKey, ctrlKey, altKey, key } = this.pushToTalkKeyFormat();
-        const f = (k, name) => (k ? name : "");
-        return `${f(ctrlKey, "Ctrl + ")}${f(altKey, "Alt + ")}${f(shiftKey, "Shift + ")}${key}`;
-    }
     togglePushToTalk() {
         this.usePushToTalk = !this.usePushToTalk;
         this._saveSettings();
@@ -193,17 +189,12 @@ export class UserSettings {
      */
     async _onSaveGlobalSettingsTimeout() {
         this.globalSettingsTimeout = undefined;
-        await this.rpc({
-            model: "res.users.settings",
-            method: "set_res_users_settings",
-            args: [
-                [this.user.userId],
-                {
-                    push_to_talk_key: this.pushToTalkKey,
-                    use_push_to_talk: this.usePushToTalk,
-                    voice_active_duration: this.voiceActiveDuration,
-                },
-            ],
+        await this.orm.call("res.users.settings", "set_res_users_settings", [[this.id]], {
+            new_settings: {
+                push_to_talk_key: this.pushToTalkKey,
+                use_push_to_talk: this.usePushToTalk,
+                voice_active_duration: this.voiceActiveDuration,
+            },
         });
     }
     /**
@@ -212,12 +203,12 @@ export class UserSettings {
      * @param {number} [param0.partnerId]
      * @param {number} param0.volume
      */
-    async _onSaveVolumeSettingTimeout({ key, partnerId, volume }) {
+    async _onSaveVolumeSettingTimeout({ key, partnerId, guestId, volume }) {
         this.volumeSettingsTimeouts.delete(key);
-        await this.rpc({
-            model: "res.users.settings",
-            method: "set_volume_setting",
-            args: [[this.user.userId], partnerId, volume],
+        await this.orm.call("res.users.settings", "set_volume_setting", [[this.id]], {
+            partner_id: partnerId,
+            volume,
+            guest_id: guestId,
         });
     }
     /**
@@ -226,12 +217,15 @@ export class UserSettings {
     async _saveSettings() {
         // return if guest, formerly !messaging.currentUser, could check user service at some point when guests are supported
         browser.clearTimeout(this.globalSettingsTimeout);
-        this.globalSettingsTimeout = browser.setTimeout(this._onSaveGlobalSettingsTimeout, 2000);
+        this.globalSettingsTimeout = browser.setTimeout(
+            () => this._onSaveGlobalSettingsTimeout(),
+            2000
+        );
     }
 }
 
 export const userSettingsService = {
-    dependencies: ["rpc", "user"],
+    dependencies: ["orm", "user"],
     start(env, services) {
         return new UserSettings(env, services);
     },

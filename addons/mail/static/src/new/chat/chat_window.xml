@@ -45,7 +45,7 @@
         </div>
         <div t-if="!props.chatWindow.folded" class="o-mail-chat-window-content d-flex flex-column h-100 overflow-auto" t-ref="content">
             <t t-if="thread">
-                <CallSettings t-if="state.activeMode === 'in-settings'"/>
+                <CallSettings t-if="state.activeMode === 'in-settings'" thread="thread"/>
                 <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'o-mail-discuss-channel-member-list flex-shrink-0 border-start w-100 h-100'"/>
                 <ChannelInvitationForm t-elif="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
                 <t t-else="">

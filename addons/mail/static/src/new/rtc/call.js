@@ -17,6 +17,7 @@ export class Call extends Component {
     setup() {
         this.messaging = useMessaging();
         this.notification = useService("notification");
+        this.userSettings = useState(useService("mail.user_settings"));
         this.rtc = useRtc();
         this.state = useState({
             isFullscreen: false,
@@ -84,12 +85,11 @@ export class Call extends Component {
     }
 
     get visibleSessions() {
-        // TODO filter them based on settings "video only" when settings is done
-        /* skip session if
-            settings.showOnlyVideo &&
-            thread.videoCount > 0 &&
-            !channelMember.isStreaming (should be = rtcSession.videoStream)
-        */
+        if (this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0) {
+            return Object.values(this.props.thread.rtcSessions).filter((session) =>
+                Boolean(session.videoStream)
+            );
+        }
         return [...Object.values(this.props.thread.rtcSessions)];
     }
 }

@@ -66,6 +66,7 @@ export class Discuss extends Component {
              *   "": no action pannel
              */
             activeMode: "",
+            showSettings: false,
         });
         this.orm = useService("orm");
         this.effect = useService("effect");
@@ -125,13 +126,7 @@ export class Discuss extends Component {
     }
 
     toggleSettings() {
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = null;
-        } else {
-            const el = this.settingsRef.el;
-            this.closePopover = this.popover.add(el, CallSettings);
-        }
+        this.state.showSettings = !this.state.showSettings;
     }
 
     toggleMemberList() {

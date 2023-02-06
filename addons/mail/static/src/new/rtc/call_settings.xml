@@ -2,12 +2,92 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.settings" owl="1">
-        <div class="p-2">
-            <div class="py-2 fw-bolder text-700 text-truncate text-uppercase">
-                Voice Settings
+        <div class="o-mail-call-settings py-2 user-select-none bg-light" t-attf-class="{{ props.className }}" t-ref="root">
+            <div class="o-mail-call-settings_category d-flex flex-column px-3 overflow-auto">
+                <div class="o-mail-call-settings_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Voice Settings</div>
+                <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Input device" aria-label="Input device">
+                        <span class="o-mail-call-settingsoptionName me-2 text-truncate">Input device</span>
+                        <div>
+                            <select name="inputDevice" class="o-mail-call-settings_optionDeviceSelect form-select" t-att-value="userSettings.audioInputDeviceId" t-on-change="onChangeSelectAudioInput">
+                                <option value="">Browser default</option>
+                                <t t-foreach="state.userDevices" t-as="device" t-key="device_index" device="device">
+                                    <option t-if="device.kind === 'audioinput'" t-att-value="device.deviceId"><t t-esc="device.label"/></option>
+                                </t>
+                            </select>
+                        </div>
+                    </label>
+                </div>
+                <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel o-mail-call-settings_pushToTalkOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Enable Push-to-talk" aria-label="Enable Push-to-talk">
+                        <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="onChangePushToTalk" t-att-checked="userSettings.usePushToTalk ? 'checked' : ''" class="form-check-input"/>
+                        <span class="o-mail-call-settings_optionName ms-2 text-truncate">Enable Push-to-talk</span>
+                    </label>
+                </div>
+                <t t-if="userSettings.usePushToTalk">
+                    <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o-mail-call-settings_optionLabel o-mail-call-settings_pushToTalkKeyOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Push-to-talk key" aria-label="Push-to-talk key">
+                            <span class="o-mail-call-settings_optionName me-2 text-truncate">Push-to-talk key</span>
+                            <span class="o-mail-call-settings_optionPushToTalkGroup d-flex">
+                                <span t-if="userSettings.pushToTalkKey" class="o-mail-call-settings_optionPushToTalkGroupKey ms-1 px-3 border border-2 rounded fs-3" t-attf-class="{{ userSettings.isRegisteringKey ? 'o-isRegistering border-danger' : 'border-primary' }}" t-esc="pushToTalkKeyText"/>
+                                <button class="o-mail-call-settings_button btn btn-link px-2 py-0 text-black" t-on-click="onClickRegisterKeyButton">
+                                    <i t-if="userSettings.isRegisteringKey" title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
+                                    <i t-else="" title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
+                                </button>
+                            </span>
+                        </label>
+                    </div>
+                    <div t-if="userSettings.isRegisteringKey">Press a key to register it as the push-to-talk shortcut.</div>
+                    <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o-mail-call-settings_optionLabel o-mail-call-settings_pushToTalkDelayOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
+                            <span class="o-mail-call-settings_optionName me-2 text-truncate">Delay after releasing push-to-talk</span>
+                            <div class="o-mail-call-settings_optionInputGroup d-flex w-100">
+                            <input class="o-mail-call-settings_optionInputGroupInput form-range" type="range" min="1" max="2000" step="1" t-att-value="userSettings.voiceActiveDuration" t-on-change="onChangeDelay"/>
+                            </div>
+                        </label>
+                    </div>
+                </t>
+                <div t-else="" class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel o-mail-call-settings_voiceThresholdOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Voice detection threshold" aria-label="Voice detection threshold">
+                        <span class="o-mail-call-settings_optionName me-2 text-truncate">Voice detection threshold</span>
+                        <div class="o-mail-call-settings_optionInputGroup d-flex w-100">
+                            <input class="o-mail-call-settings_optionInputGroupInput form-range" type="range" min="0.001" max="1" step="0.001" t-att-value="userSettings.voiceActivationThreshold" t-on-change="onChangeThreshold"/>
+                        </div>
+                    </label>
+                </div>
             </div>
-            <div>
-                Input Device
+            <div class="o-mail-call-settings_category d-flex flex-column px-3 overflow-auto">
+                <div class="o-mail-call-settings_categoryTitle py-2 fw-bolder text-700 text-truncate text-uppercase">Video Settings</div>
+                <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel o-mail-call-settings_showOnlyVideoOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Show video participants only" aria-label="Show video participants only">
+                        <input type="checkbox" aria-label="toggle push-to-talk" title="Show video participants only" t-on-change="onChangeVideoFilterCheckbox" t-att-checked="props.thread.showOnlyVideo ? 'checked' : ''" class="form-check-input"/>
+                        <span class="o-mail-call-settings_optionName ms-2 text-truncate">Show video participants only</span>
+                    </label>
+                </div>
+                <div t-if="userSettings.hasCanvasFilterSupport" class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                    <label class="o-mail-call-settings_optionLabel o-mail-call-settings_blurOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Blur video background" aria-label="Blur video background">
+                        <input type="checkbox" aria-label="Blur video background" title="Blur video background" t-on-change="onChangeBlur" t-att-checked="userSettings.useBlur ? 'checked' : ''" class="form-check-input"/>
+                        <span class="o-mail-call-settings_optionName ms-2 text-truncate">Blur video background</span>
+                    </label>
+                </div>
+                <t t-if="userSettings.useBlur">
+                    <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o-mail-call-settings_optionLabel o-mail-call-settings_backgroundBlurIntensityOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Background blur intensity" aria-label="Background blur intensity">
+                            <span class="o-mail-call-settings_optionName me-2 text-truncate">Background blur intensity</span>
+                            <div class="o-mail-call-settings_optionInputGroup d-flex w-100">
+                                <input class="o-mail-call-settings_optionInputGroupInput form-range" type="range" min="0" max="20" step="1" t-att-value="userSettings.backgroundBlurAmount" t-on-change="onChangeBackgroundBlurAmount"/>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="o-mail-call-settings_option mb-3 d-flex align-items-center flex-wrap">
+                        <label class="o-mail-call-settings_optionLabel o-mail-call-settings_edgeBlurIntensityOption d-flex align-items-center flex-wrap mw-100 cursor-pointer" title="Edge blur intensity" aria-label="Edge blur intensity">
+                            <span class="o-mail-call-settings_optionName me-2 text-truncate">Edge blur intensity</span>
+                            <div class="o-mail-call-settings_optionInputGroup d-flex w-100">
+                                <input class="o-mail-call-settings_optionInputGroupInput form-range" type="range" min="0" max="20" step="1" t-att-value="userSettings.edgeBlurAmount" t-on-change="onChangeEdgeBlurAmount"/>
+                            </div>
+                        </label>
+                    </div>
+                </t>
             </div>
         </div>
     </t>

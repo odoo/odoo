@@ -131,7 +131,9 @@ export class Rtc {
         });
         void proxyPushToTalk.usePushToTalk;
         const proxyAudioInputDevice = reactive(this.userSettings, async () => {
-            this.resetAudioTrack();
+            if (this.state.selfSession) {
+                this.resetAudioTrack();
+            }
             void proxyAudioInputDevice.audioInputDeviceId;
         });
         void proxyAudioInputDevice.audioInputDeviceId;
