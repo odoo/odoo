@@ -175,7 +175,13 @@ function SetupTimesheetUOMWidgetsTestEnvironment () {
     this.createView = async function (options) {
         const sessionToApply = options && options.session || { };
         await this.patchSessionAndStartServices(sessionToApply);
-        return await createView(options || { });
+        return await createView(Object.assign(
+            {
+                data: this.data,
+                model: 'account.analytic.line',
+            },
+            options || { },
+        ));
     };
 };
 
