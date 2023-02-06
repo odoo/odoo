@@ -426,7 +426,7 @@ export class PeerToPeer {
                     break;
                 case 'disconnected':
                     await this._recoverConnection(clientId, {
-                        delay: 1000,
+                        delay: 3000,
                         reason: 'ice connection disconnected',
                     });
                     break;
@@ -446,7 +446,7 @@ export class PeerToPeer {
                     break;
                 case 'disconnected':
                     await this._recoverConnection(clientId, {
-                        delay: 500,
+                        delay: 3000,
                         reason: 'connection disconnected',
                     });
                     break;
@@ -468,7 +468,7 @@ export class PeerToPeer {
                 console.trace(error);
                 console.groupEnd();
             }
-            this._recoverConnection(clientId, { delay: 15000, reason: 'ice candidate error' });
+            this._recoverConnection(clientId, { delay: 3000, reason: 'ice candidate error' });
         };
         const dataChannel = pc.createDataChannel('notifications', { negotiated: true, id: 1 });
         let message = [];
