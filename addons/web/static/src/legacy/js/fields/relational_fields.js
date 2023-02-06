@@ -1696,6 +1696,7 @@ return {
     ListMany2ManyTagsAvatar: ListMany2ManyTagsAvatar,
     FormFieldMany2ManyTags: FormFieldMany2ManyTags,
     FieldRadio: FieldRadio,
+    FieldSelection: FieldSelection,
 };
 
 });

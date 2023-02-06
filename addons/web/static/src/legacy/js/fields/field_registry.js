@@ -78,6 +78,7 @@ registry
     .add('kanban.many2many_tags_avatar', relational_fields.KanbanMany2ManyTagsAvatar)
     .add('list.many2many_tags_avatar', relational_fields.ListMany2ManyTagsAvatar)
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
-    .add('radio', relational_fields.FieldRadio);
+    .add('radio', relational_fields.FieldRadio)
+    .add('selection', relational_fields.FieldSelection);
 
 });
