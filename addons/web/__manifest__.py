@@ -263,13 +263,11 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/widgets/iframe_widget.js',
             'web/static/src/legacy/js/widgets/model_field_selector.js',
             'web/static/src/legacy/js/widgets/model_field_selector_popover.js',
-            'web/static/src/legacy/js/widgets/ribbon.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 
             'web/static/src/legacy/xml/base.xml',
-            'web/static/src/legacy/xml/ribbon.xml',
             'web/static/src/legacy/xml/control_panel.xml',
             'web/static/src/legacy/xml/fields.xml',
             'web/static/src/legacy/xml/search_panel.xml',
