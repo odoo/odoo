@@ -282,7 +282,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/ribbon.xml',
             'web/static/src/legacy/xml/control_panel.xml',
             'web/static/src/legacy/xml/fields.xml',
-            'web/static/src/legacy/xml/kanban.xml',
             'web/static/src/legacy/xml/search_panel.xml',
             'web/static/src/legacy/xml/week_days.xml',
         ],

@@ -539,68 +539,6 @@
     <div class="o_content"/>
 </div>
 
-<t t-name="ListView.buttons">
-    <div class="o_legacy_list_buttons d-flex" role="toolbar" aria-label="Main actions">
-        <button type="button" class="btn btn-primary o_list_button_save" title="Save record" accesskey="s">
-            Save
-        </button>
-        <button type="button" class="btn btn-secondary o_list_button_discard" title="Discard record" accesskey="j">
-            Discard
-        </button>
-        <t t-if="widget.is_action_enabled('create')">
-            <button type="button" class="btn btn-primary o_list_button_add" title="Create record" accesskey="c">
-                Create
-            </button>
-        </t>
-        <t t-if="widget.is_action_enabled('export_xlsx') and widget.isExportEnable">
-            <button type="button" class="btn btn-secondary fa fa-download o_list_export_xlsx" title="Export All" aria-label="Export All"/>
-        </t>
-    </div>
-</t>
-
-<t t-name="ListView.selection">
-    <div class="o_list_selection_box alert alert-info d-inline-flex align-items-center ps-0 px-lg-2 py-0 mb-0 ms-2" role="alert">
-        <span t-if="isDomainSelected">All <span class="font-monospace" t-esc="nbTotal"/> selected</span>
-        <t t-else="">
-            <span class="font-monospace me-1" t-esc="nbSelected"/> selected
-            <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-2 btn btn-sm btn-info px-2 py-1 border-0 fw-normal">
-                <i class="fa fa-arrow-right"/> Select all <span class="font-monospace" t-esc="nbTotal"/>
-            </a>
-        </t>
-    </div>
-</t>
-
-<t t-name="ListView.confirmModal">
-    <main role="alert">
-        <p>
-            <t t-if="isDomainSelected">This update will only consider the records of the current page.<br/><br/></t>
-            <t t-if="nbRecords != nbValidRecords">
-                Among the <t t-esc="nbRecords"/> selected records,
-                <t t-esc="nbValidRecords"/> are valid for this update.<br/>
-            </t>
-            Are you sure you want to perform the following update on those <t t-esc="nbValidRecords"/> records ?
-        </p>
-        <div class="table-responsive">
-            <table class="o_modal_changes">
-                <tbody>
-                    <t t-foreach="fields" t-as="field" t-key="field_index">
-                        <tr>
-                            <td>Field:</td>
-                            <td><t t-esc="field.label"/></td>
-                        </tr>
-                        <tr>
-                            <td>Update to:</td>
-                            <td>
-                                <div class="o_changes_widget" t-att-data-name="field.name"/>
-                            </td>
-                        </tr>
-                    </t>
-                </tbody>
-            </table>
-        </div>
-    </main>
-</t>
-
 <t t-name="CreateButton.tooltip">
     <div class="oe_tooltip_string" role="tooltip">
         <div class="tooltip-inner">
