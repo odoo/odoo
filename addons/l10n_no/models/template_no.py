@@ -16,6 +16,8 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_income_categ_id': 'chart3000',
             'property_account_expense_id': 'chart4300',
             'property_account_income_id': 'chart3000',
+            'property_tax_payable_account_id': 'chart2740',
+            'property_tax_receivable_account_id': 'chart2740',
         }
 
     @template('no', 'res.company')
