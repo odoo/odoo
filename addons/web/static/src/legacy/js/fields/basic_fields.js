@@ -1539,6 +1539,72 @@ var FieldPercentage = FieldFloat.extend({
     },
 });
 
+var FieldText = InputField.extend(TranslatableFieldMixin, {
+    description: _lt("Multiline Text"),
+    className: 'o_field_text',
+    supportedFieldTypes: ['text', 'html'],
+    tagName: 'span',
+    isQuickEditable: true,
+
+    /**
+     * @constructor
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+
+        if (this.mode === 'edit') {
+            this.tagName = 'textarea';
+        }
+        this.autoResizeOptions = {parent: this};
+    },
+    /**
+     * As it it done in the start function, the autoresize is done only once.
+     *
+     * @override
+     */
+    start: function () {
+        if (this.mode === 'edit') {
+            dom.autoresize(this.$el, this.autoResizeOptions);
+            if (this.field.translate) {
+                this.$el = this.$el.add(this._renderTranslateButton());
+                this.$el.addClass('o_field_translate');
+            }
+        }
+        return this._super();
+    },
+    /**
+     * Override to force a resize of the textarea when its value has changed
+     *
+     * @override
+     */
+    reset: function () {
+        var self = this;
+        return Promise.resolve(this._super.apply(this, arguments)).then(function () {
+            if (self.mode === 'edit') {
+                self.$input.trigger('change');
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Stops the enter navigation in a text area.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER) {
+            ev.stopPropagation();
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+});
+
 /**
  * Displays a handle to modify the sequence.
  */
@@ -2837,6 +2903,7 @@ return {
     FieldMonetary: FieldMonetary,
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
+    FieldText: FieldText,
     FieldToggleBoolean: FieldToggleBoolean,
     HandleWidget: HandleWidget,
     InputField: InputField,

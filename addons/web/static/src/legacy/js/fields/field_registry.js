@@ -31,6 +31,7 @@ registry
     .add('remaining_days', basic_fields.RemainingDays)
     .add('float', basic_fields.FieldFloat)
     .add('char', basic_fields.FieldChar)
+    .add('text', basic_fields.FieldText)
     .add('handle', basic_fields.HandleWidget)
     .add('email', basic_fields.FieldEmail)
     .add('phone', basic_fields.FieldPhone)
