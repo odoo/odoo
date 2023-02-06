@@ -9,7 +9,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_REPEATABLE_READ
 import odoo
 from odoo.sql_db import db_connect, TestCursor
 from odoo.tests import common
-from odoo.tests.common import BaseCase
+from odoo.tests.common import BaseCase, HttpCase
 from odoo.tools.misc import config
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
@@ -46,6 +46,41 @@ class TestRealCursor(BaseCase):
     def test_transaction_isolation_cursor(self):
         with registry().cursor() as cr:
             self.assertEqual(cr.connection.isolation_level, ISOLATION_LEVEL_REPEATABLE_READ)
+
+    def test_connection_readonly(self):
+        # even without db_replica, we expect the connection to be readonly for consistency
+        registry_ = registry()
+        with registry_.cursor(readonly=False) as cr:
+            cr.execute('SHOW transaction_read_only')
+            self.assertEqual(cr.fetchone(), ('off',))
+            self.assertFalse(cr._cnx.readonly)
+
+        with registry_.cursor(readonly=True) as cr:
+            cr.execute('SHOW transaction_read_only')
+            self.assertEqual(cr.fetchone(), ('on',))
+            self.assertTrue(cr._cnx.readonly)
+
+
+class TestHTTPCursor(HttpCase):
+    def test_cursor_keeps_readwriteness(self):
+        with self.env.registry.cursor(readonly=False) as cr:
+            self.assertFalse(cr.readonly)
+            cr.execute("SELECT 1")
+            cr.rollback()
+            self.assertFalse(cr.readonly)
+            cr.execute("SELECT 1")
+            cr.commit()
+            self.assertFalse(cr.readonly)
+
+        with self.env.registry.cursor(readonly=True) as cr:
+            self.assertTrue(cr.readonly)
+            cr.execute("SELECT 1")
+            cr.rollback()
+            self.assertTrue(cr.readonly)
+            cr.execute("SELECT 1")
+            cr.commit()
+            self.assertTrue(cr.readonly)
+
 
 class TestTestCursor(common.TransactionCase):
     def setUp(self):

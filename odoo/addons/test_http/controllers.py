@@ -37,12 +37,12 @@ class TestHttp(http.Controller):
     def greeting_none(self):
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-public', type='http', auth='public')
+    @http.route('/test_http/greeting-public', type='http', auth='public', readonly=True)
     def greeting_public(self):
         assert request.env.user, "ORM should be initialized"
         return "Tek'ma'te"
 
-    @http.route('/test_http/greeting-user', type='http', auth='user')
+    @http.route('/test_http/greeting-user', type='http', auth='user', readonly=True)
     def greeting_user(self):
         assert request.env.user, "ORM should be initialized"
         return "Tek'ma'te"
@@ -87,7 +87,7 @@ class TestHttp(http.Controller):
     def echo_json(self, **kwargs):
         return kwargs
 
-    @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False)
+    @http.route('/test_http/echo-json-context', type='json', auth='user', methods=['POST'], csrf=False, readonly=True)
     def echo_json_context(self, **kwargs):
         return request.env.context
 
@@ -102,7 +102,7 @@ class TestHttp(http.Controller):
     # =====================================================
     # Models
     # =====================================================
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public')
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>', auth='public', readonly=True)
     def galaxy(self, galaxy):
         if not galaxy.exists():
             raise UserError('The Ancients did not settle there.')
@@ -114,7 +114,17 @@ class TestHttp(http.Controller):
             ]),
         })
 
-    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user')
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname-rw', methods=['GET', 'POST'], type='http', auth='user')
+    def galaxy_set_name_rw(self, galaxy, name):
+        galaxy.name = name
+        return galaxy.name
+
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/setname-ro', methods=['GET', 'POST'], type='http', auth='user', readonly=True)
+    def galaxy_set_name_ro(self, galaxy, name):
+        galaxy.name = name
+        return galaxy.name
+
+    @http.route('/test_http/<model("test_http.galaxy"):galaxy>/<model("test_http.stargate"):gate>', auth='user', readonly=True)
     def stargate(self, galaxy, gate):
         if not gate.exists():
             raise UserError("The goa'uld destroyed the gate")
