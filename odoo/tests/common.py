@@ -1654,11 +1654,13 @@ class HttpCase(TransactionCase):
     def url_open(self, url, data=None, files=None, timeout=12, headers=None, allow_redirects=True, head=False):
         if url.startswith('/'):
             url = self.base_url() + url
-        if head:
-            return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
-        if data or files:
-            return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
-        return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+        with patch('odoo.addons.base.models.ir_qweb.IrQWeb._get_asset_nodes') as _get_asset_nodes:
+            _get_asset_nodes.return_value = []
+            if head:
+                return self.opener.head(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=False)
+            if data or files:
+                return self.opener.post(url, data=data, files=files, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
+            return self.opener.get(url, timeout=timeout, headers=headers, allow_redirects=allow_redirects)
 
     def _wait_remaining_requests(self, timeout=10):
 
