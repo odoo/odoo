@@ -271,6 +271,7 @@
     const DEFAULT_SCORECARD_BASELINE_COLOR_UP = "#00A04A";
     const DEFAULT_SCORECARD_BASELINE_COLOR_DOWN = "#DC6965";
     const LINE_FILL_TRANSPARENCY = 0.4;
+    const MIN_FIG_SIZE = 80;
     // session
     const DEBOUNCE_TIME = 200;
     const MESSAGE_VERSION = 1;
@@ -3901,11 +3902,11 @@
     }
     function getChartPositionAtCenterOfViewport(getters, chartSize) {
         const { x, y } = getters.getMainViewportCoordinates();
-        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
+        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
         const { width, height } = getters.getVisibleRect(getters.getActiveMainViewport());
         const position = {
-            x: x + offsetX + Math.max(0, (width - chartSize.width) / 2),
-            y: y + offsetY + Math.max(0, (height - chartSize.height) / 2),
+            x: x + scrollX + Math.max(0, (width - chartSize.width) / 2),
+            y: y + scrollY + Math.max(0, (height - chartSize.height) / 2),
         }; // Position at the center of the scrollable viewport
         return position;
     }
@@ -5591,6 +5592,9 @@
         }
         throw new Error("Can't find spreadsheet position");
     }
+    function getOpenedMenus() {
+        return Array.from(document.querySelectorAll(".o-spreadsheet .o-menu"));
+    }
 
     /**
      * Compute the intersection of two rectangles. Returns nothing if the two rectangles don't overlap
@@ -5886,8 +5890,8 @@
             this.position = useAbsolutePosition(this.menuRef);
         }
         setup() {
-            owl.useExternalListener(window, "click", this.onClick);
-            owl.useExternalListener(window, "contextmenu", this.onContextMenu);
+            owl.useExternalListener(window, "click", this.onExternalClick, { capture: true });
+            owl.useExternalListener(window, "contextmenu", this.onExternalClick, { capture: true });
             owl.onWillUpdateProps((nextProps) => {
                 if (nextProps.menuItems !== this.props.menuItems) {
                     this.closeSubMenu();
@@ -5945,21 +5949,14 @@
             const menusAbove = this.props.menuItems.slice(0, menuIndex);
             return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
         }
-        onClick(ev) {
+        onExternalClick(ev) {
             // Don't close a root menu when clicked to open the submenus.
             const el = this.menuRef.el;
-            if (el && isChildEvent(el, ev)) {
+            if (el && getOpenedMenus().some((el) => isChildEvent(el, ev))) {
                 return;
             }
+            ev.closedMenuId = this.props.menuId;
             this.close();
-        }
-        onContextMenu(ev) {
-            // Don't close a root menu when clicked to open the submenus.
-            const el = this.menuRef.el;
-            if (el && isChildEvent(el, ev)) {
-                return;
-            }
-            this.closeSubMenu();
         }
         getMenuItemsHeight(menuItems) {
             const numberOfSeparators = menuItems.filter((m) => m.separator).length;
@@ -6037,6 +6034,7 @@
         depth: { type: Number, optional: true },
         onClose: Function,
         onMenuClicked: { type: Function, optional: true },
+        menuId: { type: String, optional: true },
     };
 
     // -----------------------------------------------------------------------------
@@ -6074,7 +6072,7 @@
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
                     this.env.model.dispatch("COPY");
-                    await this.env.clipboard.clear();
+                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
                 },
             });
             registry.add("cut", {
@@ -6083,7 +6081,7 @@
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.props.figure.id });
                     this.env.model.dispatch("CUT");
-                    await this.env.clipboard.clear();
+                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
                 },
             });
             registry.add("delete", {
@@ -6329,14 +6327,14 @@
 
     function centerFigurePosition(getters, size) {
         const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-        const { offsetX, offsetY } = getters.getActiveSheetScrollInfo();
+        const { scrollX, scrollY } = getters.getActiveSheetScrollInfo();
         const dim = getters.getSheetViewDimension();
         const rect = getters.getVisibleRect(getters.getActiveMainViewport());
         const scrollableViewportWidth = Math.min(rect.width, dim.width - offsetCorrectionX);
         const scrollableViewportHeight = Math.min(rect.height, dim.height - offsetCorrectionY);
         const position = {
-            x: offsetCorrectionX + offsetX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
-            y: offsetCorrectionY + offsetY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
+            x: offsetCorrectionX + scrollX + Math.max(0, (scrollableViewportWidth - size.width) / 2),
+            y: offsetCorrectionY + scrollY + Math.max(0, (scrollableViewportHeight - size.height) / 2),
         }; // Position at the center of the scrollable viewport
         return position;
     }
@@ -7439,7 +7437,7 @@
             }
             const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
             let { top, left, bottom, right } = getters.getActiveMainViewport();
-            let { offsetScrollbarX: offsetX, offsetScrollbarY: offsetY } = getters.getActiveSheetScrollInfo();
+            let { scrollX, scrollY } = getters.getActiveSheetDOMScrollInfo();
             const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
             let canEdgeScroll = false;
             let timeoutDelay = MAX_DELAY;
@@ -7469,7 +7467,7 @@
                             newTarget = colIndex;
                             break;
                     }
-                    offsetX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
+                    scrollX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
                 }
             }
             const y = currentEv.clientY - position.top;
@@ -7498,12 +7496,20 @@
                             newTarget = rowIndex;
                             break;
                     }
-                    offsetY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
+                    scrollY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
+                }
+            }
+            if (!canEdgeScroll) {
+                if (rowIndex === -1) {
+                    rowIndex = y < 0 ? 0 : getters.getNumberRows(sheetId) - 1;
+                }
+                if (colIndex === -1 && x < 0) {
+                    colIndex = x < 0 ? 0 : getters.getNumberCols(sheetId) - 1;
                 }
             }
             cbMouseMove(colIndex, rowIndex, currentEv);
             if (canEdgeScroll) {
-                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX, offsetY });
+                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: scrollX, offsetY: scrollY });
                 timeOutId = setTimeout(() => {
                     timeOutId = null;
                     onMouseMove(currentEv);
@@ -7580,10 +7586,10 @@
         onMouseDown(ev) {
             this.state.handler = true;
             this.state.position = { left: 0, top: 0 };
-            const { offsetY, offsetX } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { scrollY, scrollX } = this.env.model.getters.getActiveSheetScrollInfo();
             const start = {
-                left: ev.clientX + offsetX,
-                top: ev.clientY + offsetY,
+                left: ev.clientX + scrollX,
+                top: ev.clientY + scrollY,
             };
             let lastCol;
             let lastRow;
@@ -7593,10 +7599,10 @@
             };
             const onMouseMove = (ev) => {
                 const position = gridOverlayPosition();
-                const { offsetY, offsetX } = this.env.model.getters.getActiveSheetScrollInfo();
+                const { scrollY, scrollX } = this.env.model.getters.getActiveSheetScrollInfo();
                 this.state.position = {
-                    left: ev.clientX - start.left + offsetX,
-                    top: ev.clientY - start.top + offsetY,
+                    left: ev.clientX - start.left + scrollX,
+                    top: ev.clientY - start.top + scrollY,
                 };
                 const col = this.env.model.getters.getColIndex(ev.clientX - position.left);
                 const row = this.env.model.getters.getRowIndex(ev.clientY - position.top);
@@ -18811,7 +18817,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
                     this.env.model.dispatch("COPY");
-                    await this.env.clipboard.clear();
+                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
                 },
             });
             registry.add("cut", {
@@ -18821,7 +18827,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 action: async () => {
                     this.env.model.dispatch("SELECT_FIGURE", { id: this.figureId });
                     this.env.model.dispatch("CUT");
-                    await this.env.clipboard.clear();
+                    await this.env.clipboard.write(this.env.model.getters.getClipboardContent());
                 },
             });
             registry.add("reset_size", {
@@ -21641,7 +21647,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     // STYLE
     // -----------------------------------------------------------------------------
     const ANCHOR_SIZE = 8;
-    const MIN_FIG_SIZE = 80;
     const BORDER_WIDTH = 1;
     const ACTIVE_BORDER_WIDTH = 2;
     css /*SCSS*/ `
@@ -21656,11 +21661,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     &:focus {
       outline: none;
     }
-
-    &.o-dragging {
-      opacity: 0.9;
-      cursor: grabbing;
-    }
   }
 
   div.o-active-figure-border {
@@ -21673,7 +21673,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     position: absolute;
     box-sizing: content-box;
 
-    .o-fig-resizer {
+    .o-fig-anchor {
       z-index: ${ComponentsImportance.ChartAnchor};
       position: absolute;
       width: ${ANCHOR_SIZE}px;
@@ -21726,10 +21726,133 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     }
   }
 `;
+    class FigureComponent extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.figureRef = owl.useRef("figure");
+        }
+        get isSelected() {
+            return this.env.model.getters.getSelectedFigureId() === this.props.figure.id;
+        }
+        get figureRegistry() {
+            return figureRegistry;
+        }
+        getBorderWidth() {
+            return this.env.isDashboard() ? 0 : this.borderWidth;
+        }
+        get figureStyle() {
+            return this.props.style + `border-width: ${this.getBorderWidth()}px;`;
+        }
+        get wrapperStyle() {
+            const { x, y, width, height } = this.props.figure;
+            return cssPropertiesToCss({
+                left: `${x}px`,
+                top: `${y}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+                "z-index": String(ComponentsImportance.Figure + (this.isSelected ? 1 : 0)),
+            });
+        }
+        getResizerPosition(resizer) {
+            const anchorCenteringOffset = (ANCHOR_SIZE - ACTIVE_BORDER_WIDTH) / 2;
+            let style = "";
+            if (resizer.includes("top")) {
+                style += `top: ${-anchorCenteringOffset}px;`;
+            }
+            else if (resizer.includes("bottom")) {
+                style += `bottom: ${-anchorCenteringOffset}px;`;
+            }
+            else {
+                style += ` bottom: calc(50% - ${anchorCenteringOffset}px);`;
+            }
+            if (resizer.includes("left")) {
+                style += `left: ${-anchorCenteringOffset}px;`;
+            }
+            else if (resizer.includes("right")) {
+                style += `right: ${-anchorCenteringOffset}px;`;
+            }
+            else {
+                style += ` right: calc(50% - ${anchorCenteringOffset}px);`;
+            }
+            return style;
+        }
+        setup() {
+            const borderWidth = figureRegistry.get(this.props.figure.tag).borderWidth;
+            this.borderWidth = borderWidth !== undefined ? borderWidth : BORDER_WIDTH;
+            owl.useEffect((selectedFigureId, thisFigureId, el) => {
+                if (selectedFigureId === thisFigureId) {
+                    /** Scrolling on a newly inserted figure that overflows outside the viewport
+                     * will break the whole layout.
+                     * NOTE: `preventScroll`does not work on mobile but then again,
+                     * mobile is not really supported ATM.
+                     *
+                     * TODO: When implementing proper mobile, we will need to scroll the viewport
+                     * correctly (and render?) before focusing the element.
+                     */
+                    el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
+                }
+            }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
+        }
+        clickAnchor(dirX, dirY, ev) {
+            this.props.onClickAnchor(dirX, dirY, ev);
+        }
+        onMouseDown(ev) {
+            this.props.onMouseDown(ev);
+        }
+        onKeyDown(ev) {
+            const figure = this.props.figure;
+            switch (ev.key) {
+                case "Delete":
+                    this.env.model.dispatch("DELETE_FIGURE", {
+                        sheetId: this.env.model.getters.getActiveSheetId(),
+                        id: figure.id,
+                    });
+                    this.props.onFigureDeleted();
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    break;
+                case "ArrowDown":
+                case "ArrowLeft":
+                case "ArrowRight":
+                case "ArrowUp":
+                    const deltaMap = {
+                        ArrowDown: [0, 1],
+                        ArrowLeft: [-1, 0],
+                        ArrowRight: [1, 0],
+                        ArrowUp: [0, -1],
+                    };
+                    const delta = deltaMap[ev.key];
+                    this.env.model.dispatch("UPDATE_FIGURE", {
+                        sheetId: this.env.model.getters.getActiveSheetId(),
+                        id: figure.id,
+                        x: figure.x + delta[0],
+                        y: figure.y + delta[1],
+                    });
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                    break;
+            }
+        }
+    }
+    FigureComponent.template = "o-spreadsheet-FigureComponent";
+    FigureComponent.components = {};
+    FigureComponent.defaultProps = {
+        onFigureDeleted: () => { },
+        onMouseDown: () => { },
+        onClickAnchor: () => { },
+    };
+    FigureComponent.props = {
+        figure: Object,
+        style: { type: String, optional: true },
+        onFigureDeleted: { type: Function, optional: true },
+        onMouseDown: { type: Function, optional: true },
+        onClickAnchor: { type: Function, optional: true },
+    };
+
     /**
      * Each figure ⭐ is positioned inside a container `div` placed and sized
-     * according to the split pane the figure is part of.
-     * Any part of the figure outside of the container is hidden
+     * according to the split pane the figure is part of, or a separate container for the figure
+     * currently drag & dropped. Any part of the figure outside of the container is hidden
      * thanks to its `overflow: hidden` property.
      *
      * Additionally, the figure is placed inside a "inverse viewport" `div` 🟥.
@@ -21780,14 +21903,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      * |                                             |
      * -----------------------------------------------
      *
+     * In the case the d&d figure container, the container is the same as the "topLeft" container for
+     * frozen pane (unaffected by scroll and always visible). The figure coordinates are transformed
+     * for this container at the start of the d&d, and transformed back at the end to adapt to the scroll
+     * that occurred during the drag & drop, and to position the figure on the correct pane.
+     *
      */
-    class FigureComponent extends owl.Component {
+    class FiguresContainer extends owl.Component {
         constructor() {
             super(...arguments);
-            this.figureRegistry = figureRegistry;
-            this.figureRef = owl.useRef("figure");
             this.dnd = owl.useState({
-                isActive: false,
+                figId: undefined,
                 x: 0,
                 y: 0,
                 width: 0,
@@ -21795,141 +21921,179 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         setup() {
-            this.figureRegistry = figureRegistry;
-            this.keepRatio = this.figureRegistry.get(this.props.figure.tag).keepRatio || false;
-            this.minFigSize = this.figureRegistry.get(this.props.figure.tag).minFigSize || MIN_FIG_SIZE;
-            const borderWidth = this.figureRegistry.get(this.props.figure.tag).borderWidth;
-            this.borderWidth = borderWidth !== undefined ? borderWidth : BORDER_WIDTH;
-            owl.useEffect((selectedFigureId, thisFigureId, el) => {
-                if (selectedFigureId === thisFigureId) {
-                    /** Scrolling on a newly inserted figure that overflows outside the viewport
-                     * will break the whole layout.
-                     * NOTE: `preventScroll`does not work on mobile but then again,
-                     * mobile is not really supported ATM.
-                     *
-                     * TODO: When implementing proper mobile, we will need to scroll the viewport
-                     * correctly (and render?) before focusing the element.
-                     */
-                    el === null || el === void 0 ? void 0 : el.focus({ preventScroll: true });
+            owl.onMounted(() => {
+                // horrible, but necessary
+                // the following line ensures that we render the figures with the correct
+                // viewport.  The reason is that whenever we initialize the grid
+                // component, we do not know yet the actual size of the viewport, so the
+                // first owl rendering is done with an empty viewport.  Only then we can
+                // compute which figures should be displayed, so we have to force a
+                // new rendering
+                this.render();
+            });
+        }
+        getVisibleFigures() {
+            const visibleFigures = this.env.model.getters.getVisibleFigures();
+            if (this.dnd.figId && !visibleFigures.some((figure) => figure.id === this.dnd.figId)) {
+                visibleFigures.push(this.env.model.getters.getFigure(this.env.model.getters.getActiveSheetId(), this.dnd.figId));
+            }
+            return visibleFigures;
+        }
+        get containers() {
+            const visibleFigures = this.getVisibleFigures();
+            const containers = [];
+            for (const containerType of [
+                "topLeft",
+                "topRight",
+                "bottomLeft",
+                "bottomRight",
+            ]) {
+                const containerFigures = visibleFigures.filter((figure) => this.getFigureContainer(figure) === containerType);
+                if (containerFigures.length > 0) {
+                    containers.push({
+                        type: containerType,
+                        figures: containerFigures,
+                        style: this.getContainerStyle(containerType),
+                        inverseViewportStyle: this.getInverseViewportPositionStyle(containerType),
+                    });
                 }
-            }, () => [this.env.model.getters.getSelectedFigureId(), this.props.figure.id, this.figureRef.el]);
+            }
+            if (this.dnd.figId) {
+                containers.push({
+                    type: "dnd",
+                    figures: [this.getDndFigure()],
+                    style: this.getContainerStyle("dnd"),
+                    inverseViewportStyle: this.getInverseViewportPositionStyle("dnd"),
+                });
+            }
+            return containers;
         }
-        get displayedFigure() {
-            return this.dnd.isActive ? { ...this.props.figure, ...this.dnd } : this.props.figure;
-        }
-        get isSelected() {
-            return this.env.model.getters.getSelectedFigureId() === this.props.figure.id;
-        }
-        get containerStyle() {
-            const { x: figureX, y: figureY } = this.props.figure;
+        getContainerStyle(container) {
             const { width: viewWidth, height: viewHeight } = this.env.model.getters.getMainViewportRect();
-            const { x, y } = this.env.model.getters.getMainViewportCoordinates();
-            const left = figureX >= x ? x : 0;
+            const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+            const left = ["bottomRight", "topRight"].includes(container) ? viewportX : 0;
             const width = viewWidth - left;
-            const top = figureY >= y ? y : 0;
+            const top = ["bottomRight", "bottomLeft"].includes(container) ? viewportY : 0;
             const height = viewHeight - top;
-            return `
-      left: ${left}px;
-      top: ${top}px;
-      width: ${width}px;
-      height: ${height}px
-    `;
+            return cssPropertiesToCss({
+                left: `${left}px`,
+                top: `${top}px`,
+                width: `${width}px`,
+                height: `${height}px`,
+            });
         }
-        get inverseViewportPositionStyle() {
-            const { x: figureX, y: figureY } = this.props.figure;
-            const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
-            const { x, y } = this.env.model.getters.getMainViewportCoordinates();
-            const left = figureX >= x ? -(x + offsetX) : 0;
-            const top = figureY >= y ? -(y + offsetY) : 0;
-            return `
-      left: ${left}px;
-      top: ${top}px;
-    `;
+        getInverseViewportPositionStyle(container) {
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+            const left = ["bottomRight", "topRight"].includes(container) ? -(viewportX + scrollX) : 0;
+            const top = ["bottomRight", "bottomLeft"].includes(container) ? -(viewportY + scrollY) : 0;
+            return cssPropertiesToCss({
+                left: `${left}px`,
+                top: `${top}px`,
+            });
         }
-        getBorderWidth() {
-            return this.env.isDashboard() ? 0 : this.borderWidth;
-        }
-        get figureStyle() {
-            return `border-width: ${this.getBorderWidth()}px;`;
-        }
-        get wrapperStyle() {
-            const { x, y, width, height } = this.displayedFigure;
-            return (`top:${y}px;` +
-                `left:${x}px;` +
-                `width:${width}px;` +
-                `height:${height}px;` +
-                `z-index: ${ComponentsImportance.Figure + (this.isSelected ? 1 : 0)}`);
-        }
-        getResizerPosition(resizer) {
-            const anchorCenteringOffset = (ANCHOR_SIZE - ACTIVE_BORDER_WIDTH) / 2;
-            let style = "";
-            if (resizer.includes("top")) {
-                style += `top: ${-anchorCenteringOffset}px;`;
+        getFigureContainer(figure) {
+            const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+            if (figure.id === this.dnd.figId) {
+                return "dnd";
             }
-            else if (resizer.includes("bottom")) {
-                style += `bottom: ${-anchorCenteringOffset}px;`;
+            else if (figure.x < viewportX && figure.y < viewportY) {
+                return "topLeft";
+            }
+            else if (figure.x < viewportX) {
+                return "bottomLeft";
+            }
+            else if (figure.y < viewportY) {
+                return "topRight";
             }
             else {
-                style += ` bottom: calc(50% - ${anchorCenteringOffset}px);`;
+                return "bottomRight";
             }
-            if (resizer.includes("left")) {
-                style += `left: ${-anchorCenteringOffset}px;`;
-            }
-            else if (resizer.includes("right")) {
-                style += `right: ${-anchorCenteringOffset}px;`;
-            }
-            else {
-                style += ` right: calc(50% - ${anchorCenteringOffset}px);`;
-            }
-            return style;
         }
-        resize(dirX, dirY, ev) {
-            const figure = this.props.figure;
+        startDraggingFigure(figure, ev) {
+            if (ev.button > 0 || this.env.model.getters.isReadonly()) {
+                // not main button, probably a context menu and no d&d in readonly mode
+                return;
+            }
+            const selectResult = this.env.model.dispatch("SELECT_FIGURE", { id: figure.id });
+            if (!selectResult.isSuccessful) {
+                return;
+            }
+            const sheetId = this.env.model.getters.getActiveSheetId();
+            const mouseInitialX = ev.clientX;
+            const mouseInitialY = ev.clientY;
+            const { x: dndInitialX, y: dndInitialY } = this.internalToScreenCoordinates(figure);
+            this.dnd.x = dndInitialX;
+            this.dnd.y = dndInitialY;
+            this.dnd.width = figure.width;
+            this.dnd.height = figure.height;
+            const onMouseMove = (ev) => {
+                const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+                const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
+                const minX = viewportX ? 0 : -scrollX;
+                const minY = viewportY ? 0 : -scrollY;
+                this.dnd.figId = figure.id;
+                const newX = ev.clientX;
+                let deltaX = newX - mouseInitialX;
+                this.dnd.x = Math.max(dndInitialX + deltaX, minX);
+                const newY = ev.clientY;
+                let deltaY = newY - mouseInitialY;
+                this.dnd.y = Math.max(dndInitialY + deltaY, minY);
+            };
+            const onMouseUp = (ev) => {
+                let { x, y } = this.screenCoordinatesToInternal(this.dnd);
+                this.dnd.figId = undefined;
+                this.env.model.dispatch("UPDATE_FIGURE", { sheetId, id: figure.id, x, y });
+            };
+            startDnd(onMouseMove, onMouseUp);
+        }
+        startResize(figure, dirX, dirY, ev) {
             ev.stopPropagation();
             const initialX = ev.clientX;
             const initialY = ev.clientY;
-            this.dnd.x = figure.x;
-            this.dnd.y = figure.y;
+            const { x: dndInitialX, y: dndInitialY } = this.internalToScreenCoordinates(figure);
+            this.dnd.x = dndInitialX;
+            this.dnd.y = dndInitialY;
             this.dnd.width = figure.width;
             this.dnd.height = figure.height;
+            const keepRatio = figureRegistry.get(figure.tag).keepRatio || false;
+            const minFigSize = figureRegistry.get(figure.tag).minFigSize || MIN_FIG_SIZE;
             let onMouseMove;
-            if (this.keepRatio && dirX != 0 && dirY != 0) {
+            if (keepRatio && dirX != 0 && dirY != 0) {
                 onMouseMove = (ev) => {
-                    this.dnd.isActive = true;
-                    const deltaX = Math.min(dirX * (initialX - ev.clientX), figure.width - this.minFigSize);
-                    const deltaY = Math.min(dirY * (initialY - ev.clientY), figure.height - this.minFigSize);
+                    this.dnd.figId = figure.id;
+                    const deltaX = Math.min(dirX * (initialX - ev.clientX), figure.width - minFigSize);
+                    const deltaY = Math.min(dirY * (initialY - ev.clientY), figure.height - minFigSize);
                     const fraction = Math.min(deltaX / figure.width, deltaY / figure.height);
                     this.dnd.width = figure.width * (1 - fraction);
                     this.dnd.height = figure.height * (1 - fraction);
                     if (dirX < 0) {
-                        this.dnd.x = figure.x + figure.width * fraction;
+                        this.dnd.x = dndInitialX + figure.width * fraction;
                     }
                     if (dirY < 0) {
-                        this.dnd.y = figure.y + figure.height * fraction;
+                        this.dnd.y = dndInitialY + figure.height * fraction;
                     }
                 };
             }
             else {
                 onMouseMove = (ev) => {
-                    this.dnd.isActive = true;
-                    const deltaX = Math.max(dirX * (ev.clientX - initialX), MIN_FIG_SIZE - figure.width);
-                    const deltaY = Math.max(dirY * (ev.clientY - initialY), MIN_FIG_SIZE - figure.height);
+                    this.dnd.figId = figure.id;
+                    const deltaX = Math.max(dirX * (ev.clientX - initialX), minFigSize - figure.width);
+                    const deltaY = Math.max(dirY * (ev.clientY - initialY), minFigSize - figure.height);
                     this.dnd.width = figure.width + deltaX;
                     this.dnd.height = figure.height + deltaY;
                     if (dirX < 0) {
-                        this.dnd.x = figure.x - deltaX;
+                        this.dnd.x = dndInitialX - deltaX;
                     }
                     if (dirY < 0) {
-                        this.dnd.y = figure.y - deltaY;
+                        this.dnd.y = dndInitialY - deltaY;
                     }
                 };
             }
             const onMouseUp = (ev) => {
-                this.dnd.isActive = false;
-                const update = {
-                    x: this.dnd.x,
-                    y: this.dnd.y,
-                };
+                this.dnd.figId = undefined;
+                let { x, y } = this.screenCoordinatesToInternal(this.dnd);
+                const update = { x, y };
                 if (dirX) {
                     update.width = this.dnd.width;
                 }
@@ -21944,115 +22108,39 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
             startDnd(onMouseMove, onMouseUp);
         }
-        onMouseDown(ev) {
-            const figure = this.props.figure;
-            if (ev.button > 0 || this.env.model.getters.isReadonly()) {
-                // not main button, probably a context menu
-                return;
-            }
-            const selectResult = this.env.model.dispatch("SELECT_FIGURE", { id: figure.id });
-            if (!selectResult.isSuccessful) {
-                return;
-            }
-            const position = gridOverlayPosition();
-            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.env.model.getters.getMainViewportCoordinates();
-            const { offsetX, offsetY } = this.env.model.getters.getActiveSheetScrollInfo();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const initialX = ev.clientX - position.left;
-            const initialY = ev.clientY - position.top;
-            this.dnd.x = figure.x;
-            this.dnd.y = figure.y;
-            this.dnd.width = figure.width;
-            this.dnd.height = figure.height;
-            const onMouseMove = (ev) => {
-                this.dnd.isActive = true;
-                const newX = ev.clientX - position.left;
-                let deltaX = newX - initialX;
-                this.dnd.x = Math.max(figure.x + deltaX, 0);
-                const newY = ev.clientY - position.top;
-                let deltaY = newY - initialY;
-                this.dnd.y = Math.max(figure.y + deltaY, 0);
+        getDndFigure() {
+            const figure = this.getVisibleFigures().find((fig) => fig.id === this.dnd.figId);
+            if (!figure)
+                throw new Error("Dnd figure not found");
+            return {
+                ...figure,
+                x: this.dnd.x,
+                y: this.dnd.y,
+                width: this.dnd.width,
+                height: this.dnd.height,
             };
-            const onMouseUp = (ev) => {
-                let { x, y } = this.dnd;
-                // Correct position in case of moving to/from a frozen pane
-                if (this.dnd.x > offsetCorrectionX && figure.x < offsetCorrectionX) {
-                    x += offsetX;
-                }
-                else if (this.dnd.x < offsetCorrectionX && figure.x > offsetCorrectionX) {
-                    x -= offsetX;
-                }
-                if (this.dnd.y > offsetCorrectionY && figure.y < offsetCorrectionY) {
-                    y += offsetY;
-                }
-                else if (this.dnd.y < offsetCorrectionY && figure.y > offsetCorrectionY) {
-                    y -= offsetY;
-                }
-                this.dnd.isActive = false;
-                this.env.model.dispatch("UPDATE_FIGURE", { sheetId, id: figure.id, x, y });
-            };
-            startDnd(onMouseMove, onMouseUp);
         }
-        onKeyDown(ev) {
-            const figure = this.props.figure;
-            switch (ev.key) {
-                case "Delete":
-                    this.env.model.dispatch("DELETE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: figure.id,
-                    });
-                    this.props.onFigureDeleted();
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    break;
-                case "ArrowDown":
-                case "ArrowLeft":
-                case "ArrowRight":
-                case "ArrowUp":
-                    const deltaMap = {
-                        ArrowDown: [0, 1],
-                        ArrowLeft: [-1, 0],
-                        ArrowRight: [1, 0],
-                        ArrowUp: [0, -1],
-                    };
-                    const delta = deltaMap[ev.key];
-                    this.env.model.dispatch("UPDATE_FIGURE", {
-                        sheetId: this.env.model.getters.getActiveSheetId(),
-                        id: figure.id,
-                        x: figure.x + delta[0],
-                        y: figure.y + delta[1],
-                    });
-                    ev.stopPropagation();
-                    ev.preventDefault();
-                    break;
-            }
-        }
-    }
-    FigureComponent.template = "o-spreadsheet-FigureComponent";
-    FigureComponent.components = {};
-    FigureComponent.defaultProps = {
-        onFigureDeleted: function () { },
-    };
-    FigureComponent.props = {
-        figure: Object,
-        onFigureDeleted: { type: Function, optional: true },
-    };
-
-    class FiguresContainer extends owl.Component {
-        getVisibleFigures() {
-            return this.env.model.getters.getVisibleFigures();
-        }
-        setup() {
-            owl.onMounted(() => {
-                // horrible, but necessary
-                // the following line ensures that we render the figures with the correct
-                // viewport.  The reason is that whenever we initialize the grid
-                // component, we do not know yet the actual size of the viewport, so the
-                // first owl rendering is done with an empty viewport.  Only then we can
-                // compute which figures should be displayed, so we have to force a
-                // new rendering
-                this.render();
+        getFigureStyle(figure) {
+            if (figure.id !== this.dnd.figId)
+                return "";
+            return cssPropertiesToCss({
+                opacity: "0.9",
+                cursor: "grabbing",
             });
+        }
+        internalToScreenCoordinates({ x, y }) {
+            const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
+            x = x < viewportX ? x : x - scrollX;
+            y = y < viewportY ? y : y - scrollY;
+            return { x, y };
+        }
+        screenCoordinatesToInternal({ x, y }) {
+            const { x: viewportX, y: viewportY } = this.env.model.getters.getMainViewportCoordinates();
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetScrollInfo();
+            x = viewportX && x < viewportX ? x : x + scrollX;
+            y = viewportY && y < viewportY ? y : y + scrollY;
+            return { x, y };
         }
     }
     FiguresContainer.template = "o-spreadsheet-FiguresContainer";
@@ -22200,8 +22288,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 resizeObserver.observe(this.gridOverlayEl);
             });
             useTouchMove(this.gridOverlay, this.props.onGridMoved, () => {
-                const { offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
-                return offsetScrollbarY > 0;
+                const { scrollY } = this.env.model.getters.getActiveSheetDOMScrollInfo();
+                return scrollY > 0;
             });
         }
         get gridOverlayEl() {
@@ -23201,7 +23289,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     class HorizontalScrollBar extends owl.Component {
         get offset() {
-            return this.env.model.getters.getActiveSheetScrollInfo().offsetScrollbarX;
+            return this.env.model.getters.getActiveSheetDOMScrollInfo().scrollX;
         }
         get width() {
             return this.env.model.getters.getMainViewportRect().width;
@@ -23220,10 +23308,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         onScroll(offset) {
-            const { offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { scrollY } = this.env.model.getters.getActiveSheetDOMScrollInfo();
             this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
                 offsetX: offset,
-                offsetY: offsetScrollbarY, // offsetY is the same
+                offsetY: scrollY, // offsetY is the same
             });
         }
     }
@@ -23246,7 +23334,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
 
     class VerticalScrollBar extends owl.Component {
         get offset() {
-            return this.env.model.getters.getActiveSheetScrollInfo().offsetScrollbarY;
+            return this.env.model.getters.getActiveSheetDOMScrollInfo().scrollY;
         }
         get height() {
             return this.env.model.getters.getMainViewportRect().height;
@@ -23265,9 +23353,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             };
         }
         onScroll(offset) {
-            const { offsetScrollbarX } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { scrollX } = this.env.model.getters.getActiveSheetDOMScrollInfo();
             this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
-                offsetX: offsetScrollbarX,
+                offsetX: scrollX,
                 offsetY: offset,
             });
         }
@@ -23508,10 +23596,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         moveCanvas(deltaX, deltaY) {
-            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetDOMScrollInfo();
             this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
-                offsetX: offsetScrollbarX + deltaX,
-                offsetY: offsetScrollbarY + deltaY,
+                offsetX: scrollX + deltaX,
+                offsetY: scrollY + deltaY,
             });
         }
         getClientPositionKey(client) {
@@ -27965,6 +28053,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "UPDATE_CELL":
+                case "CLEAR_CELL":
                     return this.checkCellOutOfSheet(cmd.sheetId, cmd.col, cmd.row);
                 default:
                     return 0 /* CommandResult.Success */;
@@ -33199,9 +33288,29 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             return this.getMainViewport(sheetId);
         }
+        /**
+         * Return the scroll info of the active sheet, ie. the offset between the viewport left/top side and
+         * the grid left/top side, snapped to the columns/rows.
+         */
         getActiveSheetScrollInfo() {
             const sheetId = this.getters.getActiveSheetId();
-            return this.getSheetScrollInfo(sheetId);
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                scrollX: viewport.offsetX,
+                scrollY: viewport.offsetY,
+            };
+        }
+        /**
+         * Return the DOM scroll info of the active sheet, ie. the offset between the viewport left/top side and
+         * the grid left/top side, corresponding to the scroll of the scrollbars and not snapped to the grid.
+         */
+        getActiveSheetDOMScrollInfo() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                scrollX: viewport.offsetScrollbarX,
+                scrollY: viewport.offsetScrollbarY,
+            };
         }
         getSheetViewVisibleCols() {
             const sheetId = this.getters.getActiveSheetId();
@@ -33276,7 +33385,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
             const { width } = this.getSheetViewDimension();
             const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
-            const currentOffsetX = this.getActiveSheetScrollInfo().offsetX;
+            const currentOffsetX = this.getActiveSheetScrollInfo().scrollX;
             if (x > width) {
                 // 3 & 5
                 canEdgeScroll = true;
@@ -33311,7 +33420,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
             const { height } = this.getSheetViewDimension();
             const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
-            const currentOffsetY = this.getActiveSheetScrollInfo().offsetY;
+            const currentOffsetY = this.getActiveSheetScrollInfo().scrollY;
             if (y > height) {
                 // 4 & 6
                 canEdgeScroll = true;
@@ -33414,15 +33523,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         getMainInternalViewport(sheetId) {
             this.ensureMainViewportExist(sheetId);
             return this.viewports[sheetId].bottomRight;
-        }
-        getSheetScrollInfo(sheetId) {
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                offsetX: viewport.offsetX,
-                offsetY: viewport.offsetY,
-                offsetScrollbarX: viewport.offsetScrollbarX,
-                offsetScrollbarY: viewport.offsetScrollbarY,
-            };
         }
         /** gets rid of deprecated sheetIds */
         cleanViewports() {
@@ -33528,8 +33628,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          */
         shiftVertically(offset) {
             const { top } = this.getActiveMainViewport();
-            const { offsetX } = this.getActiveSheetScrollInfo();
-            this.setSheetViewOffset(offsetX, offset);
+            const { scrollX } = this.getActiveSheetScrollInfo();
+            this.setSheetViewOffset(scrollX, offset);
             const { anchor } = this.getters.getSelection();
             const deltaRow = this.getActiveMainViewport().top - top;
             this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
@@ -33538,18 +33638,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const sheetId = this.getters.getActiveSheetId();
             const result = [];
             const figures = this.getters.getFigures(sheetId);
-            const { offsetX, offsetY } = this.getSheetScrollInfo(sheetId);
+            const { scrollX, scrollY } = this.getActiveSheetScrollInfo();
             const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
             const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
             for (const figure of figures) {
                 if (figure.x >= offsetCorrectionX &&
-                    (figure.x + figure.width <= offsetCorrectionX + offsetX ||
-                        figure.x >= width + offsetX + offsetCorrectionX)) {
+                    (figure.x + figure.width <= offsetCorrectionX + scrollX ||
+                        figure.x >= width + scrollX + offsetCorrectionX)) {
                     continue;
                 }
                 if (figure.y >= offsetCorrectionY &&
-                    (figure.y + figure.height <= offsetCorrectionY + offsetY ||
-                        figure.y >= height + offsetY + offsetCorrectionY)) {
+                    (figure.y + figure.height <= offsetCorrectionY + scrollY ||
+                        figure.y >= height + scrollY + offsetCorrectionY)) {
                     continue;
                 }
                 result.push(figure);
@@ -33580,6 +33680,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         "getColRowOffsetInViewport",
         "getMainViewportCoordinates",
         "getActiveSheetScrollInfo",
+        "getActiveSheetDOMScrollInfo",
         "getSheetViewVisibleCols",
         "getSheetViewVisibleRows",
         "getFrozenSheetViewRatio",
@@ -35237,10 +35338,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             return align || evaluatedCell.defaultAlign;
         }
-        createZoneBox(sheetId, zone) {
-            const visibleCols = this.getters.getSheetViewVisibleCols();
-            const left = visibleCols[0];
-            const right = visibleCols[visibleCols.length - 1];
+        createZoneBox(sheetId, zone, viewport) {
+            const { left, right } = viewport;
             const col = zone.left;
             const row = zone.top;
             const position = { sheetId, col, row };
@@ -35379,7 +35478,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     if (this.getters.isInMerge(position)) {
                         continue;
                     }
-                    boxes.push(this.createZoneBox(sheetId, positionToZone(position)));
+                    boxes.push(this.createZoneBox(sheetId, positionToZone(position), viewport));
                 }
             }
             for (const merge of this.getters.getMerges(sheetId)) {
@@ -35387,7 +35486,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     continue;
                 }
                 if (overlap(merge, viewport)) {
-                    const box = this.createZoneBox(sheetId, merge);
+                    const box = this.createZoneBox(sheetId, merge, viewport);
                     const borderBottomRight = this.getters.getCellBorder({
                         sheetId,
                         col: merge.right,
@@ -37880,6 +37979,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     break;
                 case "DELETE_CELL": {
                     const { cut, paste } = this.getDeleteCellsTargets(cmd.zone, cmd.shiftDimension);
+                    if (!isZoneValid(cut[0])) {
+                        for (const { col, row } of positions(cmd.zone)) {
+                            this.dispatch("CLEAR_CELL", { col, row, sheetId: this.getters.getActiveSheetId() });
+                        }
+                        break;
+                    }
                     const state = this.getClipboardStateForCopyCells(cut, "CUT");
                     state.paste(paste);
                     break;
@@ -38846,7 +38951,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         constructor() {
             super(...arguments);
             this.bottomBarRef = owl.useRef("bottomBar");
-            this.menuState = owl.useState({ isOpen: false, position: null, menuItems: [] });
+            this.menuState = owl.useState({
+                isOpen: false,
+                menuId: undefined,
+                position: null,
+                menuItems: [],
+            });
             this.selectedStatisticFn = "";
         }
         setup() {
@@ -38902,31 +39012,33 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onDblClick(sheetId) {
             interactiveRenameSheet(this.env, sheetId);
         }
-        openContextMenu(x, y, registry) {
+        openContextMenu(x, y, registry, menuId) {
             this.menuState.isOpen = true;
             this.menuState.menuItems = registry.getAll().filter((x) => x.isVisible(this.env));
             this.menuState.position = { x, y };
+            this.menuState.menuId = menuId;
         }
-        onIconClick(sheet, ev) {
-            if (this.env.model.getters.getActiveSheetId() !== sheet) {
-                this.activateSheet(sheet);
+        onIconClick(sheetId, ev) {
+            if (this.env.model.getters.getActiveSheetId() !== sheetId) {
+                this.activateSheet(sheetId);
             }
-            if (this.menuState.isOpen) {
+            if (ev.closedMenuId === sheetId) {
                 this.menuState.isOpen = false;
+                this.menuState.menuId = undefined;
             }
             else {
                 const target = ev.currentTarget.parentElement;
                 const { top, left } = target.getBoundingClientRect();
-                this.openContextMenu(left, top, sheetMenuRegistry);
+                this.openContextMenu(left, top, sheetMenuRegistry, sheetId);
             }
         }
-        onContextMenu(sheet, ev) {
-            if (this.env.model.getters.getActiveSheetId() !== sheet) {
-                this.activateSheet(sheet);
+        onContextMenu(sheetId, ev) {
+            if (this.env.model.getters.getActiveSheetId() !== sheetId) {
+                this.activateSheet(sheetId);
             }
             const target = ev.currentTarget;
             const { top, left } = target.getBoundingClientRect();
-            this.openContextMenu(left, top, sheetMenuRegistry);
+            this.openContextMenu(left, top, sheetMenuRegistry, sheetId);
         }
         getSelectedStatistic() {
             const statisticFnResults = this.env.model.getters.getStatisticFnResults();
@@ -39074,10 +39186,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
         }
         moveCanvas(deltaX, deltaY) {
-            const { offsetScrollbarX, offsetScrollbarY } = this.env.model.getters.getActiveSheetScrollInfo();
+            const { scrollX, scrollY } = this.env.model.getters.getActiveSheetDOMScrollInfo();
             this.env.model.dispatch("SET_VIEWPORT_OFFSET", {
-                offsetX: offsetScrollbarX + deltaX,
-                offsetY: offsetScrollbarY + deltaY,
+                offsetX: scrollX + deltaX,
+                offsetY: scrollY + deltaY,
             });
         }
         getGridRect() {
@@ -39895,13 +40007,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 return { status };
             }
         }
-        async clear() {
-            var _a;
-            try {
-                (_a = this.clipboard) === null || _a === void 0 ? void 0 : _a.write([]);
-            }
-            catch (e) { }
-        }
         getClipboardItems(content) {
             return [
                 new ClipboardItem({
@@ -39922,6 +40027,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     position: relative;
     display: grid;
     grid-template-columns: auto 350px;
+    color: #333;
+    input {
+      background-color: white;
+    }
+    .text-muted {
+      color: grey !important;
+    }
+    button {
+      color: #333;
+    }
+
     * {
       font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
     }
@@ -43718,8 +43834,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
     exports.__info__.version = '2.0.0';
-    exports.__info__.date = '2023-02-01T09:27:02.463Z';
-    exports.__info__.hash = 'eaa12b2';
+    exports.__info__.date = '2023-02-06T07:29:07.995Z';
+    exports.__info__.hash = '8228ea1';
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
 //# sourceMappingURL=o_spreadsheet.js.map
