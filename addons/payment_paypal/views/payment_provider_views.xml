@@ -14,7 +14,7 @@
                     <!-- This field should no longer be used but is kept in debug mode for the time
                          being, until we are sure that the verification protocol of IPN can be used
                          for DPT notifications -->
-                    <field name="paypal_pdt_token" groups="base.group_no_one" password="True"/>
+                    <field name="paypal_pdt_token" password="True"/>
                     <field name="paypal_use_ipn"
                            attrs="{'required':[('code', '=', 'paypal'), ('state', '!=', 'disabled')]}"/>
                     <a href="https://www.odoo.com/documentation/16.0/applications/finance/payment_providers/paypal.html"
