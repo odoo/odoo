@@ -230,7 +230,9 @@ class SendSMS(models.TransientModel):
         # on the numbers in the database.
         records = records if records is not None else self._get_records()
         records.ensure_one()
-        if self.recipient_single_number_itf and self.recipient_single_number_itf != self.recipient_single_number:
+        if not self.number_field_name:
+            self.numbers = self.recipient_single_number_itf or self.recipient_single_number
+        elif self.recipient_single_number_itf and self.recipient_single_number_itf != self.recipient_single_number:
             records.write({self.number_field_name: self.recipient_single_number_itf})
         return self._action_send_sms_comment(records=records)
 
