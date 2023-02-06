@@ -14,10 +14,8 @@ var dom = require('web.dom');
 const session = require('web.session');
 const utils = require('web.utils');
 const widgetRegistry = require('web.widget_registry');
-const widgetRegistryOwl = require("web.widgetRegistry");
 
 const { WidgetAdapterMixin } = require('web.OwlCompatibility');
-const FieldWrapper = require('web.FieldWrapper');
 const WidgetWrapper = require("web.WidgetWrapper");
 
 const { Component } = require("@odoo/owl");
@@ -200,11 +198,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // Remove defs of destroyed widget (by the call to updateAllModifiers), as
         // those defs will never resolve
         defs = defs.filter((def, index) => {
-            if (fieldWidgets[index] instanceof FieldWrapper) {
-                return status(fieldWidgets[index]) !== "destroyed";
-            } else {
-                return !fieldWidgets[index].isDestroyed();
-            }
+            return !fieldWidgets[index].isDestroyed();
         });
 
         return Promise.all(defs).then(function () {
@@ -755,7 +749,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         // Initialize and register the widget
         // Readonly status is known as the modifiers have just been registered
         var Widget = record.fieldsInfo[this.viewType][fieldName].Widget;
-        const legacy = !(Widget.prototype instanceof Component);
         const widgetOptions = {
             // Distinct readonly from renderer and readonly from modifier,
             // renderer can be readonly while modifier not.
@@ -764,16 +757,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             mode: modifiers.readonly ? 'readonly' : mode,
             viewType: this.viewType,
         };
-        let widget;
-        if (legacy) {
-            widget = new Widget(this, fieldName, record, widgetOptions);
-        } else {
-            widget = new FieldWrapper(this, Widget, {
-                fieldName,
-                record,
-                options: widgetOptions,
-            });
-        }
+        const widget = new Widget(this, fieldName, record, widgetOptions);
 
         // Register the widget so that it can easily be found again
         if (this.allFieldWidgets[record.id] === undefined) {
@@ -836,28 +820,12 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _renderWidget: function (record, node) {
         const name = node.attrs.name;
-        const Widget = widgetRegistryOwl.get(name) || widgetRegistry.get(name);
-        const legacy = !(Widget.prototype instanceof Component);
-        let widget;
-        if (legacy) {
-            widget = new Widget(this, record, node, { mode: this.mode });
-        } else {
-            widget = new WidgetWrapper(this, Widget, {
-                record,
-                node,
-                options: { mode: this.mode },
-            });
-        }
-
+        const Widget = widgetRegistry.get(name);
+        const widget = new Widget(this, record, node, { mode: this.mode });
         this.widgets.push(widget);
 
         // Prepare widget rendering and save the related promise
-        let def;
-        if (legacy) {
-            def = widget._widgetRenderAndInsert(function () {});
-        } else {
-            def = widget.mount(document.createDocumentFragment());
-        }
+        const def = widget._widgetRenderAndInsert(function () {});
         this.defs.push(def);
         var $el = $('<div>');
 
