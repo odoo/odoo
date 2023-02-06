@@ -114,7 +114,7 @@ export class ORM {
         for (const record of records) {
             validateObject("record", record);
         }
-        return this.call(model, "create", records, kwargs);
+        return this.call(model, "create", [records], kwargs);
     }
 
     nameGet(model, ids, kwargs = {}) {
