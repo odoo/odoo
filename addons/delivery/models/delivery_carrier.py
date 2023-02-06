@@ -419,7 +419,7 @@ class DeliveryCarrier(models.Model):
                 criteria_found = True
                 break
         if not criteria_found:
-            raise UserError(_("No price rule matching this order; delivery cost cannot be computed."))
+            raise UserError(_("Not available for current order"))
 
         return price
 
