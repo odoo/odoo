@@ -247,50 +247,6 @@
         </t>
     </template>
 
-    <template id="web.benchmark_suite">
-        <t t-call="web.layout">
-            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
-            <t t-set="title">Web Benchmarks</t>
-            <t t-set="head">
-                <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
-                <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
-
-                <t t-call-assets="web.assets_common" t-js="false"/>
-                <t t-call-assets="web.assets_backend" t-js="false"/>
-                <t t-call-assets="web.assets_common" t-css="false"/>
-                <t t-call-assets="web.assets_backend" t-css="false"/>
-
-                <t t-call="web.test_helpers"/>
-
-                <script type="text/javascript">
-                    QUnit.config.hidepassed = false;
-                </script>
-
-                <style>
-                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
-                        opacity: 0 !important;
-                    }
-                    #qunit-testrunner-toolbar label {
-                        font-weight: inherit;
-                        margin-bottom: inherit;
-                    }
-                    #qunit-testrunner-toolbar input[type=text] {
-                        width: inherit;
-                        display: inherit;
-                    }
-                </style>
-
-                <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
-                <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
-                <script type="text/javascript" src="/web/static/tests/views/form_benchmarks.js"></script>
-
-            </t>
-
-            <div id="qunit"/>
-            <div id="qunit-fixture"/>
-        </t>
-    </template>
-
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
             <t t-set="head_web">
