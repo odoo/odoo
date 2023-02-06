@@ -420,7 +420,9 @@ export class ThreadService {
             }
             if ("rtc_inviting_session" in serverData) {
                 thread.invitingRtcSessionId = serverData.rtc_inviting_session.id;
-                this.store.ringingThreads.push(thread.localId);
+                if (!this.store.ringingThreads.includes(thread.localId)) {
+                    this.store.ringingThreads.push(thread.localId);
+                }
             }
             if ("rtcInvitingSession" in serverData) {
                 if (Array.isArray(serverData.rtcInvitingSession)) {
