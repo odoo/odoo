@@ -51,5 +51,4 @@ registry
     .add('form.many2many_tags', relational_fields.FormFieldMany2ManyTags)
     .add('radio', relational_fields.FieldRadio)
     .add('selection', relational_fields.FieldSelection);
-
 });
