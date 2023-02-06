@@ -1,4 +1,3 @@
-/* global ace */
 odoo.define('web.basic_fields', function (require) {
 "use strict";
 
@@ -13,14 +12,12 @@ var config = require('web.config');
 var core = require('web.core');
 var datepicker = require('web.datepicker');
 var deprecatedFields = require('web.basic_fields.deprecated');
-var dom = require('web.dom');
 var framework = require('web.framework');
 var py_utils = require('web.py_utils');
 var session = require('web.session');
 var field_utils = require('web.field_utils');
 var utils = require('web.utils');
 var time = require('web.time');
-const { hidePDFJSButtons } = require('@web/legacy/js/libs/pdfjs');
 
 let FieldBoolean = deprecatedFields.FieldBoolean;
 
@@ -1810,62 +1807,6 @@ var UrlWidget = InputField.extend({
         ev.stopPropagation();
     },
 });
-
-var CopyClipboard = {
-    quickEditExclusion: [
-        '.o_clipboard_button',
-    ],
-
-    /**
-     * @override
-     */
-    destroy: function () {
-        this._super.apply(this, arguments);
-        if (this.clipboard) {
-            this.clipboard.destroy();
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Instatiates the Clipboad lib.
-     */
-    _initClipboard: function () {
-        var self = this;
-        var $clipboardBtn = this.$('.o_clipboard_button');
-        $clipboardBtn.tooltip({title: _t('Copied !'), trigger: 'manual', placement: 'right'});
-        this.clipboard = new ClipboardJS($clipboardBtn[0], {
-            text: function () {
-                return self.value.trim();
-            },
-            // Container added because of Bootstrap modal that give the focus to another element.
-            // We need to give to correct focus to ClipboardJS (see in ClipboardJS doc)
-            // https://github.com/zenorocha/clipboard.js/issues/155
-            container: self.$el[0]
-        });
-        this.clipboard.on('success', function () {
-            _.defer(function () {
-                $clipboardBtn.tooltip('show');
-                _.delay(function () {
-                    $clipboardBtn.tooltip('hide');
-                }, 800);
-            });
-        });
-    },
-    /**
-     * @override
-     */
-    _renderReadonly: function () {
-        this._super.apply(this, arguments);
-        if (this.value) {
-            this.$el.append($(qweb.render(this.clipboardTemplate)));
-            this._initClipboard();
-        }
-    }
-};
 
 var AbstractFieldBinary = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {

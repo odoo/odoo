@@ -4,7 +4,6 @@ odoo.define("hr_timesheet.timesheet_uom_tests", function (require) {
 const session = require('web.session');
 const SetupTimesheetUOMWidgetsTestEnvironment = require('hr_timesheet.timesheet_uom_tests_env');
 const fieldUtils = require('web.field_utils');
-const TimesheetUOM = require('hr_timesheet.timesheet_uom');
 
 QUnit.module('Timesheet UOM Widgets', function (hooks) {
     let env;
