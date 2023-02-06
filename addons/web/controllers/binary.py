@@ -8,6 +8,7 @@ import logging
 import os
 import unicodedata
 
+from contextlib import nullcontext
 try:
     from werkzeug.utils import send_file
 except ImportError:
