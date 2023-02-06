@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { getFixture } from "@web/../tests/helpers/utils";
 
@@ -150,4 +151,33 @@ QUnit.test("view attachments", async function (assert) {
 
     await click(".o-mail-attachment-viewer-buttonNavigationNext");
     assert.strictEqual($(target).find(".o-mail-attachment-viewer-name").text(), "Blah.txt");
+});
+
+QUnit.test("scroll to attachment box when toggling on", async function (assert) {
+    patchUiSize({ size: SIZES.XXL });
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({});
+    for (let i = 0; i < 30; i++) {
+        pyEnv["mail.message"].create({
+            body: "not empty".repeat(50),
+            model: "res.partner",
+            res_id: partnerId,
+        });
+    }
+    pyEnv["ir.attachment"].create({
+        mimetype: "text/plain",
+        name: "Blah.txt",
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
+    const { click, openView } = await start();
+    await openView({
+        res_id: partnerId,
+        res_model: "res.partner",
+        views: [[false, "form"]],
+    });
+    $(".o-mail-chatter-scrollable").scrollTop(10 * 1000); // to bottom
+    assert.notEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
+    await click("i.fa-paperclip");
+    assert.strictEqual($(".o-mail-chatter-scrollable").scrollTop(), 0);
 });

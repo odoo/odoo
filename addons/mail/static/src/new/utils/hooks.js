@@ -271,6 +271,7 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
 export function useScrollPosition(refName, model, clearOn) {
     const ref = useRef(refName);
     const self = {
+        ref,
         model,
         restore() {
             if (!self.model) {
