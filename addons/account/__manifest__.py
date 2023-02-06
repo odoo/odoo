@@ -90,7 +90,6 @@ You could use this simplified accounting in case you work with an (external) acc
             'account/static/src/scss/account_dashboard.scss',
             'account/static/src/scss/account_searchpanel.scss',
             'account/static/src/scss/legacy_account_activity.scss',
-            'account/static/src/js/legacy_mail_activity.js',
             'account/static/src/components/**/*',
             'account/static/src/js/tours/account.js',
             'account/static/src/xml/**/*',
