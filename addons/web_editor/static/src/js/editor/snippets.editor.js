@@ -1343,9 +1343,23 @@ var SnippetsMenu = Widget.extend({
         this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
+        this.invisibleDOMPanelEl = document.createElement('div');
+        this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
+        this.invisibleDOMPanelEl.appendChild(
+            $('<div/>', {
+                text: _t('Invisible Elements'),
+                class: 'o_panel_header',
+            })[0]
+        );
+
+        // Prepare snippets editor environment
+        this.$snippetEditorArea = $('<div/>', {
+            id: 'oe_manipulators',
+        }).insertAfter(this.$el);
 
         if (this.options.enableTranslation) {
             // Load the sidebar with the style tab only.
+            defs.push(this._updateInvisibleDOM());
             await this._loadSnippetsTemplates();
             this.$el.find('.o_we_website_top_actions').removeClass('d-none');
             this.$('.o_snippet_search_filter').addClass('d-none');
@@ -1359,14 +1373,6 @@ var SnippetsMenu = Widget.extend({
             this.$('#o-we-editor-table-container').addClass('d-none');
             return Promise.all(defs);
         }
-        this.invisibleDOMPanelEl = document.createElement('div');
-        this.invisibleDOMPanelEl.classList.add('o_we_invisible_el_panel');
-        this.invisibleDOMPanelEl.appendChild(
-            $('<div/>', {
-                text: _t('Invisible Elements'),
-                class: 'o_panel_header',
-            })[0]
-        );
 
         this.emptyOptionsTabContent = document.createElement('div');
         this.emptyOptionsTabContent.classList.add('text-center', 'pt-5');
@@ -1378,11 +1384,6 @@ var SnippetsMenu = Widget.extend({
             await this._loadSnippetsTemplates();
             await this._updateInvisibleDOM();
         })());
-
-        // Prepare snippets editor environment
-        this.$snippetEditorArea = $('<div/>', {
-            id: 'oe_manipulators',
-        }).insertAfter(this.$el);
 
         // Active snippet editor on click in the page
         var lastElement;
@@ -1899,8 +1900,16 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
-            const $invisibleSnippets = globalSelector.all().find('.o_snippet_invisible').addBack('.o_snippet_invisible');
+            const $selector = this.options.enableTranslation ? $('#wrapwrap') :
+                                                                globalSelector.all();
+            let $invisibleSnippets = $selector.find('.o_snippet_invisible')
+                                              .addBack('.o_snippet_invisible');
 
+            if (this.options.enableTranslation) {
+                // In translate mode, we do not want to be able to activate a
+                // hidden header or footer.
+                $invisibleSnippets = $invisibleSnippets.not("header, footer");
+            }
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
             const proms = _.map($invisibleSnippets, async el => {
@@ -1932,6 +1941,12 @@ var SnippetsMenu = Widget.extend({
      *          (might be async when an editor must be created)
      */
     _activateSnippet: async function ($snippet, previewMode, ifInactiveOptions) {
+        if (this.options.enableTranslation) {
+            // In translate mode, do not activate the snippet when enabling its
+            // corresponding invisible element. Indeed, in translate mode, we
+            // only want to toggle its visibility.
+            return;
+        }
         if (this._blockPreviewOverlays && previewMode) {
             return;
         }
