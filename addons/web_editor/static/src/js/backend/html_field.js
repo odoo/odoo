@@ -225,7 +225,7 @@ export class HtmlField extends Component {
                 collaborationResId: parseInt(this.props.record.resId),
             },
             mediaModalParams: {
-                ...this.props.mediaModalParams,
+                ...this.props.wysiwygOptions.mediaModalParams,
                 res_model: this.props.record.resModel,
                 res_id: this.props.record.resId,
             },
