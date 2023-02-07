@@ -521,6 +521,7 @@ function makeActionManager(env) {
                 actionFlags: action.flags,
                 views: action.views,
                 viewSwitcherEntries,
+                actionXmlId: action.xml_id,
             },
             displayName: action.display_name || action.name || "",
         };
