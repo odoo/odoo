@@ -23,6 +23,23 @@ class MailTestPortal(models.Model):
             record.access_url = '/my/test_portal/%s' % self.id
 
 
+class MailTestPortalNoPartner(models.Model):
+    """ A model inheriting from portal, but without any partner field """
+    _description = 'Chatter Model for Portal (no partner field)'
+    _name = 'mail.test.portal.no.partner'
+    _inherit = [
+        'mail.thread',
+        'portal.mixin',
+    ]
+
+    name = fields.Char()
+
+    def _compute_access_url(self):
+        self.access_url = False
+        for record in self.filtered('id'):
+            record.access_url = '/my/test_portal_no_partner/%s' % self.id
+
+
 class MailTestRating(models.Model):
     """ A model inheriting from mail.thread with some fields used for SMS
     gateway, like a partner, a specific mobile phone, ... """
@@ -69,6 +86,9 @@ class MailTestRating(models.Model):
                 rating.phone_nbr = rating.customer_id.phone
             elif not rating.phone_nbr:
                 rating.phone_nbr = False
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _rating_apply_get_default_subtype_id(self):
         return self.env['ir.model.data']._xmlid_to_res_id("test_mail_full.mt_mail_test_rating_rating_done")

@@ -1074,7 +1074,15 @@ class MailCommon(common.TransactionCase, MailCase):
             } for idx in range(count)
         ]
 
-        if 'customer_id' in cls.env[model]:
+        partner_fname = False
+        if 'partner_id' in cls.env[model]:
+            partner_fname = 'partner_id'
+        elif hasattr(cls.env[model], '_mail_get_partner_fields'):
+            partner_fnames = cls.env[model]._mail_get_partner_fields()
+            if partner_fnames:
+                partner_fname = partner_fnames[0]
+
+        if partner_fname:
             partners = cls.env['res.partner'].with_context(**cls._test_context).create([{
                 'name': f'Partner_{idx}',
                 'email': f'{prefix}test_partner_{idx}@example.com',
@@ -1082,7 +1090,7 @@ class MailCommon(common.TransactionCase, MailCase):
                 'mobile': '047500%02d%02d' % (idx, idx)
             } for idx in range(count)])
             for values, partner in zip(base_values, partners):
-                values['customer_id'] = partner.id
+                values[partner_fname] = partner.id
 
         records = cls.env[model].with_context(**cls._test_context).create(base_values)
 
