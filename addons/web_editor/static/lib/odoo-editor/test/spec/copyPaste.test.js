@@ -165,7 +165,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'a\nb\nc\nd');
                     },
-                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                    contentAfter: '<p>a<br class="oe_linebreak">b<br class="oe_linebreak">c<br class="oe_linebreak">d[]<br></p>',
                 });
             });
             it('should paste text and understand \r\n newlines', async () => {
@@ -174,7 +174,7 @@ describe('Copy and paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'a\r\nb\r\nc\r\nd');
                     },
-                    contentAfter: '<p>a<br>b<br>c<br>d[]<br></p>',
+                    contentAfter: '<p>a<br class="oe_linebreak">b<br class="oe_linebreak">c<br class="oe_linebreak">d[]<br></p>',
                 });
             });
         });

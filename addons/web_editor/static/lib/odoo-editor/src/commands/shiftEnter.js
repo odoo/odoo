@@ -35,6 +35,9 @@ HTMLElement.prototype.oShiftEnter = function (offset) {
 
     for (const el of brEls) {
         if (el.parentNode) {
+            if (el.parentNode.nodeName === "P") {
+                el.classList.add("oe_linebreak");
+            }
             setSelection(...rightPos(el));
             break;
         }

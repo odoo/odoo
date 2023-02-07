@@ -341,7 +341,40 @@ export const editorCommands = {
     setTag(editor, tagName) {
         const restoreCursor = preserveCursor(editor.document);
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
-        const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        const target = closestBlock(range.startContainer);
+        const span = range.startContainer.parentElement.closest("SPAN");
+        const hasLinebreak = target.querySelector("br.oe_linebreak");
+        let selectedBlocks;
+
+        if (!hasLinebreak && span) {
+            const endBlock = range.endContainer.parentElement.closest("SPAN");
+            if (span.previousSibling && span.previousSibling.tagName === "BR") {
+                span.previousSibling.remove();
+            } else if (endBlock && endBlock.nextSibling && endBlock.nextSibling.tagName === "BR") {
+                endBlock.nextSibling.remove();
+            }
+
+            if (range.startContainer !== range.endContainer) {
+                selectedBlocks = getTraversedNodes(editor.editable, range).map(node => {
+                    if (node.nodeName === "BR") {
+                        node.remove();
+                    } else if (node.nodeType === Node.TEXT_NODE) {
+                        const newBlock = editor.document.createElement(target.tagName);
+                        newBlock.textContent = node.textContent;
+                        const closestEl = node.parentElement.closest("SPAN") || node;
+                        closestEl.replaceWith(newBlock);
+                        return newBlock;
+                    }
+                }).filter(Boolean);
+            } else {
+                const newBlock = editor.document.createElement(target.tagName);
+                newBlock.textContent = span.textContent;
+                span.replaceWith(newBlock);
+                selectedBlocks = [newBlock];
+            }
+        } else {
+            selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
+        }
         for (const block of selectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
