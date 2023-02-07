@@ -20,6 +20,10 @@ patch(Thread.prototype, "im_livechat", {
         return this.type === "livechat" || this._super();
     },
 
+    get allowReactions() {
+        return this.type === "livechat" ? false : this._super();
+    },
+
     get displayName() {
         if (this.type !== "livechat" || !this.correspondent) {
             return this._super();

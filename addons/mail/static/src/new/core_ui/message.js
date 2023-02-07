@@ -157,7 +157,10 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get canAddReaction() {
-        return Boolean(!this.message.isTransient && this.message.resId);
+        return (
+            this.message.originThread?.allowReactions &&
+            Boolean(!this.message.isTransient && this.message.resId)
+        );
     }
 
     get deletable() {

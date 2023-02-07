@@ -148,6 +148,10 @@ export class Thread {
         return ["chat", "channel"].includes(this.type);
     }
 
+    get allowReactions() {
+        return true;
+    }
+
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
