@@ -193,3 +193,40 @@ class TestWorkeEntryHolidaysWorkEntry(TestWorkEntryHolidaysBase):
         work_entries = contract._generate_work_entries(date(2020, 7, 1), date(2020, 9, 30))
 
         self.assertEqual(len(work_entries), 0)
+
+    def test_work_entries_leave_if_leave_conflict_with_public_holiday(self):
+        date_from = datetime(2023, 2, 1, 0, 0, 0)
+        date_to = datetime(2023, 2, 28, 23, 59, 59)
+        work_entry_type_holiday = self.env['hr.work.entry.type'].create({
+            'name': 'Public Holiday',
+            'is_leave': True,
+            'code': 'LEAVETEST500'
+        })
+        self.env['resource.calendar.leaves'].create({
+            'name': 'Public Holiday',
+            'date_from': datetime(2023, 2, 6, 0, 0, 0),
+            'date_to': datetime(2023, 2, 7, 23, 59, 59),
+            'calendar_id': self.richard_emp.resource_calendar_id.id,
+            'work_entry_type_id': work_entry_type_holiday.id,
+        })
+        leave = self.env['hr.leave'].create({
+            'name': 'AL',
+            'employee_id': self.richard_emp.id,
+            'holiday_status_id': self.leave_type.id,
+            'date_from': date(2023, 2, 3),
+            'date_to': date(2023, 2, 9),
+            'number_of_days': 3,
+        })
+        leave.action_validate()
+
+        self.richard_emp.generate_work_entries(date_from, date_to, True)
+        work_entries = self.env['hr.work.entry'].search([
+            ('employee_id', '=', self.richard_emp.id),
+            ('date_stop', '>=', date_from),
+            ('date_start', '<=', date_to),
+            ('state', '!=', 'validated')])
+        leave_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id in self.work_entry_type_leave)
+        self.assertEqual(leave_work_entry.leave_id.id, leave.id, "Leave work entry should have leave_id value")
+
+        public_holiday_work_entry = work_entries.filtered(lambda we: we.work_entry_type_id == work_entry_type_holiday)
+        self.assertEqual(len(public_holiday_work_entry.leave_id), 0, "Public holiday work entry should not have leave_id")
