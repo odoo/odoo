@@ -69,9 +69,16 @@ export const _loadCSS = (assets.loadCSS = memoize(function loadCSS(url, retryCou
         linkEl.addEventListener("load", () => resolve(true));
         linkEl.addEventListener("error", async () => {
             if (retryCount < assets.retries.count) {
-                await new Promise(resolve => setTimeout(resolve, assets.retries.delay + assets.retries.extraDelay * retryCount));
+                await new Promise((resolve) =>
+                    setTimeout(
+                        resolve,
+                        assets.retries.delay + assets.retries.extraDelay * retryCount
+                    )
+                );
                 linkEl.remove();
-                loadCSS(url, retryCount + 1).then(resolve).catch(reject);
+                loadCSS(url, retryCount + 1)
+                    .then(resolve)
+                    .catch(reject);
             } else {
                 reject(new AssetsLoadingError(`The loading of ${url} failed`));
             }
@@ -243,6 +250,7 @@ export const _loadBundle = (assets.loadBundle = async function loadBundle(desc) 
             );
         }
     }
+    odoo.loader.checkAndReportErrors();
 });
 
 export const loadJS = function (url) {

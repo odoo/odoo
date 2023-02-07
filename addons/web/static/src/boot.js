@@ -180,7 +180,7 @@
                 }
                 frag.appendChild(ul);
                 return frag;
-            };
+            }
 
             domReady(() => {
                 // Empty body
@@ -235,6 +235,18 @@
     odoo.__DEBUG__ = {};
     odoo.loader = loader;
 
+    odoo.ready = async function (str) {
+        return Promise.resolve();
+    };
+
+    odoo.runtimeImport = function (moduleName) {
+        if (!loader.modules.has(moduleName)) {
+            throw new Error(`Service "${moduleName} is not defined or isn't finished loading."`);
+        }
+        return loader.modules.get(moduleName);
+    };
+
+    // todo: move this in test assets somewhere
     function inject({ targets, mocks }) {
         const ModuleLoader = odoo.loader.constructor;
         const factories = new Map(odoo.loader.factories);
@@ -269,15 +281,4 @@
     }
 
     odoo.inject = inject;
-
-    odoo.ready = async function (str) {
-        return Promise.resolve();
-    };
-
-    odoo.runtimeImport = function (moduleName) {
-        if (!loader.modules.has(moduleName)) {
-            throw new Error(`Service "${moduleName} is not defined or isn't finished loading."`);
-        }
-        return loader.modules.get(moduleName);
-    };
 })();
