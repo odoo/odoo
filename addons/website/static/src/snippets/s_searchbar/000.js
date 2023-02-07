@@ -120,14 +120,7 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
                 'options': this.options,
             },
         });
-        const fieldNames = [
-            'name',
-            'description',
-            'extra_link',
-            'detail',
-            'detail_strike',
-            'detail_extra',
-        ];
+        const fieldNames = this._getFieldsNames();
         res.results.forEach(record => {
             for (const fieldName of fieldNames) {
                 if (record[fieldName]) {
@@ -204,6 +197,16 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
         if ($prevMenu) {
             $prevMenu.remove();
         }
+    },
+    _getFieldsNames() {
+        return [
+            'description',
+            'detail',
+            'detail_extra',
+            'detail_strike',
+            'extra_link',
+            'name',
+        ];
     },
 
     //--------------------------------------------------------------------------
