@@ -33,8 +33,10 @@ class TransifexTranslation(models.AbstractModel):
             ):
                 if isfile(tx_path):
                     tx_config_file.read(tx_path)
-                    # tx_config_file.sections(): ['main', 'odoo-16.sale', ...]
-                    projects.update(sec.split('.')[::-1] for sec in tx_config_file.sections()[1:])
+                    # tx_config_file.sections(): ['main', 'o:odoo:p:odoo-16:r:base', ...]
+                    for sec in tx_config_file.sections()[1:]:
+                        _, _, _, tx_project, _, tx_mod = sec.split(':')
+                        projects[tx_mod] = tx_project
         return projects
 
     def _update_transifex_url(self, translations):
