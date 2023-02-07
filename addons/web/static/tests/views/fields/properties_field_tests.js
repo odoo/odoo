@@ -1168,4 +1168,60 @@ QUnit.module("Fields", (hooks) => {
         const items = target.querySelectorAll(".o_kanban_record:nth-child(1) .o_kanban_property_field");
         assert.equal(items.length, 2);
     });
+
+
+    /**
+     * Test the behavior of the default value. It should be propagated on the property
+     * value only when we create a new property. If the property already exists, and we
+     * change the default value, it should never update the property value.
+     */
+    QUnit.test("properties: default value", async function (assert) {
+        async function mockRPC(route, { method, model, kwargs }) {
+            if (method === "check_access_rights") {
+                return true;
+            }
+        }
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+
+        const field = target.querySelector(".o_field_properties");
+        assert.ok(field, "The field must be in the view");
+
+        // create a new property
+        // edit the default value and close the popover definition
+        // because we just created the property, the default value should be propagated
+        await click(target, ".o_field_property_add button");
+        await nextTick();
+        await editInput(target, ".o_field_property_definition_value input", "First Default Value");
+        await closePopover(target);
+        const newProperty = field.querySelector(".o_field_properties .o_property_field:nth-child(3)");
+        assert.strictEqual(newProperty.querySelector(".o_property_field_value input").value, "First Default Value");
+
+        // empty the new / existing property value, and re-open the property we created and change the default value
+        // it shouldn't be propagated because it's the second time we open the definition
+        const existingProperty = field.querySelector(".o_field_properties .o_property_field:nth-child(1)");
+        for (const property of [newProperty, existingProperty]) {
+            await editInput(property, ".o_property_field_value input", "");
+            await click(property, ".o_field_property_open_popover");
+            await nextTick();
+            await editInput(target, ".o_field_property_definition_value input", "Second Default Value");
+            await closePopover(target);
+            assert.strictEqual(property.querySelector(".o_property_field_value input").value, "");
+        }
+    });
 });
