@@ -1979,11 +1979,12 @@ class AccountMove(models.Model):
         needed_after = needed()
 
         # old key to new key for the same line
+        inv_existing_before = {v: k for k, v in existing_before.items()}
+        inv_existing_after = {v: k for k, v in existing_after.items()}
         before2after = {
-            before: after
-            for before, bline in existing_before.items()
-            for after, aline in existing_after.items()
-            if bline == aline
+            before: inv_existing_after[bline]
+            for bline, before in inv_existing_before.items()
+            if bline in inv_existing_after
         }
 
         # # do not alter manually inputted values if there is no change done in business field
