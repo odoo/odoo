@@ -233,7 +233,8 @@ export function formatDate(value, options = {}) {
     }
     const format = options.format || localization.dateFormat;
     const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    return value.toFormat(format, { numberingSystem });
+    const outputCalendar = options.outputCalendar || Settings.defaultOutputCalendar || "iso8601";
+    return value.toFormat(format, { numberingSystem, outputCalendar });
 }
 
 /**
@@ -260,7 +261,8 @@ export function formatDateTime(value, options = {}) {
     }
     const format = options.format || localization.dateTimeFormat;
     const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    return value.setZone("default").toFormat(format, { numberingSystem });
+    const outputCalendar = options.outputCalendar || Settings.defaultOutputCalendar || "iso8601";
+    return value.setZone("default").toFormat(format, { numberingSystem, outputCalendar });
 }
 
 // -----------------------------------------------------------------------------
@@ -401,7 +403,11 @@ export function parseDateTime(value, options = {}) {
  * @returns {DateTime} parsed date object in user's timezone
  */
 export function deserializeDate(value) {
-    return DateTime.fromSQL(value, { zone: "default", numberingSystem: "latn" });
+    return DateTime.fromSQL(value, {
+        zone: "default",
+        numberingSystem: "latn",
+        outputCalendar: "iso8601"
+    });
 }
 
 /**
@@ -410,7 +416,11 @@ export function deserializeDate(value) {
  * @returns {DateTime} parsed datetime object in user's timezone
  */
 export function deserializeDateTime(value) {
-    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
+    return DateTime.fromSQL(value, {
+        zone: "utc",
+        numberingSystem: "latn",
+        outputCalendar: "iso8601"
+    }).setZone("default");
 }
 
 const dateCache = new WeakMap();
@@ -421,7 +431,10 @@ const dateCache = new WeakMap();
  */
 export function serializeDate(value) {
     if (!dateCache.has(value)) {
-        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
+        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, {
+            numberingSystem: "latn",
+            outputCalendar: "iso8601"
+        }));
     }
     return dateCache.get(value);
 }
@@ -436,7 +449,10 @@ export function serializeDateTime(value) {
     if (!dateTimeCache.has(value)) {
         dateTimeCache.set(
             value,
-            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
+            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, {
+                numberingSystem: "latn",
+                outputCalendar: "iso8601"
+            })
         );
     }
     return dateTimeCache.get(value);
