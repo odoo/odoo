@@ -706,10 +706,6 @@ class ProjectTask(models.Model):
 class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'
 
-    def _new_task_values(self, task_from, to_template=False):
-        values = super(ProjectTaskRecurrence, self)._new_task_values(task_from, to_template=to_template)
-        values['sale_line_id'] = self._get_sale_line_id(task_from)
-        return values
-
-    def _get_sale_line_id(self, task):
-        return task.sale_line_id.id
+    @api.model
+    def _get_recurring_fields_to_copy(self):
+        return super(ProjectTaskRecurrence, self)._get_recurring_fields_to_copy() + ['sale_line_id']

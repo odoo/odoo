@@ -594,5 +594,5 @@ class ProjectTaskRecurrence(models.Model):
     _inherit = 'project.task.recurrence'
 
     @api.model
-    def _get_recurring_fields(self):
-        return ['so_analytic_account_id'] + super(ProjectTaskRecurrence, self)._get_recurring_fields()
+    def _get_recurring_fields_to_copy(self):
+        return super(ProjectTaskRecurrence, self)._get_recurring_fields_to_copy() + ['so_analytic_account_id']
