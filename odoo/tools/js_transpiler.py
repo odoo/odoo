@@ -68,7 +68,7 @@ URL_RE = re.compile(r"""
 
 def url_to_module_path(url):
     """
-    Odoo modules each have a name. (odoo.define("<the name>", async function (require) {...});
+    Odoo modules each have a name. (odoo.define("<the name>", function (require) {...});
     It is used in to be required later. (const { something } = require("<the name>").
     The transpiler transforms the url of the file in the project to this name.
     It takes the module name and add a @ on the start of it, and map it to be the source of the static/src (or
@@ -113,7 +113,7 @@ def wrap_with_odoo_define(module_path, dependencies, content):
     It adds as a second argument the list of dependencies.
     Should logically be called once all other operations have been performed.
     """
-    return f"""odoo.define({module_path!r}, {list(dependencies)}, async function (require) {{
+    return f"""odoo.define({module_path!r}, {list(dependencies)}, function (require) {{
 'use strict';
 let __exports = {{}};
 {content}
@@ -694,7 +694,7 @@ def get_aliased_odoo_define_content(module_path, content):
     we have a problem when we will have converted to module to ES6: its new name will be more like
     "web/chrome/abstract_action". So the require would fail !
     So we add a second small modules, an alias, as such:
-    > odoo.define("web/chrome/abstract_action", async function(require) {
+    > odoo.define("web/chrome/abstract_action", function(require) {
     >  return require('web.AbstractAction')[Symbol.for("default")];
     > });
 
@@ -724,11 +724,11 @@ def get_aliased_odoo_define_content(module_path, content):
         alias = matchobj['alias']
         if alias:
             if matchobj['default']:
-                return """\nodoo.define(`%s`, async function(require) {
+                return """\nodoo.define(`%s`, function(require) {
                         return require('%s');
                         });\n""" % (alias, module_path)
             else:
-                return """\nodoo.define(`%s`, async function(require) {
+                return """\nodoo.define(`%s`, function(require) {
                         return require('%s')[Symbol.for("default")];
                         });\n""" % (alias, module_path)
 
