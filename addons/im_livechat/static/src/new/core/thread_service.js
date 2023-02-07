@@ -10,8 +10,8 @@ patch(ThreadService.prototype, "im_livechat", {
         const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
         const thread = this._super(data);
         if (thread.type === "livechat") {
-            if (data.serverData) {
-                assignDefined(thread, data.serverData?.channel, ["anonymous_name"]);
+            if (data.serverData?.channel) {
+                assignDefined(thread, data.serverData.channel, ["anonymous_name"]);
             }
             if (isUnknown) {
                 this.store.discuss.livechat.threads.push(thread.localId);
