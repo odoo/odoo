@@ -22,7 +22,7 @@ function openProjectUpdateAndReturnToTasks(view, viewClass) {
         }, {
             trigger: '.o_back_button',
             content: 'Go back to the task view : ' + view,
-            // extra_trigger: '.o_list_view, .o_legacy_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
+            // extra_trigger: '.o_list_view', // FIXME: [XBO] uncomment it when the sample data will be displayed after discarding the creation of a project update record.
         },
     ];
 }
@@ -159,7 +159,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
 }, {
     trigger: '.o_back_button',
     content: 'Go back to the kanban view the project',
-    extra_trigger: '.o_list_view, .o_legacy_list_view',
+    extra_trigger: '.o_list_view',
 }, {
     trigger: '.o_switch_view.o_graph',
     content: 'Open Graph View of Tasks',

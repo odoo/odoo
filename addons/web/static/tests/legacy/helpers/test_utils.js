@@ -10,7 +10,6 @@ odoo.define('web.test_utils', async function (require) {
      * instance of a view, appended in the dom, ready to be tested.
      */
 
-    const relationalFields = require('web.relational_fields');
     const session = require('web.session');
     const testUtilsCreate = require('web.test_utils_create');
     const testUtilsControlPanel = require('web.test_utils_control_panel');
@@ -122,12 +121,6 @@ odoo.define('web.test_utils', async function (require) {
     // Assets can also contain static xml files. They are loaded when the session
     // is launched.
     await session.is_bound;
-    setTimeout(function () {
-        // jquery autocomplete refines the search in a setTimeout() parameterized
-        // with a delay, so we force this delay to 0 s.t. the dropdown is filtered
-        // directly on the next tick
-        relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
-    }, 0);
     return {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,

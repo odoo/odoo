@@ -75,7 +75,6 @@ Featuring
             'website_slides/static/src/slide_category_one2many_field.js',
             'website_slides/static/src/slide_category_list_renderer.js',
             'website_slides/static/src/scss/slide_views.scss',
-            'website_slides/static/src/js/slide_category_one2many.js',
             'website_slides/static/src/js/components/**/*.js',
             'website_slides/static/src/components/**/*.xml',
             'website_slides/static/src/js/tours/slides_tour.js',

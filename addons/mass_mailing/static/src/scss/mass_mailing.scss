@@ -1,5 +1,4 @@
-.o_form_view .o_mass_mailing_mailing_form,
-.o_legacy_form_view.o_mass_mailing_mailing_form {
+.o_form_view .o_mass_mailing_mailing_form {
     input.o_field_char.o_field_widget {
         padding-right: 40px; // Avoid overlapping subject text on emoji widget
     }
@@ -14,16 +13,14 @@
 }
 
 @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
-    .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body,
-    .o_legacy_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+    .o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
         // cancel the padding of the form_sheet when breakpoints are reached
         margin-left: -$o-sheet-cancel-hpadding*2;
         margin-right: -$o-sheet-cancel-hpadding*2;
     }
 }
 
-.o_form_view .o_mass_mailing_mailing_form.o_mass_mailing_form_full_width,
-.o_legacy_form_view.o_mass_mailing_mailing_form.o_mass_mailing_form_full_width {
+.o_form_view .o_mass_mailing_mailing_form.o_mass_mailing_form_full_width {
     .o_form_statusbar {
         margin-bottom: 0;
 
@@ -60,8 +57,7 @@
     }
 }
 
-.o_form_view .o_mass_mailing_mailing_form,
-.o_legacy_form_view.o_mass_mailing_mailing_form {
+.o_form_view .o_mass_mailing_mailing_form {
     &.o_form_readonly .o_mass_mailing_subject {
         // Place the favorite button without breaking the emoji widget
         padding-right: 50px;
@@ -96,7 +92,7 @@
     }
 }
 
-.o_kanban_renderer, .o_legacy_kanban_view {
+.o_kanban_renderer {
     .oe_kanban_mass_mailing {
         .o_title {
             margin-bottom: 16px;
@@ -171,8 +167,7 @@
     }
 }
 
-.o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group,
-.o_legacy_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
+.o_form_view .o_group.o_inner_group.o_mass_mailing_mailing_group {
     // Used to gain extra space in form.
     display: block;
 }
@@ -197,14 +192,12 @@
     }
 }
 
-.o_form_view.o_xxl_form_view .o_mass_mailing_mailing_form,
-.o_legacy_form_view.o_xxl_form_view.o_mass_mailing_mailing_form {
+.o_form_view.o_xxl_form_view .o_mass_mailing_mailing_form {
     // This will hide the chatter scroll bar
     height: initial;
 }
 
-.o_form_view,
-.o_legacy_form_view {
+.o_form_view {
     // This will display the emoji widget in the right position after a text field with sms option.
     .o_sms_container ~ .o_mail_add_emoji{
         bottom: 55px;
