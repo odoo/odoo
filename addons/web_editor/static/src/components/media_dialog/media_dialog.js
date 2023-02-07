@@ -198,6 +198,9 @@ export class MediaDialog extends Component {
                 element.classList.remove(...this.initialIconClasses);
                 element.classList.remove('o_modified_image_to_save');
                 element.classList.remove('oe_edited_link');
+                // The o_image class is not used anymore but it still needs to
+                // be removed for documents uploaded before 16.0.
+                element.classList.remove('o_image');
                 element.classList.add(...TABS[this.state.activeTab].Component.mediaSpecificClasses);
             });
             if (this.props.multiImages) {
