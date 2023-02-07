@@ -82,18 +82,13 @@
         }
 
         startModule(name) {
-            const mods = this.modules;
-            // const mod = mods.get(name);
-            const require = (name) => mods.get(name);
+            const require = (name) => this.modules.get(name);
             this.jobs.delete(name);
             try {
                 const value = this.factories.get(name).fn(require);
                 if (value instanceof Promise) {
                     console.log(name);
                 }
-                // if (mod.value instanceof Promise) {
-                //     debugger
-                // }
                 this.modules.set(name, value);
             } catch (error) {
                 this.failed.add(name);
@@ -101,59 +96,133 @@
             }
         }
 
-        validate() {
-            if (this.failed.size || this.jobs.size) {
-                throw new Error("NOOOOO");
+        findErrors() {
+            // cycle
+            const dependencyGraph = new Map();
+            for (const job of this.jobs) {
+                dependencyGraph.set(job, this.factories.get(job).deps);
             }
+            // cycle detection
+            function visitJobs(jobs, visited = new Set()) {
+                for (const job of jobs) {
+                    const result = visitJob(job, visited);
+                    if (result) {
+                        return result;
+                    }
+                }
+                return null;
+            }
+
+            function visitJob(job, visited) {
+                if (visited.has(job)) {
+                    const jobs = Array.from(visited).concat([job]);
+                    const index = jobs.indexOf(job);
+                    return jobs
+                        .slice(index)
+                        .map((j) => `"${j}"`)
+                        .join(" => ");
+                }
+                const deps = dependencyGraph.get(job);
+                return deps ? visitJobs(deps, new Set(visited).add(job)) : null;
+            }
+
+            // missing dependencies
+            const missing = new Set();
+            for (const job of this.jobs) {
+                for (const dep of this.factories.get(job).deps) {
+                    if (!this.factories.has(dep)) {
+                        missing.add(dep);
+                    }
+                }
+            }
+
+            return {
+                failed: [...this.failed],
+                cycle: visitJobs(this.jobs),
+                missing: [...missing],
+                unloaded: [...this.jobs],
+            };
         }
 
-        // async reportErrors() {
-        //     const failed = this.failed;
-        //     const unloaded = this.pending;
+        validate() {
+            if (!this.failed.size && !this.jobs.size) {
+                return;
+            }
+            const errors = this.findErrors();
+            throw new Error("boom" + errors);
+        }
 
-        //     await owl.whenReady(); // we need the DOM to be ready
-        //     console.log('FAIL');
-        //     const list = (heading, nameSet) => {
-        //         const frag = document.createDocumentFragment();
-        //         if (!nameSet.size) {
-        //             return frag;
-        //         }
-        //         frag.textContent = heading;
-        //         const ul = document.createElement("ul");
-        //         for (const el of nameSet) {
-        //             const li = document.createElement("li");
-        //             li.textContent = el;
-        //             ul.append(li);
-        //         }
-        //         frag.appendChild(ul);
-        //         return frag;
-        //     };
-        //     // Empty body
-        //     while (document.body.childNodes.length) {
-        //         document.body.childNodes[0].remove();
-        //     }
-        //     const container = document.createElement("div");
-        //     container.className =
-        //         "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
-        //     container.style.zIndex = "10000";
-        //     const alert = document.createElement("div");
-        //     alert.className = "alert alert-danger o_error_detail fw-bold m-auto";
-        //     container.appendChild(alert);
-        //     alert.appendChild(
-        //         list(
-        //             "The following modules failed to load because of an error, you may find more information in the devtools console:",
-        //             this.failed
-        //         )
-        //     );
-        //     alert.appendChild(
-        //         list(
-        //             "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
-        //             this.pending
-        //         )
-        //     );
-        //     document.body.appendChild(container);
-        // }
+        async checkAndreportErrors() {
+            if (!this.failed.size && !this.jobs.size) {
+                return;
+            }
+            const { failed, cycle, missing, unloaded } = this.findErrors();
+
+            function domReady(cb) {
+                if (document.readyState === "complete") {
+                    cb();
+                } else {
+                    document.addEventListener("DOMContentLoaded", cb);
+                }
+            }
+
+            function list(heading, names) {
+                const frag = document.createDocumentFragment();
+                if (!names || !names.length) {
+                    return frag;
+                }
+                frag.textContent = heading;
+                const ul = document.createElement("ul");
+                for (const el of names) {
+                    const li = document.createElement("li");
+                    li.textContent = el;
+                    ul.append(li);
+                }
+                frag.appendChild(ul);
+                return frag;
+            };
+
+            domReady(() => {
+                // Empty body
+                while (document.body.childNodes.length) {
+                    document.body.childNodes[0].remove();
+                }
+                const container = document.createElement("div");
+                container.className =
+                    "position-fixed w-100 h-100 d-flex align-items-center flex-column bg-white overflow-auto modal";
+                container.style.zIndex = "10000";
+                const alert = document.createElement("div");
+                alert.className = "alert alert-danger o_error_detail fw-bold m-auto";
+                container.appendChild(alert);
+                alert.appendChild(
+                    list(
+                        "The following modules failed to load because of an error, you may find more information in the devtools console:",
+                        failed
+                    )
+                );
+                alert.appendChild(
+                    list(
+                        "The following modules could not be loaded because they form a dependency cycle:",
+                        cycle && [cycle]
+                    )
+                );
+                alert.appendChild(
+                    list(
+                        "The following modules are needed by other modules but have not been defined, they may not be present in the correct asset bundle:",
+                        missing
+                    )
+                );
+                alert.appendChild(
+                    list(
+                        "The following modules could not be loaded because they have unmet dependencies, this is a secondary error which is likely caused by one of the above problems:",
+                        unloaded
+                    )
+                );
+                document.body.appendChild(container);
+            });
+        }
     }
+
     if (!globalThis.odoo) {
         globalThis.odoo = {};
     }
@@ -201,44 +270,14 @@
 
     odoo.inject = inject;
 
-    odoo.findMissing = function (name, missing = new Set(), indent = 0) {
-        const log = (str) => {
-            console.log(str.padStart(str.length + indent, " "));
-        };
-        log(`checking ${name}`);
-        for (const dep of loader.modules.get(name).deps) {
-            if (!loader.modules.has(dep)) {
-                log(`${name} -> ${dep} is missing`);
-                missing.add(dep);
-            } else if (!loader.ready.has(dep)) {
-                log(`${name} -> ${dep} is present, but not loaded.`);
-                odoo.findMissing(dep, missing, indent + 4);
-            } else {
-                log(`${name} -> ${dep} is present and loaded`);
-            }
-        }
-        return missing;
-    };
-
     odoo.ready = async function (str) {
         return Promise.resolve();
-        // function match(name) {
-        //     return typeof str === "string" ? name === str : str.test(name);
-        // }
-        // const proms = [];
-        // for (const [name, ] of loader.modules.entries()) {
-        //     if (match(mod.name)) {
-        //         proms.push(mod.promise);
-        //     }
-        // }
-        // await Promise.all(proms);
-        // return proms.length;
     };
 
     odoo.runtimeImport = function (moduleName) {
-        if (!loader.ready.has(moduleName)) {
+        if (!loader.modules.has(moduleName)) {
             throw new Error(`Service "${moduleName} is not defined or isn't finished loading."`);
         }
-        return loader.modules.get(moduleName).value;
+        return loader.modules.get(moduleName);
     };
 })();
