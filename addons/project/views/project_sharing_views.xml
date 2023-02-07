@@ -236,12 +236,7 @@
         <field name="res_model">project.task</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="search_view_id" ref="project.project_sharing_project_task_view_search"/>
-        <field name="domain">[
-            ('display_project_id', '=', active_id),
-            '|',
-                ('recurring_task', '=', False),
-                ('recurrence_template_id', '!=', False),
-        ]</field>
+        <field name="domain">[('display_project_id', '=', active_id)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No tasks found. Let's create one!

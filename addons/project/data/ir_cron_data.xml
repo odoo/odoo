@@ -8,14 +8,4 @@
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
     </record>
-
-    <record id="ir_cron_recurring_tasks" model="ir.cron">
-        <field name="name">Project: Create Recurring Tasks</field>
-        <field name="model_id" ref="project.model_project_task_recurrence"/>
-        <field name="state">code</field>
-        <field name="code">model._cron_create_recurring_tasks()</field>
-        <field name="interval_type">days</field>
-        <field name="numbercall">-1</field>
-        <field name="nextcall" eval="(DateTime.now().replace(hour=3, minute=0) + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')" />
-    </record>
 </odoo>
