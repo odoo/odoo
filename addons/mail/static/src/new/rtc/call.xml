@@ -4,7 +4,7 @@
 <t t-name="mail.call" owl="1">
         <div class="o-mail-call d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
             <!-- Used to make the component depend on the window size and trigger an update when the window size changes. -->
-            <CallMain thread="props.thread" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }" sidebar="{ active: state.sidebar, open: () => this.state.sidebar = false, close: () => this.state.sidebar = false }" compact="props.compact" minimized="minimized"/>
+            <CallMain thread="props.thread" fullscreen="{ isActive: state.isFullscreen, enter: () => this.enterFullScreen(), exit: () => this.exitFullScreen() }" sidebar="{ active: state.sidebar, open: () => this.state.sidebar = true, close: () => this.state.sidebar = false }" compact="props.compact" minimized="minimized"/>
             <div t-if="state.sidebar and props.thread.activeRtcSession" class="o-mail-call-sidebar d-flex align-items-center h-100 flex-column">
                 <CallParticipantCard t-foreach="visibleSessions" t-as="session" t-key="session.id"
                     className="'o-mail-call-sidebar-participant-card w-100'"
