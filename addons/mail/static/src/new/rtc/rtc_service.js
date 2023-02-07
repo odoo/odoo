@@ -115,22 +115,26 @@ export class Rtc {
             }
             this.toggleVideo("camera");
             void proxyBlur.useBlur;
-        }).useBlur;
+        });
+        void proxyBlur.useBlur;
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
         this.ringingThreads.length;
         this.store.ringingThreads = this.ringingThreads;
         const proxyVoiceActivation = reactive(this.userSettings, async () => {
             await this.linkVoiceActivation();
             void proxyVoiceActivation.voiceActivationThreshold;
-        }).voiceActivationThreshold;
+        });
+        void proxyVoiceActivation.voiceActivationThreshold;
         const proxyPushToTalk = reactive(this.userSettings, async () => {
             await this.linkVoiceActivation();
             void proxyPushToTalk.usePushToTalk;
-        }).usePushToTalk;
+        });
+        void proxyPushToTalk.usePushToTalk;
         const proxyAudioInputDevice = reactive(this.userSettings, async () => {
             this.resetAudioTrack();
             void proxyAudioInputDevice.audioInputDeviceId;
-        }).audioInputDeviceId;
+        });
+        void proxyAudioInputDevice.audioInputDeviceId;
         this.env.bus.addEventListener("THREAD-SERVICE:UPDATE_RTC_SESSIONS", ({ detail }) => {
             const thread = detail.thread;
             const data = detail.data;
