@@ -19,8 +19,9 @@ const ControlPanelX2Many = require('web.ControlPanelX2Many');
 var core = require('web.core');
 var data = require('web.data');
 var Dialog = require('web.Dialog');
-var dialogs = require('web.view_dialogs');
 var dom = require('web.dom');
+const { FormViewDialog } = require("@web/views/view_dialogs/form_view_dialog");
+const { SelectCreateDialog } = require("@web/views/view_dialogs/select_create_dialog");
 const Domain = require('web.Domain');
 var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
@@ -425,21 +426,17 @@ var FieldMany2One = AbstractField.extend({
     _getSearchCreatePopupOptions: function(view, ids, context, dynamicFilters) {
         var self = this;
         return {
-            res_model: this.field.relation,
+            resModel: this.field.relation,
             domain: this.record.getDomain({fieldName: this.name}),
             context: _.extend({}, this.record.getContext(this.recordParams), context || {}),
-            _createContext: this._createContext.bind(this),
             dynamicFilters: dynamicFilters || [],
             title: _.str.sprintf((view === 'search' ? _t("Search: %s") : _t("Create: %s")), this.string),
-            initial_ids: ids,
-            initial_view: view,
-            disable_multiple_selection: true,
-            no_create: !self.can_create,
-            kanban_view_ref: this.attrs.kanban_view_ref,
-            on_selected: function (records) {
-                self.reinitialize(records[0]);
+            multiSelect: false,
+            noCreate: !self.can_create,
+            onSelected: function (records) {
+                self.reinitialize({ id: records[0] });
             },
-            on_closed: function () {
+            onClose: function () {
                 self.activate();
             },
         };
@@ -538,8 +535,17 @@ var FieldMany2One = AbstractField.extend({
             // quick creation failed (probably because there are mandatory fields on
             // the model)
             var slowCreate = function () {
-                var dialog = self._searchCreatePopup("form", false, self._createContext(name));
-                dialog.on('closed', self, createDone);
+                owl.Component.env.services.dialog.add(FormViewDialog, {
+                    title: _t("Create: ") + self.string,
+                    resModel: self.field.relation,
+                    context: self._createContext(name),
+                    onRecordSaved: (record) => {
+                        self.reinitialize({
+                            id: record.resId,
+                            display_name: record.data.display_name || record.data.name,
+                        });
+                    },
+                }, { onClose: createDone });
             };
             if (self.nodeOptions.quick_create) {
                 const prom = self.reinitialize({id: false, display_name: name});
@@ -702,7 +708,17 @@ var FieldMany2One = AbstractField.extend({
                     action: () => {
                         // Input value is cleared and the form popup opens
                         this.el.querySelector(':scope input').value = "";
-                        return this._searchCreatePopup('form', false, valueContext);
+                        owl.Component.env.services.dialog.add(FormViewDialog, {
+                            title: _t("Create: ") + this.string,
+                            resModel: this.field.relation,
+                            context: { ...this.record.getContext(this.recordParams), ...valueContext },
+                            onRecordSaved: (record) => {
+                                this.reinitialize({
+                                    id: record.resId,
+                                    display_name: record.data.display_name || record.data.name,
+                                });
+                            },
+                        });
                     },
                     classname: 'o_m2o_dropdown_option',
                 });
@@ -737,9 +753,19 @@ var FieldMany2One = AbstractField.extend({
      * @param {Object[]} [dynamicFilters=[]] filters to add to the search view
      *   in the dialog (each filter has keys 'description' and 'domain')
      */
-    _searchCreatePopup: function (view, ids, context, dynamicFilters) {
-        var options = this._getSearchCreatePopupOptions(view, ids, context, dynamicFilters);
-        return new dialogs.SelectCreateDialog(this, _.extend({}, this.nodeOptions, options)).open();
+    _searchCreatePopup: function (view, ids, context, dynamicFilters, onClose) {
+        const props = this._getSearchCreatePopupOptions(view, ids, context, dynamicFilters);
+        if (onClose) {
+            const _onClose = onClose;
+            onClose = () => {
+                _onClose();
+                props.onClose();
+            }
+        } else {
+            onClose = props.onClose;
+        }
+        delete props.onClose;
+        owl.Component.env.services.dialog.add(SelectCreateDialog, props, { onClose });
     },
     /**
      * @private
@@ -805,26 +831,26 @@ var FieldMany2One = AbstractField.extend({
                 context: context,
             })
             .then(function (view_id) {
-                new dialogs.FormViewDialog(self, {
-                    res_model: self.field.relation,
-                    res_id: self.value.res_id,
-                    context: context,
+                owl.Component.env.services.dialog.add(FormViewDialog, {
                     title: _t("Open: ") + self.string,
-                    view_id: view_id,
-                    readonly: !self.can_write,
-                    on_saved: function (record, changed) {
-                        if (changed) {
-                            const _setValue = self._setValue.bind(self, self.value.data, {
-                                forceChange: true,
-                            });
-                            self.trigger_up('reload', {
-                                db_id: self.value.id,
-                                onSuccess: _setValue,
-                                onFailure: _setValue,
-                            });
-                        }
+                    resModel: self.field.relation,
+                    viewId: view_id,
+                    resId: self.value.res_id,
+                    mode: self.can_write ? "edit" : "readonly",
+                    preventEdit: !self.can_write,
+                    preventCreate: !self.can_create,
+                    context,
+                    onRecordSaved: function () {
+                        const _setValue = self._setValue.bind(self, self.value.data, {
+                            forceChange: true,
+                        });
+                        self.trigger_up('reload', {
+                            db_id: self.value.id,
+                            onSuccess: _setValue,
+                            onFailure: _setValue,
+                        });
                     },
-                }).open();
+                });
             });
     },
     /**
@@ -2728,11 +2754,11 @@ var FieldMany2ManyTags = AbstractField.extend({
             var m2mRecords = [];
             return _.extend({}, options, {
                 domain: domain.concat(["!", ["id", "in", self.value.res_ids]]),
-                disable_multiple_selection: false,
-                on_selected: function (records) {
-                    m2mRecords.push(...records);
+                multiSelect: true,
+                onSelected: function (recordIds) {
+                    m2mRecords.push(...recordIds.map((id) => { return { id } }));
                 },
-                on_closed: function () {
+                onClose: function () {
                     self.many2one.reinitialize(m2mRecords);
                 },
             });
