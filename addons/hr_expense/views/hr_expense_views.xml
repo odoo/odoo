@@ -157,7 +157,7 @@
                                 <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" attrs="{'readonly': [('sheet_is_editable', '=', False)]}"/>
                                 <field name="currency_id" groups="base.group_multi_currency"/>
                             </div>
-                            <label for="total_amount_company" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+                            <label for="total_amount_company" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
                             <div class="o_row d-flex" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
                                 <field name="total_amount_company" style="vertical-align: top;" widget='monetary' options="{'currency_field': 'company_currency_id'}"/>
                                 <field name="label_convert_rate"/>
