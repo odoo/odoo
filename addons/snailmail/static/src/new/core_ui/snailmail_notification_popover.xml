@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="snailmail.snailmail_notification_popover" owl="1">
+        <div class="o-snailmail-notification-popover m-2" t-attf-class="{{ className }}" t-ref="root">
+            <i class="me-2" t-att-class="props.message.notifications[0].statusIcon" role="img"/>
+            <span t-esc="props.message.notifications[0].statusTitle"/>
+        </div>
+    </t>
+
+</templates>
