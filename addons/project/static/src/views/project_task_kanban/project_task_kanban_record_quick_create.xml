@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="project.ProjectTaskKanbanRecordQuickCreate" t-inherit="web.KanbanRecordQuickCreate" owl="1">
+        <FormRenderer position="replace">
+            <div class="d-flex">
+                <FormRenderer class="'o_form_view o_xxs_form_view p-0'" record="props.record" archInfo="props.archInfo" />
+                <p class="btn ms-auto" t-on-click="() => this.showTips()">
+                    Tips
+                 </p>
+            </div>
+        </FormRenderer>
+    </t>
+
+</templates>

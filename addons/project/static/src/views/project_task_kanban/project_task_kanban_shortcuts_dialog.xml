@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
+    <t t-name="project.ProjectTaskKanbanShortcutsDialog" title="this.constructor.title" owl="1">
+        <Dialog contentClass="'o_tips_shortcuts_dialog'" title="this.constructor.title">
+            <h2><t t-out="tips.title"/></h2>
+            <h6><t t-out="tips.subtitle"/></h6>
+            <br></br>
+            <t t-foreach="tips.attributes" t-as="attribute" t-key="attribute.key">
+                <p>
+                    <b> <t t-out="attribute['key']"/>: </b>
+                    <t t-out="attribute['value']"/>
+                </p>
+            </t>
+            <t t-if="tips.example">
+                <h4>Example</h4>
+                <div class="example_box shadow">
+                    <t t-foreach="tips.example.formFields" t-as="field" t-key="field.key">
+                        <label class="font-500 text-900"> <t t-out="field.key"/> </label>
+                        <input class="o_input" t-att-size="field.value.length" type="text" t-att-value="field.value"/>
+                    </t>
+                    <br></br>
+                    <t t-foreach="tips.example.buttons" t-as="button" t-key="button">
+                        <button class="btn btn-primary me-1">
+                            <t t-esc="button"/>
+                        </button>
+                    </t>
+                </div>
+                <p align="center">
+                    <i class="fa fa-arrow-down"></i>
+                </p>
+                <div class="example_box card">
+                    <t t-if="tips.example.box">
+                        <div class="text-900 font-500"> <t t-out="tips.example.box.title"/> </div>
+                        <t t-if="tips.example.box.tags">
+                            <ul>
+                                <t t-foreach="tips.example.box.tags" t-as="tag" t-key="tag.name">
+                                    <li t-att-style="tag.bulletColor"> <span><t t-out="tag.name"/></span></li>
+                                </t>
+                            </ul>
+                        </t>
+                        <div class="d-flex">
+                            <t t-if="tips.example.box.high_priority">
+                                <i class="priority_star center-y fa fa-lg fa-star"></i>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-lg center-y fa-star-o"></i>
+                            </t>
+                            <i class="fa fa-fw fa-lg center-y fa-clock-o"></i>
+                            <t t-if="tips.example.box.estimated_hours">
+                                <div class="time badge center-y"><t t-esc="tips.example.box.estimated_hours"></t></div>
+                            </t>
+                            <p class="o_status center-y status"></p>
+                            <t t-if="tips.example.box.assigned_to_me">
+                                <img id="avatar" class="o_m2m_avatar center-y rounded-circle avatar"/>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </Dialog>
+    </t>
+
+</templates>
