@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo import Command
 
 
 @tagged("post_install_l10n", "post_install", "-at_install")
@@ -265,3 +266,70 @@ class TestEdiJson(AccountTestInvoicingCommon):
         })
         json_value = self.env['account.edi.format']._l10n_in_edi_generate_invoice_json(self.invoice_negative_more_than_max_line)
         self.assertDictEqual(json_value, expected, "Indian EDI with negative value more than max line sent json value is not matched")
+
+    def test_edi_json_equal_sgst_cgst(self):
+        """
+            In price include tax some time we have issue where sgst cgst tax amount is not equal
+            So we create rounding tax with 0.01
+        """
+        round_off_tax = self.env['account.tax'].create({
+            'name': 'Round Off',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 0.01,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, self.env.ref("l10n_in.tax_tag_round_off").ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'tag_ids': [(6, 0, self.env.ref("l10n_in.tax_tag_round_off").ids)],
+                }),
+            ],
+        })
+        gst_5 = self.env.ref("l10n_in.%s_sgst_sale_5" % (self.company_data["company"].id))
+        gst_5.write({
+            'children_tax_ids': [(4, round_off_tax.id)],
+        })
+        gst_5.children_tax_ids.write({
+            'price_include' : True,
+            'include_base_amount': False
+        })
+        invoice_2 = self.init_invoice("out_invoice", post=False, products=self.product_a, taxes=gst_5)
+        invoice_2.write({"invoice_line_ids": [(1, invoice_2.invoice_line_ids[0].id, {"price_unit": 100})]})
+        invoice_2.action_post()
+        json_value = self.env["account.edi.format"]._l10n_in_edi_generate_invoice_json(invoice_2)
+        expected = {
+            "Version": "1.1", "TranDtls": {"TaxSch": "GST", "SupTyp": "B2B", "RegRev": "N", "IgstOnIntra": "N"},
+            "DocDtls": {"Typ": "INV", "No": "INV/2019/00009", "Dt": "01/01/2019"},
+            "SellerDtls": {
+                "Addr1": "Block no. 401", "Loc": "City 1", "Pin": 500001, "Stcd": "36", "Addr2": "Street 2",
+                "LglNm": "company_1_data", "GSTIN": "36AABCT1332L011"
+            },
+            "BuyerDtls": {"Addr1": "Block no. 401", "Loc": "City 2", "Pin": 500001, "Stcd": "36", "Addr2": "Street 2", "POS": "36", "LglNm": "partner_a", "GSTIN": "36BBBFF5679L8ZR"},
+            "ItemList": [{
+                "SlNo": "1", "PrdDesc": "product_a", "IsServc": "N", "HsnCd": "01111", "Qty": 1.0,
+                "Unit": "UNT", "UnitPrice": 95.23, "TotAmt": 95.23, "Discount": 0.0, "AssAmt": 95.23,
+                "GstRt": 5.0, "IgstAmt": 0.0, "CgstAmt": 2.38, "SgstAmt": 2.38, "CesRt": 0.0, "CesAmt": 0.0,
+                "CesNonAdvlAmt": 0.0, "StateCesRt": 0.0, "StateCesAmt": 0.0, "StateCesNonAdvlAmt": 0.0,
+                "OthChrg": 0.0, "TotItemVal": 100.0
+            }],
+            "ValDtls": {
+                "AssVal": 95.23, "CgstVal": 2.38, "SgstVal": 2.38, "IgstVal": 0.0, "CesVal": 0.0,
+                "StCesVal": 0.0, "RndOffAmt": 0.01, "TotInvVal": 100.0
+            }
+        }
+        self.assertDictEqual(json_value, expected, "Indian EDI send json with equlal CGST and SGST value is not matched!")

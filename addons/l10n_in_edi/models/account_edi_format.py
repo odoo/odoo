@@ -490,7 +490,8 @@ class AccountEdiFormat(models.Model):
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)) * sign,
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
-                    sum(line.balance for line in invoice.invoice_line_ids if line.is_rounding_line)),
+                    sum(line.balance for line in invoice.invoice_line_ids if line.is_rounding_line)
+                    + (tax_details_by_code.get("round_off_amount", 0.00) * sign)),
                 "TotInvVal": self._l10n_in_round_value(
                     (tax_details.get("base_amount") + tax_details.get("tax_amount")) * sign),
             },
@@ -540,6 +541,7 @@ class AccountEdiFormat(models.Model):
             tax_line = tax_values["tax_line_id"]
             line_code = "other"
             tax_report_line_sc = self.env.ref("l10n_in.tax_report_line_state_cess", False)
+            tax_report_line_rf = self.env.ref("l10n_in.tax_tag_round_off", False)
             if any(tag in tax_line.tax_tag_ids for tag in self.env.ref("l10n_in.tax_report_line_cess").sudo().tag_ids):
                 if tax_line.tax_line_id.amount_type != "percent":
                     line_code = "cess_non_advol"
@@ -550,6 +552,8 @@ class AccountEdiFormat(models.Model):
                     line_code = "state_cess_non_advol"
                 else:
                     line_code = "state_cess"
+            elif tax_report_line_rf and any(tag in tax_line.tax_tag_ids for tag in tax_report_line_rf):
+                line_code = "round_off"
             else:
                 for gst in ["cgst", "sgst", "igst"]:
                     tag_ids = self.env.ref("l10n_in.tax_report_line_%s"%(gst)).sudo().tag_ids
