@@ -1769,3 +1769,55 @@ QUnit.test(
         assert.containsN(target, ".o-mail-message", 60);
     }
 );
+
+QUnit.test("composer state: attachments save and restore", async function (assert) {
+    const pyEnv = await startServer();
+    const [mailChannelId1] = pyEnv["mail.channel"].create([
+        { name: "General" },
+        { name: "Special" },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(mailChannelId1);
+    // Add attachment in a message for #general
+    await afterNextRender(async () => {
+        const file = await createFile({
+            content: "hello, world",
+            contentType: "text/plain",
+            name: "text.txt",
+        });
+        editInput(target, ".o-mail-composer input[type=file]", [file]);
+    });
+    // Switch to #special
+    await click("button:contains(Special)");
+    // Attach files in a message for #special
+    const files = [
+        await createFile({
+            content: "hello2, world",
+            contentType: "text/plain",
+            name: "text2.txt",
+        }),
+        await createFile({
+            content: "hello3, world",
+            contentType: "text/plain",
+            name: "text3.txt",
+        }),
+        await createFile({
+            content: "hello4, world",
+            contentType: "text/plain",
+            name: "text4.txt",
+        }),
+    ];
+    await afterNextRender(() => editInput(target, ".o-mail-composer input[type=file]", files));
+    // Switch back to #general
+    await click("button:contains(General)");
+    // Check attachment is reloaded
+    assert.containsOnce(target, ".o-mail-composer .o-mail-attachment-card");
+    assert.containsOnce(target, ".o-mail-attachment-card:contains(text.txt)");
+
+    // Switch back to #special
+    await click("button:contains(Special)");
+    assert.containsN(target, ".o-mail-composer .o-mail-attachment-card", 3);
+    assert.containsOnce(target, ".o-mail-attachment-card:contains(text2.txt)");
+    assert.containsOnce(target, ".o-mail-attachment-card:contains(text3.txt)");
+    assert.containsOnce(target, ".o-mail-attachment-card:contains(text4.txt)");
+});

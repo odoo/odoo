@@ -1,10 +1,9 @@
 /* @odoo-module */
 
-import { status, useComponent, useState } from "@odoo/owl";
+import { useState } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { createLocalId } from "@mail/new/utils/misc";
-import { removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { _t } from "@web/core/l10n/translation";
 
 function dataUrlToBlob(data, type) {
@@ -19,9 +18,9 @@ let nextId = -1;
 /**
  * @param {import("@mail/new/core/thread_model").Thread} pThread
  * @param {import("@mail/new/core/message_model").Message} message
+ * @param {import("@mail/new/composer/composer_model").Composer} composer
  */
-export function useAttachmentUploader(pThread, message, isPending = false) {
-    const component = useComponent();
+export function useAttachmentUploader(pThread, message, composer) {
     const { bus, upload } = useService("file_upload");
     const notification = useService("notification");
     /** @type {import("@mail/new/core/store_service").Store} */
@@ -34,7 +33,6 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
     const deferredByAttachmentId = new Map();
     const uploadingAttachmentIds = new Set();
     const state = useState({
-        attachments: [],
         uploadData({ data, name, type }) {
             const file = new File([dataUrlToBlob(data, type)], name, { type });
             return this.uploadFile(file);
@@ -47,7 +45,7 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
                 buildFormData(formData) {
                     formData.append("thread_id", thread.id);
                     formData.append("thread_model", thread.model);
-                    formData.append("is_pending", isPending);
+                    formData.append("is_pending", Boolean(composer));
                     formData.append("temporary_id", tmpId);
                 },
             }).catch((e) => {
@@ -68,22 +66,11 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
                 return;
             }
             await attachmentService.delete(attachment);
-            removeFromArrayWithPredicate(state.attachments, ({ id }) => id === attachment.id);
-        },
-        async unlinkAll() {
-            const proms = [];
-            this.attachments.forEach((attachment) => proms.push(this.unlink(attachment)));
-            await Promise.all(proms);
-            this.clear();
         },
         clear() {
             abortByAttachmentId.clear();
             deferredByAttachmentId.clear();
             uploadingAttachmentIds.clear();
-            // prevent queuing of a render that will never be resolved.
-            if (status(component) !== "destroyed") {
-                state.attachments = [];
-            }
         },
     });
     useBus(bus, "FILE_UPLOAD_ADDED", ({ detail: { upload } }) => {
@@ -100,11 +87,13 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
             id: tmpId,
             mimetype: upload.type,
             name: upload.title,
-            originThread: isPending ? undefined : originThread,
+            originThread: composer ? undefined : originThread,
             extension: upload.title.split(".").pop(),
             uploading: true,
         });
-        state.attachments.push(attachment);
+        if (composer) {
+            composer.attachments.push(attachment);
+        }
     });
     useBus(bus, "FILE_UPLOAD_LOADED", ({ detail: { upload } }) => {
         const tmpId = parseInt(upload.data.get("temporary_id"));
@@ -132,16 +121,18 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
         const attachment = attachmentService.insert({
             ...response,
             extension: upload.title.split(".").pop(),
-            originThread: isPending ? undefined : originThread,
+            originThread: composer ? undefined : originThread,
         });
-        const index = state.attachments.findIndex(({ id }) => id === tmpId);
-        const def = deferredByAttachmentId.get(tmpId);
-        if (index >= 0) {
-            state.unlink(state.attachments[index]);
-            state.attachments[index] = attachment;
-        } else {
-            state.attachments.push(attachment);
+        if (composer) {
+            const index = composer.attachments.findIndex(({ id }) => id === tmpId);
+            if (index >= 0) {
+                composer.attachments[index] = attachment;
+            } else {
+                composer.attachments.push(attachment);
+            }
         }
+        const def = deferredByAttachmentId.get(tmpId);
+        state.unlink(store.attachments[tmpId]);
         if (def) {
             def.resolve(attachment);
             deferredByAttachmentId.delete(tmpId);

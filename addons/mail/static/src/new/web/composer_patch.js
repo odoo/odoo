@@ -119,7 +119,7 @@ patch(Composer.prototype, "mail/web", {
             const thread =
                 this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
             const postData = {
-                attachments: this.attachmentUploader?.attachments,
+                attachments: this.props.composer.attachments,
                 isNote:
                     this.props.composer.type === "note" ||
                     this.props.messageToReplyTo?.message?.isNote,
@@ -148,7 +148,7 @@ patch(Composer.prototype, "mail/web", {
                 this.messageService.update(
                     this.props.composer.message,
                     value,
-                    this.attachmentUploader?.attachments,
+                    this.props.composer.attachments,
                     this.suggestion.rawMentions
                 )
             );

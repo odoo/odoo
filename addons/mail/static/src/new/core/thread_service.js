@@ -17,7 +17,7 @@ export class ThreadService {
 
     constructor(env, services) {
         this.env = env;
-        /** @type {import("@mail/new/attachments/attachment_service")} */
+        /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
         this.attachments = services["mail.attachment"];
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = services["mail.store"];
@@ -95,7 +95,11 @@ export class ThreadService {
      */
     async markAsRead(thread) {
         const mostRecentNonTransientMessage = thread.mostRecentNonTransientMessage;
-        if (this.isUnread(thread) && thread.allowSetLastSeenMessage && mostRecentNonTransientMessage) {
+        if (
+            this.isUnread(thread) &&
+            thread.allowSetLastSeenMessage &&
+            mostRecentNonTransientMessage
+        ) {
             await this.rpc("/mail/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: mostRecentNonTransientMessage.id,
@@ -726,6 +730,7 @@ export class ThreadService {
      * @param {import("@mail/new/composer/composer_model").Composer} composer
      */
     clearComposer(composer) {
+        composer.attachments.length = 0;
         Object.assign(composer, {
             textInputContent: "",
             selection: {

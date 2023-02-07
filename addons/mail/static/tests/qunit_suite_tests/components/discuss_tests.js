@@ -9,9 +9,7 @@ import {
 
 import { destroy } from "@web/../tests/helpers/utils";
 
-import { makeTestPromise, file } from "web.test_utils";
-
-const { createFile, inputFiles } = file;
+import { makeTestPromise } from "web.test_utils";
 
 QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
@@ -249,103 +247,5 @@ QUnit.module("mail", {}, function () {
                 "should have recovered scroll position of channel 2 (scroll to bottom)"
             );
         });
-
-        QUnit.skipRefactoring(
-            "composer state: attachments save and restore",
-            async function (assert) {
-                assert.expect(6);
-
-                const pyEnv = await startServer();
-                const [mailChannelId1] = pyEnv["mail.channel"].create([
-                    { name: "General" },
-                    { name: "Special" },
-                ]);
-                const { messaging, openDiscuss } = await start({
-                    discuss: {
-                        params: {
-                            default_active_id: `mail.channel_${mailChannelId1}`,
-                        },
-                    },
-                });
-                await openDiscuss();
-                const channels = document.querySelectorAll(`
-        .o-mail-category-channel .o_DiscussSidebarCategory_item
-    `);
-                // Add attachment in a message for #general
-                await afterNextRender(async () => {
-                    const file = await createFile({
-                        content: "hello, world",
-                        contentType: "text/plain",
-                        name: "text.txt",
-                    });
-                    inputFiles(messaging.discuss.threadView.composerView.fileUploader.fileInput, [
-                        file,
-                    ]);
-                });
-                // Switch to #special
-                await afterNextRender(() => channels[1].click());
-                // Attach files in a message for #special
-                const files = [
-                    await createFile({
-                        content: "hello2, world",
-                        contentType: "text/plain",
-                        name: "text2.txt",
-                    }),
-                    await createFile({
-                        content: "hello3, world",
-                        contentType: "text/plain",
-                        name: "text3.txt",
-                    }),
-                    await createFile({
-                        content: "hello4, world",
-                        contentType: "text/plain",
-                        name: "text4.txt",
-                    }),
-                ];
-                await afterNextRender(() =>
-                    inputFiles(
-                        messaging.discuss.threadView.composerView.fileUploader.fileInput,
-                        files
-                    )
-                );
-                // Switch back to #general
-                await afterNextRender(() => channels[0].click());
-                // Check attachment is reloaded
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
-                    1,
-                    "should have 1 attachment in the composer"
-                );
-                assert.strictEqual(
-                    document.querySelector(`.o_ComposerView .o_AttachmentCard`).dataset.id,
-                    messaging.models["Attachment"].findFromIdentifyingData({ id: 1 }).localId,
-                    "should have correct 1st attachment in the composer"
-                );
-
-                // Switch back to #special
-                await afterNextRender(() => channels[1].click());
-                // Check attachments are reloaded
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`).length,
-                    3,
-                    "should have 3 attachments in the composer"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[0].dataset.id,
-                    messaging.models["Attachment"].findFromIdentifyingData({ id: 2 }).localId,
-                    "should have attachment with id 2 as 1st attachment"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[1].dataset.id,
-                    messaging.models["Attachment"].findFromIdentifyingData({ id: 3 }).localId,
-                    "should have attachment with id 3 as 2nd attachment"
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_ComposerView .o_AttachmentCard`)[2].dataset.id,
-                    messaging.models["Attachment"].findFromIdentifyingData({ id: 4 }).localId,
-                    "should have attachment with id 4 as 3rd attachment"
-                );
-            }
-        );
     });
 });

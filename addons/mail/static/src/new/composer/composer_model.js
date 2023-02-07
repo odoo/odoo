@@ -1,6 +1,8 @@
 /* @odoo-module */
 
 export class Composer {
+    /** @type {import("@mail/new/attachments/attachment_model").Attachment[]} */
+    attachments = [];
     /** @type {Message} */
     message;
     /** @type {string} */

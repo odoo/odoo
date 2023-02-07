@@ -64,6 +64,7 @@ export class AttachmentService {
      * @param {Attachment} attachment
      */
     async delete(attachment) {
+        delete this.store.attachments[attachment.id];
         if (attachment.originThread) {
             removeFromArrayWithPredicate(
                 attachment.originThread.attachments,
@@ -72,6 +73,18 @@ export class AttachmentService {
         }
         for (const message of Object.values(this.store.messages)) {
             removeFromArrayWithPredicate(message.attachments, ({ id }) => id === attachment.id);
+            if (message.composer) {
+                removeFromArrayWithPredicate(
+                    message.composer.attachments,
+                    ({ id }) => id === attachment.id
+                );
+            }
+        }
+        for (const thread of Object.values(this.store.threads)) {
+            removeFromArrayWithPredicate(
+                thread.composer.attachments,
+                ({ id }) => id === attachment.id
+            );
         }
         if (attachment.id > 0) {
             await this.rpc("/mail/attachment/delete", {
