@@ -235,33 +235,5 @@ QUnit.skipRefactoring('reaction button should not be present on livechat', async
     );
 });
 
-QUnit.skipRefactoring('reply button should not be present on livechat', async function (assert) {
-    assert.expect(1);
-
-    const pyEnv = await startServer();
-    const mailChannelId1 = pyEnv['mail.channel'].create({
-        anonymous_name: "Visitor 11",
-        channel_type: 'livechat',
-        livechat_operator_id: pyEnv.currentPartnerId,
-        channel_partner_ids: [pyEnv.currentPartnerId, pyEnv.publicPartnerId],
-    });
-    const { click, insertText, openDiscuss } = await start({
-        discuss: {
-            params: {
-                default_active_id: `mail.channel_${mailChannelId1}`,
-            },
-        },
-    });
-    await openDiscuss();
-    await insertText('.o-mail-composer-textarea', "Test");
-    await click('.o-mail-composer-send-button');
-    await click('.o-mail-message');
-    assert.containsNone(
-        document.body,
-        '.o_MessageActionView_actionReplyTo',
-        "should not have reply action"
-    );
-});
-
 });
 });
