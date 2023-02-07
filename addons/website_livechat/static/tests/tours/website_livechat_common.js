@@ -1,7 +1,5 @@
 /** @odoo-module **/
 
-import { RATING } from "@im_livechat/embed/core/livechat_service";
-
 /*******************************
  *         Common Steps
  *******************************/
@@ -55,6 +53,13 @@ export const endDiscussion = [
 ];
 
 export const feedback = [
+    {
+        content: "Patching Livechat",
+        trigger: "textarea[placeholder='Explain your note']",
+        run: function() {
+            document.body.classList.add("feedback_sent");
+        }
+    },
     {
         content: "Type a feedback",
         trigger: "textarea[placeholder='Explain your note']",
@@ -114,20 +119,20 @@ export const close = [
 export const goodRating = [
     {
         content: "Choose Good Rating",
-        trigger: `img[src*=rating][alt=${RATING.GOOD}]`,
+        trigger: `img[src*=rating][alt=5]`,
     },
 ];
 
 export const okRating = [
     {
         content: "Choose ok Rating",
-        trigger: `img[src*=rating][alt=${RATING.OK}]`,
+        trigger: `img[src*=rating][alt=3]`,
     },
 ];
 
 export const sadRating = [
     {
         content: "Choose bad Rating",
-        trigger: `img[src*=rating][alt=${RATING.BAD}]`,
+        trigger: `img[src*=rating][alt=1]`,
     },
 ];

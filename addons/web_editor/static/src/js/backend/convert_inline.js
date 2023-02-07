@@ -801,7 +801,7 @@ function flattenBackgroundImages(editable) {
  */
 function fontToImg($editable) {
     const editable = $editable.get(0);
-    const { fonts } = odoo.__DEBUG__.services["@web_editor/js/wysiwyg/fonts"];
+    const { fonts } = odoo.loader.modules.get("@web_editor/js/wysiwyg/fonts");
 
     for (const font of editable.querySelectorAll('.fa')) {
         let icon, content;

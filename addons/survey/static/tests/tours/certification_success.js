@@ -1,22 +1,30 @@
 /** @odoo-module **/
 
-import SurveyFormWidget from "@survey/js/survey_form";
 /**
  * Speed up fade-in fade-out to avoid useless delay in tests.
  */
-SurveyFormWidget.include({
-    _submitForm: function () {
-        this.fadeInOutDelay = 0;
-        return this._super.apply(this, arguments);
-    }
-});
+function patchSurveyWidget() {
+    const SurveyFormWidget = odoo.loader.modules.get('@survey/js/survey_form')[Symbol.for('default')]
+    SurveyFormWidget.include({
+        _submitForm: function () {
+            this.fadeInOutDelay = 0;
+            return this._super.apply(this, arguments);
+        }
+    });
+}
 
 import { registry } from "@web/core/registry";
 
 registry.category("web_tour.tours").add('test_certification_success', {
     test: true,
     url: '/survey/start/4ead4bc8-b8f2-4760-a682-1fde8daaaaac',
-    steps: () => [{ // Page-1
+    steps: () => [{
+        content: "Patching Survey Widget",
+        trigger: 'body',
+        run: function(){
+            patchSurveyWidget();
+        }
+    }, { // Page-1
         content: "Clicking on Start Certification",
         trigger: 'button.btn.btn-primary.btn-lg:contains("Start Certification")',
     }, { // Question: Do we sell Acoustic Bloc Screens?

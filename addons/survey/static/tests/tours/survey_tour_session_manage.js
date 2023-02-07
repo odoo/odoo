@@ -5,6 +5,8 @@ import { zip } from "@web/core/utils/arrays";
 import { TourError } from "@web_tour/tour_service/tour_utils";
 import { accessSurveysteps } from "./survey_tour_session_tools";
 
+let rootWidget = null;
+
 /**
  * Since the chart is rendered using SVG, we can't use jQuery triggers to check if everything
  * is correctly rendered.
@@ -13,7 +15,6 @@ import { accessSurveysteps } from "./survey_tour_session_tools";
  */
 const getChartData = () => {
     const chartData = [];
-    const rootWidget = odoo.__DEBUG__.services['root.widget'];
     const surveyManagePublicWidget = rootWidget.publicWidgets.find((widget) => {
         return widget.$el.hasClass('o_survey_session_manage');
     });
@@ -145,6 +146,9 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'h1:contains("Nickname")',
     isCheck: true // check nickname question is displayed
 }, {
+    trigger: 'body',
+    run: async () => { rootWidget = await odoo.loader.modules.get('root.widget'); }
+}, {
     trigger: 'h1',
     run: nextScreen
 }, {
@@ -242,8 +246,8 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     }
 }, {
     trigger: 'h1:contains("Scored Simple Choice")',
-    // Wait for Button to be updated ("late" enough DOM change after onNext() is triggered).
-    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Correct Answer(s)")',
+    // Wait for progressbar to be updated ("late" enough DOM change after onNext() is triggered).
+    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: () => {
         checkAnswers(getChartData(), [
             {value: 1, type: "regular"},
@@ -255,7 +259,7 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     }
 }, {
     trigger: 'h1:contains("Scored Simple Choice")',
-    // Same as above
+    // Wait for Button to be updated ("late" enough DOM change after onNext() is triggered).
     extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Leaderboard")',
     run: () => {
         checkAnswers(getChartData(), [

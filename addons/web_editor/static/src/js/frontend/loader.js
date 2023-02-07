@@ -8,12 +8,8 @@ export async function loadLegacyWysiwygAssets(additionnalAssets = []) {
 }
 
 export async function requireLegacyModule(moduleName, loadCallback = () => {}) {
-    if (!(await odoo.ready(moduleName))) {
-        await loadCallback();
-        await odoo.ready(moduleName);
-    }
-    const mod = odoo.__DEBUG__.services[moduleName]
-    return mod[Symbol.for('default')] || mod;
+    await loadCallback();
+    return odoo.loader.modules.get(moduleName)[Symbol.for('default')] || odoo.loader.modules.get(moduleName);
 }
 
 export async function requireWysiwygLegacyModule(moduleName) {

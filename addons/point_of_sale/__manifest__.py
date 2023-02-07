@@ -101,8 +101,18 @@
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/scss/fontawesome_overridden.scss',
             'web/static/fonts/fonts.scss',
-
-
+            # JS boot
+            'web/static/src/module_loader.js',
+            # libs (should be loaded before framework)
+            'point_of_sale/static/lib/**/*',
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/odoo_module.js',
+            'web_editor/static/lib/html2canvas.js',
+            'web/static/lib/zxing-library/zxing-library.js',
+            # FIXME POSREF legacy dependencies to remove
+            'web/static/lib/moment/moment.js',
+            'web/static/src/legacy/js/promise_extension.js',
             # JS framework
             ('include', 'web._assets_core'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
@@ -125,10 +135,6 @@
             'bus/static/src/workers/*',
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
-            # libs
-            'point_of_sale/static/lib/**/*',
-            'web_editor/static/lib/html2canvas.js',
-            'web/static/lib/zxing-library/zxing-library.js',
             # PoS files
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
@@ -138,10 +144,6 @@
             'web/static/lib/jquery/jquery.js',
             'web_tour/static/src/tour_pointer/**/*',
             'web_tour/static/src/tour_service/**/*',
-
-            # FIXME POSREF legacy dependencies to remove
-            'web/static/lib/moment/moment.js',
-            'web/static/src/legacy/js/promise_extension.js',
         ],
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [

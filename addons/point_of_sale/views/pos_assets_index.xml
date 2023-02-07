@@ -38,7 +38,9 @@
             odoo.loadMenusPromise = Promise.resolve();
         </script>
 
-        <t t-call="web.conditional_assets_tests"/>
+        <t t-call="web.conditional_assets_tests">
+            <t t-set="ignore_missing_deps" t-value="True"/>
+        </t>
         <t t-call-assets="point_of_sale.assets_prod" />
     </head>
     <body class="pos">

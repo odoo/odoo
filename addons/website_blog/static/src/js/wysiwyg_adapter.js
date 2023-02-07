@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
-import "@website/js/editor/snippets.options";
 import { patch } from "@web/core/utils/patch";
 
 patch(WysiwygAdapterComponent.prototype, {

@@ -13,7 +13,7 @@ class TestImLivechatSupportPage(HttpCase):
         # interrupt errors then ensures all the assets are loaded.
         check_js_modules = """
             setTimeout(() => {
-                const { missing, failed, unloaded } = odoo.__DEBUG__.jsModules;
+                const { missing, failed, unloaded } = odoo.loader.findErrors();
                 if ([missing, failed, unloaded].some(arr => arr.length)) {
                     console.error("Couldn't load all JS modules.", JSON.stringify({ missing, failed, unloaded }));
                 } else {
@@ -27,4 +27,4 @@ class TestImLivechatSupportPage(HttpCase):
             }, 1000);
 
         """
-        self.browser_js("/im_livechat/support/1", code=check_js_modules, ready="odoo.__DEBUG__.didLogInfo")
+        self.browser_js("/im_livechat/support/1", code=check_js_modules)

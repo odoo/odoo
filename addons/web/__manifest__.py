@@ -156,7 +156,7 @@ This module provides the core of the Odoo Web Client.
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/promise_extension.js',
-            'web/static/src/boot.js',
+            'web/static/src/module_loader.js',
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
             'web/static/src/legacy/js/public/lazyloader.js',
@@ -256,6 +256,8 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
             ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+            'web/static/src/core/commands/default_providers.js',
+            'web/static/src/core/commands/command_palette.js',
             'web/static/src/public/error_notifications.js',
             'web/static/src/public/datetime_picker_widget.js',
             'web/static/src/libs/pdfjs.js',
@@ -274,7 +276,7 @@ This module provides the core of the Odoo Web Client.
             ('include', 'web.assets_frontend'),
             # Remove assets_frontend_minimal
             ('remove', 'web/static/src/legacy/js/promise_extension.js'),
-            ('remove', 'web/static/src/boot.js'),
+            ('remove', 'web/static/src/module_loader.js'),
             ('remove', 'web/static/src/session.js'),
             ('remove', 'web/static/src/legacy/js/core/cookie_utils.js'),
             ('remove', 'web/static/src/legacy/js/public/lazyloader.js'),
@@ -368,7 +370,7 @@ This module provides the core of the Odoo Web Client.
         # Bare javascript essentials: module loader, core folder and core libs
         'web._assets_core': [
             # module loader
-            'web/static/src/boot.js',
+            'web/static/src/module_loader.js',
             # libs
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',

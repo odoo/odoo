@@ -1,23 +1,26 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import FullScreen from '@website_slides/js/slides_course_fullscreen_player';
 
-/**
- * Alter this method for test purposes.
- * This will make the video start at 10 minutes.
- * As it lasts 10min24s, it will mark it as completed immediately.
- */
-FullScreen.include({
-    _renderSlide: function () {
+function patchFullScreen(){
+    /**
+     * Alter this method for test purposes.
+     * This will make the video start at 10 minutes.
+     * As it lasts 10min24s, it will mark it as completed immediately.
+    */
+    const FullScreen = odoo.loader.modules.get('@website_slides/js/slides_course_fullscreen_player')[Symbol.for("default")];
+    FullScreen.include({
+        _renderSlide: function () {
 
-        var slide = this.get('slide');
-        slide.embedUrl += '&start=260';
-        this.set('slide', slide);
+            var slide = this.get('slide');
+            slide.embedUrl += '&start=260';
+            this.set('slide', slide);
 
-        return this._super.call(this, arguments);
-    }
-});
+            return this._super.call(this, arguments);
+        }
+    });
+}
+
 
 /**
  * Global use case:
@@ -32,6 +35,13 @@ registry.category("web_tour.tours").add('course_member_youtube', {
     url: '/slides',
     test: true,
     steps: () => [
+{
+    content: "Patching FullScreen",
+    trigger: 'body',
+    run: function() {
+        patchFullScreen()
+    }
+},
 // eLearning: go on /all, find free course and join it
 {
     trigger: 'a.o_wslides_home_all_slides'
