@@ -863,7 +863,14 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
 
         this.menuEl = document.createElement('we-selection-items');
         if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => node && this.menuEl.appendChild(node));
+            this.options.childNodes.forEach(node => {
+                // Ensure to only put element nodes inside the selection menu
+                // as there could be an :empty CSS rule to handle the case when
+                // the menu is empty (so it should not contain any whitespace).
+                if (node.nodeType === Node.ELEMENT_NODE) {
+                    this.menuEl.appendChild(node);
+                }
+            });
         }
         this.containerEl.appendChild(this.menuEl);
     },
