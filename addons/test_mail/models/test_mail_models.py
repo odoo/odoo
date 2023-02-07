@@ -65,6 +65,9 @@ class MailTestGatewayGroups(models.Model):
             values['alias_parent_thread_id'] = self.id
         return values
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _message_get_default_recipients(self):
         return dict(
             (record.id, {
@@ -130,6 +133,9 @@ class MailTestTicket(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _message_compute_subject(self):
         self.ensure_one()
@@ -239,6 +245,9 @@ class MailTestContainer(models.Model):
         'mail.alias', 'Alias',
         delegate=True)
 
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
+
     def _message_get_default_recipients(self):
         return dict(
             (record.id, {
@@ -314,3 +323,6 @@ class MailTestComposerSource(models.Model):
     def _compute_email_from(self):
         for source in self.filtered(lambda r: r.customer_id and not r.email_from):
             source.email_from = source.customer_id.email_formatted
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
