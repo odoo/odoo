@@ -10,7 +10,8 @@
                 <t t-foreach="props.list" t-as="item" t-key="item.id">
                     <div class="selection-item" t-att-class="{ selected: item.isSelected }"
                             t-on-click="() => this.selectItem(item.id)">
-                        <t t-esc="item.label" />
+                        <span t-esc="item.label" />
+                        <span t-esc="item.description" t-if="item.description" />
                     </div>
                 </t>
             </div>

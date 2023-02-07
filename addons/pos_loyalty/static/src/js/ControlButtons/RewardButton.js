@@ -100,16 +100,11 @@ export class RewardButton extends Component {
 
     async click() {
         const rewards = this._getPotentialRewards();
-        if (rewards.length === 1) {
-            return this._applyReward(
-                rewards[0].reward,
-                rewards[0].coupon_id,
-                rewards[0].potentialQty
-            );
-        } else {
+        if (rewards.length >= 1) {
             const rewardsList = rewards.map((reward) => ({
                 id: reward.reward.id,
                 label: reward.reward.description,
+                description: reward.reward.program_id.name,
                 item: reward,
             }));
             const { confirmed, payload: selectedReward } = await this.popup.add(SelectionPopup, {
