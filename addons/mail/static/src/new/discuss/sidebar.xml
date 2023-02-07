@@ -25,7 +25,7 @@
         <t t-call="mail.discuss_category">
             <t t-set="category" t-value="store.discuss.channels" />
         </t>
-        <t t-call="mail.discuss_category">
+        <t name="chatCategory" t-call="mail.discuss_category">
             <t t-set="category" t-value="store.discuss.chats" />
         </t>
     </div>
@@ -82,8 +82,7 @@
 </t>
 
 <t t-name="mail.discuss_category_item" owl="1">
-    <t t-if="thread.type === 'chat'" t-set="counter" t-value="threadService.localMessageUnreadCounter(thread)"/>
-    <t t-else="" t-set="counter" t-value="thread.message_needaction_counter"/>
+    <t t-set="counter" t-value="threadService.getUnreadCounter(thread)"/>
     <button class="o-mail-category-item btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
         t-att-class="{
             'bg-100': threadLocalId !== store.discuss.threadLocalId,
@@ -102,7 +101,7 @@
         <div class="flex-grow-1"/>
         <div class="o-mail-commands d-none ms-1 me-3">
             <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
-            <div t-if="thread.canLeave" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
+            <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                 t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
             <div t-if="thread.type === 'chat' and counter === 0" t-attf-class="fa fa-times ms-1" t-on-click.stop="() => this.unpinChannel(thread.id)" title="Unpin Conversation" role="img"/>
         </div>

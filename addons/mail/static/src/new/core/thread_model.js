@@ -30,7 +30,6 @@ export class Thread {
     attachments = [];
     /** @type {integer} */
     activeRtcSessionId;
-    canLeave = false;
     /** @type {import("@mail/new/core/channel_member_model").ChannelMember[]} */
     channelMembers = [];
     /** @type {RtcSession{}} */
@@ -145,6 +144,10 @@ export class Thread {
         return ["chat", "group"].includes(this.type);
     }
 
+    get allowSetLastSeenMessage() {
+        return ["chat", "channel"].includes(this.type);
+    }
+
     get displayName() {
         if (this.type === "chat" && this.chatPartnerId) {
             return (
@@ -158,6 +161,25 @@ export class Thread {
                 .join(_t(", "));
         }
         return this.name;
+    }
+
+    /** @type {import("@mail/new/core/persona_model").Persona|undefined} */
+    get correspondent() {
+        if (this.type === "channel") {
+            return undefined;
+        }
+        const correspondents = this.channelMembers
+            .map((member) => member.persona)
+            .filter(({ id }) => id !== this._store.user.id);
+        if (correspondents.length === 1) {
+            // 2 members chat.
+            return correspondents[0];
+        }
+        if (correspondents.length === 0 && this.channelMembers.length === 1) {
+            // Self-chat.
+            return this._store.user;
+        }
+        return undefined;
     }
 
     /**

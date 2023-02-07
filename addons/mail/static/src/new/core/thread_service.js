@@ -95,11 +95,7 @@ export class ThreadService {
      */
     async markAsRead(thread) {
         const mostRecentNonTransientMessage = thread.mostRecentNonTransientMessage;
-        if (
-            this.isUnread(thread) &&
-            ["chat", "channel"].includes(thread.type) &&
-            mostRecentNonTransientMessage
-        ) {
+        if (this.isUnread(thread) && thread.allowSetLastSeenMessage && mostRecentNonTransientMessage) {
             await this.rpc("/mail/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: mostRecentNonTransientMessage.id,
@@ -480,10 +476,6 @@ export class ThreadService {
                     }
                 );
             }
-            thread.canLeave =
-                ["channel", "group"].includes(thread.type) &&
-                !thread.message_needaction_counter &&
-                !thread.serverData.group_based_subscription;
         }
     }
 
@@ -642,6 +634,27 @@ export class ThreadService {
      */
     isUnread(thread) {
         return this.localMessageUnreadCounter(thread) > 0;
+    }
+
+    /**
+     * @param {Thread} thread
+     */
+    canLeave(thread) {
+        return (
+            ["channel", "group"].includes(thread.type) &&
+            !thread.message_needaction_counter &&
+            !thread.serverData.group_based_subscription
+        );
+    }
+
+    /**
+     * @param {Thread} thread
+     */
+    getUnreadCounter(thread) {
+        if (thread.type === "chat") {
+            return this.localMessageUnreadCounter(thread);
+        }
+        return thread.message_needaction_counter;
     }
 
     /**

@@ -6,6 +6,10 @@ import { registry } from "@web/core/registry";
 
 export class Store {
     constructor(env) {
+        this.setup(env);
+    }
+
+    setup(env) {
         this.env = env;
         this.isSmall = env.isSmall;
     }
