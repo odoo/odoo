@@ -6587,8 +6587,9 @@ QUnit.module('Legacy fields', {}, function () {
                         assert.deepEqual(args.kwargs.context, {
                             key: 'yop',
                             active_field: 2,
+                            bin_size: true,
                             someKey: 'some value',
-                        }, "sent context should be correct");
+                        }, "sent context should be correct and bin_size should be true by default");
                     }
                     if (args.method === 'write') {
                         assert.deepEqual(args.kwargs.context, {

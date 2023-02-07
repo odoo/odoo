@@ -2059,7 +2059,7 @@ var BasicModel = AbstractModel.extend({
                         model: list.model,
                         method: 'read',
                         args: [_.pluck(data, 'id'), fieldNames],
-                        context: _.extend({}, record.context, field.context, list.getContext()),
+                        context: _.extend({ bin_size: true }, record.context, field.context, list.getContext()),
                     }).then(function (records) {
                         _.each(records, function (record) {
                             list_records[record.id].data = record;
@@ -2826,7 +2826,7 @@ var BasicModel = AbstractModel.extend({
                 model: field.relation,
                 method: 'read',
                 args: [ids, fieldNames],
-                context: list.getContext() || {},
+                context: {bin_size: true, ...list.getContext()},
             });
         } else {
             def = Promise.resolve(_.map(ids, function (id) {
@@ -4750,7 +4750,7 @@ var BasicModel = AbstractModel.extend({
         var def;
         if (missingIDs.length && fieldNames.length) {
             def = self._performRPC({
-                context: list.getContext(),
+                context: {bin_size:true, ...list.getContext()},
                 fieldNames: fieldNames,
                 ids: missingIDs,
                 method: 'read',
