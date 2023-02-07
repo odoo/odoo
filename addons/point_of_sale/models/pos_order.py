@@ -1171,7 +1171,6 @@ class PosOrderLine(models.Model):
         return {
             'price_subtotal_incl': taxes['total_included'],
             'price_subtotal': taxes['total_excluded'],
-            'taxes': taxes['taxes']
         }
 
     @api.onchange('product_id')
