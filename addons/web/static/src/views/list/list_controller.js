@@ -205,6 +205,13 @@ export class ListController extends Component {
         }
     }
 
+    onActionExecuted() {
+        const { root } = this.model;
+        root.load({
+            selectedIds: root.selection.map((record) => record.resId) || [],
+        });
+    }
+
     onClickCreate() {
         this.createRecord();
     }

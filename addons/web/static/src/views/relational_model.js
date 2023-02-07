@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { markRaw, markup, toRaw } from "@odoo/owl";
 import { AlertDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
@@ -24,7 +25,6 @@ import { Model } from "@web/views/model";
 import { archParseBoolean, evalDomain, isNumeric, isRelational, isX2Many } from "@web/views/utils";
 
 const { DateTime } = luxon;
-import { markRaw, markup, toRaw } from "@odoo/owl";
 
 const formatters = registry.category("formatters");
 const preloadedDataRegistry = registry.category("preloadedData");
@@ -479,7 +479,7 @@ export class Record extends DataPoint {
 
         this.getParentRecordContext = params.getParentRecordContext;
 
-        this.selected = false;
+        this.selected = params.selected || false;
         this.mode = params.mode || (this.resId ? state.mode || "readonly" : "edit");
 
         this._onWillSwitchMode = params.onRecordWillSwitchMode || (() => {});
@@ -2027,7 +2027,7 @@ export class DynamicRecordList extends DynamicList {
     async load(params = {}) {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
-        this.records = await this._loadRecords();
+        this.records = await this._loadRecords(params.selectedIds);
         await this._adjustOffset();
     }
 
@@ -2099,7 +2099,7 @@ export class DynamicRecordList extends DynamicList {
     /**
      * @returns {Promise<Record[]>}
      */
-    async _loadRecords() {
+    async _loadRecords(selectedIds) {
         const kwargs = {
             limit: this.limit,
             offset: this.offset,
@@ -2128,6 +2128,7 @@ export class DynamicRecordList extends DynamicList {
                     resId: data.id,
                     rawContext: this.rawContext,
                     defaultContext: undefined,
+                    selected: selectedIds && selectedIds.includes(data.id),
                 });
                 await record.load({ values: data });
                 return record;
@@ -2329,7 +2330,9 @@ export class DynamicGroupList extends DynamicList {
         this.offset = params.offset === undefined ? this.offset : params.offset;
         /** @type {[Group, number][]} */
         this.groups = await this._loadGroups();
-        await Promise.all(this.groups.map((group) => group.load()));
+        await Promise.all(
+            this.groups.map((group) => group.load({ selectedIds: params.selectedIds }))
+        );
     }
 
     get nbTotalRecords() {
@@ -2759,13 +2762,13 @@ export class Group extends DataPoint {
         }
     }
 
-    async load() {
+    async load(params) {
         if (!this.record && this.recordParams) {
             this.record = this.makeRecord(this.recordParams);
             await this.record.load();
         }
         if (!this.isFolded && this.count) {
-            await this.list.load();
+            await this.list.load(params);
         }
     }
 

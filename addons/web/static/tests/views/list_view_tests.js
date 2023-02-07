@@ -8502,6 +8502,8 @@ QUnit.module("Views", (hooks) => {
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Custom Action");
+        assert.containsN(target, ".o_list_record_selector input:checked", 5);
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
 
         assert.verifySteps([
             "get_views",
@@ -8514,7 +8516,7 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "execute ActionMenus actions with correct params (single page)",
         async function (assert) {
-            assert.expect(12);
+            assert.expect(13);
 
             patchWithCleanup(actionService, {
                 start() {
@@ -8585,6 +8587,7 @@ QUnit.module("Views", (hooks) => {
 
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Custom Action");
+            assert.containsN(target, ".o_list_record_selector input:checked", 2);
 
             assert.verifySteps([
                 '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
@@ -8667,10 +8670,15 @@ QUnit.module("Views", (hooks) => {
 
             await toggleActionMenu(target);
             await toggleMenuItem(target, "Custom Action");
+            assert.containsN(target, ".o_list_record_selector input:checked", 3);
+            assert.containsNone(target, ".o_list_selection_box .o_list_select_domain");
 
+            await toggleActionMenu(target);
+            await toggleMenuItem(target, "Custom Action");
             assert.verifySteps([
                 '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2],"active_model":"foo","active_domain":[]}}',
                 '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3,4],"active_model":"foo","active_domain":[]}}',
+                '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
                 '{"action_id":44,"context":{"lang":"en","uid":7,"tz":"taht","active_id":1,"active_ids":[1,2,3],"active_model":"foo","active_domain":[["bar","=",true]]}}',
             ]);
         }
