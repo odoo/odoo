@@ -1119,6 +1119,9 @@ export class Rtc {
      */
     async linkVoiceActivation() {
         this.state.disconnectAudioMonitor?.();
+        if (!this.state.selfSession) {
+            return;
+        }
         if (this.userSettings.usePushToTalk || !this.state.channel || !this.state.audioTrack) {
             this.state.selfSession.isTalking = false;
             await this.refreshAudioStatus();
