@@ -130,7 +130,7 @@ PosLoyalty.check.isRewardButtonHighlighted(false);
 ProductScreen.do.clickPartnerButton();
 ProductScreen.do.clickCustomer("Test Partner CCC");
 PosLoyalty.check.isRewardButtonHighlighted(true);
-PosLoyalty.do.clickRewardButton();
+PosLoyalty.do.claimReward("Free Product - Whiteboard Pen");
 PosLoyalty.check.hasRewardLine("Free Product - Whiteboard Pen", "-3.20", "1.00");
 ProductScreen.do.clickPartnerButton();
 // This deselects the customer.
