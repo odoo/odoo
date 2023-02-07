@@ -54,7 +54,7 @@ class IrTranslation(models.Model):
             project_modules = {}
             for module in translation_modules:
                 for section in tx_sections:
-                    tx_project, tx_mod = section.split('.')
+                    _, _, _, tx_project, _, tx_mod = section.split(':')
                     if tx_mod == module:
                         project_modules[module] = tx_project
 
