@@ -55,7 +55,13 @@ class DeliveryCarrier(models.Model):
             )
 
     def get_return_label_prefix(self):
-        return 'ReturnLabel-%s' % self.delivery_type
+        return 'LabelReturn-%s' % self.delivery_type
+
+    def _get_delivery_label_prefix(self):
+        return 'LabelShipping-%s' % self.delivery_type
+
+    def _get_delivery_doc_prefix(self):
+        return 'ShippingDoc-%s' % self.delivery_type
 
     def get_tracking_link(self, picking):
         ''' Ask the tracking link to the service provider
