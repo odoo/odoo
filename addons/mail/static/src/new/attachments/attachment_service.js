@@ -3,12 +3,14 @@
 import { Attachment } from "./attachment_model";
 import { assignDefined, createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
+import { removeFromArrayWithPredicate } from "../utils/arrays";
 
 export class AttachmentService {
     constructor(env, services) {
         this.env = env;
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = services["mail.store"];
+        this.rpc = services["rpc"];
     }
 
     insert(data) {
@@ -57,10 +59,30 @@ export class AttachmentService {
             }
         }
     }
+
+    /**
+     * @param {Attachment} attachment
+     */
+    async delete(attachment) {
+        if (attachment.originThread) {
+            removeFromArrayWithPredicate(
+                attachment.originThread.attachments,
+                ({ id }) => id === attachment.id
+            );
+        }
+        for (const message of Object.values(this.store.messages)) {
+            removeFromArrayWithPredicate(message.attachments, ({ id }) => id === attachment.id);
+        }
+        if (attachment.id > 0) {
+            await this.rpc("/mail/attachment/delete", {
+                attachment_id: attachment.id,
+            });
+        }
+    }
 }
 
 export const attachmentService = {
-    dependencies: ["mail.store"],
+    dependencies: ["mail.store", "rpc"],
     start(env, services) {
         return new AttachmentService(env, services);
     },

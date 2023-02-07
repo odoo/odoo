@@ -24,11 +24,11 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
     const component = useComponent();
     const { bus, upload } = useService("file_upload");
     const notification = useService("notification");
-    /** @type {import("@mail/new/core/messaging_service").Messaging} */
-    const messaging = useService("mail.messaging");
     /** @type {import("@mail/new/core/store_service").Store} */
     const store = useService("mail.store");
+    /** @type {import("@mail/new/core/thread_service").ThreadService} */
     const threadService = useService("mail.thread");
+    /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
     const attachmentService = useService("mail.attachment");
     const abortByAttachmentId = new Map();
     const deferredByAttachmentId = new Map();
@@ -67,7 +67,7 @@ export function useAttachmentUploader(pThread, message, isPending = false) {
                 abort();
                 return;
             }
-            await messaging.unlinkAttachment(attachment);
+            await attachmentService.delete(attachment);
             removeFromArrayWithPredicate(state.attachments, ({ id }) => id === attachment.id);
         },
         async unlinkAll() {

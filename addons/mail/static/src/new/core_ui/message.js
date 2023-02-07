@@ -4,7 +4,6 @@ import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 import { AttachmentList } from "@mail/new/attachments/attachment_list";
 import { MessageInReplyTo } from "./message_in_reply_to";
 import { isEventHandled, markEventHandled } from "@mail/new/utils/misc";
-import { removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/new/utils/format";
 import { onExternalClick } from "@mail/new/utils/hooks";
 import {
@@ -83,6 +82,8 @@ export class Message extends Component {
         this.threadService = useState(useService("mail.thread"));
         /** @type {import("@mail/new/core/message_service").MessageService} */
         this.messageService = useState(useService("mail.message"));
+        /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
+        this.attachmentService = useService("mail.attachment");
         this.user = useService("user");
         useChildSubEnv({
             alignedRight: this.isAlignedRight,
@@ -275,8 +276,7 @@ export class Message extends Component {
     }
 
     async onClickAttachmentUnlink(attachment) {
-        await this.messaging.unlinkAttachment(attachment);
-        removeFromArrayWithPredicate(this.message.attachments, ({ id }) => id === attachment.id);
+        await this.attachmentService.delete(attachment);
     }
 
     openChatAvatar(ev) {
