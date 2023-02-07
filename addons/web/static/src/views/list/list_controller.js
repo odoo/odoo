@@ -497,7 +497,11 @@ export class ListController extends Component {
         });
     }
 
-    async beforeExecuteActionButton(clickParams) {}
+    async beforeExecuteActionButton(clickParams) {
+        if (clickParams.special !== "cancel" && this.model.root.editedRecord) {
+            return this.model.root.editedRecord.save();
+        }
+    }
 
     async afterExecuteActionButton(clickParams) {}
 }
