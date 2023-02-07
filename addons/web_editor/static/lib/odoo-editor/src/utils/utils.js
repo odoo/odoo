@@ -861,6 +861,10 @@ const getOrCreateSpan = (node, ancestors) => {
     if (span) {
         return span;
     } else {
+        const styleNode = closestElement(node, '[style]');
+        if (styleNode) {
+            node = styleNode;
+        }
         const span = document.createElement('span');
         node.after(span);
         span.append(node);

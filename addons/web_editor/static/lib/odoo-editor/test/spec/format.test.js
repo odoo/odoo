@@ -759,6 +759,13 @@ describe('Format', () => {
                 contentAfter: '<p>[abc]</p>',
             });
         });
+        it('should add font-size style before color styles', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><font style="background-color: red;">[abcd]</font></p>',
+                stepFunction: setFontSize('62px'),
+                contentAfter: '<p><span style="font-size: 62px;"><font style="background-color: red;">[abcd]</font></span></p>',
+            });
+        });
     });
 
     it('should add style to a span parent of an inline', async () => {
