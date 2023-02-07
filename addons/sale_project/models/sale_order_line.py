@@ -14,10 +14,10 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('milestones', 'Milestones')])
     project_id = fields.Many2one(
         'project.project', 'Generated Project',
-        index=True, copy=False)
+        index=False, copy=False)
     task_id = fields.Many2one(
         'project.task', 'Generated Task',
-        index=True, copy=False)
+        index=False, copy=False)
     # used to know if generate a task and/or a project, depending on the product settings
     reached_milestones_ids = fields.One2many('project.milestone', 'sale_line_id', string='Reached Milestones', domain=[('is_reached', '=', True)])
 

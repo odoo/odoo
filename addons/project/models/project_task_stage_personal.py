@@ -9,8 +9,8 @@ class ProjectTaskStagePersonal(models.Model):
     _table = 'project_task_user_rel'
     _rec_name = 'stage_id'
 
-    task_id = fields.Many2one('project.task', required=True, ondelete='cascade', index=True)
-    user_id = fields.Many2one('res.users', required=True, ondelete='cascade', index=True)
+    task_id = fields.Many2one('project.task', required=True, ondelete='cascade', index=False)
+    user_id = fields.Many2one('res.users', required=True, ondelete='cascade', index=False)
     stage_id = fields.Many2one('project.task.type', domain="[('user_id', '=', user_id)]", ondelete='restrict')
 
     _sql_constraints = [

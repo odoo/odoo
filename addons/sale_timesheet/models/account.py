@@ -33,7 +33,7 @@ class AccountAnalyticLine(models.Model):
         domain="[('is_service', '=', True), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_partner_id', 'child_of', commercial_partner_id)]",
         help="Sales order item to which the time spent will be added in order to be invoiced to your customer. Remove the sales order item for the timesheet entry to be non-billable.")
     # we needed to store it only in order to be able to groupby in the portal
-    order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=True)
+    order_id = fields.Many2one(related='so_line.order_id', store=True, readonly=True, index=False)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
     allow_billable = fields.Boolean(related="project_id.allow_billable")
 
