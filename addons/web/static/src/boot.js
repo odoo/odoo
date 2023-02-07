@@ -152,7 +152,7 @@
             throw new Error("boom" + errors);
         }
 
-        async checkAndreportErrors() {
+        async checkAndReportErrors() {
             if (!this.failed.size && !this.jobs.size) {
                 return;
             }

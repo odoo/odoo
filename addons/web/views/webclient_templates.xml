@@ -320,7 +320,7 @@
                 <t t-call-assets="web.assets_backend" t-css="false"/>
                 <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>
                 <script type="text/javascript">
-                    odoo.loader.checkAndreportErrors();
+                    odoo.loader.checkAndReportErrors();
                 </script>
                 <t t-call="web.conditional_assets_tests"/>
             </t>
