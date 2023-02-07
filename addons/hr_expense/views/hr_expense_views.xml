@@ -160,7 +160,7 @@
                             <field name="amount_residual" widget='monetary' options="{'currency_field': 'currency_id'}" invisible="1"/>
                             <div class="o_td_label">
                                 <field name="label_total_amount_company" nolabel="1" class="o_form_label" invisible="1"/>
-                                <label for="total_amount_company" string="" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
+                                <label for="total_amount_company" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}"/>
                             </div>
                             <!-- YTI TO REMOVE IN MASTER END -->
                             <div class="o_row d-flex" attrs="{'invisible': [('same_currency', '=', True), ('product_has_cost', '=', False)]}">
