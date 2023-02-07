@@ -49,6 +49,7 @@ class RedirectWarning(Exception):
     """
     def __init__(self, message, action, button_text, additional_context=None):
         super().__init__(message, action, button_text, additional_context)
+        self.sentry_ignored = True
 
     # using this RedirectWarning won't crash if used as an UserError
     @property

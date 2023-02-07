@@ -34,7 +34,9 @@ SMTP_TIMEOUT = 60
 
 class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
-
+    def __init__(self, message, **kwargs):
+        super().__init__(message)
+        self.sentry_ignored = True
 
 # Python 3: patch SMTP's internal printer/debugger
 def _print_debug(self, *args):
