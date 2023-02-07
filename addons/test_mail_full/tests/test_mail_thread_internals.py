@@ -48,6 +48,7 @@ class TestMailThreadInternals(TestMailThreadInternalsCommon):
             with self.subTest(test_record=test_record):
                 is_portal = test_record._name != 'mail.test.simple'
                 has_customer = test_record._name != 'mail.test.portal.no.partner'
+                partner_fnames = test_record._mail_get_partner_fields()
 
                 if is_portal:
                     self.assertFalse(
@@ -63,15 +64,21 @@ class TestMailThreadInternals(TestMailThreadInternalsCommon):
 
                 if is_portal and has_customer:
                     # should have generated the access token, required for portal links
-                    self.assertFalse(
+                    self.assertTrue(
                         test_record.access_token,
-                        'TODO: Method not called, access token is not generated'
+                        'Portal should generate access token'
                     )
                     # check portal_customer content and link
-                    self.assertFalse(
+                    self.assertTrue(
                         portal_customer_group,
-                        'TODO: MEthod not called, group is not present'
+                        'Portal Mixin should add portal customer notification group'
                     )
+                    portal_url = portal_customer_group[2]['button_access']['url']
+                    parameters = url_parse(portal_url).decode_query()
+                    self.assertEqual(parameters['access_token'], test_record.access_token)
+                    self.assertEqual(parameters['model'], test_record._name)
+                    self.assertEqual(parameters['pid'], str(test_record[partner_fnames[0]].id))
+                    self.assertEqual(parameters['res_id'], str(test_record.id))
                 else:
                     self.assertFalse(
                         portal_customer_group,
