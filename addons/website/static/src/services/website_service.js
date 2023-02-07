@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from '@web/core/registry';
-import { loadLegacyWysiwygAssets } from '@web_editor/js/frontend/loader';
+import { getBundle, loadBundle } from "@web/core/assets";
 
 import { FullscreenIndication } from '../components/fullscreen_indication/fullscreen_indication';
 import { WebsiteLoader } from '../components/website_loader/website_loader';
@@ -221,7 +221,8 @@ export const websiteService = {
                 websites = [...(await orm.searchRead('website', [], ['domain', 'id', 'name']))];
             },
             async loadWysiwyg() {
-                await loadLegacyWysiwygAssets(['website.assets_wysiwyg']);
+                const assets = await getBundle("website.assets_all_wysiwyg");
+                await loadBundle(assets);
             },
             blockPreview(showLoader, processId) {
                 if (!blockingProcesses.length) {

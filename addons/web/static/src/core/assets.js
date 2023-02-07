@@ -169,11 +169,6 @@ assets.loadBundle = async function loadBundle(desc) {
         if (typeof urlData === "string") {
             // serial loading
             await assets.loadJS(urlData);
-            // Wait template if the JavaScript come from bundle.
-            const bundle = urlData.match(/\/web\/assets\/.*\/([^/]+?)(\.min)?\.js/);
-            if (bundle) {
-                await odoo.ready(bundle[1] + ".bundle.xml");
-            }
         } else {
             // parallel loading
             await Promise.all(urlData.map(loadJS));
@@ -202,6 +197,7 @@ assets.loadBundle = async function loadBundle(desc) {
             );
         }
     }
+    odoo.loader.checkAndReportErrors();
 };
 
 export const loadJS = function (url) {

@@ -23,7 +23,7 @@
     const { isEnterprise } = odoo.info;
     const { onWillStart } = owl;
     let appsMenusOnly = false;
-    const isStudioInstalled = "@web_studio/studio_service" in odoo.__DEBUG__.services;
+    const isStudioInstalled = odoo.loader.modules.has("@web_studio/studio_service");
     let actionCount = 0;
     let viewUpdateCount = 0;
     let studioCount = 0;
@@ -49,8 +49,8 @@
             actionCount++;
         });
 
-        const { patch } = odoo.__DEBUG__.services["@web/core/utils/patch"];
-        const { WithSearch } = odoo.__DEBUG__.services["@web/search/with_search/with_search"];
+        const { patch } = odoo.loader.modules.get("@web/core/utils/patch");
+        const { WithSearch } = odoo.loader.modules.get("@web/search/with_search/with_search");
 
         patch(WithSearch.prototype, {
             setup() {
@@ -67,7 +67,7 @@
 
         // This test file is not respecting Odoo module dependencies.
         // The following module might not be loaded (eg. if mail is not installed).
-        const DiscussWidgetModule = odoo.__DEBUG__.services["@mail/widgets/discuss/discuss"];
+        const DiscussWidgetModule = odoo.loader.modules.get("@mail/widgets/discuss/discuss");
         const DiscussWidget = DiscussWidgetModule && DiscussWidgetModule[Symbol.for("default")];
         if (DiscussWidget) {
             DiscussWidget.include({

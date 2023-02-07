@@ -26,8 +26,6 @@ whenReady(() => {
         isEnterprise: session.server_version_info.slice(-1)[0] === "e",
     };
 
-    // Wait for all templates
-    await odoo.ready(/\.bundle\.xml/);
     // Make a temporary app to be able to use renderToString method before the main app is available.
     const renderToStringApp = new App(Component, {
         name: "renderToString app",

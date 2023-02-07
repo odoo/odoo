@@ -1,17 +1,19 @@
 /** @odoo-module **/
 
-import { WysiwygAdapterComponent } from "@website/components/wysiwyg_adapter/wysiwyg_adapter";
 import websiteTourUtils from "@website/js/tours/tour_utils";
 import { patch } from "@web/core/utils/patch";
 
-const patchWysiwygAdapter = () => patch(WysiwygAdapterComponent.prototype, {
-    _trigger_up(ev) {
-        super._trigger_up(...arguments);
-        if (ev.name === 'snippet_removed') {
-            $('body').attr('test-dd-snippet-removed', true);
+const patchWysiwygAdapter = () => {
+    const { WysiwygAdapterComponent } = odoo.loader.modules.get("@website/components/wysiwyg_adapter/wysiwyg_adapter");
+    return patch(WysiwygAdapterComponent.prototype, {
+        _trigger_up(ev) {
+            super._trigger_up(...arguments);
+            if (ev.name === 'snippet_removed') {
+                $('body').attr('test-dd-snippet-removed', true);
+            }
         }
-    }
-});
+    });
+};
 
 let unpatchWysiwygAdapter = null;
 
