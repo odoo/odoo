@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <odoo>
-    <!-- note Stage Form View -->
+    <!-- note Stage Form View --> <!-- NOTE: Where is it used ?? Could some view be deleted ?-->
     <record id="view_note_stage_form" model="ir.ui.view">
       <field name="name">note.stage.form</field>
-      <field name="model">note.stage</field>
+      <field name="model">project.task.type</field>
       <field name="arch" type="xml">
         <form string="Stage of Notes">
           <group>
@@ -17,7 +17,7 @@
     <!-- note Stage Tree View -->
     <record id="view_note_stage_tree" model="ir.ui.view">
       <field name="name">note.stage.tree</field>
-      <field name="model">note.stage</field>
+      <field name="model">project.task.type</field>
       <field name="arch" type="xml">
         <tree string="Stages of Notes" editable="bottom">
             <field name="sequence" widget="handle"/>
@@ -30,15 +30,16 @@
     <!-- note Stage Action -->
     <record id="action_note_stage" model="ir.actions.act_window">
         <field name="name">Stages</field>
-        <field name="res_model">note.stage</field>
+        <field name="res_model">project.task.type</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('user_id','=',uid)]</field>
+        <field name="context">{'default_todo_stage': True}</field>
+        <field name="domain">[('user_id', '=', uid), ('todo_stage', '=', True)]</field>
     </record>
 
     <!-- note Tag Form View -->
     <record id="note_tag_view_form" model="ir.ui.view">
       <field name="name">note.tag.form</field>
-      <field name="model">note.tag</field>
+      <field name="model">project.tags</field>
       <field name="arch" type="xml">
         <form string="Tags">
           <group>
@@ -51,7 +52,7 @@
     <!-- note Tag Tree View -->
     <record id="note_tag_view_tree" model="ir.ui.view">
       <field name="name">note.tag.tree</field>
-      <field name="model">note.tag</field>
+      <field name="model">project.tags</field>
       <field name="arch" type="xml">
         <tree string="Tags" editable="bottom">
             <field name="name"/>
@@ -62,7 +63,9 @@
     <!-- note Tag Action -->
     <record id="note_tag_action" model="ir.actions.act_window">
       <field name="name">Tags</field>
-      <field name="res_model">note.tag</field>
+      <field name="res_model">project.tags</field>
+      <field name="domain">[('todo_tag', '=', True)]</field>
+      <field name="context">{'default_todo_tag': True}</field>
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
         <p class="o_view_nocontent_smiling_face">
@@ -70,105 +73,140 @@
         </p>
       </field>
     </record>
-
-    <!-- New note Kanban View -->
-    <record id="view_note_note_kanban" model="ir.ui.view">
-      <field name="name">note.note.kanban</field>
-      <field name="model">note.note</field>
-      <field name="arch" type="xml">
-        <kanban default_group_by="stage_id" class="oe_notes oe_kanban_quickcreate_textarea o_kanban_small_column">
-          <field name="color"/>
-          <field name="sequence"/>
-          <field name="name"/>
-          <field name="stage_id"/>
-          <field name="open"/>
-          <field name="memo"/>
-          <field name="date_done"/>
-          <field name="message_partner_ids"/>
-          <field name="activity_ids" />
-          <field name="activity_state" />
-          <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
-          <templates>
-            <t t-name="kanban-menu">
-              <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
-              <ul class="oe_kanban_colorpicker" data-field="color"/>
-            </t>
-            <t t-name="kanban-box">
-              <t t-set="noteHasFollowers" t-value="record.message_partner_ids.raw_value.length &gt; 1"/>
-
-              <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
-
-                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-
-                <div t-attf-class="d-flex #{noteHasFollowers ? 'flex-wrap' : 'flex-nowrap'}">
-                  <div class="d-flex flex-grow-1">
-                    <span class="me-2">
-                      <a name="action_close" type="object" t-if="record.open.raw_value">
-                        <i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/>
-                      </a>
-                      <a name="action_open" type="object" t-if="!record.open.raw_value">
-                        <i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/>
-                      </a>
-                    </span>
-
-                    <span t-attf-class="oe_kanban_content flex-grow-1 text-break #{record.open.raw_value ? '' : 'note_text_line_through'}">
-                      <!-- title -->
-                      <field name="name"/>
-                    </span>
-                  </div>
-                  <div t-attf-class="d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
-                    <div t-if="noteHasFollowers" class="d-flex align-items-center me-2 mt-2">
-                      <t t-foreach="record.message_partner_ids.raw_value" t-as="follower" t-key="follower">
-                        <img
-                            t-if="follower_index &lt; 5"
-                            t-att-src="kanban_image('res.partner', 'avatar_128', follower)"
-                            class="oe_kanban_avatar o_image_24_cover rounded-circle border border-white bg-white ml-n2"
-                            t-att-data-member_id="follower"
-                            alt="Follower"/>
-                        <small
-                            t-if="follower_index == 5"
-                            t-esc="'+' + (follower_size - 5)"
-                            class="text-info fw-bold ms-1"/>
-                      </t>
-                    </div>
-                    <field name="activity_ids" widget="kanban_activity" />
-                  </div>
-                </div>
-              </div>
-            </t>
-          </templates>
-        </kanban>
-      </field>
-    </record>
-
-    <!-- New note Tree View -->
-    <record id="view_note_note_tree" model="ir.ui.view">
-      <field name="name">note.note.tree</field>
-      <field name="model">note.note</field>
-      <field name="arch" type="xml">
-        <tree string="Stages">
-          <field name="name"/>
-          <field name="open"/>
-          <field name="stage_id"/>
-          <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-          <field name="activity_ids" widget="list_activity" optional="show"/>
-        </tree>
-      </field>
-    </record>
-
-    <!-- New note Form View -->
-    <record id="view_note_note_form" model="ir.ui.view">
-        <field name="name">note.note.form</field>
-        <field name="model">note.note</field>
+    
+    <!-- Project Task Quick create form  View adapted for note -->
+    <record id="quick_create_todo_form" model="ir.ui.view">
+        <field name="name">project.task.form.quick_create_todo</field>
+        <field name="model">project.task</field>
+        <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <form string="Note" class="o_note_form_view">
+            <form class="o_form_project_tasks">
+                <group>
+                    <field name="name" string = "To-do Title" placeholder="e.g. Send Invitations"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Project Task Kanban View adapted for note -->
+    <record model="ir.ui.view" id="view_project_task_todo_kanban">
+        <field name="name">project.task.kanban</field>
+        <field name="model">project.task</field>
+        <field name="priority">800</field>
+        <field name="arch" type="xml">
+            <kanban
+                default_group_by="personal_stage_type_ids"
+                class="o_kanban_small_column" 
+                on_create="quick_create"
+                quick_create_view="note.quick_create_todo_form"
+                js_class="project_task_to_do_kanban"
+                ><!-- class: o_kanban_project_tasks"+quick_create to implement //examples="project"// sample="1"-->
+                <field name="color"/>
+                <field name="sequence"/>
+                <field name="name"/>
+                <field name="personal_stage_type_id"/><!-- NECESSARY ????-->
+                <field name="active"/>
+                <field name="description"/>
+                <field name="message_partner_ids"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
+                <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
+                <templates>
+                    <t t-name="kanban-menu">
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </t>
+                    <t t-name="kanban-box">
+                        <t t-set="noteHasFollowers" t-value="record.message_partner_ids.raw_value.length &gt; 0"/><!--No sense to requires >1 as done before-->
+                        <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+                            <div class="oe_kanban_content">
+
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <s t-if="!record.active.raw_value"><field name="name"/></s>
+                                            <t t-else=""><field name="name"/></t>
+                                        </strong>
+                                    </div>
+                                </div>
+
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div t-attf-class="d-flex #{noteHasFollowers ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
+                                            <div t-if="noteHasFollowers" class="d-flex align-items-center me-2 mt-2">
+                                                <field name="user_ids" widget="many2many_avatar_user"/><!--user_ids is updated every time a new folower is added-> ONLY OF PROJECT IS INSTALLED.....-->
+                                                <!--<t t-foreach="record.message_partner_ids.raw_value" t-as="follower" t-key="follower">
+                                                    <img
+                                                        t-if="follower_index &lt; 5"
+                                                        t-att-src="kanban_image('res.partner', 'avatar_128', follower)"
+                                                        class="oe_kanban_avatar o_image_24_cover rounded-circle border border-white bg-white ml-n2"
+                                                        t-att-data-member_id="follower"
+                                                        alt="Follower"/>
+                                                    <small
+                                                        t-if="follower_index == 5"
+                                                        t-esc="'+' + (follower_size - 5)"
+                                                        class="text-info fw-bold ms-1"/>
+                                                </t>-->
+                                            </div>
+                                            <!--<field name="activity_ids" widget="kanban_activity" />-->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+
+    <!-- To-do Tree View -->
+    <record id="view_project_task_todo_tree" model="ir.ui.view">
+        <field name="name">project.task.todo.tree</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            
+            <tree string="To-do's"
+                  default_group_by="personal_stage_type_ids">
+                <field name="name"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'default_todo_tag': True}"/>
+                <field name="activity_ids" widget="list_activity" optional="show"/>
+                <field name="personal_stage_type_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- To-do Form View -->
+    <record id="view_project_task_todo_form" model="ir.ui.view">
+        <field name="name">note.note.form</field>
+        <field name="model">project.task</field>
+        <field name="arch" type="xml">
+            <form string="Note"
+                  class="o_note_form_view"
+                  js_class = "todo_form">
                 <header>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
+                    <!--<field name="name" placeholder="Name" invisible="1"/>--> <!--To replace with mark as done button -->
+                    <field name="tag_ids"
+                           widget="many2many_tags"
+                           options="{'color_field': 'color'}"
+                           context="{'default_todo_tag': True}"
+                           domain="[('todo_tag', '=', True)]"
+                           placeholder="Tags"/>
+                    <!--<field name="company_id" groups="base.group_multi_company"/>-->
+                    <field name="personal_stage_type_id" domain="[('user_id','=',uid), ('todo_stage', '=', True)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
+                    <field name="description" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids"/>
@@ -182,13 +220,13 @@
     <!-- Search note  -->
     <record id="view_note_note_filter" model="ir.ui.view">
       <field name="name">note.note.search</field>
-      <field name="model">note.note</field>
+      <field name="model">project.task</field>
       <field name="arch" type="xml">
         <search string="Notes">
-          <field name="memo" string="Note"/>
+          <field name="description" string="Note"/>
           <field name="tag_ids"/>
-          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
-          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
+          <filter name="active_true" string="Active" domain="[('active', '=', True)]"/>
+          <filter name="active_false" string="Archive" domain="[('active', '=', False)]"/>
           <filter invisible="1" string="Late Activities" name="activities_overdue"
                   domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>
@@ -198,19 +236,34 @@
                         domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'personal_stage_type_id'}"/>
           </group>
         </search>
       </field>
     </record>
 
     <!-- Action -->
+    <!-- <record id="action_server_view_notes" model="ir.actions.server"> -->
+    <!--     <field name="name">menu view My Notes</field> -->
+    <!--     <field name="model_id" ref="note.model_project_task"/> -->
+    <!--     <field name="state">code</field> -->
+    <!--     <field name="code"> -->
+    <!--         action = env["ir.actions.actions"]._for_xml_id("note.action_note_note") -->
+    <!--     </field> -->
+    <!-- </record> -->
+    
     <record id="action_note_note" model="ir.actions.act_window">
-      <field name="name">Notes</field>
-      <field name="res_model">note.note</field>
+      <field name="name">To-do's</field>
+      <field name="res_model">project.task</field>
       <field name="view_mode">kanban,tree,form,activity</field>
+      <field name="view_ids"
+             eval="[(5, 0, 0),
+                   (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_task_todo_kanban')}),
+                   (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project_task_todo_tree')}),
+                   (0, 0, {'view_mode': 'form', 'view_id': ref('view_project_task_todo_form')})]"/>
+      <field name="domain">[('is_todo', '=', True)]</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
-      <field name="context">{}</field>
+      <field name="context">{'default_user_id': uid, 'default_is_todo': True, 'default_todo_stage': True}</field> <!-- default_todo_stage ->maybe not necessary -> why ???; and is_todo ??-->
       <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Add a new personal note
@@ -223,7 +276,7 @@
 
     <menuitem
       id="menu_note_notes"
-      name="Notes"
+      name="To-do"
       sequence="15"
       action="note.action_note_note"
       web_icon="note,static/description/icon.svg">

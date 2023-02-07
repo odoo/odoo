@@ -7,7 +7,7 @@ Patch({
     fields: {
         isNote: attr({
             compute() {
-                return this.irModel.model === 'note.note';
+                return this.irModel.model === 'project.task';
             },
         }),
     },

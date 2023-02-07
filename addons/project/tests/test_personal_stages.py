@@ -10,39 +10,52 @@ class TestPersonalStages(TestProjectCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        print('...running setUpClass')
+        # Default stages are normally created when the user is loading the related view (My Tasks)
+        cls.task_1.with_user(cls.user_projectuser)._ensure_project_personal_stages()
+        cls.task_1.with_user(cls.user_projectmanager)._ensure_project_personal_stages()
+
         cls.user_stages = cls.env['project.task.type'].search([('user_id', '=', cls.user_projectuser.id)])
         cls.manager_stages = cls.env['project.task.type'].search([('user_id', '=', cls.user_projectmanager.id)])
 
-    def test_personal_stage_base(self):
+    def test_personal_stage_base(self): #TODO: test failed
+        print('...launching test test_personal_stage_base')
+        # Default stages are normally created when the user is loading the related view (My Tasks)
+        #self.task_1.with_user(self.user_projectuser)._ensure_project_personal_stages()
+        #self.task_1.with_user(self.user_projectmanager)._ensure_project_personal_stages()
+
         # Project User is assigned to task_1 he should be able to see a personal stage
-        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_type_id()
         self.assertTrue(self.task_1.with_user(self.user_projectuser).personal_stage_type_id,
             'Project User is assigned to task 1, he should have a personal stage assigned.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertFalse(self.env['project.task'].browse(self.task_1.id).with_user(self.user_projectmanager).personal_stage_type_id,
             'Project Manager is not assigned to task 1, he should not have a personal stage assigned.')
 
         # Now assign a second user to our task_1
         self.task_1.user_ids += self.user_projectmanager
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertTrue(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id,
             'Project Manager has now been assigned to task 1 and should have a personal stage assigned.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         task_1_manager_stage = self.task_1.with_user(self.user_projectmanager).personal_stage_type_id
 
-        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectuser)._compute_personal_stage_type_id()
         self.task_1.with_user(self.user_projectuser).personal_stage_type_id = self.user_stages[1]
         self.assertEqual(self.task_1.with_user(self.user_projectuser).personal_stage_type_id, self.user_stages[1],
             'Assigning another personal stage to the task should have changed it for user 1.')
 
-        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_id()
+        self.task_1.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.assertEqual(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id, task_1_manager_stage,
             'Modifying the personal stage of Project User should not have affected the personal stage of Project Manager.')
 
+        self.task_2.with_user(self.user_projectmanager)._compute_personal_stage_type_id()
         self.task_2.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
         self.assertEqual(self.task_1.with_user(self.user_projectmanager).personal_stage_type_id, task_1_manager_stage,
             'Modifying the personal stage on task 2 for Project Manager should not have affected the stage on task 1.')
+        print('...end of test test_personal_stage_base')
 
     def test_personal_stage_search(self):
         self.task_2.user_ids += self.user_projectuser
@@ -55,7 +68,7 @@ class TestPersonalStages(TestProjectCommon):
             self.assertEqual(task.personal_stage_type_id, self.user_stages[0],
                 'The search should only have returned task that are in the inbox personal stage.')
 
-    def test_personal_stage_read_group(self):
+    def test_personal_stage_read_group(self): # TODO: UPDATE domain with is_todo = False ??
         self.task_1.user_ids += self.user_projectmanager
         self.task_1.with_user(self.user_projectmanager).personal_stage_type_id = self.manager_stages[1]
         #Makes sure the personal stage for project manager is saved in the database
@@ -104,12 +117,12 @@ class TestPersonalStages(TestProjectCommon):
         })
         ProjectTaskTypeSudo = self.env['project.task.type'].sudo()
         # ensure that a user without personal stage is getting the default stages
-        self.task_1.with_user(user_without_stage)._ensure_personal_stages()
-        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_without_stage.id)])
+        self.task_1.with_user(user_without_stage)._ensure_project_personal_stages()
+        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_without_stage.id), ('todo_stage', '=', False)])
         self.assertEqual(len(stages), 7, "As this user had no personal stage, the default ones should have been created for him")
         # ensure that the user's personal stages are not changing if the user already had some
-        self.task_1.with_user(user_with_stages)._ensure_personal_stages()
-        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_with_stages.id)])
+        self.task_1.with_user(user_with_stages)._ensure_project_personal_stages()
+        stages = ProjectTaskTypeSudo.search([('user_id', '=', user_with_stages.id), ('todo_stage', '=', False)])
         self.assertEqual(stages, personal_stage, "As this user already had a personal stage, none should be added")
 
 @tagged('-at_install', 'post_install')

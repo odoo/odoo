@@ -2,21 +2,21 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Notes',
+    'name': 'To-Do',
     'version': '1.0',
-    'category': 'Productivity/Notes',
-    'website': 'https://www.odoo.com/app/notes',
-    'summary': 'Organize your work with memos',
+    'category': 'Productivity/To-Do',
+    'website': 'https://www.odoo.com/app/todo', #NOTE: Is this page automatically created ??
+    'summary': 'Organize your work with memos and to-do lists',
     'sequence': 260,
     'depends': [
         'mail',
     ],
+    'auto_install': True,
     'data': [
-        'security/note_security.xml',
         'security/ir.model.access.csv',
+        'security/note_security.xml',
         'data/mail_activity_type_data.xml',
         'data/note_data.xml',
-        'data/res_users_data.xml',
         'views/note_views.xml',
         ],
     'demo': [
@@ -31,6 +31,9 @@
         'web.assets_backend': [
             'note/static/src/components/**/*',
             'note/static/src/scss/note.scss',
+            'note/static/src/views/**/*',
+#            'note/static/src/views/**/*.js',
+#            'note/static/src/views/**/*.xml',
         ],
         'web.qunit_suite_tests': [
             'note/static/tests/**/*',

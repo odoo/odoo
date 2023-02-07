@@ -20,3 +20,5 @@ class TestNote(TransactionCaseWithUserDemo):
             'name': 'test bug lp:1156215',
             'login': 'lp_1156215',
         })
+
+#TODO: write some additional tests for note

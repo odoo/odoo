@@ -1,31 +1,39 @@
 <?xml version="1.0"?>
 <odoo noupdate="1">
-    <record id="ir_rule_note_note_multi_company" model="ir.rule">
-        <field name="name">Note - Multi-Company</field>
-        <field name="model_id" ref="model_note_note"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-    </record>
-
-    <record id="note_note_rule_global" model="ir.rule">
+    <record id="project_task_rule_todo_all_users" model="ir.rule">
         <field name="name">Only followers can access a sticky notes</field>
-        <field name="model_id" ref="model_note_note"/>
-        <field name="domain_force">['|', ('user_id', '=', user.id), ('message_partner_ids', '=', user.partner_id.id)]</field>
-        <field name="perm_create" eval="False"/>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">[('is_todo', '=', True), '|', ('user_id', '=', user.id), ('message_partner_ids', '=', user.partner_id.id)]</field>
         <field name="perm_unlink" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record id="note_note_create_unlink_global" model="ir.rule">
-        <field name="name">note: create / unlink: responsible</field>
-        <field name="model_id" ref="model_note_note"/>
-        <field name="domain_force">[('user_id', '=', user.id)]</field>
+    <record id="project_task_create_unlink_all_users" model="ir.rule">
+        <field name="name">To-do: create / unlink: responsible</field>
+        <field name="model_id" ref="model_project_task"/>
+        <field name="domain_force">[('is_todo', '=', True), ('user_id', '=', user.id)]</field>
         <field name="perm_write" eval="False"/>
         <field name="perm_read" eval="False"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
-    <record id="note_stage_rule_global" model="ir.rule">
+    <record id="note_stage_rule_all_users" model="ir.rule">
         <field name="name">Each user have his stage name</field>
-        <field name="model_id" ref="model_note_stage"/>
-        <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
+        <field name="model_id" ref="model_project_task_type"/>
+        <field name="domain_force">[('todo_stage', '=', True), '|',('user_id','=',False),('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record model="ir.rule" id="tags_todo_edit_rule">
+        <field name="name">Project/Tags: Users can edit all tags in Todo</field>
+        <field name="model_id" ref="model_project_tags"/>
+        <field name="domain_force">[('todo_tag', '=', True)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
 
 </odoo>

@@ -33,7 +33,7 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
     await click('.o_note_save');
     assert.strictEqual(document.querySelector('.o_ActivityMenuView_counter').innerText, '1',
         "should increment activity notification counter after creating a note");
-    assert.containsOnce(document.body, '.o_ActivityMenuView_activityGroup[data-res_model="note.note"]',
+    assert.containsOnce(document.body, '.o_ActivityMenuView_activityGroup[data-res_model="project.task"]',
         "should have an activity preview that is a note");
     assert.strictEqual(document.querySelector('.o_ActivityMenuView_activityGroupFilterButton[data-filter="today"]').innerText.trim(),
         "1 Today",
