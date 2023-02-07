@@ -4,8 +4,13 @@
     <!-- Call this template instead of "web.assets_tests" to have the proper conditional check -->
     <template id="conditional_assets_tests" name="Tests Assets Bundle">
         <t t-if="'tests' in debug or test_mode_enabled">
-            <!-- To allow all tests assets and tours to be in the same bundle, the assets_tests bundle ignores missing dependencies -->
-            <t t-call-assets="web.__assets_tests_call__" defer_load="True" />
+            <t t-if="ignore_missing_deps">
+                <!-- FIXME: This is only to ignore the errors for the lazy loading. To allow all tests assets and tours to be in the same bundle, the assets_tests bundle ignores missing dependencies -->
+                <t t-call-assets="web.__assets_tests_call__" defer_load="True" />
+            </t>
+            <t t-else="">
+                <t t-call-assets="web.assets_tests" defer_load="True" />
+            </t>
         </t>
     </template>
 
@@ -47,7 +52,9 @@
             }
         </script>
         <t t-call-assets="web.assets_frontend_minimal" t-css="false" defer_load="True"/>
-        <t t-call="web.conditional_assets_tests"/>
+        <t t-call="web.conditional_assets_tests">
+            <t t-set="ignore_missing_deps" t-value="True"/>
+        </t>
         <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
       </xpath>
         <xpath expr="//t[@t-out='0']" position="replace">

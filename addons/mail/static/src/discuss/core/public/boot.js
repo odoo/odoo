@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
-import { data } from "mail.discuss_public_template";
 
 import { mount, whenReady } from "@odoo/owl";
 
@@ -16,7 +15,7 @@ import { makeEnv, startServices } from "@web/env";
     const mainComponentsRegistry = registry.category("main_components");
     mainComponentsRegistry.add("DiscussPublic", {
         Component: DiscussPublic,
-        props: { data },
+        props: { data: odoo.discuss_data },
     });
 
     const env = makeEnv();

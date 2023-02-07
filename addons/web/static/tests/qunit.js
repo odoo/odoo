@@ -257,7 +257,7 @@ export function setupQUnit() {
         modulesAlert.classList.add("alert-info");
         modulesAlert.textContent = "Waiting for modules check...";
         document.getElementById("qunit").appendChild(modulesAlert);
-        const info = odoo.__DEBUG__.jsModules;
+        const info = odoo.loader.findErrors();
         if (info.missing.length || info.failed.length || info.unloaded.length) {
             document.querySelector("#qunit-banner").classList.add("qunit-fail");
             modulesAlert.classList.toggle("alert-danger");
@@ -295,7 +295,6 @@ export function setupQUnit() {
         }
     }
 
-    QUnit.begin(() => odoo.__DEBUG__.didLogInfo);
     /**
      * If we want to log several errors, we have to log all of them at once, as
      * browser_js is closed as soon as an error is logged.

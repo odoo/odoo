@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import wTourUtils from "@website/js/tours/tour_utils";
-import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { whenReady } from "@odoo/owl";
 
 wTourUtils.registerWebsitePreviewTour('rte_translator', {
@@ -113,6 +112,7 @@ wTourUtils.dragNDrop({
     trigger: 'iframe #wrap p font:first',
     run: function (actionHelper) {
         actionHelper.text('translated Parseltongue text');
+        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.$anchor.contents()[0], 22);
         this.$anchor.trigger($.Event("keyup", {key: '_', keyCode: 95}));
         this.$anchor.trigger('input');
@@ -123,6 +123,7 @@ wTourUtils.dragNDrop({
     run: function (actionHelper) {
         actionHelper.click();
         this.$anchor.prepend('&lt;{translated}&gt;');
+        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(this.$anchor.contents()[0], 0);
         this.$anchor.trigger($.Event("keyup", {key: '_', keyCode: 95}));
         this.$anchor.trigger('input');
@@ -190,6 +191,7 @@ wTourUtils.dragNDrop({
         mousedown.initMouseEvent('mousedown', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mousedown);
         var mouseup = document.createEvent('MouseEvents');
+        const { Wysiwyg } = odoo.loader.modules.get('@web_editor/js/wysiwyg/wysiwyg');
         Wysiwyg.setRange(el.childNodes[2], 6, el.childNodes[2], 13);
         mouseup.initMouseEvent('mouseup', true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, el);
         el.dispatchEvent(mouseup);

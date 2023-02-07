@@ -164,7 +164,6 @@
         'web.assets_tests': [
             'website/static/tests/tour_utils/**/*',
             'website/static/tests/tours/**/*',
-            'website/static/src/client_actions/website_preview/website_preview_test_mode.js',
         ],
         'web.assets_backend': [
             ('include', 'website.assets_editor'),
@@ -175,7 +174,6 @@
             'website/static/src/js/backend/**/*',
             'website/static/src/js/tours/tour_utils.js',
             'website/static/src/client_actions/*/*',
-            ('remove', 'website/static/src/client_actions/website_preview/website_preview_test_mode.js'),
             'website/static/src/components/fields/*',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.js',
             'website/static/src/components/fullscreen_indication/fullscreen_indication.scss',
@@ -253,6 +251,11 @@
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/link_popover_widget.js',
             'website/static/src/xml/website.cookies_bar.xml',
+        ],
+        'website.assets_all_wysiwyg': [
+            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'web_editor.assets_legacy_wysiwyg'),
+            ('include', 'website.assets_wysiwyg'),
         ],
         'web_editor.assets_media_dialog': [
             'website/static/src/components/media_dialog/image_selector.js',

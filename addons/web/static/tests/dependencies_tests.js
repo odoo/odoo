@@ -9,12 +9,12 @@
 function invalidImportsFrom(folder, allowedFolders) {
     // modules within a folder can always depend on one another
     allowedFolders.push(folder);
-    const modulesToCheck = Object.keys(odoo.__DEBUG__.services).filter((module) =>
+    const modulesToCheck = Array.from(odoo.loader.modules.keys()).filter((module) =>
         module.startsWith(`@web/${folder}/`)
     );
     const invalidDeps = {};
     for (const module of modulesToCheck) {
-        const invalid = odoo.__DEBUG__.getDependencies(module).filter((dep) => {
+        const invalid = odoo.loader.factories.get(module).deps.filter((dep) => {
             // owl and @web/session are allowed everywhere
             if (dep === "@odoo/owl" || dep === "@web/session") {
                 return false;
