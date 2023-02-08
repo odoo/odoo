@@ -27,6 +27,7 @@ from odoo.tools.misc import file_path
 
 GETMTINE = os.path.getmtime
 
+# ruff: noqa: S320
 
 class TestAddonPaths(TransactionCase):
     def test_operations(self):
@@ -72,7 +73,7 @@ class TestAddonPaths(TransactionCase):
         # insert with a duplicate of 'd' before 'd'
         asset_paths.insert([
             ('/home/user/odoo/addons/web/b', '/web/b', 1),
-            ('/home/user/odoo/addons/web/d', '/web/d', 1)
+            ('/home/user/odoo/addons/web/d', '/web/d', 1),
         ], 'bundle4', 1)
         self.assertEqual(asset_paths.list, [
 
@@ -88,7 +89,7 @@ class TestAddonPaths(TransactionCase):
         asset_paths.remove([
             ('/home/user/odoo/addons/web/c', '/web/c', 1),
             ('/home/user/odoo/addons/web/d', '/web/d', 1),
-            ('/home/user/odoo/addons/web/g', '/web/g', 1)
+            ('/home/user/odoo/addons/web/g', '/web/g', 1),
         ], 'bundle5')
         self.assertEqual(asset_paths.list, [
             ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
@@ -163,8 +164,10 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
-        rtl = 'rtl/' if rtl and extension in ['css', 'min.css'] else ''
-        url = f'/web/assets/%-%/{rtl}{bundle}.{extension}'
+        extra = '-'
+        if extension in ['css', 'min.css']:
+            extra = 'rtl' if rtl else 'ltr'
+        url = f'/web/assets/%/{extra}/{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
@@ -389,7 +392,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         debug_bundle = self._get_asset(self.cssbundle_name, debug_assets=True)
         content = debug_bundle.get_links()
         # there should be a minified file
-        self.assertEqual(content[0][0], '/web/assets/debug/test_assetsbundle.bundle2.css')
+        self.assertEqual(content[0][0], '/web/assets/debug/ltr/test_assetsbundle.bundle2.css')
 
         # there should be one css asset created in debug mode
         self.assertEqual(len(self._any_ira_for_bundle('css')), 1,
@@ -485,7 +488,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Check two bundles are available, one for ltr and one for rtl
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', f'/web/assets/%/{self.cssbundle_name}%.min.css'),
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -529,7 +532,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
             # check if the previous attachment is correctly cleaned
             css_bundles = self.env['ir.attachment'].search([
-                ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+                ('url', '=like', f'/web/assets/%/{self.cssbundle_name}%.min.css'),
             ])
             self.assertEqual(len(css_bundles), 2)
 
@@ -549,7 +552,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         rtl_version0 = rtl_bundle0.get_version('css')
 
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', f'/web/assets/%/{self.cssbundle_name}%.min.css'),
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -582,7 +585,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # check if the previous attachment are correctly cleaned
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', f'/web/assets/%/{self.cssbundle_name}%.min.css'),
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -593,19 +596,19 @@ class TestJavascriptAssetsBundle(FileTouchable):
         content = debug_bundle.get_links()
 
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
-        self.assertEqual('/web/assets/debug/rtl/{0}.css'.format(self.cssbundle_name), content[0][0],
+        self.assertEqual(f'/web/assets/debug/rtl/{self.cssbundle_name}.css', content[0][0],
                       "there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets")
 
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
         css_bundle = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/rtl/{0}.css'.format(self.cssbundle_name))
+            ('url', '=like', f'/web/assets/%/rtl/{self.cssbundle_name}.css'),
         ])
         self.assertEqual(len(css_bundle), 1,
                          "there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets")
 
     def test_20_external_lib_assets(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
-        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_assetsbundle.bundle4.%')])
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
 
         format_data = {
@@ -633,8 +636,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(attachments), 1)
 
         format_data = {
-            "css": '/web/assets/debug/test_assetsbundle.bundle4.css',
-            "js": '/web/assets/debug/test_assetsbundle.bundle4.js',
+            "css": '/web/assets/debug/ltr/test_assetsbundle.bundle4.css',
+            "js": '/web/assets/debug/-/test_assetsbundle.bundle4.js',
         }
         self.assertEqual(str(html.strip()), ("""<!DOCTYPE html>
 <html>
