@@ -232,20 +232,19 @@ class AssetsBundle(object):
         return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
-        return "/web/assets/{unique}/{extra}{name}{sep}{extension}"
+        return "/web/assets/{unique}/{extra}{name}.{extension}"
 
-    def _get_asset_url_values(self, unique, extra, name, sep, extension):  # extra can contain direction or/and website
+    def _get_asset_url_values(self, unique, extra, name, extension):  # extra can contain direction or/and website
         return {
             'unique': unique,
             'extra': extra,
             'name': name,
-            'sep': sep,
             'extension': extension,
         }
 
-    def get_asset_url(self, unique='%', extra='', name='%', sep="%", extension='%'):
+    def get_asset_url(self, unique='%', extra='', name='%', extension='%'):
         return self._get_asset_template_url().format(
-            **self._get_asset_url_values(unique=unique, extra=extra, name=name, sep=sep, extension=extension)
+            **self._get_asset_url_values(unique=unique, extra=extra, name=name, extension=extension)
         )
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
@@ -279,7 +278,6 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
-            sep='.',
             extension=extension
         )
 
@@ -317,7 +315,6 @@ class AssetsBundle(object):
             unique=unique,
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
-            sep='.',
             extension=extension
         )
         self.env.cr.execute("""
@@ -369,7 +366,6 @@ class AssetsBundle(object):
             unique=self.version,
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
-            sep='.',  # included in fname
             extension=extension
         )
         values = {
