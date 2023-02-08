@@ -1,15 +1,12 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
-import { useListener } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
+import { Component, useState } from "@odoo/owl";
 
-const { useState } = owl;
-
-export class ProductsWidget extends LegacyComponent {
+export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
     static template = "ProductsWidget";
 
@@ -19,10 +16,6 @@ export class ProductsWidget extends LegacyComponent {
      */
     setup() {
         super.setup();
-        useListener("switch-category", this._switchCategory);
-        useListener("update-search", this._updateSearch);
-        useListener("clear-search", this._clearSearch);
-        useListener("update-product-list", this._updateProductList);
         this.state = useState({ searchWord: "" });
         this.pos = usePos();
     }
@@ -66,17 +59,17 @@ export class ProductsWidget extends LegacyComponent {
     get shouldShowButton() {
         return this.productsToDisplay.length === 0 && this.searchWord;
     }
-    _switchCategory(event) {
-        this.env.pos.setSelectedCategoryId(event.detail);
+    switchCategory(categoryId) {
+        this.env.pos.setSelectedCategoryId(categoryId);
     }
-    _updateSearch(event) {
-        this.state.searchWord = event.detail;
+    updateSearch(searchWord) {
+        this.state.searchWord = searchWord;
     }
-    _clearSearch() {
+    clearSearch() {
         this.state.searchWord = "";
     }
-    _updateProductList(event) {
+    updateProductList(event) {
         this.render(true);
-        this.trigger("switch-category", 0);
+        this.switchCategory(0);
     }
 }

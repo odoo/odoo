@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class Orderline extends LegacyComponent {
+export class Orderline extends Component {
     static template = "Orderline";
 
     selectLine() {
-        this.trigger("select-line", { orderline: this.props.line });
+        this.props.selectLine(this.props.line);
     }
     lotIconClicked() {
-        this.trigger("edit-pack-lot-lines", { orderline: this.props.line });
+        this.props.editPackLotLines(this.props.line);
     }
     get addedClasses() {
         return {

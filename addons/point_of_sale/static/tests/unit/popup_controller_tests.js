@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import makeTestEnvironment from "web.test_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -9,8 +8,7 @@ import { registry } from "@web/core/registry";
 import { popupService } from "@point_of_sale/app/popup/popup_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useService } from "@web/core/utils/hooks";
-
-const { xml } = owl;
+import { Component, xml } from "@odoo/owl";
 
 // Note that we are creating new popups here to decouple this test from the pos app.
 class CustomPopup1 extends AbstractAwaitablePopup {}
@@ -38,7 +36,7 @@ CustomPopup2.template = xml/* html */ `
     </div>
 `;
 
-class Root extends LegacyComponent {
+class Root extends Component {
     static components = { MainComponentsContainer };
     setup() {
         super.setup();

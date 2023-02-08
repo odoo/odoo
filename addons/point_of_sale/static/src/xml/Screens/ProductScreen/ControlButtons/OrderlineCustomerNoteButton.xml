@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="OrderlineCustomerNoteButton" owl="1">
-        <div class="control-button">
+        <div class="control-button" t-on-click="() => this.onClick()">
             <i class="fa fa-sticky-note" />
             <span> </span>
             <span>Customer Note</span>

@@ -1,13 +1,11 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { round_precision as round_pr } from "web.utils";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component, onMounted, onWillUnmount, useExternalListener, useState } from "@odoo/owl";
 
-const { onMounted, onWillUnmount, useExternalListener, useState } = owl;
-
-export class ScaleScreen extends LegacyComponent {
+export class ScaleScreen extends Component {
     static template = "ScaleScreen";
 
     /**

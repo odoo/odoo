@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
      <t t-name="RewardButton" owl="1">
-        <span class="control-button" t-att-class="hasClaimableRewards() ? 'highlight' : 'disabled'">
+        <span class="control-button" t-att-class="hasClaimableRewards() ? 'highlight' : 'disabled'" t-on-click="() => this.click()">
             <i class="fa fa-star"></i>
             <span> </span>
             <span>Reward</span>

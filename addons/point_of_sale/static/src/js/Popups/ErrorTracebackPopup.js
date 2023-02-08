@@ -2,6 +2,7 @@
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _lt } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 // formerly ErrorTracebackPopupWidget
 export class ErrorTracebackPopup extends ErrorPopup {
@@ -14,8 +15,11 @@ export class ErrorTracebackPopup extends ErrorPopup {
         body: "",
         exitButtonIsShown: false,
         exitButtonText: _lt("Exit Pos"),
-        exitButtonTrigger: "close-pos",
     };
+
+    setup() {
+        this.pos = useService("pos");
+    }
 
     get tracebackUrl() {
         const blob = new Blob([this.props.body]);

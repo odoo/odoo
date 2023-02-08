@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class WrappedProductNameLines extends LegacyComponent {
+export class WrappedProductNameLines extends Component {
     static template = "WrappedProductNameLines";
 }

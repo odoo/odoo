@@ -2,13 +2,11 @@
 
 import { _t } from "web.core";
 import { getDataURLFromFile } from "web.utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
+import { Component, onMounted, onWillUnmount  } from "@odoo/owl";
 
-const { onMounted, onWillUnmount } = owl;
-
-export class PartnerDetailsEdit extends LegacyComponent {
+export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";
 
     setup() {
@@ -72,7 +70,7 @@ export class PartnerDetailsEdit extends LegacyComponent {
             });
         }
         processedChanges.id = this.props.partner.id || false;
-        this.trigger("save-changes", { processedChanges });
+        this.props.saveChanges(processedChanges);
     }
     async uploadImage(event) {
         const file = event.target.files[0];

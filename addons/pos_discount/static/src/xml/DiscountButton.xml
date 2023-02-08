@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="DiscountButton" owl="1">
-        <span class="control-button js_discount">
+        <span class="control-button js_discount" t-on-click="() => this.click()">
             <i class="fa fa-tag"></i>
             <span> </span>
             <span>Discount</span>

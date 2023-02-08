@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
 /**
  * IMPROVEMENT: Perhaps this class is quite complicated for its worth.
@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
  * Also, the current order changes when the selectedOrder in pos is changed.
  * After setting new current order, we update the listeners.
  */
-export class SubmitOrderButton extends LegacyComponent {
+export class SubmitOrderButton extends Component {
     static template = "SubmitOrderButton";
 
     setup() {

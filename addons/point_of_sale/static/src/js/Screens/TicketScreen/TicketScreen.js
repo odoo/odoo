@@ -3,7 +3,7 @@
 import { Order } from "@point_of_sale/js/models";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { registry } from "@web/core/registry";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -42,22 +42,10 @@ export class TicketScreen extends IndependentToOrderScreen {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
-        useListener("filter-selected", this._onFilterSelected);
-        useListener("search", this._onSearch);
-        useListener("click-order", this._onClickOrder);
-        useListener("create-new-order", this._onCreateNewOrder);
-        useListener("delete-order", this._onDeleteOrder);
-        useListener("next-page", this._onNextPage);
-        useListener("prev-page", this._onPrevPage);
-        useListener("order-invoiced", this._onInvoiceOrder);
-        useListener("click-order-line", this._onClickOrderline);
-        useListener("click-refund-order-uid", this._onClickRefundOrderUid);
-        useListener("update-selected-orderline", this._onUpdateSelectedOrderline);
-        useListener("do-refund", this._onDoRefund);
+        this.rpc = useService("rpc");
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use({
-            nonKeyboardInputEvent: "numpad-click-input",
-            triggerAtInput: "update-selected-orderline",
+            triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
         this._state = this.env.pos.TICKET_SCREEN_STATE;
         this.state = useState({
@@ -73,33 +61,39 @@ export class TicketScreen extends IndependentToOrderScreen {
               };
         Object.assign(this._state.ui, defaultUIState, this.props.ui || {});
 
-        onMounted(() => {
-            this._onFilterSelected({ detail: { filter: this._state.ui.filter } });
-        });
-        onWillUnmount(() => {
-            /**
-             * Automatically create new order when there is no currently active order.
-             * Important in fiscal modules to keep the sequence of the orders.
-             */
-            if (this.env.pos.orders.length == 0 && this.allowNewOrders) {
-                this.env.pos.add_new_order();
-            }
+        onMounted(this.onMounted);
+        onWillUnmount(this.onWillUnmount);
+    }
+    //#region LIFECYCLE METHODS
+    onMounted() {
+        this.env.posbus.on("ticket-button-clicked", this, this.close);
+        setTimeout(() => {
+            // Show updated list of synced orders when going back to the screen.
+            this.onFilterSelected(this._state.ui.filter);
         });
     }
-    async _onFilterSelected(event) {
-        this._state.ui.filter = event.detail.filter;
+    onWillUnmount() {
+        this.env.posbus.off("ticket-button-clicked", this);
+    }
+    //#endregion
+    //#region EVENT HANDLERS
+    onCloseScreen() {
+        this.close();
+    }
+    async onFilterSelected(selectedFilter) {
+        this._state.ui.filter = selectedFilter;
         if (this._state.ui.filter == "SYNCED") {
             await this._fetchSyncedOrders();
         }
     }
-    async _onSearch(event) {
-        Object.assign(this._state.ui.searchDetails, event.detail);
+    async onSearch(search) {
+        Object.assign(this._state.ui.searchDetails, search);
         if (this._state.ui.filter == "SYNCED") {
             this._state.syncedOrders.currentPage = 1;
             await this._fetchSyncedOrders();
         }
     }
-    _onClickOrder({ detail: clickedOrder }) {
+    onClickOrder(clickedOrder) {
         if (!clickedOrder || clickedOrder.locked) {
             if (this._state.ui.selectedSyncedOrderId == clickedOrder.backendId) {
                 this._state.ui.selectedSyncedOrderId = null;
@@ -118,7 +112,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             this._setOrder(clickedOrder);
         }
     }
-    _onCreateNewOrder() {
+    onCreateNewOrder() {
         this.env.pos.add_new_order();
         this.pos.showScreen("ProductScreen");
     }
@@ -129,7 +123,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]
         );
     }
-    async _onDeleteOrder({ detail: order }) {
+    async onDeleteOrder(order) {
         const screen = order.get_screen_data();
         if (
             ["ProductScreen", "PaymentScreen"].includes(screen.name) &&
@@ -156,36 +150,35 @@ export class TicketScreen extends IndependentToOrderScreen {
             this.env.pos.removeOrder(order);
         }
     }
-    async _onNextPage() {
+    async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
             this._state.syncedOrders.currentPage += 1;
             await this._fetchSyncedOrders();
         }
     }
-    async _onPrevPage() {
+    async onPrevPage() {
         if (this._state.syncedOrders.currentPage > 1) {
             this._state.syncedOrders.currentPage -= 1;
             await this._fetchSyncedOrders();
         }
     }
-    async _onInvoiceOrder({ detail: orderId }) {
+    async onInvoiceOrder(orderId) {
         this.env.pos._invalidateSyncedOrdersCache([orderId]);
         await this._fetchSyncedOrders();
     }
-    _onClickOrderline({ detail: orderline }) {
+    onClickOrderline(orderline) {
         const order = this.getSelectedSyncedOrder();
         this._state.ui.selectedOrderlineIds[order.backendId] = orderline.id;
         this.numberBuffer.reset();
     }
-    _onClickRefundOrderUid({ detail: orderUid }) {
+    onClickRefundOrderUid(orderUid) {
         // Open the refund order.
         const refundOrder = this.env.pos.orders.find((order) => order.uid == orderUid);
         if (refundOrder) {
             this._setOrder(refundOrder);
         }
     }
-    _onUpdateSelectedOrderline({ detail }) {
-        const buffer = detail.buffer;
+    _onUpdateSelectedOrderline({ key, buffer }) {
         const order = this.getSelectedSyncedOrder();
         if (!order) {
             return this.numberBuffer.reset();
@@ -229,7 +222,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             }
         }
     }
-    async _onDoRefund() {
+    async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
 
         if (this._doesOrderHaveSoleItem(order)) {
@@ -278,8 +271,10 @@ export class TicketScreen extends IndependentToOrderScreen {
             this.env.pos.set_order(destinationOrder);
         }
 
-        this.close();
+        this.onCloseScreen();
     }
+    //#endregion
+    //#region PUBLIC METHODS
     getSelectedSyncedOrder() {
         if (this._state.ui.filter == "SYNCED") {
             return this._state.syncedOrders.cache[this._state.ui.selectedSyncedOrderId];

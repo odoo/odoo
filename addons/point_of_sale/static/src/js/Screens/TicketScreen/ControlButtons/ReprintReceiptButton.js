@@ -1,18 +1,16 @@
 /** @odoo-module */
 
-import { useListener } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component } from "@odoo/owl";
 
-export class ReprintReceiptButton extends LegacyComponent {
+export class ReprintReceiptButton extends Component {
     static template = "ReprintReceiptButton";
 
     setup() {
         super.setup();
         this.pos = usePos();
-        useListener("click", this._onClick);
     }
-    async _onClick() {
+    async click() {
         if (!this.props.order) {
             return;
         }

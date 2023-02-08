@@ -19,7 +19,10 @@
                         <div class="order">
                             <ul class="orderlines">
                                 <t t-foreach="orderlines" t-as="line" t-key="line.cid">
-                                    <SplitOrderline line="line" split="splitlines[line.id]" />
+                                    <SplitOrderline
+                                        onClickLine.bind="onClickLine"
+                                        line="line"
+                                        split="splitlines[line.id]" />
                                 </t>
                             </ul>
                         </div>

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="SplitBillButton" owl="1">
-        <span class="control-button order-split" t-att-class="{'disabled': _isDisabled()}">
+        <span class="control-button order-split" t-att-class="{'disabled': _isDisabled()}" t-on-click="() => this.click()">
             <i class="fa fa-files-o"></i>
             <span> </span>
             <span>Split</span>

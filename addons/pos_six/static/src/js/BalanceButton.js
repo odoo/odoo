@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class BalanceButton extends LegacyComponent {
+export class BalanceButton extends Component {
     static template = "BalanceButton";
 
     sendBalance() {

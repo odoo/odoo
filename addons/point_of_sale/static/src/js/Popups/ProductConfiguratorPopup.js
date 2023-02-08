@@ -1,10 +1,8 @@
 /** @odoo-module */
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { Component, useRef, useState, useSubEnv } from "@odoo/owl";
 
-const { useState, useSubEnv } = owl;
-
-export class BaseProductAttribute extends LegacyComponent {
+export class BaseProductAttribute extends Component {
     setup() {
         super.setup();
         this.env.attribute_components.push(this);
@@ -38,6 +36,7 @@ export class RadioProductAttribute extends BaseProductAttribute {
 
     setup() {
         super.setup();
+        this.root = useRef("root");
         owl.onMounted(this.onMounted);
     }
     onMounted() {
@@ -45,7 +44,7 @@ export class RadioProductAttribute extends BaseProductAttribute {
         // a matching `value` attribute. In our case, we use `t-att-value` so `value` is
         // not found yet and no radio is selected by default.
         // We then manually select the first input of each radio attribute.
-        $(this.el).find('input[type="radio"]:first').prop("checked", true);
+        this.root.el.querySelector("input[type=radio]").checked = true;
     }
 }
 

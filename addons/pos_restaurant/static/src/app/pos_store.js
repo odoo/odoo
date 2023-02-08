@@ -83,11 +83,10 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     },
     /**
      * @override
-     * FIXME POSREF this is now dead code, check if we still want this
      * Before closing pos, we remove the event listeners set on window
      * for detecting activities outside FloorScreen.
      */
-    async _closePos() {
+    async closePos() {
         if (IDLE_TIMER_SETTER) {
             for (const event of NON_IDLE_EVENTS) {
                 window.removeEventListener(event, IDLE_TIMER_SETTER);

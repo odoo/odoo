@@ -1,17 +1,16 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { Component } from "@odoo/owl";
 
-export class SetPricelistButton extends LegacyComponent {
+export class SetPricelistButton extends Component {
     static template = "SetPricelistButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("click", this.onClick);
     }
     get currentOrder() {
         return this.env.pos.get_order();
@@ -20,7 +19,7 @@ export class SetPricelistButton extends LegacyComponent {
         const order = this.currentOrder;
         return order && order.pricelist ? order.pricelist.display_name : this.env._t("Pricelist");
     }
-    async onClick() {
+    async click() {
         // Create the list to be passed to the SelectionPopup.
         // Pricelist object is passed as item in the list because it
         // is the object that will be returned when the popup is confirmed.

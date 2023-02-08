@@ -1,19 +1,20 @@
 /** @odoo-module */
 
-import { useListener, useService } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useService } from "@web/core/utils/hooks";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component, useRef } from "@odoo/owl";
 
-export class InvoiceButton extends LegacyComponent {
+export class InvoiceButton extends Component {
     static template = "InvoiceButton";
 
     setup() {
         super.setup();
         this.pos = usePos();
+        this.invoiceButton = useRef("invoice-button");
         this.popup = useService("popup");
-        useListener("click", this._onClick);
+        this.rpc = useService("rpc");
     }
     get isAlreadyInvoiced() {
         if (!this.props.order) {
@@ -110,14 +111,14 @@ export class InvoiceButton extends LegacyComponent {
 
         // Part 3: Download invoice.
         await this._downloadInvoice(orderId);
-        this.trigger("order-invoiced", orderId);
+        this.props.onInvoiceOrder(orderId);
     }
-    async _onClick() {
+    async click() {
         try {
-            this.el.style.pointerEvents = "none";
+            this.invoiceButton.el.style.pointerEvents = "none";
             await this._invoiceOrder();
         } finally {
-            this.el.style.pointerEvents = "auto";
+            this.invoiceButton.el.style.pointerEvents = "auto";
         }
     }
 }

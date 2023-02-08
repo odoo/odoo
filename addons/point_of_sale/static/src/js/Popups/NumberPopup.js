@@ -3,9 +3,8 @@ import core from "web.core";
 var _t = core._t;
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { useListener, useService } from "@web/core/utils/hooks";
-
-const { useState } = owl;
+import { useService } from "@web/core/utils/hooks";
+import { useState } from "@odoo/owl";
 
 export class NumberPopup extends AbstractAwaitablePopup {
     static template = "NumberPopup";
@@ -31,8 +30,6 @@ export class NumberPopup extends AbstractAwaitablePopup {
      */
     setup() {
         super.setup();
-        useListener("accept-input", this.confirm);
-        useListener("close-this-popup", this.cancel);
         let startingBuffer = "";
         if (typeof this.props.startingValue === "number" && this.props.startingValue > 0) {
             startingBuffer = this.props.startingValue
@@ -42,9 +39,8 @@ export class NumberPopup extends AbstractAwaitablePopup {
         this.state = useState({ buffer: startingBuffer, toStartOver: this.props.isInputSelected });
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use({
-            nonKeyboardInputEvent: "numpad-click-input",
-            triggerAtEnter: "accept-input",
-            triggerAtEscape: "close-this-popup",
+            triggerAtEnter: () => this.confirm(),
+            triggerAtEscape: () => this.cancel(),
             state: this.state,
         });
     }
@@ -67,7 +63,7 @@ export class NumberPopup extends AbstractAwaitablePopup {
         }
     }
     sendInput(key) {
-        this.trigger("numpad-click-input", { key });
+        this.numberBuffer.sendKey(key);
     }
     getPayload() {
         return this.numberBuffer.get();

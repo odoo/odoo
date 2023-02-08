@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class PartnerLine extends LegacyComponent {
+export class PartnerLine extends Component {
     static template = "PartnerLine";
 
     get highlight() {

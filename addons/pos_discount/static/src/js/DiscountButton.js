@@ -1,20 +1,19 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { Component } from "@odoo/owl";
 
-export class DiscountButton extends LegacyComponent {
+export class DiscountButton extends Component {
     static template = "DiscountButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("click", this.onClick);
     }
-    async onClick() {
+    async click() {
         var self = this;
         const { confirmed, payload } = await this.popup.add(NumberPopup, {
             title: this.env._t("Discount Percentage"),

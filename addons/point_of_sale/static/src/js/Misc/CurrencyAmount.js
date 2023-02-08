@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class CurrencyAmount extends LegacyComponent {
+export class CurrencyAmount extends Component {
     static template = "CurrencyAmount";
 }

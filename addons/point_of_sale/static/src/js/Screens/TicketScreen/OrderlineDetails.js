@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 import { format } from "web.field_utils";
 import { round_precision as round_pr } from "web.utils";
 
 /**
  * @props {pos.order.line} line
  */
-export class OrderlineDetails extends LegacyComponent {
+export class OrderlineDetails extends Component {
     static template = "OrderlineDetails";
 
     get line() {
