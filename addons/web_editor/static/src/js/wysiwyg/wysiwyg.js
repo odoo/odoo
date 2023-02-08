@@ -143,8 +143,12 @@ const Wysiwyg = Widget.extend({
             this.getSession()['notification_type']
         ) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
-            // Wait until editor is focused to join the peer to peer network.
-            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            if (this.options.collaborativeTrigger === 'start') {
+                this._joinPeerToPeer();
+            } else if (this.options.collaborativeTrigger === 'focus') {
+                // Wait until editor is focused to join the peer to peer network.
+                this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            }
         }
 
         const getYoutubeVideoElement = async (url) => {
@@ -2610,8 +2614,12 @@ const Wysiwyg = Widget.extend({
         this.setValue(value);
         this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
-        // Wait until editor is focused to join the peer to peer network.
-        this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        if (this.options.collaborativeTrigger === 'start') {
+            this._joinPeerToPeer();
+        } else if (this.options.collaborativeTrigger === 'focus') {
+            // Wait until editor is focused to join the peer to peer network.
+            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        }
         const initialHistoryId = value && this._getInitialHistoryId(value);
         if (initialHistoryId) {
             this.odooEditor.historySetInitialId(initialHistoryId);
