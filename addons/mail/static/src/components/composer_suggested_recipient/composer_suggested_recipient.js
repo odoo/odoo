@@ -18,6 +18,9 @@ class FormViewDialogComponentAdapter extends ComponentAdapter {
         return this.willStart();
     }
 
+    updateWidget() {
+        return Promise.resolve();
+    }
 }
 
 export class ComposerSuggestedRecipient extends Component {
@@ -116,6 +119,7 @@ export class ComposerSuggestedRecipient extends Component {
                 this._isDialogOpen = true;
                 widget.on('closed', this, () => {
                     this._isDialogOpen = false;
+                    this._checkboxRef.el.checked = !!this.suggestedRecipientInfo.partner;
                 });
                 widget.context = Object.assign({}, widget.context, session.user_context);
                 widget.open();
