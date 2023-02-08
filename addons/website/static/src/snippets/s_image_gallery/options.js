@@ -470,25 +470,5 @@ options.registry.gallery_img = options.Class.extend({
             },
         });
     },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Allows to change the position of an image (its order in the image set).
-     *
-     * @see this.selectClass for parameters
-     */
-    position: function (previewMode, widgetValue, params) {
-        this.trigger_up('option_update', {
-            optionName: 'gallery',
-            name: 'image_index_request',
-            data: {
-                $image: this.$target,
-                position: widgetValue,
-            },
-        });
-    },
 });
 });

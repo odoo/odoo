@@ -1725,6 +1725,34 @@ options.registry.Carousel = options.Class.extend({
         this._super(...arguments);
         if (name === 'add_slide') {
             this._addSlide();
+        } else if (name === 'image_index_request') {
+            const slides = Array.from(this.$target[0].querySelectorAll('.carousel-item'));
+            let position = slides.indexOf(data.$image[0]);
+            slides.splice(position, 1);
+            switch (data.position) {
+                case 'first':
+                    slides.unshift(data.$image[0]);
+                    break;
+                case 'prev':
+                    slides.splice(Math.max(position - 1, 0), 0, data.$image[0]);
+                    break;
+                case 'next':
+                    slides.splice(position + 1, 0, data.$image[0]);
+                    break;
+                case 'last':
+                    slides.push(data.$image[0]);
+                    break;
+            }
+            position = slides.indexOf(data.$image[0]);
+            // Modify the DOM with the new slides order
+            this.$target.find(".carousel-inner").empty();
+            this.$target.find(".carousel-inner").append($(slides));
+            this.$target.find('.carousel-indicators li').removeClass('active');
+            this.$target.find('.carousel-indicators li[data-bs-slide-to="' + position + '"]').addClass('active');
+            this.trigger_up('activate_snippet', {
+                $snippet: this.$target.find('.carousel-item.active'),
+                ifInactiveOptions: true,
+            });
         }
     },
 
@@ -3692,6 +3720,31 @@ options.registry.GridImage = options.Class.extend({
                 : 'cover';
         }
         return this._super(...arguments);
+    },
+});
+
+options.registry.GalleryElementPosition = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Allows to change the position of an image (its order in the image set).
+     *
+     * @see this.selectClass for parameters
+     */
+    position: function (previewMode, widgetValue, params) {
+        const optionName = this.$target[0].classList.contains("carousel-item") ? "Carousel" : "gallery";
+        const $image = this.$target[0].classList.contains("s_carousel") ? this.$target.find(".carousel-item.active") : this.$target;
+        this.trigger_up('option_update', {
+            optionName: optionName,
+            name: 'image_index_request',
+            data: {
+                $image: $image,
+                position: widgetValue,
+            },
+        });
     },
 });
 
