@@ -10,9 +10,7 @@ import {
     startServer,
 } from "@mail/../tests/helpers/test_utils";
 
-import fieldRegistry from "web.field_registry";
-import { dom, makeTestPromise, nextTick } from "web.test_utils";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { dom, makeTestPromise } from "web.test_utils";
 
 const { triggerEvent } = dom;
 
@@ -928,72 +926,6 @@ QUnit.module("mail", {}, function () {
                     document.querySelector(".o_MessageView_readMoreLess").textContent,
                     "Read Less",
                     "Read More/Less link on message should still be unfolded after a click on message aside of this button click (Read Less)"
-                );
-            }
-        );
-
-        QUnit.test(
-            "chatter does not flicker when the form view is re-rendered",
-            async function (assert) {
-                const pyEnv = await startServer();
-                const [resPartnerId1, resPartnerId2] = pyEnv["res.partner"].create([
-                    { display_name: "first partner" },
-                    { display_name: "second partner" },
-                ]);
-
-                // define an asynchronous field and use it in the form to ease testing
-                let def;
-                const FieldChar = fieldRegistry.get("char");
-                const AsyncWidget = FieldChar.extend({
-                    willStart() {
-                        return Promise.resolve(def);
-                    },
-                });
-                fieldRegistry.add("async_widget", AsyncWidget);
-                registerCleanup(() => {
-                    delete fieldRegistry.map.async_widget;
-                });
-
-                const views = {
-                    "res.partner,false,form": `<form string="Partners">
-                <sheet>
-                    <field name="name"/>
-                </sheet>
-                <div class="oe_chatter"></div>
-            </form>`,
-                };
-                const { openView } = await start({
-                    serverData: { views },
-                });
-                await openView(
-                    {
-                        res_model: "res.partner",
-                        res_id: resPartnerId1,
-                        views: [[false, "form"]],
-                    },
-                    { resIds: [resPartnerId1, resPartnerId2] }
-                );
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "there should be a chatter"
-                );
-                def = makeDeferred();
-                document.querySelector(".o_pager_next").click();
-                await nextTick();
-
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "there should be a chatter"
-                );
-                def.resolve();
-                await nextTick();
-
-                assert.strictEqual(
-                    document.querySelectorAll(`.o_Chatter`).length,
-                    1,
-                    "there should be a chatter"
                 );
             }
         );

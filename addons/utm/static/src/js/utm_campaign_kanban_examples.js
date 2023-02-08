@@ -1,11 +1,7 @@
-odoo.define('utm.campaing_kanban_examples', function (require) {
-'use strict';
+/** @odoo-module */
 
-var core = require('web.core');
-var kanbanExamplesRegistry = require('web.kanban_examples_registry');
-const { registry } = require("@web/core/registry");
-
-var _lt = core._lt;
+import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
 const exampleData = {
     ghostColumns: [_lt('Ideas'), _lt('Design'), _lt('Review'), _lt('Send'), _lt('Done')],
@@ -33,6 +29,4 @@ const exampleData = {
     }],
 };
 
-kanbanExamplesRegistry.add('utm_campaign', exampleData);
 registry.category("kanban_examples").add("utm_campaign", exampleData);
-});

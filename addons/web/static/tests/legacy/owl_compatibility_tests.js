@@ -1,10 +1,6 @@
 odoo.define('web.OwlCompatibilityTests', function (require) {
     "use strict";
 
-    const fieldRegistry = require('web.field_registry');
-    const widgetRegistry = require('web.widgetRegistry');
-    const FormView = require('web.FormView');
-
     const {
         ComponentAdapter,
         ComponentWrapper,
@@ -1724,65 +1720,6 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             ]);
 
             parent.destroy();
-        });
-
-        QUnit.module("WidgetWrapper");
-
-        QUnit.test("correctly update widget component during mounting", async function (assert) {
-            // It comes with a fix for a bug that occurred because in some circonstances,
-            // a widget component can be updated twice.
-            // Specifically, this occurs when there is 'pad' widget in the form view, because this
-            // widget does a 'setValue' in its 'renderEdit', which thus resets the widget component.
-            assert.expect(4);
-
-            const PadLikeWidget = fieldRegistry.get('char').extend({
-                _renderEdit() {
-                    assert.step("setValue");
-                    this._setValue("some value");
-                }
-            });
-            fieldRegistry.add('pad_like', PadLikeWidget);
-
-            class WidgetComponent extends LegacyComponent {}
-            WidgetComponent.template = xml`<div>Widget</div>`;
-            widgetRegistry.add("widget_comp", WidgetComponent);
-
-            const form = await testUtils.createView({
-                View: FormView,
-                model: 'partner',
-                res_id: 1,
-                data: {
-                    partner: {
-                        fields: {
-                            id: {string: "id", type:"integer"},
-                            foo: {string: "Foo", type: "char"},
-                        },
-                        records: [{
-                            id: 1,
-                            foo: "value",
-                        }],
-                    },
-                },
-                arch: `
-                    <form><sheet><group>
-                        <field name="foo" widget="pad_like" />
-                        <widget name="widget_comp" />
-                    </group></sheet></form>
-                `,
-            });
-
-            assert.containsOnce(form, ".o_legacy_form_view.o_form_readonly");
-
-            await testUtils.dom.click(form.$(".o_form_label")[0]);
-            await testUtils.nextTick(); // wait for quick edit
-
-            assert.containsOnce(form, ".o_legacy_form_view.o_form_editable");
-            assert.verifySteps(["setValue"]);
-
-            form.destroy();
-
-            delete fieldRegistry.map.pad_like;
-            delete widgetRegistry.map.widget_comp;
         });
 
         QUnit.module("useWowlService");

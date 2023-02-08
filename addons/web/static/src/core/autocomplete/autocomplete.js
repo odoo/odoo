@@ -143,8 +143,6 @@ export class AutoComplete extends Component {
             ...params,
             input: this.inputRef.el,
         });
-        const customEvent = new CustomEvent("AutoComplete:OPTION_SELECTED", { bubbles: true });
-        this.root.el.dispatchEvent(customEvent);
         this.close();
     }
 
