@@ -12,9 +12,9 @@ class SuggestionService {
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = services["mail.store"];
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
-        this.thread = services["mail.thread"];
+        this.threadService = services["mail.thread"];
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
-        this.persona = services["mail.persona"];
+        this.personaService = services["mail.persona"];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread } = {}) {
@@ -51,7 +51,7 @@ class SuggestionService {
             kwargs
         );
         suggestedPartners.map((data) => {
-            this.persona.insert({ ...data, type: "partner" });
+            this.personaService.insert({ ...data, type: "partner" });
         });
     }
 
@@ -63,7 +63,7 @@ class SuggestionService {
             { search: term }
         );
         suggestedThreads.map((data) => {
-            this.thread.insert({
+            this.threadService.insert({
                 model: "mail.channel",
                 ...data,
             });

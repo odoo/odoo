@@ -71,11 +71,14 @@ export class Rtc {
         this.store = services["mail.store"];
         this.notification = services.notification;
         this.rpc = services.rpc;
-        this.soundEffects = services["mail.sound_effects"];
-        this.userSettings = services["mail.user_settings"];
+        /** @type {import("@mail/new/core/sound_effects_service").SoundEffects} */
+        this.soundEffectsService = services["mail.sound_effects"];
+        /** @type {import("@mail/new/core/user_settings_service").UserSettings} */
+        this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
-        this.thread = services["mail.thread"];
-        this.persona = services["mail.persona"];
+        this.threadService = services["mail.thread"];
+        /** @type {import("@mail/new/core/persona_service").PersonaService} */
+        this.personaService = services["mail.persona"];
         this.state = reactive({
             hasPendingRequest: false,
             selfSession: undefined,
@@ -109,7 +112,7 @@ export class Rtc {
             pttReleaseTimeout: undefined,
         });
         // discuss refactor: use observe util when available
-        const proxyBlur = reactive(this.userSettings, () => {
+        const proxyBlur = reactive(this.userSettingsService, () => {
             if (!this.state.sendCamera) {
                 return;
             }
@@ -120,17 +123,17 @@ export class Rtc {
         this.ringingThreads = reactive([], () => this.onRingingThreadsChange());
         this.ringingThreads.length;
         this.store.ringingThreads = this.ringingThreads;
-        const proxyVoiceActivation = reactive(this.userSettings, async () => {
+        const proxyVoiceActivation = reactive(this.userSettingsService, async () => {
             await this.linkVoiceActivation();
             void proxyVoiceActivation.voiceActivationThreshold;
         });
         void proxyVoiceActivation.voiceActivationThreshold;
-        const proxyPushToTalk = reactive(this.userSettings, async () => {
+        const proxyPushToTalk = reactive(this.userSettingsService, async () => {
             await this.linkVoiceActivation();
             void proxyPushToTalk.usePushToTalk;
         });
         void proxyPushToTalk.usePushToTalk;
-        const proxyAudioInputDevice = reactive(this.userSettings, async () => {
+        const proxyAudioInputDevice = reactive(this.userSettingsService, async () => {
             if (this.state.selfSession) {
                 this.resetAudioTrack();
             }
@@ -160,33 +163,33 @@ export class Rtc {
         browser.addEventListener("keydown", (ev) => {
             if (
                 !this.state.channel ||
-                this.userSettings.isRegisteringKey ||
-                !this.userSettings.usePushToTalk ||
-                !this.userSettings.isPushToTalkKey(ev)
+                this.userSettingsService.isRegisteringKey ||
+                !this.userSettingsService.usePushToTalk ||
+                !this.userSettingsService.isPushToTalkKey(ev)
             ) {
                 return;
             }
             browser.clearTimeout(this.state.pttReleaseTimeout);
             if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
-                this.soundEffects.play("push-to-talk-on", { volume: 0.3 });
+                this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
             }
             this.setTalking(true);
         });
         browser.addEventListener("keyup", (ev) => {
             if (
                 !this.state.channel ||
-                !this.userSettings.usePushToTalk ||
-                !this.userSettings.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
+                !this.userSettingsService.usePushToTalk ||
+                !this.userSettingsService.isPushToTalkKey(ev, { ignoreModifiers: true }) ||
                 !this.state.selfSession.isTalking
             ) {
                 return;
             }
             if (!this.state.selfSession.isMute) {
-                this.soundEffects.play("push-to-talk-off", { volume: 0.3 });
+                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
             }
             this.state.pttReleaseTimeout = browser.setTimeout(
                 () => this.setTalking(false),
-                this.userSettings.voiceActiveDuration || 0
+                this.userSettingsService.voiceActiveDuration || 0
             );
         });
 
@@ -231,21 +234,21 @@ export class Rtc {
         channel.rtcInvitingSessionId = undefined;
         if (this.state.channel === channel) {
             this.clear();
-            this.soundEffects.play("channel-leave");
+            this.soundEffectsService.play("channel-leave");
         }
     }
 
     onRingingThreadsChange() {
         if (this.ringingThreads.length > 0) {
-            this.soundEffects.play("incoming-call", { loop: true });
+            this.soundEffectsService.play("incoming-call", { loop: true });
         } else {
-            this.soundEffects.stop("incoming-call");
+            this.soundEffectsService.stop("incoming-call");
         }
     }
 
     async deafen() {
         await this.setDeaf(true);
-        this.soundEffects.play("deafen");
+        this.soundEffectsService.play("deafen");
     }
 
     async handleNotification(sessionId, content) {
@@ -391,7 +394,7 @@ export class Rtc {
 
     async mute() {
         await this.setMute(true);
-        this.soundEffects.play("mute");
+        this.soundEffectsService.play("mute");
     }
 
     async toggleCall(channel, startWithVideo) {
@@ -419,7 +422,7 @@ export class Rtc {
 
     async undeafen() {
         await this.setDeaf(false);
-        this.soundEffects.play("undeafen");
+        this.soundEffectsService.play("undeafen");
     }
 
     async unmute() {
@@ -428,7 +431,7 @@ export class Rtc {
         } else {
             await this.resetAudioTrack(true);
         }
-        this.soundEffects.play("unmute");
+        this.soundEffectsService.play("unmute");
     }
 
     //----------------------------------------------------------------------
@@ -564,7 +567,9 @@ export class Rtc {
         };
         peerConnection.ontrack = ({ transceiver, track }) => {
             this.log(session, `received ${track.kind} track`);
-            const volume = this.userSettings.partnerVolumes.get(session.channelMember.persona.id);
+            const volume = this.userSettingsService.partnerVolumes.get(
+                session.channelMember.persona.id
+            );
             this.updateStream(session, track, {
                 mute: this.state.selfSession.isDeaf,
                 volume: volume ?? 1,
@@ -631,7 +636,7 @@ export class Rtc {
         // Initializing a new session implies closing the current session.
         this.clear();
         this.state.channel = channel;
-        this.thread.update(this.state.channel, {
+        this.threadService.update(this.state.channel, {
             serverData: {
                 rtcSessions,
                 invitedPartners,
@@ -683,7 +688,7 @@ export class Rtc {
         this.state.channel.rtcInvitingSessionId = undefined;
         // discuss refactor: todo call channel.update below when availalbe and do the formatting in update
         this.call();
-        this.soundEffects.play("channel-join");
+        this.soundEffectsService.play("channel-join");
         await this.resetAudioTrack(true);
         if (startWithVideo) {
             await this.toggleVideo("camera");
@@ -984,7 +989,7 @@ export class Rtc {
         };
         if (!activateVideo) {
             if (type === "screen") {
-                this.soundEffects.play("screen-sharing");
+                this.soundEffectsService.play("screen-sharing");
             }
             stopVideo();
             return;
@@ -1000,7 +1005,7 @@ export class Rtc {
                 stream = await browser.navigator.mediaDevices.getDisplayMedia({
                     video: VIDEO_CONFIG,
                 });
-                this.soundEffects.play("screen-sharing");
+                this.soundEffectsService.play("screen-sharing");
             }
         } catch {
             const str =
@@ -1079,7 +1084,7 @@ export class Rtc {
             let audioTrack;
             try {
                 const audioStream = await browser.navigator.mediaDevices.getUserMedia({
-                    audio: this.userSettings.audioConstraints,
+                    audio: this.userSettingsService.audioConstraints,
                 });
                 audioTrack = audioStream.getAudioTracks()[0];
             } catch {
@@ -1128,7 +1133,11 @@ export class Rtc {
         if (!this.state.selfSession) {
             return;
         }
-        if (this.userSettings.usePushToTalk || !this.state.channel || !this.state.audioTrack) {
+        if (
+            this.userSettingsService.usePushToTalk ||
+            !this.state.channel ||
+            !this.state.audioTrack
+        ) {
             this.state.selfSession.isTalking = false;
             await this.refreshAudioStatus();
             return;
@@ -1138,7 +1147,7 @@ export class Rtc {
                 onThreshold: async (isAboveThreshold) => {
                     this.setTalking(isAboveThreshold);
                 },
-                volumeThreshold: this.userSettings.voiceActivationThreshold,
+                volumeThreshold: this.userSettingsService.voiceActivationThreshold,
             });
         } catch {
             /**
@@ -1174,7 +1183,7 @@ export class Rtc {
             session.channelId = channelMember.channel.id;
         }
         if (channelMember) {
-            session.channelMemberId = this.thread.insertChannelMember(channelMember).id;
+            session.channelMemberId = this.threadService.insertChannelMember(channelMember).id;
         }
         this.store.rtcSessions[session.id] = session;
         // return reactive version

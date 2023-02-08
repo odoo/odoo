@@ -21,7 +21,7 @@ let nextId = -1;
  */
 export function useAttachmentUploader(thread, composer) {
     const { bus, upload } = useService("file_upload");
-    const notification = useService("notification");
+    const notificationService = useService("notification");
     /** @type {import("@mail/new/core/store_service").Store} */
     const store = useService("mail.store");
     /** @type {import("@mail/new/core/thread_service").ThreadService} */
@@ -101,16 +101,16 @@ export function useAttachmentUploader(thread, composer) {
         uploadingAttachmentIds.delete(tmpId);
         abortByAttachmentId.delete(tmpId);
         if (upload.xhr.status === 413) {
-            notification.add(_t("File too large"), { type: "danger" });
+            notificationService.add(_t("File too large"), { type: "danger" });
             return;
         }
         if (upload.xhr.status !== 200) {
-            notification.add(_t("Server error"), { type: "danger" });
+            notificationService.add(_t("Server error"), { type: "danger" });
             return;
         }
         const response = JSON.parse(upload.xhr.response);
         if (response.error) {
-            notification.add(response.error, { type: "danger" });
+            notificationService.add(response.error, { type: "danger" });
             return;
         }
         const threadId = parseInt(upload.data.get("thread_id"));

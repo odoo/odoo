@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
-class SoundEffects {
+export class SoundEffects {
     constructor(env) {
         this.soundEffects = {
             "channel-join": { defaultVolume: 0.3, path: "/mail/static/src/audio/channel_01_in" },

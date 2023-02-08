@@ -49,17 +49,19 @@ export class Messaging {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        this.notification = services.notification;
-        this.soundEffects = services["mail.sound_effects"];
-        this.userSettings = services["mail.user_settings"];
+        this.notificationService = services.notification;
+        /** @type {import("@mail/new/core/sound_effects_service").SoundEffects} */
+        this.soundEffectsService = services["mail.sound_effects"];
+        /** @type {import("@mail/new/core/user_settings_service").UserSettings} */
+        this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/new/chat/chat_window_service").ChatWindow} */
-        this.chatWindow = services["mail.chat_window"];
+        this.chatWindowService = services["mail.chat_window"];
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
-        this.thread = services["mail.thread"];
+        this.threadService = services["mail.thread"];
         /** @type {import("@mail/new/core/message_service").MessageService} */
-        this.message = services["mail.message"];
+        this.messageService = services["mail.message"];
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
-        this.persona = services["mail.persona"];
+        this.personaService = services["mail.persona"];
         /** @type {import("@mail/new/rtc/rtc_service").Rtc} */
         this.rtc = services["mail.rtc"];
         this.router = services.router;
@@ -79,24 +81,24 @@ export class Messaging {
             });
         });
         const user = services.user;
-        this.persona.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
+        this.personaService.insert({ id: user.partnerId, type: "partner", isAdmin: user.isAdmin });
         this.registeredImStatusPartners = reactive([], () => this.updateImStatusRegistration());
         this.store.registeredImStatusPartners = this.registeredImStatusPartners;
         this.store.discuss.threadLocalId = initialThreadLocalId;
-        this.store.discuss.inbox = this.thread.insert({
+        this.store.discuss.inbox = this.threadService.insert({
             id: "inbox",
             model: "mail.box",
             name: _t("Inbox"),
             type: "mailbox",
         });
-        this.store.discuss.starred = this.thread.insert({
+        this.store.discuss.starred = this.threadService.insert({
             id: "starred",
             model: "mail.box",
             name: _t("Starred"),
             type: "mailbox",
             counter: 0,
         });
-        this.store.discuss.history = this.thread.insert({
+        this.store.discuss.history = this.threadService.insert({
             id: "history",
             model: "mail.box",
             name: _t("History"),
@@ -117,10 +119,13 @@ export class Messaging {
 
     initMessagingCallback(data) {
         if (data.current_partner) {
-            this.store.user = this.persona.insert({ ...data.current_partner, type: "partner" });
+            this.store.user = this.personaService.insert({
+                ...data.current_partner,
+                type: "partner",
+            });
         }
         if (data.currentGuest) {
-            this.store.guest = this.persona.insert({
+            this.store.guest = this.personaService.insert({
                 ...data.currentGuest,
                 type: "guest",
                 channelId: data.channels[0]?.id,
@@ -129,21 +134,24 @@ export class Messaging {
         if (session.user_context.uid) {
             this.loadFailures();
         }
-        this.store.partnerRoot = this.persona.insert({ ...data.partner_root, type: "partner" });
+        this.store.partnerRoot = this.personaService.insert({
+            ...data.partner_root,
+            type: "partner",
+        });
         for (const channelData of data.channels) {
-            const thread = this.thread.createChannelThread(channelData);
+            const thread = this.threadService.createChannelThread(channelData);
             if (channelData.is_minimized && channelData.state !== "closed") {
-                this.chatWindow.insert({
+                this.chatWindowService.insert({
                     autofocus: 0,
                     folded: channelData.state === "folded",
                     thread,
                 });
             }
         }
-        this.thread.sortChannels();
+        this.threadService.sortChannels();
         const settings = data.current_user_settings;
-        this.userSettings.updateFromCommands(settings);
-        this.userSettings.id = settings.id;
+        this.userSettingsService.updateFromCommands(settings);
+        this.userSettingsService.id = settings.id;
         this.store.companyName = data.companyName;
         this.store.discuss.channels.isOpen = settings.is_discuss_sidebar_category_channel_open;
         this.store.discuss.chats.isOpen = settings.is_discuss_sidebar_category_chat_open;
@@ -159,7 +167,7 @@ export class Messaging {
     loadFailures() {
         this.rpc("/mail/load_message_failures", {}, { silent: true }).then((messages) => {
             messages.map((messageData) =>
-                this.message.insert({
+                this.messageService.insert({
                     ...messageData,
                     body: messageData.body ? markup(messageData.body) : messageData.body,
                     // implicit: failures are sent by the server at
@@ -258,7 +266,7 @@ export class Messaging {
      * @param {Object} options
      */
     async sendOdooNotification(message, options) {
-        this.notification.add(message, options);
+        this.notificationService.add(message, options);
         if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
             try {
                 await this.outOfFocusAudio.play();
@@ -314,7 +322,7 @@ export class Messaging {
                         const { id, message: messageData } = notif.payload;
                         const channel = this.store.threads[createLocalId("mail.channel", id)];
                         Promise.resolve(
-                            channel ?? this.thread.joinChat(messageData.author.id)
+                            channel ?? this.threadService.joinChat(messageData.author.id)
                         ).then((channel) => {
                             if ("parentMessage" in messageData && messageData.parentMessage.body) {
                                 messageData.parentMessage.body = markup(
@@ -324,7 +332,7 @@ export class Messaging {
                             const data = Object.assign(messageData, {
                                 body: markup(messageData.body),
                             });
-                            const message = this.message.insert({
+                            const message = this.messageService.insert({
                                 ...data,
                                 res_id: channel.id,
                                 model: channel.model,
@@ -337,24 +345,24 @@ export class Messaging {
                                 if (channel.type !== "channel" && !this.store.guest) {
                                     // disabled on non-channel threads and
                                     // on `channel` channels for performance reasons
-                                    this.thread.markAsFetched(channel);
+                                    this.threadService.markAsFetched(channel);
                                 }
                             }
-                            this.chatWindow.insert({ thread: channel });
+                            this.chatWindowService.insert({ thread: channel });
                             if (
                                 channel.composer.isFocused &&
                                 channel.mostRecentNonTransientMessage &&
                                 !this.store.guest &&
                                 channel.mostRecentNonTransientMessage === channel.mostRecentMsg
                             ) {
-                                this.thread.markAsRead(channel);
+                                this.threadService.markAsRead(channel);
                             }
                         });
                     }
                     break;
                 case "mail.channel/leave":
                     {
-                        const thread = this.thread.insert({
+                        const thread = this.threadService.insert({
                             ...notif.payload,
                             model: "mail.channel",
                         });
@@ -362,7 +370,7 @@ export class Messaging {
                         if (thread.localId === this.store.discuss.threadLocalId) {
                             this.store.discuss.threadLocalId = undefined;
                         }
-                        this.notification.add(
+                        this.notificationService.add(
                             sprintf(_t("You unsubscribed from %s."), thread.displayName),
                             { type: "info" }
                         );
@@ -381,7 +389,7 @@ export class Messaging {
                     break;
                 case "mail.channel/joined": {
                     const { channel, invited_by_user_id: invitedByUserId } = notif.payload;
-                    const thread = this.thread.insert({
+                    const thread = this.threadService.insert({
                         ...channel,
                         rtcSessions: channel.rtcSessions[0][1],
                         model: "mail.channel",
@@ -391,7 +399,7 @@ export class Messaging {
                         type: channel.channel.channel_type,
                     });
                     if (invitedByUserId !== this.store.user?.user.id) {
-                        this.notification.add(
+                        this.notificationService.add(
                             sprintf(_t("You have been invited to #%s"), thread.displayName),
                             { type: "info" }
                         );
@@ -399,7 +407,7 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/legacy_insert":
-                    this.thread.insert({
+                    this.threadService.insert({
                         id: notif.payload.channel.id,
                         model: "mail.channel",
                         serverData: notif.payload,
@@ -407,7 +415,7 @@ export class Messaging {
                     });
                     break;
                 case "mail.channel/transient_message":
-                    return this.message.createTransient(
+                    return this.messageService.createTransient(
                         Object.assign(notif.payload, { body: markup(notif.payload.body) })
                     );
                 case "mail.link.preview/delete":
@@ -421,7 +429,7 @@ export class Messaging {
                     break;
                 case "mail.message/inbox": {
                     const data = Object.assign(notif.payload, { body: markup(notif.payload.body) });
-                    this.message.insert(data);
+                    this.messageService.insert(data);
                     break;
                 }
                 case "mail.message/mark_as_read": {
@@ -455,16 +463,16 @@ export class Messaging {
                     if (
                         this.store.discuss.inbox.counter > this.store.discuss.inbox.messages.length
                     ) {
-                        this.thread.fetchMessages(this.store.discuss.inbox);
+                        this.threadService.fetchMessages(this.store.discuss.inbox);
                     }
                     break;
                 }
                 case "mail.message/toggle_star": {
                     const { message_ids: messageIds, starred } = notif.payload;
                     for (const messageId of messageIds) {
-                        const message = this.message.insert({ id: messageId });
-                        this.message.updateStarred(message, starred);
-                        this.message.sortMessages(this.store.discuss.starred);
+                        const message = this.messageService.insert({ id: messageId });
+                        this.messageService.updateStarred(message, starred);
+                        this.messageService.sortMessages(this.store.discuss.starred);
                     }
                     break;
                 }
@@ -504,13 +512,12 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.channel.id)
-                    ];
+                    const channel =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
                     if (!channel) {
                         return;
                     }
-                    const member = this.thread.insertChannelMember(notif.payload);
+                    const member = this.threadService.insertChannelMember(notif.payload);
                     if (member.persona === this.store.self) {
                         return;
                     }
@@ -530,14 +537,13 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread = this.store.threads[
-                        createLocalId("mail.channel", notif.payload.id)
-                    ];
+                    const thread =
+                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
                     if (!thread) {
                         return;
                     }
-                    this.thread.remove(thread);
-                    this.notification.add(
+                    this.threadService.remove(thread);
+                    this.notificationService.add(
                         sprintf(_t("You unpinned your conversation with %s"), thread.displayName),
                         { type: "info" }
                     );
@@ -546,7 +552,7 @@ export class Messaging {
                 case "mail.message/notification_update":
                     {
                         notif.payload.elements.map((message) => {
-                            this.message.insert({
+                            this.messageService.insert({
                                 ...message,
                                 body: markup(message.body),
                                 // implicit: failures are sent by the server at
@@ -563,7 +569,7 @@ export class Messaging {
 
     _handleNotificationRecordInsert(notif) {
         if (notif.payload.Thread) {
-            this.thread.insert({
+            this.threadService.insert({
                 id: notif.payload.Thread.id,
                 model: notif.payload.Thread.model,
                 serverData: notif.payload.Thread,
@@ -578,7 +584,7 @@ export class Messaging {
                 : [notif.payload.Partner];
             for (const partner of partners) {
                 if (partner.im_status) {
-                    this.persona.insert({ ...partner, type: "partner" });
+                    this.personaService.insert({ ...partner, type: "partner" });
                 }
             }
         }
@@ -587,7 +593,7 @@ export class Messaging {
                 ? notif.payload.Guest
                 : [notif.payload.Guest];
             for (const guest of guests) {
-                this.persona.insert({ ...guest, type: "guest" });
+                this.personaService.insert({ ...guest, type: "guest" });
             }
         }
         const { LinkPreview: linkPreviews } = notif.payload;
@@ -600,14 +606,14 @@ export class Messaging {
         }
         const { Message: messageData } = notif.payload;
         if (messageData) {
-            this.message.insert({
+            this.messageService.insert({
                 ...messageData,
                 body: messageData.body ? markup(messageData.body) : messageData.body,
             });
         }
         const { "res.users.settings": settings } = notif.payload;
         if (settings) {
-            this.userSettings.updateFromCommands(settings);
+            this.userSettingsService.updateFromCommands(settings);
             this.store.discuss.chats.isOpen =
                 settings.is_discuss_sidebar_category_chat_open ?? this.store.discuss.chats.isOpen;
             this.store.discuss.channels.isOpen =
@@ -636,9 +642,9 @@ export class Messaging {
                 break;
         }
         if (Object.keys(channel.rtcSessions).length > oldCount) {
-            this.soundEffects.play("channel-join");
+            this.soundEffectsService.play("channel-join");
         } else if (Object.keys(channel.rtcSessions).length < oldCount) {
-            this.soundEffects.play("member-leave");
+            this.soundEffectsService.play("member-leave");
         }
     }
 
@@ -660,7 +666,7 @@ export class Messaging {
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
-                this.message.insert({ ...data, res_id: thread.id, model: thread.model });
+                this.messageService.insert({ ...data, res_id: thread.id, model: thread.model });
             }
         }
     });
@@ -689,7 +695,7 @@ export class Messaging {
                 limit,
             ]);
             partners = partnersData.map((data) =>
-                this.persona.insert({ ...data, type: "partner" })
+                this.personaService.insert({ ...data, type: "partner" })
             );
         }
         return partners;

@@ -18,19 +18,19 @@ export class ThreadService {
     constructor(env, services) {
         this.env = env;
         /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
-        this.attachments = services["mail.attachment"];
+        this.attachmentsService = services["mail.attachment"];
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.rpc = services.rpc;
         /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
-        this.chatWindow = services["mail.chat_window"];
-        this.notification = services.notification;
+        this.chatWindowService = services["mail.chat_window"];
+        this.notificationService = services.notification;
         this.router = services.router;
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
-        this.persona = services["mail.persona"];
+        this.personaService = services["mail.persona"];
         /** @type {import("@mail/new/core/message_service").MessageService} */
-        this.message = services["mail.message"];
+        this.messageService = services["mail.message"];
         // FIXME this prevents cyclic dependencies between mail.thread and mail.message
         this.env.bus.addEventListener("MESSAGE-SERVICE:INSERT_THREAD", ({ detail }) => {
             const model = detail.model;
@@ -162,7 +162,7 @@ export class ThreadService {
                     ? markup(data.parentMessage.body)
                     : data.parentMessage.body;
             }
-            return this.message.insert(
+            return this.messageService.insert(
                 Object.assign(data, { body: data.body ? markup(data.body) : data.body }),
                 true
             );
@@ -232,7 +232,7 @@ export class ThreadService {
         if (this.store.discuss.isActive && !this.store.isSmall) {
             this.setDiscussThread(thread);
         } else {
-            const chatWindow = this.chatWindow.insert({
+            const chatWindow = this.chatWindowService.insert({
                 folded: false,
                 thread,
                 replaceNewMessageChatWindow,
@@ -241,7 +241,7 @@ export class ThreadService {
             if (thread) {
                 thread.state = "open";
             }
-            this.chatWindow.notifyState(chatWindow);
+            this.chatWindowService.notifyState(chatWindow);
         }
     }
 
@@ -273,7 +273,7 @@ export class ThreadService {
                 }
             }
             if (!user.partner_id) {
-                this.notification.add(_t("You can only chat with existing users."), {
+                this.notificationService.add(_t("You can only chat with existing users."), {
                     type: "warning",
                 });
                 return;
@@ -287,7 +287,7 @@ export class ThreadService {
             chat = await this.joinChat(partnerId);
         }
         if (!chat) {
-            this.notification.add(
+            this.notificationService.add(
                 _t("An unexpected error occurred during the creation of the chat."),
                 { type: "warning" }
             );
@@ -394,7 +394,7 @@ export class ThreadService {
             // smart process to avoid triggering reactives when there is no change between the 2 arrays
             replaceArrayWithCompare(
                 thread.attachments,
-                attachments.map((attachment) => this.attachments.insert(attachment)),
+                attachments.map((attachment) => this.attachmentsService.insert(attachment)),
                 (a1, a2) => a1.id === a2.id
             );
         }
@@ -464,7 +464,7 @@ export class ThreadService {
                 thread.invitedPartners =
                     serverData.invitedPartners &&
                     serverData.invitedPartners.map((partner) =>
-                        this.persona.insert({ ...partner, type: "partner" })
+                        this.personaService.insert({ ...partner, type: "partner" })
                     );
             }
             if ("seen_partners_info" in serverData) {
@@ -472,12 +472,15 @@ export class ThreadService {
                     ({ fetched_message_id, partner_id, seen_message_id }) => {
                         return {
                             lastFetchedMessage: fetched_message_id
-                                ? this.message.insert({ id: fetched_message_id })
+                                ? this.messageService.insert({ id: fetched_message_id })
                                 : undefined,
                             lastSeenMessage: seen_message_id
-                                ? this.message.insert({ id: seen_message_id })
+                                ? this.messageService.insert({ id: seen_message_id })
                                 : undefined,
-                            partner: this.persona.insert({ id: partner_id, type: "partner" }),
+                            partner: this.personaService.insert({
+                                id: partner_id,
+                                type: "partner",
+                            }),
                         };
                     }
                 );
@@ -540,7 +543,7 @@ export class ThreadService {
         }
         Object.assign(channelMember, {
             id: data.id,
-            persona: this.persona.insert({
+            persona: this.personaService.insert({
                 ...(data.persona.partner ?? data.persona.guest),
                 type: data.persona.guest ? "guest" : "partner",
                 country: data.persona.partner?.country,
@@ -559,7 +562,9 @@ export class ThreadService {
      * @param {string} body
      */
     async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
-        const command = this.store.user ? this.message.getCommandFromText(thread, body) : undefined;
+        const command = this.store.user
+            ? this.messageService.getCommandFromText(thread, body)
+            : undefined;
         if (command) {
             await this.executeCommand(thread, command, body);
             return;
@@ -567,7 +572,7 @@ export class ThreadService {
         let tmpMsg;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
-            ? this.message.getMentionsFromText(rawMentions, body)
+            ? this.messageService.getMentionsFromText(rawMentions, body)
             : undefined;
         const partner_ids = validMentions?.partners.map((partner) => partner.id);
         if (!isNote) {
@@ -594,7 +599,7 @@ export class ThreadService {
             params.thread_id = thread.id;
             params.thread_model = thread.model;
         } else {
-            const lastMessageId = this.message.getLastMessageId();
+            const lastMessageId = this.messageService.getLastMessageId();
             const tmpId = lastMessageId + 0.01;
             const tmpData = {
                 id: tmpId,
@@ -611,7 +616,7 @@ export class ThreadService {
             if (parentId) {
                 tmpData.parentMessage = this.store.messages[parentId];
             }
-            tmpMsg = this.message.insert({
+            tmpMsg = this.messageService.insert({
                 ...tmpData,
                 body: markup(await prettifyMessageContent(body, validMentions)),
                 res_id: thread.id,
@@ -624,7 +629,9 @@ export class ThreadService {
                 ? markup(data.parentMessage.body)
                 : data.parentMessage.body;
         }
-        const message = this.message.insert(Object.assign(data, { body: markup(data.body) }));
+        const message = this.messageService.insert(
+            Object.assign(data, { body: markup(data.body) })
+        );
         if (!message.isEmpty) {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
@@ -669,7 +676,7 @@ export class ThreadService {
     localMessageUnreadCounter(thread) {
         let baseCounter = thread.serverMessageUnreadCounter;
         let countFromId = thread.serverLastSeenMsgBySelf ? thread.serverLastSeenMsgBySelf : 0;
-        this.message.sortMessages(thread);
+        this.messageService.sortMessages(thread);
         const lastSeenMessageId = this.lastSeenBySelfMessageId(thread);
         const firstMessage = thread.messages[0];
         if (firstMessage && lastSeenMessageId && lastSeenMessageId >= firstMessage.id) {

@@ -20,11 +20,10 @@ export class MessageService {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
-        this.presence = services.presence;
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
-        this.persona = services["mail.persona"];
+        this.personaService = services["mail.persona"];
         /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
-        this.attachment = services["mail.attachment"];
+        this.attachmentService = services["mail.attachment"];
     }
 
     async update(message, body, attachments = [], rawMentions) {
@@ -219,7 +218,7 @@ export class MessageService {
         } = data;
         assignDefined(message, remainingData);
         assignDefined(message, {
-            attachments: attachments.map((attachment) => this.attachment.insert(attachment)),
+            attachments: attachments.map((attachment) => this.attachmentService.insert(attachment)),
             defaultSubject,
             isDiscussion,
             isNote,
@@ -239,13 +238,13 @@ export class MessageService {
             message.author = undefined;
         }
         if (data.author?.id) {
-            message.author = this.persona.insert({
+            message.author = this.personaService.insert({
                 ...data.author,
                 type: "partner",
             });
         }
         if (data.guestAuthor?.id) {
-            message.author = this.persona.insert({
+            message.author = this.personaService.insert({
                 ...data.guestAuthor,
                 type: "guest",
                 channelId: message.originThread.id,
@@ -253,7 +252,7 @@ export class MessageService {
         }
         if (data.recipients) {
             message.recipients = data.recipients.map((recipient) =>
-                this.persona.insert({ ...recipient, type: "partner" })
+                this.personaService.insert({ ...recipient, type: "partner" })
             );
         }
         if (data.record_name) {
@@ -339,7 +338,7 @@ export class MessageService {
             const [command, partnerData] = Array.isArray(rawPartner)
                 ? rawPartner
                 : ["insert", rawPartner];
-            const persona = this.persona.insert({ ...partnerData, type: "partner" });
+            const persona = this.personaService.insert({ ...partnerData, type: "partner" });
             if (command === "insert" && !alreadyKnownPersonaIds.has(persona.localId)) {
                 reaction.personaLocalIds.push(persona.localId);
             } else if (command !== "insert") {
@@ -381,7 +380,7 @@ export class MessageService {
             notification_type: data.notification_type,
             failure_type: data.failure_type,
             partner: data.res_partner_id
-                ? this.persona.insert({
+                ? this.personaService.insert({
                       id: data.res_partner_id[0],
                       name: data.res_partner_id[1],
                       type: "partner",
@@ -469,7 +468,7 @@ export class MessageService {
 }
 
 export const messageService = {
-    dependencies: ["mail.store", "rpc", "orm", "presence", "mail.persona", "mail.attachment"],
+    dependencies: ["mail.store", "rpc", "orm", "mail.persona", "mail.attachment"],
     start(env, services) {
         return new MessageService(env, services);
     },

@@ -80,11 +80,12 @@ export class Chatter extends Component {
     setup() {
         this.action = useService("action");
         this.messaging = useMessaging();
-        this.activity = useState(useService("mail.activity"));
+        /** @type {import("@mail/new/activity/activity_service").ActivityService} */
+        this.activityService = useState(useService("mail.activity"));
         /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
-        this.attachment = useService("mail.attachment");
+        this.attachmentService = useService("mail.attachment");
         /** @type {import("@mail/new/web/chatter_service").ChatterService} */
-        this.chatter = useState(useService("mail.chatter"));
+        this.chatterService = useState(useService("mail.chatter"));
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         /** @type {import('@mail/new/core/persona_service').PersonaService} */
@@ -101,7 +102,7 @@ export class Chatter extends Component {
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
-            this.chatter.getThread(this.props.threadModel, this.props.threadId)
+            this.chatterService.getThread(this.props.threadModel, this.props.threadId)
         );
         this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
         this.rootRef = useRef("root");
@@ -178,7 +179,7 @@ export class Chatter extends Component {
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
         const { threadModel } = this.props;
-        this.state.thread = this.chatter.getThread(threadModel, threadId);
+        this.state.thread = this.chatterService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
             // todo: reset activities/attachments/followers
@@ -188,7 +189,7 @@ export class Chatter extends Component {
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.chatter.fetchData(threadId, threadModel, requestList).then((result) => {
+        this.chatterService.fetchData(threadId, threadModel, requestList).then((result) => {
             this.state.thread.hasReadAccess = result.hasReadAccess;
             this.state.thread.hasWriteAccess = result.hasWriteAccess;
             if ("activities" in result) {
@@ -197,11 +198,11 @@ export class Chatter extends Component {
                     if (activity.note) {
                         activity.note = markup(activity.note);
                     }
-                    existingIds.add(this.activity.insert(activity).id);
+                    existingIds.add(this.activityService.insert(activity).id);
                 }
                 for (const activity of this.activities) {
                     if (!existingIds.has(activity.id)) {
-                        this.activity.delete(activity);
+                        this.activityService.delete(activity);
                     }
                 }
             }
@@ -213,7 +214,7 @@ export class Chatter extends Component {
             }
             if ("mainAttachment" in result) {
                 this.state.thread.mainAttachment = result.mainAttachment.id
-                    ? this.attachment.insert(result.mainAttachment)
+                    ? this.attachmentService.insert(result.mainAttachment)
                     : undefined;
             }
             // TODO move this somewhere else to make sure it works in all flows (eg. attachment upload)
@@ -225,14 +226,14 @@ export class Chatter extends Component {
             }
             if ("followers" in result) {
                 for (const followerData of result.followers) {
-                    this.chatter.insertFollower({
+                    this.chatterService.insertFollower({
                         followedThread: this.state.thread,
                         ...followerData,
                     });
                 }
             }
             if ("suggestedRecipients" in result) {
-                this.chatter.insertSuggestedRecipients(
+                this.chatterService.insertSuggestedRecipients(
                     this.state.thread,
                     result.suggestedRecipients
                 );
@@ -288,13 +289,13 @@ export class Chatter extends Component {
      * @param {import("@mail/new/core/follower_model").Follower} follower
      */
     async onClickRemove(ev, follower) {
-        await this.chatter.removeFollower(follower);
+        await this.chatterService.removeFollower(follower);
         this.onFollowerChanged();
         document.body.click(); // hack to close dropdown
     }
 
     async onClickUnfollow() {
-        await this.chatter.removeFollower(this.state.thread.followerOfSelf);
+        await this.chatterService.removeFollower(this.state.thread.followerOfSelf);
         this.onFollowerChanged();
     }
 
@@ -350,7 +351,7 @@ export class Chatter extends Component {
     }
 
     async scheduleActivity() {
-        await this.activity.schedule(this.props.threadModel, this.props.threadId);
+        await this.activityService.schedule(this.props.threadModel, this.props.threadId);
         this.load(this.props.threadId, ["activities"]);
     }
 
