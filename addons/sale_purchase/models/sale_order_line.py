@@ -177,8 +177,10 @@ class SaleOrderLine(models.Model):
         else:
             product_ctx.update({'partner_id': purchase_order.partner_id.id})
 
+        product = self.product_id.with_context(**product_ctx)
         return {
-            'name': self.product_id.with_context(**product_ctx).display_name,
+            'name': product.display_name + ''.join(['\n', product.description_purchase])
+                        if product.description_purchase else product.display_name,
             'product_qty': purchase_qty_uom,
             'product_id': self.product_id.id,
             'product_uom': self.product_id.uom_po_id.id,
