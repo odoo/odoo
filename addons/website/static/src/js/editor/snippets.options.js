@@ -1551,6 +1551,12 @@ options.registry.OptionsTab = options.Class.extend({
         if (params.param === this.GRAY_PARAMS.HUE) {
             return this.grayHueIsDefined;
         }
+        if (params.removeFont) {
+            const font = await this._computeWidgetState('customizeWebsiteVariable', {
+                variable: params.removeFont,
+            });
+            return !!font;
+        }
         return this._super(...arguments);
     },
     /**
