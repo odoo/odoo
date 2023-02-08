@@ -17,6 +17,7 @@
         'wizard/pos_payment.xml',
         'wizard/pos_close_session_wizard.xml',
         'wizard/pos_session_check_product_wizard.xml',
+        'wizard/pos_daily_sales_reports.xml',
         'views/pos_assets_common.xml',
         'views/pos_assets_index.xml',
         'views/pos_assets_qunit.xml',

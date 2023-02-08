@@ -24,8 +24,13 @@
     <menuitem id="menu_point_rep"
         name="Reporting"
         parent="menu_point_root"
-        sequence="90"
-        groups="group_pos_manager"/>
+        sequence="90"/>
+
+    <menuitem id="menu_report_daily_details"
+        name="Session Report"
+        action="action_report_pos_daily_sales_reports"
+        parent="menu_point_rep"
+        sequence="5"/>
 
     <!-- Config menu and sub menus -->
     <menuitem id="menu_point_config_product"
