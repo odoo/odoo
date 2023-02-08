@@ -1740,9 +1740,10 @@ class HttpDispatcher(Dispatcher):
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
+            was_connected = session.uid is not None
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
-            if not session.is_explicit:
+            if not session.is_explicit and was_connected:
                 root.session_store.rotate(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
             return response
