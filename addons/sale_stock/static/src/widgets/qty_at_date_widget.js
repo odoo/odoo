@@ -14,7 +14,7 @@ export class QtyAtDatePopover extends Component {
     }
 
     openForecast() {
-        this.actionService.doAction("stock.stock_replenishment_product_product_action", {
+        this.actionService.doAction("stock.stock_forecasted_product_product_action", {
             additionalContext: {
                 active_model: 'product.product',
                 active_id: this.props.record.data.product_id[0],
