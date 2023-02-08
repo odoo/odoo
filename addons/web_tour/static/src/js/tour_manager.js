@@ -30,10 +30,12 @@ var do_before_unload = utils.do_before_unload;
 var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
-    init: function(parent, consumed_tours, disabled = false, toursFromRegistry = true) {
+    init: function(parent, disabled = false) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
-
+        this.disabled = disabled;
+    },
+    initialize: function(consumed_tours) {
         this.$body = $('body');
         this.active_tooltips = {};
         this.tours = {};
@@ -41,7 +43,6 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.consumed_tours = (consumed_tours || []).filter(tourName => {
             return !local_storage.getItem(get_debugging_key(tourName));
         });
-        this.disabled = disabled;
         this.running_tour = local_storage.getItem(get_running_key());
         if (this.running_tour) {
             // Transitions can cause DOM mutations which will cause the tour_service
@@ -53,15 +54,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
 
-        if (toursFromRegistry) {
-            const register = (name, params) => {
-                this.register(name, params, params.steps);
-            };
-            for (let [name, params] of tourRegistry.getEntries()) {
-                register(name, params);
-            }
-            tourRegistry.addEventListener("UPDATE", ev => register(ev.detail.key, ev.detail.value));
+        const register = (name, params) => {
+            this.register(name, params, params.steps);
+        };
+        for (let [name, params] of tourRegistry.getEntries()) {
+            register(name, params);
         }
+        tourRegistry.addEventListener("UPDATE", ev => register(ev.detail.key, ev.detail.value));
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
     },
     /**
