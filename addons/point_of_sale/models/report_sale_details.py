@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
-from odoo.osv.expression import AND
 from datetime import timedelta
 
 import pytz
 
+from odoo import api, fields, models, _
+from odoo.osv.expression import AND
 
 class ReportSaleDetails(models.AbstractModel):
 
-    _inherit = 'report.point_of_sale.report_saledetails'
+    _name = 'report.point_of_sale.report_saledetails'
+    _description = 'Point of Sale Details'
+
 
     @api.model
     def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
@@ -26,8 +26,6 @@ class ReportSaleDetails(models.AbstractModel):
         :type session_ids: list of numbers.
         :returns: dict -- Serialised sales.
         """
-        #This function is overriding the get_sale_details function in point_of_sale module
-        #It will be removed soon after the forwardport of the improvment of the X and Z reports.
         domain = [('state', 'in', ['paid', 'invoiced', 'done'])]
         if (session_ids):
             domain = AND([domain, [('session_id', 'in', session_ids)]])
@@ -80,6 +78,9 @@ class ReportSaleDetails(models.AbstractModel):
                 else:
                     refund_done, refund_taxes = self._get_products_and_taxes_dict(line, refund_done, refund_taxes, currency)
 
+        taxes_info = self._get_taxes_info(taxes)
+        refund_taxes_info = self._get_taxes_info(refund_taxes)
+
         payment_ids = self.env["pos.payment"].search([('pos_order_id', 'in', orders.ids)]).ids
         if payment_ids:
             self.env.cr.execute("""
@@ -115,7 +116,7 @@ class ReportSaleDetails(models.AbstractModel):
             cash_counted = 0
             if session.cash_register_balance_end_real:
                 cash_counted = session.cash_register_balance_end_real
-
+            is_cash_method = False
             for payment in payments:
                 account_payments = self.env['account.payment'].search([('pos_session_id', '=', session.id)])
                 if payment['session'] == session.id:
@@ -135,6 +136,7 @@ class ReportSaleDetails(models.AbstractModel):
                                 payment['count'] = True
                                 break
                     else:
+                        is_cash_method = True
                         payment['final_count'] = payment['total'] + session.cash_register_balance_start + session.cash_real_transaction
                         payment['money_counted'] = cash_counted
                         payment['money_difference'] = payment['money_counted'] - payment['final_count']
@@ -161,6 +163,17 @@ class ReportSaleDetails(models.AbstractModel):
                                 })
                         payment['cash_moves'] = cash_in_out_list
                         payment['count'] = True
+            if not is_cash_method:
+                cash_name = 'Cash ' + str(session.name)
+                payments.insert(0, {
+                    'name': cash_name,
+                    'total': 0,
+                    'final_count': session.cash_register_balance_start,
+                    'money_counted': session.cash_register_balance_end_real,
+                    'money_difference': session.cash_register_balance_end_real - session.cash_register_balance_start,
+                    'cash_moves': [],
+                    'count': True,
+                })
         products = []
         refund_products = []
         for category_name, product_list in products_sold.items():
@@ -227,7 +240,7 @@ class ReportSaleDetails(models.AbstractModel):
             discount_amount += session.get_total_discount()
             invoiceList.append({
                 'name': session.name,
-                'invoices': session._get_invoice_total_list()
+                'invoices': session._get_invoice_total_list(),
             })
             invoiceTotal += session._get_total_invoice()
 
@@ -244,9 +257,11 @@ class ReportSaleDetails(models.AbstractModel):
             'payments': payments,
             'company_name': self.env.company.name,
             'taxes': list(taxes.values()),
+            'taxes_info': taxes_info,
             'products': products,
             'products_info': products_info,
             'refund_taxes': list(refund_taxes.values()),
+            'refund_taxes_info': refund_taxes_info,
             'refund_info': refund_info,
             'refund_products': refund_products,
             'discount_number': discount_number,
@@ -291,80 +306,24 @@ class ReportSaleDetails(models.AbstractModel):
 
         return categories, {'total': all_total, 'qty': all_qty}
 
-    class PosSession(models.Model):
+    @api.model
+    def _get_report_values(self, docids, data=None):
+        data = dict(data or {})
+        # initialize data keys with their value if provided, else None
+        data.update({
+            'session_ids': data.get('session_ids') or docids,
+            'config_ids': data.get('config_ids'),
+            'date_start': data.get('date_start'),
+            'date_stop': data.get('date_stop')
+        })
+        configs = self.env['pos.config'].browse(data['config_ids'])
+        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids, data['session_ids']))
+        return data
 
-        _inherit = 'pos.session'
-
-        closing_notes = fields.Text(string='Closing Notes')
-
-        def update_closing_control_state_session(self, notes):
-            # Prevent closing the session again if it was already closed
-            if self.state == 'closed':
-                raise UserError(_('This session is already closed.'))
-            # Prevent the session to be opened again.
-            self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
-            self._post_cash_details_message('Closing', self.cash_register_difference, notes)
-
-        def get_total_discount(self):
-            amount = 0
-            for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
-                normal_price = line.qty * line.price_unit
-                normal_price = normal_price + (normal_price / 100 * line.tax_ids.amount)
-                amount += normal_price - line.price_subtotal_incl
-
-            return amount
-
-        def _get_invoice_total_list(self):
-            invoice_list = []
-            for order in self.order_ids.filtered(lambda o: o.is_invoiced):
-                invoice = {
-                    'total': order.account_move.amount_total,
-                    'name': order.account_move.highest_name,
-                    'order_ref': order.pos_reference
-                }
-                invoice_list.append(invoice)
-
-            return invoice_list
-
-        def _get_total_invoice(self):
-            amount = 0
-            for order in self.order_ids.filtered(lambda o: o.is_invoiced):
-                amount += order.amount_paid
-
-            return amount
-
-        def get_total_sold_refund_per_category(self, group_by_user_id=None):
-            total_sold_per_user_per_category = {}
-            total_refund_per_user_per_category = {}
-
-            for order in self.order_ids:
-                if group_by_user_id:
-                    user_id = order.user_id.id
-                else:
-                    # use a user_id of 0 to keep the logic between with user group and without user group the same
-                    user_id = 0
-
-                if user_id not in total_sold_per_user_per_category:
-                    total_sold_per_user_per_category[user_id] = {}
-                    total_refund_per_user_per_category[user_id] = {}
-
-                total_sold_per_category = total_sold_per_user_per_category[user_id]
-                total_refund_per_category = total_refund_per_user_per_category[user_id]
-
-                for line in order.lines:
-                    key = line.product_id.pos_categ_id.name or "None"
-                    if line.qty >= 0:
-                        if key in total_sold_per_category:
-                            total_sold_per_category[key] += line.price_subtotal_incl
-                        else:
-                            total_sold_per_category[key] = line.price_subtotal_incl
-                    else:
-                        if key in total_refund_per_category:
-                            total_refund_per_category[key] += line.price_subtotal_incl
-                        else:
-                            total_refund_per_category[key] = line.price_subtotal_incl
-
-            if group_by_user_id or not total_sold_per_user_per_category:
-                return list(total_sold_per_user_per_category.items()), list(total_refund_per_user_per_category.items())
-            else:
-                return list(total_sold_per_user_per_category[0].items()), list(total_refund_per_user_per_category[0].items())
+    def _get_taxes_info(self, taxes):
+        total_tax_amount = 0
+        total_base_amount = 0
+        for tax in taxes.values():
+            total_tax_amount += tax['tax_amount']
+            total_base_amount += tax['base_amount']
+        return {'tax_amount': total_tax_amount, 'base_amount': total_base_amount}

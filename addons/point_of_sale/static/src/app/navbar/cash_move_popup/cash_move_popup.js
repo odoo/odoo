@@ -17,6 +17,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         super.setup();
         this.notification = useService("pos_notification");
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
         this.state = useState({
             /** @type {'in'|'out'} */
             type: "out",

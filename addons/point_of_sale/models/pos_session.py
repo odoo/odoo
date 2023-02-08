@@ -53,6 +53,7 @@ class PosSession(models.Model):
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
 
     opening_notes = fields.Text(string="Opening Notes")
+    closing_notes = fields.Text(string="Closing Notes")
     cash_control = fields.Boolean(compute='_compute_cash_all', string='Has Cash Control', compute_sudo=True)
     cash_journal_id = fields.Many2one('account.journal', compute='_compute_cash_all', string='Cash Journal', store=True)
 
@@ -420,7 +421,7 @@ class PosSession(models.Model):
         if self.state == 'closed':
             raise UserError(_('This session is already closed.'))
         # Prevent the session to be opened again.
-        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+        self.write({'state': 'closing_control', 'stop_at': fields.Datetime.now(), 'closing_notes': notes})
         self._post_cash_details_message('Closing', self.cash_register_difference, notes)
 
     def post_closing_cash_details(self, counted_cash):
@@ -2008,6 +2009,69 @@ class PosSession(models.Model):
         partners = self.env['res.partner'].search_read(**params['search_params'])
         return partners
 
+    def get_total_discount(self):
+        amount = 0
+        for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
+            normal_price = line.qty * line.price_unit
+            normal_price = normal_price + (normal_price / 100 * line.tax_ids.amount)
+            amount += normal_price - line.price_subtotal_incl
+
+        return amount
+
+    def _get_invoice_total_list(self):
+        invoice_list = []
+        for order in self.order_ids.filtered(lambda o: o.is_invoiced):
+            invoice = {
+                'total': order.account_move.amount_total,
+                'name': order.account_move.highest_name,
+                'order_ref': order.pos_reference,
+            }
+            invoice_list.append(invoice)
+
+        return invoice_list
+
+    def _get_total_invoice(self):
+        amount = 0
+        for order in self.order_ids.filtered(lambda o: o.is_invoiced):
+            amount += order.amount_paid
+
+        return amount
+
+    def get_total_sold_refund_per_category(self, group_by_user_id=None):
+        total_sold_per_user_per_category = {}
+        total_refund_per_user_per_category = {}
+
+        for order in self.order_ids:
+            if group_by_user_id:
+                user_id = order.user_id.id
+            else:
+                # use a user_id of 0 to keep the logic between with user group and without user group the same
+                user_id = 0
+
+            if user_id not in total_sold_per_user_per_category:
+                total_sold_per_user_per_category[user_id] = {}
+                total_refund_per_user_per_category[user_id] = {}
+
+            total_sold_per_category = total_sold_per_user_per_category[user_id]
+            total_refund_per_category = total_refund_per_user_per_category[user_id]
+
+            for line in order.lines:
+                key = line.product_id.pos_categ_id.name or "None"
+                if line.qty >= 0:
+                    if key in total_sold_per_category:
+                        total_sold_per_category[key] += line.price_subtotal_incl
+                    else:
+                        total_sold_per_category[key] = line.price_subtotal_incl
+                else:
+                    if key in total_refund_per_category:
+                        total_refund_per_category[key] += line.price_subtotal_incl
+                    else:
+                        total_refund_per_category[key] = line.price_subtotal_incl
+
+        if group_by_user_id or not total_sold_per_user_per_category:
+            return list(total_sold_per_user_per_category.items()), list(total_refund_per_user_per_category.items())
+        else:
+            return list(total_sold_per_user_per_category[0].items()), list(total_refund_per_user_per_category[0].items())
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
