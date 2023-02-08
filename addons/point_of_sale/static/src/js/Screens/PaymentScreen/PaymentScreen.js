@@ -1,10 +1,9 @@
 /** @odoo-module */
 
 import { parse } from "web.field_utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import { registry } from "@web/core/registry";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import utils from "web.utils";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -16,8 +15,9 @@ import { PaymentScreenNumpad } from "./PaymentScreenNumpad";
 import { PaymentScreenPaymentLines } from "./PaymentScreenPaymentLines";
 import { PaymentScreenStatus } from "./PaymentScreenStatus";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component } from "@odoo/owl";
 
-export class PaymentScreen extends LegacyComponent {
+export class PaymentScreen extends Component {
     static template = "PaymentScreen";
     static components = {
         PaymentScreenNumpad,
@@ -29,16 +29,8 @@ export class PaymentScreen extends LegacyComponent {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
         this.notification = useService("pos_notification");
-        useListener("delete-payment-line", this.deletePaymentLine);
-        useListener("select-payment-line", this.selectPaymentLine);
-        useListener("new-payment-line", this.addNewPaymentLine);
-        useListener("update-selected-paymentline", this._updateSelectedPaymentline);
-        useListener("send-payment-request", this._sendPaymentRequest);
-        useListener("send-payment-cancel", this._sendPaymentCancel);
-        useListener("send-payment-reverse", this._sendPaymentReverse);
-        useListener("send-force-done", this._sendForceDone);
-        useListener("validate-order", () => this.validateOrder(false));
         this.payment_methods_from_config = this.env.pos.payment_methods.filter((method) =>
             this.env.pos.config.payment_method_ids.includes(method.id)
         );
@@ -59,12 +51,9 @@ export class PaymentScreen extends LegacyComponent {
     }
     get _getNumberBufferConfig() {
         const config = {
-            // The numberBuffer listens to this event to update its state.
-            // Basically means 'update the buffer when this event is triggered'
-            nonKeyboardInputEvent: "input-from-numpad",
             // When the buffer is updated, trigger this event.
             // Note that the component listens to it.
-            triggerAtInput: "update-selected-paymentline",
+            triggerAtInput: () => this.updateSelectedPaymentline(),
         };
         // Check if pos has a cash payment method
         const hasCashPaymentMethod = this.payment_methods_from_config.some(
@@ -102,7 +91,7 @@ export class PaymentScreen extends LegacyComponent {
             this.currentOrder.updatePricelist(newPartner);
         }
     }
-    addNewPaymentLine({ detail: paymentMethod }) {
+    addNewPaymentLine(paymentMethod) {
         // original function: click_paymentmethods
         const result = this.currentOrder.add_paymentline(paymentMethod);
         if (result) {
@@ -116,7 +105,7 @@ export class PaymentScreen extends LegacyComponent {
             return false;
         }
     }
-    _updateSelectedPaymentline() {
+    updateSelectedPaymentline() {
         if (this.paymentLines.every((line) => line.paid)) {
             this.currentOrder.add_paymentline(this.payment_methods_from_config[0]);
         }
@@ -132,7 +121,7 @@ export class PaymentScreen extends LegacyComponent {
             return;
         }
         if (this.numberBuffer.get() === null) {
-            this.deletePaymentLine({ detail: { cid: this.selectedPaymentLine.cid } });
+            this.deletePaymentLine(this.selectedPaymentLine.cid);
         } else {
             this.selectedPaymentLine.set_amount(this.numberBuffer.getFloat());
         }
@@ -173,11 +162,9 @@ export class PaymentScreen extends LegacyComponent {
             this.currentOrder.setShippingDate(false);
         }
     }
-    deletePaymentLine(event) {
+    deletePaymentLine(cid) {
         var self = this;
-        const { cid } = event.detail;
         const line = this.paymentLines.find((line) => line.cid === cid);
-
         // If a paymentline with a payment terminal linked to
         // it is removed, the terminal should get a cancel
         // request.
@@ -196,14 +183,14 @@ export class PaymentScreen extends LegacyComponent {
             this.render(true);
         }
     }
-    selectPaymentLine(event) {
-        const { cid } = event.detail;
+    selectPaymentLine(cid) {
         const line = this.paymentLines.find((line) => line.cid === cid);
         this.currentOrder.select_paymentline(line);
         this.numberBuffer.reset();
         this.render(true);
     }
     async validateOrder(isForceValidate) {
+        this.numberBuffer.capture();
         if (this.env.pos.config.cash_rounding) {
             if (!this.env.pos.get_order().check_paymentlines_rounding()) {
                 this.popup.add(ErrorPopup, {
@@ -467,8 +454,9 @@ export class PaymentScreen extends LegacyComponent {
     async _postPushOrderResolve(order, order_server_ids) {
         return true;
     }
-    async _sendPaymentRequest({ detail: line }) {
+    async sendPaymentRequest(line) {
         // Other payment lines can not be reversed anymore
+        this.numberBuffer.capture();
         this.paymentLines.forEach(function (line) {
             line.can_be_reversed = false;
         });
@@ -490,13 +478,13 @@ export class PaymentScreen extends LegacyComponent {
                 ) &&
                 this.env.pos.config.auto_validate_terminal_payment
             ) {
-                this.trigger("validate-order");
+                this.validateOrder(false);
             }
         } else {
             line.set_payment_status("retry");
         }
     }
-    async _sendPaymentCancel({ detail: line }) {
+    async sendPaymentCancel(line) {
         const payment_terminal = line.payment_method.payment_terminal;
         line.set_payment_status("waitingCancel");
         const isCancelSuccessful = await payment_terminal.send_payment_cancel(
@@ -509,7 +497,7 @@ export class PaymentScreen extends LegacyComponent {
             line.set_payment_status("waitingCard");
         }
     }
-    async _sendPaymentReverse({ detail: line }) {
+    async sendPaymentReverse(line) {
         const payment_terminal = line.payment_method.payment_terminal;
         line.set_payment_status("reversing");
 
@@ -522,7 +510,7 @@ export class PaymentScreen extends LegacyComponent {
             line.set_payment_status("done");
         }
     }
-    async _sendForceDone({ detail: line }) {
+    async sendForceDone(line) {
         line.set_payment_status("done");
     }
 }

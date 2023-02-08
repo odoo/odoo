@@ -1,22 +1,21 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
-
-export class SetSaleOrderButton extends LegacyComponent {
+import { Component } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+export class SetSaleOrderButton extends Component {
     static template = "SetSaleOrderButton";
 
     setup() {
         super.setup();
         this.pos = usePos();
-        useListener("click", this.onClick);
+        this.rpc = useService("rpc");
     }
     get currentOrder() {
         return this.env.pos.get_order();
     }
-    async onClick() {
+    async click() {
         // ping the server, if no error, show the screen
         // Use rpc from services which resolves even when this
         // component is destroyed (removed together with the popup).

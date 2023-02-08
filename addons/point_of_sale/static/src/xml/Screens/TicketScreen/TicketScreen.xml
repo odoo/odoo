@@ -8,7 +8,7 @@
                     <div class="controls">
                         <t t-if="!env.isMobile || !state.showSearchBar">
                             <div class="buttons">
-                                <button class="discard" t-on-click="() => this.pos.closeScreen()">
+                                <button class="discard" t-on-click="() => this.onCloseScreen()">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
@@ -16,7 +16,7 @@
                                         Back
                                     </t>
                                 </button>
-                                <button t-if="allowNewOrders" class="highlight" t-on-click="() => this.trigger('create-new-order')">New Order</button>
+                                <button t-if="allowNewOrders" class="highlight" t-on-click="() => this.onCreateNewOrder()">New Order</button>
                             </div>
                         </t>
                         <t t-if="env.isMobile">
@@ -36,13 +36,18 @@
                             </t>
                         </t>
                         <t t-set="_placeholder">Search Orders...</t>
-                        <SearchBar t-if="state.showSearchBar" config="getSearchBarConfig()" placeholder="_placeholder" />
+                        <SearchBar
+                            t-if="state.showSearchBar"
+                            config="getSearchBarConfig()"
+                            placeholder="_placeholder"
+                            onSearch.bind="onSearch"
+                            onFilterSelected.bind="onFilterSelected" />
                         <div t-if="shouldShowPageControls()" class="item">
                             <div class="page-controls">
-                                <div class="previous" t-on-click="() => this.trigger('prev-page')">
+                                <div class="previous" t-on-click="() => this.onPrevPage()">
                                     <i class="fa fa-fw fa-caret-left" role="img" aria-label="Previous Order List" title="Previous Order List"></i>
                                 </div>
-                                <div class="next" t-on-click="() => this.trigger('next-page')">
+                                <div class="next" t-on-click="() => this.onNextPage()">
                                     <i class="fa fa-fw fa-caret-right" role="img" aria-label="Next Order List" title="Next Order List"></i>
                                 </div>
                             </div>
@@ -65,7 +70,7 @@
                                 <div class="col very-narrow" name="delete"></div>
                             </div>
                             <t t-foreach="_filteredOrderList" t-as="order" t-key="order.cid">
-                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.trigger('click-order', order)">
+                                <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
                                     <div class="col wide">
                                         <div t-if="env.isMobile">Date</div>
                                         <div><t t-esc="getDate(order)"></t></div>
@@ -94,7 +99,7 @@
                                         <div t-if="env.isMobile">Status</div>
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.trigger('delete-order', order)">
+                                    <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
                                         <i class="fa fa-trash" aria-hidden="true"/><t t-if="env.isMobile"> Delete</t>
                                     </div>
                                     <div t-else="" class="col very-narrow"></div>
@@ -112,17 +117,32 @@
                 <div class="leftpane">
                     <t t-set="_selectedSyncedOrder" t-value="getSelectedSyncedOrder()" />
                     <t t-set="_selectedOrderlineId" t-value="getSelectedOrderlineId()" />
-                    <OrderDetails order="_selectedSyncedOrder" selectedOrderlineId="_selectedOrderlineId" highlightHeaderNote="_state.ui.highlightHeaderNote" />
+                    <OrderDetails
+                        onClickOrderline.bind="onClickOrderline"
+                        onClickRefundOrderUid.bind="onClickRefundOrderUid"
+                        order="_selectedSyncedOrder"
+                        selectedOrderlineId="_selectedOrderlineId"
+                        highlightHeaderNote="_state.ui.highlightHeaderNote" />
                     <div class="pads">
                         <div class="control-buttons">
-                            <InvoiceButton order="_selectedSyncedOrder" />
+                            <InvoiceButton
+                                onInvoiceOrder.bind="onInvoiceOrder"
+                                order="_selectedSyncedOrder" />
                             <ReprintReceiptButton order="_selectedSyncedOrder" />
                         </div>
                         <div class="subpads">
                             <!-- We set so that the term 'Refund' is translated. -->
                             <t t-set="_actionName">Refund</t>
-                            <ActionpadWidget partner="getSelectedPartner()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
-                            <NumpadWidget disabledModes="['price', 'discount']" activeMode="_selectedOrderlineId and 'quantity'" disableSign="true" />
+                            <ActionpadWidget
+                                partner="getSelectedPartner()"
+                                actionName="_actionName"
+                                actionToTrigger.bind="onDoRefund"
+                                isActionButtonHighlighted="getHasItemsToRefund()" />
+                            <NumpadWidget
+                                disabledModes="['price', 'discount']"
+                                setNumpadMode="() => {}"
+                                activeMode="_selectedOrderlineId and 'quantity'"
+                                disableSign="true" />
                         </div>
                     </div>
                 </div>

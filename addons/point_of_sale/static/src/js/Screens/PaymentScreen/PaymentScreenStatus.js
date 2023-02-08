@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class PaymentScreenStatus extends LegacyComponent {
+export class PaymentScreenStatus extends Component {
     static template = "PaymentScreenStatus";
 
     get changeText() {

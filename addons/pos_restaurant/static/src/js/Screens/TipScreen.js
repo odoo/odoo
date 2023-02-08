@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { parse } from "web.field_utils";
 import { renderToString } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
@@ -8,16 +7,17 @@ import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { Component, useRef, onMounted } from "@odoo/owl";
 
-const { onMounted } = owl;
-
-export class TipScreen extends LegacyComponent {
+export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
     static showBackToFloorButton = true;
     setup() {
         super.setup();
         this.pos = usePos();
+        this.posReceiptContainer = useRef("pos-receipt-container");
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
         this.state = this.currentOrder.uiState.TipScreen;
         this._totalAmount = this.currentOrder.get_total_with_tax();
 
@@ -152,7 +152,7 @@ export class TipScreen extends LegacyComponent {
 
     async _printWeb(receipt) {
         try {
-            $(this.el).find(".pos-receipt-container").html(receipt);
+            this.posReceiptContainer.el.innerHTML = receipt;
             window.print();
         } catch {
             await this.popup.add(ErrorPopup, {

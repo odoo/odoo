@@ -1,17 +1,19 @@
 /** @odoo-module **/
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component } from "@odoo/owl";
 
-export class eWalletButton extends LegacyComponent {
+export class eWalletButton extends Component {
     static template = "point_of_sale.eWalletButton";
 
     setup() {
         super.setup(...arguments);
         this.popup = useService("popup");
+        this.pos = usePos();
     }
 
     _getEWalletRewards(order) {
@@ -50,7 +52,7 @@ export class eWalletButton extends LegacyComponent {
                 const eWalletProduct = this.env.pos.db.get_product_by_id(
                     selectedProgram.trigger_product_ids[0]
                 );
-                order.add_product(eWalletProduct, {
+                this.pos.addProductFromUi(eWalletProduct, {
                     price: -orderTotal,
                     merge: false,
                     eWalletGiftCardProgram: selectedProgram,

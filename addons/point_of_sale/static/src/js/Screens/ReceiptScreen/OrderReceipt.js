@@ -1,12 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
-
 import { WrappedProductNameLines } from "./WrappedProductNameLines";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 
-const { onWillUpdateProps } = owl;
-
-export class OrderReceipt extends LegacyComponent {
+export class OrderReceipt extends Component {
     static components = { WrappedProductNameLines };
     static template = "OrderReceipt";
 

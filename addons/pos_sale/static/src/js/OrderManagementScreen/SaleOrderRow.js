@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 import utils from "web.utils";
 
 /**
@@ -8,7 +8,7 @@ import utils from "web.utils";
  * @props columns
  * @emits click-order
  */
-export class SaleOrderRow extends LegacyComponent {
+export class SaleOrderRow extends Component {
     static template = "SaleOrderRow";
 
     get order() {

@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class PaymentScreenPaymentLines extends LegacyComponent {
+export class PaymentScreenPaymentLines extends Component {
     static template = "PaymentScreenPaymentLines";
 
     formatLineAmount(paymentline) {

@@ -1,20 +1,18 @@
 /** @odoo-module **/
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
-export class ResetProgramsButton extends LegacyComponent {
+export class ResetProgramsButton extends Component {
     static template = "ResetProgramsButton";
 
     setup() {
         super.setup();
-        useListener("click", this.onClick);
     }
     _isDisabled() {
         return !this.env.pos.get_order().isProgramsResettable();
     }
-    onClick() {
+    click() {
         this.env.pos.get_order()._resetPrograms();
     }
 }

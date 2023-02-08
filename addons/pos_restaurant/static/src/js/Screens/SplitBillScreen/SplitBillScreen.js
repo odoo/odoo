@@ -1,23 +1,19 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
-import { useListener } from "@web/core/utils/hooks";
 import { Order } from "@point_of_sale/js/models";
 
 import { SplitOrderline } from "./SplitOrderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component, useState, onMounted  } from "@odoo/owl";
 
-const { useState, onMounted } = owl;
-
-export class SplitBillScreen extends LegacyComponent {
+export class SplitBillScreen extends Component {
     static template = "SplitBillScreen";
     static components = { SplitOrderline };
 
     setup() {
         super.setup();
         this.pos = usePos();
-        useListener("click-line", this.onClickLine);
         this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
         this.newOrderLines = {};
         this.newOrder = undefined;
@@ -42,8 +38,7 @@ export class SplitBillScreen extends LegacyComponent {
     get orderlines() {
         return this.currentOrder.get_orderlines();
     }
-    onClickLine(event) {
-        const line = event.detail;
+    onClickLine(line) {
         this._splitQuantity(line);
         this._updateNewOrder(line);
     }

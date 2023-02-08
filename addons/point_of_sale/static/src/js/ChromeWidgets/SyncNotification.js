@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class SyncNotification extends LegacyComponent {
+export class SyncNotification extends Component {
     static template = "SyncNotification";
 
     onClick() {

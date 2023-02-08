@@ -1,18 +1,17 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { Component } from "@odoo/owl";
 
-export class TableGuestsButton extends LegacyComponent {
+export class TableGuestsButton extends Component {
     static template = "TableGuestsButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("click", this.onClick);
     }
     get currentOrder() {
         return this.env.pos.get_order();
@@ -20,7 +19,7 @@ export class TableGuestsButton extends LegacyComponent {
     get nGuests() {
         return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
     }
-    async onClick() {
+    async click() {
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: this.nGuests,
             cheap: true,

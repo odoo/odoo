@@ -1,16 +1,17 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { ErrorPopup } from "../Popups/ErrorPopup";
+import { Component } from "@odoo/owl";
 
-export class SaleDetailsButton extends LegacyComponent {
+export class SaleDetailsButton extends Component {
     static template = "SaleDetailsButton";
 
     setup() {
         super.setup(...arguments);
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
     }
 
     async onClick() {

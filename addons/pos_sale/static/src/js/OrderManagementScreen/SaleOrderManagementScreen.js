@@ -2,7 +2,7 @@
 
 import { sprintf } from "web.utils";
 import { parse } from "web.field_utils";
-import { useBus, useListener, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
@@ -16,8 +16,7 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 
 import { SaleOrderList } from "./SaleOrderList";
 import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
-
-const { onMounted, useState } = owl;
+import { onMounted, useRef, useState } from "@odoo/owl";
 
 export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
@@ -26,13 +25,10 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     setup() {
         super.setup();
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
+        this.root = useRef("root");
         this.numberBuffer = useService("number_buffer");
         this.saleOrderFetcher = useService("sale_order_fetcher");
-        useListener("close-screen", this.close);
-        useListener("click-sale-order", this._onClickSaleOrder);
-        useListener("next-page", this._onNextPage);
-        useListener("prev-page", this._onPrevPage);
-        useListener("search", this._onSearch);
 
         useBus(this.saleOrderFetcher, "update", this.render);
         this.orderManagementContext = useState(orderManagement);
@@ -43,9 +39,9 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         // calculate how many can fit in the screen.
         // It is based on the height of the header element.
         // So the result is only accurate if each row is just single line.
-        const flexContainer = this.el.querySelector(".flex-container");
-        const cpEl = this.el.querySelector(".control-panel");
-        const headerEl = this.el.querySelector(".header-row");
+        const flexContainer = this.root.el.querySelector(".flex-container");
+        const cpEl = this.root.el.querySelector(".control-panel");
+        const headerEl = this.root.el.querySelector(".header-row");
         const val = Math.trunc(
             (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
                 headerEl.offsetHeight
@@ -65,19 +61,18 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         this.numpadMode = mode;
         this.numberBuffer.reset();
     }
-    _onNextPage() {
+    onNextPage() {
         this.saleOrderFetcher.nextPage();
     }
-    _onPrevPage() {
+    onPrevPage() {
         this.saleOrderFetcher.prevPage();
     }
-    _onSearch({ detail: domain }) {
+    onSearch({ detail: domain }) {
         this.saleOrderFetcher.setSearchDomain(domain);
         this.saleOrderFetcher.setPage(1);
         this.saleOrderFetcher.fetch();
     }
-    async _onClickSaleOrder(event) {
-        const clickedOrder = event.detail;
+    async onClickSaleOrder(clickedOrder) {
         const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
             title: this.env._t("What do you want to do?"),
             list: [

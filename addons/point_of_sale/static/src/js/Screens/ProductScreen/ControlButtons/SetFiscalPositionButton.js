@@ -1,17 +1,16 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { Component } from "@odoo/owl";
 
-export class SetFiscalPositionButton extends LegacyComponent {
+export class SetFiscalPositionButton extends Component {
     static template = "SetFiscalPositionButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("click", this.onClick);
     }
     get currentOrder() {
         return this.env.pos.get_order();
@@ -21,7 +20,7 @@ export class SetFiscalPositionButton extends LegacyComponent {
             ? this.currentOrder.fiscal_position.display_name
             : this.env._t("Tax");
     }
-    async onClick() {
+    async click() {
         const currentFiscalPosition = this.currentOrder.fiscal_position;
         const fiscalPosList = [
             {

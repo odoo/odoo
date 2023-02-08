@@ -3,8 +3,7 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useService } from "@web/core/utils/hooks";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
-
-const { useState } = owl;
+import { useState } from "@odoo/owl";
 
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "CashOpeningPopup";
@@ -19,6 +18,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
         });
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
     }
     //@override
     async confirm() {

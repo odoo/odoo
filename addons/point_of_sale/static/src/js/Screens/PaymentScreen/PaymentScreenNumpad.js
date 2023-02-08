@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { PSNumpadInputButton } from "./PSNumpadInputButton";
+import { Component } from "@odoo/owl";
 
-export class PaymentScreenNumpad extends LegacyComponent {
+export class PaymentScreenNumpad extends Component {
     static components = { PSNumpadInputButton };
     static template = "PaymentScreenNumpad";
 

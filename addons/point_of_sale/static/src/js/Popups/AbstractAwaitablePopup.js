@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { useExternalListener } from "@odoo/owl";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component, useExternalListener } from "@odoo/owl";
 
 /**
  * Implement this abstract class by extending it like so:
@@ -28,7 +27,7 @@ import { LegacyComponent } from "@web/legacy/legacy_component";
  * //    otherwise, payload = null
  * ```
  */
-export class AbstractAwaitablePopup extends LegacyComponent {
+export class AbstractAwaitablePopup extends Component {
     setup() {
         super.setup(...arguments);
         useExternalListener(window, "keyup", this._onWindowKeyup);

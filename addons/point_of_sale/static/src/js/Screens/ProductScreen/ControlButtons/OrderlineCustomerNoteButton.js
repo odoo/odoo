@@ -1,17 +1,16 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { TextAreaPopup } from "@point_of_sale/js/Popups/TextAreaPopup";
+import { Component } from "@odoo/owl";
 
-export class OrderlineCustomerNoteButton extends LegacyComponent {
+export class OrderlineCustomerNoteButton extends Component {
     static template = "OrderlineCustomerNoteButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("click", this.onClick);
     }
     async onClick() {
         const selectedOrderline = this.env.pos.get_order().get_selected_orderline();

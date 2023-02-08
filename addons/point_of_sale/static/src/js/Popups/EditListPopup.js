@@ -3,10 +3,8 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useAutoFocusToLast } from "@point_of_sale/js/custom_hooks";
 import { _lt } from "@web/core/l10n/translation";
-
+import { useState } from "@odoo/owl";
 import { EditListInput } from "./EditListInput";
-
-const { useState } = owl;
 
 /**
  * Given a array of { id, text }, we show the user this popup to be able to modify this given array.

@@ -1,9 +1,8 @@
 /** @odoo-module */
 
 import { loadCSS } from "@web/core/assets";
-import { useListener, useBus, useService } from "@web/core/utils/hooks";
+import { useBus, useService } from "@web/core/utils/hooks";
 import BarcodeParser from "barcodes.BarcodeParser";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
@@ -18,7 +17,6 @@ import { pos_env as env } from "@point_of_sale/js/pos_env";
 
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { CashOpeningPopup } from "./Popups/CashOpeningPopup";
-import { ConfirmPopup } from "./Popups/ConfirmPopup";
 
 import {
     onMounted,
@@ -27,13 +25,14 @@ import {
     useSubEnv,
     reactive,
     onWillUnmount,
+    Component,
 } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
  * Chrome is the root component of the PoS App.
  */
-export class Chrome extends LegacyComponent {
+export class Chrome extends Component {
     static template = "Chrome"; // FIXME POSREF namespace templates
     static components = { Transition, MainComponentsContainer, WithEnv, ErrorHandler, Navbar };
     setup() {
@@ -90,9 +89,6 @@ export class Chrome extends LegacyComponent {
 
         super.setup();
         useExternalListener(window, "beforeunload", this._onBeforeUnload);
-        useListener("close-pos", this._closePos);
-        useListener("loading-skip-callback", () => this.env.proxy.stop_searching());
-        useListener("connect-to-proxy", this.connect_to_proxy);
         useBus(this.env.posbus, "start-cash-control", this.openCashControl);
         useService("number_buffer").activate();
 
@@ -157,7 +153,7 @@ export class Chrome extends LegacyComponent {
             await this.env.pos.load_server_data();
             await this.setupBarcodeParser();
             if (this.env.pos.config.use_proxy) {
-                await this.connect_to_proxy();
+                await this.pos.connect_to_proxy();
             }
             // Load the saved `env.pos.toRefundLines` from localStorage when
             // the PosGlobalState is ready.
@@ -252,45 +248,6 @@ export class Chrome extends LegacyComponent {
         return barcode_parser.is_loaded();
     }
 
-    connect_to_proxy() {
-        return new Promise((resolve, reject) => {
-            this.env.barcode_reader.disconnect_from_proxy();
-            this.pos.loadingSkipButtonIsShown = true;
-            this.env.proxy
-                .autoconnect({
-                    force_ip: this.env.pos.config.proxy_ip || undefined,
-                    progress: function (prog) {},
-                })
-                .then(
-                    () => {
-                        if (this.env.pos.config.iface_scan_via_proxy) {
-                            this.env.barcode_reader.connect_to_proxy();
-                        }
-                        resolve();
-                    },
-                    (statusText, url) => {
-                        // this should reject so that it can be captured when we wait for pos.ready
-                        // in the chrome component.
-                        // then, if it got really rejected, we can show the error.
-                        if (statusText == "error" && window.location.protocol == "https:") {
-                            reject({
-                                title: this.env._t("HTTPS connection to IoT Box failed"),
-                                body: _.str.sprintf(
-                                    this.env._t(
-                                        "Make sure you are using IoT Box v18.12 or higher. Navigate to %s to accept the certificate of your IoT Box."
-                                    ),
-                                    url
-                                ),
-                                popup: "alert",
-                            });
-                        } else {
-                            resolve();
-                        }
-                    }
-                );
-        });
-    }
-
     openCashControl() {
         if (this.shouldShowCashControl()) {
             this.popup.add(CashOpeningPopup, { keepBehind: true });
@@ -306,48 +263,7 @@ export class Chrome extends LegacyComponent {
     // EVENT HANDLERS //
 
     async _closePos() {
-        // If pos is not properly loaded, we just go back to /web without
-        // doing anything in the order data.
-        if (!this.env.pos || this.env.pos.db.get_orders().length === 0) {
-            window.location = "/web#action=point_of_sale.action_client_pos_menu";
-        }
-
-        if (this.env.pos.db.get_orders().length) {
-            // If there are orders in the db left unsynced, we try to sync.
-            // If sync successful, close without asking.
-            // Otherwise, ask again saying that some orders are not yet synced.
-            try {
-                await this.env.pos.push_orders();
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
-            } catch (error) {
-                console.warn(error);
-                const reason = this.env.pos.failed
-                    ? this.env._t(
-                          "Some orders could not be submitted to " +
-                              "the server due to configuration errors. " +
-                              "You can exit the Point of Sale, but do " +
-                              "not close the session before the issue " +
-                              "has been resolved."
-                      )
-                    : this.env._t(
-                          "Some orders could not be submitted to " +
-                              "the server due to internet connection issues. " +
-                              "You can exit the Point of Sale, but do " +
-                              "not close the session before the issue " +
-                              "has been resolved."
-                      );
-                const { confirmed } = await this.popup.add(ConfirmPopup, {
-                    title: this.env._t("Offline Orders"),
-                    body: reason,
-                });
-                if (confirmed) {
-                    // FIXME POSREF setting the location prevents the next render, the loading screen never shows
-                    this.pos.uiState = "CLOSING";
-                    this.pos.loadingSkipButtonIsShown = false;
-                    window.location = "/web#action=point_of_sale.action_client_pos_menu";
-                }
-            }
-        }
+        this.pos.closePos();
     }
     /**
      * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
@@ -355,6 +271,10 @@ export class Chrome extends LegacyComponent {
      */
     _onBeforeUnload() {
         this.env.pos.db.save("TO_REFUND_LINES", this.env.pos.toRefundLines);
+    }
+    _onSetSyncStatus({ detail: { status, pending } }) {
+        this.env.pos.synch.status = status;
+        this.env.pos.synch.pending = pending;
     }
 
     // MISC METHODS //
@@ -416,7 +336,7 @@ export class Chrome extends LegacyComponent {
                         msg.session == this.env.pos.pos_session.id
                     ) {
                         console.info("POS / Session opened in another window. EXITING POS");
-                        this._closePos();
+                        this.closePos();
                     }
                 }
             },

@@ -12,8 +12,7 @@ patch(OrderWidget.prototype, "pos_loyalty.OrderWidget", {
         const seenRewards = new Set();
         const activeRewards = [];
         for (const line of order._get_reward_lines()) {
-            const key =
-                line.reward_id + "-" + line.coupon_id + "-" + line.reward_identifier_code;
+            const key = line.reward_id + "-" + line.coupon_id + "-" + line.reward_identifier_code;
             if (seenRewards.has(key)) {
                 continue;
             }
