@@ -2,11 +2,18 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="SaleOrderManagementScreen" owl="1">
-        <div class="order-management-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+        <div class="order-management-screen screen" t-att-class="{ oe_hidden: !props.isShown }" t-ref="root">
                 <div class="rightpane">
                     <div class="flex-container">
-                        <SaleOrderManagementControlPanel />
-                        <SaleOrderList orders="orders" initHighlightedOrder="orderManagementContext.selectedOrder" />
+                        <SaleOrderManagementControlPanel
+                            close.bind="close"
+                            onSearch.bind="onSearch"
+                            onPrevPage.bind="onPrevPage"
+                            onNextPage.bind="onNextPage" />
+                        <SaleOrderList
+                            onClickSaleOrder.bind="onClickSaleOrder"
+                            orders="orders"
+                            initHighlightedOrder="orderManagementContext.selectedOrder" />
                     </div>
                 </div>
         </div>

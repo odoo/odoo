@@ -431,10 +431,6 @@ patch(Order.prototype, "pos_loyalty.Order", {
         line.giftCardId = options.giftCardId;
         line.eWalletGiftCardProgram = options.eWalletGiftCardProgram;
     },
-    add_product(product, options) {
-        this._super(...arguments);
-        this._updateRewards();
-    },
     async _initializePrograms() {
         // When deleting a reward line, a popup will be displayed if the reward was automatic,
         //  if confirmed the reward is added to this list and will not be claimed automatically again.
@@ -1064,61 +1060,6 @@ patch(Order.prototype, "pos_loyalty.Order", {
                     reward: reward,
                     potentialQty: unclaimedQty,
                 });
-            }
-        }
-        return result;
-    },
-    /**
-     * Returns the reward such that when its reward product is added
-     * in the order, it will be added as free. That is, when added,
-     * it comes with the corresponding reward product line.
-     */
-    getPotentialFreeProductRewards() {
-        const allCouponPrograms = Object.values(this.couponPointChanges)
-            .map((pe) => {
-                return {
-                    program_id: pe.program_id,
-                    coupon_id: pe.coupon_id,
-                };
-            })
-            .concat(
-                this.codeActivatedCoupons.map((coupon) => {
-                    return {
-                        program_id: coupon.program_id,
-                        coupon_id: coupon.id,
-                    };
-                })
-            );
-        const result = [];
-        for (const couponProgram of allCouponPrograms) {
-            const program = this.pos.program_by_id[couponProgram.program_id];
-            const points = this._getRealCouponPoints(couponProgram.coupon_id);
-            const hasLine = this.orderlines.filter((line) => !line.is_reward_line).length > 0;
-            for (const reward of program.rewards.filter(
-                (reward) => reward.reward_type == "product"
-            )) {
-                if (points < reward.required_points) {
-                    continue;
-                }
-                // Loyalty program (applies_on == 'both') should needs an orderline before it can apply a reward.
-                const considerTheReward =
-                    program.applies_on !== "both" || (program.applies_on == "both" && hasLine);
-                if (reward.reward_type === "product" && considerTheReward) {
-                    const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
-                    const potentialQty = this._computePotentialFreeProductQty(
-                        reward,
-                        product,
-                        points
-                    );
-                    if (potentialQty <= 0) {
-                        continue;
-                    }
-                    result.push({
-                        coupon_id: couponProgram.coupon_id,
-                        reward: reward,
-                        potentialQty,
-                    });
-                }
             }
         }
         return result;

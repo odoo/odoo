@@ -1,14 +1,11 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { registry } from "@web/core/registry";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 import { parse } from "web.field_utils";
 
-import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
-import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
@@ -21,10 +18,9 @@ import { NumpadWidget } from "./NumpadWidget";
 import { OrderWidget } from "./OrderWidget";
 import { ProductsWidget } from "./ProductsWidget";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component, onMounted, useState } from "@odoo/owl";
 
-const { onMounted, useState } = owl;
-
-export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
+export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "ProductScreen";
     static components = {
         ActionpadWidget,
@@ -38,12 +34,13 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
-        useListener("update-selected-orderline", this._updateSelectedOrderline);
-        useListener("select-line", this._selectLine);
-        useListener("set-numpad-mode", this._setNumpadMode);
-        useListener("click-product", this._clickProduct);
-        useListener("click-partner", this.onClickPartner);
-        useListener("click-pay", this._onClickPay);
+        this.rpc = useService("rpc");
+        this.numberBuffer = useService("number_buffer");
+        onMounted(this.onMounted);
+        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
+        // We don't do this in the `mounted` lifecycle method because it is called before
+        // the callbacks in `onMounted` hook.
+        onMounted(() => this.numberBuffer.reset());
         useBarcodeReader({
             product: this._barcodeProductAction,
             weight: this._barcodeProductAction,
@@ -52,17 +49,6 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
             discount: this._barcodeDiscountAction,
             error: this._barcodeErrorAction,
         });
-        this.numberBuffer = useService("number_buffer");
-        this.numberBuffer.use({
-            nonKeyboardInputEvent: "numpad-click-input",
-            triggerAtInput: "update-selected-orderline",
-            useWithBarcode: true,
-        });
-        onMounted(this.onMounted);
-        // Call `reset` when the `onMounted` callback in `numberBuffer.use` is done.
-        // We don't do this in the `mounted` lifecycle method because it is called before
-        // the callbacks in `onMounted` hook.
-        onMounted(() => this.numberBuffer.reset());
         this.state = useState({
             mobile_pane: this.props.mobile_pane || "right",
         });
@@ -75,130 +61,13 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
      * connected scale.
      * @see _onScaleNotAvailable
      */
-    get isScaleAvailable() {
-        return true;
-    }
     get partner() {
         return this.currentOrder ? this.currentOrder.get_partner() : null;
     }
     get currentOrder() {
         return this.env.pos.get_order();
     }
-    async _getAddProductOptions(product, base_code) {
-        let price_extra = 0.0;
-        let draftPackLotLines, weight, description, packLotLinesToEdit;
-
-        if (_.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
-            const attributes = _.map(
-                product.attribute_line_ids,
-                (id) => this.env.pos.attributes_by_ptal_id[id]
-            ).filter((attr) => attr !== undefined);
-            const { confirmed, payload } = await this.popup.add(ProductConfiguratorPopup, {
-                product: product,
-                attributes: attributes,
-            });
-
-            if (confirmed) {
-                description = payload.selected_attributes.join(", ");
-                price_extra += payload.price_extra;
-            } else {
-                return;
-            }
-        }
-
-        // Gather lot information if required.
-        if (
-            ["serial", "lot"].includes(product.tracking) &&
-            (this.env.pos.picking_type.use_create_lots ||
-                this.env.pos.picking_type.use_existing_lots)
-        ) {
-            const isAllowOnlyOneLot = product.isAllowOnlyOneLot();
-            if (isAllowOnlyOneLot) {
-                packLotLinesToEdit = [];
-            } else {
-                const orderline = this.currentOrder
-                    .get_orderlines()
-                    .filter((line) => !line.get_discount())
-                    .find((line) => line.product.id === product.id);
-                if (orderline) {
-                    packLotLinesToEdit = orderline.getPackLotLinesToEdit();
-                } else {
-                    packLotLinesToEdit = [];
-                }
-            }
-            const { confirmed, payload } = await this.popup.add(EditListPopup, {
-                title: this.env._t("Lot/Serial Number(s) Required"),
-                name: product.display_name,
-                isSingleItem: isAllowOnlyOneLot,
-                array: packLotLinesToEdit,
-            });
-            if (confirmed) {
-                // Segregate the old and new packlot lines
-                const modifiedPackLotLines = Object.fromEntries(
-                    payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
-                );
-                const newPackLotLines = payload.newArray
-                    .filter((item) => !item.id)
-                    .map((item) => ({ lot_name: item.text }));
-
-                draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
-            } else {
-                // We don't proceed on adding product.
-                return;
-            }
-        }
-
-        // Take the weight if necessary.
-        if (product.to_weight && this.env.pos.config.iface_electronic_scale) {
-            // Show the ScaleScreen to weigh the product.
-            if (this.isScaleAvailable) {
-                const { confirmed, payload } = await this.pos.showTempScreen("ScaleScreen", {
-                    product,
-                });
-                if (confirmed) {
-                    weight = payload.weight;
-                } else {
-                    // do not add the product;
-                    return;
-                }
-            } else {
-                await this._onScaleNotAvailable();
-            }
-        }
-
-        if (base_code && this.env.pos.db.product_packaging_by_barcode[base_code.code]) {
-            weight = this.env.pos.db.product_packaging_by_barcode[base_code.code].qty;
-        }
-
-        return { draftPackLotLines, quantity: weight, description, price_extra };
-    }
-    async _addProduct(product, options) {
-        this.currentOrder.add_product(product, options);
-    }
-    async _clickProduct(event) {
-        if (!this.currentOrder) {
-            this.env.pos.add_new_order();
-        }
-        const product = event.detail;
-        const options = await this._getAddProductOptions(product);
-        // Do not add product if options is undefined.
-        if (!options) {
-            return;
-        }
-        // Add the product after having the extra information.
-        await this._addProduct(product, options);
-        this.numberBuffer.reset();
-    }
-    _setNumpadMode(event) {
-        const { mode } = event.detail;
-        this.numberBuffer.capture();
-        this.numberBuffer.reset();
-        this.env.pos.numpadMode = mode;
-    }
-    _selectLine() {
-        this.numberBuffer.reset();
-    }
-    async _updateSelectedOrderline(event) {
+    async updateSelectedOrderline({ buffer, key }) {
         if (this.env.pos.numpadMode === "quantity" && this.env.pos.disallowLineQuantityChange()) {
             const order = this.env.pos.get_order();
             if (!order.orderlines.length) {
@@ -219,16 +88,15 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
                 });
                 return;
             }
-            const parsedInput = (event.detail.buffer && parse.float(event.detail.buffer)) || 0;
+            const parsedInput = (buffer && parse.float(buffer)) || 0;
             if (lastId != selectedLine.cid) {
                 this._showDecreaseQuantityPopup();
             } else if (currentQuantity < parsedInput) {
-                this._setValue(event.detail.buffer);
+                this._setValue(buffer);
             } else if (parsedInput < currentQuantity) {
                 this._showDecreaseQuantityPopup();
             }
         } else {
-            const { buffer } = event.detail;
             const val = buffer === null ? "remove" : buffer;
             this._setValue(val);
             if (val == "remove") {
@@ -272,9 +140,9 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
                 return this._barcodeErrorAction(code);
             }
         }
-        const options = await this._getAddProductOptions(product, code);
+        const options = await product.getAddProductOptions(code);
         // Do not proceed on adding the product when no options is returned.
-        // This is consistent with _clickProduct.
+        // This is consistent with clickProduct.
         if (!options) {
             return;
         }
@@ -337,12 +205,8 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
             controlButtons: this.controlButtons,
         });
     }
-    /**
-     * override this method to perform procedure if the scale is not available.
-     * @see isScaleAvailable
-     */
-    async _onScaleNotAvailable() {}
     async _showDecreaseQuantityPopup() {
+        this.numberBuffer.reset();
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: 0,
             title: this.env._t("Set the new quantity"),
@@ -370,33 +234,7 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
             }
         }
     }
-    async onClickPartner() {
-        // IMPROVEMENT: This code snippet is very similar to selectPartner of PaymentScreen.
-        const currentPartner = this.currentOrder.get_partner();
-        if (currentPartner && this.currentOrder.getHasRefundLines()) {
-            this.popup.add(ErrorPopup, {
-                title: this.env._t("Can't change customer"),
-                body: _.str.sprintf(
-                    this.env._t(
-                        "This order already has refund lines for %s. We can't change the customer associated to it. Create a new order for the new customer."
-                    ),
-                    currentPartner.name
-                ),
-            });
-            return;
-        }
-        const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
-            "PartnerListScreen",
-            {
-                partner: currentPartner,
-            }
-        );
-        if (confirmed) {
-            this.currentOrder.set_partner(newPartner);
-            this.currentOrder.updatePricelist(newPartner);
-        }
-    }
-    async _onClickPay() {
+    async onClickPay() {
         if (
             this.env.pos
                 .get_order()

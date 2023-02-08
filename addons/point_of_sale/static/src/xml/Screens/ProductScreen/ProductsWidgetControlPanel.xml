@@ -21,7 +21,7 @@
                     <!-- Breadcrumbs -->
                         <div class="breadcrumbs">
                             <span class="breadcrumb">
-                                <span class="breadcrumb-button breadcrumb-home" t-on-click="() => this.trigger('switch-category', 0)">
+                                <span class="breadcrumb-button breadcrumb-home" t-on-click="() => this.props.switchCategory(0)">
                                     <i class="fa fa-home" role="img" aria-label="Home" title="Home"></i>
                                 </span>
                             </span>
@@ -29,7 +29,7 @@
                                 <span class="breadcrumb">
                                     <i class="breadcrumb-arrow fa fa-caret-right" aria-hidden="true"/>
                                     <span class="breadcrumb-button"
-                                        t-on-click="() => this.trigger('switch-category', category.id)">
+                                        t-on-click="() => this.props.switchCategory(category.id)">
                                         <t t-esc="category.name"></t>
                                     </span>
                                 </span>
@@ -39,7 +39,7 @@
                         <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple">
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
                                 <span class="category-simple-button"
-                                    t-on-click="() => this.trigger('switch-category', category.id)">
+                                    t-on-click="() => this.props.switchCategory(category.id)">
                                     <t t-esc="category.name" />
                                 </span>
                             </t>
@@ -52,7 +52,9 @@
                     <div class="category-list-scroller">
                         <div class="category-list">
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <CategoryButton category="category" />
+                                <CategoryButton
+                                    switchCategory.bind="props.switchCategory"
+                                    category="category" />
                             </t>
                         </div>
                     </div>

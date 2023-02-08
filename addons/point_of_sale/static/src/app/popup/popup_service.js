@@ -1,13 +1,12 @@
 /** @odoo-module */
 
-import { reactive } from "@odoo/owl";
+import { Component, reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { usePos } from "@point_of_sale/app/pos_hook";
-export class PopupContainer extends LegacyComponent {
+export class PopupContainer extends Component {
     static template = "point_of_sale.PopupContainer";
     setup() {
-        // FIXME POSREF: remove this after LegacyComponent is removed.
+        // FIXME POSREF: remove this when Chrome uses the new env
         this.__owl__.childEnv = usePos().legacyEnv;
     }
 }

@@ -2,14 +2,13 @@
 
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useService } from "@web/core/utils/hooks";
 import { numberBuffer } from "@point_of_sale/app/number_buffer_service";
 import { registry } from "@web/core/registry";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 
-import { useState, xml } from "@odoo/owl";
+import { Component, useState, xml } from "@odoo/owl";
 
 QUnit.module("unit tests for NumberBuffer", {
     async beforeEach() {
@@ -23,13 +22,12 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
     const target = testUtils.prepareTarget();
     const env = await makeTestEnv();
 
-    class Root extends LegacyComponent {
+    class Root extends Component {
         setup() {
             this.state = useState({ buffer: "" });
             this.numberBuffer = useService("number_buffer");
             this.numberBuffer.activate();
             this.numberBuffer.use({
-                nonKeyboardInputEvent: "numpad-click-input",
                 state: this.state,
             });
         }
@@ -38,10 +36,10 @@ QUnit.test("simple fast inputs with capture in between", async function (assert)
             this.numberBuffer.reset();
         }
         onClickOne() {
-            this.trigger("numpad-click-input", { key: "1" });
+            this.numberBuffer.sendKey("1");
         }
         onClickTwo() {
-            this.trigger("numpad-click-input", { key: "2" });
+            this.numberBuffer.sendKey("2");
         }
     }
     Root.template = xml/* html */ `

@@ -1,17 +1,15 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
-export class SplitBillButton extends LegacyComponent {
+export class SplitBillButton extends Component {
     static template = "SplitBillButton";
 
     setup() {
         super.setup();
         this.pos = usePos();
-        useListener("click", this.onClick);
     }
     _isDisabled() {
         const order = this.env.pos.get_order();
@@ -21,7 +19,7 @@ export class SplitBillButton extends LegacyComponent {
                 .reduce((totalProduct, orderline) => totalProduct + orderline.quantity, 0) < 2
         );
     }
-    async onClick() {
+    async click() {
         this.pos.showScreen("SplitBillScreen");
     }
 }

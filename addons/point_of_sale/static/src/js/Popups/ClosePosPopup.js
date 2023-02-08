@@ -1,16 +1,13 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
-import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { SaleDetailsButton } from "../ChromeWidgets/SaleDetailsButton";
 import { ConfirmPopup } from "./ConfirmPopup";
 import { ErrorPopup } from "./ErrorPopup";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 import { AlertPopup } from "./AlertPopup";
 import { useService } from "@web/core/utils/hooks";
-
-const { useState } = owl;
+import { useState } from "@odoo/owl";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
     static components = { SaleDetailsButton };
@@ -19,6 +16,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     setup() {
         super.setup();
         this.popup = useService("popup");
+        this.pos = useService("pos");
         this.manualInputCashCount = false;
         this.cashControl = this.env.pos.config.cash_control;
         this.closeSessionClicked = false;
@@ -123,82 +121,25 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         return true;
     }
     closePos() {
-        this.trigger("close-pos");
+        this.pos.closePos();
     }
     async closeSession() {
         if (!this.closeSessionClicked) {
             this.closeSessionClicked = true;
-            let response;
-            if (this.cashControl) {
-                response = await this.rpc({
-                    model: "pos.session",
-                    method: "post_closing_cash_details",
-                    args: [this.env.pos.pos_session.id],
-                    kwargs: {
-                        counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
-                    },
-                });
-                if (!response.successful) {
-                    return this.handleClosingError(response);
-                }
-            }
 
-            try {
-                await this.rpc({
-                    model: "pos.session",
-                    method: "update_closing_control_state_session",
-                    args: [this.env.pos.pos_session.id, this.state.notes],
-                });
-            } catch (error) {
-                // We have to handle the error manually otherwise the validation check stops the script.
-                // In case of "rescue session", we want to display the next popup with "handleClosingError".
-                // FIXME
-                if (
-                    !error.message &&
-                    !error.message.data &&
-                    error.message.data.message !== "This session is already closed."
-                ) {
-                    throw error;
-                }
-            }
-
-            try {
-                const bankPaymentMethodDiffPairs = this.otherPaymentMethods
-                    .filter((pm) => pm.type == "bank")
-                    .map((pm) => [pm.id, this.state.payments[pm.id].difference]);
-                response = await this.rpc({
-                    model: "pos.session",
-                    method: "close_session_from_ui",
-                    args: [this.env.pos.pos_session.id, bankPaymentMethodDiffPairs],
-                    context: this.env.session.user_context,
-                });
-                if (!response.successful) {
-                    return this.handleClosingError(response);
-                }
-                window.location = "/web#action=point_of_sale.action_client_pos_menu";
-            } catch (error) {
-                if (identifyError(error) instanceof ConnectionLostError) {
-                    // Cannot redirect to backend when offline, let error handlers show the offline popup
-                    // FIXME POSREF: doing this means closing again when online will redo the beginning of the method
-                    // although it's impossible to close again because this.closeSessionClicked isn't reset to false
-                    // The application state is corrupted.
-                    throw error;
-                } else {
-                    // FIXME POSREF: why are we catching errors here but not anywhere else in this method?
-                    await this.popup.add(ErrorPopup, {
-                        title: this.env._t("Closing session error"),
-                        body: this.env._t(
-                            "An error has occurred when trying to close the session.\n" +
-                                "You will be redirected to the back-end to manually close the session."
-                        ),
-                    });
-                    window.location = "/web#action=point_of_sale.action_client_pos_menu";
-                }
-            }
+            const defaultCashCounted = this.env.pos.config.cashControl
+                ? this.state.payments[this.defaultCashDetails.id].counted
+                : 0;
+            this.pos.closeSession(
+                defaultCashCounted,
+                this.state.notes,
+                this.otherPaymentMethods,
+                this.state.payments
+            );
         }
+
         this.closeSessionClicked = false;
     }
-
     async handleClosingError(response) {
         let popupType = "";
         let title = "";

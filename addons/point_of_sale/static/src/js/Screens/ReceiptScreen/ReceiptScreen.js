@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 import { OrderReceipt } from "./OrderReceipt";
 import { onMounted, useRef, status } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { useService } from "@web/core/utils/hooks";
 
 export class ReceiptScreen extends AbstractReceiptScreen {
     static template = "ReceiptScreen";
@@ -18,6 +19,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         super.setup();
         this.pos = usePos();
         useErrorHandlers();
+        this.rpc = useService("rpc");
         this.orderReceipt = useRef("order-receipt");
         this.currentOrder = this.env.pos.get_order();
         const partner = this.currentOrder.get_partner();

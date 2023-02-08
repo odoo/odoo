@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class CategoryButton extends LegacyComponent {
+export class CategoryButton extends Component {
     static template = "CategoryButton";
 
     get imageUrl() {

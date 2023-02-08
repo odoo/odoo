@@ -1,9 +1,7 @@
 /** @odoo-module */
 
-import { useAutofocus, useListener } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
-
-const { useExternalListener, useState } = owl;
+import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useAutofocus } from "@web/core/utils/hooks";
 
 /**
  * This is a simple configurable search bar component. It has search fields
@@ -23,20 +21,17 @@ const { useExternalListener, useState } = owl;
  *  placeholder: string,
  * }}
  * @emits search @payload { fieldName: string, searchTerm: '' }
- * @emits filter-selected @payload { filter: string }
  *
  * NOTE: The payload of the emitted event is accessible via the `detail`
  * field of the event.
  */
-export class SearchBar extends LegacyComponent {
+export class SearchBar extends Component {
     static template = "point_of_sale.SearchBar";
 
     setup() {
         super.setup();
         useAutofocus();
         useExternalListener(window, "click", this._hideOptions);
-        useListener("click-search-field", this._onClickSearchField);
-        useListener("select-filter", this._onSelectFilter);
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
         this.searchFieldsList = [...this.props.config.searchFields.keys()];
         const defaultSearchFieldId = this.searchFieldsList.indexOf(
@@ -50,9 +45,9 @@ export class SearchBar extends LegacyComponent {
             selectedFilter: this.props.config.defaultFilter || this.filterOptionsList[0],
         });
     }
-    _onSelectFilter({ detail: key }) {
+    _onSelectFilter(key) {
         this.state.selectedFilter = key;
-        this.trigger("filter-selected", { filter: this.state.selectedFilter });
+        this.props.onFilterSelected(this.state.selectedFilter);
     }
     /**
      * When pressing vertical arrow keys, do not move the input cursor.
@@ -83,9 +78,9 @@ export class SearchBar extends LegacyComponent {
     /**
      * Called when a search field is clicked.
      */
-    _onClickSearchField({ detail: fieldName }) {
+    _onClickSearchField(fieldName) {
         this.state.showSearchFields = false;
-        this.trigger("search", { fieldName, searchTerm: this.state.searchInput });
+        this.props.onSearch({ fieldName, searchTerm: this.state.searchInput });
     }
     /**
      * Given an arrow key, return the next selectedSearchFieldId.

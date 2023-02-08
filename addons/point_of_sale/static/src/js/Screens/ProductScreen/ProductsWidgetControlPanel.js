@@ -1,15 +1,14 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { debounce } from "@web/core/utils/timing";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { CategoryButton } from "./CategoryButton";
 
-import { onMounted, onWillUnmount, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-export class ProductsWidgetControlPanel extends LegacyComponent {
+export class ProductsWidgetControlPanel extends Component {
     static components = { CategoryButton };
     static template = "ProductsWidgetControlPanel";
 
@@ -17,6 +16,7 @@ export class ProductsWidgetControlPanel extends LegacyComponent {
         super.setup();
         this.pos = usePos();
         this.notification = useService("pos_notification");
+        this.rpc = useService("rpc");
         this.updateSearch = debounce(this.updateSearch, 100);
         this.state = useState({ searchInput: "", mobileSearchBarIsShown: false });
 
@@ -33,7 +33,7 @@ export class ProductsWidgetControlPanel extends LegacyComponent {
     }
     _clearSearch() {
         this.state.searchInput = "";
-        this.trigger("clear-search");
+        this.props.clearSearch();
     }
     get displayCategImages() {
         return (
@@ -42,7 +42,7 @@ export class ProductsWidgetControlPanel extends LegacyComponent {
         );
     }
     updateSearch(event) {
-        this.trigger("update-search", this.state.searchInput);
+        this.props.updateSearch(this.state.searchInput);
         if (event.key === "Enter") {
             this._onPressEnterKey();
         }
@@ -63,8 +63,8 @@ export class ProductsWidgetControlPanel extends LegacyComponent {
     }
     searchProductFromInfo(productName) {
         this.state.searchInput = productName;
-        this.trigger("switch-category", 0);
-        this.trigger("update-search", productName);
+        this.props.switchCategory(0);
+        this.props.updateSearch(productName);
     }
     async loadProductFromDB() {
         if (!this.state.searchInput) {
@@ -90,7 +90,7 @@ export class ProductsWidgetControlPanel extends LegacyComponent {
         if (ProductIds.length) {
             await this.env.pos._addProducts(ProductIds, false);
         }
-        this.trigger("update-product-list");
+        this.props.updateProductList();
         return ProductIds;
     }
 }

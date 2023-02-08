@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
 /**
  * props {
@@ -9,7 +9,7 @@ import { LegacyComponent } from "@web/legacy/legacy_component";
  *     item: object,
  * }
  */
-export class EditListInput extends LegacyComponent {
+export class EditListInput extends Component {
     static template = "EditListInput";
 
     onKeyup(event) {

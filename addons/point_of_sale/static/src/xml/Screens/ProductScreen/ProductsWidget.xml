@@ -3,11 +3,19 @@
 
     <t t-name="ProductsWidget" owl="1">
       <div class="products-widget">
-            <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" hasNoCategories="hasNoCategories" />
+            <ProductsWidgetControlPanel
+                updateProductList.bind="updateProductList"
+                clearSearch.bind="clearSearch"
+                updateSearch.bind="updateSearch"
+                switchCategory.bind="switchCategory"
+                breadcrumbs="breadcrumbs"
+                subcategories="subcategories"
+                hasNoCategories="hasNoCategories" />
             <div class="product-list-container">
                 <div t-if="productsToDisplay.length != 0" class="product-list">
                     <t t-foreach="productsToDisplay" t-as="product" t-key="product.id">
-                        <ProductItem product="product" />
+                        <ProductItem
+                            product="product" />
                     </t>
                 </div>
                 <div t-else="" class="product-list-empty no-results-message">

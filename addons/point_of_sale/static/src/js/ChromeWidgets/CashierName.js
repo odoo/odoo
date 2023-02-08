@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
 // Previously UsernameWidget
-export class CashierName extends LegacyComponent {
+export class CashierName extends Component {
     static template = "CashierName";
 
     get username() {

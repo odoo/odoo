@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="TransferOrderButton" owl="1">
-        <div class="control-button">
+        <div class="control-button" t-on-click="() => this.click()">
             <i class="fa fa-arrow-right" />
             <span> </span>
             <span>Transfer</span>

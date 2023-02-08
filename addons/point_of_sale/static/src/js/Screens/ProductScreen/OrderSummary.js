@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 import { float_is_zero } from "web.utils";
 
-export class OrderSummary extends LegacyComponent {
+export class OrderSummary extends Component {
     static template = "OrderSummary";
 
     getTotal() {

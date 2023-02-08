@@ -1,11 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmPopup } from "../Popups/ConfirmPopup";
 import { ErrorPopup } from "../Popups/ErrorPopup";
-
-const { useRef } = owl;
+import { Component, useRef } from "@odoo/owl";
 
 /**
  * This relies on the assumption that there is a reference to
@@ -13,7 +11,7 @@ const { useRef } = owl;
  * `order-receipt` in the template of the Component that extends
  * this abstract component.
  */
-export class AbstractReceiptScreen extends LegacyComponent {
+export class AbstractReceiptScreen extends Component {
     setup() {
         super.setup();
         this.orderReceipt = useRef("order-receipt");

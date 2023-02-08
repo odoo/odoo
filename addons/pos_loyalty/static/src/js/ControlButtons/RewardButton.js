@@ -1,18 +1,19 @@
 /** @odoo-module **/
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component } from "@odoo/owl";
 
-export class RewardButton extends LegacyComponent {
+export class RewardButton extends Component {
     static template = "RewardButton";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
+        this.pos = usePos();
         this.notification = useService("pos_notification");
-        useListener("click", this.onClick);
     }
 
     /**
@@ -42,7 +43,7 @@ export class RewardButton extends LegacyComponent {
         }
         const discountRewards = rewards.filter(({ reward }) => reward.reward_type == "discount");
         const freeProductRewards = rewards.filter(({ reward }) => reward.reward_type == "product");
-        const potentialFreeProductRewards = order.getPotentialFreeProductRewards();
+        const potentialFreeProductRewards = this.pos.getPotentialFreeProductRewards();
         return discountRewards.concat(
             this._mergeFreeProductRewards(freeProductRewards, potentialFreeProductRewards)
         );
@@ -84,11 +85,7 @@ export class RewardButton extends LegacyComponent {
             (reward.reward_type == "product" && reward.program_id.applies_on !== "both") ||
             (reward.program_id.applies_on == "both" && potentialQty)
         ) {
-            // Delegate the addition of product and reward update to the `click-product` event.
-            this.trigger(
-                "click-product",
-                this.env.pos.db.get_product_by_id(args["product"] || reward.reward_product_ids[0])
-            );
+            this.pos.addProductToCurrentOrder(args["product"] || reward.reward_product_ids[0]);
             return true;
         } else {
             const result = order._applyReward(reward, coupon_id, args);
@@ -101,7 +98,7 @@ export class RewardButton extends LegacyComponent {
         }
     }
 
-    async onClick() {
+    async click() {
         const rewards = this._getPotentialRewards();
         if (rewards.length === 1) {
             return this._applyReward(

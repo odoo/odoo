@@ -2,8 +2,7 @@
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
-
-const { useState } = owl;
+import { useState } from "@odoo/owl";
 
 export class PaymentTransactionPopup extends AbstractAwaitablePopup {
     static template = "PaymentTransactionPopup";

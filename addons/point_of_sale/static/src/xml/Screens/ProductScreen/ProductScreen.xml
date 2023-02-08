@@ -19,14 +19,24 @@
                         </div>
                         <div class="subpads">
                             <t t-set="_actionName">Payment</t>
-                            <ActionpadWidget partner="partner" actionName="_actionName" onSwitchPane.bind="switchPane" />
-                            <NumpadWidget activeMode="env.pos.numpadMode" />
+                            <ActionpadWidget
+                                clickPay.bind="onClickPay"
+                                partner="partner"
+                                actionName="_actionName"
+                                onSwitchPane.bind="switchPane" />
+                            <NumpadWidget
+                                updateSelectedOrderline.bind="updateSelectedOrderline"
+                                activeMode="env.pos.numpadMode" />
                         </div>
                     </div>
                 </div>
                 <div class="rightpane" t-if="!env.isMobile || state.mobile_pane === 'right'">
-                    <ProductsWidget/>
-                    <MobileOrderWidget t-if="env.isMobile" pane="state.mobile_pane" onSwitchPane.bind="switchPane"/>
+                    <ProductsWidget />
+                    <MobileOrderWidget
+                        clickPay.bind="onClickPay"
+                        t-if="env.isMobile"
+                        pane="state.mobile_pane"
+                        onSwitchPane.bind="switchPane"/>
                 </div>
             </div>
         </div>

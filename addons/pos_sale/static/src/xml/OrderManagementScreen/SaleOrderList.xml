@@ -13,7 +13,10 @@
             </div>
             <div class="order-list">
                 <t t-foreach="props.orders" t-as="order" t-key="order.id">
-                    <SaleOrderRow order="order" highlightedOrder="highlightedOrder" />
+                    <SaleOrderRow
+                        onClickSaleOrder.bind="props.onClickSaleOrder"
+                        order="order"
+                        highlightedOrder="highlightedOrder" />
                 </t>
             </div>
         </div>

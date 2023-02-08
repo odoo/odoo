@@ -3,7 +3,7 @@
 
     <t t-name="pos_restaurant.TipScreen" owl="1">
         <div class="tip-screen screen">
-            <div class="pos-receipt-container"/>
+            <div class="pos-receipt-container" t-ref="pos-receipt-container"/>
             <div class="screen-content">
                 <div class="top-content">
                     <span class="button back" t-on-click="() => this.pos.showScreen('FloorScreen')">

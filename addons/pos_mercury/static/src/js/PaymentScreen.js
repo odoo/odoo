@@ -121,24 +121,6 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         res["useWithBarcode"] = true;
         return res;
     },
-    /**
-     * Finish any pending input before trying to validate.
-     *
-     * @override
-     */
-    async validateOrder(isForceValidate) {
-        this.numberBuffer.capture();
-        return this._super(...arguments);
-    },
-    /**
-     * Finish any pending input before sending a request to a terminal.
-     *
-     * @override
-     */
-    async _sendPaymentRequest({ detail: line }) {
-        this.numberBuffer.capture();
-        return this._super(...arguments);
-    },
     _get_swipe_pending_line() {
         var i = 0;
         var lines = this.env.pos.get_order().get_paymentlines();
@@ -545,19 +527,18 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     /**
      * @override
      */
-    deletePaymentLine(event) {
-        const { cid } = event.detail;
+    deletePaymentLine(cid) {
         const line = this.paymentLines.find((line) => line.cid === cid);
         if (line.mercury_data) {
             this.do_reversal(line, false);
         } else {
-            this._super(event);
+            this._super(cid);
         }
     },
     /**
      * @override
      */
-    addNewPaymentLine({ detail: paymentMethod }) {
+    addNewPaymentLine(paymentMethod) {
         const order = this.env.pos.get_order();
         const res = this._super(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {

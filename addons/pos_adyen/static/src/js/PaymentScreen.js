@@ -2,7 +2,7 @@
 
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 import { patch } from "@web/core/utils/patch";
-const { onMounted } = owl;
+import { onMounted } from "@odoo/owl";
 
 patch(PaymentScreen.prototype, "pos_adyen.PaymentScreen", {
     setup() {

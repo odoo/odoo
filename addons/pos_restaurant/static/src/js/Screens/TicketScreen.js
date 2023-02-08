@@ -1,12 +1,10 @@
 /** @odoo-module */
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { parse } from "web.field_utils";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-
-const { useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     _getScreenToStatusMap() {
@@ -78,7 +76,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     //@override
-    async _onDeleteOrder() {
+    async onDeleteOrder() {
         await this._super(...arguments);
         if (this.env.pos.config.iface_floorplan) {
             if (!this.env.pos.table) {
@@ -145,7 +143,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
         return result;
     },
-    async _onDoRefund() {
+    async onDoRefund() {
         if (this.env.pos.config.iface_floorplan) {
             this.env.pos.setTable(
                 this.getSelectedSyncedOrder().table
@@ -163,7 +161,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
 });
 
-export class TipCell extends LegacyComponent {
+export class TipCell extends Component {
     static template = "TipCell";
 
     setup() {

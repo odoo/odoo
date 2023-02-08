@@ -25,7 +25,11 @@
                         </div>
                         <ul class="orderlines">
                             <t t-foreach="orderlines" t-as="orderline" t-key="orderline.id">
-                                <OrderlineDetails line="orderline" isSelected="orderline.id == props.selectedOrderlineId" />
+                                <OrderlineDetails
+                                    onClickOrderline.bind="this.props.onClickOrderline"
+                                    onClickRefundOrderUid.bind="props.onClickRefundOrderUid"
+                                    line="orderline"
+                                    isSelected="orderline.id == props.selectedOrderlineId" />
                             </t>
                         </ul>
                         <!-- Not using OrderSummary because we don't need it's overrides in this view. -->

@@ -1,9 +1,9 @@
 /** @odoo-module */
 
+import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class IndependentToOrderScreen extends LegacyComponent {
+export class IndependentToOrderScreen extends Component {
     static storeOnOrder = false;
     setup() {
         super.setup(...arguments);

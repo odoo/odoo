@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PromoCodeButton" owl="1">
-        <span class="control-button">
+        <span class="control-button" t-on-click="() => this.click()">
             <i class="fa fa-barcode"></i>
             <span> </span>
             <span>Enter Code</span>

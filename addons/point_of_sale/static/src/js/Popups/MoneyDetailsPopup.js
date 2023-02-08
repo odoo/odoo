@@ -1,10 +1,8 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-
+import { useState } from "@odoo/owl";
 import { CurrencyAmount } from "../Misc/CurrencyAmount";
-
-const { useState } = owl;
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
     static components = { CurrencyAmount };

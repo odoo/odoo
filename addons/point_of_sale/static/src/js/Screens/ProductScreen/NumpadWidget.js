@@ -1,21 +1,26 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useService } from "@web/core/utils/hooks";
+import { Component } from "@odoo/owl";
 
 /**
  * @prop {'quantity' | 'price' | 'discount'} activeMode
  * @prop {Array<'quantity' | 'price' | 'discount'>} disabledModes
  * @prop {boolean} disableSign
- * @event set-numpad-mode - triggered when mode button is clicked
- * @event numpad-click-input - triggered when numpad button is clicked
  */
-export class NumpadWidget extends LegacyComponent {
+export class NumpadWidget extends Component {
     static template = "NumpadWidget";
     static defaultProps = {
         disabledModes: [],
         disableSign: false,
     };
-
+    setup() {
+        this.numberBuffer = useService("number_buffer");
+        this.numberBuffer.use({
+            triggerAtInput: (event) => this.props.updateSelectedOrderline(event),
+            useWithBarcode: true,
+        });
+    }
     get hasPriceControlRights() {
         return (
             this.env.pos.cashierHasPriceControlRights() &&
@@ -34,10 +39,12 @@ export class NumpadWidget extends LegacyComponent {
         if (!this.hasManualDiscount && mode === "discount") {
             return;
         }
-        this.trigger("set-numpad-mode", { mode });
+        this.numberBuffer.capture();
+        this.numberBuffer.reset();
+        this.env.pos.numpadMode = mode;
     }
     sendInput(key) {
-        this.trigger("numpad-click-input", { key });
+        this.numberBuffer.sendKey(key);
     }
     get decimalSeparator() {
         return this.env._t.database.parameters.decimal_point;

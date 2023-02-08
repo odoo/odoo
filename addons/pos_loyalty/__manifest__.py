@@ -26,6 +26,7 @@
     'assets': {
         'point_of_sale.assets': [
             'pos_loyalty/static/src/css/Loyalty.scss',
+            'pos_loyalty/static/src/app/**/*',
             'pos_loyalty/static/src/js/**/*',
             'pos_loyalty/static/src/xml/**/*',
         ],

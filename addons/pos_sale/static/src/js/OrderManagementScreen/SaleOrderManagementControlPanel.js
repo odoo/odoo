@@ -1,10 +1,8 @@
 /** @odoo-module */
 
-import { useAutofocus, useListener, useService } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { orderManagement } from "@point_of_sale/js/PosContext";
-
-const { useState } = owl;
+import { Component, useState } from "@odoo/owl";
 
 // NOTE: These are constants so that they are only instantiated once
 // and they can be used efficiently by the OrderManagementControlPanel.
@@ -19,19 +17,15 @@ const FIELD_MAP = {
 const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
 
 /**
- * @emits close-screen
- * @emits prev-page
- * @emits next-page
  * @emits search
  */
-export class SaleOrderManagementControlPanel extends LegacyComponent {
+export class SaleOrderManagementControlPanel extends Component {
     static template = "SaleOrderManagementControlPanel";
 
     setup() {
         super.setup();
         this.saleOrderFetcher = useService("sale_order_fetcher");
         this.orderManagementContext = useState(orderManagement);
-        useListener("clear-search", this._onClearSearch);
         useAutofocus();
 
         const currentPartner = this.env.pos.get_order().get_partner();
@@ -42,7 +36,7 @@ export class SaleOrderManagementControlPanel extends LegacyComponent {
     }
     onInputKeydown(event) {
         if (event.key === "Enter") {
-            this.trigger("search", this._computeDomain());
+            this.props.onSearch(this._computeDomain());
         }
     }
     get showPageControls() {
@@ -123,7 +117,7 @@ export class SaleOrderManagementControlPanel extends LegacyComponent {
         }
         return domain;
     }
-    _onClearSearch() {
+    clearSearch() {
         this.orderManagementContext.searchString = "";
         this.onInputKeydown({ key: "Enter" });
     }

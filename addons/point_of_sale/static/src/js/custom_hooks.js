@@ -3,9 +3,7 @@ import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
 import { ConfirmPopup } from "./Popups/ConfirmPopup";
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { ErrorPopup } from "./Popups/ErrorPopup";
-import { useEnv } from "@odoo/owl";
-
-const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
+import { useEnv, onMounted, onPatched, onWillUnmount, useComponent } from "@odoo/owl";
 
 /**
  * Introduce error handlers in the component.

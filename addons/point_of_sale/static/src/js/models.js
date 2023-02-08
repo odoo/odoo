@@ -9,14 +9,15 @@ import time from "web.time";
 import utils from "web.utils";
 import { batched, uuidv4 } from "@point_of_sale/js/utils";
 import { ErrorPopup } from "./Popups/ErrorPopup";
+import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
+import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
+import { markRaw, reactive } from "@odoo/owl";
 
 var QWeb = core.qweb;
 var _t = core._t;
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
-const Markup = utils.Markup
-
-const { markRaw, reactive } = owl;
+const Markup = utils.Markup;
 
 // Container of the product images fetched during rendering
 // of customer display. There is no need to observe it, thus,
@@ -1201,7 +1202,8 @@ export class PosGlobalState extends PosModel {
                     } else if (tax.amount_type === "division") {
                         incl_division_amount += tax.amount * tax.sum_repartition_factor;
                     } else if (tax.amount_type === "fixed") {
-                        incl_fixed_amount += Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
+                        incl_fixed_amount +=
+                            Math.abs(quantity) * tax.amount * tax.sum_repartition_factor;
                     } else {
                         var tax_amount = self._compute_all(tax, base, quantity);
                         incl_fixed_amount += tax_amount;
@@ -1252,7 +1254,10 @@ export class PosGlobalState extends PosModel {
             }
 
             tax_amount = round_pr(tax_amount, currency_rounding);
-            var factorized_tax_amount = round_pr(tax_amount * tax.sum_repartition_factor, currency_rounding)
+            var factorized_tax_amount = round_pr(
+                tax_amount * tax.sum_repartition_factor,
+                currency_rounding
+            );
 
             if (tax.price_include && total_included_checkpoints[i] === undefined) {
                 cumulated_tax_included_amount += factorized_tax_amount;
@@ -1475,6 +1480,103 @@ export class Product extends PosModel {
             return undefined;
         }
         return this.pos.units_by_id[unit_id];
+    }
+    async _onScaleNotAvailable() {}
+    get isScaleAvailable() {
+        return true;
+    }
+    async getAddProductOptions(base_code) {
+        let price_extra = 0.0;
+        let draftPackLotLines, weight, description, packLotLinesToEdit;
+
+        if (_.some(this.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id)) {
+            const attributes = _.map(
+                this.attribute_line_ids,
+                (id) => this.pos.attributes_by_ptal_id[id]
+            ).filter((attr) => attr !== undefined);
+            const { confirmed, payload } = await this.pos.env.services.popup.add(
+                ProductConfiguratorPopup,
+                {
+                    product: this,
+                    attributes: attributes,
+                }
+            );
+
+            if (confirmed) {
+                description = payload.selected_attributes.join(", ");
+                price_extra += payload.price_extra;
+            } else {
+                return;
+            }
+        }
+        // Gather lot information if required.
+        if (
+            ["serial", "lot"].includes(this.tracking) &&
+            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+        ) {
+            const isAllowOnlyOneLot = this.isAllowOnlyOneLot();
+            if (isAllowOnlyOneLot) {
+                packLotLinesToEdit = [];
+            } else {
+                const orderline = this.currentOrder
+                    .get_orderlines()
+                    .filter((line) => !line.get_discount())
+                    .find((line) => line.product.id === this.id);
+                if (orderline) {
+                    packLotLinesToEdit = orderline.getPackLotLinesToEdit();
+                } else {
+                    packLotLinesToEdit = [];
+                }
+            }
+            const { confirmed, payload } = await this.pos.env.services.popup.add(EditListPopup, {
+                title: this.pos.env._t("Lot/Serial Number(s) Required"),
+                name: this.display_name,
+                isSingleItem: isAllowOnlyOneLot,
+                array: packLotLinesToEdit,
+            });
+            if (confirmed) {
+                // Segregate the old and new packlot lines
+                const modifiedPackLotLines = Object.fromEntries(
+                    payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                );
+                const newPackLotLines = payload.newArray
+                    .filter((item) => !item.id)
+                    .map((item) => ({ lot_name: item.text }));
+
+                draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
+            } else {
+                // We don't proceed on adding product.
+                return;
+            }
+        }
+
+        // Take the weight if necessary.
+        if (this.to_weight && this.pos.config.iface_electronic_scale) {
+            // Show the ScaleScreen to weigh the product.
+            if (this.isScaleAvailable) {
+                const product = this;
+                const { confirmed, payload } = await this.pos.env.services.pos.showTempScreen(
+                    "ScaleScreen",
+                    {
+                        product,
+                    }
+                );
+                if (confirmed) {
+                    weight = payload.weight;
+                } else {
+                    // do not add the product;
+                    return;
+                }
+            } else {
+                await this._onScaleNotAvailable();
+            }
+        }
+
+        if (base_code && this.pos.db.product_packaging_by_barcode[base_code.code]) {
+            weight = this.pos.db.product_packaging_by_barcode[base_code.code].qty;
+        }
+
+        return { draftPackLotLines, quantity: weight, description, price_extra };
     }
     // Port of _get_product_price on product.pricelist.
     //
@@ -2995,7 +3097,7 @@ export class Order extends PosModel {
         line.set_unit_price(line.compute_fixed_price(line.price));
     }
 
-    add_product(product, options) {
+    async add_product(product, options) {
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);

@@ -2,8 +2,7 @@
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
-
-const { onMounted, useRef, useState } = owl;
+import { onMounted, useRef, useState } from "@odoo/owl";
 
 // IMPROVEMENT: This code is very similar to TextInputPopup.
 //      Combining them would reduce the code.

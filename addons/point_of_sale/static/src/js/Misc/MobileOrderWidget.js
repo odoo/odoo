@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-export class MobileOrderWidget extends LegacyComponent {
+export class MobileOrderWidget extends Component {
     static template = "MobileOrderWidget";
 
     get order() {

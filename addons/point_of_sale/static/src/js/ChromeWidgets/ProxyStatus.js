@@ -1,11 +1,9 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
-
-const { onMounted, onWillUnmount, useState } = owl;
+import { Component, onMounted, onWillUnmount, useState } from "@odoo/owl";
 
 // Previously ProxyStatusWidget
-export class ProxyStatus extends LegacyComponent {
+export class ProxyStatus extends Component {
     static template = "ProxyStatus";
 
     setup() {

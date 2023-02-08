@@ -1,16 +1,14 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useService } from "@web/core/utils/hooks";
 
 import { PartnerLine } from "./PartnerLine";
 import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
 import { usePos } from "@point_of_sale/app/pos_hook";
-
-const { onWillUnmount, useRef } = owl;
+import { Component, onWillUnmount, useRef } from "@odoo/owl";
 
 /**
  * Render this screen using `showTempScreen` to select partner.
@@ -27,16 +25,15 @@ const { onWillUnmount, useRef } = owl;
  *
  * @props partner - originally selected partner
  */
-export class PartnerListScreen extends LegacyComponent {
+export class PartnerListScreen extends Component {
     static components = { PartnerDetailsEdit, PartnerLine };
     static template = "PartnerListScreen";
 
     setup() {
         super.setup();
         this.pos = usePos();
+        this.rpc = useService("rpc");
         this.notification = useService("pos_notification");
-        useListener("click-save", () => this.env.bus.trigger("save-partner"));
-        useListener("save-changes", this.saveChanges);
         this.searchWordInputRef = useRef("search-word-input-partner");
 
         // We are not using useState here because the object
@@ -159,11 +156,11 @@ export class PartnerListScreen extends LegacyComponent {
         };
         this.activateEditMode();
     }
-    async saveChanges(event) {
+    async saveChanges(processedChanges) {
         const partnerId = await this.rpc({
             model: "res.partner",
             method: "create_from_ui",
-            args: [event.detail.processedChanges],
+            args: [processedChanges],
         });
         await this.env.pos.load_new_partners();
         this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);

@@ -1,12 +1,11 @@
 /** @odoo-module */
 
-import { useListener } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
 import { barcodeService } from "@barcodes/barcode_service";
 import { _t } from "web.core";
 import { registry } from "@web/core/registry";
+import { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } from "@odoo/owl";
 
-const { EventBus, onMounted, onWillUnmount, useComponent, useExternalListener } = owl;
 const INPUT_KEYS = new Set(
     ["Delete", "Backspace", "+1", "+2", "+5", "+10", "+20", "+50"].concat(
         "0123456789+-.,".split("")
@@ -19,7 +18,6 @@ const getDefaultConfig = () => ({
     triggerAtEnter: false,
     triggerAtEsc: false,
     triggerAtInput: false,
-    nonKeyboardInputEvent: false,
     useWithBarcode: false,
 });
 
@@ -124,7 +122,6 @@ class NumberBuffer extends EventBus {
      * @param {String|null} config.triggerAtEnter Event triggered when 'Enter' key is pressed.
      * @param {String|null} config.triggerAtEsc Event triggered when 'Esc' key is pressed.
      * @param {String|null} config.triggerAtInput Event triggered for every accepted input.
-     * @param {String|null} config.nonKeyboardInputEvent Also listen to a non-keyboard input event
      *      that carries a payload of { key }. The key is checked if it is a valid input. If valid,
      *      the number buffer is modified just as it is modified when a keyboard key is pressed.
      * @param {Boolean} config.useWithBarcode Whether this buffer is used with barcode.
@@ -148,10 +145,6 @@ class NumberBuffer extends EventBus {
             this.bufferHolderStack.pop();
             this._setUp();
         });
-        // Add listener that accepts non keyboard inputs
-        if (typeof config.nonKeyboardInputEvent === "string") {
-            useListener(config.nonKeyboardInputEvent, this._onNonKeyboardInput.bind(this));
-        }
     }
     get _currentBufferHolder() {
         return this.bufferHolderStack[this.bufferHolderStack.length - 1];
@@ -172,7 +165,14 @@ class NumberBuffer extends EventBus {
     _onKeyboardInput(event) {
         return this._bufferEvents(this._onInput((event) => event.key))(event);
     }
-    _onNonKeyboardInput(event) {
+    sendKey(key) {
+        const event = new CustomEvent("", {
+            detail: {
+                key: key,
+            },
+        });
+        Object.defineProperty(event, "target", { value: {} });
+
         return this._bufferEvents(this._onInput((event) => event.detail.key))(event);
     }
     _bufferEvents(handler) {
@@ -211,13 +211,13 @@ class NumberBuffer extends EventBus {
     }
     _handleInput(key) {
         if (key === "Enter" && this.config.triggerAtEnter) {
-            this.component.trigger(this.config.triggerAtEnter, this.state);
+            this.config.triggerAtEnter(this.state);
         } else if (key === "Esc" && this.config.triggerAtEsc) {
-            this.component.trigger(this.config.triggerAtEsc, this.state);
+            this.config.triggerAtEsc(this.state);
         } else if (INPUT_KEYS.has(key)) {
             this._updateBuffer(key);
             if (this.config.triggerAtInput) {
-                this.component.trigger(this.config.triggerAtInput, {
+                this.config.triggerAtInput({
                     buffer: this.state.buffer,
                     key,
                 });

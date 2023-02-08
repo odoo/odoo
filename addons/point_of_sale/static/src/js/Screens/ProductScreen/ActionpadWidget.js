@@ -1,17 +1,20 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { usePos } from "@point_of_sale/app/pos_hook";
+import { Component } from "@odoo/owl";
 
 /**
  * @props partner
- * @emits click-partner
- * @emits click-pay
  */
-export class ActionpadWidget extends LegacyComponent {
+export class ActionpadWidget extends Component {
     static template = "ActionpadWidget";
     static defaultProps = {
         isActionButtonHighlighted: false,
     };
+
+    setup() {
+        this.pos = usePos();
+    }
 
     get isLongName() {
         return this.props.partner && this.props.partner.name.length > 10;

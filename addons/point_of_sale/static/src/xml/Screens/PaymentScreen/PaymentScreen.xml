@@ -27,7 +27,7 @@
                                 <t t-foreach="payment_methods_from_config" t-as="paymentMethod"
                                    t-key="paymentMethod.id">
                                     <div class="button paymentmethod"
-                                        t-on-click="() => this.trigger('new-payment-line', paymentMethod)">
+                                        t-on-click="() => this.addNewPaymentLine(paymentMethod)">
                                         <div class="payment-method-display">
                                             <div><img class="payment-method-icon" t-att-src="paymentMethodImage(paymentMethod.id)"/></div>
                                             <span class="payment-name"><t t-esc="paymentMethod.name" /></span>
@@ -35,10 +35,17 @@
                                     </div>
                                 </t>
                             </div>
-                            <PaymentScreenPaymentLines paymentLines="paymentLines" />
+                            <PaymentScreenPaymentLines
+                                paymentLines="paymentLines"
+                                deleteLine.bind="deletePaymentLine"
+                                sendForceDone.bind="sendForceDone"
+                                sendPaymentReverse.bind="sendPaymentReverse"
+                                sendPaymentCancel.bind="sendPaymentCancel"
+                                sendPaymentRequest.bind="sendPaymentRequest"
+                                selectLine.bind="selectPaymentLine"/>
                         </div>
                         <div t-if="!env.isMobile" class="button next validation" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
-                            t-on-click="() => this.trigger('validate-order')">
+                            t-on-click="() => this.validateOrder()">
                             <div class="pay-circle">
                                 <i class="fa fa-chevron-right" role="img" aria-label="Pay" title="Pay" />
                             </div>
@@ -105,7 +112,7 @@
                     <div class="switchpane">
                         <button class="btn-switchpane"
                             t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"
-                            t-on-click="() => this.trigger('validate-order')">
+                            t-on-click="() => this.validateOrder()">
                             <h1>Validate</h1>
                         </button>
                         <button class="btn-switchpane secondary" t-on-click="() => pos.showScreen('ProductScreen', {mobile_pane: 'left'})">

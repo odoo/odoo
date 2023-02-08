@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
@@ -12,8 +11,9 @@ import { SaleDetailsButton } from "@point_of_sale/js/ChromeWidgets/SaleDetailsBu
 import { SyncNotification } from "@point_of_sale/js/ChromeWidgets/SyncNotification";
 import { CashMovePopup } from "./cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
+import { Component } from "@odoo/owl";
 
-export class Navbar extends LegacyComponent {
+export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
     static components = {
         // FIXME POSREF remove some of these components

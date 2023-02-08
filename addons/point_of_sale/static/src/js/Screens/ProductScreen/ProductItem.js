@@ -1,10 +1,14 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
-export class ProductItem extends LegacyComponent {
+export class ProductItem extends Component {
     static template = "ProductItem";
 
+    setup() {
+        this.pos = usePos();
+    }
     /**
      * For accessibility, pressing <space> should be like clicking the product.
      * <enter> is not considered because it conflicts with the barcode.
@@ -13,7 +17,7 @@ export class ProductItem extends LegacyComponent {
      */
     spaceClickProduct(event) {
         if (event.which === 32) {
-            this.trigger("click-product", this.props.product);
+            this.pos.addProductToCurrentOrder(this.props.product);
         }
     }
     get imageUrl() {

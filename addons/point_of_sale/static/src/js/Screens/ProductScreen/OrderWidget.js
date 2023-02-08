@@ -1,23 +1,20 @@
 /** @odoo-module */
 
-import { useListener, useService } from "@web/core/utils/hooks";
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { useService } from "@web/core/utils/hooks";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 
 import { Orderline } from "./Orderline";
 import { OrderSummary } from "./OrderSummary";
+import { Component, useEffect, useRef } from "@odoo/owl";
 
-const { useEffect, useRef } = owl;
-
-export class OrderWidget extends LegacyComponent {
+export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };
     static template = "OrderWidget";
 
     setup() {
         super.setup();
         this.popup = useService("popup");
-        useListener("select-line", this._selectLine);
-        useListener("edit-pack-lot-lines", this._editPackLotLines);
+        this.numberBuffer = useService("number_buffer");
         this.scrollableRef = useRef("scrollable");
         useEffect(
             () => {
@@ -37,8 +34,9 @@ export class OrderWidget extends LegacyComponent {
     get orderlinesArray() {
         return this.order ? this.order.get_orderlines() : [];
     }
-    _selectLine(event) {
-        this.order.select_orderline(event.detail.orderline);
+    selectLine(orderline) {
+        this.numberBuffer.reset();
+        this.order.select_orderline(orderline);
     }
     // IMPROVEMENT: Might be better to lift this to ProductScreen
     // because there is similar operation when clicking a product.
@@ -47,8 +45,7 @@ export class OrderWidget extends LegacyComponent {
     // to an orderline that has product tracked by lot. Lot tracking (based
     // on the current implementation) requires that 1 item per orderline is
     // allowed.
-    async _editPackLotLines(event) {
-        const orderline = event.detail.orderline;
+    async editPackLotLines(orderline) {
         const isAllowOnlyOneLot = orderline.product.isAllowOnlyOneLot();
         const packLotLinesToEdit = orderline.getPackLotLinesToEdit(isAllowOnlyOneLot);
         const { confirmed, payload } = await this.popup.add(EditListPopup, {
@@ -68,6 +65,6 @@ export class OrderWidget extends LegacyComponent {
 
             orderline.setPackLotLines({ modifiedPackLotLines, newPackLotLines });
         }
-        this.order.select_orderline(event.detail.orderline);
+        this.order.select_orderline(orderline);
     }
 }

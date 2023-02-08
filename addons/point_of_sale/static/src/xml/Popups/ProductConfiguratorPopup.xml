@@ -28,7 +28,7 @@
     </t>
 
     <t t-name="RadioProductAttribute" owl="1">
-        <div class="configurator_radio">
+        <div class="configurator_radio" t-ref="root">
             <div class="table">
                 <t t-foreach="values" t-as="value" t-key="value.id">
                     <div class="attribute-name-cell">

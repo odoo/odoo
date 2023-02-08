@@ -1,10 +1,8 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component, useState } from "@odoo/owl";
 
-const { useState } = owl;
-
-export class CustomerFacingDisplayButton extends LegacyComponent {
+export class CustomerFacingDisplayButton extends Component {
     static template = "CustomerFacingDisplayButton";
 
     setup() {
