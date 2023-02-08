@@ -1336,11 +1336,6 @@ const Wysiwyg = Widget.extend({
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
 
-        // The html_field value should not be updated while the mediaDialog is
-        // in use because if its value change, restoreSelection may fail since
-        // it has a reference to HTMLElements which are not in the DOM anymore.
-        this._shouldDelayBlur = true;
-
         this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             resModel: model,
             resId: $editable.data('oe-id'),
@@ -1394,7 +1389,17 @@ const Wysiwyg = Widget.extend({
         }
 
         if (params.node) {
-            params.node.replaceWith(element);
+            const isIcon = (el) => el.matches('i.fa, span.fa');
+            const changedIcon = isIcon(params.node) && isIcon(element);
+            if (changedIcon) {
+                // Preserve tag name when changing an icon and not recreate the
+                // editors unnecessarily.
+                for (const attribute of element.attributes) {
+                    params.node.setAttribute(attribute.nodeName, attribute.nodeValue);
+                }
+            } else {
+                params.node.replaceWith(element);
+            }
             this.odooEditor.unbreakableStepUnactive();
             this.odooEditor.historyStep();
         } else {
@@ -2483,7 +2488,7 @@ const Wysiwyg = Widget.extend({
                 });
                 dialog.open({shouldFocusButtons:true});
 
-                this.resetEditor(serverContent);
+                await this.resetEditor(serverContent);
                 // We were in a peer to peer session before the conflict, join
                 // it again immediately.
                 this._joinPeerToPeer();
@@ -2535,7 +2540,8 @@ const Wysiwyg = Widget.extend({
             this._peerToPeerLoading.then(() => this.ptp.notifyAllClients('ptp_join'));
         }
     },
-    resetEditor: function (value, options) {
+    resetEditor: async function (value, options) {
+        await this._peerToPeerLoading;
         this.$editable[0].removeEventListener('focus', this._joinPeerToPeer);
         if (options) {
             this.options = this._getEditorOptions(options);
@@ -2549,20 +2555,17 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.historyReset();
             return;
         }
-        this.setupCollaboration(collaborationChannel);
-        this._currentClientId = this._generateClientId();
-        this._startCollaborationTime = new Date().getTime();
-        this.ptp = this._getNewPtp();
         this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
         this.odooEditor.historyReset();
+        this.setupCollaboration(collaborationChannel);
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
         const initialHistoryId = value && this._getInitialHistoryId(value);
         if (initialHistoryId) {
             this.odooEditor.historySetInitialId(initialHistoryId);
         }
-        this.ptp.notifyAllClients('ptp_join');
+        await this._peerToPeerLoading;
     },
     /**
      * Set contenteditable=false for all `.o_not_editable` found within node if
