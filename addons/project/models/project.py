@@ -2123,7 +2123,7 @@ class Task(models.Model):
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
-        for task in self:
+        for task in tasks:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
