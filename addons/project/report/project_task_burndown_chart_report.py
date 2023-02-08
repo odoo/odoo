@@ -18,11 +18,15 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     date = fields.Datetime('Date', readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
+    date_last_stage_update = fields.Date(string='Last Stage Update', readonly=True)
     is_closed = fields.Boolean("Closing Stage", readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     project_id = fields.Many2one('project.project', readonly=True)
     stage_id = fields.Many2one('project.task.type', readonly=True)
+    tag_ids = fields.Many2many('project.tags', relation='project_tags_project_task_rel',
+                               column1='project_task_id', column2='project_tags_id',
+                               string='Tags', readonly=True)
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
                                 string='Assignees', readonly=True)
 
@@ -30,16 +34,20 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     # at a lower level than the "usual" query made by the `read_group_raw`. Indeed, the domain applied on those fields
     # will be performed on a `CTE` that will be later use in the `SQL` in order to limit the subset of data that is used
     # in the successive `GROUP BY` statements.
-    task_specific_fields = [
-        'date_assign',
-        'date_deadline',
-        'is_closed',
-        'milestone_id',
-        'partner_id',
-        'project_id',
-        'stage_id',
-        'user_ids',
-    ]
+    @property
+    def task_specific_fields(self):
+        return [
+            'date_assign',
+            'date_deadline',
+            'date_last_stage_update',
+            'is_closed',
+            'milestone_id',
+            'partner_id',
+            'project_id',
+            'stage_id',
+            'tag_ids',
+            'user_ids',
+        ]
 
     def _get_group_by_SQL(self, task_specific_domain, count_field, select_terms, from_clause, where_clause,
                           where_clause_params, groupby_terms, orderby_terms, limit, offset, groupby, annotated_groupbys,
