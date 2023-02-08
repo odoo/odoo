@@ -37,7 +37,7 @@ patch(ThreadService.prototype, "hr", {
             }
         }
         if (!employee.user_id) {
-            this.notification.add(
+            this.notificationService.add(
                 _t("You can only chat with employees that have a dedicated user."),
                 { type: "info" }
             );
