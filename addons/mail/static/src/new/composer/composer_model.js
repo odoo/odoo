@@ -3,7 +3,7 @@
 export class Composer {
     /** @type {import("@mail/new/attachments/attachment_model").Attachment[]} */
     attachments = [];
-    /** @type {Message} */
+    /** @type {import("@mail/new/core/message_model").Message} */
     message;
     /** @type {string} */
     textInputContent;

@@ -58,8 +58,9 @@ export class Composer extends Component {
         this.store = useStore();
         if (this.allowUpload) {
             this.attachmentUploader = useAttachmentUploader(
-                this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread,
-                this.props.composer.message,
+                this.props.messageToReplyTo?.message?.originThread ??
+                    this.props.composer.thread ??
+                    this.props.composer.message.originThread,
                 this.props.composer
             );
         }

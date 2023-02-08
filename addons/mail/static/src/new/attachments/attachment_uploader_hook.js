@@ -16,11 +16,10 @@ function dataUrlToBlob(data, type) {
 let nextId = -1;
 
 /**
- * @param {import("@mail/new/core/thread_model").Thread} pThread
- * @param {import("@mail/new/core/message_model").Message} message
+ * @param {import("@mail/new/core/thread_model").Thread} thread
  * @param {import("@mail/new/composer/composer_model").Composer} composer
  */
-export function useAttachmentUploader(pThread, message, composer) {
+export function useAttachmentUploader(thread, composer) {
     const { bus, upload } = useService("file_upload");
     const notification = useService("notification");
     /** @type {import("@mail/new/core/store_service").Store} */
@@ -38,7 +37,6 @@ export function useAttachmentUploader(pThread, message, composer) {
             return this.uploadFile(file);
         },
         async uploadFile(file) {
-            const thread = pThread ?? message.originThread;
             const tmpId = nextId--;
             uploadingAttachmentIds.add(tmpId);
             await upload("/mail/attachment/upload", [file], {
