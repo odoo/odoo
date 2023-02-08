@@ -286,10 +286,6 @@ QUnit.module('Bus', {
     });
 
     QUnit.test('channels subscription after disconnection', async function (assert) {
-        // Patch setTimeout in order for the worker to reconnect immediatly.
-        patchWithCleanup(window, {
-            setTimeout: fn => fn(),
-        });
         const firstSubscribeDeferred = makeDeferred();
         const worker = patchWebsocketWorkerWithCleanup({
             _sendToServer({ event_name, data }) {
@@ -302,11 +298,16 @@ QUnit.module('Bus', {
 
         const env = await makeTestEnv();
         env.services["bus_service"].start();
+        const reconnectDoneDeferred = makeDeferred();
+        env.services["bus_service"].addEventListener("reconnect", () =>
+            reconnectDoneDeferred.resolve()
+        );
         // wait for the websocket to connect and the first subscription
         // to occur.
         await firstSubscribeDeferred;
         worker.websocket.close(WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT);
         // wait for the websocket to re-connect.
+        await reconnectDoneDeferred;
         await nextTick();
 
         assert.verifySteps([

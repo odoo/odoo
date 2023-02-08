@@ -165,6 +165,13 @@ class ConnectionState(IntEnum):
     CLOSED = 2
 
 
+# Application ping frame payload.
+RAW_PING_PAYLOAD = 'PING'
+# Heartbeat frames payload, encoded. Useful to check whether
+# or not a frame is part of the application heartbeat without
+# decoding it.
+PING_PAYLOAD = RAW_PING_PAYLOAD.encode('utf-8')
+PONG_PAYLOAD = b'PONG'
 DATA_OP = {Opcode.TEXT, Opcode.BINARY}
 CTRL_OP = {Opcode.CLOSE, Opcode.PING, Opcode.PONG}
 HEARTBEAT_OP = {Opcode.PING, Opcode.PONG}
@@ -194,6 +201,12 @@ class Frame:
         self.rsv1 = rsv1
         self.rsv2 = rsv2
         self.rsv3 = rsv3
+
+    def is_application_ping_frame(self):
+        return self.opcode is Opcode.TEXT and self.payload == PING_PAYLOAD
+
+    def is_application_pong_frame(self):
+        return self.opcode is Opcode.TEXT and self.payload == PONG_PAYLOAD
 
 
 class CloseFrame(Frame):
@@ -420,6 +433,8 @@ class Websocket:
             # should be closed, a peer discards any further data
             # received.
             return
+        if frame.is_application_pong_frame():
+            return
         if frame.opcode is Opcode.CONTINUE:
             raise ProtocolError("Unexpected continuation frame")
         message = frame.payload
@@ -508,8 +523,11 @@ class Websocket:
         self._send_frame(CloseFrame(code, reason))
 
     def _send_ping_frame(self):
-        """ Send a ping frame """
-        self._send_frame(Frame(Opcode.PING))
+        """ Send a ping frame at the application level (eg. a TEXT frame with a
+        `PING_PAYLOAD`) """
+        if self.state is not ConnectionState.OPEN:
+            return
+        self._send(RAW_PING_PAYLOAD)
 
     def _send_pong_frame(self, payload):
         """ Send a pong frame """
@@ -650,7 +668,10 @@ class TimeoutManager:
     PING/CLOSE frame is received after `TIMEOUT` seconds or if the
     connection is opened for more than `self._keep_alive_timeout` seconds,
     the connection is considered to have timed out. To determine if the
-    connection has timed out, use the `has_timed_out` method.
+    connection has timed out, use the `has_timed_out` method. Note that
+    a PING frame refers to a TEXT frame containing a `PING_PAYLOAD` and that
+    the expected answer to such a frame is another TEXT frame containing the
+    `PONG_PAYLOAD`.
     """
     TIMEOUT = 15
     # Timeout specifying how many seconds the connection should be kept
@@ -659,7 +680,8 @@ class TimeoutManager:
 
     def __init__(self):
         super().__init__()
-        self._awaited_opcode = None
+        self._awaits_close = False
+        self._awaits_pong = False
         # Time in which the connection was opened.
         self._opened_at = time.time()
         # Custom keep alive timeout for each TimeoutManager to avoid multiple
@@ -673,8 +695,12 @@ class TimeoutManager:
         self._waiting_start_time = None
 
     def acknowledge_frame_receipt(self, frame):
-        if self._awaited_opcode is frame.opcode:
-            self._awaited_opcode = None
+        if (
+            self._awaits_pong and frame.is_application_pong_frame() or
+            self._awaits_close and frame.opcode is Opcode.CLOSE
+        ):
+            self._awaits_pong = None
+            self._awaits_close = None
             self._waiting_start_time = None
 
     def acknowledge_frame_sent(self, frame):
@@ -684,11 +710,11 @@ class TimeoutManager:
         """
         if self.has_timed_out():
             return
-        if frame.opcode is Opcode.PING:
-            self._awaited_opcode = Opcode.PONG
+        if frame.is_application_ping_frame():
+            self._awaits_pong = True
         elif frame.opcode is Opcode.CLOSE:
-            self._awaited_opcode = Opcode.CLOSE
-        if self._awaited_opcode is not None:
+            self._awaits_close = True
+        if self._awaits_close or self._awaits_pong:
             self._waiting_start_time = time.time()
 
     def has_timed_out(self):
@@ -702,7 +728,9 @@ class TimeoutManager:
         if now - self._opened_at >= self._keep_alive_timeout:
             self.timeout_reason = TimeoutReason.KEEP_ALIVE
             return True
-        if self._awaited_opcode and now - self._waiting_start_time >= type(self).TIMEOUT:
+        if not (self._awaits_close or self._awaits_pong):
+            return False
+        if now - self._waiting_start_time >= type(self).TIMEOUT:
             self.timeout_reason = TimeoutReason.NO_RESPONSE
             return True
         return False

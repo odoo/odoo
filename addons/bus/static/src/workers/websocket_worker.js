@@ -34,7 +34,10 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.3';
+export const WORKER_VERSION = '1.0.4';
+const PING_PAYLOAD = 'PING';
+const PONG_PAYLOAD = 'PONG';
+const INACTIVITY_TIMEOUT = 50000;
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
@@ -53,6 +56,7 @@ export class WebsocketWorker {
         this.channelsByClient = new Map();
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
+        this.heartbeatTimeout = null;
         this.debugModeByClient = new Map();
         this.isDebug = false;
         this.isReconnecting = false;
@@ -106,6 +110,19 @@ export class WebsocketWorker {
     //--------------------------------------------------------------------------
     // PRIVATE
     //--------------------------------------------------------------------------
+
+    /**
+     * Start/reset the application level heartbeat. If no message is received
+     * within `INACTIVITY_TIMEOUT` seconds, assume the connection is dead and
+     * try to reconnect.
+     */
+    _heartbeat() {
+        clearTimeout(this.heartbeatTimeout);
+        this.heartbeatTimeout = setTimeout(() => {
+            this._stop();
+            this._retryConnectionWithDelay();
+        }, INACTIVITY_TIMEOUT);
+    }
 
     /**
      * Called when a message is posted to the worker by a client (i.e. a
@@ -261,10 +278,21 @@ export class WebsocketWorker {
      * @param {string} reason reason indicating why the connection was
      * closed.
      */
-    _onWebsocketClose({ code, reason }) {
+    _onWebsocketClose({ code, currentTarget, reason }) {
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onClose]`, 'color: #c6e; font-weight: bold;', code, reason);
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onClose]`,
+                "color: #c6e; font-weight: bold;",
+                code,
+                reason,
+                this.websocket === currentTarget
+            );
         }
+        if (this.websocket !== currentTarget) {
+            // Event triggered for an outdated websocket, ignore it.
+            return;
+        }
+        clearTimeout(this.heartbeatTimeout);
         this.lastChannelSubscription = null;
         if (this.isReconnecting) {
             // Connection was not established but the close event was
@@ -293,10 +321,19 @@ export class WebsocketWorker {
     /**
      * Triggered when a connection failed or failed to established.
      */
-    _onWebsocketError() {
+    _onWebsocketError({ currentTarget }) {
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onError]`, 'color: #c6e; font-weight: bold;');
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onError]`,
+                "color: #c6e; font-weight: bold;",
+                this.websocket === currentTarget
+            );
         }
+        if (this.websocket !== currentTarget) {
+            // Event triggered for an outdated websocket, ignore it.
+            return;
+        }
+        clearTimeout(this.heartbeatTimeout);
         this._retryConnectionWithDelay();
     }
 
@@ -306,6 +343,11 @@ export class WebsocketWorker {
     * @param {MessageEvent} messageEv
     */
     _onWebsocketMessage(messageEv) {
+        this._heartbeat();
+        if (messageEv.data === PING_PAYLOAD) {
+            this.websocket.send(PONG_PAYLOAD);
+            return;
+        }
         const notifications = JSON.parse(messageEv.data);
         if (this.isDebug) {
             console.debug(`%c${new Date().toLocaleString()} - [onMessage]`, 'color: #c6e; font-weight: bold;', notifications);
@@ -329,6 +371,7 @@ export class WebsocketWorker {
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
+        this._heartbeat();
     }
 
     /**
@@ -336,6 +379,7 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
+        clearTimeout(this.connectTimeout);
         this.connectRetryDelay = Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
@@ -374,6 +418,7 @@ export class WebsocketWorker {
      * Stop the worker.
      */
     _stop() {
+        clearTimeout(this.heartbeatTimeout);
         clearTimeout(this.connectTimeout);
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.isReconnecting = false;

@@ -20,6 +20,8 @@ from ..websocket import (
     CloseCode,
     Frame,
     Opcode,
+    PONG_PAYLOAD,
+    PING_PAYLOAD,
     TimeoutManager,
     TimeoutReason,
     Websocket
@@ -66,8 +68,8 @@ class TestWebsocketCaryall(WebsocketCase):
             timeout_manager = TimeoutManager()
             # A PING frame was just sent, if no pong has been received
             # within TIMEOUT seconds, the connection should have timed out.
-            timeout_manager.acknowledge_frame_sent(Frame(Opcode.PING))
-            self.assertEqual(timeout_manager._awaited_opcode, Opcode.PONG)
+            timeout_manager.acknowledge_frame_sent(Frame(Opcode.TEXT, PING_PAYLOAD))
+            self.assertTrue(timeout_manager._awaits_pong)
             frozen_time.tick(delta=timedelta(seconds=TimeoutManager.TIMEOUT / 2))
             self.assertFalse(timeout_manager.has_timed_out())
             frozen_time.tick(delta=timedelta(seconds=TimeoutManager.TIMEOUT / 2))
@@ -78,7 +80,7 @@ class TestWebsocketCaryall(WebsocketCase):
             # A CLOSE frame was just sent, if no close has been received
             # within TIMEOUT seconds, the connection should have timed out.
             timeout_manager.acknowledge_frame_sent(Frame(Opcode.CLOSE))
-            self.assertEqual(timeout_manager._awaited_opcode, Opcode.CLOSE)
+            self.assertTrue(timeout_manager._awaits_close)
             frozen_time.tick(delta=timedelta(seconds=TimeoutManager.TIMEOUT / 2))
             self.assertFalse(timeout_manager.has_timed_out())
             frozen_time.tick(delta=timedelta(seconds=TimeoutManager.TIMEOUT / 2))
@@ -97,16 +99,16 @@ class TestWebsocketCaryall(WebsocketCase):
     def test_timeout_manager_reset_wait_for(self):
         timeout_manager = TimeoutManager()
         # PING frame
-        timeout_manager.acknowledge_frame_sent(Frame(Opcode.PING))
-        self.assertEqual(timeout_manager._awaited_opcode, Opcode.PONG)
-        timeout_manager.acknowledge_frame_receipt(Frame(Opcode.PONG))
-        self.assertIsNone(timeout_manager._awaited_opcode)
+        timeout_manager.acknowledge_frame_sent(Frame(Opcode.TEXT, PING_PAYLOAD))
+        self.assertTrue(timeout_manager._awaits_pong)
+        timeout_manager.acknowledge_frame_receipt(Frame(Opcode.TEXT, PONG_PAYLOAD))
+        self.assertIsNone(timeout_manager._awaits_pong)
 
         # CLOSE frame
         timeout_manager.acknowledge_frame_sent(Frame(Opcode.CLOSE))
-        self.assertEqual(timeout_manager._awaited_opcode, Opcode.CLOSE)
+        self.assertTrue(timeout_manager._awaits_close)
         timeout_manager.acknowledge_frame_receipt(Frame(Opcode.CLOSE))
-        self.assertIsNone(timeout_manager._awaited_opcode)
+        self.assertIsNone(timeout_manager._awaits_close)
 
     def test_user_login(self):
         websocket = self.websocket_connect()
