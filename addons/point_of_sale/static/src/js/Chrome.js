@@ -3,7 +3,7 @@
 import { loadCSS } from "@web/core/assets";
 import { useListener, useBus, useService } from "@web/core/utils/hooks";
 import BarcodeParser from "barcodes.BarcodeParser";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { batched } from "@point_of_sale/js/utils";
 import { debounce } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
@@ -13,7 +13,6 @@ import { Navbar } from "@point_of_sale/app/navbar/navbar";
 
 // ChromeAdapter imports
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { configureGui } from "@point_of_sale/js/Gui";
 import { registry } from "@web/core/registry";
 import { pos_env as env } from "@point_of_sale/js/pos_env";
 
@@ -34,8 +33,9 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 /**
  * Chrome is the root component of the PoS App.
  */
-export class Chrome extends PosComponent {
+export class Chrome extends LegacyComponent {
     static template = "Chrome"; // FIXME POSREF namespace templates
+    static components = { Transition, MainComponentsContainer, WithEnv, ErrorHandler, Navbar };
     setup() {
         this.pos = usePos();
         this.popup = useService("popup");
@@ -65,6 +65,7 @@ export class Chrome extends PosComponent {
             "pos_notification",
             "number_buffer",
             "popup",
+            "sale_order_fetcher",
         ]) {
             env.services[service] = this.wowlEnv.services[service];
         }
@@ -91,7 +92,6 @@ export class Chrome extends PosComponent {
         useExternalListener(window, "beforeunload", this._onBeforeUnload);
         useListener("close-pos", this._closePos);
         useListener("loading-skip-callback", () => this.env.proxy.stop_searching());
-        useListener("set-sync-status", this._onSetSyncStatus);
         useListener("connect-to-proxy", this.connect_to_proxy);
         useBus(this.env.posbus, "start-cash-control", this.openCashControl);
         useService("number_buffer").activate();
@@ -152,7 +152,6 @@ export class Chrome extends PosComponent {
         // FIXME POSREF: use a silent RPC instead
         const BlockUiFromRegistry = registry.category("main_components").get("BlockUI");
         registry.category("main_components").remove("BlockUI");
-        configureGui({ component: this }); // FIXME POSREF: move Gui functions to services
 
         try {
             await this.env.pos.load_server_data();
@@ -350,10 +349,6 @@ export class Chrome extends PosComponent {
             }
         }
     }
-    _onSetSyncStatus({ detail: { status, pending } }) {
-        this.env.pos.synch.status = status;
-        this.env.pos.synch.pending = pending;
-    }
     /**
      * Save `env.pos.toRefundLines` in localStorage on beforeunload - closing the
      * browser, reloading or going to other page.
@@ -443,17 +438,3 @@ export class Chrome extends PosComponent {
         Promise.reject(err);
     }
 }
-Object.defineProperty(Chrome, "components", {
-    get() {
-        return Object.assign(
-            {
-                Transition,
-                MainComponentsContainer,
-                WithEnv,
-                ErrorHandler,
-                Navbar,
-            },
-            PosComponent.components
-        );
-    },
-});

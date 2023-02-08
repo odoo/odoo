@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class PartnerLine extends PosComponent {
+export class PartnerLine extends LegacyComponent {
     static template = "PartnerLine";
 
     get highlight() {

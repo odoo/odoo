@@ -1,10 +1,10 @@
 /** @odoo-module */
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 
 const { useState, useSubEnv } = owl;
 
-export class BaseProductAttribute extends PosComponent {
+export class BaseProductAttribute extends LegacyComponent {
     setup() {
         super.setup();
         this.env.attribute_components.push(this);
@@ -62,7 +62,7 @@ export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
     static components = {
         RadioProductAttribute,
         SelectProductAttribute,
-        ColorProductAttribute
+        ColorProductAttribute,
     };
 
     setup() {

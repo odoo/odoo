@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class PaymentScreenPaymentLines extends PosComponent {
+export class PaymentScreenPaymentLines extends LegacyComponent {
     static template = "PaymentScreenPaymentLines";
 
     formatLineAmount(paymentline) {

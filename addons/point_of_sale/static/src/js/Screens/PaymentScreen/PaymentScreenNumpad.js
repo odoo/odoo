@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { PSNumpadInputButton } from "./PSNumpadInputButton";
 
-export class PaymentScreenNumpad extends PosComponent {
+export class PaymentScreenNumpad extends LegacyComponent {
     static components = { PSNumpadInputButton };
     static template = "PaymentScreenNumpad";
 

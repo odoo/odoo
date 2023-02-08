@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { OrderlineDetails } from "./OrderlineDetails";
 
 /**
  * @props {models.Order} order
  */
-export class OrderDetails extends PosComponent {
+export class OrderDetails extends LegacyComponent {
     static components = { OrderlineDetails };
     static template = "OrderDetails";
 

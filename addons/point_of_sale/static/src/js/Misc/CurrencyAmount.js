@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class CurrencyAmount extends PosComponent {
+export class CurrencyAmount extends LegacyComponent {
     static template = "CurrencyAmount";
 }

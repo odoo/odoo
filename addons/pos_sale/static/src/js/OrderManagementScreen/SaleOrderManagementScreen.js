@@ -2,10 +2,9 @@
 
 import { sprintf } from "web.utils";
 import { parse } from "web.field_utils";
-import { useListener, useService } from "@web/core/utils/hooks";
+import { useBus, useListener, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
-import { saleOrderFetcher } from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Orderline } from "@point_of_sale/js/models";
@@ -18,7 +17,7 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { SaleOrderList } from "./SaleOrderList";
 import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
 
-const { onMounted, onWillUnmount, useState } = owl;
+const { onMounted, useState } = owl;
 
 export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
@@ -28,21 +27,19 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         super.setup();
         this.popup = useService("popup");
         this.numberBuffer = useService("number_buffer");
+        this.saleOrderFetcher = useService("sale_order_fetcher");
         useListener("close-screen", this.close);
         useListener("click-sale-order", this._onClickSaleOrder);
         useListener("next-page", this._onNextPage);
         useListener("prev-page", this._onPrevPage);
         useListener("search", this._onSearch);
 
-        saleOrderFetcher.setComponent(this);
+        useBus(this.saleOrderFetcher, "update", this.render);
         this.orderManagementContext = useState(orderManagement);
 
         onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
     }
     onMounted() {
-        saleOrderFetcher.on("update", this, this.render);
-
         // calculate how many can fit in the screen.
         // It is based on the height of the header element.
         // So the result is only accurate if each row is just single line.
@@ -53,21 +50,15 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
             (flexContainer.offsetHeight - cpEl.offsetHeight - headerEl.offsetHeight) /
                 headerEl.offsetHeight
         );
-        saleOrderFetcher.setNPerPage(val);
-
-        // Fetch the order after mounting so that order management screen
-        // is shown while fetching.
-        setTimeout(() => saleOrderFetcher.fetch(), 0);
-    }
-    onWillUnmount() {
-        saleOrderFetcher.off("update", this);
+        this.saleOrderFetcher.setNPerPage(val);
+        this.saleOrderFetcher.fetch();
     }
     get selectedPartner() {
         const order = this.orderManagementContext.selectedOrder;
         return order ? order.get_partner() : null;
     }
     get orders() {
-        return saleOrderFetcher.get();
+        return this.saleOrderFetcher.get();
     }
     async _setNumpadMode(event) {
         const { mode } = event.detail;
@@ -75,15 +66,15 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         this.numberBuffer.reset();
     }
     _onNextPage() {
-        saleOrderFetcher.nextPage();
+        this.saleOrderFetcher.nextPage();
     }
     _onPrevPage() {
-        saleOrderFetcher.prevPage();
+        this.saleOrderFetcher.prevPage();
     }
     _onSearch({ detail: domain }) {
-        saleOrderFetcher.setSearchDomain(domain);
-        saleOrderFetcher.setPage(1);
-        saleOrderFetcher.fetch();
+        this.saleOrderFetcher.setSearchDomain(domain);
+        this.saleOrderFetcher.setPage(1);
+        this.saleOrderFetcher.fetch();
     }
     async _onClickSaleOrder(event) {
         const clickedOrder = event.detail;

@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { WrappedProductNameLines } from "./WrappedProductNameLines";
 
 const { onWillUpdateProps } = owl;
 
-export class OrderReceipt extends PosComponent {
+export class OrderReceipt extends LegacyComponent {
     static components = { WrappedProductNameLines };
     static template = "OrderReceipt";
 
@@ -34,7 +34,7 @@ export class OrderReceipt extends PosComponent {
         return this._receiptEnv;
     }
     get shippingDate() {
-        return this.receiptEnv.shippingDate
+        return this.receiptEnv.shippingDate;
     }
     isSimple(line) {
         return (

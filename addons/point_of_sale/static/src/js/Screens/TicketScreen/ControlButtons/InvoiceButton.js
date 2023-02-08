@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { useListener, useService } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
-export class InvoiceButton extends PosComponent {
+export class InvoiceButton extends LegacyComponent {
     static template = "InvoiceButton";
 
     setup() {

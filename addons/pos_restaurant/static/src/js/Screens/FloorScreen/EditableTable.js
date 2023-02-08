@@ -1,14 +1,14 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { Draggable } from "@point_of_sale/js/Misc/Draggable";
 import { Resizeable } from "../../Resizeable";
 
 const { onMounted, onPatched } = owl;
 
-export class EditableTable extends PosComponent {
+export class EditableTable extends LegacyComponent {
     static template = "EditableTable";
     static components = { Draggable, Resizeable };
 

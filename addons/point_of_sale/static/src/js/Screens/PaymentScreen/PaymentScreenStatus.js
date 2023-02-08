@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class PaymentScreenStatus extends PosComponent {
+export class PaymentScreenStatus extends LegacyComponent {
     static template = "PaymentScreenStatus";
 
     get changeText() {

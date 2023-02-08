@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { registry } from "@web/core/registry";
 import { useListener, useService } from "@web/core/utils/hooks";
@@ -24,7 +24,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { onMounted, useState } = owl;
 
-export class ProductScreen extends ControlButtonsMixin(PosComponent) {
+export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
     static template = "ProductScreen";
     static components = {
         ActionpadWidget,

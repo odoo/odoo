@@ -20,9 +20,9 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.pos = usePos();
         useErrorHandlers();
         this.orderReceipt = useRef("order-receipt");
-        const order = this.currentOrder;
-        const partner = order.get_partner();
-        this.orderUiState = order.uiState.ReceiptScreen;
+        this.currentOrder = this.env.pos.get_order();
+        const partner = this.currentOrder.get_partner();
+        this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
         this.orderUiState.inputEmail =
             this.orderUiState.inputEmail || (partner && partner.email) || "";
         this.is_email = is_email;
@@ -77,9 +77,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
         const tipAmountStr = this.env.pos.format_currency(tipAmount);
         return `${orderAmountStr} + ${tipAmountStr} tip`;
-    }
-    get currentOrder() {
-        return this.env.pos.get_order();
     }
     get nextScreen() {
         return { name: "ProductScreen" };

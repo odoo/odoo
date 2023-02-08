@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useAutofocus, useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { useExternalListener, useState } = owl;
 
@@ -28,7 +28,7 @@ const { useExternalListener, useState } = owl;
  * NOTE: The payload of the emitted event is accessible via the `detail`
  * field of the event.
  */
-export class SearchBar extends PosComponent {
+export class SearchBar extends LegacyComponent {
     static template = "point_of_sale.SearchBar";
 
     setup() {

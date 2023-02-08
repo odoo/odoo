@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 /**
  * @prop {'quantity' | 'price' | 'discount'} activeMode
@@ -9,7 +9,7 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
  * @event set-numpad-mode - triggered when mode button is clicked
  * @event numpad-click-input - triggered when numpad button is clicked
  */
-export class NumpadWidget extends PosComponent {
+export class NumpadWidget extends LegacyComponent {
     static template = "NumpadWidget";
     static defaultProps = {
         disabledModes: [],

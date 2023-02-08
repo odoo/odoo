@@ -2,13 +2,13 @@
 
 import { _t } from "web.core";
 import { getDataURLFromFile } from "web.utils";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
 
 const { onMounted, onWillUnmount } = owl;
 
-export class PartnerDetailsEdit extends PosComponent {
+export class PartnerDetailsEdit extends LegacyComponent {
     static template = "PartnerDetailsEdit";
 
     setup() {
@@ -19,7 +19,7 @@ export class PartnerDetailsEdit extends PosComponent {
         this.changes = {
             country_id: partner.country_id && partner.country_id[0],
             state_id: partner.state_id && partner.state_id[0],
-            property_product_pricelist: this.setDefaultPricelist(partner)
+            property_product_pricelist: this.setDefaultPricelist(partner),
         };
 
         onMounted(() => {
@@ -32,9 +32,8 @@ export class PartnerDetailsEdit extends PosComponent {
     }
     setDefaultPricelist(partner) {
         if (partner.property_product_pricelist) {
-            return partner.property_product_pricelist[0]
-        }
-        else if (this.env.pos.default_pricelist) {
+            return partner.property_product_pricelist[0];
+        } else if (this.env.pos.default_pricelist) {
             return this.env.pos.default_pricelist.id;
         }
         return false;

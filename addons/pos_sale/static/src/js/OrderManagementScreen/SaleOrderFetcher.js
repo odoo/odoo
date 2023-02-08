@@ -1,15 +1,17 @@
 /** @odoo-module */
 
-import { Gui } from "@point_of_sale/js/Gui";
+import { registry } from "@web/core/registry";
+import { EventBus } from "@odoo/owl";
 
-const { EventBus } = owl;
-// FIXME POSREF: should probably be a service instead of a singleton.
 class SaleOrderFetcher extends EventBus {
-    constructor() {
+    static serviceDependencies = ["orm", "pos"];
+    constructor({ orm, pos }) {
         super();
         this.currentPage = 1;
         this.ordersToShow = [];
         this.totalCount = 0;
+        this.orm = orm;
+        this.pos = pos;
     }
 
     /**
@@ -59,28 +61,27 @@ class SaleOrderFetcher extends EventBus {
         return sale_orders;
     }
     async _getOrderIdsForCurrentPage(limit, offset) {
-        const domain = [["currency_id", "=", this.comp.env.pos.currency.id]].concat(
-            this.searchDomain || []
-        );
-        return await this.rpc({
-            model: "sale.order",
-            method: "search_read",
-            args: [
-                domain,
-                [
-                    "name",
-                    "partner_id",
-                    "amount_total",
-                    "date_order",
-                    "state",
-                    "user_id",
-                    "amount_unpaid",
-                ],
-                offset,
-                limit,
+        const domain = [["currency_id", "=", this.pos.globalState.currency.id]];
+        if (this.searchDomain) {
+            domain.push(...this.searchDomain);
+        }
+        this.pos.globalState.set_synch("connecting");
+        const res = await this.orm.searchRead(
+            "sale.order",
+            domain,
+            [
+                "name",
+                "partner_id",
+                "amount_total",
+                "date_order",
+                "state",
+                "user_id",
+                "amount_unpaid",
             ],
-            context: this.comp.env.session.user_context,
-        });
+            { offset, limit }
+        );
+        this.pos.globalState.set_synch("connected");
+        return res;
     }
 
     nextPage() {
@@ -105,23 +106,19 @@ class SaleOrderFetcher extends EventBus {
     setSearchDomain(searchDomain) {
         this.searchDomain = searchDomain;
     }
-    setComponent(comp) {
-        this.comp = comp;
-        return this;
-    }
     setNPerPage(val) {
         this.nPerPage = val;
     }
     setPage(page) {
         this.currentPage = page;
     }
-
-    async rpc() {
-        Gui.setSyncStatus("connecting");
-        const result = await this.comp.rpc(...arguments);
-        Gui.setSyncStatus("connected");
-        return result;
-    }
 }
 
-export const saleOrderFetcher = new SaleOrderFetcher();
+export const saleOrderFetcherService = {
+    dependencies: SaleOrderFetcher.serviceDependencies,
+    start(env, deps) {
+        return new SaleOrderFetcher(deps);
+    },
+};
+
+registry.category("services").add("sale_order_fetcher", saleOrderFetcherService);

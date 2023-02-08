@@ -68,9 +68,18 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             this.mainScreen.component !== FloorScreen
         );
     },
-    showScreen() {
+    showScreen(screenName) {
+        if (screenName === "FloorScreen" && this.globalState.table) {
+            this.globalState.unsetTable();
+        }
         this._super(...arguments);
         this.setIdleTimer();
+    },
+    closeScreen() {
+        if (this.globalState.config.iface_floorplan && !this.globalState.get_order()) {
+            return this.showScreen("FloorScreen");
+        }
+        return this._super(...arguments);
     },
     /**
      * @override

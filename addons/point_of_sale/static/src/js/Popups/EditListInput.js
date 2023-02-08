@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 /**
  * props {
@@ -9,7 +9,7 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
  *     item: object,
  * }
  */
-export class EditListInput extends PosComponent {
+export class EditListInput extends LegacyComponent {
     static template = "EditListInput";
 
     onKeyup(event) {

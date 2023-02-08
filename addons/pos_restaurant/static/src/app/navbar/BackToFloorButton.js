@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class BackToFloorButton extends PosComponent {
+export class BackToFloorButton extends LegacyComponent {
     static template = "BackToFloorButton";
 
     setup() {

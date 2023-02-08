@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 // Previously UsernameWidget
-export class CashierName extends PosComponent {
+export class CashierName extends LegacyComponent {
     static template = "CashierName";
 
     get username() {

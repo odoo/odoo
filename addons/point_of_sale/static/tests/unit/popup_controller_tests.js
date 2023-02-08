@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import makeTestEnvironment from "web.test_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -38,7 +38,7 @@ CustomPopup2.template = xml/* html */ `
     </div>
 `;
 
-class Root extends PosComponent {
+class Root extends LegacyComponent {
     static components = { MainComponentsContainer };
     setup() {
         super.setup();

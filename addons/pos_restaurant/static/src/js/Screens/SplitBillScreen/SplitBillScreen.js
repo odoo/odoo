@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useListener } from "@web/core/utils/hooks";
 import { Order } from "@point_of_sale/js/models";
 
@@ -10,7 +10,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 const { useState, onMounted } = owl;
 
-export class SplitBillScreen extends PosComponent {
+export class SplitBillScreen extends LegacyComponent {
     static template = "SplitBillScreen";
     static components = { SplitOrderline };
 
