@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { ActivityMailTemplate } from "@mail/new/activity/activity_mail_template";
-import { ActivityMarkAsDone } from "@mail/new/activity/activity_markasdone_popover";
+import { ActivityMailTemplate } from "@mail/new/web/activity/activity_mail_template";
+import { ActivityMarkAsDone } from "@mail/new/web/activity/activity_markasdone_popover";
 
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";

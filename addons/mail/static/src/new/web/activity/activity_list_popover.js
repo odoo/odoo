@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { useMessaging, useStore } from "../core/messaging_hook";
+import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
 
-import { ActivityListPopoverItem } from "@mail/new/activity/activity_list_popover_item";
+import { ActivityListPopoverItem } from "@mail/new/web/activity/activity_list_popover_item";
 
 import { Component, onWillUpdateProps } from "@odoo/owl";
 
@@ -34,7 +34,7 @@ export class ActivityListPopover extends Component {
         this.orm = useService("orm");
         this.messaging = useMessaging();
         this.user = useService("user");
-        /** @type {import("@mail/new/activity/activity_service").ActivityService} */
+        /** @type {import("@mail/new/web/activity/activity_service").ActivityService} */
         this.activity = useService("mail.activity");
         /** @type {import("@mail/new/core/store_service").Store} */
         this.store = useStore();

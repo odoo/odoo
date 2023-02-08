@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { ActivityListPopover } from "@mail/new/activity/activity_list_popover";
+import { ActivityListPopover } from "@mail/new/web/activity/activity_list_popover";
 
 import { usePopover } from "@web/core/popover/popover_hook";
 

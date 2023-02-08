@@ -1,7 +1,6 @@
 /* @odoo-module */
 
 import { AutoresizeInput } from "./autoresize_input";
-import { Sidebar } from "./sidebar";
 import { Thread } from "../core_ui/thread";
 import { ThreadIcon } from "./thread_icon";
 import { useMessaging, useStore } from "../core/messaging_hook";
@@ -10,7 +9,6 @@ import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@ma
 import { Composer } from "../composer/composer";
 import { Call } from "../rtc/call";
 import { ChannelMemberList } from "./channel_member_list";
-import { MessagingMenu } from "../messaging_menu/messaging_menu";
 import {
     Component,
     onWillStart,
@@ -30,14 +28,12 @@ import { _t } from "@web/core/l10n/translation";
 export class Discuss extends Component {
     static components = {
         AutoresizeInput,
-        Sidebar,
         Thread,
         ThreadIcon,
         Composer,
         Call,
         CallSettings,
         ChannelMemberList,
-        MessagingMenu,
     };
     static props = {
         public: { type: Boolean, optional: true },

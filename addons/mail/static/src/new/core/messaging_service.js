@@ -54,8 +54,6 @@ export class Messaging {
         this.soundEffectsService = services["mail.sound_effects"];
         /** @type {import("@mail/new/core/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/new/chat/chat_window_service").ChatWindow} */
-        this.chatWindowService = services["mail.chat_window"];
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
         /** @type {import("@mail/new/core/message_service").MessageService} */
@@ -139,14 +137,7 @@ export class Messaging {
             type: "partner",
         });
         for (const channelData of data.channels) {
-            const thread = this.threadService.createChannelThread(channelData);
-            if (channelData.is_minimized && channelData.state !== "closed") {
-                this.chatWindowService.insert({
-                    autofocus: 0,
-                    folded: channelData.state === "folded",
-                    thread,
-                });
-            }
+            this.threadService.createChannelThread(channelData);
         }
         this.threadService.sortChannels();
         const settings = data.current_user_settings;
@@ -337,7 +328,7 @@ export class Messaging {
                                 res_id: channel.id,
                                 model: channel.model,
                             });
-                            if (channel.chatPartnerId !== this.store.partnerRoot.id) {
+                            if (channel.chatPartnerId !== this.store.partnerRoot?.id) {
                                 if (!this.presence.isOdooFocused() && channel.isChatChannel) {
                                     this.notifyOutOfFocusMessage(message, channel);
                                 }
@@ -348,7 +339,6 @@ export class Messaging {
                                     this.threadService.markAsFetched(channel);
                                 }
                             }
-                            this.chatWindowService.insert({ thread: channel });
                             if (
                                 channel.composer.isFocused &&
                                 channel.mostRecentNonTransientMessage &&
@@ -739,7 +729,6 @@ export const messagingService = {
         "presence",
         "mail.sound_effects",
         "mail.user_settings",
-        "mail.chat_window",
         "mail.thread",
         "mail.message",
         "mail.persona",

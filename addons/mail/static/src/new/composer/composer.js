@@ -13,7 +13,9 @@ import { sprintf } from "@web/core/utils/strings";
 import { escapeAndCompactTextContent } from "../utils/format.js";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { Typing } from "./typing";
+import { NavigableList } from "@mail/new/composer/navigable_list";
 import { useDebounced } from "@web/core/utils/timing";
+import { useSuggestion } from "@mail/new/composer/suggestion_hook";
 import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
@@ -34,6 +36,7 @@ export class Composer extends Component {
         AttachmentList,
         FileUploader,
         Typing,
+        NavigableList,
     };
     static defaultProps = {
         mode: "normal",
@@ -93,6 +96,7 @@ export class Composer extends Component {
                 );
             },
         });
+        this.suggestion = this.store.user ? useSuggestion() : undefined;
         if (this.props.dropzoneRef && this.allowUpload) {
             useDropzone(this.props.dropzoneRef, (ev) => {
                 if (isDragSourceExternalFile(ev.dataTransfer)) {
@@ -207,6 +211,83 @@ export class Composer extends Component {
         );
     }
 
+    get hasSuggestions() {
+        return this.suggestion?.state.items.length > 0;
+    }
+
+    get navigableListProps() {
+        return {
+            anchorRef: this.ref.el,
+            position: "top",
+            onSelect: (ev, option) => {
+                this.suggestion?.insert(option);
+                markEventHandled(ev, "composer.selectSuggestion");
+            },
+            sources: this.suggestion
+                ? this.suggestion.state.items.map((mainOrExtraSuggestions) => {
+                      switch (mainOrExtraSuggestions.type) {
+                          case "Partner":
+                              return {
+                                  placeholder: "Loading",
+                                  optionTemplate: "mail.Composer.suggestionPartner",
+                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                      return {
+                                          label: suggestion.name,
+                                          partner: suggestion,
+                                          classList:
+                                              "o-composer-suggestion o-composer-suggestion-partner",
+                                      };
+                                  }),
+                              };
+                          case "Thread":
+                              return {
+                                  placeholder: "Loading",
+                                  optionTemplate: "mail.Composer.suggestionThread",
+                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                      return {
+                                          label: suggestion.displayName,
+                                          thread: suggestion,
+                                          classList:
+                                              "o-composer-suggestion o-composer-suggestion-thread",
+                                      };
+                                  }),
+                              };
+                          case "ChannelCommand":
+                              return {
+                                  placeholder: "Loading",
+                                  optionTemplate: "mail.Composer.suggestionChannelCommand",
+                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                      return {
+                                          label: suggestion.name,
+                                          help: suggestion.help,
+                                          classList:
+                                              "o-composer-suggestion o-composer-suggestion-channel-command",
+                                      };
+                                  }),
+                              };
+                          case "CannedResponse":
+                              return {
+                                  placeholder: "Loading",
+                                  optionTemplate: "mail.Composer.suggestionCannedResponse",
+                                  options: mainOrExtraSuggestions.suggestions.map((suggestion) => {
+                                      return {
+                                          name: suggestion.name,
+                                          label: suggestion.substitution,
+                                          classList:
+                                              "o-composer-suggestion o-composer-suggestion-canned-response",
+                                      };
+                                  }),
+                              };
+                          default:
+                              return {
+                                  options: [],
+                              };
+                      }
+                  })
+                : [],
+        };
+    }
+
     /**
      * This doesn't work on firefox https://bugzilla.mozilla.org/show_bug.cgi?id=1699743
      */
@@ -229,6 +310,9 @@ export class Composer extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp":
+                if (this.hasSuggestions) {
+                    return;
+                }
                 if (this.props.messageEdition) {
                     const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
@@ -237,6 +321,9 @@ export class Composer extends Component {
                 }
                 break;
             case "Enter": {
+                if (isEventHandled(ev, "NavigableList.select")) {
+                    return;
+                }
                 const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
                 if (!shouldPost) {
                     return;
@@ -250,6 +337,9 @@ export class Composer extends Component {
                 break;
             }
             case "Escape":
+                if (isEventHandled(ev, "NavigableList.close")) {
+                    return;
+                }
                 if (this.props.onDiscardCallback) {
                     this.props.onDiscardCallback();
                     markEventHandled(ev, "Composer.discard");
@@ -346,6 +436,7 @@ export class Composer extends Component {
                 isNote:
                     this.props.composer.type === "note" ||
                     this.props.messageToReplyTo?.message?.isNote,
+                rawMentions: this.suggestion ? this.suggestion.rawMentions : [],
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             const message = await this.threadService.post(thread, value, postData);
@@ -355,6 +446,7 @@ export class Composer extends Component {
                     { type: "info" }
                 );
             }
+            this.suggestion?.clearRawMentions();
             this.props.messageToReplyTo?.cancel();
             if (this.typingNotified) {
                 this.typingNotified = false;
@@ -387,7 +479,8 @@ export class Composer extends Component {
                 this.messageService.update(
                     this.props.composer.message,
                     value,
-                    this.props.composer.attachments
+                    this.props.composer.attachments,
+                    this.suggestion?.rawMentions
                 )
             );
         } else {
@@ -396,6 +489,7 @@ export class Composer extends Component {
                 messageComponent: this.props.messageComponent,
             });
         }
+        this.suggestion?.clearRawMentions();
     }
 
     addEmoji(str) {

@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { Activity } from "./activity_model";
+import { Activity } from "@mail/new/web/activity/activity_model";
 import { _t } from "@web/core/l10n/translation";
-import { assignDefined } from "../utils/misc";
+import { assignDefined } from "@mail/new/utils/misc";
 import { registry } from "@web/core/registry";
 
 export class ActivityService {

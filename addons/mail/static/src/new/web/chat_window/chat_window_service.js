@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { ChatWindow } from "./chat_window_model";
-import { assignDefined } from "../utils/misc";
+import { ChatWindow } from "@mail/new/web/chat_window/chat_window_model";
+import { assignDefined } from "@mail/new/utils/misc";
 import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.

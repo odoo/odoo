@@ -105,13 +105,13 @@ export class Store {
     };
     cannedResponses = [];
 
-    /** @type {Object.<number, import("@mail/new/activity/activity_model").Activity>} */
+    /** @type {Object.<number, import("@mail/new/web/activity/activity_model").Activity>} */
     activities = {};
     activityCounter = 0;
     /** @type {Object.<number, import("@mail/new/attachments/attachment_model").Attachment>} */
     attachments = {};
 
-    /** @type {import("@mail/new/chat/chat_window_model").ChatWindow[]} */
+    /** @type {import("@mail/new/web/chat_window/chat_window_model").ChatWindow[]} */
     chatWindows = [];
 
     /** @type {Object.<number, import("@mail/new/core/message_model").Message>} */

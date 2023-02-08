@@ -1,24 +1,24 @@
 /* @odoo-module */
 
-import { Call } from "../rtc/call";
-import { Thread } from "../core_ui/thread";
-import { Composer } from "../composer/composer";
-import { useStore } from "../core/messaging_hook";
-import { useRtc } from "../rtc/rtc_hook";
+import { Call } from "@mail/new/rtc/call";
+import { Thread } from "@mail/new/core_ui/thread";
+import { Composer } from "@mail/new/composer/composer";
+import { useStore } from "@mail/new/core/messaging_hook";
+import { useRtc } from "@mail/new/rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/new/utils/hooks";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
-import { CallSettings } from "../rtc/call_settings";
-import { ChannelMemberList } from "../discuss/channel_member_list";
-import { ChatWindowIcon } from "./chat_window_icon";
-import { ChannelInvitationForm } from "../discuss/channel_invitation_form";
-import { isEventHandled } from "../utils/misc";
+import { CallSettings } from "@mail/new/rtc/call_settings";
+import { ChannelMemberList } from "@mail/new/discuss/channel_member_list";
+import { ChatWindowIcon } from "@mail/new/web/chat_window/chat_window_icon";
+import { ChannelInvitationForm } from "@mail/new/discuss/channel_invitation_form";
+import { isEventHandled } from "@mail/new/utils/misc";
 import { ChannelSelector } from "@mail/new/discuss/channel_selector";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/new/chat/chat_window_model").ChatWindow} chatWindow
+ * @property {import("@mail/new/web/chat_window/chat_window_model").ChatWindow} chatWindow
  * @property {boolean} [right]
  * @extends {Component<Props, Env>}
  */
@@ -38,7 +38,7 @@ export class ChatWindow extends Component {
 
     setup() {
         this.store = useStore();
-        /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
+        /** @type {import("@mail/new/web/chat_window/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="mail.composer" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='composer']" position="after">
-            <NavigableList class="'o-composer-suggestion-list'" t-props="getNavigableListProps()" />
-        </xpath>
-    </t>
-</templates>

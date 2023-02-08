@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { MessagingMenu } from "@mail/new/messaging_menu/messaging_menu";
+import { MessagingMenu } from "@mail/new/web/messaging_menu/messaging_menu";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 

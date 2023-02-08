@@ -1,12 +1,12 @@
 /* @odoo-module */
 
-import { ChatWindow } from "./chat_window";
+import { ChatWindow } from "@mail/new/web/chat_window/chat_window";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
-} from "../chat/chat_window_service";
-import { useMessaging, useStore } from "../core/messaging_hook";
+} from "@mail/new/web/chat_window/chat_window_service";
+import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
 
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 

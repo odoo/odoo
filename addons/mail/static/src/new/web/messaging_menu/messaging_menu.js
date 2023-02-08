@@ -2,10 +2,10 @@
 
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 
-import { useMessaging, useStore } from "../core/messaging_hook";
-import { NotificationItem } from "./notification_item";
-import { ChannelSelector } from "../discuss/channel_selector";
-import { createLocalId } from "../utils/misc";
+import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
+import { NotificationItem } from "@mail/new/web/messaging_menu/notification_item";
+import { ChannelSelector } from "@mail/new/discuss/channel_selector";
+import { createLocalId } from "@mail/new/utils/misc";
 import { onExternalClick } from "@mail/new/utils/hooks";
 import { Component, useState } from "@odoo/owl";
 

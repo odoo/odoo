@@ -1,15 +1,15 @@
 /* @odoo-module */
 
-import { useMessaging, useStore } from "../core/messaging_hook";
-import { ThreadIcon } from "./thread_icon";
-import { ChannelSelector } from "./channel_selector";
-import { PartnerImStatus } from "./partner_im_status";
+import { useMessaging, useStore } from "@mail/new/core/messaging_hook";
+import { ThreadIcon } from "@mail/new/discuss/thread_icon";
+import { ChannelSelector } from "@mail/new/discuss/channel_selector";
+import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "@mail/new/utils/hooks";
 import { Component, useState } from "@odoo/owl";
-import { createLocalId, markEventHandled } from "../utils/misc";
-import { ChatWindowIcon } from "../chat/chat_window_icon";
+import { createLocalId, markEventHandled } from "@mail/new/utils/misc";
+import { ChatWindowIcon } from "@mail/new/web/chat_window/chat_window_icon";
 
 import { _t } from "@web/core/l10n/translation";
 

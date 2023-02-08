@@ -8,9 +8,9 @@ import { makeMultiTabToLegacyEnv } from "@bus/services/legacy/make_multi_tab_to_
 import { makeBusServiceToLegacyEnv } from "@bus/services/legacy/make_bus_service_to_legacy_env";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { ActivityMenu } from "@mail/new/activity/activity_menu";
-import { ChatWindowContainer } from "@mail/new/chat/chat_window_container";
-import { MessagingMenu } from "@mail/new/messaging_menu/messaging_menu";
+import { ActivityMenu } from "@mail/new/web/activity/activity_menu";
+import { ChatWindowContainer } from "@mail/new/web/chat_window/chat_window_container";
+import { MessagingMenu } from "@mail/new/web/messaging_menu/messaging_menu";
 import { messagingService as newMessagingService } from "@mail/new/core/messaging_service";
 import { messagingService } from "@mail/services/messaging_service";
 import { makeMessagingToLegacyEnv } from "@mail/utils/make_messaging_to_legacy_env";
@@ -27,10 +27,10 @@ import { userSettingsService } from "@mail/new/core/user_settings_service";
 import { rtcService } from "@mail/new/rtc/rtc_service";
 import { suggestionService } from "@mail/new/composer/suggestion_service";
 import { storeService } from "@mail/new/core/store_service";
-import { chatWindowService } from "@mail/new/chat/chat_window_service";
+import { chatWindowService } from "@mail/new/web/chat_window/chat_window_service";
 import { threadService } from "@mail/new/core/thread_service";
 import { messageService } from "@mail/new/core/message_service";
-import { activityService } from "@mail/new/activity/activity_service";
+import { activityService } from "@mail/new/web/activity/activity_service";
 import { chatterService } from "@mail/new/web/chatter_service";
 import { DiscussClientAction } from "@mail/new/discuss/discuss_client_action";
 import { personaService } from "@mail/new/core/persona_service";

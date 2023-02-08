@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { Activity } from "@mail/new/activity/activity";
+import { Activity } from "@mail/new/web/activity/activity";
 
 import { patch } from "@web/core/utils/patch";
 
-/** @type {import("@mail/new/activity/activity").Activity } */
+/** @type {import("@mail/new/web/activity/activity").Activity } */
 const ActivityPatch = {
     async onGrantAccess() {
         await this.env.services.orm.call(

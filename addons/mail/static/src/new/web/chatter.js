@@ -5,7 +5,7 @@ import { useMessaging, useStore } from "../core/messaging_hook";
 import { useDropzone } from "@mail/new/dropzone/dropzone_hook";
 import { AttachmentList } from "@mail/new/attachments/attachment_list";
 import { Composer } from "../composer/composer";
-import { Activity } from "@mail/new/activity/activity";
+import { Activity } from "@mail/new/web/activity/activity";
 import {
     Component,
     markup,
@@ -140,7 +140,7 @@ export class Chatter extends Component {
     }
 
     /**
-     * @returns {import("@mail/new/activity/activity_model").Activity[]}
+     * @returns {import("@mail/new/web/activity/activity_model").Activity[]}
      */
     get activities() {
         return Object.values(this.store.activities).filter((activity) => {

@@ -211,6 +211,7 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/main.js',
         ],
         'mail.assets_discuss_public_test_tours': [
+            'web/static/tests/legacy/helpers/test_utils_file.js',
             'mail/static/tests/tours/discuss_public_tour.js',
             'mail/static/tests/tours/mail_channel_as_guest_tour.js',
         ],
@@ -258,7 +259,6 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/views/fields/many2many_tags/tags_list.*',
 
             'mail/static/src/new/**/*',
-            'web/static/tests/legacy/helpers/test_utils_file.js',
             'web/static/src/legacy/js/core/misc.js',
             'web/static/src/legacy/js/env.js',
             'web/static/src/legacy/js/owl_compatibility.js',

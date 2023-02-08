@@ -1,9 +1,9 @@
 /* @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { useStore } from "../core/messaging_hook";
-import { Typing } from "../composer/typing";
-import { createLocalId } from "../utils/misc";
+import { useStore } from "@mail/new/core/messaging_hook";
+import { Typing } from "@mail/new/composer/typing";
+import { createLocalId } from "@mail/new/utils/misc";
 
 /**
  * @typedef {Object} Props

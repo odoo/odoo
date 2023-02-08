@@ -222,7 +222,9 @@ export class MessageService {
             defaultSubject,
             isDiscussion,
             isNote,
-            isStarred: message.starred_partner_ids.includes(this.store.self.id),
+            isStarred: this.store.user
+                ? message.starred_partner_ids.includes(this.store.user.id)
+                : false,
             isTransient,
             linkPreviews: linkPreviews.map((data) => new LinkPreview(data)),
             parentMessage: message.parentMessage ? this.insert(message.parentMessage) : undefined,

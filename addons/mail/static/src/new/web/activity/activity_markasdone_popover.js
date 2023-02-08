@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useMessaging } from "../core/messaging_hook";
+import { useMessaging } from "@mail/new/core/messaging_hook";
 import { Component, onMounted, useExternalListener, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 

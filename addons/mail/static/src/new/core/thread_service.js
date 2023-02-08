@@ -16,6 +16,10 @@ export class ThreadService {
     nextId = 0;
 
     constructor(env, services) {
+        this.setup(env, services);
+    }
+
+    setup(env, services) {
         this.env = env;
         /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
         this.attachmentsService = services["mail.attachment"];
@@ -23,8 +27,6 @@ export class ThreadService {
         this.store = services["mail.store"];
         this.orm = services.orm;
         this.rpc = services.rpc;
-        /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
-        this.chatWindowService = services["mail.chat_window"];
         this.notificationService = services.notification;
         this.router = services.router;
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
@@ -229,20 +231,7 @@ export class ThreadService {
      * @param {boolean} replaceNewMessageChatWindow
      */
     open(thread, replaceNewMessageChatWindow) {
-        if (this.store.discuss.isActive && !this.store.isSmall) {
-            this.setDiscussThread(thread);
-        } else {
-            const chatWindow = this.chatWindowService.insert({
-                folded: false,
-                thread,
-                replaceNewMessageChatWindow,
-            });
-            chatWindow.autofocus++;
-            if (thread) {
-                thread.state = "open";
-            }
-            this.chatWindowService.notifyState(chatWindow);
-        }
+        this.setDiscussThread(thread);
     }
 
     async openChat(person) {
@@ -757,7 +746,6 @@ export const threadService = {
         "mail.store",
         "orm",
         "rpc",
-        "mail.chat_window",
         "notification",
         "router",
         "mail.persona",

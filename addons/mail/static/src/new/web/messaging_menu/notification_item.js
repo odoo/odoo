@@ -2,7 +2,7 @@
 
 import { Component, useRef } from "@odoo/owl";
 import { PartnerImStatus } from "@mail/new/discuss/partner_im_status";
-import { RelativeTime } from "../core_ui/relative_time";
+import { RelativeTime } from "@mail/new/core_ui/relative_time";
 
 export class NotificationItem extends Component {
     static components = { RelativeTime, PartnerImStatus };

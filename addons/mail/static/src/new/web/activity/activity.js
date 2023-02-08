@@ -6,8 +6,8 @@ import { sprintf } from "@web/core/utils/strings";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { FileUploader } from "@web/views/fields/file_handler";
 
-import { ActivityMailTemplate } from "@mail/new/activity/activity_mail_template";
-import { ActivityMarkAsDone } from "./activity_markasdone_popover";
+import { ActivityMailTemplate } from "@mail/new/web/activity/activity_mail_template";
+import { ActivityMarkAsDone } from "@mail/new/web/activity/activity_markasdone_popover";
 import { computeDelay } from "@mail/new/utils/dates";
 import { useAttachmentUploader } from "@mail/new/attachments/attachment_uploader_hook";
 
@@ -30,7 +30,7 @@ export class Activity extends Component {
     closePopover;
 
     setup() {
-        /** @type {import("@mail/new/activity/activity_service").ActivityService} */
+        /** @type {import("@mail/new/web/activity/activity_service").ActivityService} */
         this.activityService = useService("mail.activity");
         this.messaging = useService("mail.messaging");
         this.chatter = useState(useService("mail.chatter"));
