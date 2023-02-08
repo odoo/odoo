@@ -22,4 +22,13 @@
         <field name="interval_type">days</field>
         <field name="numbercall">-1</field>
     </record>
+
+    <record id="action_download_xsd" model="ir.actions.server">
+        <field name="name">Download XSD files</field>
+        <field name="model_id" ref="account.model_ir_attachment"/>
+        <field name="binding_model_id" ref="account.model_ir_attachment"/>
+        <field name="binding_view_types">form</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_download_xsd_files()</field>
+    </record>
 </odoo>

@@ -292,23 +292,17 @@ def load_xsd_files_from_url(env, xsd_info, request_max_timeout=10, modify_xsd_co
     return saved_attachments
 
 
-def validate_xml_from_attachment(env, xml_content, xsd_info, reload_files_function=None):
+def validate_xml_from_attachment(env, xml_content, xsd_info):
     """Try and validate the XML content with an XSD attachment.
-    If the XSD attachment cannot be found in database, (re)load it.
-
-    A skip_xsd key can be provided in the context in order to skip the XSD validation.
-    This should be used during tests to avoid loading XSD files (and making http requests every time).
+    If the XSD attachment cannot be found in database, skip validation without raising.
 
     :param odoo.api.Environment env: environment of calling module
     :param xml_content: the XML content to validate
     :param dict xsd_info: a dictionary containing the following information:
         'name': the XSD file name,
         'prefix': prefix given to XSD file names
-    :param reload_files_function: function that will be called to try and (re)load XSD files
     :return: the result of the function :func:`odoo.tools.xml_utils._check_with_xsd`
     """
-    if env.context.get('skip_xsd', False):
-        return
     prefix = xsd_info.get('prefix')
     prefixed_xsd_name = f"{prefix}.{xsd_info.get('name')}"
     try:
@@ -316,16 +310,7 @@ def validate_xml_from_attachment(env, xml_content, xsd_info, reload_files_functi
         _check_with_xsd(xml_content, prefixed_xsd_name, env, prefix)
         _logger.info("XSD validation successful!")
     except FileNotFoundError:
-        if not reload_files_function:
-            _logger.warning("You need to provide a function used to (re)load XSD files")
-            return
-        _logger.info("Trying to reload the XSD attachment...")
-        reload_files_function()
-        try:
-            _check_with_xsd(xml_content, prefixed_xsd_name, env, prefix)
-            _logger.info("XSD validation successful!")
-        except FileNotFoundError:
-            _logger.warning("The XSD file could not be found, even after a reload")
+        _logger.info("XSD file not found, skipping validation")
 
 
 def find_xml_value(xpath, xml_element, namespaces=None):
