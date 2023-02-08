@@ -11,9 +11,10 @@ patch(Store.prototype, "im_livechat", {
             extraClass: "o-mail-category-livechat",
             id: "livechat",
             name: _t("Livechat"),
-            isOpen: true,
+            isOpen: false,
             canView: false,
             canAdd: false,
+            serverStateKey: "is_discuss_sidebar_category_livechat_open",
             threads: [], // list of ids
         };
     },

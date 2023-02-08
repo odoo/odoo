@@ -377,57 +377,7 @@ export class Messaging {
                     }
                     break;
                 case "mail.record/insert":
-                    {
-                        if (notif.payload.Thread) {
-                            this.thread.insert({
-                                id: notif.payload.Thread.id,
-                                model: notif.payload.Thread.model,
-                                serverData: notif.payload.Thread,
-                            });
-                        }
-                        if (notif.payload.RtcSession) {
-                            this.rtc.insertSession(notif.payload.RtcSession);
-                        }
-                        if (notif.payload.Partner) {
-                            const partners = Array.isArray(notif.payload.Partner)
-                                ? notif.payload.Partner
-                                : [notif.payload.Partner];
-                            for (const partner of partners) {
-                                if (partner.im_status) {
-                                    this.persona.insert({ ...partner, type: "partner" });
-                                }
-                            }
-                        }
-                        if (notif.payload.Guest) {
-                            const guests = Array.isArray(notif.payload.Guest)
-                                ? notif.payload.Guest
-                                : [notif.payload.Guest];
-                            for (const guest of guests) {
-                                this.persona.insert({ ...guest, type: "guest" });
-                            }
-                        }
-                        const { LinkPreview: linkPreviews } = notif.payload;
-                        if (linkPreviews) {
-                            for (const linkPreview of linkPreviews) {
-                                this.store.messages[linkPreview.message.id].linkPreviews.push(
-                                    new LinkPreview(linkPreview)
-                                );
-                            }
-                        }
-                        const { Message: messageData } = notif.payload;
-                        if (messageData) {
-                            this.message.insert({
-                                ...messageData,
-                                body: messageData.body
-                                    ? markup(messageData.body)
-                                    : messageData.body,
-                            });
-                        }
-                        const { "res.users.settings": userSettingsData } = notif.payload;
-                        if (userSettingsData) {
-                            this.userSettings.updateFromCommands(userSettingsData);
-                        }
-                    }
+                    this._handleNotificationRecordInsert(notif);
                     break;
                 case "mail.channel/joined": {
                     const { channel, invited_by_user_id: invitedByUserId } = notif.payload;
@@ -554,8 +504,9 @@ export class Messaging {
                 }
                 case "mail.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
-                    const channel =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
+                    const channel = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.channel.id)
+                    ];
                     if (!channel) {
                         return;
                     }
@@ -579,8 +530,9 @@ export class Messaging {
                     break;
                 }
                 case "mail.channel/unpin": {
-                    const thread =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+                    const thread = this.store.threads[
+                        createLocalId("mail.channel", notif.payload.id)
+                    ];
                     if (!thread) {
                         return;
                     }
@@ -606,6 +558,61 @@ export class Messaging {
                     }
                     break;
             }
+        }
+    }
+
+    _handleNotificationRecordInsert(notif) {
+        if (notif.payload.Thread) {
+            this.thread.insert({
+                id: notif.payload.Thread.id,
+                model: notif.payload.Thread.model,
+                serverData: notif.payload.Thread,
+            });
+        }
+        if (notif.payload.RtcSession) {
+            this.rtc.insertSession(notif.payload.RtcSession);
+        }
+        if (notif.payload.Partner) {
+            const partners = Array.isArray(notif.payload.Partner)
+                ? notif.payload.Partner
+                : [notif.payload.Partner];
+            for (const partner of partners) {
+                if (partner.im_status) {
+                    this.persona.insert({ ...partner, type: "partner" });
+                }
+            }
+        }
+        if (notif.payload.Guest) {
+            const guests = Array.isArray(notif.payload.Guest)
+                ? notif.payload.Guest
+                : [notif.payload.Guest];
+            for (const guest of guests) {
+                this.persona.insert({ ...guest, type: "guest" });
+            }
+        }
+        const { LinkPreview: linkPreviews } = notif.payload;
+        if (linkPreviews) {
+            for (const linkPreview of linkPreviews) {
+                this.store.messages[linkPreview.message.id].linkPreviews.push(
+                    new LinkPreview(linkPreview)
+                );
+            }
+        }
+        const { Message: messageData } = notif.payload;
+        if (messageData) {
+            this.message.insert({
+                ...messageData,
+                body: messageData.body ? markup(messageData.body) : messageData.body,
+            });
+        }
+        const { "res.users.settings": settings } = notif.payload;
+        if (settings) {
+            this.userSettings.updateFromCommands(settings);
+            this.store.discuss.chats.isOpen =
+                settings.is_discuss_sidebar_category_chat_open ?? this.store.discuss.chats.isOpen;
+            this.store.discuss.channels.isOpen =
+                settings.is_discuss_sidebar_category_channel_open ??
+                this.store.discuss.channels.isOpen;
         }
     }
 

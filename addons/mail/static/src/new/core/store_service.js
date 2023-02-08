@@ -80,6 +80,7 @@ export class Store {
             isOpen: false,
             canView: true,
             canAdd: true,
+            serverStateKey: "is_discuss_sidebar_category_channel_open",
             addTitle: _t("Add or join a channel"),
             threads: [], // list of ids
         },
@@ -90,6 +91,7 @@ export class Store {
             isOpen: false,
             canView: false,
             canAdd: true,
+            serverStateKey: "is_discuss_sidebar_category_chat_open",
             addTitle: _t("Start a conversation"),
             threads: [], // list of ids
         },
