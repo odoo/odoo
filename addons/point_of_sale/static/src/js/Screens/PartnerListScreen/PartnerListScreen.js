@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
@@ -27,7 +27,7 @@ const { onWillUnmount, useRef } = owl;
  *
  * @props partner - originally selected partner
  */
-export class PartnerListScreen extends PosComponent {
+export class PartnerListScreen extends LegacyComponent {
     static components = { PartnerDetailsEdit, PartnerLine };
     static template = "PartnerListScreen";
 

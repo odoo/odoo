@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class MobileOrderWidget extends PosComponent {
+export class MobileOrderWidget extends LegacyComponent {
     static template = "MobileOrderWidget";
 
     get order() {

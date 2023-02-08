@@ -1,8 +1,7 @@
 /** @odoo-module */
 
-import { useAutofocus, useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
-import { saleOrderFetcher } from "@pos_sale/js/OrderManagementScreen/SaleOrderFetcher";
+import { useAutofocus, useListener, useService } from "@web/core/utils/hooks";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { orderManagement } from "@point_of_sale/js/PosContext";
 
 const { useState } = owl;
@@ -25,11 +24,12 @@ const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
  * @emits next-page
  * @emits search
  */
-export class SaleOrderManagementControlPanel extends PosComponent {
+export class SaleOrderManagementControlPanel extends LegacyComponent {
     static template = "SaleOrderManagementControlPanel";
 
     setup() {
         super.setup();
+        this.saleOrderFetcher = useService("sale_order_fetcher");
         this.orderManagementContext = useState(orderManagement);
         useListener("clear-search", this._onClearSearch);
         useAutofocus();
@@ -38,7 +38,7 @@ export class SaleOrderManagementControlPanel extends PosComponent {
         if (currentPartner) {
             this.orderManagementContext.searchString = currentPartner.name;
         }
-        saleOrderFetcher.setSearchDomain(this._computeDomain());
+        this.saleOrderFetcher.setSearchDomain(this._computeDomain());
     }
     onInputKeydown(event) {
         if (event.key === "Enter") {
@@ -46,11 +46,11 @@ export class SaleOrderManagementControlPanel extends PosComponent {
         }
     }
     get showPageControls() {
-        return saleOrderFetcher.lastPage > 1;
+        return this.saleOrderFetcher.lastPage > 1;
     }
     get pageNumber() {
-        const currentPage = saleOrderFetcher.currentPage;
-        const lastPage = saleOrderFetcher.lastPage;
+        const currentPage = this.saleOrderFetcher.currentPage;
+        const lastPage = this.saleOrderFetcher.lastPage;
         return isNaN(lastPage) ? "" : `(${currentPage}/${lastPage})`;
     }
     get validSearchTags() {

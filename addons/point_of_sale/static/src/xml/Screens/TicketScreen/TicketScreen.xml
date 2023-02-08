@@ -8,7 +8,7 @@
                     <div class="controls">
                         <t t-if="!env.isMobile || !state.showSearchBar">
                             <div class="buttons">
-                                <button class="discard" t-on-click="() => this.trigger('close-screen')">
+                                <button class="discard" t-on-click="() => this.pos.closeScreen()">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
@@ -16,7 +16,7 @@
                                         Back
                                     </t>
                                 </button>
-                                <button t-if="shouldShowNewOrderButton()" class="highlight" t-on-click="() => this.trigger('create-new-order')">New Order</button>
+                                <button t-if="allowNewOrders" class="highlight" t-on-click="() => this.trigger('create-new-order')">New Order</button>
                             </div>
                         </t>
                         <t t-if="env.isMobile">

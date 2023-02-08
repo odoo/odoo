@@ -1,0 +1,93 @@
+.cash-move-popup {
+    top: 20% !important;
+
+    .input-amount {
+        display: flex;
+        flex-flow: row;
+    }
+
+    .input-type {
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 2px;
+        padding: 0 12px;
+        margin-right: 10px;
+        font-size: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        border: solid 1px rgba(60,60,60,0.1);
+        background: rgba(0,0,0,0.05);
+        white-space: nowrap;
+
+        &.highlight {
+            background: $primary !important;
+            border: solid 1px #64AF8A !important;
+            color: white !important;
+        }
+
+        &.red-highlight {
+            background: #bd2222 !important;
+            border: solid 1px #bd2222 !important;
+            color: white !important;
+        }
+
+        input {
+            width: 100%;
+            min-height: auto;
+            text-align: right;
+            padding-right: 30px;
+        }
+    }
+
+    .input-field {
+        position: relative;
+        flex-grow: 1;
+
+        .currency {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+
+        .left-currency {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            background-color: #fff;
+            padding-right: 8px;
+        }
+    }
+
+    textarea {
+        resize: none;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .error-message {
+        color: rgb(197, 52, 0);
+        text-align: left;
+        padding-left: 5px;
+    }
+
+    // FIXME POSREF increased selector specificity to override default style. Should just be "footer"
+    footer.cash-move.cash-move {
+        display: block;
+        width: calc(100% - 36px);
+        padding: 10px 18px 10px 18px;
+
+        .button.confirm {
+            float: left;
+        }
+
+        .button.cancel {
+            margin-right: 0;
+        }
+    }
+}
+
+.cash-move {
+    display: flex;
+    flex-flow: column;
+}

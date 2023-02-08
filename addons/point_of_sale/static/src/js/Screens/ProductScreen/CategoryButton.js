@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class CategoryButton extends PosComponent {
+export class CategoryButton extends LegacyComponent {
     static template = "CategoryButton";
 
     get imageUrl() {

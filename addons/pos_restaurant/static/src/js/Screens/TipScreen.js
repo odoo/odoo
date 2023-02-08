@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { parse } from "web.field_utils";
 import { renderToString } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
@@ -11,7 +11,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const { onMounted } = owl;
 
-export class TipScreen extends PosComponent {
+export class TipScreen extends LegacyComponent {
     static template = "pos_restaurant.TipScreen";
     static showBackToFloorButton = true;
     setup() {

@@ -1,12 +1,12 @@
 /** @odoo-module **/
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
 
-export class eWalletButton extends PosComponent {
+export class eWalletButton extends LegacyComponent {
     static template = "point_of_sale.eWalletButton";
 
     setup() {

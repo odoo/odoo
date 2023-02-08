@@ -1,10 +1,10 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
-export class ReprintReceiptButton extends PosComponent {
+export class ReprintReceiptButton extends LegacyComponent {
     static template = "ReprintReceiptButton";
 
     setup() {

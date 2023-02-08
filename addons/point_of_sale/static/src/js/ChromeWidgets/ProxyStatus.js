@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { onMounted, onWillUnmount, useState } = owl;
 
 // Previously ProxyStatusWidget
-export class ProxyStatus extends PosComponent {
+export class ProxyStatus extends LegacyComponent {
     static template = "ProxyStatus";
 
     setup() {

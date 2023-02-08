@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { parse } from "web.field_utils";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import { registry } from "@web/core/registry";
 import { useListener, useService } from "@web/core/utils/hooks";
@@ -17,7 +17,7 @@ import { PaymentScreenPaymentLines } from "./PaymentScreenPaymentLines";
 import { PaymentScreenStatus } from "./PaymentScreenStatus";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
-export class PaymentScreen extends PosComponent {
+export class PaymentScreen extends LegacyComponent {
     static template = "PaymentScreen";
     static components = {
         PaymentScreenNumpad,

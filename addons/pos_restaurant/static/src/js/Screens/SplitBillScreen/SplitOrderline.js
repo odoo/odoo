@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class SplitOrderline extends PosComponent {
+export class SplitOrderline extends LegacyComponent {
     static template = "SplitOrderline";
 
     setup() {

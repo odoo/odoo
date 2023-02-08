@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import utils from "web.utils";
 
 /**
@@ -8,7 +8,7 @@ import utils from "web.utils";
  * @props columns
  * @emits click-order
  */
-export class SaleOrderRow extends PosComponent {
+export class SaleOrderRow extends LegacyComponent {
     static template = "SaleOrderRow";
 
     get order() {

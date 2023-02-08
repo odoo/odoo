@@ -16,8 +16,7 @@ import { OrderDetails } from "../TicketScreen/OrderDetails";
 import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
 import { SearchBar } from "../../Misc/SearchBar";
 import { usePos } from "@point_of_sale/app/pos_hook";
-
-const { onMounted, onWillUnmount, useState } = owl;
+import { onWillUnmount, onMounted, useState } from "@odoo/owl";
 
 export class TicketScreen extends IndependentToOrderScreen {
     static template = "TicketScreen";
@@ -43,7 +42,6 @@ export class TicketScreen extends IndependentToOrderScreen {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
-        useListener("close-screen", this._onCloseScreen);
         useListener("filter-selected", this._onFilterSelected);
         useListener("search", this._onSearch);
         useListener("click-order", this._onClickOrder);
@@ -75,24 +73,18 @@ export class TicketScreen extends IndependentToOrderScreen {
               };
         Object.assign(this._state.ui, defaultUIState, this.props.ui || {});
 
-        onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
-    }
-    //#region LIFECYCLE METHODS
-    onMounted() {
-        this.env.posbus.on("ticket-button-clicked", this, this.close);
-        setTimeout(() => {
-            // Show updated list of synced orders when going back to the screen.
+        onMounted(() => {
             this._onFilterSelected({ detail: { filter: this._state.ui.filter } });
         });
-    }
-    onWillUnmount() {
-        this.env.posbus.off("ticket-button-clicked", this);
-    }
-    //#endregion
-    //#region EVENT HANDLERS
-    _onCloseScreen() {
-        this.close();
+        onWillUnmount(() => {
+            /**
+             * Automatically create new order when there is no currently active order.
+             * Important in fiscal modules to keep the sequence of the orders.
+             */
+            if (this.env.pos.orders.length == 0 && this.allowNewOrders) {
+                this.env.pos.add_new_order();
+            }
+        });
     }
     async _onFilterSelected(event) {
         this._state.ui.filter = event.detail.filter;
@@ -286,19 +278,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             this.env.pos.set_order(destinationOrder);
         }
 
-        this._onCloseScreen();
-    }
-    //#endregion
-    //#region PUBLIC METHODS
-    close() {
-        /**
-         * Automatically create new order when there is no currently active order.
-         * Important in fiscal modules to keep the sequence of the orders.
-         */
-        if (this.env.pos.orders.length == 0) {
-            this.env.pos.add_new_order();
-        }
-        super.close();
+        this.close();
     }
     getSelectedSyncedOrder() {
         if (this._state.ui.filter == "SYNCED") {
@@ -311,9 +291,12 @@ export class TicketScreen extends IndependentToOrderScreen {
         return this._state.ui.selectedOrderlineIds[this._state.ui.selectedSyncedOrderId];
     }
     /**
-     * Override to conditionally show the new ticket button.
+     * Override to conditionally show the new order button, or prevent order
+     * creation when leaving the screen.
+     *
+     * @returns {boolean}
      */
-    shouldShowNewOrderButton() {
+    get allowNewOrders() {
         return true;
     }
     getFilteredOrderList() {

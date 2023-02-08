@@ -1,11 +1,11 @@
 /** @odoo-module **/
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener, useService } from "@web/core/utils/hooks";
 import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 
-export class PromoCodeButton extends PosComponent {
+export class PromoCodeButton extends LegacyComponent {
     static template = "PromoCodeButton";
 
     setup() {

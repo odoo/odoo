@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { parse } from "web.field_utils";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { Transition } from "@web/core/transition";
 import { Draggable } from "@point_of_sale/js/Misc/Draggable";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -10,7 +10,7 @@ import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useRef, useState } from "@odoo/owl";
 
-export class DebugWidget extends PosComponent {
+export class DebugWidget extends LegacyComponent {
     static components = { Transition, Draggable };
     static template = "point_of_sale.DebugWidget";
     setup() {

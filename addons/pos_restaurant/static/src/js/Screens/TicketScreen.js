@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
@@ -9,19 +9,6 @@ import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 const { useState } = owl;
 
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
-    close() {
-        if (!this.env.pos.config.iface_floorplan) {
-            this._super(...arguments);
-        } else {
-            const order = this.env.pos.get_order();
-            if (order) {
-                const { name: screenName } = order.get_screen_data();
-                this.pos.showScreen(screenName);
-            } else {
-                this.pos.showScreen("FloorScreen");
-            }
-        }
-    },
     _getScreenToStatusMap() {
         return Object.assign(this._super(...arguments), {
             PaymentScreen: this.env.pos.config.set_tip_after_payment
@@ -56,7 +43,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
             this.close();
         }
     },
-    shouldShowNewOrderButton() {
+    get allowNewOrders() {
         return this.env.pos.config.iface_floorplan
             ? Boolean(this.env.pos.table)
             : this._super(...arguments);
@@ -176,7 +163,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
 });
 
-export class TipCell extends PosComponent {
+export class TipCell extends LegacyComponent {
     static template = "TipCell";
 
     setup() {

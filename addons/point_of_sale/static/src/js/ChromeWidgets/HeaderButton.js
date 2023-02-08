@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useService } from "@web/core/utils/hooks";
 import { ClosePosPopup } from "@point_of_sale/js/Popups/ClosePosPopup";
 
 // Previously HeaderButtonWidget
 // This is the close session button
-export class HeaderButton extends PosComponent {
+export class HeaderButton extends LegacyComponent {
     static template = "HeaderButton";
 
     setup() {

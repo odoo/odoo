@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { useState } = owl;
 
-export class CustomerFacingDisplayButton extends PosComponent {
+export class CustomerFacingDisplayButton extends LegacyComponent {
     static template = "CustomerFacingDisplayButton";
 
     setup() {

@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { odooExceptionTitleMap } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
-import { GuiNotReadyError } from "@point_of_sale/js/Gui";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ErrorTracebackPopup } from "@point_of_sale/js/Popups/ErrorTracebackPopup";
 import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
@@ -62,12 +61,3 @@ function defaultErrorHandler(env, error, originalError) {
 registry
     .category("error_handlers")
     .add("defaultErrorHandler", defaultErrorHandler, { sequence: 99 });
-
-function guiNotReadyHandler(env, error, originalError) {
-    error = identifyError(originalError);
-    if (error instanceof GuiNotReadyError) {
-        console.error(originalError);
-        return true;
-    }
-}
-registry.category("error_handlers").add("guiNotReadyHandler", guiNotReadyHandler);
