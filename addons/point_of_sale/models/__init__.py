@@ -23,3 +23,4 @@ from . import stock_warehouse
 from . import pos_payment
 from . import pos_payment_method
 from . import pos_bill
+from . import report_sale_details

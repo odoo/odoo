@@ -65,9 +65,9 @@ export class SearchBar extends Component {
         if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             this.state.selectedSearchFieldId = this._fieldIdToSelect(event.key);
         } else if (event.key === "Enter" || this.state.searchInput == "") {
-            this._onClickSearchField({
-                detail: this.searchFieldsList[this.state.selectedSearchFieldId],
-            });
+            this._onClickSearchField(
+                this.searchFieldsList[this.state.selectedSearchFieldId],
+            );
         } else {
             if (this.state.selectedSearchFieldId === -1 && this.searchFieldsList.length) {
                 this.state.selectedSearchFieldId = 0;
