@@ -1,12 +1,27 @@
 .o_select_menu {
+    .o_select_menu_toggler {
+        display: grid;
+        grid-template-columns: auto 25px;
+    }
+    .o_select_menu_toggler.o_can_deselect {
+        grid-template-columns: auto 25px 25px;
+    }
+
     .o_select_menu_toggler_slot {
         flex-grow: 2;
     }
-    .o_select_menu_toggler_caret,
-    .o_select_menu_toggler_clear {
-        width: 2rem;
-        flex-basis: 1;
+
+    .o_select_menu_toggler_caret {
+        grid-column: 2;
     }
+    .o_can_deselect .o_select_menu_toggler_caret {
+        grid-column: 3;
+    }
+
+    .o_select_menu_toggler_clear {
+        grid-column: 2;
+    }
+
     .o_select_menu_toggler_clear:hover i {
         color: red;
     }

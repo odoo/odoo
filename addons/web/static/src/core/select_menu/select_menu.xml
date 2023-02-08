@@ -4,7 +4,7 @@
     <t t-name="web.SelectMenu" owl="1">
         <Dropdown
             class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
-            togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''}`"
+            togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
             menuClass="`o_select_menu_menu${props.searchable ? ' pt-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''}`"
             position="'bottom-fit'"
             beforeOpen.bind="filterOptions"
