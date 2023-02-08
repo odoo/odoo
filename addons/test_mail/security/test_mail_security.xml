@@ -52,4 +52,13 @@
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
     </record>
 
+    <!-- MULTI COMPANY MAIN ATTACHMENT -->
+    <record id="mail_test_simple_mc_rule" model="ir.rule">
+        <field name="name">Test</field>
+        <field name="model_id" ref="test_mail.model_mail_test_simple_mc"/>
+        <field name="perm_read" eval="False"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
 </odoo>

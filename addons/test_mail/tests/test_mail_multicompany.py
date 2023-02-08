@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import socket
 
 from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
@@ -88,3 +89,39 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                     "%s %s" % (self.user_employee_c2.company_id.name, test_record.name),
                     "%s@%s" % (self.alias_catchall, self.alias_domain)))
             )
+
+@tagged('multi_company')
+class TestMultiCompanySetupAttachment(TestMailCommon, TestRecipients):
+    """ Test message post with attachment on record of another company than the
+    user company but for which the user has readonly access on. """
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._activate_multi_company()
+
+        cls.test_record = cls.env['mail.test.simple.mc'].with_context(cls._test_context).create({
+            'company_id': cls.user_employee.company_id.id,
+            'email_from': 'ignasse@example.com',
+            'name': 'Test',
+        }).with_context({})
+
+    @users('employee_c2')
+    def test_post_main_attachment_on_record_with_read_access(self):
+        """ Check that with readonly access, a message with attachment can be
+        posted on a model with the attribute _mail_post_access = 'read'. """
+        test_record = self.env['mail.test.simple.mc'].browse([self.test_record.id])
+        test_record.message_post(attachments=[('testAttachment', b'Test attachment')])
+
+    @users('employee_c2')
+    def test_post_main_existing_attachment_on_record_with_read_access(self):
+        """ Check that with readonly access, a message with pre-created attachment
+        can be posted on a model with the attribute _mail_post_access = 'read'. """
+        test_record = self.env['mail.test.simple.mc'].browse([self.test_record.id])
+        test_record.message_post(attachment_ids=[self.env['ir.attachment'].create({
+            'company_id': self.user_employee_c2.company_id.id,
+            'datas': base64.b64encode(b'Test attachment'),
+            'mimetype': 'text/plain',
+            'name': 'TestAttachment.txt',
+            'res_model': 'mail.compose.message',
+            'res_id': False,
+        }).id])

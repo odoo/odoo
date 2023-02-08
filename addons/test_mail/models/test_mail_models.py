@@ -15,6 +15,17 @@ class MailTestSimple(models.Model):
     email_from = fields.Char()
 
 
+class MailTestSimpleMC(models.Model):
+    """ Just mail.test.simple, but multi company and supporting posting
+    even if the user has no write access. """
+    _description = 'Simple Chatter Model '
+    _name = 'mail.test.simple.mc'
+    _inherit = ['mail.test.simple']
+    _mail_post_access = 'read'
+
+    company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
+
+
 class MailTestGateway(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
     mailing features and base performances. """
