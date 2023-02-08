@@ -263,6 +263,8 @@
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_14"/>
             <field name="color">2</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">1</field>
         </record>
 
         <!-- Sick leave -->
@@ -272,8 +274,10 @@
             <field name="leave_notif_subtype_id" ref="mt_leave_sick"/>
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="support_document">True</field>
-            <field name="icon_id" ref="hr_holidays.icon_21"/>
+            <field name="icon_id" ref="hr_holidays.icon_22"/>
             <field name="color">3</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">2</field>
         </record>
 
         <!-- Compensatory Days -->
@@ -288,6 +292,8 @@
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_4"/>
             <field name="color">4</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">4</field>
         </record>
 
         <!--Unpaid Time Off -->
@@ -302,6 +308,8 @@
             <field name="responsible_ids" eval="[(4, ref('base.user_admin'))]"/>
             <field name="icon_id" ref="hr_holidays.icon_28"/>
             <field name="color">5</field>
+            <field name="company_id" eval="False"/> <!-- Explicitely set to False for it to be available to all companies -->
+            <field name="sequence">3</field>
         </record>
     </data>
 </odoo>
