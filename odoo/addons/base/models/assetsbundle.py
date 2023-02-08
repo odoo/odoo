@@ -279,8 +279,8 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
-            sep='',
-            extension='.%s' % extension
+            sep='.',
+            extension=extension
         )
 
         domain = [
@@ -317,8 +317,8 @@ class AssetsBundle(object):
             unique=unique,
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=self.name,
-            sep='',
-            extension='.%s' % extension
+            sep='.',
+            extension=extension
         )
         self.env.cr.execute("""
              SELECT max(id)
@@ -368,9 +368,9 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             unique=self.version,
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
-            name=fname,
-            sep='',  # included in fname
-            extension=''
+            name=self.name,
+            sep='.',  # included in fname
+            extension=extension
         )
         values = {
             'url': url,
