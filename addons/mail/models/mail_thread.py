@@ -1794,6 +1794,13 @@ class MailThread(models.AbstractModel):
           * create attachments from ``attachments``. If those are linked to the
             content (body) through CIDs body is updated accordingly;
 
+        Note that attachments are created/written in sudo as we consider at this
+        point access is granted on related record and/or to post the linked
+        message. The caller must verify the access rights accordingly. Indeed
+        attachments rights are stricter than message rights which may lead to
+        ACLs issues e.g. when posting on a readonly document or replying to
+        a notification on a private document.
+
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -1869,7 +1876,7 @@ class MailThread(models.AbstractModel):
                 # keep cid and name list synced with attachement_values_list length to match ids latter
                 cid_list.append(cid)
                 name_list.append(name)
-            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
+            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
             cid_mapping = {}
             name_mapping = {}
             for counter, new_attachment in enumerate(new_attachments):
