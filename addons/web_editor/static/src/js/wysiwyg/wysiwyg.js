@@ -2562,7 +2562,6 @@ const Wysiwyg = Widget.extend({
         if (initialHistoryId) {
             this.odooEditor.historySetInitialId(initialHistoryId);
         }
-        this.ptp.notifyAllClients('ptp_join');
     },
     /**
      * Set contenteditable=false for all `.o_not_editable` found within node if
