@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 {
     'name': "Snail Mail",
     'description': """
@@ -21,8 +22,10 @@ Allows users to send documents by post
     ],
     'auto_install': True,
     'assets': {
+        'mail.assets_backend': [
+            'snailmail/static/src/new/**/*',
+        ],
         'mail.assets_messaging': [
-            'snailmail/static/src/new/**/*.js',
             'snailmail/static/src/models/*.js',
         ],
         'mail.assets_discuss_public': [
@@ -38,7 +41,6 @@ Allows users to send documents by post
         'web.assets_backend': [
             'snailmail/static/src/components/*/*.scss',
             'snailmail/static/src/components/*/*.xml',
-            'snailmail/static/src/new/*/*.xml',
         ],
         'web.tests_assets': [
             'snailmail/static/tests/helpers/**/*.js',

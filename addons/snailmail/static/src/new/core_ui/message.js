@@ -6,13 +6,6 @@ import { SnailmailError } from "./snailmail_error";
 import { SnailmailNotificationPopover } from "./snailmail_notification_popover";
 
 patch(Message.prototype, "snailmail", {
-    addFailureDialog(failureType, messageId) {
-        this.env.services.dialog.add(SnailmailError, {
-            failureType: failureType,
-            messageId: messageId,
-        });
-    },
-
     onClickFailure() {
         if (this.message.type === "snailmail") {
             const failureType = this.message.notifications[0].failure_type;
@@ -21,7 +14,10 @@ patch(Message.prototype, "snailmail", {
                 case "sn_trial":
                 case "sn_price":
                 case "sn_error":
-                    this.addFailureDialog(failureType, this.message.id);
+                    this.env.services.dialog.add(SnailmailError, {
+                        failureType: failureType,
+                        messageId: this.message.id,
+                    });
                     break;
                 case "sn_fields":
                     this.openMissingFieldsLetterAction();

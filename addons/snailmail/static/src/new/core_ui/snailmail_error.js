@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { Dialog } from "@web/core/dialog/dialog";
 
 import { _t } from "@web/core/l10n/translation";
@@ -12,7 +12,6 @@ export class SnailmailError extends Component {
     static template = "snailmail.snailmail_error";
 
     setup() {
-        this.messageService = useState(useService("mail.message"));
         this.orm = useService("orm");
         this.title = _t("Failed letter");
     }
