@@ -1803,7 +1803,7 @@
                         "baselineColorDown": "#DC6965",
                         "baselineColorUp": "#00A04A",
                         "baselineMode": "percentage",
-                        "title": "Orders",
+                        "title": "Order Lines",
                         "type": "scorecard",
                         "background": "",
                         "baseline": "Data!E3",
@@ -1821,13 +1821,13 @@
                     "data": {
                         "baselineColorDown": "#DC6965",
                         "baselineColorUp": "#00A04A",
-                        "baselineMode": "percentage",
-                        "title": "Average Order",
+                        "baselineMode": "text",
+                        "title": "Delay before Reception",
                         "type": "scorecard",
                         "background": "",
-                        "baseline": "Data!E4",
-                        "baselineDescr": "since last period",
-                        "keyValue": "Data!D4"
+                        "baseline": "Data!E5",
+                        "baselineDescr": "last period",
+                        "keyValue": "Data!D5"
                     }
                 },
                 {
@@ -1841,12 +1841,12 @@
                         "baselineColorDown": "#DC6965",
                         "baselineColorUp": "#00A04A",
                         "baselineMode": "text",
-                        "title": "Lead Time to Receive",
+                        "title": "Days to Purchase",
                         "type": "scorecard",
                         "background": "",
-                        "baseline": "Data!E5",
+                        "baseline": "Data!E6",
                         "baselineDescr": "last period",
-                        "keyValue": "Data!D5"
+                        "keyValue": "Data!D6"
                     }
                 }
             ],
@@ -1870,7 +1870,7 @@
                     "content": "=_t(\"Amount\")"
                 },
                 "A3": {
-                    "content": "=_t(\"Orders\")"
+                    "content": "=_t(\"Order Lines\")"
                 },
                 "A4": {
                     "content": "=_t(\"Average order\")"
@@ -1892,7 +1892,7 @@
                     "content": "=ODOO.PIVOT(10,\"untaxed_total\")"
                 },
                 "B3": {
-                    "content": "=ODOO.PIVOT(10,\"order_id\")"
+                    "content": "=ODOO.PIVOT(10,\"__count\")"
                 },
                 "B4": {
                     "content": "=IFERROR(B2/B3)"
@@ -1914,7 +1914,7 @@
                     "content": "=ODOO.PIVOT(11,\"untaxed_total\")"
                 },
                 "C3": {
-                    "content": "=ODOO.PIVOT(11,\"order_id\")"
+                    "content": "=ODOO.PIVOT(11,\"__count\")"
                 },
                 "C4": {
                     "content": "=IFERROR(C2/C3)"
@@ -2076,7 +2076,7 @@
     },
     "revisionId": "START_REVISION",
     "chartOdooMenusReferences": {
-        "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": "purchase.menu_purchase_root",
+        "40aef9ad-8e20-47d1-861c-9e9121a4cdd0": "purchase.purchase_report",
         "3026e15a-cf89-4626-b40d-d61b0d802cd4": "purchase.menu_purchase_form_action",
         "bf0b19f1-c857-463c-ab3b-501de4bac427": "purchase.menu_purchase_form_action",
         "f146ff41-fce3-4f51-a21c-f0903a4e2c96": "purchase.purchase_report",
@@ -2402,6 +2402,9 @@
                 },
                 {
                     "field": "qty_ordered"
+                },
+                {
+                    "field": "__count"
                 }
             ],
             "model": "purchase.report",
@@ -2436,6 +2439,9 @@
                 },
                 {
                     "field": "qty_ordered"
+                },
+                {
+                    "field": "__count"
                 }
             ],
             "model": "purchase.report",
