@@ -1336,11 +1336,6 @@ const Wysiwyg = Widget.extend({
         const field = $editable.data('oe-field');
         const type = $editable.data('oe-type');
 
-        // The html_field value should not be updated while the mediaDialog is
-        // in use because if its value change, restoreSelection may fail since
-        // it has a reference to HTMLElements which are not in the DOM anymore.
-        this._shouldDelayBlur = true;
-
         this.mediaDialogWrapper = new ComponentWrapper(this, MediaDialogWrapper, {
             resModel: model,
             resId: $editable.data('oe-id'),
