@@ -1,13 +1,13 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 /**
  * @props partner
  * @emits click-partner
  * @emits click-pay
  */
-export class ActionpadWidget extends PosComponent {
+export class ActionpadWidget extends LegacyComponent {
     static template = "ActionpadWidget";
     static defaultProps = {
         isActionButtonHighlighted: false,

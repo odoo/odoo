@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { useState } = owl;
 
-export class HeaderLockButton extends PosComponent {
+export class HeaderLockButton extends LegacyComponent {
     static template = "HeaderLockButton";
 
     setup() {

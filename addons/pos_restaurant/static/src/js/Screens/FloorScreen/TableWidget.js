@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 /**
  * props: {
@@ -8,7 +8,7 @@ import { PosComponent } from "@point_of_sale/js/PosComponent";
  *  table: table object,
  * }
  */
-export class TableWidget extends PosComponent {
+export class TableWidget extends LegacyComponent {
     static template = "TableWidget";
 
     setup() {

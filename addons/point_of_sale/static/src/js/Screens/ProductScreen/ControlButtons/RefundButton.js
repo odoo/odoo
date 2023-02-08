@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { useListener } from "@web/core/utils/hooks";
 
-export class RefundButton extends PosComponent {
+export class RefundButton extends LegacyComponent {
     static template = "point_of_sale.RefundButton";
 
     setup() {

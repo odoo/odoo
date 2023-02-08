@@ -2,12 +2,12 @@
 
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { usePos } from "@point_of_sale/app/pos_hook";
-export class PopupContainer extends PosComponent {
+export class PopupContainer extends LegacyComponent {
     static template = "point_of_sale.PopupContainer";
     setup() {
-        // FIXME POSREF: remove this after PosComponent is removed.
+        // FIXME POSREF: remove this after LegacyComponent is removed.
         this.__owl__.childEnv = usePos().legacyEnv;
     }
 }

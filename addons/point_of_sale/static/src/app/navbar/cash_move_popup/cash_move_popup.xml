@@ -6,14 +6,14 @@
             <main class="body">
                 <div class="cash-move">
                     <div class="input-amount">
-                        <span t-on-click="() => this.onClickButton('in')" class="input-type" t-att-class="{ highlight: state.inputType == 'in' }">
+                        <span t-on-click="() => this.onClickButton('in')" class="input-type" t-att-class="{ highlight: state.type === 'in' }">
                             Cash In
                         </span>
-                        <span t-on-click="() => this.onClickButton('out')" class="input-type" t-att-class="{ 'red-highlight': state.inputType == 'out' }">
+                        <span t-on-click="() => this.onClickButton('out')" class="input-type" t-att-class="{ 'red-highlight': state.type === 'out' }">
                             Cash Out
                         </span>
                         <div class="input-field">
-                            <input type="number" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref" t-on-keypress="_onAmountKeypress"/>
+                            <input type="number" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
                             <t t-if="env.pos.currency.symbol.length > 1">
                                 <span class="left-currency" t-esc="env.pos.currency.symbol" />
                             </t>
@@ -22,7 +22,7 @@
                             </t>
                         </div>
                     </div>
-                    <textarea name="reason" t-model="state.inputReason" placeholder="Reason"></textarea>
+                    <textarea name="reason" t-model="state.reason" placeholder="Reason"></textarea>
                     <span t-if="state.errorMessage" class="error-message">
                         <t t-esc="state.errorMessage" />
                     </span>

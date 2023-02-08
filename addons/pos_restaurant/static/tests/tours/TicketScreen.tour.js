@@ -9,6 +9,7 @@ import { registry } from "@web/core/registry";
 
 startSteps();
 
+ProductScreen.do.confirmOpeningPopup();
 // New Ticket button should not be in the ticket screen if no table is selected.
 Chrome.do.clickTicketButton();
 TicketScreen.check.noNewTicketButton();
@@ -16,7 +17,6 @@ TicketScreen.do.clickDiscard();
 
 // Deleting the last order in the table brings back to floorscreen
 FloorScreen.do.clickTable("T4");
-ProductScreen.do.confirmOpeningPopup();
 ProductScreen.check.isShown();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains(2, "-0001");
@@ -58,4 +58,6 @@ FloorScreen.check.orderCountSyncedInTableIs("T5", "0");
 FloorScreen.do.clickTable("T5");
 ProductScreen.check.orderIsEmpty();
 
-registry.category("web_tour.tours").add("PosResTicketScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosResTicketScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

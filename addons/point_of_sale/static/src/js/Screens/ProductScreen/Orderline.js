@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class Orderline extends PosComponent {
+export class Orderline extends LegacyComponent {
     static template = "Orderline";
 
     selectLine() {

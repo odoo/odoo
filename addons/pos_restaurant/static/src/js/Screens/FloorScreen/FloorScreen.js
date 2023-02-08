@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
@@ -16,7 +16,7 @@ import { useService } from "@web/core/utils/hooks";
 
 const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
 
-export class FloorScreen extends PosComponent {
+export class FloorScreen extends LegacyComponent {
     static components = { EditableTable, EditBar, TableWidget };
     static template = "FloorScreen";
     static storeOnOrder = false;
@@ -47,9 +47,6 @@ export class FloorScreen extends PosComponent {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     onMounted() {
-        if (this.env.pos.table) {
-            this.env.pos.unsetTable();
-        }
         this.env.posbus.trigger("start-cash-control");
         this.floorMapRef.el.style.background = this.state.floorBackground;
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;

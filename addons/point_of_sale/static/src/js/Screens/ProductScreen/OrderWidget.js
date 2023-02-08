@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useListener, useService } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 
 import { Orderline } from "./Orderline";
@@ -9,7 +9,7 @@ import { OrderSummary } from "./OrderSummary";
 
 const { useEffect, useRef } = owl;
 
-export class OrderWidget extends PosComponent {
+export class OrderWidget extends LegacyComponent {
     static components = { Orderline, OrderSummary };
     static template = "OrderWidget";
 

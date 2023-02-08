@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { float_is_zero } from "web.utils";
 
-export class OrderSummary extends PosComponent {
+export class OrderSummary extends LegacyComponent {
     static template = "OrderSummary";
 
     getTotal() {

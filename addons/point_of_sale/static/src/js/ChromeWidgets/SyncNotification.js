@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
-export class SyncNotification extends PosComponent {
+export class SyncNotification extends LegacyComponent {
     static template = "SyncNotification";
 
     onClick() {

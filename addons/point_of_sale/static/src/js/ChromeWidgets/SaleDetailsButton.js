@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { useService } from "@web/core/utils/hooks";
 import { renderToString } from "@web/core/utils/render";
 import { ErrorPopup } from "../Popups/ErrorPopup";
 
-export class SaleDetailsButton extends PosComponent {
+export class SaleDetailsButton extends LegacyComponent {
     static template = "SaleDetailsButton";
 
     setup() {

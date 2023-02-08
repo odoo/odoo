@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { useListener } from "@web/core/utils/hooks";
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 
 const { onMounted, useExternalListener } = owl;
 
-export class Resizeable extends PosComponent {
+export class Resizeable extends LegacyComponent {
     static template = "Resizeable";
 
     setup() {

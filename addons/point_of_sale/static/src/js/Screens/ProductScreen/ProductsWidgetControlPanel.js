@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { LegacyComponent } from "@web/legacy/legacy_component";
 import { debounce } from "@web/core/utils/timing";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
@@ -9,7 +9,7 @@ import { CategoryButton } from "./CategoryButton";
 import { onMounted, onWillUnmount, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
-export class ProductsWidgetControlPanel extends PosComponent {
+export class ProductsWidgetControlPanel extends LegacyComponent {
     static components = { CategoryButton };
     static template = "ProductsWidgetControlPanel";
 
