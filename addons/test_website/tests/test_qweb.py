@@ -43,8 +43,8 @@ class TestQweb(TransactionCaseWithUserDemo):
         html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
-        css_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/%-{asset_version_css}/{website.id}/test_website.test_bundle.%')])
-        js_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/%-{asset_version_js}/{website.id}/test_website.test_bundle.%')])
+        css_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/{asset_version_css}/w-{website.id}_ltr/test_website.test_bundle.%')])
+        js_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/{asset_version_js}/w-{website.id}_-/test_website.test_bundle.%')])
         self.assertEqual(len(css_attachement), 1)
         self.assertEqual(len(js_attachement), 1)
 
