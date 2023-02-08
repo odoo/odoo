@@ -128,7 +128,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
         rtl = 'rtl/' if extension in ['css', 'min.css'] and user_direction == 'rtl' else ''
-        url = f'/web/assets/%-%/{rtl}{bundle}.{extension}'
+        url = f'/web/assets/%/{rtl}{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
@@ -481,7 +481,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # Check two bundles are available, one for ltr and one for rtl
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', '/web/assets/%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -527,7 +527,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
             # check if the previous attachment is correctly cleaned
             css_bundles = self.env['ir.attachment'].search([
-                ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+                ('url', '=like', '/web/assets/%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
             ])
             self.assertEqual(len(css_bundles), 2)
 
@@ -547,7 +547,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         rtl_version0 = rtl_bundle0.version
 
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', '/web/assets/%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -580,7 +580,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # check if the previous attachment are correctly cleaned
         css_bundles = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
+            ('url', '=like', '/web/assets/%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
         ])
         self.assertEqual(len(css_bundles), 2)
 
@@ -597,14 +597,14 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
         css_bundle = self.env['ir.attachment'].search([
-            ('url', '=like', '/web/assets/%-%/rtl/{0}.css'.format(self.cssbundle_name))
+            ('url', '=like', '/web/assets/%/rtl/{0}.css'.format(self.cssbundle_name))
         ])
         self.assertEqual(len(css_bundle), 1,
                          "there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets")
 
     def test_20_external_lib_assets(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
-        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_assetsbundle.bundle4.%')])
+        attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
 
         asset_data_css = etree.HTML(html).xpath('//*[@data-asset-bundle]')[0]

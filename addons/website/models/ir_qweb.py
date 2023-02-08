@@ -19,11 +19,11 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 
 
 class AssetsBundleMultiWebsite(AssetsBundle):
-    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):
+    def _get_asset_url_values(self, unique, extra, name, sep, extension):
         website_id = self.env.context.get('website_id')
         website_id_path = website_id and ('%s/' % website_id) or ''
         extra = website_id_path + extra
-        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, extension)
+        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(unique, extra, name, sep, extension)
         return res
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):

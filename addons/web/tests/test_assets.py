@@ -73,6 +73,7 @@ class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
 class TestLoad(HttpCase):
     def test_assets_already_exists(self):
         self.authenticate('admin', 'admin')
+        # TODO xdo adapt this test. url open won't generate attachment anymore even if not pregenerated
         _save_attachment = odoo.addons.base.models.assetsbundle.AssetsBundle.save_attachment
 
         def save_attachment(bundle, extension, content):

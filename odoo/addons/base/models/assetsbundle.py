@@ -188,7 +188,10 @@ class AssetsBundle(object):
 
         if js and self.javascripts:
             js_attachment = self.js(is_minified=not is_debug_assets)
-            src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
+            if is_debug_assets:
+                src = self.get_debug_asset_url(name=js_attachment.name, extension='')
+            else:
+                src = js_attachment[0].url
             attr = dict([
                 ["async", "async" if async_load else None],
                 ["defer", "defer" if defer_load or lazy_load else None],
@@ -229,11 +232,10 @@ class AssetsBundle(object):
         return hashlib.sha512(check.encode('utf-8')).hexdigest()[:64]
 
     def _get_asset_template_url(self):
-        return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
+        return "/web/assets/{unique}/{extra}{name}{sep}{extension}"
 
-    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):  # extra can contain direction or/and website
+    def _get_asset_url_values(self, unique, extra, name, sep, extension):  # extra can contain direction or/and website
         return {
-            'id': id,
             'unique': unique,
             'extra': extra,
             'name': name,
@@ -241,9 +243,9 @@ class AssetsBundle(object):
             'extension': extension,
         }
 
-    def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", extension='%'):
+    def get_asset_url(self, unique='%', extra='', name='%', sep="%", extension='%'):
         return self._get_asset_template_url().format(
-            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, extension=extension)
+            **self._get_asset_url_values(unique=unique, extra=extra, name=name, sep=sep, extension=extension)
         )
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
@@ -304,10 +306,10 @@ class AssetsBundle(object):
         by file name and only return the one with the max id for each group.
 
         :param extension: file extension (js, min.js, css)
-        :param ignore_version: if ignore_version, the url contains a version => web/assets/%-%/name.extension
+        :param ignore_version: if ignore_version, the url contains a version => web/assets/%/name.extension
                                 (the second '%' corresponds to the version),
                                else: the url contains a version equal to that of the self.version
-                                => web/assets/%-self.version/name.extension.
+                                => web/assets/self.version/name.extension.
         """
         unique = "%" if ignore_version else self.version
 
@@ -364,7 +366,6 @@ class AssetsBundle(object):
         }
         attachment = ira.with_user(SUPERUSER_ID).create(values)
         url = self.get_asset_url(
-            id=attachment.id,
             unique=self.version,
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
             name=fname,

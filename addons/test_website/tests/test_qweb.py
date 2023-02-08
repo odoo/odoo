@@ -41,7 +41,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
-        attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_website.test_bundle.%')])
+        attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%/test_website.test_bundle.%')])
         self.assertEqual(len(attachments), 2)
 
         format_data = {
