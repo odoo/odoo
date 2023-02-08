@@ -2055,6 +2055,7 @@ class Task(models.Model):
 
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
+<<<<<<< HEAD
             self.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
 
         if 'state' in vals:
@@ -2065,6 +2066,19 @@ class Task(models.Model):
                         task.state = '04_waiting_normal'
             if vals['state'] in CLOSED_STATES:
                 task.date_last_stage_update = now
+||||||| parent of fadd1a23d1a (temp)
+            tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+        for task in self:
+            if task.display_project_id != task.project_id and not task.parent_id:
+                # We must make the display_project_id follow the project_id if no parent_id set
+                task.display_project_id = task.project_id
+=======
+            tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
+        for task in tasks:
+            if task.display_project_id != task.project_id and not task.parent_id:
+                # We must make the display_project_id follow the project_id if no parent_id set
+                task.display_project_id = task.project_id
+>>>>>>> fadd1a23d1a (temp)
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
