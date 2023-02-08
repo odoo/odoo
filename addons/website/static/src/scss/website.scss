@@ -289,7 +289,7 @@ $-seen-urls: ();
     }
 }
 .navbar-brand, .navbar-text, .navbar .nav-link, .navbar a.js_change_lang span,
-.navbar a.o_add_language {
+.navbar a.o_add_language, header li.nav-item .dropdown-item {
     @if $o-theme-navbar-font != $o-theme-font {
         font-family: $o-theme-navbar-font;
     }
@@ -330,6 +330,57 @@ $-header-nav-link-height: $nav-link-height;
         }
     }
 }
+
+// We can only use style inheritance to apply the text color to the dropdown
+// because for overlay header, the style is stored in DB. For the background
+// color, we handle that in JS because the inheritance mechanism would make the
+// header ugly if there is a color with transparency.
+#wrapwrap.o_header_overlay header:not(.o_header_is_scrolled) {
+    .nav-item.dropdown .dropdown-menu {
+        color: inherit;
+
+        .dropdown-item, i {
+            color: inherit !important;
+        }
+    }
+}
+
+// Apply the style manually because we have the colors in scss variables.
+#wrapwrap:not(.o_header_overlay), header.o_header_is_scrolled {
+    .nav-item.dropdown .dropdown-menu {
+        @include o-add-gradient('menu-gradient');
+        color: inherit !important;
+
+        > li > a:not(.active):not(:hover), > a:not(.active):not(:hover),
+        > a:not(.active):not(:hover) > i {
+            @if ($-header-text-color) {
+                color: o-color($-header-text-color) !important;
+            }
+            @else {
+                color: inherit !important;
+            }
+        }
+    }
+}
+
+// The contrast between the background color of the submenu and the text color
+// of the submenu is "guaranteed" by the fact that the user will have put
+// contrasting colors between the texts of his header and the background of his
+// header. On the other hand, we have to determine ourselves the color of the
+// text of the elements of the submenu that are active because they must
+// contrast the first color of the theme (which the user could have forgotten).
+header .nav-item.dropdown .dropdown-menu {
+    .active {
+        color: color-contrast(map-get($theme-colors, 'primary')) !important;
+        span, a, i {
+            color: color-contrast(map-get($theme-colors, 'primary')) !important;
+        }
+    }
+    .dropdown-item:hover {
+        @extend .active;
+    }
+}
+
 @if $o-theme-navbar-logo-height {
     // With default values, this makes it slightly bigger than standard
     // navbar-brand, which is what we want

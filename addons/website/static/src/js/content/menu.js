@@ -495,6 +495,37 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
     },
 });
 
+publicWidget.registry.menuColor = publicWidget.Widget.extend({
+    selector: 'header .navbar .nav',
+    disabledInEditableMode: false,
+    events: {
+        'show.bs.dropdown': '_onDropdownShow',
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onDropdownShow(ev) {
+        // We can't handle the background color in CSS because for overlay
+        // header, the background color is stored in the DB and we can't pass
+        // the property from the header to the submenu via inheritance because
+        // it will not look good with a color with transparency.
+        let backgroundColor;
+        const dropdownMenuEl = ev.target.parentElement.querySelector('.dropdown-menu');
+        if (this.el.closest('.o_header_overlay') && !this.el.closest('.o_header_is_scrolled')) {
+            backgroundColor = window.getComputedStyle(this.el.closest('header')).backgroundColor;
+            dropdownMenuEl.style.setProperty('background-color', backgroundColor);
+        } else {
+            backgroundColor = window.getComputedStyle(this.el.closest('nav')).backgroundColor;
+            dropdownMenuEl.style.setProperty('background-color', backgroundColor);
+        }
+    },
+});
+
 publicWidget.registry.hoverableDropdown = animations.Animation.extend({
     selector: 'header.o_hoverable_dropdown',
     disabledInEditableMode: false,
