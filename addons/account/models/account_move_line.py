@@ -746,7 +746,7 @@ class AccountMoveLine(models.Model):
             line.reconciled = (
                 comp_curr.is_zero(line.amount_residual)
                 and foreign_curr.is_zero(line.amount_residual_currency)
-                and (line.matched_debit_ids or line.matched_credit_ids)
+                and (line.matched_debit_ids or line.matched_credit_ids or comp_curr.is_zero(line.balance))
             )
 
     @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id', 'debit', 'credit', 'tax_tag_ids', 'is_refund')
