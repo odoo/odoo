@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import socket
 
 from itertools import product
@@ -178,6 +179,55 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
 
     @users('employee_c2')
     @mute_logger('odoo.addons.base.models.ir_rule')
+    def test_post_with_read_access(self):
+        """ Check that with readonly access, a message with attachment can be
+        posted on a model with the attribute _mail_post_access = 'read'. """
+        test_record_c1_su = self.env['mail.test.multi.company.read'].sudo().create([
+            {
+                'company_id': self.user_employee.company_id.id,
+                'name': 'MC Readonly',
+            }
+        ])
+        test_record_c1 = test_record_c1_su.with_env(self.env)
+        self.assertFalse(test_record_c1.message_main_attachment_id)
+
+        self.assertEqual(test_record_c1.name, 'MC Readonly')
+        with self.assertRaises(AccessError):
+            test_record_c1.write({'name': 'Cannot Write'})
+
+        message = test_record_c1.message_post(
+            attachments=[('testAttachment', b'Test attachment')],
+            body='My Body',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+        self.assertEqual(message.attachment_ids.mapped('name'), ['testAttachment'])
+        first_attachment = message.attachment_ids
+        self.assertEqual(test_record_c1.message_main_attachment_id, first_attachment)
+
+        new_attach = self.env['ir.attachment'].create({
+            'company_id': self.user_employee_c2.company_id.id,
+            'datas': base64.b64encode(b'Test attachment'),
+            'mimetype': 'text/plain',
+            'name': 'TestAttachmentIDS.txt',
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+        })
+        message = test_record_c1.message_post(
+            attachments=[('testAttachment', b'Test attachment')],
+            attachment_ids=new_attach.ids,
+            body='My Body',
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment',
+        )
+        self.assertEqual(
+            sorted(message.attachment_ids.mapped('name')),
+            ['TestAttachmentIDS.txt', 'testAttachment'],
+        )
+        self.assertEqual(test_record_c1.message_main_attachment_id, first_attachment)
+
+    @users('employee_c2')
+    @mute_logger('odoo.addons.base.models.ir_rule')
     def test_post_wo_access(self):
         test_records_mc_c1, test_records_mc_c2 = self.test_records_mc.with_env(self.env)
         attachments_data = [
@@ -272,7 +322,7 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
         self.assertTrue(attachments < message.attachment_ids)
         self.assertEqual(
             sorted(message.attachment_ids.mapped('name')),
-            sorted(['SameAttFileName_00.txt', 'SameAttFileName_01.txt', 'ReportLike1', 'ReportLike2']),
+            ['ReportLike1', 'ReportLike2', 'SameAttFileName_00.txt', 'SameAttFileName_01.txt'],
         )
         self.assertEqual(
             message.attachment_ids.mapped('res_id'),
