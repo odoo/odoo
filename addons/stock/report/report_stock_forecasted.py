@@ -108,7 +108,7 @@ class ReplenishmentReport(models.AbstractModel):
 
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reservation=False):
         product = product or (move_out.product_id if move_out else move_in.product_id)
-        is_late = move_out.date < move_in.date if (move_out and move_in) else False
+        is_late = move_out.date < (move_in.date_deadline or move_in.date) if (move_out and move_in) else False
 
         move_to_match_ids = self.env.context.get('move_to_match_ids') or []
         move_in_id = move_in.id if move_in else None
@@ -123,7 +123,7 @@ class ReplenishmentReport(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'uom_id': product.uom_id,
-            'receipt_date': format_date(self.env, move_in.date) if move_in else False,
+            'receipt_date': format_date(self.env, move_in.date_deadline or move_in.date) if move_in else False,
             'delivery_date': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': float_round(quantity, precision_rounding=product.uom_id.rounding),
@@ -168,7 +168,8 @@ class ReplenishmentReport(models.AbstractModel):
             outs_per_product[out.product_id.id].append(out)
         for out in reserved_outs:
             reserved_outs_per_product[out.product_id.id].append(out)
-        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
+        # Order by date_deadline to consider possible supplier delays
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date_deadline, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
             ins_per_product[in_.product_id.id].append({

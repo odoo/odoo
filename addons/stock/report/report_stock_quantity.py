@@ -40,7 +40,12 @@ class ReportStockQuantity(models.Model):
 CREATE or REPLACE VIEW report_stock_quantity AS (
 WITH
     existing_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
-        SELECT m.id, m.product_id, pt.id, m.product_qty, m.date, m.state, m.company_id, whs.id, whd.id
+        SELECT m.id, m.product_id, pt.id, m.product_qty,
+        CASE
+            WHEN spt.code = 'incoming' THEN COALESCE(m.date_deadline, m.date)
+            ELSE m.date
+        END as date,
+        m.state, m.company_id, whs.id, whd.id
         FROM stock_move m
         LEFT JOIN stock_location ls on (ls.id=m.location_id)
         LEFT JOIN stock_location ld on (ld.id=m.location_dest_id)
@@ -48,12 +53,20 @@ WITH
         LEFT JOIN stock_warehouse whd ON ld.parent_path like concat('%/', whd.view_location_id, '/%')
         LEFT JOIN product_product pp on pp.id=m.product_id
         LEFT JOIN product_template pt on pt.id=pp.product_tmpl_id
+        LEFT JOIN stock_picking sp ON sp.id=m.picking_id
+        LEFT JOIN stock_picking_type spt ON sp.picking_type_id=spt.id
         WHERE pt.type = 'product' AND
             (whs.id IS NOT NULL OR whd.id IS NOT NULL) AND
             (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state != 'done' or m.date >= ((now() at time zone 'utc')::date - interval '3month'))
+            (
+                m.state != 'done' or
+                CASE
+                    WHEN spt.code = 'incoming' THEN COALESCE(m.date_deadline, m.date)
+                    ELSE m.date
+                END >= ((now() at time zone 'utc')::date - interval '3month'
+            ))
     ),
     all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
