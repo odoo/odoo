@@ -857,3 +857,53 @@ class TestAccountMove(AccountTestInvoicingCommon):
                     }),
                 ]
             })
+
+    def test_reset_draft_exchange_move(self):
+        """ Ensure you can't reset to draft an exchange journal entry """
+        moves = self.env['account.move'].create([
+            {
+                'date': '2016-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': 400.0,
+                        'amount_currency': 1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': -400.0,
+                    }),
+                ]
+            },
+            {
+                'date': '2017-01-01',
+                'line_ids': [
+                    Command.create({
+                        'name': "line1",
+                        'account_id': self.company_data['default_account_receivable'].id,
+                        'currency_id': self.currency_data['currency'].id,
+                        'balance': -600.0,
+                        'amount_currency': -1200.0,
+                    }),
+                    Command.create({
+                        'name': "line2",
+                        'account_id': self.company_data['default_account_expense'].id,
+                        'balance': 600.0,
+                    }),
+                ]
+            },
+        ])
+        moves.action_post()
+
+        res = moves.line_ids\
+            .filtered(lambda x: x.account_id == self.company_data['default_account_receivable'])\
+            .reconcile()
+
+        self.assertTrue(res.get('partials'))
+        exchange_diff = res['partials'].exchange_move_id
+        self.assertTrue(exchange_diff)
+        with self.assertRaises(UserError), self.cr.savepoint():
+            exchange_diff.button_draft()
