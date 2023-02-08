@@ -872,8 +872,6 @@ export class ListRenderer extends Component {
         const list = this.props.list;
         if (this.isSortable(column)) {
             list.sortBy(fieldName);
-            // don't resize column when reordering.
-            this.keepColumnWidths = true;
         }
     }
 
@@ -1676,6 +1674,8 @@ export class ListRenderer extends Component {
         // Mouse or keyboard events : stop resize
         const stopResize = (ev) => {
             this.resizing = false;
+            // freeze column size after resizing
+            this.keepColumnWidths = true;
             // Ignores the 'left mouse button down' event as it used to start resizing
             if (ev.type === "mousedown" && ev.which === 1) {
                 return;
