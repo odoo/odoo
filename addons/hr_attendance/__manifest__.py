@@ -38,7 +38,7 @@ actions(Check in/Check out) performed by them.
             'hr_attendance/static/src/xml/**/*',
         ],
         'web.qunit_suite_tests': [
-            ('after', 'web/static/tests/legacy/views/kanban_tests.js', 'hr_attendance/static/tests/hr_attendance_tests.js'),
+            'hr_attendance/static/tests/hr_attendance_tests.js',
         ],
     },
     'license': 'LGPL-3',

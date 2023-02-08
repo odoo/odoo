@@ -46,11 +46,7 @@ Preferences
     'assets': {
         'web.assets_backend': [
             'sale_stock/static/src/**/*',
-            ('remove', 'sale_stock/static/src/legacy/**/*'),
         ],
-        "web.assets_backend_legacy_lazy": [
-            'sale_stock/static/src/legacy/**/*',
-        ]
     },
     'license': 'LGPL-3',
 }
