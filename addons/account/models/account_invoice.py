@@ -367,6 +367,11 @@ class AccountInvoice(models.Model):
     partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         readonly=True, states={'draft': [('readonly', False)]}) #Default value computed in default_get for out_invoices
+    bank_partner_id = fields.Many2one(
+        comodel_name='res.partner',
+        help='Technical field to get the domain on the bank',
+        compute='_compute_bank_partner_id',
+    )
 
     residual = fields.Monetary(string='Amount Due',
         compute='_compute_residual', store=True, help="Remaining amount due.")
@@ -614,6 +619,17 @@ class AccountInvoice(models.Model):
                     ('partner_id', '=', company.partner_id.id), ('company_id', '=', False)
                 ], limit=1)
             return bank
+
+    @api.depends(
+        'commercial_partner_id',
+    )
+    def _compute_bank_partner_id(self):
+        for invoice in self:
+            invoice_type = invoice.type
+            if invoice_type in ['out_invoice', 'in_refund']:
+                invoice.bank_partner_id = invoice.company_id.partner_id
+            else:
+                invoice.bank_partner_id = invoice.commercial_partner_id
 
     @api.model
     def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):

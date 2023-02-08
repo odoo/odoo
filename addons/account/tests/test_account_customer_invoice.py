@@ -1,8 +1,10 @@
+import re
 from unittest.mock import patch
 
 from odoo.addons.account.tests.account_test_users import AccountTestUsers
 import datetime
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
+from odoo.tools.safe_eval import safe_eval
 
 
 @tagged('post_install', '-at_install')
@@ -395,3 +397,61 @@ class TestAccountCustomerInvoice(AccountTestUsers):
             dashboard_data = journal.get_journal_dashboard_datas()
             self.assertEquals(dashboard_data['number_late'], 2)
             self.assertIn('78.42', dashboard_data['sum_late'])
+
+    def test_bank_account(self):
+        """When opening an invoice, only company accounts can be selected."""
+        # Arrange: Create an invoice for a customer
+        customer = self.env['res.partner'].create([
+            {
+                'name': "Customer",
+                'customer': True,
+            },
+        ])
+        bank_account_model = self.env['res.partner.bank']
+        customer_bank_account, company_bank_account = bank_account_model.create([
+            {
+                'acc_number': '123',
+                'partner_id': customer.id,
+            },
+            {
+                'acc_number': '234',
+                'partner_id': self.main_company.partner_id.id,
+            },
+        ])
+
+        def get_customer_invoice_form(record):
+            """Helper to open the invoice as a customer invoice"""
+            return Form(record, view='account.invoice_form')
+
+        invoice_form = get_customer_invoice_form(self.env['account.invoice'])
+        invoice_form.partner_id = customer
+        invoice = invoice_form.save()
+        # pre-condition: the invoice is for the customer
+        self.assertEqual(invoice.partner_id, customer)
+
+        # Act: Open the bank account selection, the allowed_accounts are shown
+        invoice_form = get_customer_invoice_form(invoice)
+        match_bank_account_domain = re.search(
+            r"partner_bank_id"
+            r".*"
+            r"domain=\"(?P<domain>[^\"]*)",
+            invoice_form._view['arch'],
+        )
+        if match_bank_account_domain:
+            bank_account_domain = safe_eval(
+                match_bank_account_domain['domain'],
+                locals_dict={
+                    'bank_partner_id': invoice_form.bank_partner_id.id,
+                },
+            )
+        else:
+            bank_account_domain = []
+        allowed_bank_accounts = bank_account_model.search(bank_account_domain)
+
+        # Assert: Only the Company bank account is allowed
+        self.assertIn(
+            company_bank_account, allowed_bank_accounts
+        )
+        self.assertNotIn(
+            customer_bank_account, allowed_bank_accounts
+        )

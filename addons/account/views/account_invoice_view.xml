@@ -310,7 +310,10 @@
                             <field name="currency_id" options="{'no_create': True, 'no_open': True}" groups="base.group_multi_currency"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="commercial_partner_id" invisible="1"/>
-                            <field domain="[('partner_id', '=', commercial_partner_id)]" name="partner_bank_id" string="Bank Account" context="{'default_partner_id': commercial_partner_id}" attrs="{'invisible': [('type', '!=', 'in_invoice')]}"/>
+                            <field name="bank_partner_id" invisible="1"/>
+                            <field name="partner_bank_id"
+                                   context="{'default_partner_id': bank_partner_id}"
+                                   domain="[('partner_id', '=', bank_partner_id)]"/>
                         </group>
                     </group>
                     <notebook>
@@ -598,10 +601,10 @@
                                     <field name="fiscal_position_id" options="{'no_create': True}" />
                                     <field name="move_id" groups="account.group_account_user" attrs="{'invisible': [('move_id', '=', False)]}"/>
                                     <field name="origin" groups="base.group_user" attrs="{'invisible': [('origin', '=', False)]}"/>
-                                    <!-- Since the same form view is used for customer invoices and credit notes,
-                                    we can't set a domain or a default value context on partner_bank_id. We must
-                                    rely on the onchange -->
-                                    <field name="partner_bank_id"/>
+                                    <field name="bank_partner_id" invisible="1"/>
+                                    <field name="partner_bank_id"
+                                           context="{'default_partner_id': bank_partner_id}"
+                                           domain="[('partner_id', '=', bank_partner_id)]"/>
                                 </group>
                             </group>
                             <field name="tax_line_ids">
