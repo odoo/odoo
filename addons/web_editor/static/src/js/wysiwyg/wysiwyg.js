@@ -2568,6 +2568,10 @@ const Wysiwyg = Widget.extend({
         this.odooEditor.historyReset();
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        const initialHistoryId = value && this._getInitialHistoryId(value);
+        if (initialHistoryId) {
+            this.odooEditor.historySetInitialId(initialHistoryId);
+        }
     },
     /**
      * Set contenteditable=false for all `.o_not_editable` found within node if
