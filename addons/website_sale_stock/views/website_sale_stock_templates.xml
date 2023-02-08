@@ -50,4 +50,12 @@
         </t>
     </xpath>
   </template>
+
+  <template id="products_add_to_cart_out_of_stock" inherit_id="website_sale.products_add_to_cart">
+    <xpath expr="//a[@name='o_products_grid_cart_button']" position="replace">
+      <t t-set="info" t-value="product.with_context(website_sale_stock_get_quantity=True)._get_combination_info()"></t>
+      <t t-if="info['product_type'] == 'product' and not info['allow_out_of_stock_order'] and info['free_qty'] &lt;= info['cart_qty']"></t>
+      <t t-else="1">$0</t>
+    </xpath>
+  </template>
 </odoo>
