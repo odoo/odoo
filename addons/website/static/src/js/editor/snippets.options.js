@@ -750,7 +750,12 @@ options.Class.include({
             // Caller will reload the page, nothing needs to be done anymore.
             return;
         }
-
+        await this._refreshBundles();
+    },
+    /**
+     * @private
+     */
+    async _refreshBundles() {
         // Finally, only update the bundles as no reload is required
         await this._reloadBundles();
         // Any option that require to reload bundle should probably
@@ -807,6 +812,17 @@ options.Class.include({
         return this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', {
             [params.variable]: value,
         }, params.nullValue);
+    },
+    /**
+     * Customizes several website variables at the same time.
+     *
+     * @private
+     * @param {Object} values: value per key variable
+     * @param {string} nullValue: string that represent null
+     */
+    _customizeWebsiteVariables: async function (values, nullValue) {
+        await this._makeSCSSCusto('/website/static/src/scss/options/user_values.scss', values, nullValue);
+        await this._refreshBundles();
     },
     /**
      * @private
@@ -1330,9 +1346,10 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async customizeBodyBg(previewMode, widgetValue, params) {
-        // TODO improve: customize two variables at the same time...
-        await this.customizeWebsiteVariable(previewMode, this.bodyImageType, {variable: 'body-image-type'});
-        await this.customizeWebsiteVariable(previewMode, widgetValue ? `'${widgetValue}'` : '', {variable: 'body-image'});
+        await this._customizeWebsiteVariables({
+            'body-image-type': this.bodyImageType,
+            'body-image': widgetValue ? `'${widgetValue}'` : '',
+        }, params.nullValue);
     },
     /**
      * @see this.selectClass for parameters
@@ -1431,9 +1448,10 @@ options.registry.OptionsTab = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async customizeButtonStyle(previewMode, widgetValue, params) {
-        // TODO improve: customize two variables at the same time...
-        await this.customizeWebsiteVariable(previewMode, widgetValue === 'outline', {variable: `btn-${params.button}-outline`});
-        await this.customizeWebsiteVariable(previewMode, widgetValue === 'flat', {variable: `btn-${params.button}-flat`});
+        await this._customizeWebsiteVariables({
+            [`btn-${params.button}-outline`]: widgetValue === 'outline',
+            [`btn-${params.button}-flat`]: widgetValue === 'flat',
+        }, params.nullValue);
     },
 
     //--------------------------------------------------------------------------
