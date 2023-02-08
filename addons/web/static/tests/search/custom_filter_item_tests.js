@@ -44,12 +44,14 @@ QUnit.module("Search", (hooks) => {
                             string: "A date",
                             type: "date",
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                         date_time_field: {
                             name: "date_time_field",
                             string: "DateTime",
                             type: "datetime",
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                         boolean_field: {
                             name: "boolean_field",
@@ -57,6 +59,7 @@ QUnit.module("Search", (hooks) => {
                             type: "boolean",
                             default: true,
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                         char_field: {
                             name: "char_field",
@@ -65,6 +68,7 @@ QUnit.module("Search", (hooks) => {
                             default: "foo",
                             trim: true,
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                         float_field: {
                             name: "float_field",
@@ -72,6 +76,7 @@ QUnit.module("Search", (hooks) => {
                             type: "float",
                             digits: [999, 1],
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                         color: {
                             name: "color",
@@ -82,6 +87,7 @@ QUnit.module("Search", (hooks) => {
                                 ["white", "White"],
                             ],
                             searchable: true,
+                            show_on_filter_menu: true,
                         },
                     },
                     records: {},
@@ -169,6 +175,8 @@ QUnit.module("Search", (hooks) => {
                         store: true,
                         sortable: true,
                         searchable: true,
+                        show_on_filter_menu: true,
+                        show_on_group_menu: true,
                     },
                     foo: { string: "Foo", type: "char", store: true, sortable: true },
                 },
@@ -203,6 +211,8 @@ QUnit.module("Search", (hooks) => {
                     store: true,
                     sortable: true,
                     searchable: true,
+                    show_on_filter_menu: true,
+                    show_on_group_menu: true,
                 },
             },
         });
@@ -306,6 +316,7 @@ QUnit.module("Search", (hooks) => {
                     type: "boolean",
                     default: true,
                     searchable: true,
+                    show_on_filter_menu: true,
                 },
             },
         });
@@ -401,6 +412,7 @@ QUnit.module("Search", (hooks) => {
                         string: "AAA",
                         type: "many2one",
                         searchable: true,
+                        show_on_filter_menu: true,
                     },
                 },
             });

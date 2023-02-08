@@ -24,10 +24,10 @@ QUnit.module("Search", (hooks) => {
                 foo: {
                     fields: {
                         bar: { string: "Bar", type: "many2one", relation: "partner" },
-                        birthday: { string: "Birthday", type: "date", store: true, sortable: true },
-                        date_field: { string: "Date", type: "date", store: true, sortable: true },
+                        birthday: { string: "Birthday", type: "date", store: true, sortable: true, show_on_group_menu: true },
+                        date_field: { string: "Date", type: "date", store: true, sortable: true, show_on_group_menu: true },
                         float_field: { string: "Float", type: "float", group_operator: "sum" },
-                        foo: { string: "Foo", type: "char", store: true, sortable: true },
+                        foo: { string: "Foo", type: "char", store: true, sortable: true, show_on_group_menu: true },
                     },
                     records: {},
                 },
@@ -89,8 +89,8 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
-                    foo: { string: "Foo", type: "char", store: true, sortable: true },
-                    id: { sortable: true, string: "ID", type: "integer" },
+                    foo: { string: "Foo", type: "char", store: true, sortable: true, show_on_group_menu: true },
+                    id: { sortable: true, string: "ID", type: "integer", show_on_group_menu: true },
                 },
             });
 
@@ -120,12 +120,13 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
-                    char_a: { string: "Char A", type: "char", store: true, sortable: true },
+                    char_a: { string: "Char A", type: "char", store: true, sortable: true, show_on_group_menu: true },
                     m2m_no_stored: { string: "M2M Not Stored", type: "many2many" },
                     m2m_stored: {
                         string: "M2M Stored",
                         type: "many2many",
                         store: true,
+                        show_on_group_menu: true,
                     },
                 },
             });
@@ -156,8 +157,8 @@ QUnit.module("Search", (hooks) => {
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
-                    date_field: { string: "Date", type: "date", store: true, sortable: true },
-                    id: { sortable: true, string: "ID", type: "integer" },
+                    date_field: { string: "Date", type: "date", store: true, sortable: true, show_on_group_menu: true },
+                    id: { sortable: true, string: "ID", type: "integer", show_on_group_menu: true },
                 },
             });
             await toggleGroupByMenu(target);
@@ -187,7 +188,7 @@ QUnit.module("Search", (hooks) => {
             Component: ControlPanel,
             searchMenuTypes: ["groupBy"],
             searchViewFields: {
-                date: { sortable: true, name: "date", string: "Super Date", type: "date" },
+                date: { sortable: true, name: "date", string: "Super Date", type: "date", show_on_group_menu: true },
             },
         });
 
@@ -227,6 +228,7 @@ QUnit.module("Search", (hooks) => {
                         sortable: true,
                         string: "Candlelight",
                         type: "boolean",
+                        show_on_group_menu: true,
                     },
                 },
             });

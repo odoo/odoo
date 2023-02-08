@@ -24,10 +24,10 @@ QUnit.module("Search", (hooks) => {
                 foo: {
                     fields: {
                         bar: { string: "Bar", type: "many2one", relation: "partner" },
-                        birthday: { string: "Birthday", type: "date", store: true, sortable: true },
-                        date_field: { string: "Date", type: "date", store: true, sortable: true },
+                        birthday: { string: "Birthday", type: "date", store: true, sortable: true, show_on_group_menu: true },
+                        date_field: { string: "Date", type: "date", store: true, sortable: true, show_on_group_menu: true },
                         float_field: { string: "Float", type: "float", group_operator: "sum" },
-                        foo: { string: "Foo", type: "char", store: true, sortable: true },
+                        foo: { string: "Foo", type: "char", store: true, sortable: true, show_on_group_menu: true },
                     },
                     records: {},
                 },
