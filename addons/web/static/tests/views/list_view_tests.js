@@ -14812,6 +14812,70 @@ QUnit.module("Views", (hooks) => {
         assertAlmostEqual(th2.offsetWidth, widthsAfterReorder[1] + widthsAfterReorder[2] / 2);
     });
 
+    QUnit.test("list: resize column and toggle one checkbox", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // 1. Resize column foo to middle of column int_field.
+        const th2 = target.querySelector("th:nth-child(2)");
+        const th3 = target.querySelector("th:nth-child(3)");
+        const resizeHandle = th2.querySelector(".o_resize");
+
+        await dragAndDrop(resizeHandle, th3);
+
+        const widthsAfterResize = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+
+        // 2. Column size should be the same after selecting a row
+        await click(target.querySelector("tbody .o_list_record_selector"));
+        const widthsAfterSelectRow = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+        assert.strictEqual(widthsAfterResize[0], widthsAfterSelectRow[0], "Width must not have been changed after selecting a row");
+        assert.strictEqual(widthsAfterResize[1], widthsAfterSelectRow[1], "Width must not have been changed after selecting a row");
+    });
+
+    QUnit.test("list: resize column and toggle check all", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        // 1. Resize column foo to middle of column int_field.
+        const th2 = target.querySelector("th:nth-child(2)");
+        const th3 = target.querySelector("th:nth-child(3)");
+        const resizeHandle = th2.querySelector(".o_resize");
+
+        await dragAndDrop(resizeHandle, th3);
+
+        const widthsAfterResize = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+
+        // 2. Column size should be the same after selecting all
+        await click(target.querySelector("thead .o_list_record_selector"));
+        const widthsAfterSelectAll = [...target.querySelectorAll(".o_list_table th")].map(
+            (th) => th.offsetWidth
+        );
+        assert.strictEqual(widthsAfterResize[0], widthsAfterSelectAll[0], "Width must not have been changed after selecting all");
+        assert.strictEqual(widthsAfterResize[1], widthsAfterSelectAll[1], "Width must not have been changed after selecting all");
+    });
+
     QUnit.test("editable list: resize column headers", async function (assert) {
         await makeView({
             type: "list",
