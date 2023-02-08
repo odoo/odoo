@@ -118,7 +118,7 @@ class AssetsBundle(object):
             css_attachments = self.css(is_minified=not self.is_debug_assets) or []
             for attachment in css_attachments:
                 if self.is_debug_assets:
-                    href = self.get_debug_asset_url(extra='rtl/' if self.rtl else '',
+                    href = self.get_debug_asset_url(extra='rtl' if self.rtl else 'ltr',
                                                     name=css_attachments.name,
                                                     extension='')
                 else:
@@ -166,13 +166,14 @@ class AssetsBundle(object):
             self._checksum_cache[asset_type] = hashlib.sha512(unique_descriptor.encode()).hexdigest()[:64]
         return self._checksum_cache[asset_type]
 
-    def get_asset_url(self, attachment_id='%', unique='%', extra='', name='%', sep=".", extension='%'):
+    def get_asset_url(self, unique='%', extra='-', name='%', sep=".", extension='%'):
         extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
-        return f"/web/assets/{attachment_id}-{unique}/{extra}{name}{sep}{extension}"
+        return f"/web/assets/{unique}/{extra}/{name}{sep}{extension}"
 
-    def get_debug_asset_url(self, extra='', name='%', extension='%'):
+    def get_debug_asset_url(self, extra='-', name='%', extension='%'):
         extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
-        return f"/web/assets/debug/{extra}{name}{extension}"
+
+        return f"/web/assets/debug/{extra}/{name}{extension}"
 
     def _unlink_attachments(self, attachments):
         """ Unlinks attachments without actually calling unlink, so that the ORM cache is not cleared.
@@ -188,7 +189,7 @@ class AssetsBundle(object):
         for fpath in to_delete:
             attachments._file_delete(fpath)
 
-    def clean_attachments(self, extension):
+    def clean_attachments(self, extension, keep_url):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
 
@@ -200,15 +201,14 @@ class AssetsBundle(object):
         """
         ira = self.env['ir.attachment']
         is_css = extension in ['css', 'min.css', 'css.map']
-        url = self.get_asset_url(
-            extra='%s' % ('rtl/' if is_css and self.rtl else ''),
+        to_clean_pattern = self.get_asset_url(
+            extra='rtl' if is_css and self.rtl else 'ltr' if is_css else '-',
             name=self.name,
             extension=extension,
         )
-
         domain = [
-            ('url', '=like', url),
-            '!', ('url', '=like', self.get_asset_url(unique=self.get_version('css' if is_css else 'js'), sep='%'))
+            ('url', '=like', to_clean_pattern),
+            ('url', '!=', keep_url)
         ]
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
@@ -228,14 +228,14 @@ class AssetsBundle(object):
         by file name and only return the one with the max id for each group.
 
         :param extension: file extension (js, min.js, css)
-        :param ignore_version: if ignore_version, the url contains a version => web/assets/%-%/name.extension
+        :param ignore_version: if ignore_version, the url contains a version => web/assets/%/name.extension
                                 (the second '%' corresponds to the version),
                                else: the url contains a version equal to that of the self.get_version(type)
-                                => web/assets/%-self.get_version(type)/name.extension.
+                                => web/assets/self.get_version(type)/name.extension.
         """
         is_css = extension in ['css', 'min.css', 'css.map']
         unique = "%" if ignore_version else self.get_version('css' if is_css else 'js')
-        extra = '%s' % ('rtl/' if is_css and self.rtl else '')
+        extra = 'rtl' if is_css and self.rtl else 'ltr' if is_css else '-'
         url_pattern = self.get_asset_url(
             unique=unique,
             extra=extra,  # not sure about css.map
@@ -269,6 +269,12 @@ class AssetsBundle(object):
             if similar_attachment_ids:
                 similar = self.env['ir.attachment'].sudo().browse(similar_attachment_ids)
                 _logger.info('Found a similar attachment for %s, copying from %s', url_pattern, similar.url)
+                url = self.get_asset_url(
+                    unique=unique,
+                    extra=extra,
+                    name=self.name,
+                    extension=extension,
+                )
                 values = {
                     'name': similar.name,
                     'mimetype': similar.mimetype,
@@ -277,18 +283,10 @@ class AssetsBundle(object):
                     'type': 'binary',
                     'public': True,
                     'raw': similar.raw,
+                    'url': url,
                 }
-
                 self.add_post_rollback()
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
-                url = self.get_asset_url(
-                    attachment_id=attachment.id,
-                    unique=unique,
-                    extra=extra,
-                    name=self.name,
-                    extension=extension,
-                )
-                attachment.url = url
                 attachment_id = attachment.id
                 if self.env.context.get('commit_assetsbundle') is True:
                     self.env.cr.commit()
@@ -327,6 +325,12 @@ class AssetsBundle(object):
             'application/json' if extension in ['js.map', 'css.map'] else
             'application/javascript'
         )
+        url = self.get_asset_url(
+            unique=self.get_version('css' if is_css else 'js'),
+            extra='rtl' if is_css and self.rtl else 'ltr' if is_css else '-',
+            name=self.name,
+            extension=extension,
+        )
         values = {
             'name': fname,
             'mimetype': mimetype,
@@ -335,22 +339,15 @@ class AssetsBundle(object):
             'type': 'binary',
             'public': True,
             'raw': content.encode('utf8'),
+            'url': url,
         }
         self.add_post_rollback()
         attachment = ira.with_user(SUPERUSER_ID).create(values)
-        url = self.get_asset_url(
-            attachment_id=attachment.id,
-            unique=self.get_version('css' if is_css else 'js'),
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.rtl else ''),
-            name=self.name,
-            extension=extension,
-        )
-        attachment.url = url
 
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
 
-        self.clean_attachments(extension)
+        self.clean_attachments(extension, url)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
@@ -602,7 +599,7 @@ class AssetsBundle(object):
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
         debug_asset_url = self.get_debug_asset_url(name=self.name,
-                                                   extra='rtl/' if self.rtl else '')
+                                                   extra='rtl' if self.rtl else 'ltr')
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
@@ -1030,7 +1027,7 @@ class PreprocessedCSS(StylesheetAsset):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self.html_url_args = tuple(self.url.rsplit('/', 1))
-        self.html_url_format = '%%s/%s%s/%%s.css' % ('rtl/' if self.rtl else '', self.bundle.name)
+        self.html_url_format = '%%s/%s%s/%%s.css' % ('rtl' if self.rtl else 'ltr', self.bundle.name)
 
     def get_command(self):
         raise NotImplementedError

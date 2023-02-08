@@ -19,7 +19,7 @@ class IrAsset(models.Model):
         extra = super()._get_asset_extra(extra, **params)
         if extra == '%':
             return extra
-        website_id_path = website_id and ('%s/' % website_id) or ''
+        website_id_path = website_id and ('website-%s+' % website_id) or ''
         return website_id_path + extra
 
     def _get_related_assets(self, domain, website_id=None, **params):

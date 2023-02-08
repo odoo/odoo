@@ -61,7 +61,6 @@ class UtilPerf(HttpCase):
                 sql_into_log_before = copy.deepcopy(self.cr.sql_into_log)
 
             self.url_open(url)
-
             sql_count = self.cr.sql_log_count - sql_count_before - EXTRA_REQUEST
             if table_count:
                 sql_from_tables = {'base_registry_signaling': 1}  # see EXTRA_REQUEST
@@ -283,13 +282,10 @@ class TestWebsitePerformancePost(UtilPerf):
         assets_url = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%/web.assets_frontend_lazy%.js')], limit=1).url
         select_tables_perf = {
             'base_registry_signaling': 1,
-            'ir_attachment': 3,
-            # All 3 coming from the /web/assets and ir.binary stack
-            # 1. `_find_record()` performs an access right check through
-            #    `exists()` which perform a request on the ir.attachment.
-            # 2. `validate_access` reads `public` field of ir.attachment with
-            #    prefetch=False (so only that field)
-            # 3. `_record_to_stream` reads the other attachment fields
+            'ir_attachment': 2,
+            # All 2 coming from the /web/assets and ir.binary stack
+            # 1. `search() the attachment`
+            # 2. `_record_to_stream` reads the other attachment fields
         }
-        self._check_url_hot_query(assets_url, 4, select_tables_perf)
-        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 4)
+        self._check_url_hot_query(assets_url, 3, select_tables_perf)
+        self.assertEqual(self._get_url_hot_query(assets_url, cache=False), 3)
