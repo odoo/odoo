@@ -15,20 +15,14 @@
                     </span>
                     <button type="object"
                         name="open_google_gmail_uri" class="btn-link px-0"
-                        invisible="not is_google_gmail_configured or smtp_authentication != 'gmail' or google_gmail_token_id">
+                        invisible="smtp_authentication != 'gmail' or google_gmail_token_id">
                         <i class="oi oi-arrow-right"/>
                         Connect your Gmail account
                     </button>
                     <button type="object"
                         name="open_google_gmail_uri" class="btn-link px-0 ms-2"
-                        invisible="not is_google_gmail_configured or smtp_authentication != 'gmail' or not google_gmail_token_id">
+                        invisible="smtp_authentication != 'gmail' or not google_gmail_token_id">
                         <i class="fa fa-cog" title="Edit Settings"/>
-                    </button>
-                    <button class="alert alert-warning d-block mt-2 text-start"
-                        icon="oi-arrow-right" type="action" role="alert"
-                        name="%(base.res_config_setting_act_window)d"
-                        invisible="is_google_gmail_configured or smtp_authentication != 'gmail'">
-                        Setup your Gmail API credentials in the general settings to link a Gmail account.
                     </button>
                 </div>
             </field>
