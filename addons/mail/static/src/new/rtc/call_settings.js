@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, onWillStart, onWillDestroy, useState } from "@odoo/owl";
+import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { useRtc } from "@mail/new/rtc/rtc_hook";
 import { useService } from "@web/core/utils/hooks";
 import { browser } from "@web/core/browser/browser";
@@ -15,16 +15,10 @@ export class CallSettings extends Component {
         this.state = useState({
             userDevices: [],
         });
-        this._onKeyDown = this._onKeyDown.bind(this);
-        this._onKeyUp = this._onKeyUp.bind(this);
+        useExternalListener(browser, "keydown", this._onKeyDown);
+        useExternalListener(browser, "keyup", this._onKeyUp);
         onWillStart(async () => {
             this.state.userDevices = await browser.navigator.mediaDevices.enumerateDevices();
-            browser.addEventListener("keydown", this._onKeyDown);
-            browser.addEventListener("keyup", this._onKeyUp);
-        });
-        onWillDestroy(() => {
-            browser.removeEventListener("keydown", this._onKeyDown);
-            browser.removeEventListener("keyup", this._onKeyUp);
         });
     }
 
