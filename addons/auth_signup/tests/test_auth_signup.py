@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from unittest.mock import patch
+
+import odoo
 from odoo.tests import HttpCase
 from odoo import http
 
@@ -39,11 +42,13 @@ class TestAuthSignupFlow(HttpCase):
             'csrf_token': csrf_token,
         }
 
-        # Call the controller
-        url_free_signup = self._get_free_signup_url()
-        self.url_open(url_free_signup, data=payload)
-        # Check if an email is sent to the new user
-        new_user = self.env['res.users'].search([('name', '=', name)])
-        self.assertTrue(new_user)
-        mail = self.env['mail.message'].search([('message_type', '=', 'email'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
-        self.assertTrue(mail, "The new user must be informed of his registration")
+        # Override unlink to not delete the email if the send works.
+        with patch.object(odoo.addons.mail.models.mail_mail.MailMail, 'unlink', lambda self: None):
+            # Call the controller
+            url_free_signup = self._get_free_signup_url()
+            self.url_open(url_free_signup, data=payload)
+            # Check if an email is sent to the new user
+            new_user = self.env['res.users'].search([('name', '=', name)])
+            self.assertTrue(new_user)
+            mail = self.env['mail.message'].search([('message_type', '=', 'email'), ('model', '=', 'res.users'), ('res_id', '=', new_user.id)], limit=1)
+            self.assertTrue(mail, "The new user must be informed of his registration")
