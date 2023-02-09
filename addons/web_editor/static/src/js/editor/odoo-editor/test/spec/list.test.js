@@ -1145,7 +1145,7 @@ describe('List', () => {
                                         </li>
                                     </ol>
                                 </li>
-                                <li>q]r</li>
+                                <li>qr</li>
                                 <li>st</li>
                             </ul>`),
                         stepFunction: toggleOrderedList,
@@ -1171,7 +1171,7 @@ describe('List', () => {
                                         </li>
                                     </ol>
                                 </li>
-                                <li>q]r</li>
+                                <li>qr</li>
                                 <li>st</li>
                             </ul>`),
                     });
