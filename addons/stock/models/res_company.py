@@ -206,3 +206,6 @@ class Company(models.Model):
             'partner_id': company.partner_id.id
         } for company in companies])
         return companies
+
+    def _get_security_by_rule_action(self):
+        return {}

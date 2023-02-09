@@ -251,9 +251,19 @@ export class Many2XAutocomplete extends Component {
                 action: async (params) => {
                     try {
                         await this.props.quickCreate(request, params);
-                    } catch {
-                        const context = this.getCreationContext(request);
-                        return this.openMany2X({ context });
+                    } catch (e) {
+                        if (e && e.name === "RPC_ERROR") {
+                            const context = this.getCreationContext(request);
+                            return this.openMany2X({ context });
+                        }
+                        // Compatibility with legacy code
+                        if (e && e.message && e.message.name === "RPC_ERROR") {
+                            // The event.preventDefault() is necessary because we still use the legacy
+                            e.event.preventDefault();
+                            const context = this.getCreationContext(request);
+                            return this.openMany2X({ context });
+                        }
+                        throw e;
                     }
                 },
             });

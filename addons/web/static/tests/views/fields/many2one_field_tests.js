@@ -2984,7 +2984,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
         await nextTick(); // wait for the error service to ensure that there's no error dialog
-        assert.containsNone(target, ".o_form_error_dialog");
+        assert.containsNone(target, ".o_dialog_error");
         assert.containsOnce(target, ".modal .o_form_view");
         assert.strictEqual(
             target.querySelector(".modal .o_field_widget[name='name'] input").value,
@@ -3017,7 +3017,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="p" /></form>',
             mockRPC(route, { args, method }) {
                 if (method === "name_create") {
-                    return Promise.reject();
+                    throw new RPCError("Something went wrong");
                 }
                 if (method === "create") {
                     assert.deepEqual(args[0], { name: "xyz" });
@@ -3251,10 +3251,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name=trululu] input");
         await selectDropdownItem(target, "trululu", "Create and edit...");
 
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name=foo] input").value,
-            "yz"
-        );
+        assert.strictEqual(target.querySelector(".o_field_widget[name=foo] input").value, "yz");
 
         await clickDiscard(target.querySelector(".modal"));
     });
