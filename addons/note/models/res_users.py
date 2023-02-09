@@ -17,7 +17,7 @@ class Users(models.Model):
         users = super().create(vals_list)
         user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
         # for new employee, create his own 5 base note stages
-        users.filtered_domain([('groups_id', 'in', [user_group_id])])._create_note_stages()
+        users.filtered_domain([('groups_id', '=', user_group_id)])._create_note_stages()
         return users
 
     @api.model

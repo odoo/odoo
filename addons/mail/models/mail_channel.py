@@ -1115,7 +1115,7 @@ class Channel(models.Model):
         domain = expression.AND([
                         [('name', 'ilike', search)],
                         [('channel_type', '=', 'channel')],
-                        [('channel_partner_ids', 'in', [self.env.user.partner_id.id])]
+                        [('channel_partner_ids', '=', self.env.user.partner_id.id)]
                     ])
         channels = self.search(domain, limit=limit)
         return [{

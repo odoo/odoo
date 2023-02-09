@@ -72,7 +72,7 @@
         <field name="model_id" ref="model_project_project"/>
         <field name="domain_force">['|',
                                         ('privacy_visibility', '!=', 'followers'),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                        ('message_partner_ids', '=', user.partner_id.id)
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>
@@ -92,11 +92,11 @@
                     ('project_id', '!=', False),
                     '|',
                         ('project_id.privacy_visibility', '!=', 'followers'),
-                        ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                        ('project_id.message_partner_ids', '=', user.partner_id.id),
                 '|',
-                    ('message_partner_ids', 'in', [user.partner_id.id]),
+                    ('message_partner_ids', '=', user.partner_id.id),
                     # to subscribe check access to the record, follower is not enough at creation
-                    ('user_ids', 'in', user.id)
+                    ('user_ids', '=', user.id)
         ]</field>
         <field name="groups" eval="[(4,ref('base.group_user'))]"/>
     </record>
@@ -106,7 +106,7 @@
         <field name="model_id" ref="model_project_task"/>
         <field name="domain_force">[
             '|', ('project_id', '!=', False),
-                 ('user_ids', 'in', user.id),
+                 ('user_ids', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_manager'))]"/>
     </record>
@@ -154,7 +154,7 @@
             ('project_id.privacy_visibility', '!=', 'followers'),
             '|', '|', ('project_id', '!=', False),
                       ('parent_id', '!=', False),
-                 ('user_ids', 'in', user.id),
+                 ('user_ids', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
@@ -208,7 +208,7 @@
             '|',
                 ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                 ('message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
-            ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+            ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="False"/>
@@ -230,7 +230,7 @@
         '|',
             ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.message_partner_ids', '=', user.partner_id.id),
                 '|',
                     ('user_id', '=', user.id),
                     ('project_id.user_id', '=', user.id)
@@ -245,10 +245,10 @@
         '|',
             ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.message_partner_ids', '=', user.partner_id.id),
                 '|',
-                    ('task_id.message_partner_ids', 'in', [user.partner_id.id]),
-                    ('user_ids', 'in', user.id),
+                    ('task_id.message_partner_ids', '=', user.partner_id.id),
+                    ('user_ids', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
@@ -274,8 +274,8 @@
         '|',
             ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                ('user_ids', 'in', user.id),
+                ('project_id.message_partner_ids', '=', user.partner_id.id),
+                ('user_ids', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4,ref('project.group_project_user'))]"/>
     </record>
@@ -300,7 +300,7 @@
         '|',
             ('project_id.privacy_visibility', '!=', 'followers'),
             '|',
-                ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
+                ('project_id.message_partner_ids', '=', user.partner_id.id),
                 ('project_id.user_id', '=', user.id),
         ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>

@@ -250,11 +250,11 @@ class MicrosoftSync(models.AbstractModel):
         # To map existing recurrences with events to update, we must use the universal id
         # (also known as ICalUId in the Microsoft API), as 'seriesMasterId' attribute of events
         # is specific to the Microsoft user calendar.
-        ms_recurrence_ids = list({x.seriesMasterId for x in recurrents})
+        ms_recurrence_ids = {x.seriesMasterId for x in recurrents}
         ms_recurrence_uids = {r.id: r.iCalUId for r in microsoft_events if r.id in ms_recurrence_ids}
 
         recurrences = self.env['calendar.recurrence'].search([
-            ('ms_universal_event_id', 'in', ms_recurrence_uids.values())
+            ('ms_universal_event_id', 'in', list(ms_recurrence_uids.values()))
         ])
         for recurrent_master_id in ms_recurrence_ids:
             recurrence_id = recurrences.filtered(

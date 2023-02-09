@@ -51,8 +51,8 @@
         <field name="model_id" ref="model_hr_applicant"/>
         <field name="domain_force">[
             '|',
-                ('job_id.interviewer_ids', 'in', user.id),
-                ('interviewer_ids', 'in', user.id),
+                ('job_id.interviewer_ids', '=', user.id),
+                ('interviewer_ids', '=', user.id),
         ]</field>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>

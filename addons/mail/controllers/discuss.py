@@ -216,7 +216,7 @@ class DiscussController(http.Controller):
 
     @http.route('/mail/starred/messages', methods=['POST'], type='json', auth='user')
     def discuss_starred_messages(self, max_id=None, min_id=None, limit=30, **kwargs):
-        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', 'in', [request.env.user.partner_id.id])], max_id=max_id, min_id=min_id, limit=limit).message_format()
+        return request.env['mail.message']._message_fetch(domain=[('starred_partner_ids', '=', request.env.user.partner_id.id)], max_id=max_id, min_id=min_id, limit=limit).message_format()
 
     # --------------------------------------------------------------------------
     # Thread API (channel/chatter common)

@@ -660,7 +660,7 @@ class Base(models.AbstractModel):
                 if enable_counters or not expand:
                     search_domain = AND([
                             model_domain,
-                            [(field_name, 'in', record_id)],
+                            [(field_name, '=', record_id)],
                         ])
                     local_extra_domain = extra_domain
                     if group_by and group_domain:

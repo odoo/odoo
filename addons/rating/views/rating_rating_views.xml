@@ -230,7 +230,7 @@
                     <field name="res_name" filter_domain="[('res_name','ilike',self)]"/>
                     <field name="res_id"/>
                     <field name="parent_res_name" filter_domain="[('parent_res_name','ilike',self)]"/>
-                    <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', 'in', [uid])]"/>
+                    <filter string="My Ratings" name="my_ratings" domain="[('rated_partner_id.user_ids', '=', uid)]"/>
                     <separator/>
                     <filter string="Satisfied" name="rating_happy" domain="[('rating_text', '=', 'top')]"/>
                     <filter string="Okay" name="rating_okay" domain="[('rating_text', '=', 'ok')]"/>

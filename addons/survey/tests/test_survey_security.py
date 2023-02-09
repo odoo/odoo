@@ -171,9 +171,9 @@ class TestAccess(common.TestSurveyCommon):
 
         # Read: nope
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input.line'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
         with self.assertRaises(AccessError):
@@ -200,9 +200,9 @@ class TestAccess(common.TestSurveyCommon):
 
         # Read: nope
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input.line'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
         with self.assertRaises(AccessError):
@@ -229,9 +229,9 @@ class TestAccess(common.TestSurveyCommon):
 
         # Read: nope
         with self.assertRaises(AccessError):
-            self.env['survey.user_input'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
-            self.env['survey.user_input.line'].search([('survey_id', 'in', [self.survey.id])])
+            self.env['survey.user_input.line'].search([('survey_id', '=', self.survey.id)])
         with self.assertRaises(AccessError):
             self.env['survey.user_input'].browse(self.answer_0.ids).read(['state'])
         with self.assertRaises(AccessError):

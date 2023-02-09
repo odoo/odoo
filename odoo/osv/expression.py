@@ -390,6 +390,7 @@ def _quote(to_quote):
     return to_quote
 
 
+NORMALIZE_DOMAIN_RIGHT_IN = (list, tuple, Query)
 def normalize_leaf(element):
     """ Normalizes the leaf of the domain whether it is an operator, a boolea
         and a leaf in the form of a triplet (tuple/list).
@@ -426,10 +427,10 @@ def normalize_leaf(element):
             warnings.warn(f"The domain leaf operator '{element}' should use a lowercase operator.", UserWarning)
         else:
             raise ValueError(f"Invalide operator in domain leaf {element!r}.")
-    if isinstance(right, bool) and operator in ('in', 'not in'):
+    if operator in ('in', 'not in') and not isinstance(right, NORMALIZE_DOMAIN_RIGHT_IN):
         warnings.warn(f"The domain term '{element}' should use the '=' or '!=' operator.", UserWarning)
         operator = '=' if operator == 'in' else '!='
-    if isinstance(right, (list, tuple)) and operator in ('=', '!='):
+    if operator in ('=', '!=') and isinstance(right, (list, tuple)):
         warnings.warn(f"The domain term '{element}' should use the 'in' or 'not in' operator.", UserWarning)
         operator = 'in' if operator == '=' else 'not in'
     return left, operator, right

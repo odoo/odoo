@@ -421,7 +421,7 @@ class MaintenanceTeam(models.Model):
         default=lambda self: self.env.company)
     member_ids = fields.Many2many(
         'res.users', 'maintenance_team_users_rel', string="Team Members",
-        domain="[('company_ids', 'in', company_id)]")
+        domain="[('company_ids', '=', company_id)]")
     color = fields.Integer("Color Index", default=0)
     request_ids = fields.One2many('maintenance.request', 'maintenance_team_id', copy=False)
     equipment_ids = fields.One2many('maintenance.equipment', 'maintenance_team_id', copy=False)

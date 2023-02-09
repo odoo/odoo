@@ -306,7 +306,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             # check that every attendee receive a (single) mail for the event
             for partner in partners:
                 mail = self.env['mail.message'].sudo().search([
-                    ('notified_partner_ids', 'in', partner.id),
+                    ('notified_partner_ids', '=', partner.id),
                     ])
                 self.assertEqual(len(mail), 1)
 

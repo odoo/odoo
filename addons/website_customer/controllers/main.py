@@ -59,7 +59,7 @@ class WebsiteCustomer(http.Controller):
         tag_id = post.get('tag_id')
         if tag_id:
             tag_id = unslug(tag_id)[1] or 0
-            domain += [('website_tag_ids', 'in', tag_id)]
+            domain += [('website_tag_ids', '=', tag_id)]
 
         # group by industry, based on customers found with the search(domain)
         industries = Partner.sudo().read_group(domain, ["id", "industry_id"], groupby="industry_id", orderby="industry_id")

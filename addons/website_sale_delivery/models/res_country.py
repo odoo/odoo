@@ -27,7 +27,7 @@ class ResCountry(models.Model):
 
         states = self.env['res.country.state']
         if mode == 'shipping':
-            dom = ['|', ('country_ids', 'in', self.id), ('country_ids', '=', False), ('website_published', '=', True)]
+            dom = ['|', ('country_ids', '=', self.id), ('country_ids', '=', False), ('website_published', '=', True)]
             delivery_carriers = self.env['delivery.carrier'].sudo().search(dom)
 
             for carrier in delivery_carriers:

@@ -111,7 +111,7 @@ class LoyaltyReward(models.Model):
         if self.discount_product_category_id:
             domain = expression.OR([domain, [('categ_id', 'child_of', self.discount_product_category_id.id)]])
         if self.discount_product_tag_id:
-            domain = expression.OR([domain, [('all_product_tag_ids', 'in', self.discount_product_tag_id.id)]])
+            domain = expression.OR([domain, [('all_product_tag_ids', '=', self.discount_product_tag_id.id)]])
         if self.discount_product_domain and self.discount_product_domain != '[]':
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain

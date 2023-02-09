@@ -56,7 +56,7 @@
                             </p>
                             <group col="2">
                                 <field name="dst_partner_id"
-                                    domain="[('id', 'in', partner_ids or False)]"
+                                    domain="[('id', 'in', partner_ids)]"
                                     attrs="{'required': [('state', '=', 'selection')]}"
                                     context="{'partner_show_db_id': True}"
                                     options="{'always_reload': True}"/>

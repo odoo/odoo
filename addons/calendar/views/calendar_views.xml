@@ -318,7 +318,7 @@
                 <field name="show_as"/>
                 <field name="categ_ids"/>
                 <field name="description"/>
-                <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
+                <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', '=', uid)]"/>
                 <separator/>
                 <filter string="Date" name="filter_start_date" date="start"/>
                 <separator/>

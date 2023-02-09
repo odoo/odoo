@@ -242,8 +242,8 @@ class Message(models.Model):
     @api.model
     def _search_starred(self, operator, operand):
         if operator == '=' and operand:
-            return [('starred_partner_ids', 'in', [self.env.user.partner_id.id])]
-        return [('starred_partner_ids', 'not in', [self.env.user.partner_id.id])]
+            return [('starred_partner_ids', '=', self.env.user.partner_id.id)]
+        return [('starred_partner_ids', '!=', self.env.user.partner_id.id)]
 
     # ------------------------------------------------------
     # CRUD / ORM
@@ -771,7 +771,7 @@ class Message(models.Model):
         """ Unstar messages for the current partner. """
         partner_id = self.env.user.partner_id.id
 
-        starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
+        starred_messages = self.search([('starred_partner_ids', '=', partner_id)])
         starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]

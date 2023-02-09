@@ -28,7 +28,7 @@ export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
             return super._loadGroups(...arguments);
         }
         const previousDomain = this.domain;
-        this.domain = Domain.and([[['user_ids', 'in', session.uid]], previousDomain]).toList({});
+        this.domain = Domain.and([[['user_ids', '=', session.uid]], previousDomain]).toList({});
         const result = await super._loadGroups(...arguments);
         this.domain = previousDomain;
         return result;

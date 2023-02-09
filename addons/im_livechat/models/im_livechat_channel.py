@@ -331,7 +331,7 @@ class ImLivechatChannelRule(models.Model):
             return False
         # first, search the country specific rules (the first match is returned)
         if country_id: # don't include the country in the research if geoIP is not installed
-            domain = [('country_ids', 'in', [country_id]), ('channel_id', '=', channel_id)]
+            domain = [('country_ids', '=', country_id), ('channel_id', '=', channel_id)]
             rule = _match(self.search(domain))
             if rule:
                 return rule

@@ -15,7 +15,7 @@
                         ('channel_type', '=', 'channel'),
                         '|',
                             ('group_public_id', '=', False),
-                            ('group_public_id', 'in', [g.id for g in user.groups_id])]
+                            ('group_public_id', 'in', user.groups_id.ids)]
             </field>
             <field name="perm_create" eval="False"/>
         </record>
@@ -40,7 +40,7 @@
                         ('channel_id.channel_type', '=', 'channel'),
                         '|',
                             ('channel_id.group_public_id', '=', False),
-                            ('channel_id.group_public_id', 'in', [g.id for g in user.groups_id])]
+                            ('channel_id.group_public_id', 'in', user.groups_id.ids)]
             </field>
             <field name="perm_read" eval="False"/>
             <field name="perm_write" eval="True"/>

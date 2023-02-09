@@ -179,19 +179,19 @@ class MassMailingList(models.Model):
 
     def action_view_contacts_opt_out(self):
         action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
-        action['domain'] = [('list_ids', 'in', self.id)]
+        action['domain'] = [('list_ids', '=', self.id)]
         action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_opt_out': 1}
         return action
 
     def action_view_contacts_blacklisted(self):
         action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
-        action['domain'] = [('list_ids', 'in', self.id)]
+        action['domain'] = [('list_ids', '=', self.id)]
         action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_blacklisted': 1}
         return action
 
     def action_view_contacts_bouncing(self):
         action = self.env["ir.actions.actions"]._for_xml_id('mass_mailing.action_view_mass_mailing_contacts')
-        action['domain'] = [('list_ids', 'in', self.id)]
+        action['domain'] = [('list_ids', '=', self.id)]
         action['context'] = {'default_list_ids': self.ids, 'create': False, 'search_default_filter_bounce': 1}
         return action
 

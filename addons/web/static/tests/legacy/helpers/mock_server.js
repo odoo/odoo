@@ -1079,7 +1079,7 @@ var MockServer = Class.extend({
                 if (enableCounters || !expand) {
                     const searchDomain = Domain.prototype.normalizeArray([
                         ...modelDomain,
-                        [fieldName, "in", record.id]
+                        [fieldName, "=", record.id]
                     ]);
                     let localExtraDomain = extraDomain;
                     if (groupBy && groupDomain) {

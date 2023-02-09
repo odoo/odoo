@@ -44,7 +44,7 @@ class Applicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
-        'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', 'in', company_id)]",
+        'res.users', "Recruiter", compute='_compute_user', domain="[('share', '=', False), ('company_ids', '=', company_id)]",
         tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Hire Date", compute='_compute_date_closed', store=True, readonly=False, tracking=True)
     date_open = fields.Datetime("Assigned", readonly=True)
@@ -93,7 +93,7 @@ class Applicant(models.Model):
     source_id = fields.Many2one(ondelete='set null')
     interviewer_ids = fields.Many2many('res.users', 'hr_applicant_res_users_interviewers_rel',
         string='Interviewers', index=True, tracking=True,
-        domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+        domain="[('share', '=', False), ('company_ids', '=', company_id)]")
     linkedin_profile = fields.Char('LinkedIn Profile')
     application_status = fields.Selection([
         ('ongoing', 'Ongoing'),

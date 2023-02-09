@@ -538,7 +538,7 @@ class AccountReportExpression(models.Model):
                 ('id', 'not in', self.ids),
             ], limit=1)
             if not other_expression_using_tag:
-                aml_using_tag = self.env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+                aml_using_tag = self.env['account.move.line'].sudo().search([('tax_tag_ids', '=', tag.id)], limit=1)
                 if aml_using_tag:
                     tags_to_archive += tag
                 else:

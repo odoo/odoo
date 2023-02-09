@@ -7,14 +7,14 @@
             '|',
             '|',
             '|',
-                ('moderator_ids', 'in', user.id),
+                ('moderator_ids', '=', user.id),
                 ('access_mode', '=', 'public'),
                 '&amp;',
                     ('access_mode', '=', 'groups'),
-                    ('access_group_id', 'in', [g.id for g in user.groups_id]),
+                    ('access_group_id', 'in', user.groups_id.ids),
                 '&amp;',
                     ('access_mode', '=', 'members'),
-                    ('member_partner_ids', 'in', [user.partner_id.id]),
+                    ('member_partner_ids', '=', user.partner_id.id),
             ]
         </field>
         <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal')), (4, ref('base.group_public'))]"/>
@@ -26,7 +26,7 @@
     <record id="mail_group_rule_write_all" model="ir.rule">
         <field name="name">Mail Group: Moderator have write access on their group</field>
         <field name="model_id" ref="model_mail_group"/>
-        <field name="domain_force">[('moderator_ids', 'in', user.id)]</field>
+        <field name="domain_force">[('moderator_ids', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_read" eval="False"/>
@@ -52,11 +52,11 @@
                 '|',
                 '|',
                 '|',
-                    ('mail_group_id.moderator_ids', 'in', user.id),
+                    ('mail_group_id.moderator_ids', '=', user.id),
                     ('mail_group_id.access_mode', '=', 'public'),
                     '&amp;',
                         ('mail_group_id.access_mode', '=', 'groups'),
-                        ('mail_group_id.access_group_id', 'in', [g.id for g in user.groups_id]),
+                        ('mail_group_id.access_group_id', 'in', user.groups_id.ids),
                     '&amp;',
                         ('mail_group_id.access_mode', '=', 'members'),
                         ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
@@ -75,18 +75,18 @@
                 '&amp;',
                     '|',
                         ('moderation_status', '=', 'accepted'),
-                        ('mail_group_id.moderator_ids', 'in', user.id),
+                        ('mail_group_id.moderator_ids', '=', user.id),
                     '|',
                     '|',
                     '|',
-                        ('mail_group_id.moderator_ids', 'in', user.id),
+                        ('mail_group_id.moderator_ids', '=', user.id),
                         ('mail_group_id.access_mode', '=', 'public'),
                         '&amp;',
                             ('mail_group_id.access_mode', '=', 'groups'),
-                            ('mail_group_id.access_group_id', 'in', [g.id for g in user.groups_id]),
+                            ('mail_group_id.access_group_id', 'in', user.groups_id.ids),
                         '&amp;',
                             ('mail_group_id.access_mode', '=', 'members'),
-                            ('mail_group_id.member_partner_ids', 'in', [user.partner_id.id]),
+                            ('mail_group_id.member_partner_ids', '=', user.partner_id.id),
             ]
         </field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
@@ -108,7 +108,7 @@
     <record id="mail_group_member_rule_user" model="ir.rule">
         <field name="name">Mail Group Member: Members are accessible only by moderators</field>
         <field name="model_id" ref="model_mail_group_member"/>
-        <field name="domain_force">[('mail_group_id.moderator_ids', 'in', user.id)]</field>
+        <field name="domain_force">[('mail_group_id.moderator_ids', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>
@@ -128,7 +128,7 @@
     <record id="mail_group_moderation_rule_user" model="ir.rule">
         <field name="name">Mail Group Moderation: Moderation rules are accessible only by moderators</field>
         <field name="model_id" ref="model_mail_group_moderation"/>
-        <field name="domain_force">[('mail_group_id.moderator_ids', 'in', user.id)]</field>
+        <field name="domain_force">[('mail_group_id.moderator_ids', '=', user.id)]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="perm_create" eval="True"/>
         <field name="perm_read" eval="True"/>

@@ -44,10 +44,10 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # On a one2many or many2many field, `in` should be read `contains` (and
         # `not in` should be read `doesn't contain`.
-        with_a = self._search(partners, [('category_id', 'in', [cat_a.id])])
+        with_a = self._search(partners, [('category_id', '=', cat_a.id)])
         self.assertEqual(a + ab, with_a, "Search for category_id in cat_a failed.")
 
-        with_b = self._search(partners, [('category_id', 'in', [cat_b.id])])
+        with_b = self._search(partners, [('category_id', '=', cat_b.id)])
         self.assertEqual(b + ab, with_b, "Search for category_id in cat_b failed.")
 
         # Partners with the category A or the category B.
@@ -55,11 +55,11 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(a + b + ab, with_a_or_b, "Search for category_id contains cat_a or cat_b failed.")
 
         # Show that `contains list` is really `contains element or contains element`.
-        with_a_or_with_b = self._search(partners, ['|', ('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
+        with_a_or_with_b = self._search(partners, ['|', ('category_id', '=', cat_a.id), ('category_id', '=', cat_b.id)])
         self.assertEqual(a + b + ab, with_a_or_with_b, "Search for category_id contains cat_a or contains cat_b failed.")
 
         # If we change the OR in AND...
-        with_a_and_b = self._search(partners, [('category_id', 'in', [cat_a.id]), ('category_id', 'in', [cat_b.id])])
+        with_a_and_b = self._search(partners, [('category_id', '=', cat_a.id), ('category_id', '=', cat_b.id)])
         self.assertEqual(ab, with_a_and_b, "Search for category_id contains cat_a and cat_b failed.")
 
         # Partners without category A and without category B.
@@ -68,18 +68,18 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertTrue(c in without_a_or_b, "Search for category_id doesn't contain cat_a or cat_b failed (2).")
 
         # Show that `doesn't contain list` is really `doesn't contain element and doesn't contain element`.
-        without_a_and_without_b = self._search(partners, [('category_id', 'not in', [cat_a.id]), ('category_id', 'not in', [cat_b.id])])
+        without_a_and_without_b = self._search(partners, [('category_id', '!=', cat_a.id), ('category_id', '!=', cat_b.id)])
         self.assertFalse(without_a_and_without_b & (a + b + ab), "Search for category_id doesn't contain cat_a and cat_b failed (1).")
         self.assertTrue(c in without_a_and_without_b, "Search for category_id doesn't contain cat_a and cat_b failed (2).")
 
         # We can exclude any partner containing the category A.
-        without_a = self._search(partners, [('category_id', 'not in', [cat_a.id])])
+        without_a = self._search(partners, [('category_id', '!=', cat_a.id)])
         self.assertTrue(a not in without_a, "Search for category_id doesn't contain cat_a failed (1).")
         self.assertTrue(ab not in without_a, "Search for category_id doesn't contain cat_a failed (2).")
         self.assertLessEqual(b + c, without_a, "Search for category_id doesn't contain cat_a failed (3).")
 
         # (Obviously we can do the same for cateory B.)
-        without_b = self._search(partners, [('category_id', 'not in', [cat_b.id])])
+        without_b = self._search(partners, [('category_id', '!=', cat_b.id)])
         self.assertTrue(b not in without_b, "Search for category_id doesn't contain cat_b failed (1).")
         self.assertTrue(ab not in without_b, "Search for category_id doesn't contain cat_b failed (2).")
         self.assertLessEqual(a + c, without_b, "Search for category_id doesn't contain cat_b failed (3).")
@@ -262,7 +262,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         res_0 = self._search(Currency, [])
         res_1 = self._search(Currency, [('name', 'not like', 'probably_unexisting_name')])
         self.assertEqual(res_0, res_1)
-        res_2 = self._search(Currency, [('id', 'not in', [non_currency_id])])
+        res_2 = self._search(Currency, [('id', '!=', non_currency_id)])
         self.assertEqual(res_0, res_2)
         res_3 = self._search(Currency, [('id', 'not in', [])])
         self.assertEqual(res_0, res_3)
@@ -287,7 +287,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(one, res_4)
         # res_5 = Partner.search([('id', 'in', one)]) # TODO make it permitted, just like for child_of
         # self.assertEqual(one, res_5)
-        res_6 = self._search(Partner, [('id', 'in', [one.id])])
+        res_6 = self._search(Partner, [('id', '=', one.id)])
         self.assertEqual(one, res_6)
         res_7 = self._search(Partner, [('name', '=', one.name)])
         self.assertEqual(one, res_7)
@@ -299,10 +299,6 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # testing equality with name
         partners = self._search(Partner, [('parent_id', '=', 'Pepper Street')])
-        self.assertTrue(partners)
-
-        # testing the in operator with name
-        partners = self._search(Partner, [('parent_id', 'in', 'Pepper Street')])
         self.assertTrue(partners)
 
         # testing the in operator with a list of names
@@ -382,7 +378,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # existing value belongs to them.
         res_0 = self._search(Partner, [('parent_id', 'not like', 'probably_unexisting_name')]) # get all rows, included null parent_id
         self.assertEqual(res_0, all_partners)
-        res_1 = self._search(Partner, [('parent_id', 'not in', [non_partner_id])]) # get all rows, included null parent_id
+        res_1 = self._search(Partner, [('parent_id', '!=', non_partner_id)]) # get all rows, included null parent_id
         self.assertEqual(res_1, all_partners)
         res_2 = self._search(Partner, [('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
         self.assertEqual(res_2, with_parent)
@@ -397,7 +393,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # give the whole set of ids.
         res_5 = self._search(Partner, [('parent_id', 'like', 'probably_unexisting_name')])
         self.assertFalse(res_5)
-        res_6 = self._search(Partner, [('parent_id', 'in', [non_partner_id])])
+        res_6 = self._search(Partner, [('parent_id', '=', non_partner_id)])
         self.assertFalse(res_6)
         res_7 = self._search(Partner, [('parent_id', '=', False)])
         self.assertEqual(res_7, without_parent)
@@ -412,7 +408,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         # i.e. not ... in ... must be the same as ... not in ... .
         res_10 = self._search(Partner, ['!', ('parent_id', 'like', 'probably_unexisting_name')])
         self.assertEqual(res_0, res_10)
-        res_11 = self._search(Partner, ['!', ('parent_id', 'in', [non_partner_id])])
+        res_11 = self._search(Partner, ['!', ('parent_id', '=', non_partner_id)])
         self.assertEqual(res_1, res_11)
         res_12 = self._search(Partner, ['!', ('parent_id', '=', False)])
         self.assertEqual(res_2, res_12)
@@ -540,8 +536,10 @@ class TestExpression(SavepointCaseWithUserDemo):
         u1b = Users.create({'login': 'dbo2', 'partner_id': p1}).id
         u2 = Users.create({'login': 'rpo', 'partner_id': p2}).id
 
-        res = self._search(Partner, [('user_ids', 'in', u1a)])
-        self.assertEqual([p1], res.ids, "o2m IN accept single int on right side")
+        res = self._search(Partner, [('user_ids', '=', u1a)])
+        self.assertEqual([p1], res.ids, "o2m = accept single int on right side")
+        res = self._search(Partner, [('user_ids', 'in', [u1a])])
+        self.assertEqual([p1], res.ids, "o2m IN accept a list of int on right side")
         res = self._search(Partner, [('user_ids', '=', 'Dédé Boitaclou')])
         self.assertEqual([p1], res.ids, "o2m NOT IN matches none on the right side")
         res = self._search(Partner, [('user_ids', 'in', [10000])])
@@ -549,7 +547,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         res = self._search(Partner, [('user_ids', 'in', [u1a,u2])])
         self.assertEqual([p1,p2], res.ids, "o2m IN matches any on the right side")
         all_ids = self._search(Partner, []).ids
-        res = self._search(Partner, [('user_ids', 'not in', u1a)])
+        res = self._search(Partner, [('user_ids', 'not in', [u1a])])
         self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
         res = self._search(Partner, [('user_ids', '!=', 'Dédé Boitaclou')])
         self.assertEqual(set(all_ids) - set([p1]), set(res.ids), "o2m NOT IN matches none on the right side")
@@ -584,7 +582,7 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # search the currency via its rates one2many (the one2many must point back at the currency)
         currency_rate1 = self._search(CurrencyRate, [('currency_id', 'not like', 'probably_unexisting_name')])
-        currency_rate2 = self._search(CurrencyRate, [('id', 'not in', [non_currency_id])])
+        currency_rate2 = self._search(CurrencyRate, [('id', '!=', non_currency_id)])
         self.assertEqual(currency_rate1, currency_rate2)
         currency_rate3 = self._search(CurrencyRate, [('id', 'not in', [])])
         self.assertEqual(currency_rate1, currency_rate3)
@@ -594,7 +592,7 @@ class TestExpression(SavepointCaseWithUserDemo):
         self.assertEqual(res_3, default_currency)
         res_4 = self._search(Currency, [('rate_ids', 'in', default_currency.rate_ids[0].ids)]) # currencies having first rate of main currency
         self.assertEqual(res_4, default_currency)
-        res_5 = self._search(Currency, [('rate_ids', 'in', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
+        res_5 = self._search(Currency, [('rate_ids', '=', default_currency.rate_ids[0].id)]) # currencies having first rate of main currency
         self.assertEqual(res_5, default_currency)
         # res_6 = Currency.search([('rate_ids', 'in', [default_currency.rate_ids[0].name])])
         # res_7 = Currency.search([('rate_ids', '=', default_currency.rate_ids[0].name)])
@@ -606,7 +604,7 @@ class TestExpression(SavepointCaseWithUserDemo):
 
         # get the currencies referenced by some currency rates using a weird negative domain
         res_10 = self._search(Currency, [('rate_ids', 'not like', 'probably_unexisting_name')])
-        res_11 = self._search(Currency, [('rate_ids', 'not in', [non_currency_id])])
+        res_11 = self._search(Currency, [('rate_ids', '!=', non_currency_id)])
         self.assertEqual(res_10, res_11)
         res_12 = self._search(Currency, [('rate_ids', '!=', False)])
         self.assertEqual(res_10, res_12)

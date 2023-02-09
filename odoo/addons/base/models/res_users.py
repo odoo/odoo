@@ -428,7 +428,7 @@ class Users(models.Model):
     @api.depends('groups_id')
     def _compute_share(self):
         user_group_id = self.env['ir.model.data']._xmlid_to_res_id('base.group_user')
-        internal_users = self.filtered_domain([('groups_id', 'in', [user_group_id])])
+        internal_users = self.filtered_domain([('groups_id', '=', user_group_id)])
         internal_users.share = False
         (self - internal_users).share = True
 
@@ -708,7 +708,7 @@ class Users(models.Model):
     @tools.ormcache('self.id')
     def _get_company_ids(self):
         # use search() instead of `self.company_ids` to avoid extra query for `active_test`
-        domain = [('active', '=', True), ('user_ids', 'in', self.id)]
+        domain = [('active', '=', True), ('user_ids', '=', self.id)]
         return self.env['res.company'].search(domain)._ids
 
     @api.model

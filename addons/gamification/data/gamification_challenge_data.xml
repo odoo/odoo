@@ -22,7 +22,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_company"/>
-            <field name="domain">[('user_ids', 'in', [user.id]), ('name', '=', 'YourCompany')]</field>
+            <field name="domain">[('user_ids', '=', user.id), ('name', '=', 'YourCompany')]</field>
             <field name="condition">lower</field>
             <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
@@ -33,7 +33,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_company"/>
-            <field name="domain">[('user_ids', 'in', [user.id]),('logo', '!=', False)]</field>
+            <field name="domain">[('user_ids', '=', user.id),('logo', '!=', False)]</field>
             <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>

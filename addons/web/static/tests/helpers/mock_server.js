@@ -1694,7 +1694,7 @@ export class MockServer {
                 if (enableCounters || !expand) {
                     const searchDomain = new Domain([
                         ...modelDomain,
-                        [fieldName, "in", record.id],
+                        [fieldName, "=", record.id],
                     ]).toList();
                     let localExtraDomain = extraDomain;
                     if (groupBy && groupDomain) {

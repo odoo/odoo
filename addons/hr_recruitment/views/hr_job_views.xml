@@ -132,7 +132,7 @@
         <field name="inherit_id" ref="hr.view_job_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='department_id']" position="after">
-                <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_user_ids', 'in', uid)]"/>
+                <filter string="My Favorites" name="my_favorite_jobs" domain="[('favorite_user_ids', '=', uid)]"/>
                 <separator/>
             </xpath>
         </field>
@@ -297,8 +297,8 @@
         <field name="context">{'create': False}</field>
         <field name="domain">[
             '|',
-                ('interviewer_ids', 'in', uid),
-                ('extended_interviewer_ids', 'in', uid),
+                ('interviewer_ids', '=', uid),
+                ('extended_interviewer_ids', '=', uid),
         ]</field>
     </record>
     <menuitem name="By Job Positions" parent="menu_crm_case_categ0_act_job"

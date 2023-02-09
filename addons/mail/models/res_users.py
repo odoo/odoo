@@ -47,7 +47,7 @@ class Users(models.Model):
         inbox_group_id = self.env['ir.model.data']._xmlid_to_res_id('mail.group_mail_notification_type_inbox')
 
         self.filtered_domain([
-            ('groups_id', 'in', inbox_group_id), ('notification_type', '!=', 'inbox')
+            ('groups_id', '=', inbox_group_id), ('notification_type', '!=', 'inbox')
         ]).notification_type = 'inbox'
         self.filtered_domain([
             ('groups_id', 'not in', inbox_group_id), ('notification_type', '=', 'inbox')

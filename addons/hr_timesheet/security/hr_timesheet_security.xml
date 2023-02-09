@@ -40,7 +40,7 @@
                     ('project_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                     ('task_id.message_partner_ids', 'child_of', [user.partner_id.commercial_partner_id.id]),
                 ('project_id.privacy_visibility', '=', 'portal'),
-                ('project_id.collaborator_ids.partner_id', 'in', [user.partner_id.id]),
+                ('project_id.collaborator_ids.partner_id', '=', user.partner_id.id),
             ]</field>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="True"/>
@@ -57,8 +57,8 @@
                 ('project_id', '!=', False),
                 '|', '|',
                     ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                    ('task_id.message_partner_ids', 'in', [user.partner_id.id])
+                    ('project_id.message_partner_ids', '=', user.partner_id.id),
+                    ('task_id.message_partner_ids', '=', user.partner_id.id)
             ]</field>
             <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>
         </record>
@@ -70,7 +70,7 @@
                 ('project_id', '!=', False),
                 '|',
                     ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+                    ('project_id.message_partner_ids', '=', user.partner_id.id)
             ]</field>
             <field name="groups" eval="[(4, ref('hr_timesheet.group_hr_timesheet_approver'))]" />
         </record>
@@ -99,8 +99,8 @@
                 ('user_id', '=', user.id),
                 '|', '|',
                     ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id]),
-                    ('task_id.message_partner_ids', 'in', [user.partner_id.id])
+                    ('project_id.message_partner_ids', '=', user.partner_id.id),
+                    ('task_id.message_partner_ids', '=', user.partner_id.id)
             ]</field>
             <field name="groups" eval="[(4, ref('group_hr_timesheet_user'))]"/>
         </record>
@@ -111,7 +111,7 @@
             <field name="domain_force">[
                 '|',
                     ('project_id.privacy_visibility', '!=', 'followers'),
-                    ('project_id.message_partner_ids', 'in', [user.partner_id.id])
+                    ('project_id.message_partner_ids', '=', user.partner_id.id)
             ]</field>
             <field name="groups" eval="[(4, ref('group_hr_timesheet_approver'))]"/>
         </record>

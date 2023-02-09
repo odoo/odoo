@@ -26,7 +26,7 @@ class TestMailPublicPage(HttpCase):
 
     def test_mail_channel_public_page_as_guest(self):
         self.start_tour(self.channel.invitation_url, "mail/static/tests/tours/mail_channel_as_guest_tour.js")
-        guest = self.env['mail.guest'].search([('channel_ids', 'in', self.channel.id)], limit=1, order='id desc')
+        guest = self.env['mail.guest'].search([('channel_ids', '=', self.channel.id)], limit=1, order='id desc')
         self.start_tour(self.channel.invitation_url, self.tour, cookies={guest._cookie_name: f"{guest.id}{guest._cookie_separator}{guest.access_token}"})
 
     def test_mail_channel_public_page_as_internal(self):

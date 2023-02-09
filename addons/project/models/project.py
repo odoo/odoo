@@ -283,7 +283,7 @@ class Project(models.Model):
     def _search_is_favorite(self, operator, value):
         if operator not in ['=', '!='] or not isinstance(value, bool):
             raise NotImplementedError(_('Operation not supported'))
-        return [('favorite_user_ids', 'in' if (operator == '=') == value else 'not in', self.env.uid)]
+        return [('favorite_user_ids', operator, self.env.uid)]
 
     def _compute_is_favorite(self):
         for project in self:
@@ -2730,7 +2730,7 @@ class ProjectTags(models.Model):
 
     def _get_project_tags_domain(self, domain, project_id):
         tag_ids = list(self.with_user(SUPERUSER_ID)._search(
-            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', 'in', project_id)]))
+            ['|', ('task_ids.project_id', '=', project_id), ('project_ids', '=', project_id)]))
         return expression.AND([domain, [('id', 'in', tag_ids)]])
 
     @api.model

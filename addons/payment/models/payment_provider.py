@@ -473,7 +473,7 @@ class PaymentProvider(models.Model):
                 domain, [
                     '|',
                     ('available_country_ids', '=', False),
-                    ('available_country_ids', 'in', [partner.country_id.id]),
+                    ('available_country_ids', '=', partner.country_id.id),
                 ]
             ])
 
@@ -498,7 +498,7 @@ class PaymentProvider(models.Model):
                 domain, [
                     '|',
                     ('available_currency_ids', '=', False),
-                    ('available_currency_ids', 'in', [currency.id]),
+                    ('available_currency_ids', '=', currency.id),
                 ]
             ])
 

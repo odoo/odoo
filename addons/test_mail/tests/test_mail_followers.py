@@ -462,7 +462,7 @@ class AdvancedResponsibleNotifiedTest(TestMailCommon):
         mail_message = self.env['mail.message'].search([
             ('model', '=', 'mail.test.track'),
             ('res_id', '=', sub.id),
-            ('partner_ids', 'in', partner.id),
+            ('partner_ids', '=', partner.id),
         ])
         self.assertEqual(1, len(mail_message))
 

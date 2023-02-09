@@ -245,7 +245,7 @@ class Partner(models.Model):
         # get the channels and groups
         channels |= self.env['mail.channel'].search([
             ('channel_type', 'in', ('channel', 'group')),
-            ('channel_partner_ids', 'in', [self.id]),
+            ('channel_partner_ids', '=', self.id),
         ])
         # get the pinned direct messages
         channels |= self.env['mail.channel'].search([
@@ -276,9 +276,9 @@ class Partner(models.Model):
         ])
         if channel_id:
             channel = self.env['mail.channel'].search([('id', '=', int(channel_id))])
-            domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
+            domain = expression.AND([domain, [('channel_ids', '!=', channel.id)]])
             if channel.group_public_id:
-                domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
+                domain = expression.AND([domain, [('user_ids.groups_id', '=', channel.group_public_id.id)]])
         query = self.env['res.partner']._search(domain, order='name, id')
         query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()
         query.limit = int(limit)
@@ -297,7 +297,7 @@ class Partner(models.Model):
         search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
         search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
         if channel_id:
-            search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
+            search_dom = expression.AND([[('channel_ids', '=', channel_id)], search_dom])
         domain_is_user = expression.AND([[('user_ids', '!=', False), ('user_ids.active', '=', True)], search_dom])
         priority_conditions = [
             expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users

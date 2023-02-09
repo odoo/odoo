@@ -110,7 +110,7 @@
                     <field name="parent_id"/>
                     <filter string="Has Mentions"
                             name="filter_has_mentions"
-                            domain="[('partner_ids.user_ids', 'in', [uid])]"/>
+                            domain="[('partner_ids.user_ids', '=', uid)]"/>
                     <separator/>
                     <filter string="Need Action"
                             name="message_needaction" help="Unread messages"

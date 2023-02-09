@@ -123,8 +123,8 @@ class TestVariants(ProductVariantsCommon):
         for ptav in sofa_size_s + sofa_size_m:
             products = self.env['product.product'].search([
                 ('product_tmpl_id', '=', test_template.id),
-                ('product_template_attribute_value_ids', 'in', ptav.id),
-                ('product_template_attribute_value_ids', 'in', sofa_attr1_v2.id)
+                ('product_template_attribute_value_ids', '=', ptav.id),
+                ('product_template_attribute_value_ids', '=', sofa_attr1_v2.id)
             ])
             self.assertEqual(len(products), 1)
 
@@ -162,8 +162,8 @@ class TestVariants(ProductVariantsCommon):
             for value_2 in sofa_size_s + sofa_size_m + sofa_size_l:
                 products = self.env['product.product'].search([
                     ('product_tmpl_id', '=', test_template.id),
-                    ('product_template_attribute_value_ids', 'in', value_1.id),
-                    ('product_template_attribute_value_ids', 'in', value_2.id)
+                    ('product_template_attribute_value_ids', '=', value_1.id),
+                    ('product_template_attribute_value_ids', '=', value_2.id)
                 ])
                 self.assertEqual(len(products), 1)
 

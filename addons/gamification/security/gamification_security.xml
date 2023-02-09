@@ -12,7 +12,7 @@
                 '|',
                     ('user_id','=',user.id),
                     '&amp;',
-                        ('challenge_id.user_ids','in',user.id),
+                        ('challenge_id.user_ids','=',user.id),
                         ('challenge_id.visibility_mode','=','ranking')]</field>
         </record>
 

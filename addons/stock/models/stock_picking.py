@@ -379,7 +379,7 @@ class Picking(models.Model):
         readonly=True, store=True, index=True)
     user_id = fields.Many2one(
         'res.users', 'Responsible', tracking=True,
-        domain=lambda self: [('groups_id', 'in', self.env.ref('stock.group_stock_user').id)],
+        domain=lambda self: [('groups_id', '=', self.env.ref('stock.group_stock_user').id)],
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         default=lambda self: self.env.user)
     move_line_ids = fields.One2many('stock.move.line', 'picking_id', 'Operations')

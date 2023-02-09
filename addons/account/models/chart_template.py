@@ -117,8 +117,8 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         Checks if the tags are still used in taxes or move lines. If not we delete it.
         """
         for tag in tags:
-            tax_using_tag = env['account.tax.repartition.line'].sudo().search([('tag_ids', 'in', tag.id)], limit=1)
-            aml_using_tag = env['account.move.line'].sudo().search([('tax_tag_ids', 'in', tag.id)], limit=1)
+            tax_using_tag = env['account.tax.repartition.line'].sudo().search([('tag_ids', '=', tag.id)], limit=1)
+            aml_using_tag = env['account.move.line'].sudo().search([('tax_tag_ids', '=', tag.id)], limit=1)
             report_expr_using_tag = tag._get_related_tax_report_expressions()
             if not (aml_using_tag or tax_using_tag or report_expr_using_tag):
                 tag.unlink()

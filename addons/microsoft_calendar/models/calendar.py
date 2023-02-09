@@ -132,7 +132,7 @@ class Meeting(models.Model):
         lower_bound = fields.Datetime.subtract(fields.Datetime.now(), days=day_range)
         upper_bound = fields.Datetime.add(fields.Datetime.now(), days=day_range)
         return [
-            ('partner_ids.user_ids', 'in', self.env.user.id),
+            ('partner_ids.user_ids', '=', self.env.user.id),
             ('stop', '>', lower_bound),
             ('start', '<', upper_bound),
             # Do not sync events that follow the recurrence, they are already synced at recurrence creation

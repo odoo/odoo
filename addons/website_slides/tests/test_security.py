@@ -281,7 +281,7 @@ class TestAccessFeatures(common.SlidesCase):
 
     @mute_logger('odoo.models', 'odoo.addons.base.models.ir_rule')
     def test_channel_auto_subscription(self):
-        user_employees = self.env['res.users'].search([('groups_id', 'in', self.ref('base.group_user'))])
+        user_employees = self.env['res.users'].search([('groups_id', '=', self.ref('base.group_user'))])
 
         channel = self.env['slide.channel'].with_user(self.user_officer).create({
             'name': 'Test',

@@ -66,7 +66,7 @@ class Contract(models.Model):
     visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
 
     def _get_hr_responsible_domain(self):
-        return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
+        return "[('share', '=', False), ('company_ids', '=', company_id), ('groups_id', '=', %s)]" % self.env.ref('hr.group_hr_user').id
 
     hr_responsible_id = fields.Many2one('res.users', 'HR Responsible', tracking=True,
         help='Person responsible for validating the employee\'s contracts.', domain=_get_hr_responsible_domain)
