@@ -13,7 +13,7 @@
                                 'btn-odoo': !chatterTopbar.chatter.composerView,
                                 'btn-light': chatterTopbar.chatter.composerView and chatterTopbar.chatter.composerView.composer.isLog,
                             }"
-                            t-att-disabled="!chatterTopbar.chatter.isTemporary and !chatterTopbar.chatter.hasWriteAccess"
+                            t-att-disabled="!chatterTopbar.chatter.canPostMessage"
                             data-hotkey="m"
                             t-on-click="chatterTopbar.chatter.onClickSendMessage"
                         >

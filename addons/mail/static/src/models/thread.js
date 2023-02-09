@@ -40,6 +40,9 @@ registerModel({
             if ('authorizedGroupFullName' in data) {
                 data2.authorizedGroupFullName = data.authorizedGroupFullName;
             }
+            if ('canPostOnReadonly' in data) {
+                data2.canPostOnReadonly = data.canPostOnReadonly;
+            }
             if ('channel' in data) {
                 data2.channel = data.channel;
                 data2.model = 'mail.channel';
@@ -464,6 +467,7 @@ registerModel({
             const {
                 activities: activitiesData,
                 attachments: attachmentsData,
+                canPostOnReadonly,
                 followers: followersData,
                 hasWriteAccess,
                 mainAttachment,
@@ -480,7 +484,7 @@ registerModel({
             if (!this.exists()) {
                 return;
             }
-            const values = { hasWriteAccess, mainAttachment, hasReadAccess };
+            const values = { canPostOnReadonly, hasWriteAccess, mainAttachment, hasReadAccess };
             if (activitiesData) {
                 Object.assign(values, {
                     activities: activitiesData.map(activityData =>
@@ -1137,6 +1141,9 @@ registerModel({
             inverse: 'thread',
             readonly: true,
             required: true,
+        }),
+        canPostOnReadonly: attr({
+            default: false,
         }),
         channel: one('Channel', {
             inverse: 'thread',

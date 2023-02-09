@@ -3305,6 +3305,7 @@ class MailThread(models.AbstractModel):
         if not self:
             res['hasReadAccess'] = False
             return res
+        res['canPostOnReadonly'] = getattr(self, '_mail_post_access', False) == 'read'
 
         self.ensure_one()
         try:

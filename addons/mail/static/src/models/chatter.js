@@ -432,6 +432,12 @@ registerModel({
                 return Boolean(this.thread && !this.thread.isTemporary && this.thread.hasWriteAccess);
             },
         }),
+        canPostMessage: attr({
+            compute() {
+                return Boolean(this.isTemporary || this.hasWriteAccess ||
+                    (this.hasReadAccess && this.thread && this.thread.canPostOnReadonly));
+            },
+        }),
         hasTopbarCloseButton: attr({
             default: false,
         }),
