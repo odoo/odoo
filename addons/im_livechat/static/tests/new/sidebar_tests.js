@@ -258,3 +258,186 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test(
+    "No counter if the category is unfolded and with unread messages",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({
+            anonymous_name: "Visitor 11",
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        message_unread_counter: 10,
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: pyEnv.currentPartnerId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsNone(
+            target,
+            ".o-mail-category-livechat .o-mail-discuss-category-counter",
+            "should not have a counter if the category is unfolded and with unread messages"
+        );
+    }
+);
+
+QUnit.test("No counter if category is folded and without unread messages", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_livechat_open: false,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsNone(
+        target,
+        ".o-mail-category-livechat .o-mail-category-counter",
+        "should not have a counter if the category is unfolded and with unread messages"
+    );
+});
+
+QUnit.test(
+    "Counter should have correct value of unread threads if category is folded and with unread messages",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({
+            anonymous_name: "Visitor 11",
+            channel_member_ids: [
+                [
+                    0,
+                    0,
+                    {
+                        message_unread_counter: 10,
+                        partner_id: pyEnv.currentPartnerId,
+                    },
+                ],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: pyEnv.currentPartnerId,
+        });
+        pyEnv["res.users.settings"].create({
+            user_id: pyEnv.currentUserId,
+            is_discuss_sidebar_category_livechat_open: false,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.strictEqual(
+            document.querySelector(".o-mail-category-livechat .o-mail-category-counter")
+                .textContent,
+            "1"
+        );
+    }
+);
+
+QUnit.test("Close manually by clicking the title", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_livechat_open: true,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(
+        target,
+        ".o-mail-category-livechat + .o-mail-category-item",
+        "Category is unfolded initially"
+    );
+    // fold the livechat category
+    await click(".o-mail-category-livechat .btn");
+    assert.containsNone(target, ".o-mail-category-item");
+});
+
+QUnit.test("Open manually by clicking the title", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    pyEnv["res.users.settings"].create({
+        user_id: pyEnv.currentUserId,
+        is_discuss_sidebar_category_livechat_open: false,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsNone(
+        target,
+        ".o-mail-category-livechat + .o-mail-category-item",
+        "Category is folded initially"
+    );
+    // open the livechat category
+    await click(".o-mail-category-livechat .btn");
+    assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
+});
+
+QUnit.test("Category item should be invisible if the category is closed", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
+    await click(".o-mail-category-livechat .btn");
+    assert.containsNone(target, ".o-mail-category-livechat + .o-mail-category-item");
+});
+
+QUnit.test(
+    "Active category item should be visible even if the category is closed",
+    async function (assert) {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({
+            anonymous_name: "Visitor 11",
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: pyEnv.publicPartnerId }],
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: pyEnv.currentPartnerId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss();
+        assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
+        await click(".o-mail-category-livechat + .o-mail-category-item");
+        assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item.o-active");
+        await click(".o-mail-category-livechat .btn");
+        assert.containsOnce(target, ".o-mail-category-livechat + .o-mail-category-item");
+    }
+);
