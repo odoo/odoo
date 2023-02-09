@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from lxml import html
 from markupsafe import Markup
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
@@ -16,6 +16,11 @@ AVAILABLE_PRIORITIES = [
     ('2', 'Very Good'),
     ('3', 'Excellent')
 ]
+
+JOB_POSTING_SERVICES_MAILS = {
+    "jobs-listings@linkedin.com": "LinkedIn",
+    "applications@email.ictjob.be": "ICTJobs"
+}
 
 
 class Applicant(models.Model):
@@ -290,7 +295,12 @@ class Applicant(models.Model):
             if vals.get('user_id'):
                 vals['date_open'] = fields.Datetime.now()
             if vals.get('email_from'):
-                vals['email_from'] = vals['email_from'].strip()
+                if vals.get('from_job_website'):
+                    vals['email_from'] = vals["applicant_email_from"].strip()
+                    del vals["applicant_email_from"]
+                    del vals["from_job_website"]
+                else:
+                    vals['email_from'] = vals['email_from'].strip()
         applicants = super().create(vals_list)
         applicants.sudo().interviewer_ids._create_recruitment_interviewers()
         # Record creation through calendar, creates the calendar event directly, it will also create the activity.
@@ -493,6 +503,57 @@ class Applicant(models.Model):
                 for applicant in self
             ]
         return super().name_get()
+    @staticmethod
+    def _parse_ict_job_application(msg):
+        tree = html.fromstring(msg.get('body'))
+        text_elements = tree.xpath("//text()")
+        mail_index = 0
+
+        for text in text_elements:
+            if "@" in text:
+                break
+            mail_index += 1
+        try:
+            email = text_elements[mail_index]
+            name = text_elements[mail_index - 2]
+            first_name = text_elements[mail_index - 4]
+        except IndexError:
+            email = ''
+            name = ''
+            first_name = ''
+
+        return {
+                'name': msg.get('subject'),
+                'partner_name': f'{first_name} {name}',
+                'applicant_email_from': email,
+                'from_job_website': True
+            }
+
+    @staticmethod
+    def _parse_linkedin_application(msg):
+        tree = html.fromstring(msg.get('body'))
+        text_elements = tree.xpath("//text()")
+        href_elements = tree.xpath("//a/@href")
+
+        name_index = 0
+        for text in text_elements:
+            if "·" in text:
+                break
+            name_index += 1
+        try:
+            applicant_name = text_elements[name_index-1]
+            linkedin_application = href_elements[1]
+        except IndexError:
+            applicant_name = ''
+            linkedin_application = ''
+
+        return {
+            'name': msg.get('subject'),
+            'partner_name': applicant_name.strip(),
+            'applicant_email_from': "",
+            'linkedin_profile': linkedin_application,
+            'from_job_website': True
+        }
 
     @api.model
     def message_new(self, msg, custom_values=None):
@@ -504,17 +565,29 @@ class Applicant(models.Model):
         # do not want to explicitly set user_id to False; however we do not
         # want the gateway user to be responsible if no other responsible is
         # found.
+        job_offer_parsers = {
+                'LinkedIn': self._parse_linkedin_application,
+                'ICTJobs': self._parse_ict_job_application,
+            }
         self = self.with_context(default_user_id=False)
         stage = False
         if custom_values and 'job_id' in custom_values:
             stage = self.env['hr.job'].browse(custom_values['job_id'])._get_first_stage()
+
         val = msg.get('from').split('<')[0]
-        defaults = {
-            'name': msg.get('subject') or _("No Subject"),
-            'partner_name': val,
-            'email_from': msg.get('from'),
-            'partner_id': msg.get('author_id', False),
-        }
+
+        msg_from = msg.get('from')
+        job_website = next((value for key, value in JOB_POSTING_SERVICES_MAILS.items() if key in msg_from), None)
+
+        if job_website:
+            defaults = job_offer_parsers[job_website](msg)
+        else:
+            defaults = {
+                'name': msg.get('subject') or _("No Subject"),
+                'partner_name': val,
+                'email_from': msg.get('from'),
+                'partner_id': msg.get('author_id', False),
+            }
         if msg.get('priority'):
             defaults['priority'] = msg.get('priority')
         if stage and stage.id:
