@@ -36,6 +36,30 @@ export class MessagingMenu extends Component {
         });
     }
 
+    beforeOpen() {
+        this.messaging.fetchPreviews();
+        if (
+            !this.store.discuss.inbox.isLoaded &&
+            this.store.discuss.inbox.status !== "loading" &&
+            this.store.discuss.inbox.counter !== this.store.discuss.inbox.messageIds.length
+        ) {
+            this.threadService.fetchMessages(this.store.discuss.inbox);
+        }
+    }
+
+    onClickPreview(isMarkAsRead, preview) {
+        const { thread, isNeedaction } = preview;
+        if (!isMarkAsRead) {
+            this.openDiscussion(thread);
+            return;
+        }
+        if (isNeedaction) {
+            this.threadService.markAllMessagesAsRead(thread);
+        } else {
+            this.threadService.markAsRead(thread);
+        }
+    }
+
     createLocalId(...args) {
         return createLocalId(...args);
     }
@@ -71,9 +95,15 @@ export class MessagingMenu extends Component {
 
     get displayedPreviews() {
         /** @type {import("@mail/new/core/thread_model").Thread[]} **/
-        const threads = Object.values(this.store.threads);
-        const previews = threads.filter((thread) => thread.is_pinned);
-        previews.sort((a, b) => {
+        let threads = Object.values(this.store.threads).filter(
+            (thread) =>
+                thread.is_pinned || (thread.hasNeedactionMessages && thread.type !== "mailbox")
+        );
+        const tab = this.store.discuss.activeTab;
+        if (tab !== "all") {
+            threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
+        }
+        threads.sort((a, b) => {
             if (!a.mostRecentNonTransientMessage?.datetime) {
                 return -1;
             }
@@ -84,12 +114,36 @@ export class MessagingMenu extends Component {
                 b.mostRecentNonTransientMessage.datetime - a.mostRecentNonTransientMessage.datetime
             );
         });
-        const tab = this.store.discuss.activeTab;
-        if (tab === "all") {
-            return previews;
+        const previews = [];
+        for (const thread of threads) {
+            const { mostRecentMsg, mostRecentNeedactionMsg } = thread;
+            if (thread.is_pinned) {
+                previews.push({
+                    id: `preview-${thread.localId}`,
+                    body: mostRecentMsg?.inlineBody,
+                    datetime: mostRecentMsg?.datetime,
+                    displayName: thread.displayName,
+                    imgUrl: thread.imgUrl,
+                    hasMarkAsReadButton: this.threadService.isUnread(thread),
+                    thread: thread,
+                    isNeedaction: false,
+                });
+            }
+            if (mostRecentNeedactionMsg) {
+                previews.push({
+                    id: `preview-needaction-${thread.localId}`,
+                    body: mostRecentNeedactionMsg.inlineBody,
+                    count: thread.needactionMessages.length,
+                    datetime: mostRecentNeedactionMsg.datetime,
+                    displayName: thread.displayName,
+                    imgUrl: mostRecentNeedactionMsg.module_icon,
+                    hasMarkAsReadButton: true,
+                    thread: thread,
+                    isNeedaction: true,
+                });
+            }
         }
-        const target = this.tabToThreadType(tab);
-        return previews.filter((preview) => target.includes(preview.type));
+        return previews;
     }
 
     /**

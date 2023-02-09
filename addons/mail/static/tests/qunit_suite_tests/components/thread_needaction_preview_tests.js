@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
@@ -8,15 +8,17 @@ QUnit.module("mail", {}, function () {
     QUnit.module("components", {}, function () {
         QUnit.module("thread_needaction_preview_tests.js");
 
-        QUnit.skipRefactoring(
+        QUnit.test(
             "click on preview should mark as read and open the thread",
             async function (assert) {
                 assert.expect(4);
 
                 const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
+                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
                 const mailMessageId1 = pyEnv["mail.message"].create({
                     model: "res.partner",
+                    body: "not empty",
+                    author_id: pyEnv.partnerRootId,
                     needaction: true,
                     needaction_partner_ids: [pyEnv.currentPartnerId],
                     res_id: resPartnerId1,
@@ -27,25 +29,11 @@ QUnit.module("mail", {}, function () {
                     notification_type: "inbox",
                     res_partner_id: pyEnv.currentPartnerId,
                 });
-                const { afterEvent, click, messaging } = await start();
-                await afterNextRender(() =>
-                    afterEvent({
-                        eventName: "o-thread-cache-loaded-messages",
-                        func: () =>
-                            document
-                                .querySelector(
-                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
-                                )
-                                .click(),
-                        message: "should wait until inbox loaded initial needaction messages",
-                        predicate: ({ threadCache }) => {
-                            return threadCache.thread === messaging.inbox.thread;
-                        },
-                    })
-                );
+                await start();
+                await click(".o_menu_systray i[aria-label='Messages']");
                 assert.containsOnce(
                     document.body,
-                    ".o_ThreadNeedactionPreviewView",
+                    ".o-mail-notification-item:contains(Frodo Baggins)",
                     "should have a preview initially"
                 );
                 assert.containsNone(
@@ -53,17 +41,16 @@ QUnit.module("mail", {}, function () {
                     ".o-mail-chat-window",
                     "should have no chat window initially"
                 );
-
-                await click(".o_ThreadNeedactionPreviewView");
+                await click(".o-mail-notification-item:contains(Frodo Baggins)");
                 assert.containsOnce(
                     document.body,
                     ".o-mail-chat-window",
                     "should have opened the thread on clicking on the preview"
                 );
-                await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
+                await click(".o_menu_systray i[aria-label='Messages']");
                 assert.containsNone(
                     document.body,
-                    ".o_ThreadNeedactionPreviewView",
+                    ".o-mail-notification-item:contains(Frodo Baggins)",
                     "should have no preview because the message should be marked as read after opening its thread"
                 );
             }
@@ -217,11 +204,9 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.skipRefactoring(
+        QUnit.test(
             "preview should display last needaction message preview even if there is a more recent message that is not needaction in the thread",
             async function (assert) {
-                assert.expect(2);
-
                 const pyEnv = await startServer();
                 const resPartnerId1 = pyEnv["res.partner"].create({
                     name: "Stranger",
@@ -246,30 +231,12 @@ QUnit.module("mail", {}, function () {
                     notification_type: "inbox",
                     res_partner_id: pyEnv.currentPartnerId,
                 });
-                const { afterEvent, messaging } = await start();
-                await afterNextRender(() =>
-                    afterEvent({
-                        eventName: "o-thread-cache-loaded-messages",
-                        func: () =>
-                            document
-                                .querySelector(
-                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
-                                )
-                                .click(),
-                        message: "should wait until inbox loaded initial needaction messages",
-                        predicate: ({ threadCache }) => {
-                            return threadCache.thread === messaging.inbox.thread;
-                        },
-                    })
-                );
+                await start();
+                await click(".o_menu_systray i[aria-label='Messages']");
                 assert.containsOnce(
                     document.body,
-                    ".o_ThreadNeedactionPreviewView_inlineText",
-                    "should have a preview from the last message"
-                );
-                assert.strictEqual(
-                    document.querySelector(".o_ThreadNeedactionPreviewView_inlineText").textContent,
-                    "Stranger: I am the oldest but needaction",
+                    ".o-mail-notification-item:contains(I am the oldest but needaction)",
+                    "I am the oldest but needaction",
                     "the displayed message should be the one that needs action even if there is a more recent message that is not needaction on the thread"
                 );
             }

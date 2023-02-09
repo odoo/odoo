@@ -37,7 +37,8 @@ export class ThreadService {
         this.env.bus.addEventListener("MESSAGE-SERVICE:INSERT_THREAD", ({ detail }) => {
             const model = detail.model;
             const id = detail.id;
-            this.insert({ model, id });
+            const type = detail.type;
+            this.insert({ model, id, type });
         });
     }
 
@@ -110,6 +111,15 @@ export class ThreadService {
         }
     }
 
+    markAllMessagesAsRead(thread) {
+        return this.orm.silent.call("mail.message", "mark_all_as_read", [
+            [
+                ["model", "=", thread.model],
+                ["res_id", "=", thread.id],
+            ],
+        ]);
+    }
+
     /**
      * @param {Thread} thread
      */
@@ -121,7 +131,7 @@ export class ThreadService {
      * @param {Thread} thread
      * @param {{min: Number, max: Number}}
      */
-    async fetchMessages(thread, { min, max }) {
+    async fetchMessages(thread, { min, max } = {}) {
         thread.status = "loading";
         if (thread.type === "chatter" && !thread.id) {
             return [];
@@ -169,6 +179,7 @@ export class ThreadService {
                 true
             );
         });
+        this.update(thread, { isLoaded: true });
         return messages;
     }
 
@@ -176,7 +187,7 @@ export class ThreadService {
      * @param {Thread} thread
      */
     async fetchNewMessages(thread) {
-        const min = thread.mostRecentNonTransientMessage?.id;
+        const min = thread.isLoaded ? thread.mostRecentNonTransientMessage?.id : undefined;
         try {
             const fetchedMsgs = await this.fetchMessages(thread, { min });
             Object.assign(thread, {
@@ -376,9 +387,7 @@ export class ThreadService {
      */
     update(thread, data) {
         const { attachments, ...remainingData } = data;
-        for (const key in remainingData) {
-            thread[key] = data[key];
-        }
+        assignDefined(thread, remainingData);
         if (attachments) {
             // smart process to avoid triggering reactives when there is no change between the 2 arrays
             replaceArrayWithCompare(

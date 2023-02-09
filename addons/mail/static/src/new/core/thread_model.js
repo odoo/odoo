@@ -50,6 +50,7 @@ export class Thread {
     followers = [];
     isAdmin = false;
     loadMore = true;
+    isLoaded = false;
     /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
     mainAttachment;
     memberCount = 0;
@@ -90,6 +91,9 @@ export class Thread {
             this._store.discuss.channels.threads.push(this.localId);
         } else if (this.type === "chat" || this.type === "group") {
             this._store.discuss.chats.threads.push(this.localId);
+        }
+        if (!this.type && !["mail.box", "mail.channel"].includes(this.model)) {
+            this.type = "chatter";
         }
         store.threads[this.localId] = this;
     }
@@ -235,6 +239,10 @@ export class Thread {
         return createLocalId(this.model, this.id);
     }
 
+    get needactionMessages() {
+        return this.messages.filter(({ isNeedaction }) => isNeedaction);
+    }
+
     /** @returns {import("@mail/new/core/message_model").Message | undefined} */
     get mostRecentMsg() {
         if (!this.mostRecentMsgId) {
@@ -243,11 +251,26 @@ export class Thread {
         return this._store.messages[this.mostRecentMsgId];
     }
 
+    get mostRecentNeedactionMsg() {
+        const mostRecentNeedactionMsgId = this.mostRecentNeedactionMsgId;
+        if (!mostRecentNeedactionMsgId) {
+            return undefined;
+        }
+        return this._store.messages[mostRecentNeedactionMsgId];
+    }
+
     get mostRecentMsgId() {
         if (this.messageIds.length === 0) {
             return undefined;
         }
         return Math.max(...this.messageIds);
+    }
+
+    get mostRecentNeedactionMsgId() {
+        const needactionMessages = this.needactionMessages;
+        return needactionMessages.length > 0
+            ? Math.max(needactionMessages.map(({ id }) => id))
+            : undefined;
     }
 
     get mostRecentNonTransientMessage() {
@@ -344,6 +367,10 @@ export class Thread {
 
     get rtcInvitingSession() {
         return this._store.rtcSessions[this.invitingRtcSessionId];
+    }
+
+    get hasNeedactionMessages() {
+        return this.needactionMessages.length > 0;
     }
 
     get typingMembers() {

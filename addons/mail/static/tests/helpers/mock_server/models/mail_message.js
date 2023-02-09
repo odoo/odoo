@@ -282,6 +282,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                 ]);
                 response["guestAuthor"] = { id: guest.id, name: guest.name };
             }
+            response["module_icon"] = "/base/static/description/icon.png";
             return response;
         });
     },

@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.messaging_menu" owl="1">
-    <Dropdown t-if="!env.inDiscussApp" beforeOpen.bind="() => messaging.fetchPreviews()" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+    <Dropdown t-if="!env.inDiscussApp" beforeOpen.bind="beforeOpen" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = store.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
             <span class="o-mail-messaging-menu-counter badge"><t t-esc="counter"/></span>
@@ -62,13 +62,14 @@
             </NotificationItem>
             <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
                 <NotificationItem
-                    body="preview.mostRecentMsg?.inlineBody"
-                    datetime="preview.mostRecentMsg?.datetime"
+                    body="preview.body"
+                    count="preview.count"
+                    datetime="preview.datetime"
                     displayName="preview.displayName"
                     iconSrc="preview.imgUrl"
-                    hasMarkAsReadButton="threadService.isUnread(preview)"
+                    hasMarkAsReadButton="preview.hasMarkAsReadButton"
                     isLast="preview_last and failures.length === 0"
-                    onClick="(isMarkAsRead) => isMarkAsRead ? threadService.markAsRead(preview) : this.openDiscussion(preview)"
+                    onClick="(isMarkAsRead) => this.onClickPreview(isMarkAsRead, preview)"
                 >
                     <t t-set-slot="icon">
                         <PartnerImStatus t-if="preview.type === 'chat'" className="'position-absolute bottom-0 end-0'" partner="store.personas[createLocalId('partner', preview.chatPartnerId)]"/>

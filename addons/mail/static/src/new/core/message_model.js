@@ -220,6 +220,9 @@ export class Message {
     }
 
     get inlineBody() {
+        if (!this.body) {
+            return "";
+        }
         return htmlToTextContentInline(this.body);
     }
 
