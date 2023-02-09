@@ -154,6 +154,18 @@ QUnit.module(
             );
         });
 
+        QUnit.test("parseDate with different numbering system", async (assert) => {
+            patchWithCleanup(localization, {
+                dateFormat: "dd MMM, yyyy",
+                dateTimeFormat: "dd MMM, yyyy hh:mm:ss",
+                timeFormat: "hh:mm:ss",
+            });
+
+            patchWithCleanup(Settings, { defaultNumberingSystem: "arab", defaultLocale: "ar" });
+
+            assert.equal(parseDate("٠١ فبراير, ٢٠٢٣").toISO(), "2023-02-01T00:00:00.000+01:00");
+        });
+
         QUnit.test("parseDateTime", async (assert) => {
             patch(localization, "default loc", defaultLocalization);
 
@@ -635,7 +647,7 @@ QUnit.module(
              * Type of testSet value: [newExpected: string, legacyExpected: string]
              */
             const testSet = new Map([
-                ["10101010101010", ["1010-10-10T00:00:00.000Z"]],
+                ["10101010101010", [undefined, "1010-10-10T00:00:00.000Z"]],
                 ["1191111", ["1191-04-21T00:00:00.000Z"]], // day 111 of year 1191
                 ["11911111", ["1191-11-11T00:00:00.000Z"]],
                 ["3101", ["2020-01-31T00:00:00.000Z"]],
@@ -652,8 +664,8 @@ QUnit.module(
                 ["310197", ["1997-01-31T00:00:00.000Z"]],
                 ["310117", ["2017-01-31T00:00:00.000Z"]],
                 ["31011985", ["1985-01-31T00:00:00.000Z"]],
-                ["3101198508", ["1985-01-31T00:00:00.000Z"]],
-                ["310119850833", ["1985-01-31T00:00:00.000Z"]],
+                ["3101198508", [undefined, "1985-01-31T00:00:00.000Z"]],
+                ["310119850833", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["1137", [undefined]],
                 ["1197", [undefined]],
@@ -667,7 +679,7 @@ QUnit.module(
 
                 ["970131", [undefined]],
                 ["31.01", ["2020-01-31T00:00:00.000Z"]],
-                ["31/01/1985 08", ["1985-01-31T00:00:00.000Z"]],
+                ["31/01/1985 08", [undefined, "1985-01-31T00:00:00.000Z"]],
 
                 ["01121934", ["1934-12-01T00:00:00.000Z"]],
                 ["011234", ["2034-12-01T00:00:00.000Z"]],
