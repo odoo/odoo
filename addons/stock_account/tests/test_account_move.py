@@ -143,3 +143,56 @@ class TestAccountMove(TestAccountMoveStockCommon):
         expense_line = move.line_ids.filtered(lambda l: l.account_id == self.product_A.property_account_expense_id)
         self.assertEqual(expense_line.debit, -10)
         self.assertEqual(expense_line.credit, 0)
+
+    def test_standard_manual_tax_edit(self):
+        ''' Test manually editing tax amount, cogs creation should not reset tax amount '''
+        move_form = Form(self.env["account.move"].with_context(default_move_type="out_invoice"))
+        move_form.partner_id = self.partner_a
+        with move_form.invoice_line_ids.new() as line_form:
+            line_form.product_id = self.product_A
+        invoice = move_form.save()
+
+        self.assertEqual(invoice.amount_total, 115)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 15)
+
+        # simulate manual tax edit via widget
+        vals = {
+            'tax_totals': {
+                'amount_untaxed': 100,
+                'amount_total': 114,
+                'formatted_amount_total': '$\xa0114.00',
+                'formatted_amount_untaxed': '$\xa0100.00',
+                'groups_by_subtotal': {
+                    'Untaxed Amount': [{
+                        'group_key': 2,
+                        'tax_group_id': invoice.invoice_line_ids.tax_ids.tax_group_id.id,
+                        'tax_group_name': 'Tax 15%',
+                        'tax_group_amount': 14,
+                        'tax_group_base_amount': 100,
+                        'formatted_tax_group_amount': '$\xa014.00',
+                        'formatted_tax_group_base_amount': '$\xa0100.00'
+                    }]
+                },
+                'subtotals': [{
+                    'name': 'Untaxed Amount',
+                    'amount': 100,
+                    'formatted_amount': '$\xa0100.00'
+                }],
+                'subtotals_order': ['Untaxed Amount'],
+                'display_tax_base': False,
+            }
+        }
+        invoice.write(vals)
+
+        self.assertEqual(len(invoice.mapped("line_ids")), 3)
+        self.assertEqual(invoice.amount_total, 114)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 14)
+
+        invoice._post()
+
+        self.assertEqual(len(invoice.mapped("line_ids")), 5)
+        self.assertEqual(invoice.amount_total, 114)
+        self.assertEqual(invoice.amount_untaxed, 100)
+        self.assertEqual(invoice.amount_tax, 14)
