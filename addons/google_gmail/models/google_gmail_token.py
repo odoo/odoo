@@ -67,12 +67,48 @@ class GoogleGmailToken(models.Model):
         :return:
             access_token, access_token_expiration
         """
-        response = self._fetch_gmail_token('refresh_token', refresh_token=refresh_token)
+        Config = self.env['ir.config_parameter'].sudo()
+        google_gmail_client_id = Config.get_param('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        if not google_gmail_client_id or not google_gmail_client_secret:
+            return self._fetch_gmail_access_token_iap(refresh_token)
 
+        response = self._fetch_gmail_token('refresh_token', refresh_token=refresh_token)
         return (
             response['access_token'],
             int(time.time()) + response['expires_in'],
         )
+
+    def _fetch_gmail_access_token_iap(self, refresh_token):
+        """Fetch the access token using IAP.
+
+        Make a HTTP request to IAP, that will make a HTTP request
+        to the Gmail API and give us the result.
+
+        :return:
+            access_token, access_token_expiration
+        """
+        gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
+            'mail.gmail_iap_endpoint',
+            self.env['google.gmail.mixin']._DEFAULT_GMAIL_IAP_ENDPOINT,
+        )
+        db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+
+        response = requests.get(
+            url_join(gmail_iap_endpoint, '/iap/mail_oauth/gmail_access_token'),
+            params={'refresh_token': refresh_token, 'db_uuid': db_uuid},
+            timeout=3,
+        )
+
+        if not response.ok:
+            _logger.error('Can not contact IAP: %s.', response.text)
+            raise UserError(_('Can not contact IAP.'))
+
+        response = response.json()
+        if 'error' in response:
+            raise UserError(_('An error occurred: %s.', response['error']))
+
+        return response
 
     def _fetch_gmail_token(self, grant_type, **values):
         """Generic method to request an access token or a refresh token.
