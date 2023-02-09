@@ -209,6 +209,9 @@
                             <setting help="Print a QR code on the receipt to allow the user to easily request the invoice for an order.">
                                 <field name="point_of_sale_use_ticket_qr_code"/>
                             </setting>
+                            <setting help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.">
+                                <field name="point_of_sale_ticket_unique_code"/>
+                            </setting>
                             <setting id="order_reference" groups="base.group_no_one" string="Order Reference" help="Generation of your order references">
                                 <field name="pos_sequence_id" readonly="1"/>
                             </setting>

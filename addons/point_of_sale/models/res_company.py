@@ -14,6 +14,9 @@ class ResCompany(models.Model):
     point_of_sale_use_ticket_qr_code = fields.Boolean(
         string='Use QR code on ticket',
         help="Add a QR code on the ticket, which the user can scan to request the invoice linked to its order.")
+    point_of_sale_ticket_unique_code = fields.Boolean(
+        string='Generate a code on ticket',
+        help="Add a 5-digit code on the receipt to allow the user to request the invoice for an order on the portal.")
 
     @api.constrains('period_lock_date', 'fiscalyear_lock_date')
     def validate_period_lock_date(self):
