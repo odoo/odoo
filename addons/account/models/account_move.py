@@ -775,7 +775,7 @@ class AccountMove(models.Model):
                     'grouping_dict': False,
                 })
                 taxes_map_entry['amount'] += tax_vals['amount']
-                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line, tax_vals['group'])
+                taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line, tax_vals['group'], is_credit=line.credit or False)
                 taxes_map_entry['grouping_dict'] = grouping_dict
 
         # ==== Pre-process taxes_map ====
@@ -851,14 +851,21 @@ class AccountMove(models.Model):
                 taxes_map_entry['tax_line'].update(taxes_map_entry['tax_line']._get_fields_onchange_balance(force_computation=True))
 
     @api.model
-    def _get_base_amount_to_display(self, base_amount, tax_rep_ln, parent_tax_group=None):
+    def _get_base_amount_to_display(self, base_amount, tax_rep_ln, parent_tax_group=None, is_credit=True):
         """ The base amount returned for taxes by compute_all has is the balance
-        of the base line. For inbound operations, positive sign is on credit, so
-        we need to invert the sign of this amount before displaying it.
+        of the base line. Properly compute the base amount based on the use case and
+        the position of the move line (credit or debit)
         """
         source_tax = parent_tax_group or tax_rep_ln.invoice_tax_id or tax_rep_ln.refund_tax_id
-        if (tax_rep_ln.invoice_tax_id and source_tax.type_tax_use == 'sale') \
-           or (tax_rep_ln.refund_tax_id and source_tax.type_tax_use == 'purchase'):
+        if (
+            is_credit and
+            (tax_rep_ln.invoice_tax_id and source_tax.type_tax_use == 'sale') or
+            (tax_rep_ln.refund_tax_id and source_tax.type_tax_use == 'purchase')
+            ) or (
+            not is_credit and
+            (tax_rep_ln.refund_tax_id and source_tax.type_tax_use == 'sale') or
+            (tax_rep_ln.invoice_tax_id and source_tax.type_tax_use == 'purchase')
+        ):
             return -base_amount
         return base_amount
 

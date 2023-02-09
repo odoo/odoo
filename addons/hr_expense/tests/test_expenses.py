@@ -258,7 +258,7 @@ class TestExpenses(TestExpenseCommon):
                     self.assertEqual(len(line.analytic_line_ids), 1, "The debit move line should have 1 analytic lines")
                     self.assertEqual(line.product_id, self.product_a, "Product of debit move line should be the one from the expense")
                 else:
-                    self.assertEqual(line.tax_base_amount, 318.18)
+                    self.assertEqual(line.tax_base_amount, -318.18)
                     self.assertAlmostEqual(line.debit, 31.82)
                     self.assertAlmostEqual(line.amount_currency, 63.64)
                     self.assertEqual(len(line.analytic_line_ids), 0, "The tax move line should not have analytic lines")
@@ -347,7 +347,7 @@ class TestExpenses(TestExpenseCommon):
         wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
-        
+
         move = self.env['account.payment'].browse(action['res_id']).move_id
         move.button_cancel()
         self.assertEqual(sheet.state, 'cancel', 'Sheet state must be cancel when the payment linked to that sheet is canceled')
