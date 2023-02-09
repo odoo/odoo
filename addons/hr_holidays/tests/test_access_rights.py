@@ -70,6 +70,10 @@ class TestHrHolidaysAccessRightsCommon(TestHrHolidaysCommon):
             cls.lt_validation_both
         ]
 
+        # Here we only test access rights, prevent any conflict with
+        # existing stress days - they are tested someplace else.
+        cls.env['hr.leave.stress.day'].search([]).unlink()
+
     def request_leave(self, user_id, date_from, number_of_days, values=None):
         values = dict(values or {}, **{
             'date_from': date_from,
