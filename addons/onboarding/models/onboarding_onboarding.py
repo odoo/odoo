@@ -43,8 +43,6 @@ class Onboarding(models.Model):
             current_progress_id = onboarding.progress_ids.filtered(
                 lambda progress: progress.company_id.id in {False, self.env.company.id})
             if current_progress_id:
-                if len(current_progress_id) > 1:
-                    current_progress_id = current_progress_id.sorted('create_date', reverse=True)[0]
                 onboarding.current_onboarding_state = current_progress_id.onboarding_state
                 onboarding.current_progress_id = current_progress_id
                 onboarding.is_onboarding_closed = current_progress_id.is_onboarding_closed
