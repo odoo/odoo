@@ -21,7 +21,9 @@
                     <div name="option_print">
                         <field name="is_print" />
                         <b><label for="is_print"/></b>
-                        <div name="info_form" attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">
+                        <div name="info_form"
+                             attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}"
+                             class="text-center text-muted d-inline-block ms-2">
                             Preview as a PDF
                         </div>
                     </div>
