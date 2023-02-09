@@ -24,8 +24,8 @@ class AccountAnalyticAccount(models.Model):
             ('move_id.move_type', 'in', sale_types),
         ])
         query.add_where(
-            'account_move_line.analytic_distribution ?| array[%s]',
-            [str(account_id) for account_id in self.ids],
+            'account_move_line.analytic_distribution ?| %s',
+            [[str(account_id) for account_id in self.ids]],
         )
 
         query.order = None
@@ -49,8 +49,8 @@ class AccountAnalyticAccount(models.Model):
             ('move_id.move_type', 'in', purchase_types),
         ])
         query.add_where(
-            'account_move_line.analytic_distribution ?| array[%s]',
-            [str(account_id) for account_id in self.ids],
+            'account_move_line.analytic_distribution ?| %s',
+            [[str(account_id) for account_id in self.ids]],
         )
 
         query.order = None
