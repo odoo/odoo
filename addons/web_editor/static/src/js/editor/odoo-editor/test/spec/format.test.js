@@ -578,7 +578,7 @@ describe('Format', () => {
             });
         });
         it('should remove underline, write, restore underline, write, remove underline again, write (collapsed, strikeThrough)', async () => {
-            const uselessU = u(''); // TODO: clean
+            const uselessS = s(u('\u200B', 'first'), 'first'); // TODO: clean
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(s(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
@@ -589,7 +589,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`)}C[]${uselessU}`)}${u(s(`ef`))}</p>`,
+                contentAfterEdit: `<p>ab${u(s(`cd`))}${s(`A${u(`B`, 'first')}C[]\u200B`, 'first')}${uselessS}${u(s(`ef`))}</p>`,
             });
         });
         it('should remove only underline decoration on a span', async () => {
@@ -682,7 +682,6 @@ describe('Format', () => {
             });
         });
         it('should remove underline, write, restore underline, write, remove underline again, write (collapsed, italic)', async () => {
-            const uselessU = u(''); // TODO: clean
             await testEditor(BasicEditor, {
                 contentBefore: `<p>ab${u(em(`cd[]ef`))}</p>`,
                 stepFunction: async editor => {
@@ -693,7 +692,7 @@ describe('Format', () => {
                     await editor.execCommand('underline');
                     await editor.execCommand('insert', 'C');
                 },
-                contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}C[]${uselessU}`)}${u(em(`ef`))}</p>`,
+                contentAfter: `<p>ab${u(em(`cd`))}${em(`A${u(`B`)}C[]`)}${u(em(`ef`))}</p>`,
             });
         });
     });

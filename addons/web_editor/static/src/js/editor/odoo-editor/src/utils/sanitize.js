@@ -91,7 +91,11 @@ function sanitizeNode(node, root) {
     if (
         areSimilarElements(node, node.previousSibling) &&
         !isUnbreakable(node) &&
-        !isEditorTab(node)
+        !isEditorTab(node) &&
+        !(
+            node.attributes?.length === 1 &&
+            node.hasAttribute('data-oe-zws-empty-inline') &&
+            (node.textContent === '\u200B' || node.previousSibling.textContent === '\u200B'))
     ) {
         // Merge identical elements together.
         getDeepRange(root, { select: true });
@@ -121,31 +125,6 @@ function sanitizeNode(node, root) {
         paragraph.replaceChildren(...node.childNodes);
         node.replaceWith(paragraph);
         node = paragraph; // The node has been removed, update the reference.
-    } else if (
-        node.nodeType === Node.TEXT_NODE &&
-        node.textContent.includes('\u200B') &&
-        node.parentElement.hasAttribute('data-oe-zws-empty-inline') &&
-        node !== root.ownerDocument.getSelection()?.anchorNode &&
-        !isBlock(node.parentElement) &&
-        (
-            node.textContent.length > 1 ||
-            // There can be multiple ajacent text nodes, in which case
-            // the zero-width space is not needed either, despite being
-            // alone (length === 1) in its own text node.
-            Array.from(node.parentNode.childNodes).find(
-                sibling =>
-                    sibling !== node &&
-                    sibling.nodeType === Node.TEXT_NODE &&
-                    sibling.length > 0
-            )
-        )
-    ) {
-        // Remove zero-width spaces added by `fillEmpty` when there is
-        // content and the selection is not next to it.
-        const restoreCursor = node.isConnected && preserveCursor(root.ownerDocument);
-        node.textContent = node.textContent.replace('\u200B', '');
-        node.parentElement.removeAttribute("data-oe-zws-empty-inline");
-        restoreCursor?.();
     } else if (isFontAwesome(node) && node.textContent !== '\u200B') {
         // Ensure a zero width space is present inside the FA element.
         node.textContent = '\u200B';
