@@ -172,7 +172,7 @@ class AccountBankStatementLine(models.Model):
             # Find the oldest index for each journal.
             self._cr.execute(
                 """
-                    SELECT first_line_index, balance_start
+                    SELECT first_line_index, COALESCE(balance_start, 0.0)
                     FROM account_bank_statement
                     WHERE
                         first_line_index < %s
@@ -197,7 +197,7 @@ class AccountBankStatementLine(models.Model):
                         st_line.id,
                         st_line.amount,
                         st.first_line_index = st_line.internal_index AS is_anchor,
-                        st.balance_start,
+                        COALESCE(st.balance_start, 0.0),
                         move.state
                     FROM account_bank_statement_line st_line
                     JOIN account_move move ON move.statement_line_id = st_line.id
