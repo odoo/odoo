@@ -30,18 +30,12 @@ var do_before_unload = utils.do_before_unload;
 var get_jquery_element_from_selector = utils.get_jquery_element_from_selector;
 
 return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
-    init: function(parent, consumed_tours, disabled = false, toursFromRegistry = true) {
+    init: function(parent, disabled = false) {
         mixins.EventDispatcherMixin.init.call(this);
         this.setParent(parent);
-
-        this.$body = $('body');
+        this.disabled = disabled;
         this.active_tooltips = {};
         this.tours = {};
-        // remove the tours being debug from the list of consumed tours
-        this.consumed_tours = (consumed_tours || []).filter(tourName => {
-            return !local_storage.getItem(get_debugging_key(tourName));
-        });
-        this.disabled = disabled;
         this.running_tour = local_storage.getItem(get_running_key());
         if (this.running_tour) {
             // Transitions can cause DOM mutations which will cause the tour_service
@@ -52,7 +46,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         this.running_step_delay = parseInt(local_storage.getItem(get_running_delay_key()), 10) || 0;
         this.edition = (_.last(session.server_version_info) === 'e') ? 'enterprise' : 'community';
         this._log = [];
-
+        },
+    initialize: function(consumed_tours, toursFromRegistry = true) {
+        this.$body = $('body');
+        // remove the tours being debug from the list of consumed tours
+        this.consumed_tours = (consumed_tours || []).filter(tourName => {
+            return !local_storage.getItem(get_debugging_key(tourName));
+        });
         if (toursFromRegistry) {
             const register = (name, params) => {
                 this.register(name, params, params.steps);

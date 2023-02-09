@@ -20,24 +20,27 @@ const untrackedClassnames = ["o_tooltip", "o_tooltip_content", "o_tooltip_overla
  * @property {'community' | 'enterprise'} edition
  * @property {Array} _log
  */
-return session.is_bound.then(function () {
-    var defs = [];
-    // Load the list of consumed tours and the tip template only if we are admin, in the frontend,
-    // tours being only available for the admin. For the backend, the list of consumed is directly
-    // in the page source.
-    if (session.is_frontend && session.is_admin) {
-        var def = rpc.query({
-                model: 'web_tour.tour',
-                method: 'get_consumed_tours',
-            });
-        defs.push(def);
-    }
-    return Promise.all(defs).then(function (results) {
-        var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
-        const disabled = session.tour_disable || device.isMobile;
-        var tour_manager = new TourManager(rootWidget, consumed_tours, disabled);
-        registry.add("tourManager", tour_manager);
 
+
+var defs = [];
+// Load the list of consumed tours and the tip template only if we are admin, in the frontend,
+// tours being only available for the admin. For the backend, the list of consumed is directly
+// in the page source.
+if (session.is_frontend && session.is_admin) {
+    var def = rpc.query({
+            model: 'web_tour.tour',
+            method: 'get_consumed_tours',
+        });
+    defs.push(def);
+}
+defs.push(session.is_bound);
+const disabled = session.tour_disable || device.isMobile;
+var tour_manager = new TourManager(rootWidget, disabled);
+registry.add("tourManager", tour_manager);
+
+Promise.all(defs).then(function (results) {
+        var consumed_tours = session.is_frontend ? results[0] : session.web_tours;
+        tour_manager.initialize(consumed_tours);
         // The tests can be loaded inside an iframe. The tour manager should
         // not run in that context, as it will already run in its parent
         // window.
@@ -235,10 +238,10 @@ return session.is_bound.then(function () {
                 observer.disconnect();
             };
         }
-        // helper to start a tour manually (or from a python test with its counterpart start_tour function)
-        odoo.startTour = tour_manager.run.bind(tour_manager);
-        return tour_manager;
     });
-});
+    
+// helper to start a tour manually (or from a python test with its counterpart start_tour function)
+odoo.startTour = tour_manager.run.bind(tour_manager);
+return tour_manager;
 
 });
