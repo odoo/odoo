@@ -1927,8 +1927,9 @@ class MailThread(models.AbstractModel):
             ])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
+                                     or all_attachments.filtered(lambda x: not x.mimetype.endswith('xml'))
+            if prioritary_attachments:
+                self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
 
     def _message_post_after_hook(self, message, msg_vals):
         """ Hook to add custom behavior after having posted the message. Both
