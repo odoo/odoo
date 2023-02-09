@@ -3878,23 +3878,21 @@ export class OdooEditor extends EventTarget {
             hint.removeAttribute('placeholder');
         }
         this._pluginCall('cleanForSave', [element]);
-        // Clean the remaining ZeroWidthspaces added by the `fillEmpty` function
-        // ( contain "data-oe-zws-empty-inline" attr)
-        // If the element contain more than just a ZWS,
-        // we remove it and clean the attribute.
-        // If the element have a class,
-        // we only remove the attribute to ensure we don't break some style.
-        // Otherwise we remove the entire inline element.
-        for (const emptyElement of element.querySelectorAll('[data-oe-zws-empty-inline]')) {
-            if (isZWS(emptyElement)) {
-                if (emptyElement.classList.length > 0) {
-                    emptyElement.removeAttribute('data-oe-zws-empty-inline');
-                } else {
-                    emptyElement.remove();
-                }
-            } else {
+
+        // Clean the zero-width spaces added by the `fillEmpty` function
+        // (flagged with the "data-oe-zws-empty-inline" attributes). Reverse the
+        // list to start from the deepest elements (for emptiness checks).
+        const allWhitespaceRegex = /^[\s\u200b]*$/;
+        for (const emptyElement of [...element.querySelectorAll('[data-oe-zws-empty-inline]')].reverse()) {
+            emptyElement.removeAttribute('data-oe-zws-empty-inline');
+            if (!allWhitespaceRegex.test(emptyElement.textContent)) {
+                // The element has some meaningful text. Remove the ZWS in it.
                 cleanZWS(emptyElement);
-                emptyElement.removeAttribute('data-oe-zws-empty-inline');
+            } else if (!emptyElement.classList.length) {
+                // We only remove the empty element if it has no class, to
+                // ensure we don't break visual styles (in that case, its
+                // ZWS was kept to ensure the cursor can be placed in it).
+                emptyElement.remove();
             }
         }
 
