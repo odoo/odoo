@@ -5,7 +5,7 @@
     <xpath expr="//t[@t-if='groupOrRecord.group']//KanbanRecord" position="attributes">
         <attribute name="t-if">recordFilter(record, props.list.records)</attribute>
     </xpath>
-    <xpath expr="//div/t/t[2]/KanbanRecord" position="attributes">
+    <xpath expr="//div/t/t[@t-else='']/KanbanRecord" position="attributes">
         <attribute name="t-if">recordFilter(groupOrRecord.record, props.list.records)</attribute>
     </xpath>
 </t>
