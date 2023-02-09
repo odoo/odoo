@@ -159,7 +159,6 @@ QUnit.module("ActionManager", (hooks) => {
         await testUtils.dom.click(`button[name="some_method"]`);
         assert.verifySteps([
             "/web/dataset/call_kw/partner/create",
-            "/web/dataset/call_kw/partner/read",
             "/web/dataset/call_button",
             "/web/dataset/call_kw/partner/read",
         ]);
