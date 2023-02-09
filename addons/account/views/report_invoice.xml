@@ -247,7 +247,7 @@
                         </div>
                         <div id="qrcode" class="d-flex mb-3 avoid-page-break-inside" t-if="o.display_qr_code and o.amount_residual > 0">
                             <div class="qrcode me-3" id="qrcode_image">
-                                <t t-set="qr_code_url" t-value="o._generate_qr_code(silent_errors=True)"/>
+                                <t t-set="qr_code_url" t-value="qr_code_urls.get(o.id) or o._generate_qr_code(silent_errors=True)"/>
                                 <p t-if="qr_code_url" class="position-relative mb-0">
                                     <img t-att-src="qr_code_url"/>
                                     <img src="/account/static/src/img/Odoo_logo_O.svg"
