@@ -2,6 +2,33 @@
 
 import wTourUtils from 'website.tour_utils';
 
+// TODO: This part should be moved in a QUnit test
+const checkKanbanGroupBy = [{
+    content: "Click on Kanban View",
+    trigger: '.o_cp_switch_buttons .o_kanban',
+}, {
+    content: "Click on Group By",
+    extra_trigger: '.o_kanban_renderer',
+    trigger: '.o_search_options .o_group_by_menu button',
+}, {
+    content: "Click on Add Custom Group",
+    trigger: '.o_search_options .o_add_custom_group_menu button',
+    run: function (actions) {
+        this.$anchor[0].dispatchEvent(new MouseEvent('mouseenter'));
+    },
+}, {
+    content: "Click on Apply", // Active is selected by default
+    trigger: '.o_add_custom_group_menu .dropdown-menu .btn-primary',
+}, {
+    content: "Click on List View",
+    extra_trigger: '.o_kanban_renderer .o_kanban_header',
+    trigger: '.o_cp_switch_buttons .o_list',
+}, {
+    content: "Remove applied Group By",
+    extra_trigger: '.o_list_renderer',
+    trigger: '.o_cp_searchview .o_facet_remove',
+}];
+
 const deleteSelectedPage = [
     {
         content: "Click on Action",
@@ -37,6 +64,7 @@ wTourUtils.registerWebsitePreviewTour('website_page_manager', {
         content: "Click on Pages",
         trigger: 'a.dropdown-item[data-menu-xmlid="website.menu_website_pages_list"]',
     },
+    ...checkKanbanGroupBy,
     {
         content: "Click on Home Page",
         trigger: `.o_list_renderer ${homePage} td.o_list_record_selector input[type="checkbox"]`,
