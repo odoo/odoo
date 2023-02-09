@@ -46,7 +46,7 @@ patch(Thread.prototype, "im_livechat", {
     },
 
     get imgUrl() {
-        if (this.type === "livechat") {
+        if (this.type === "livechat" && !this.correspondent.is_public) {
             return `/web/image/res.partner/${this.correspondent.id}/avatar_128`;
         }
         return this._super();
