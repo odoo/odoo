@@ -214,26 +214,35 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
         with self.assertRaises(AccessError):
             test_record_c1.write({'name': 'Cannot Write'})
 
+        first_attachment = self.env['ir.attachment'].create({
+            'company_id': self.user_employee_c2.company_id.id,
+            'datas': base64.b64encode(b'First attachment'),
+            'mimetype': 'text/plain',
+            'name': 'TestAttachmentIDS.txt',
+            'res_model': 'mail.compose.message',
+            'res_id': 0,
+        })
+
         message = test_record_c1.message_post(
-            attachments=[('testAttachment', b'Test attachment')],
+            attachments=[('testAttachment', b'First attachment')],
+            attachment_ids=first_attachment.ids,
             body='My Body',
             message_type='comment',
             subtype_xmlid='mail.mt_comment',
         )
-        self.assertEqual(message.attachment_ids.mapped('name'), ['testAttachment'])
-        first_attachment = message.attachment_ids
+        self.assertTrue('testAttachment' in message.attachment_ids.mapped('name'))
         self.assertEqual(test_record_c1.message_main_attachment_id, first_attachment)
 
         new_attach = self.env['ir.attachment'].create({
             'company_id': self.user_employee_c2.company_id.id,
-            'datas': base64.b64encode(b'Test attachment'),
+            'datas': base64.b64encode(b'Second attachment'),
             'mimetype': 'text/plain',
             'name': 'TestAttachmentIDS.txt',
             'res_model': 'mail.compose.message',
             'res_id': 0,
         })
         message = test_record_c1.message_post(
-            attachments=[('testAttachment', b'Test attachment')],
+            attachments=[('testAttachment', b'Second attachment')],
             attachment_ids=new_attach.ids,
             body='My Body',
             message_type='comment',

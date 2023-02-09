@@ -939,6 +939,70 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
         self.assertFalse(self.env['mail.message.schedule'].sudo()._update_message_scheduled_datetime(msg, now - timedelta(hours=1)),
                          'Mail scheduler: should return False when no schedule is found')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
+    def test_message_post_w_attachments_filtering(self):
+        """
+        Test the message_main_attachment heuristics with an emphasis on the XML/Octet/PDF types.
+        -> we don't want XML nor Octet-Stream files to be set as message_main_attachment
+        """
+        xml_attachment, octet_attachment, pdf_attachment = [('List1', b'My xml attachment')], \
+                                                           [('List2', b'My octet-stream attachment')], \
+                                                           [('List3', b'My pdf attachment')]
+
+        xml_attachment_data, octet_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
+            self._generate_attachments_data(3, 'mail.compose.message', 0)
+        )
+        xml_attachment_data.write({'mimetype': 'application/xml'})
+        octet_attachment_data.write({'mimetype': 'application/octet-stream'})
+        pdf_attachment_data.write({'mimetype': 'application/pdf'})
+
+        test_record = self.env['mail.test.simple.main.attachment'].with_context(self._test_context).create({
+            'name': 'Test',
+            'email_from': 'ignasse@example.com',
+        })
+        self.assertFalse(test_record.message_main_attachment_id)
+
+        # test with xml attachment
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=xml_attachment,
+                attachment_ids=xml_attachment_data.ids,
+                body='Post XML',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+        self.assertFalse(test_record.message_main_attachment_id,
+                         'MailThread: main attachment should not be set with an XML')
+
+        # test with octet attachment
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=octet_attachment,
+                attachment_ids=octet_attachment_data.ids,
+                body='Post Octet-Stream',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+        self.assertFalse(test_record.message_main_attachment_id,
+                         'MailThread: main attachment should not be set with an Octet-Stream')
+        # test with pdf attachment
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=pdf_attachment,
+                attachment_ids=pdf_attachment_data.ids,
+                body='Post PDF',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+        self.assertEqual(test_record.message_main_attachment_id, pdf_attachment_data,
+                         'MailThread: main attachment should be set to application/pdf')
+
     @users('employee')
     @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
     def test_message_post_w_attachments_on_main_attachment_model(self):
