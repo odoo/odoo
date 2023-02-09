@@ -3,6 +3,7 @@
 
 import json
 import logging
+import requests
 
 from werkzeug.urls import url_encode, url_join
 
@@ -20,10 +21,8 @@ class GoogleGmailMixin(models.AbstractModel):
     _server_type_field = None
 
     _SERVICE_SCOPE = 'https://mail.google.com/'
+    _DEFAULT_GMAIL_IAP_ENDPOINT = 'https://gmail.api.odoo.com'
 
-    is_google_gmail_configured = fields.Boolean(
-        'Is Gmail Credential Configured',
-        compute='_compute_is_google_gmail_configured')
     google_gmail_token_id = fields.Many2one(
         'google.gmail.token',
         'Gmail Token',
@@ -48,27 +47,57 @@ class GoogleGmailMixin(models.AbstractModel):
         if not self.env.user.has_group('base.group_system'):
             raise AccessError(_('Only the administrator can link a Gmail mail server.'))
 
-        if not tools.email_normalize(self[self._email_field]):
+        email = tools.email_normalize(self[self._email_field])
+        if not email:
             raise UserError(_('Please enter a valid email address.'))
 
-        if not self.google_gmail_uri:
+        Config = self.env['ir.config_parameter'].sudo()
+        google_gmail_client_id = Config.get_param('google_gmail_client_id')
+        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
+        is_configured = google_gmail_client_id and google_gmail_client_secret
+        if not is_configured:  # use IAP (see '/google_gmail/iap_confirm')
+            gmail_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
+                'mail.gmail_iap_endpoint',
+                self._DEFAULT_GMAIL_IAP_ENDPOINT,
+            )
+            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+
+            # final callback URL that will receive the token from IAP
+            callback_url = url_join(self.get_base_url(), '/google_gmail/iap_confirm')
+            callback_url += '?' + url_encode({
+                'model': self._name,
+                'rec_id': self.id,
+                'csrf_token': self._get_gmail_csrf_token(),
+                'email': email,
+            })
+
+            try:
+                response = requests.get(
+                    url_join(gmail_iap_endpoint, '/iap/mail_oauth/gmail'),
+                    params={'db_uuid': db_uuid, 'email': email, 'callback_url': callback_url},
+                    timeout=3)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                _logger.error('Can not contact IAP: %s.', e)
+                raise UserError(_('Can not contact IAP.'))
+
+            response = response.json()
+            if 'error' in response:
+                raise UserError(_('An error occurred: %s.', response['error']))
+
+            # URL on IAP that will redirect to Gmail login page
+            google_gmail_uri = response['url']
+
+        else:
+            google_gmail_uri = self.google_gmail_uri
+
+        if not google_gmail_uri:
             raise UserError(_('Please configure your Gmail credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
-            'url': self.google_gmail_uri,
+            'url': google_gmail_uri,
         }
-
-    @api.depends(lambda self: (self._email_field, self._server_type_field))
-    def _compute_is_google_gmail_configured(self):
-        Config = self.env['ir.config_parameter'].sudo()
-        google_gmail_client_id = Config.get_param('google_gmail_client_id')
-        google_gmail_client_secret = Config.get_param('google_gmail_client_secret')
-        is_configured = bool(google_gmail_client_id and google_gmail_client_secret)
-
-        gmail_servers, normal_servers = self._split_gmail_servers()
-        gmail_servers.is_google_gmail_configured = is_configured
-        normal_servers.is_google_gmail_configured = False
 
     @api.depends(lambda self: (self._email_field, self._server_type_field))
     def _compute_google_gmail_uri(self):
