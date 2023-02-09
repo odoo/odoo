@@ -56,7 +56,7 @@ class HRLeave(models.Model):
                 if employee.user_id == self.env.user:
                     raise ValidationError(_('You do not have enough extra hours to request this leave'))
                 raise ValidationError(_('The employee does not have enough extra hours to request this leave.'))
-            if not leave.overtime_id:
+            if not leave.sudo().overtime_id:
                 leave.sudo().overtime_id = self.env['hr.attendance.overtime'].sudo().create({
                     'employee_id': employee.id,
                     'date': fields.Date.today(),
