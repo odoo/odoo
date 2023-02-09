@@ -36,6 +36,9 @@ export class AttendeeCalendarCommonRenderer extends CalendarCommonRenderer {
         const record = this.props.model.records[event.id];
 
         if (record) {
+            if (this.env.searchModel?.context?.default_calendar_event_id === parseInt(event.id)) {
+                this.openPopover(info.el, record);
+            }
             if (record.rawRecord.is_highlighted) {
                 el.classList.add("o_event_highlight");
             }
