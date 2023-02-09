@@ -17,7 +17,7 @@ class Project(models.Model):
             self.expenses_count = 0
             return
         query = self.env['hr.expense']._search([])
-        query.add_where('hr_expense.analytic_distribution ?| array[%s]', [str(account_id) for account_id in self.analytic_account_id.ids])
+        query.add_where('hr_expense.analytic_distribution ?| %s', [[str(account_id) for account_id in self.analytic_account_id.ids]])
 
         query_string, query_param = query.select(
             'jsonb_object_keys(analytic_distribution) as account_id',
@@ -27,7 +27,7 @@ class Project(models.Model):
         self._cr.execute(query_string, query_param)
         data = {int(record.get('account_id')): record.get('expense_count') for record in self._cr.dictfetchall()}
         for project in self:
-            project.expenses_count = data.get(self.analytic_account_id.id, 0)
+            project.expenses_count = data.get(project.analytic_account_id.id, 0)
 
     # ----------------------------
     #  Actions
