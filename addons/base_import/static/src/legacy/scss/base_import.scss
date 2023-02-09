@@ -1,0 +1,250 @@
+.oe_import {
+    padding: 0px;
+    overflow: hidden;
+    position: absolute; // Needed for chrome
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include media-breakpoint-down(md) {
+        position: static;
+    }
+
+    > p {
+        text-align: justify
+    }
+    h2 {
+        margin-top: 0.5em;
+        font-size: large; // override h2 font-size which is too large
+    }
+    .oe_padding {
+        padding: 13px 0;
+    }
+
+    .oe_import_box {
+        flex: 0 0 250px;
+        padding: 10px 14px;
+        border-radius: $border-radius;
+        border-right: solid 1px $border-color;
+        label {
+            font-weight: normal;
+        }
+        .oe_import_file {
+            display: inline-block;
+        }
+    }
+
+    /* ----------- INITIAL SETUP ------------ */
+    dd,
+    .oe_import_grid,
+    .oe_import_error_report,
+    .oe_import_noheaders,
+    .oe_import_report_more {
+        display: none;
+    }
+
+    .oe_import_with_file {
+        flex: 1 1 100%;
+        background-color: $o-white;
+        overflow: auto;
+        label {
+            font-weight: normal;
+            &.form-check-label {
+                left: 20px;
+            }
+        }
+        h4 {
+            margin: 10px 0px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        input:checked + label:after {
+            background-image: url('/web_studio/static/src/img/ui/checkbox_active.svg');
+            background-size: cover;
+        }
+        .truncate {
+            max-width: 178px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .o_import_batch_alert {
+            color: #46646d;
+        }
+    }
+
+    &.oe_import_preview .oe_import_grid {
+        display: table;
+    }
+    &.oe_import_error .oe_import_error_report,
+    &.oe_import_noheaders .oe_import_noheaders{
+        display: block;
+    }
+    .oe_import_report_showmore .oe_import_report_more {
+        display: list-item;
+        list-style-type: none;
+        li {
+            list-style-type: disc;
+        }
+    }
+    .oe_import_report_count, .oe_import_report_count_less {
+        .arrow {
+          border: solid black;
+          border-width: 0 2px 2px 0;
+          display: inline-block;
+          padding: 2px;
+          margin-right: 2px;
+          pointer-events: none;
+        }
+
+        .down {
+          transform: rotate(45deg);
+          -webkit-transform: rotate(45deg);
+          margin-bottom: 2px;
+        }
+
+        .up {
+          transform: rotate(-135deg);
+          -webkit-transform: rotate(-135deg);
+        }
+    }
+
+    /* ------------- ERRORS AND WARNINGS REPORT ------------ */
+    .oe_import_error_report {
+        border-bottom: 1px solid $border-color;
+        > ul {
+            padding: 0;
+        }
+    }
+    .oe_import_report {
+        list-style: none;
+    }
+    .alert {
+        padding: 0.50rem 1.25rem;
+        margin: 0.25rem 0;
+
+        a {
+            @extend .alert-link;
+            &:hover {opacity: 0.8;}
+        }
+
+        // alias -error to -danger
+        &.alert-error {
+            @extend .alert-danger;
+        }
+        &.text-error {
+            @extend .text-danger;
+        }
+    }
+
+    /* ------------- THE CSV TABLE ------------ */
+
+    $cell-max-width: 350px;
+    $cell-padding: 8px;
+    .oe_import_grid {
+        tr {
+            border-bottom: 1px solid $border-color;
+            &.oe_import_grid-header:first-child {
+                line-height: 24px;
+                font-weight: normal;
+            }
+            .oe_import_grid-cell {
+                cursor:default;
+                border-left: 0px;
+                border-right: 0px;
+                max-width: $cell-max-width;
+                padding: $cell-padding 12px;
+                vertical-align: top;
+                .o_multi_line_text {
+                    word-break: break-word;
+                }
+                .o_single_line_text {
+                    @include o-text-overflow($display: table-cell, $max-width: $cell-max-width - $cell-padding);
+                }
+            }
+        }
+    }
+
+    /* Default Color for placeholder on import fields*/
+    .select2-default{
+        color: #D67D00 !important;
+        font-weight: 500;
+    }
+
+    /* Common dropdown style */
+    .oe_import_dropdown {
+        width: 100% !important;
+
+        select {
+            border-radius: 4px;
+            padding-left: 8px;
+        }
+
+        select, .select2-choice {
+            color: black;
+            border: 1px solid #aaa;
+            height: 26px;
+            padding-right: 24px;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 4px;
+            background-image: url('/base_import/static/src/legacy/img/ui/dropdown_arrow_small.png');
+            background-position: center right;
+            background-repeat: no-repeat;
+            appearance: none;
+            width: auto;
+            background-color: white;
+        }
+
+        .select2-arrow {
+            display: none !important;
+        }
+    }
+
+    input.oe_import_dropdown {
+        border-radius: 4px;
+        border: 1px solid darkgrey;
+        height: 26px;
+        padding-left: 8px;
+    }
+}
+/* ------------- PARTIAL MODE buttons ------------ */
+// hide import in partial mode, resume otherwise
+.o_import_import_full.o_import_partial_mode,
+.o_import_import_partial:not(.o_import_partial_mode) {
+    display: none;
+}
+
+/* Field dropdown */
+.oe_import_selector {
+    font-size: $font-size-sm;
+    ul, li {
+        margin: 0; padding: 0;
+    }
+    .select2-results {
+        max-height: 192px;
+        .text-decoration-underline {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* Import Progress Bar */
+.o_import_progress_dialog {
+    .progress {
+        height: 1.5rem;
+        border-radius: 4px;
+        font-size: 1rem;
+
+        .progress-bar {
+            width: 0%;
+            min-width: 3%;
+        }
+    }
+
+    .o_progress_stop_import {
+        cursor: pointer;
+        &:hover {
+            transform: scale(1.2);
+        }
+    }
+}
