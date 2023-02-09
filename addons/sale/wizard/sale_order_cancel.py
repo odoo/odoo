@@ -60,6 +60,7 @@ class SaleOrderCancel(models.TransientModel):
 
     @api.depends('order_id')
     def _compute_subject(self):
+<<<<<<< HEAD
         for wizard_su in self.filtered('template_id').sudo():
             wizard_su.subject = wizard_su.template_id._render_field(
                 'subject',
@@ -67,9 +68,29 @@ class SaleOrderCancel(models.TransientModel):
                 compute_lang=True,
                 options={'post_process': True},
             )[wizard_su.order_id.id]
+||||||| parent of a7e9bf84dd6 (temp)
+        for wizard in self:
+            if wizard.template_id:
+                wizard.subject = self.sudo()._render_template(
+                    wizard.template_id.subject,
+                    'sale.order',
+                    [wizard.order_id.id],
+                    post_process=True,
+                )[wizard.order_id.id]
+=======
+        for wizard in self:
+            if wizard.template_id:
+                wizard.subject = wizard.template_id.sudo()._render_field(
+                    'subject',
+                    wizard.order_id.ids,
+                    post_process=True,
+                    compute_lang=True,
+                )[wizard.order_id.id]
+>>>>>>> a7e9bf84dd6 (temp)
 
     @api.depends('order_id')
     def _compute_body(self):
+<<<<<<< HEAD
         for wizard_su in self.filtered('template_id').sudo():
             wizard_su.body = wizard_su.template_id._render_field(
                 'body_html',
@@ -77,6 +98,26 @@ class SaleOrderCancel(models.TransientModel):
                 compute_lang=True,
                 options={'post_process': True},
             )[wizard_su.order_id.id]
+||||||| parent of a7e9bf84dd6 (temp)
+        for wizard in self:
+            if wizard.template_id:
+                wizard.body = self.sudo()._render_template(
+                    wizard.template_id.body_html,
+                    'sale.order',
+                    [wizard.order_id.id],
+                    post_process=True,
+                    engine='qweb',
+                )[wizard.order_id.id]
+=======
+        for wizard in self:
+            if wizard.template_id:
+                wizard.body = wizard.template_id.sudo()._render_field(
+                    'body_html',
+                    wizard.order_id.ids,
+                    post_process=True,
+                    compute_lang=True,
+                )[wizard.order_id.id]
+>>>>>>> a7e9bf84dd6 (temp)
 
     def action_send_mail_and_cancel(self):
         self.ensure_one()
