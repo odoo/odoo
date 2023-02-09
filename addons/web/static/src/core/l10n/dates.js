@@ -278,7 +278,7 @@ export function parseDate(value, options = {}) {
     if (!value) {
         return false;
     }
-    return parseDateTime(value, options).startOf("day");
+    return parseDateTime(value, { format: localization.dateFormat, ...options }).startOf("day");
 }
 
 /**
