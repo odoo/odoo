@@ -160,6 +160,7 @@ class PosOrder(models.Model):
             'to_invoice',
             'multiprint_resume',
             'access_token',
+            'ticket_code',
         ]
 
     def _get_domain_for_draft_orders(self, table_ids):

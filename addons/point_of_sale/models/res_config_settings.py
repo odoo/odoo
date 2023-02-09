@@ -104,6 +104,7 @@ class ResConfigSettings(models.TransientModel):
     pos_warehouse_id = fields.Many2one(related='pos_config_id.warehouse_id', readonly=False, string="Warehouse (PoS)")
     point_of_sale_use_ticket_qr_code = fields.Boolean(related='company_id.point_of_sale_use_ticket_qr_code', readonly=False)
     pos_auto_validate_terminal_payment = fields.Boolean(related='pos_config_id.auto_validate_terminal_payment', readonly=False, string="Automatically validates orders paid with a payment terminal.")
+    point_of_sale_ticket_unique_code = fields.Boolean(related='company_id.point_of_sale_ticket_unique_code', readonly=False)
 
     @api.model_create_multi
     def create(self, vals_list):

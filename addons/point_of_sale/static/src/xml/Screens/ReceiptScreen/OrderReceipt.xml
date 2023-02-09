@@ -130,6 +130,16 @@
                 <img id="posqrcode" t-att-src="receipt.pos_qr_code" class="pos-receipt-logo"/>
             </div>
 
+            <div t-if="receipt.ticket_code">
+                <br /><br />
+                <div class="pos-receipt-order-data">
+                    You can go to <t t-out="receipt.base_url"/>/pos/ticket and use the code below to request an invoice online
+                </div>
+                <div class="pos-receipt-order-data">
+                    Unique Code: <t t-out="receipt.ticket_code"/>
+                </div>
+            </div>
+
             <!-- Footer -->
             <div t-if="receipt.footer_html"  class="pos-receipt-center-align">
                 <t t-out="receipt.footer_html" />
