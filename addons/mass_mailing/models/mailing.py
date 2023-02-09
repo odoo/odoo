@@ -266,7 +266,10 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             if mass_mailing.schedule_date:
                 schedule_date = str2dt(mass_mailing.schedule_date)
-                mass_mailing.next_departure = max(schedule_date, cron_time)
+                if fields.Datetime.now() < schedule_date < cron_time :
+                    mass_mailing.next_departure = schedule_date
+                else :
+                    mass_mailing.next_departure = cron_time
             else:
                 mass_mailing.next_departure = cron_time
 
@@ -746,7 +749,7 @@ class MassMailing(models.Model):
               JOIN %(target)s t ON (s.res_id = t.id)
               %(join_domain)s
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-              %(where_domain)s                               
+              %(where_domain)s
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
@@ -757,9 +760,9 @@ class MassMailing(models.Model):
                   FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
-                  %(join_domain)s                  
+                  %(join_domain)s
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-                  %(where_domain)s 
+                  %(where_domain)s
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
