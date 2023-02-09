@@ -73,12 +73,7 @@ export class SurveyQuestionTriggerWidget extends Component {
             return "";
         }
         const triggerId = record.data.triggering_question_id[0];
-        let triggerRecord;
-        if (this.props.isSurveyForm) { // embedded list
-            triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
-        } else {
-            triggerRecord = record.model.root.records.find(rec => rec.resId === triggerId);
-        }
+        let triggerRecord = record.model.root.data.question_and_page_ids.records.find(rec => rec.data.id === triggerId);
 
         if (!triggerRecord) {
             return "MISSING_TRIGGER_ERROR";
@@ -97,17 +92,6 @@ export class SurveyQuestionTriggerWidget extends Component {
 SurveyQuestionTriggerWidget.template = "survey.surveyQuestionTrigger";
 SurveyQuestionTriggerWidget.props = {
     ...standardWidgetProps,
-    isSurveyForm: { type: Boolean, optional: true },
-};
-
-SurveyQuestionTriggerWidget.defaultProps = {
-    isSurveyForm: false
-};
-
-SurveyQuestionTriggerWidget.extractProps = ({ attrs }) => {
-    return {
-        isSurveyForm: attrs.options.isSurveyForm
-    };
 };
 
 SurveyQuestionTriggerWidget.displayName = 'Trigger';
