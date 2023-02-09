@@ -1198,7 +1198,7 @@ var BasicModel = AbstractModel.extend({
                             if (shouldReload) {
                                 self._fetchRecord(record).then(function () {
                                     resolve(changedFields);
-                                });
+                                }, reject);
                             } else {
                                 _.extend(record.data, _changes);
                                 resolve(changedFields);

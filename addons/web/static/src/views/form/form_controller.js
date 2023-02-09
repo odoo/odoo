@@ -404,8 +404,9 @@ export class FormController extends Component {
 
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
+            const noReload = this.env.inDialog && clickParams.close;
             return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog })
+                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog, noReload })
                 .then((saved) => {
                     if (saved && this.props.onSave) {
                         this.props.onSave(this.model.root);
