@@ -60,7 +60,7 @@ export class Chatter extends Component {
         "threadId?",
         "threadModel",
         "webRecord?",
-        "saveRecord",
+        "saveRecord?",
     ];
     static defaultProps = {
         compactHeight: false,
@@ -342,7 +342,9 @@ export class Chatter extends Component {
                     toggle();
                 }
             };
-            this.props.saveRecord();
+            if (this.props.saveRecord) {
+                this.props.saveRecord();
+            }
         }
     }
 
