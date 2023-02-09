@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import Registries from "@point_of_sale/js/Registries";
+import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 const { useRef, useState, onWillStart} = owl;
 
 /**
@@ -16,6 +15,8 @@ const { useRef, useState, onWillStart} = owl;
  */
 
 export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
+    static template = "EventConfiguratorPopup";
+
     setup() {
         super.setup();
         const openEvents = this.props.eventData.filter(data => data["event_registrations_open"]);
@@ -131,6 +132,3 @@ export class EventConfiguratorPopup extends AbstractAwaitablePopup  {
         return false;
     }
 };
-
-EventConfiguratorPopup.template = "EventConfiguratorPopup";
-Registries.Component.add(EventConfiguratorPopup);

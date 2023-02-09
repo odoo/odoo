@@ -1,18 +1,20 @@
 /** @odoo-module **/
 
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { patch } from "@web/core/utils/patch";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
-export const PosEventProductScreen = (ProductScreen) => class extends ProductScreen {
+patch(ProductScreen.prototype, "pos_event.ProductScreen", {
     async _onClickPay() {
         const order = this.env.pos.get_order();
+        const _super = this._super;
         if (order.hasEventLines() && !order.get_partner()) {
-            const {confirmed} = await this.showPopup("ConfirmPopup", {
+            const {confirmed} = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Customer needed"),
                 body: this.env._t("Buying event ticket requires a customer to be selected"),
             });
             if (confirmed) {
-                const { confirmed, payload: newPartner } = await this.showTempScreen(
+                const { confirmed, payload: newPartner } = await this.pos.showTempScreen(
                     "PartnerListScreen",
                     { partner: null }
                 );
@@ -23,9 +25,7 @@ export const PosEventProductScreen = (ProductScreen) => class extends ProductScr
                 }
             }
         } else {
-            return super._onClickPay(...arguments);
+            return _super._onClickPay(...arguments);
         }
     }
-};
-
-Registries.Component.extend(ProductScreen, PosEventProductScreen);
+});

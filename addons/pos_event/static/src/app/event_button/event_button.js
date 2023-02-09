@@ -1,25 +1,28 @@
 /** @odoo-module */
 
-import PosComponent from "@point_of_sale/js/PosComponent";
-import ProductScreen from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import Registries from "@point_of_sale/js/Registries";
-import { identifyError } from "@point_of_sale/js/utils";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
-import { useListener } from "@web/core/utils/hooks";
+import { EventConfiguratorPopup } from "../event_configurator_popup/event_configurator_popup";
+import { identifyError } from "@point_of_sale/js/utils";
+import { useService } from "@web/core/utils/hooks";
+import { PosComponent } from "@point_of_sale/js/PosComponent";
+import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 
 
 export class EventButton extends PosComponent {
+    static template = "pos_event.EventButton";
+
     setup() {
         super.setup();
-        useListener("click", this.onClick);
+        this.popup = useService("popup");
     }
+
     async onClick() {
         try {
             const eventData = await this.rpc({
                 model: "event.event.ticket",
                 method: "get_ticket_linked_to_product_available_pos",
             });
-            const { confirmed, payload } = await this.showPopup("EventConfiguratorPopup", { eventData });
+            const { confirmed, payload } = await this.popup.add(EventConfiguratorPopup, { eventData });
             if (confirmed) {
                 const { ticketDetails } = payload;
                 const currentOrder = this.env.pos.get_order();
@@ -49,10 +52,7 @@ export class EventButton extends PosComponent {
         }
     }
 }
-EventButton.template = "EventButton";
 
 ProductScreen.addControlButton({
     component: EventButton,
 });
-
-Registries.Component.add(EventButton);

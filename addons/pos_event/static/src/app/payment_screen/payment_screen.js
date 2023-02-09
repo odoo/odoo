@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import PaymentScreen from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
-import Registries from "@point_of_sale/js/Registries";
+import { patch } from "@web/core/utils/patch";
+import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
 
-export const PosLoyaltyPaymentScreen = (PaymentScreen) => class extends PaymentScreen {
+patch(PaymentScreen.prototype, "pos_event.PaymentScreen", {
     //@override
     async validateOrder(isForceValidate) { // todo take into account when validation of order failed, what to do ?
+        const _super = this._super;
         const order = this.env.pos.get_order();
         const eventLines = order.get_orderlines().filter(line => line.eventId);
         if (eventLines.length > 0) {
@@ -55,7 +56,7 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) => class extends PaymentS
                 }
             }
         }
-        return await super.validateOrder(...arguments);
+        return await _super.validateOrder(...arguments);
     }
 
     /**
@@ -63,6 +64,4 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) => class extends PaymentS
      */
     // async _postPushOrderResolve(order, server_ids) {
     // }
-};
-
-Registries.Component.extend(PaymentScreen, PosLoyaltyPaymentScreen);
+});
