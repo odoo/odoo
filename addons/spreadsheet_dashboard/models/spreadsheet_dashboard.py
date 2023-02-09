@@ -20,5 +20,5 @@ class SpreadsheetDashboard(models.Model):
 
     @api.depends("data")
     def _compute_spreadsheet_data(self):
-        for dashboard in self:
+        for dashboard in self.with_context(bin_size=False):
             dashboard.spreadsheet_data = base64.b64decode(dashboard.data).decode()

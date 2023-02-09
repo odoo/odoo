@@ -45,4 +45,19 @@
         </field>
     </record>
 
+    <record id="spreadsheet_dashboard_view_form" model="ir.ui.view">
+        <field name="name">spreadsheet.dashboard.view.form</field>
+        <field name="model">spreadsheet.dashboard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="name"/>
+                    <field name="dashboard_group_id"/>
+                    <field name="data"/>
+                    <field name="thumbnail"/>
+                    <field name="group_ids" widget="many2many_tags"/>
+                </group>
+            </form>
+        </field>
+    </record>
 </odoo>
