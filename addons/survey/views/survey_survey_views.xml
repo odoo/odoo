@@ -71,6 +71,7 @@
                                     <field name="title" widget="survey_description_page"/>
                                     <field name="background_image" invisible="1"/>
                                     <field name="question_type" />
+                                    <field name="constr_mandatory" optional="1"/>
                                     <field name="is_page" invisible="1"/>
                                     <field name="questions_selection" invisible="1"/>
                                     <field name="suggested_answer_ids" invisible="1"/>
@@ -83,7 +84,8 @@
                                     <field name="triggering_answer_id" invisible="1"/>
                                     <field name="is_placed_before_trigger" invisible="1"/>
                                     <field name="allowed_triggering_question_ids" invisible="1"/>
-                                    <widget name="survey_question_trigger" options="{'isSurveyForm': True}"/>
+                                    <widget name="survey_question_trigger"/>
+                                    <button name="copy" type="object" icon="fa-clone" title="Duplicate Question"/>
                                     <control>
                                         <create name="add_question_control" string="Add a question"/>
                                         <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
