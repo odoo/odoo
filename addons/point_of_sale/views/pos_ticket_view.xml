@@ -132,4 +132,51 @@
             </div>
         </t>
     </template>
+
+    <template id="ticket_request_with_code">
+        <t t-call="portal.portal_layout">
+            <t t-set="no_breadcrumbs" t-value="True"/>
+            <div class="row justify-content-md-center">
+                <form method="post" target="_self" t-att-action="'/pos/ticket'">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                    <div class="col-12 col-md-6 mt-4 offset-md-3">
+                        <div class="row">
+                            <div t-if="banner_error" class="alert alert-danger" role="alert">
+                                <div class="col-lg-12">
+                                    <t t-esc="banner_error"/>
+                                </div>
+                            </div>
+                            <h2>Invoice Request</h2>
+                            <hr class="mt-1 mb-0"/>
+                            <div class="row o_portal_details">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div t-attf-class="col-12 mb-6 col-xl-8">
+                                            <label class="col-form-label" for="pos_reference">Ticket Nr</label>
+                                            <input type="text" name="pos_reference" placeholder="00014-001-0001"
+                                                   t-attf-class="form-control #{errors.get('pos_reference') and 'is-invalid' or ''}"
+                                                   t-att-value="form_values.get('pos_reference')"/>
+                                            <label class="col-form-label" for="date_order">Date</label>
+                                            <input type="date" name="date_order"
+                                                   t-attf-class="form-control #{errors.get('date_order') and 'is-invalid' or ''}"
+                                                   t-att-value="form_values.get('date_order')"/>
+                                            <label class="col-form-label" for="ticket_code">Unique code</label>
+                                            <input type="text" name="ticket_code" placeholder="qx9h1"
+                                                   t-attf-class="form-control #{errors.get('ticket_code') and 'is-invalid' or ''}"
+                                                   t-att-value="form_values.get('ticket_code')"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-12 col-md-6 col-lg-5 col-xl-4">
+                                    <button class="btn btn-primary w-100">Request invoice</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </t>
+    </template>
 </odoo>

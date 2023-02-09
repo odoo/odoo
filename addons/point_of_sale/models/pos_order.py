@@ -56,7 +56,8 @@ class PosOrder(models.Model):
             'shipping_date': ui_order['shipping_date'] if "shipping_date" in ui_order else False,
             'is_tipped': ui_order.get('is_tipped', False),
             'tip_amount': ui_order.get('tip_amount', 0),
-            'access_token': ui_order.get('access_token', '')
+            'access_token': ui_order.get('access_token', ''),
+            'ticket_code': ui_order.get('ticket_code', ''),
         }
 
     @api.model
@@ -294,6 +295,7 @@ class PosOrder(models.Model):
     refunded_order_ids = fields.Many2many('pos.order', compute='_compute_refund_related_fields')
     has_refundable_lines = fields.Boolean('Has Refundable Lines', compute='_compute_has_refundable_lines')
     refunded_orders_count = fields.Integer(compute='_compute_refund_related_fields')
+    ticket_code = fields.Char(help='5 digits alphanumeric code to be used by portal user to request an invoice')
 
     @api.depends('lines.refund_orderline_ids', 'lines.refunded_orderline_id')
     def _compute_refund_related_fields(self):
@@ -1037,6 +1039,7 @@ class PosOrder(models.Model):
             'is_tipped': order.is_tipped,
             'tip_amount': order.tip_amount,
             'access_token': order.access_token,
+            'ticket_code': order.ticket_code,
         }
 
     def _get_fields_for_order_line(self):
