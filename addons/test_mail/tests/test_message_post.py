@@ -823,6 +823,51 @@ class TestMessagePost(TestMessagePostCommon, CronMixinCase):
                         ]
         )
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_message_schedule')
+    def test_message_post_w_attachments_filtering(self):
+        """
+        Test the message_main_attachment heuristics with an emphasis on the XML/PDF types.
+        -> we don't want XML files to be set as message_main_attachment
+        """
+        xml_attachment, pdf_attachment = ('List1', b'My xml attachment'), ('List2', b'My pdf attachment')
+
+        xml_attachment_data, pdf_attachment_data = self.env['ir.attachment'].create(
+            self._generate_attachments_data(2, 'mail.compose.message', 0)
+        )
+        xml_attachment_data.write({'mimetype': 'application/xml'})
+        pdf_attachment_data.write({'mimetype': 'application/pdf'})
+
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        self.assertFalse(test_record.message_main_attachment_id)
+
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=xml_attachment,
+                attachment_ids=xml_attachment_data.ids,
+                body='Post XML',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        self.assertFalse(test_record.message_main_attachment_id,
+                         'MailThread: main attachment should not be set with an XML')
+
+        with self.mock_mail_gateway():
+            test_record.message_post(
+                attachments=pdf_attachment,
+                attachment_ids=pdf_attachment_data.ids,
+                body='Post PDF',
+                message_type='comment',
+                partner_ids=[self.partner_1.id],
+                subject='Test',
+                subtype_xmlid='mail.mt_comment',
+            )
+
+        self.assertEqual(test_record.message_main_attachment_id, pdf_attachment_data,
+                         'MailThread: main attachment should be set to application/pdf')
+
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_multiline_subject(self):
         with self.mock_mail_gateway():
