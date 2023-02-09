@@ -123,6 +123,16 @@ export class ChatWindow extends Component {
     }
 
     expand() {
+        if (this.thread.type === "chatter") {
+            this.action.doAction({
+                type: "ir.actions.act_window",
+                res_id: this.thread.id,
+                res_model: this.thread.model,
+                views: [[false, "form"]],
+            });
+            this.chatWindowService.close(this.props.chatWindow);
+            return;
+        }
         this.threadService.setDiscussThread(this.thread);
         this.action.doAction(
             {

@@ -56,15 +56,15 @@ QUnit.module("mail", {}, function () {
             }
         );
 
-        QUnit.skipRefactoring(
+        QUnit.test(
             "click on expand from chat window should close the chat window and open the form view",
             async function (assert) {
-                assert.expect(8);
-
                 const pyEnv = await startServer();
-                const resPartnerId1 = pyEnv["res.partner"].create({});
+                const resPartnerId1 = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
                 const mailMessageId1 = pyEnv["mail.message"].create({
                     model: "res.partner",
+                    body: "not empty",
+                    author_id: pyEnv.partnerRootId,
                     needaction: true,
                     needaction_partner_ids: [pyEnv.currentPartnerId],
                     res_id: resPartnerId1,
@@ -75,7 +75,7 @@ QUnit.module("mail", {}, function () {
                     notification_type: "inbox",
                     res_partner_id: pyEnv.currentPartnerId,
                 });
-                const { afterEvent, click, env, messaging } = await start();
+                const { env } = await start();
                 patchWithCleanup(env.services.action, {
                     doAction(action) {
                         assert.step("do_action");
@@ -91,40 +91,9 @@ QUnit.module("mail", {}, function () {
                         );
                     },
                 });
-                await afterNextRender(() =>
-                    afterEvent({
-                        eventName: "o-thread-cache-loaded-messages",
-                        func: () =>
-                            document
-                                .querySelector(
-                                    ".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])"
-                                )
-                                .click(),
-                        message: "should wait until inbox loaded initial needaction messages",
-                        predicate: ({ threadCache }) => {
-                            return threadCache.thread === messaging.inbox.thread;
-                        },
-                    })
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ThreadNeedactionPreviewView",
-                    "should have a preview initially"
-                );
-
-                await click(".o_ThreadNeedactionPreviewView");
-                assert.containsOnce(
-                    document.body,
-                    ".o-mail-chat-window",
-                    "should have opened the thread on clicking on the preview"
-                );
-                assert.containsOnce(
-                    document.body,
-                    ".o_ChatWindowHeaderView_commandExpand",
-                    "should have an expand button"
-                );
-
-                await click(".o_ChatWindowHeaderView_commandExpand");
+                await click(".o_menu_systray i[aria-label='Messages']");
+                await click(".o-mail-notification-item:contains(Frodo Baggins)");
+                await click(".o-mail-command i.fa-expand");
                 assert.containsNone(
                     document.body,
                     ".o-mail-chat-window",
