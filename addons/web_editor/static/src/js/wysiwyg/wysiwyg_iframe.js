@@ -154,7 +154,7 @@ Wysiwyg.include({
                 self.$iframe[0].contentWindow.document
                     .open("text/html", "replace")
                     .write(`<!DOCTYPE html><html${
-                        self.options.iframeHtmlClass ? ` class="${self.options.iframeHtmlClass}"` : ''
+                        self.options.iframeHtmlClass ? ' class="' + self.options.iframeHtmlClass +'"' : ''
                     }>${iframeContent}</html>`);
             });
             self.options.document = self.$iframe[0].contentWindow.document;
