@@ -659,7 +659,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-            line.name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+            if not line.order_partner_id.is_public:
+                line = line.with_context(lang=line.order_partner_id.lang)
+            line.name = line._get_sale_order_line_multiline_description_sale()
 
     @api.depends('product_id')
     def _compute_custom_attribute_values(self):
