@@ -72,13 +72,13 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "ADD_GLOBAL_FILTER":
-                this._addGlobalFilter(cmd.filter);
+                this.history.update("globalFilters", cmd.filter.id, cmd.filter);
                 break;
             case "EDIT_GLOBAL_FILTER":
                 this._editGlobalFilter(cmd.id, cmd.filter);
                 break;
             case "REMOVE_GLOBAL_FILTER":
-                this._removeGlobalFilter(cmd.id);
+                this.history.update("globalFilters", cmd.id, undefined);
                 break;
         }
     }
@@ -132,26 +132,6 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
     // Handlers
     // ---------------------------------------------------------------------
 
-    /**
-     * Add a global filter
-     *
-     * @param {GlobalFilter} filter
-     */
-    _addGlobalFilter(filter) {
-        const globalFilters = { ...this.globalFilters };
-        globalFilters[filter.id] = filter;
-        this.history.update("globalFilters", globalFilters);
-    }
-    /**
-     * Remove a global filter
-     *
-     * @param {string} id Id of the filter to remove
-     */
-    _removeGlobalFilter(id) {
-        const globalFilters = { ...this.globalFilters };
-        delete globalFilters[id];
-        this.history.update("globalFilters", globalFilters);
-    }
     /**
      * Edit a global filter
      *
