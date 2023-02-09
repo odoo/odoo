@@ -9,7 +9,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('ar_ex')
     def _get_ar_ex_template_data(self):
         return {
-            'name': 'Plan Contable Genérico Argentina para Exentos',
+            'name': 'Argentine Generic Chart of Accounts for Exempt Individuals',
             'parent': 'ar_base',
             'code_digits': '12',
         }

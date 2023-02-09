@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 13.3alpha1+e\n"
+"Project-Id-Version: Odoo Server 16.2alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-30 18:36+0000\n"
-"PO-Revision-Date: 2020-03-30 18:36+0000\n"
+"POT-Creation-Date: 2023-02-21 14:52+0000\n"
+"PO-Revision-Date: 2023-02-21 14:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -159,6 +159,11 @@ msgstr ""
 
 #. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid "<strong>Son: </strong>"
+msgstr ""
+
+#. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 msgid "<strong>VAT Cond: </strong>"
 msgstr ""
 
@@ -193,19 +198,16 @@ msgid "AFIP Concept"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "AFIP POS Address"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid "AFIP POS Number"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_system
 #: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_afip_pos_system
 msgid "AFIP POS System"
 msgstr ""
@@ -233,7 +235,6 @@ msgstr ""
 #. module: l10n_ar
 #: model:ir.actions.act_window,name:l10n_ar.action_afip_responsibility_type
 #: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__l10n_ar_afip_responsibility_type_ids
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__l10n_ar_afip_responsibility_type_ids
 msgid "AFIP Responsibility Types"
 msgstr ""
 
@@ -272,6 +273,11 @@ msgid "Accounting Date"
 msgstr ""
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
+msgid "Accounting Date: This Year"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_partner_property_form
 msgid "Accounting Documents"
 msgstr ""
@@ -292,6 +298,11 @@ msgid "Argentinean Documents"
 msgstr ""
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.res_config_settings_view_form
+msgid "Argentinean Localization"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.ui.menu,name:l10n_ar.account_reports_ar_statements_menu
 msgid "Argentinean Statements"
 msgstr ""
@@ -302,7 +313,11 @@ msgid "Bank Accounts"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_exento
+#: model:l10n_latam.identification.type,description:l10n_ar.it_AN
+msgid "Birth certificate"
+msgstr ""
+
+#. module: l10n_ar
 #: model:product.template,name:l10n_ar.product_product_exento_product_template
 msgid "Book \"Development in Odoo\" (VAT Exempt)"
 msgstr ""
@@ -313,6 +328,7 @@ msgid "CBA"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner_bank.py:0
 #, python-format
 msgid "CBU"
@@ -334,8 +350,134 @@ msgid "CCorr"
 msgstr ""
 
 #. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CDI
 #: model:l10n_latam.identification.type,name:l10n_ar.it_CDI
 msgid "CDI"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIBAR
+msgid "CI Bs. As. RNP"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CBA
+msgid "CI Buenos Aires"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CCat
+msgid "CI Catamarca"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CICha
+msgid "CI Chaco"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIChu
+msgid "CI Chubut"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CCorr
+msgid "CI Corrientes"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CCor
+msgid "CI Córdoba"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIER
+msgid "CI Entre Ríos"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CPF
+msgid "CI Federal Police"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIF
+msgid "CI Formosa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIJ
+msgid "CI Jujuy"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CILP
+msgid "CI La Pampa"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CILR
+msgid "CI La Rioja"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIMen
+msgid "CI Mendoza"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIMis
+msgid "CI Misiones"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIN
+msgid "CI Neuquén"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIRN
+msgid "CI Río Negro"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIS
+msgid "CI Salta"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CISJ
+msgid "CI San Juan"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CISL
+msgid "CI San Luis"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CISC
+msgid "CI Santa Cruz"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CISF
+msgid "CI Santa Fe"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CISdE
+msgid "CI Santiago del Estero"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CITdF
+msgid "CI Tierra del Fuego"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CIT
+msgid "CI Tucumán"
 msgstr ""
 
 #. module: l10n_ar
@@ -454,14 +596,7 @@ msgid "CUIT"
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_move.py:0
-#, python-format
-msgid ""
-"Can not change the POS number, you can only change the first number for "
-"document type that you are creating in odoo"
-msgstr ""
-
-#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -516,6 +651,7 @@ msgid "Contact"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_company.py:0
 #, python-format
 msgid ""
@@ -574,22 +710,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__display_name
+#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__l10n_ar_state_id
+msgid "Delivery Province"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__display_name
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -610,6 +736,7 @@ msgid "ET"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Electronic Fiscal Bond - Online Invoice"
@@ -622,12 +749,21 @@ msgid "Exempt"
 msgstr ""
 
 #. module: l10n_ar
+#: model:account.journal,name:l10n_ar.sale_expo_journal_exento
+#: model:account.journal,name:l10n_ar.sale_expo_journal_mono
+#: model:account.journal,name:l10n_ar.sale_expo_journal_ri
+msgid "Expo Sales Journal"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Export Voucher - Billing Plus"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Export Voucher - Online Invoice"
@@ -666,12 +802,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Go to Companies"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Go to Journals"
@@ -698,28 +836,12 @@ msgid "Gross Income Type"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_servicio_de_guarda
 #: model:product.template,name:l10n_ar.product_product_servicio_de_guarda_product_template
 msgid "Guard Service"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group__id
 #: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner__id
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank__id
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom__id
 msgid "ID"
 msgstr ""
 
@@ -746,6 +868,7 @@ msgid "Identification Types"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -754,12 +877,34 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_quote_despacho
 #: model:product.template,name:l10n_ar.product_product_quote_despacho_product_template
 msgid "Import Clearance"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Checksum"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Format"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
+#: code:addons/l10n_ar/models/res_partner_bank.py:0
+#, python-format
+msgid "Invalid Length"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Invalid length for \"%s\""
@@ -781,33 +926,20 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: l10n_ar
+#: model:ir.model,name:l10n_ar.model_account_move_line
+msgid "Journal Item"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_LC
 #: model:l10n_latam.identification.type,name:l10n_ar.it_LC
 msgid "LC"
 msgstr ""
 
 #. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_LE
 #: model:l10n_latam.identification.type,name:l10n_ar.it_LE
 msgid "LE"
-msgstr ""
-
-#. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_chart_template____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_fiscal_position_template____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_account_tax_group____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_ar_afip_responsibility_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_document_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_l10n_latam_identification_type____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_company____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_country____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_currency____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_res_partner_bank____last_update
-#: model:ir.model.fields,field_description:l10n_ar.field_uom_uom____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: l10n_ar
@@ -861,6 +993,12 @@ msgid "Logo"
 msgstr ""
 
 #. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CdM
+msgid "Migration Certificate"
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Missing Partner Configuration"
@@ -882,18 +1020,23 @@ msgid "Name must be unique!"
 msgstr ""
 
 #. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_dni
+msgid "National Identity Card"
+msgstr ""
+
+#. module: l10n_ar
 #: model:ir.model.fields,field_description:l10n_ar.field_res_country__l10n_ar_natural_vat
 msgid "Natural Person VAT"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "No VAT configured for partner [%i] %s"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_cero
 #: model:product.template,name:l10n_ar.product_product_cero_product_template
 msgid "Non-industrialized animals and vegetables (VAT Zero)"
 msgstr ""
@@ -920,12 +1063,14 @@ msgid "Number..."
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "On invoice id \"%s\" you must use VAT Not Applicable on every line."
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -934,12 +1079,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Online Invoice"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "Only numbers allowed for \"%s\""
@@ -949,6 +1096,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_ar.field_res_partner__l10n_ar_special_purchase_document_type_ids
 #: model:ir.model.fields,field_description:l10n_ar.field_res_users__l10n_ar_special_purchase_document_type_ids
 msgid "Other Purchase Documents"
+msgstr ""
+
+#. module: l10n_ar
+#: model:account.tax,name:l10n_ar.ri_tax_other_taxes_compras
+#: model:account.tax,name:l10n_ar.ri_tax_other_taxes_ventas
+msgid "Other Tax"
 msgstr ""
 
 #. module: l10n_ar
@@ -967,30 +1120,35 @@ msgid "Partner"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid "Please configure the AFIP Responsibility for \"%s\" in order to continue"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Please define a valid AFIP POS number (5 digits max)"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Please define an AFIP POS number"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Pre-printed Invoice"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid "Product Coding - Online Voucher"
@@ -1025,12 +1183,6 @@ msgid "Sequence"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_sequence_ids
-#: model:ir.model.fields,field_description:l10n_ar.field_account_journal__l10n_ar_sequence_ids
-msgid "Sequences"
-msgstr ""
-
-#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "Service Date"
 msgstr ""
@@ -1049,19 +1201,16 @@ msgid "Sigd"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,field_description:l10n_ar.field_account_invoice_report__l10n_ar_state_id
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_account_invoice_report_search_inherit
 msgid "State"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_tasa_estadistica
 #: model:product.template,name:l10n_ar.product_product_tasa_estadistica_product_template
 msgid "Statistics Rate"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_arancel
 #: model:product.template,name:l10n_ar.product_product_arancel_product_template
 msgid "Tariff"
 msgstr ""
@@ -1072,17 +1221,12 @@ msgid "Tax Group"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_telefonia
 #: model:product.template,name:l10n_ar.product_product_telefonia_product_template
 msgid "Telephone service (VAT 27)"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model,name:l10n_ar.model_account_fiscal_position_template
-msgid "Template for Fiscal Position"
-msgstr ""
-
-#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1091,6 +1235,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid ""
@@ -1101,12 +1246,14 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid "The number of import Dispatch must be 16 characters"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1115,12 +1262,22 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
+msgid ""
+"The tax credit specified in this voucher may only be computed for purposes "
+"of the Tax Support and Inclusion Regime for Small Taxpayers of Law No. "
+"27,618."
+msgstr ""
+
+#. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/res_partner.py:0
 #, python-format
 msgid "The validation digit is not valid for \"%s\""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1143,13 +1300,11 @@ msgid "This field is required in order to print the invoice report properly"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_partner_id
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_partner_id
 msgid "This is the address used for invoice reports of this POS"
 msgstr ""
 
 #. module: l10n_ar
-#: model:ir.model.fields,help:l10n_ar.field_account_bank_statement_import_journal_creation__l10n_ar_afip_pos_number
 #: model:ir.model.fields,help:l10n_ar.field_account_journal__l10n_ar_afip_pos_number
 msgid ""
 "This is the point of sale number assigned by AFIP in order to generate "
@@ -1168,23 +1323,18 @@ msgid "Type of gross income: exempt, local, multilateral"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,uom_name:l10n_ar.product_product_arancel
-#: model:product.product,uom_name:l10n_ar.product_product_cero
-#: model:product.product,uom_name:l10n_ar.product_product_exento
-#: model:product.product,uom_name:l10n_ar.product_product_no_gravado
-#: model:product.product,uom_name:l10n_ar.product_product_quote_despacho
-#: model:product.product,uom_name:l10n_ar.product_product_servicio_de_guarda
-#: model:product.product,uom_name:l10n_ar.product_product_tasa_estadistica
-#: model:product.product,uom_name:l10n_ar.product_product_telefonia
-#: model:product.template,uom_name:l10n_ar.product_product_arancel_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_cero_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_exento_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_no_gravado_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_quote_despacho_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_servicio_de_guarda_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_tasa_estadistica_product_template
-#: model:product.template,uom_name:l10n_ar.product_product_telefonia_product_template
-msgid "Units"
+#: model:l10n_latam.identification.type,description:l10n_ar.it_Sigd
+msgid "Unidentified/global daily sales"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_CUIL
+msgid "Unique Labor Identification Code"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_cuit
+msgid "Unique Tax Identification Code"
 msgstr ""
 
 #. module: l10n_ar
@@ -1193,7 +1343,6 @@ msgid "Untaxed"
 msgstr ""
 
 #. module: l10n_ar
-#: model:product.product,name:l10n_ar.product_product_no_gravado
 #: model:product.template,name:l10n_ar.product_product_no_gravado_product_template
 msgid "Untaxed concepts (VAT NT)"
 msgstr ""
@@ -1201,6 +1350,11 @@ msgstr ""
 #. module: l10n_ar
 #: model:l10n_latam.identification.type,name:l10n_ar.it_UpApP
 msgid "UpApP"
+msgstr ""
+
+#. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_UpApP
+msgid "Used by Anses for Padrón"
 msgstr ""
 
 #. module: l10n_ar
@@ -1215,15 +1369,10 @@ msgid "VAT AFIP Code"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_fiscal_position.py:0
 #, python-format
 msgid "Warning"
-msgstr ""
-
-#. module: l10n_ar
-#: code:addons/l10n_ar/models/res_partner.py:0
-#, python-format
-msgid "We were not able to sanitize the identification number"
 msgstr ""
 
 #. module: l10n_ar
@@ -1232,6 +1381,7 @@ msgid "With Document"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1240,6 +1390,7 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/account_move.py:0
 #, python-format
 msgid ""
@@ -1248,11 +1399,12 @@ msgid ""
 msgstr ""
 
 #. module: l10n_ar
-#: code:addons/l10n_ar/models/account_chart_template.py:0
+#. odoo-python
+#: code:addons/l10n_ar/models/account_journal.py:0
 #, python-format
 msgid ""
-"You are trying to install a chart of account for the %s responsibility but "
-"your company is configured as %s type"
+"You can not change the journal's configuration if it already has validated "
+"invoices"
 msgstr ""
 
 #. module: l10n_ar
@@ -1261,35 +1413,19 @@ msgid "Zero"
 msgstr ""
 
 #. module: l10n_ar
+#. odoo-python
 #: code:addons/l10n_ar/models/l10n_latam_document_type.py:0
 #, python-format
 msgid "is not a valid value for"
 msgstr ""
 
 #. module: l10n_ar
+#: model:l10n_latam.identification.type,description:l10n_ar.it_ET
+msgid "pending"
+msgstr ""
+
+#. module: l10n_ar
 #: model_terms:ir.ui.view,arch_db:l10n_ar.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:l10n_ar.view_move_form
 msgid "to"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Checksum"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Format"
-msgstr ""
-
-#. module: l10n_ar
-#. odoo-python
-#: code:addons/l10n_ar/models/res_partner_bank.py:0
-#, python-format
-msgid "Invalid Length"
 msgstr ""

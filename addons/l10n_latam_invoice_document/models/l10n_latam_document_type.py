@@ -16,12 +16,12 @@ class L10nLatamDocumentType(models.Model):
         ' commonly used first')
     country_id = fields.Many2one(
         'res.country', required=True, index=True, help='Country in which this type of document is valid')
-    name = fields.Char(required=True, help='The document name', translate=True)
+    name = fields.Char(required=True, help='The document name')
     doc_code_prefix = fields.Char(
         'Document Code Prefix', help="Prefix for Documents Codes on Invoices and Account Moves. For eg. 'FA ' will"
         " build 'FA 0001-0000001' Document Number")
     code = fields.Char(help='Code used by different localizations')
-    report_name = fields.Char('Name on Reports', help='Name that will be printed in reports, for example "CREDIT NOTE"', translate= True)
+    report_name = fields.Char('Name on Reports', help='Name that will be printed in reports, for example "CREDIT NOTE"')
     internal_type = fields.Selection(
         [('invoice', 'Invoices'), ('debit_note', 'Debit Notes'), ('credit_note', 'Credit Notes')],
         help='Analog to odoo account.move.move_type but with more options allowing to identify the kind of document we are'

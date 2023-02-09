@@ -40,11 +40,11 @@ class TestManual(common.TestAr):
 
         # Cerro Castor > IVA Liberado – Ley Nº 19.640 > Compras / Ventas Zona Franca > IVA Exento
         invoice = self._create_invoice({'partner': self.res_partner_cerrocastor})
-        self.assertEqual(invoice.fiscal_position_id, self._search_fp('Compras / Ventas Zona Franca'))
+        self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales Free Trade Zone'))
 
         # Expresso > Cliente / Proveedor del Exterior >  > IVA Exento
         invoice = self._create_invoice({'partner': self.res_partner_expresso})
-        self.assertEqual(invoice.fiscal_position_id, self._search_fp('Compras / Ventas al exterior'))
+        self.assertEqual(invoice.fiscal_position_id, self._search_fp('Purchases / Sales abroad'))
 
     def test_03_corner_cases(self):
         """ Mono partner of type Service and VAT 21 """
