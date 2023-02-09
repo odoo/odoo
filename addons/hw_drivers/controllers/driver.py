@@ -31,6 +31,15 @@ class DriverController(http.Controller):
         if iot_device:
             iot_device.data['owner'] = session_id
             data = json.loads(data)
+
+            # Skip the request if it was already executed (duplicated action calls)
+            iot_idempotent_id = data.get("iot_idempotent_id")
+            if iot_idempotent_id:
+                idempotent_session = iot_device._check_idempotency(iot_idempotent_id, session_id)
+                if idempotent_session:
+                    _logger.info("Ignored request from %s as iot_idempotent_id %s already received from session %s",
+                                 session_id, iot_idempotent_id, idempotent_session)
+                    return False
             iot_device.action(data)
             return True
         return False
