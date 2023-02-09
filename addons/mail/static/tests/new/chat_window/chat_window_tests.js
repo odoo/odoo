@@ -70,7 +70,7 @@ QUnit.test(
         await click(".o-mail-messaging-menu .o-mail-notification-item");
         await insertText(".o-mail-chat-window .o-mail-composer-textarea", "Test");
         await afterNextRender(() => triggerHotkey("control+Enter"));
-        assert.containsOnce(document.body, ".o-mail-message");
+        assert.containsOnce(target, ".o-mail-message");
     }
 );
 

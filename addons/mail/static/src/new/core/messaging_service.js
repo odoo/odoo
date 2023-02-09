@@ -4,7 +4,7 @@ import { markup, reactive } from "@odoo/owl";
 import { Deferred } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 import { cleanTerm, htmlToTextContentInline } from "@mail/new/utils/format";
-import { removeFromArray } from "@mail/new/utils/arrays";
+import { removeFromArray, removeFromArrayWithPredicate } from "@mail/new/utils/arrays";
 import { LinkPreview } from "./link_preview_model";
 import { CannedResponse } from "./canned_response_model";
 import { browser } from "@web/core/browser/browser";
@@ -444,9 +444,12 @@ export class Messaging {
                             (p) => p === this.store.user.id
                         );
                         removeFromArray(message.needaction_partner_ids, partnerIndex);
-                        removeFromArray(this.store.discuss.inbox.messageIds, messageId);
+                        removeFromArrayWithPredicate(
+                            this.store.discuss.inbox.messages,
+                            ({ id }) => id === messageId
+                        );
                         if (this.store.discuss.history.messages.length > 0) {
-                            this.store.discuss.history.messageIds.push(messageId);
+                            this.store.discuss.history.messages.push(message);
                         }
                     }
                     this.store.discuss.inbox.counter = needaction_inbox_counter;

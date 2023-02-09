@@ -4,7 +4,11 @@ import { markup } from "@odoo/owl";
 import { ChannelMember } from "../core/channel_member_model";
 import { Thread } from "../core/thread_model";
 import { _t } from "@web/core/l10n/translation";
-import { removeFromArray, replaceArrayWithCompare } from "@mail/new/utils/arrays";
+import {
+    removeFromArray,
+    removeFromArrayWithPredicate,
+    replaceArrayWithCompare,
+} from "@mail/new/utils/arrays";
 import { assignDefined, createLocalId } from "../utils/misc";
 import { Composer } from "../composer/composer_model";
 import { prettifyMessageContent } from "../utils/format";
@@ -634,7 +638,7 @@ export class ThreadService {
             this.rpc("/mail/link_preview", { message_id: data.id }, { silent: true });
         }
         if (thread.type !== "chatter") {
-            removeFromArray(thread.messageIds, tmpMsg.id);
+            removeFromArrayWithPredicate(thread.messages, ({ id }) => id === tmpMsg.id);
             delete this.store.messages[tmpMsg.id];
         }
         return message;
@@ -674,7 +678,6 @@ export class ThreadService {
     localMessageUnreadCounter(thread) {
         let baseCounter = thread.serverMessageUnreadCounter;
         let countFromId = thread.serverLastSeenMsgBySelf ? thread.serverLastSeenMsgBySelf : 0;
-        this.messageService.sortMessages(thread);
         const lastSeenMessageId = this.lastSeenBySelfMessageId(thread);
         const firstMessage = thread.messages[0];
         if (firstMessage && lastSeenMessageId && lastSeenMessageId >= firstMessage.id) {

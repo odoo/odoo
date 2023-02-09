@@ -56,8 +56,8 @@ export class Thread {
     memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
-    /** @type {number[]} */
-    messageIds = [];
+    /** @type {import("@mail/new/core/message_model").Message[]} */
+    messages = [];
     /** @type {string} */
     name;
     /** @type {number} */
@@ -96,10 +96,6 @@ export class Thread {
             this.type = "chatter";
         }
         store.threads[this.localId] = this;
-    }
-
-    get messages() {
-        return this.messageIds.map((id) => this._store.messages[id]);
     }
 
     get accessRestrictedToGroupText() {
@@ -260,10 +256,10 @@ export class Thread {
     }
 
     get mostRecentMsgId() {
-        if (this.messageIds.length === 0) {
+        if (this.messages.length === 0) {
             return undefined;
         }
-        return Math.max(...this.messageIds);
+        return Math.max(...this.messages.map((m) => m.id));
     }
 
     get mostRecentNeedactionMsgId() {
@@ -274,7 +270,7 @@ export class Thread {
     }
 
     get mostRecentNonTransientMessage() {
-        if (this.messageIds.length === 0) {
+        if (this.messages.length === 0) {
             return undefined;
         }
         const oldestNonTransientMessage = [...this.messages]
@@ -311,7 +307,7 @@ export class Thread {
     }
 
     get oldestNonTransientMessage() {
-        if (this.messageIds.length === 0) {
+        if (this.messages.length === 0) {
             return undefined;
         }
         const oldestNonTransientMessage = this.messages.find((message) =>

@@ -41,7 +41,7 @@ export class MessagingMenu extends Component {
         if (
             !this.store.discuss.inbox.isLoaded &&
             this.store.discuss.inbox.status !== "loading" &&
-            this.store.discuss.inbox.counter !== this.store.discuss.inbox.messageIds.length
+            this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
         ) {
             this.threadService.fetchMessages(this.store.discuss.inbox);
         }

@@ -2,7 +2,7 @@
 
 import { markup } from "@odoo/owl";
 import { Message } from "./message_model";
-import { removeFromArray } from "../utils/arrays";
+import { removeFromArray, removeFromArrayWithPredicate } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
 import { registry } from "@web/core/registry";
 import { MessageReactions } from "./message_reactions_model";
@@ -45,7 +45,10 @@ export class MessageService {
     async delete(message) {
         if (message.isStarred) {
             this.store.discuss.starred.counter--;
-            removeFromArray(this.store.discuss.starred.messageIds, message.id);
+            removeFromArrayWithPredicate(
+                this.store.discuss.starred.messages,
+                ({ id }) => id === message.id
+            );
         }
         message.body = "";
         message.attachments = [];
@@ -137,7 +140,7 @@ export class MessageService {
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.store.discuss.starred.counter = 0;
-        this.store.discuss.starred.messageIds = [];
+        this.store.discuss.starred.messages = [];
         await this.orm.call("mail.message", "unstar_all");
     }
 
@@ -162,11 +165,14 @@ export class MessageService {
         if (isStarred) {
             this.store.discuss.starred.counter++;
             if (this.store.discuss.starred.messages.length > 0) {
-                this.store.discuss.starred.messageIds.push(message.id);
+                this.store.discuss.starred.messages.push(message);
             }
         } else {
             this.store.discuss.starred.counter--;
-            removeFromArray(this.store.discuss.starred.messageIds, message.id);
+            removeFromArrayWithPredicate(
+                this.store.discuss.starred.messages,
+                ({ id }) => id === message.id
+            );
         }
     }
 
@@ -189,12 +195,12 @@ export class MessageService {
         } else {
             message = new Message();
             message._store = this.store;
+            message = this.store.messages[data.id] = message;
         }
         this._update(message, data, fromFetch);
-        this.store.messages[message.id] = message;
         this.updateNotifications(message);
         // return reactive version
-        return this.store.messages[message.id];
+        return message;
     }
 
     /**
@@ -264,9 +270,8 @@ export class MessageService {
             message.originThread.modelName = data.res_model_name;
         }
         this._updateReactions(message, data.messageReactionGroups);
-        this.store.messages[message.id] = message;
         if (message.originThread && !message.originThread.messages.includes(message)) {
-            message.originThread.messageIds.push(message.id);
+            message.originThread.messages.push(message);
             this.sortMessages(message.originThread);
         }
         if (message.isNeedaction && !this.store.discuss.inbox.messages.includes(message)) {
@@ -276,15 +281,15 @@ export class MessageService {
                     message.originThread.message_needaction_counter++;
                 }
             }
-            this.store.discuss.inbox.messageIds.push(message.id);
+            this.store.discuss.inbox.messages.push(message);
             this.sortMessages(this.store.discuss.inbox);
         }
         if (message.isStarred && !this.store.discuss.starred.messages.includes(message)) {
-            this.store.discuss.starred.messageIds.push(message.id);
+            this.store.discuss.starred.messages.push(message);
             this.sortMessages(this.store.discuss.starred);
         }
         if (message.isHistory && !this.store.discuss.history.messages.includes(message)) {
-            this.store.discuss.history.messageIds.push(message.id);
+            this.store.discuss.history.messages.push(message);
             this.sortMessages(this.store.discuss.history);
         }
     }
@@ -456,9 +461,7 @@ export class MessageService {
      * @param {import("@mail/new/core/thread_model").Thread} thread
      */
     sortMessages(thread) {
-        thread.messageIds.sort((msgId1, msgId2) => {
-            const msg1 = this.store.messages[msgId1];
-            const msg2 = this.store.messages[msgId2];
+        thread.messages.sort((msg1, msg2) => {
             const indicator = msg1.datetime - msg2.datetime;
             if (indicator) {
                 return indicator;
