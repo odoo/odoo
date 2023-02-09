@@ -25,7 +25,7 @@
         flex: 0 0 250px;
         padding: 10px 14px;
         border-radius: $border-radius;
-        border-right: solid 1px #dddddd;
+        border-right: solid 1px $border-color;
         label {
             font-weight: normal;
         }
@@ -45,7 +45,7 @@
 
     .oe_import_with_file {
         flex: 1 1 100%;
-        background-color: white;
+        background-color: $o-white;
         overflow: auto;
         label {
             font-weight: normal;
@@ -111,7 +111,7 @@
 
     /* ------------- ERRORS AND WARNINGS REPORT ------------ */
     .oe_import_error_report {
-        border-bottom: 1px solid lightgrey;
+        border-bottom: 1px solid $border-color;
         > ul {
             padding: 0;
         }
@@ -143,7 +143,7 @@
     $cell-padding: 8px;
     .oe_import_grid {
         tr {
-            border-bottom: 1px solid lightgrey;
+            border-bottom: 1px solid $border-color;
             &.oe_import_grid-header:first-child {
                 line-height: 24px;
                 font-weight: normal;
@@ -181,6 +181,7 @@
         }
 
         select, .select2-choice {
+            color: black;
             border: 1px solid #aaa;
             height: 26px;
             padding-right: 24px;
