@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_tax_on_payment" model="ir.ui.view">
+        <field name="name">res.config.settings.form.inherit.tax.on.payment</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='default_accounts']" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_left_pane"></div>
+                    <div class="o_setting_right_pane">
+                        <div class="content-group">
+                            <div>
+                                <span class="o_form_label">Advance Tax Adjustment:</span>
+                            </div>
+                            <div class="row mt8">
+                                <label for="account_advance_payment_tax_adjustment_journal_id" class="col-lg-4 o_light_label" string="Journal"/>
+                                <field name="account_advance_payment_tax_adjustment_journal_id"/>
+                            </div>
+                            <div class="row mt8">
+                                <label for="account_advance_payment_tax_account_id" class="col-lg-4 o_light_label" string="Account"/>
+                                <field name="account_advance_payment_tax_account_id"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
