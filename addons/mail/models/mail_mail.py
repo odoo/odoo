@@ -84,8 +84,6 @@ class MailMail(models.Model):
     auto_delete = fields.Boolean(
         'Auto Delete',
         help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
-    # Unused since v16, to remove in master.
-    to_delete = fields.Boolean('To Delete', help='If set, the mail will be deleted during the next Email Queue CRON run.')
     scheduled_date = fields.Datetime('Scheduled Send Date',
         help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Unless a timezone is specified, it is considered as being in UTC timezone.")
     fetchmail_server_id = fields.Many2one('fetchmail.server', "Inbound Mail Server", readonly=True)
