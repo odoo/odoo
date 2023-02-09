@@ -399,8 +399,9 @@ export class FormController extends Component {
 
     async beforeExecuteActionButton(clickParams) {
         if (clickParams.special !== "cancel") {
-            return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog })
+        const noReload = this.env.inDialog && clickParams.close;
+        return this.model.root
+                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog, noReload })
                 .then((saved) => {
                     if (saved && this.props.onSave) {
                         this.props.onSave(this.model.root);
@@ -451,7 +452,7 @@ export class FormController extends Component {
         if (this.props.saveRecord) {
             saved = await this.props.saveRecord(record, params);
         } else {
-            saved = await record.save();
+            saved = await record.save(params);
         }
         this.enableButtons();
         if (saved && this.props.onSave) {

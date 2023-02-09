@@ -595,15 +595,14 @@ export class Record extends DataPoint {
      *  applicable, allowing to catch it.
      * @returns {Promise<boolean>}
      */
-    async save(
-        options = {
+    async save(options = {}) {
+        options = Object.assign({
             stayInEdition: true,
             noReload: false,
             savePoint: false,
             useSaveErrorDialog: false,
             throwOnError: false,
-        }
-    ) {
+        }, options);
         const shouldSwitchToReadonly = !options.stayInEdition && this.isInEdition;
         let resolveSavePromise;
         this._savePromise = new Promise((r) => {
