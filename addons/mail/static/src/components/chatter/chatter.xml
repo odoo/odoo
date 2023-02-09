@@ -18,7 +18,7 @@
                                     'btn-odoo': !composerView,
                                     'btn-light': composerView and composerView.composer.isLog,
                                 }"
-                                t-att-disabled="!isTemporary and !hasWriteAccess"
+                                t-att-disabled="!canPostMessage"
                                 data-hotkey="m"
                                 t-on-click="onClickSendMessage"
                             >
