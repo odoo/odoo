@@ -44,4 +44,11 @@ patch(Thread.prototype, "im_livechat", {
         }
         return correspondentName;
     },
+
+    get imgUrl() {
+        if (this.type === "livechat") {
+            return `/web/image/res.partner/${this.correspondent.id}/avatar_128`;
+        }
+        return this._super();
+    },
 });

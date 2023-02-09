@@ -203,6 +203,10 @@ export class Message {
         return `${url("/web")}#model=${this.resModel}&id=${this.id}`;
     }
 
+    get authorAvatarUrl() {
+        return this.author?.avatarUrl || "/mail/static/src/img/smiley/avatar.jpg";
+    }
+
     get isBodyEmpty() {
         return (
             !this.body ||

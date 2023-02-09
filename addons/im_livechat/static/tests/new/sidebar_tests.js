@@ -214,3 +214,47 @@ QUnit.test("Close from the bus", async function (assert) {
     });
     assert.containsNone(target, ".o-mail-category-livechat + .o-mail-category-item");
 });
+
+QUnit.test("Smiley face avatar for an anonymous livechat item", async function (assert) {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    assert.strictEqual(
+        document.querySelector(".o-mail-category-livechat + .o-mail-category-item img").dataset.src,
+        "/mail/static/src/img/smiley/avatar.jpg"
+    );
+});
+
+QUnit.test(
+    "Partner profile picture for livechat item linked to a partner",
+    async function (assert) {
+        const pyEnv = await startServer();
+        const resPartnerId1 = pyEnv["res.partner"].create({
+            name: "Jean",
+        });
+        const channelId = pyEnv["mail.channel"].create({
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: resPartnerId1 }],
+            ],
+            channel_type: "livechat",
+            livechat_operator_id: pyEnv.currentPartnerId,
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.strictEqual(
+            document.querySelector(".o-mail-category-livechat + .o-mail-category-item img").dataset
+                .src,
+            `/web/image/res.partner/${resPartnerId1}/avatar_128`
+        );
+    }
+);
