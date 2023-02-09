@@ -16,4 +16,4 @@ class Product(models.Model):
             return super(Product, self).get_product_multiline_description_sale()
 
         new_line = '' if len(payment_channels) == 1 else '\n'
-        return _('Access to:%s%s', new_line, '\n'.join(payment_channels.mapped('name')))
+        return _('Access to: %s%s', new_line, '\n'.join(payment_channels.mapped('name')))

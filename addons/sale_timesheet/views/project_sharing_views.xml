@@ -18,7 +18,9 @@
                     optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='remaining_hours']" position="after">
-                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom"/>
+                <field name="sale_line_id" invisible="1"/>
+                <field name="remaining_hours_available" invisible="1"/>
+                <field name="remaining_hours_so" optional="hide" widget="timesheet_uom" attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='remaining_hours']" position="after">
                 <field name="allow_billable" invisible="1" />
