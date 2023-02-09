@@ -88,10 +88,16 @@
             <field name="inherit_id" ref="hr_timesheet.view_task_form2_inherited"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='child_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="sale_line_id" invisible="1"/>
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"
+                        attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='depend_on_ids']/tree//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"/>
+                    <field name="sale_line_id" invisible="1"/>
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide" groups="base.group_user"
+                        attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}"/>
                 </xpath>
 
             </field>
@@ -103,7 +109,9 @@
             <field name="inherit_id" ref="hr_timesheet.view_task_tree2_inherited" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='remaining_hours']" position="after">
-                    <field name="remaining_hours_so" widget="timesheet_uom" optional="hide"/>
+                    <field name="sale_line_id" invisible="1"/>
+                    <field name="remaining_hours_available" invisible="1"/>
+                    <field name="remaining_hours_so" attrs="{'invisible': ['|', ('sale_line_id', '=', False), ('remaining_hours_available', '=', False)]}" widget="timesheet_uom" optional="hide"/>
                 </xpath>
             </field>
         </record>

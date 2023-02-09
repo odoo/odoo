@@ -157,11 +157,12 @@
                 <field name="date_deadline" position="before">
                     <field name="allow_subtasks" invisible="1"/>
                     <field name="progress" invisible="1"/>
-                    <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" optional="hide"/>
-                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show"/>
+                    <field name="effective_hours" invisible="1"/>
+                    <field name="planned_hours" widget="timesheet_uom_no_toggle" sum="Initially Planned Hours" attrs="{'invisible' : [('planned_hours', '=', 0)]}" optional="hide"/>
+                    <field name="effective_hours" widget="timesheet_uom" sum="Effective Hours" optional="show" attrs="{'invisible' : [('effective_hours', '=', 0)]}"/>
                     <field name="subtask_effective_hours" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" attrs="{'invisible' : [('allow_subtasks', '=', False)]}" optional="hide"/>
-                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100"/>
+                    <field name="remaining_hours" widget="timesheet_uom" sum="Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
                     <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
                 </field>
             </field>
