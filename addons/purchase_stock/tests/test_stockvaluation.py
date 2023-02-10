@@ -1104,11 +1104,11 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'balance': 15.0,   'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
             {'balance': -15.0,  'amount_currency': -30.0,   'account_id': self.company_data['default_account_payable'].id},
         ])
-        self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids, [
+        self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids.sorted('balance'), [
             # pylint: disable=C0326
             {'balance': -42.86, 'amount_currency': -30.0,   'account_id': self.stock_input_account.id},
-            {'balance': 27.86,  'amount_currency': 0.0,     'account_id': self.stock_input_account.id},
             {'balance': 15.0,   'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
+            {'balance': 27.86,  'amount_currency': 0.0,     'account_id': self.stock_input_account.id},
         ])
 
     def test_average_realtime_with_two_delivery_anglo_saxon_valuation_multicurrency_different_dates(self):

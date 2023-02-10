@@ -151,10 +151,9 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         (invoice + refund).action_post()
         self._set_lock_date('2017-01-31')
 
-        res = (invoice + refund).line_ids\
-            .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
-            .reconcile()
-        exchange_move = res['partials'].exchange_move_id
+        amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        amls.reconcile()
+        exchange_move = amls.matched_debit_ids.exchange_move_id
 
         self.assertRecordValues(exchange_move, [{
             'date': fields.Date.from_string('2017-02-01'),
@@ -167,10 +166,9 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
         refund = self._create_invoice('out_refund', '2017-01-01', currency_id=self.currency_data['currency'].id)
         (invoice + refund).action_post()
 
-        res = (invoice + refund).line_ids\
-            .filtered(lambda x: x.account_id.account_type == 'asset_receivable')\
-            .reconcile()
-        exchange_move = res['partials'].exchange_move_id
+        amls = (invoice + refund).line_ids.filtered(lambda x: x.account_id.account_type == 'asset_receivable')
+        amls.reconcile()
+        exchange_move = amls.matched_debit_ids.exchange_move_id
 
         self._set_lock_date('2017-01-31')
         (invoice + refund).line_ids.remove_move_reconcile()
