@@ -221,12 +221,19 @@ class WebsitePublishedMixin(models.AbstractModel):
     def create_and_get_website_url(self, **kwargs):
         return self.create(kwargs).website_url
 
+    @api.depends_context('uid')
     def _compute_can_publish(self):
-        """ This method can be overridden if you need more complex rights management than just 'website_restricted_editor'
-        The publish widget will be hidden and the user won't be able to change the 'website_published' value
-        if this method sets can_publish False """
+        """ This method can be overridden if you need more complex rights
+        management than just write access to the model.
+        The publish widget will be hidden and the user won't be able to change
+        the 'website_published' value if this method sets can_publish False """
         for record in self:
-            record.can_publish = True
+            try:
+                self.check_access_rights('write')
+                self.check_access_rule('write')
+                record.can_publish = True
+            except AccessError:
+                record.can_publish = False
 
     @api.model
     def _get_can_publish_error_message(self):
