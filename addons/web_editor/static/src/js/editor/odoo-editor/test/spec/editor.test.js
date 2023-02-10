@@ -3377,9 +3377,16 @@ X[]
                 });
             });
             describe('POC extra tests', () => {
-                it('should duplicate an empty h1', async () => {
+                it('should insert a paragraph after an empty h1', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<h1>[]<br></h1>',
+                        stepFunction: insertParagraphBreak,
+                        contentAfter: '<h1><br></h1><p>[]<br></p>',
+                    });
+                });
+                it('should insert a paragraph after an empty h1 with styles and a zero-width space', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<h1><font style="color: red;" data-oe-zws-empty-inline="">[]\u200B</font><br></h1>',
                         stepFunction: insertParagraphBreak,
                         contentAfter: '<h1><br></h1><p>[]<br></p>',
                     });

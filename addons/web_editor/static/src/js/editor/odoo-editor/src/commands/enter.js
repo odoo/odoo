@@ -14,6 +14,7 @@ import {
     splitTextNode,
     toggleClass,
     isVisible,
+    isVisibleStr,
 } from '../utils/utils.js';
 
 Text.prototype.oEnter = function (offset) {
@@ -91,8 +92,9 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if (!newEl.textContent) {
+    if (!isVisibleStr(newEl.textContent)) {
         const node = setTagName(newEl, 'P');
+        node.replaceChildren(document.createElement('br'));
         setCursorStart(node);
     }
 };
