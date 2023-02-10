@@ -10,22 +10,10 @@ import { ForecastedDetails } from "./forecasted_details";
 import { ForecastedHeader } from "./forecasted_header";
 import { ForecastedWarehouseFilter } from "./forecasted_warehouse_filter";
 
-const { Component, onWillStart, useState, useSubEnv } = owl;
+const { Component, onWillStart, useState } = owl;
 
 export class StockForecasted extends Component {
     setup() {
-        useSubEnv({
-            ...this.env,
-            //ControlPanel trick : Allow the use of ControlPanel's bottom-right while disabling search to avoid errors
-            searchModel: {
-                searchMenuTypes: [],
-            },
-            config: {
-                ...this.env.config,
-                viewSwitcherEntries: [],
-            }
-        });
-
         this.orm = useService("orm");
         this.action = useService("action");
 
