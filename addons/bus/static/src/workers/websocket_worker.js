@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.3';
+export const WORKER_VERSION = '1.0.4';
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
@@ -60,6 +60,11 @@ export class WebsocketWorker {
         this.lastNotificationId = 0;
         this.messageWaitQueue = [];
         this._forceUpdateChannels = debounce(this._forceUpdateChannels, 300, true);
+
+        this._onWebsocketClose = this._onWebsocketClose.bind(this);
+        this._onWebsocketError = this._onWebsocketError.bind(this);
+        this._onWebsocketMessage = this._onWebsocketMessage.bind(this);
+        this._onWebsocketOpen = this._onWebsocketOpen.bind(this);
     }
 
     //--------------------------------------------------------------------------
@@ -251,6 +256,16 @@ export class WebsocketWorker {
     }
 
     /**
+     * Determine whether or not the websocket associated to this worker
+     * is in the closing state.
+     *
+     * @returns {boolean}
+     */
+    _isWebsocketClosing() {
+        return this.websocket && this.websocket.readyState === 2;
+    }
+
+    /**
      * Triggered when a connection is closed. If closure was not clean ,
      * try to reconnect after indicating to the clients that the
      * connection was closed.
@@ -363,11 +378,23 @@ export class WebsocketWorker {
         if (this._isWebsocketConnected() || this._isWebsocketConnecting()) {
             return;
         }
+        if (this.websocket) {
+            this.websocket.removeEventListener('open', this._onWebsocketOpen);
+            this.websocket.removeEventListener('message', this._onWebsocketMessage);
+            this.websocket.removeEventListener('error', this._onWebsocketError);
+            this.websocket.removeEventListener('close', this._onWebsocketClose);
+        }
+        if (this._isWebsocketClosing()) {
+            // close event was not triggered and will never be, broadcast the
+            // disconnect event for consistency sake.
+            this.lastChannelSubscription = null;
+            this.broadcast("disconnect", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE });
+        }
         this.websocket = new WebSocket(this.websocketURL);
-        this.websocket.addEventListener('open', this._onWebsocketOpen.bind(this));
-        this.websocket.addEventListener('error', this._onWebsocketError.bind(this));
-        this.websocket.addEventListener('message', this._onWebsocketMessage.bind(this));
-        this.websocket.addEventListener('close', this._onWebsocketClose.bind(this));
+        this.websocket.addEventListener('open', this._onWebsocketOpen);
+        this.websocket.addEventListener('error', this._onWebsocketError);
+        this.websocket.addEventListener('message', this._onWebsocketMessage);
+        this.websocket.addEventListener('close', this._onWebsocketClose);
     }
 
     /**
