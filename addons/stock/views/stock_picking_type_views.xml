@@ -78,49 +78,71 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active"/>
                     <label for="name"/>
                     <h1><field name="name" placeholder="e.g. Receptions"/></h1>
-                    <group name="first">
-                        <group>
-                            <field name="code"/>
-                            <field name="active" invisible="1"/>
-                            <field name="company_id" invisible="1"/>
-                            <field name="hide_reservation_method" invisible="1"/>
-                            <field name="show_picking_type" invisible="1"/>
-                            <field name="sequence_id" groups="base.group_no_one"/>
-                            <field name="sequence_code"/>
-                            <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                            <field name="reservation_method" invisible="hide_reservation_method" widget="radio"/>
-                            <label for="reservation_days_before" string="Reserve before scheduled date" invisible="code == 'incoming' or reservation_method != 'by_date'"/>
-                            <div class="o_row" invisible="code == 'incoming' or reservation_method != 'by_date'">
-                                <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
-                                <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
-                            </div>
-                            <field name="auto_show_reception_report" invisible="code not in ['incoming', 'internal']" groups="stock.group_reception_report"/>
-                        </group>
-                        <group>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                            <field invisible="code not in ['incoming', 'outgoing', 'internal']" name="return_picking_type_id" string="Returns Type"/>
-                            <field name="default_location_return_id" invisible="code not in ['incoming', 'outgoing', 'internal']" groups="stock.group_stock_multi_locations"/>
-                            <field name="create_backorder"/>
-                            <field name="show_operations" invisible="not show_picking_type"/>
-                            <field name="show_reserved" invisible="code != 'incoming'"/>
-                        </group>
-                    </group>
-                    <group name="second">
-                        <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Lots/Serial Numbers" groups="stock.group_production_lot" name="stock_picking_type_lot">
-                            <field name="use_create_lots" string="Create New"/>
-                            <field name="use_existing_lots" string="Use Existing ones"/>
-                        </group>
-                        <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Packages" groups="stock.group_tracking_lot">
-                            <field name="show_entire_packs"/>
-                        </group>
-                        <!-- As this group will be hidden without multi_loccation, you will not be able to create a
-                            picking type with the code 'Internal', which make sense, but as the field 'code' on picking
-                            types can't be partially hidden, you can still select the code internal in the form view -->
-                        <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
-                            <field name="default_location_src_id" options="{'no_create': True}" required="code in ('internal', 'outgoing')"/>
-                            <field name="default_location_dest_id" options="{'no_create': True}" required="code in ('internal', 'incoming')"/>
-                        </group>
-                    </group>
+                    <notebook>
+                        <page name="general" string="General">
+                            <group name="first">
+                                <group>
+                                    <field name="code"/>
+                                    <field name="active" invisible="1"/>
+                                    <field name="company_id" invisible="1"/>
+                                    <field name="hide_reservation_method" invisible="1"/>
+                                    <field name="show_picking_type" invisible="1"/>
+                                    <field name="sequence_id" groups="base.group_no_one"/>
+                                    <field name="sequence_code"/>
+                                    <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
+                                    <field name="reservation_method" invisible="hide_reservation_method" widget="radio"/>
+                                    <label for="reservation_days_before" string="Reserve before scheduled date" invisible="code == 'incoming' or reservation_method != 'by_date'"/>
+                                    <div class="o_row" invisible="code == 'incoming' or reservation_method != 'by_date'">
+                                        <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
+                                        <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
+                                    </div>
+                                    <field name="auto_show_reception_report" invisible="code not in ['incoming', 'internal']" groups="stock.group_reception_report"/>
+                                </group>
+                                <group>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field invisible="code not in ['incoming', 'outgoing', 'internal']" name="return_picking_type_id" string="Returns Type"/>
+                                    <field name="default_location_return_id" invisible="code not in ['incoming', 'outgoing', 'internal']" groups="stock.group_stock_multi_locations"/>
+                                    <field name="create_backorder"/>
+                                    <field name="show_operations" invisible="not show_picking_type"/>
+                                    <field name="show_reserved" invisible="code != 'incoming'"/>
+                                </group>
+                            </group>
+                            <group name="second">
+                                <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Lots/Serial Numbers" groups="stock.group_production_lot" name="stock_picking_type_lot">
+                                    <field name="use_create_lots" string="Create New"/>
+                                    <field name="use_existing_lots" string="Use Existing ones"/>
+                                </group>
+                                <group invisible="code not in ['incoming', 'outgoing', 'internal']" string="Packages" groups="stock.group_tracking_lot">
+                                    <field name="show_entire_packs"/>
+                                </group>
+                                <!-- As this group will be hidden without multi_loccation, you will not be able to create a
+                                    picking type with the code 'Internal', which make sense, but as the field 'code' on picking
+                                    types can't be partially hidden, you can still select the code internal in the form view -->
+                                <group string="Locations" groups="stock.group_stock_multi_locations" name="locations">
+                                    <field name="default_location_src_id" options="{'no_create': True}" required="code in ('internal', 'outgoing')"/>
+                                    <field name="default_location_dest_id" options="{'no_create': True}" required="code in ('internal', 'incoming')"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page name="hardware" string="Hardware" invisible="code not in ['incoming', 'outgoing', 'internal']" >
+                            <group name="auto_print">
+                                <group string="Print on Validation">
+                                    <field name="auto_print_delivery_slip" string="Delivery Slip"/>
+                                </group>
+                                <group string="">
+                                    <div colspan="2">
+                                        Odoo opens a PDF preview by default. If you (Enterprise users only) want to print instantly,
+                                        install the IoT App on a computer that is on the same local network as the
+                                        barcode operator and configure the routing of the reports.
+                                        <a href="https://www.odoo.com/documentation/master/applications/productivity/iot/devices/printer.html"
+                                           target="_blank" class="fa fa-arrow-right">
+                                            Documentation
+                                        </a>
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
