@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import {
-    addFieldDependencies,
     archParseBoolean,
     getActiveActions,
     getDecoration,
@@ -72,7 +71,7 @@ export class ListArchParser extends XMLParser {
         let handleField = null;
         const treeAttr = {};
         let nextId = 0;
-        const activeFields = {};
+        const fieldNextIds = {};
         this.visitXML(arch, (node) => {
             if (node.tagName !== "button") {
                 buttonGroup = undefined;
@@ -100,16 +99,17 @@ export class ListArchParser extends XMLParser {
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = this.parseFieldNode(node, models, modelName);
-                fieldNodes[fieldInfo.name] = fieldInfo;
-                node.setAttribute("field_id", fieldInfo.name);
+                let fieldId = fieldInfo.name;
+                if (fieldInfo.name in fieldNextIds) {
+                    fieldId = `${fieldInfo.name}_${fieldNextIds[fieldInfo.name]++}`;
+                } else {
+                    fieldNextIds[fieldInfo.name] = 1;
+                }
+                fieldNodes[fieldId] = fieldInfo;
+                node.setAttribute("field_id", fieldId);
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    fieldInfo.field.fieldDependencies
-                );
                 if (this.isColumnVisible(fieldInfo.modifiers.column_invisible)) {
                     const label = fieldInfo.field.label;
                     columns.push({
@@ -130,11 +130,6 @@ export class ListArchParser extends XMLParser {
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    widgetInfo.widget.fieldDependencies
-                );
 
                 const widgetProps = {
                     name: widgetInfo.name,
@@ -157,7 +152,6 @@ export class ListArchParser extends XMLParser {
                 const groupByArchInfo = groupListArchParser.parse(groupByArch, models, coModelName);
                 groupBy.buttons[fieldName] = groupByArchInfo.buttons;
                 groupBy.fields[fieldName] = {
-                    activeFields: groupByArchInfo.fieldNodes,
                     fieldNodes: groupByArchInfo.fieldNodes,
                     fields: models[coModelName],
                 };
@@ -232,17 +226,12 @@ export class ListArchParser extends XMLParser {
             treeAttr.defaultOrder = stringToOrderBy(handleField);
         }
 
-        for (const [key, field] of Object.entries(fieldNodes)) {
-            activeFields[key] = field; // TODO process
-        }
-
         return {
             creates,
             handleField,
             headerButtons,
             fieldNodes,
             widgetNodes,
-            activeFields,
             columns,
             groupBy,
             __rawArch: arch,

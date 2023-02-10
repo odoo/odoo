@@ -34,6 +34,9 @@ export class ControlPanel extends Component {
 
         this.root = useRef("root");
 
+        owl.onWillRender(() => {
+            console.log("render control panel");
+        });
         this.state = useState({
             showSearchBar: false,
             showMobileSearch: false,

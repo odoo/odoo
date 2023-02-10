@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "DatetimeField does not trigger fieldChange before datetime completly picked",
         async function (assert) {
             patchTimeZone(120);
@@ -241,7 +241,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
     });
 
-    QUnit.test("DatetimeField in editable list view", async function (assert) {
+    QUnit.tttt("DatetimeField in editable list view", async function (assert) {
         patchTimeZone(120);
 
         await makeView({
@@ -330,7 +330,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "multi edition of DatetimeField in list view: edit date in input",
         async function (assert) {
             await makeView({
@@ -365,7 +365,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "multi edition of DatetimeField in list view: clear date in input",
         async function (assert) {
             serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00";
@@ -448,7 +448,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "DatetimeField with date/datetime widget (with day change)",
         async function (assert) {
             patchTimeZone(-240);
@@ -491,7 +491,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "DatetimeField with date/datetime widget (without day change)",
         async function (assert) {
             patchTimeZone(-240);

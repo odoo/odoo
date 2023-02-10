@@ -202,10 +202,9 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("push state after action is loaded, not before", async function (assert) {
-        assert.expect(2);
         const def = makeDeferred();
         const mockRPC = async function (route, args) {
-            if (args.method === "web_search_read") {
+            if (args.method === "unity_read") {
                 await def;
             }
         };

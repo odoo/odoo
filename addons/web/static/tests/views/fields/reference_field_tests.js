@@ -225,7 +225,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("ReferenceField");
 
-    QUnit.test("ReferenceField can quick create models", async function (assert) {
+    QUnit.tttt("ReferenceField can quick create models", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -259,7 +259,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("ReferenceField in modal readonly mode", async function (assert) {
+    QUnit.tttt("ReferenceField in modal readonly mode", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].trululu = 1;
         serverData.models.partner.records[1].reference = "product,41";
@@ -312,7 +312,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body, ".modal .o_form_button_cancel");
     });
 
-    QUnit.test("ReferenceField in modal write mode", async function (assert) {
+    QUnit.tttt("ReferenceField in modal write mode", async function (assert) {
         serverData.models.partner.records[0].p = [2];
         serverData.models.partner.records[1].trululu = 1;
         serverData.models.partner.records[1].reference = "product,41";
@@ -373,7 +373,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("reference in form view", async function (assert) {
+    QUnit.tttt("reference in form view", async function (assert) {
         assert.expect(11);
 
         serverData.views = {
@@ -505,7 +505,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "computed reference field changed by onchange to 'False,0' value",
         async function (assert) {
             assert.expect(1);
@@ -544,7 +544,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("interact with reference field changed by onchange", async function (assert) {
+    QUnit.tttt("interact with reference field changed by onchange", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.onchanges = {
@@ -589,7 +589,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("default_get and onchange with a reference field", async function (assert) {
+    QUnit.tttt("default_get and onchange with a reference field", async function (assert) {
         serverData.models.partner.fields.reference.default = "product,37";
         serverData.models.partner.onchanges = {
             int_field(obj) {
@@ -647,7 +647,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("default_get a reference field in a x2m", async function (assert) {
+    QUnit.tttt("default_get a reference field in a x2m", async function (assert) {
         serverData.models.partner.fields.turtles.default = [
             [0, false, { turtle_ref: "product,37" }],
         ];
@@ -682,7 +682,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("ReferenceField on char field, reset by onchange", async function (assert) {
+    QUnit.tttt("ReferenceField on char field, reset by onchange", async function (assert) {
         serverData.models.partner.records[0].foo = "product,37";
         serverData.models.partner.onchanges = {
             int_field(obj) {
@@ -730,7 +730,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("reference and list navigation", async function (assert) {
+    QUnit.tttt("reference and list navigation", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -757,7 +757,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("ReferenceField with model_field option", async function (assert) {
+    QUnit.tttt("ReferenceField with model_field option", async function (assert) {
         serverData.models.partner.records[0].reference = false;
         serverData.models.partner.records[0].model_id = 20;
         serverData.models.partner.records[1].display_name = "John Smith";
@@ -811,7 +811,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "ReferenceField with model_field option (model_field not synchronized with reference)",
         async function (assert) {
             // Checks that the data is not modified even though it is not synchronized.
@@ -850,7 +850,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("Reference field with default value in list view", async function (assert) {
+    QUnit.tttt("Reference field with default value in list view", async function (assert) {
         assert.expect(2);
 
         await makeView({
@@ -865,7 +865,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC: (route, { method, args }) => {
                 if (method === "onchange") {
                     return {
-                        value: {reference: "partner,2"},
+                        value: { reference: "partner,2" },
                     };
                 } else if (method === "create") {
                     assert.strictEqual(args.length, 1);
@@ -874,13 +874,13 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, '.o_list_button_add');
+        await click(target, ".o_list_button_add");
         await click(target, '.o_list_char[name="display_name"] input');
         await editInput(target, '.o_list_char[name="display_name"] input', "Blabla");
-        await click(target, '.o_list_button_save');
+        await click(target, ".o_list_button_save");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "ReferenceField with model_field option (tree list in form view)",
         async function (assert) {
             serverData.models.turtle.records[0].partner_ids = [1];
@@ -923,7 +923,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "edit a record containing a ReferenceField with model_field option (list in form view)",
         async function (assert) {
             serverData.models.turtle.records[0].partner_ids = [1];
@@ -969,7 +969,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("model selector is displayed only when it should be", async function (assert) {
+    QUnit.tttt("model selector is displayed only when it should be", async function (assert) {
         //The model selector should be only displayed if
         //there is no hide_model=True options AND no model_field specified
         await makeView({

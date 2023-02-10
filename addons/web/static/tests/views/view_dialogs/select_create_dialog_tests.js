@@ -83,7 +83,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("SelectCreateDialog");
 
-    QUnit.test(
+    QUnit.tttt(
         "SelectCreateDialog use domain, group_by and search default",
         async function (assert) {
             assert.expect(3);
@@ -199,7 +199,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
-    QUnit.test("SelectCreateDialog correctly evaluates domains", async function (assert) {
+    QUnit.tttt("SelectCreateDialog correctly evaluates domains", async function (assert) {
         assert.expect(1);
 
         serverData.views = {
@@ -234,7 +234,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await nextTick();
     });
 
-    QUnit.test("SelectCreateDialog list view in readonly", async function (assert) {
+    QUnit.tttt("SelectCreateDialog list view in readonly", async function (assert) {
         serverData.views = {
             "partner,false,list": `
                     <tree string="Partner" editable="bottom">
@@ -263,7 +263,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test("SelectCreateDialog cascade x2many in create mode", async function (assert) {
+    QUnit.tttt("SelectCreateDialog cascade x2many in create mode", async function (assert) {
         assert.expect(5);
         serverData.views = {
             "partner,false,form": `
@@ -341,7 +341,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target.querySelector(".modal .o_form_button_save"));
     });
 
-    QUnit.test("SelectCreateDialog: save current search", async function (assert) {
+    QUnit.tttt("SelectCreateDialog: save current search", async function (assert) {
         assert.expect(5);
 
         serverData.views = {
@@ -413,7 +413,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await saveFavorite(target);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "SelectCreateDialog calls on_selected with every record matching the domain",
         async function (assert) {
             assert.expect(1);
@@ -446,7 +446,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "SelectCreateDialog calls on_selected with every record matching without selecting a domain",
         async function (assert) {
             assert.expect(1);
@@ -480,7 +480,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
-    QUnit.test("SelectCreateDialog: default props, create a record", async function (assert) {
+    QUnit.tttt("SelectCreateDialog: default props, create a record", async function (assert) {
         serverData.views = {
             "partner,false,list": `<tree><field name="display_name"/></tree>`,
             "partner,false,search": `

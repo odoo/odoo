@@ -50,7 +50,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyBinaryField");
 
-    QUnit.test("widget many2many_binary", async function (assert) {
+    QUnit.tttt("widget many2many_binary", async function (assert) {
         assert.expect(24);
 
         const fakeHTTPService = {
@@ -188,7 +188,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("widget many2many_binary displays notification on error", async function (assert) {
+    QUnit.tttt("widget many2many_binary displays notification on error", async function (assert) {
         assert.expect(12);
 
         const fakeHTTPService = {

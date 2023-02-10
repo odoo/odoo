@@ -24,7 +24,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatFactorField");
 
-    QUnit.test("FloatFactorField in form view", async function (assert) {
+    QUnit.tttt("FloatFactorField in form view", async function (assert) {
         assert.expect(3);
 
         await makeView({

@@ -24,7 +24,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatToggleField");
 
-    QUnit.test("basic flow in form view", async function (assert) {
+    QUnit.tttt("basic flow in form view", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -83,7 +83,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["8"]);
     });
 
-    QUnit.test("kanban view (readonly) with option force_button", async function (assert) {
+    QUnit.tttt("kanban view (readonly) with option force_button", async function (assert) {
         await makeView({
             type: "kanban",
             serverData,

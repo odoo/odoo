@@ -152,25 +152,22 @@ export class ListRenderer extends Component {
             });
         }
 
-        // not very beautiful but works: refactor at some point
-        this.lastCellFocused;
-        useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
-            if (this.tableRef.el.contains(document.activeElement)) {
-                this.lastCellFocused = document.activeElement.closest("td");
-            }
-        });
+        // FIXME: doesn't work as model is now reactive
+        // // not very beautiful but works: refactor at some point
+        // this.lastCellFocused;
+        // useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
+        //     if (this.tableRef.el.contains(document.activeElement)) {
+        //         this.lastCellFocused = document.activeElement.closest("td");
+        //     }
+        // });
 
-        useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
-            if (this.lastCellFocused) {
-                this.focus(this.lastCellFocused);
-            }
-        });
+        // useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
+        //     if (this.lastCellFocused) {
+        //         this.focus(this.lastCellFocused);
+        //     }
+        // });
 
-        useBus(
-            this.props.list.model,
-            "FIELD_IS_DIRTY",
-            (ev) => (this.lastIsDirty = ev.detail)
-        );
+        useBus(this.props.list.model, "FIELD_IS_DIRTY", (ev) => (this.lastIsDirty = ev.detail));
 
         useBounceButton(this.rootRef, () => {
             return this.showNoContentHelper;
@@ -490,7 +487,7 @@ export class ListRenderer extends Component {
 
     createKeyOptionalFields() {
         let keyParts = {
-            fields: this.props.list.fieldNames,
+            fields: this.props.list.fieldNames, // FIXME: use something else?
             model: this.props.list.resModel,
             viewMode: "list",
             viewId: this.env.config.viewId,
@@ -695,9 +692,8 @@ export class ListRenderer extends Component {
     }
 
     isSortable(column) {
-        const { hasLabel, name } = column;
+        const { hasLabel, name, options } = column;
         const { sortable } = this.fields[name];
-        const { options } = this.props.list.activeFields[name];
         return (sortable || options.allow_order) && hasLabel;
     }
 

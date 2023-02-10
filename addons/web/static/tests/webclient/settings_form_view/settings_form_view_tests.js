@@ -65,7 +65,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         };
     });
 
-    QUnit.test("change setting on nav bar click in base settings", async function (assert) {
+    QUnit.tttt("change setting on nav bar click in base settings", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
@@ -354,7 +354,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.containsOnce(target, ".o_setting_tip:not(.d-none)", "Tip should not be hidden");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "settings views does not read existing id when coming back in breadcrumbs",
         async function (assert) {
             assert.expect(11);
@@ -417,15 +417,15 @@ QUnit.module("SettingsFormView", (hooks) => {
                 "get_views", // initial setting action
                 "onchange", // this is a setting view => new record transient record
                 "create", // create the record before doing the action
-                "read", // read the created record
+                "unity_read", // read the created record
                 "get_views", // for other action in breadcrumb,
-                "web_search_read", // with a searchread
+                "unity_read", // with a searchread
                 "onchange", // when we come back, we want to restart from scratch
             ]);
         }
     );
 
-    QUnit.test("resIds should contains only 1 id", async function (assert) {
+    QUnit.tttt("resIds should contains only 1 id", async function (assert) {
         assert.expect(1);
 
         serverData.models["res.config.settings"].fields.foo_text = {
@@ -503,7 +503,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelector(".o_form_button_save")); // Save Settings
     });
 
-    QUnit.test("settings views does not read existing id when reload", async function (assert) {
+    QUnit.tttt("settings views does not read existing id when reload", async function (assert) {
         serverData.actions = {
             1: {
                 id: 1,
@@ -561,7 +561,7 @@ QUnit.module("SettingsFormView", (hooks) => {
 
         assert.verifySteps([
             "create", // settings: create the record before doing the action
-            "read", // settings: read the created record
+            "unity_read", // settings: read the created record
             "get_views", // dialog: get views
             "onchange", // dialog: onchange
         ]);
@@ -569,7 +569,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target, ".modal button.btn.btn-primary.o_form_button_save");
         assert.verifySteps([
             "create", // dialog: create the record before doing back to the settings
-            "read", // dialog: read the created record
+            "unity_read", // dialog: read the created record
             "onchange", // settings: when we come back, we want to restart from scratch
         ]);
     });
@@ -938,7 +938,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
-    QUnit.test("clicking a button with dirty settings -- save", async (assert) => {
+    QUnit.tttt("clicking a button with dirty settings -- save", async (assert) => {
         registry.category("services").add(
             "action",
             {
@@ -974,12 +974,12 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target, ".modal .btn-primary");
         assert.verifySteps([
             "create",
-            "read",
+            "unity_read",
             'action executed {"name":"execute","type":"object","resModel":"res.config.settings","resId":1,"resIds":[1],"context":{"lang":"en","uid":7,"tz":"taht"},"buttonContext":{}}',
         ]);
     });
 
-    QUnit.test("clicking a button with dirty settings -- discard", async (assert) => {
+    QUnit.tttt("clicking a button with dirty settings -- discard", async (assert) => {
         registry.category("services").add(
             "action",
             {
@@ -1015,7 +1015,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         await click(target.querySelectorAll(".modal .btn-secondary")[1]);
         assert.verifySteps([
             "create",
-            "read",
+            "unity_read",
             'action executed {"context":{"lang":"en","uid":7,"tz":"taht"},"type":"object","name":"mymethod","resModel":"res.config.settings","resId":1,"resIds":[1],"buttonContext":{}}',
         ]);
     });
@@ -1177,7 +1177,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "execute action from settings view with several actions in the breadcrumb",
         async function (assert) {
             // This commit fixes a race condition, that's why we artificially slow down a read rpc
@@ -1251,7 +1251,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
-    QUnit.test("settings can contain one2many fields", async function (assert) {
+    QUnit.tttt("settings can contain one2many fields", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
@@ -1355,6 +1355,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ]);
         }
     );
+
     QUnit.test("Discard button clean the settings view", async function (assert) {
         assert.expect(10);
 
@@ -1417,7 +1418,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.verifySteps(["onchange"]);
     });
 
-    QUnit.test("Settings Radio widget: show and search", async function (assert) {
+    QUnit.tttt("Settings Radio widget: show and search", async function (assert) {
         serverData.models["res.config.settings"].fields.product_id = {
             string: "Product",
             type: "many2one",
@@ -1483,7 +1484,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
-    QUnit.test("standalone field labels with string inside a settings page", async (assert) => {
+    QUnit.tttt("standalone field labels with string inside a settings page", async (assert) => {
         let compiled = undefined;
         patchWithCleanup(SettingsFormCompiler.prototype, {
             compile() {

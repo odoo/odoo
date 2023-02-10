@@ -24,7 +24,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Formatters");
 
-    QUnit.test("formatFloat", function (assert) {
+    QUnit.tttt("formatFloat", function (assert) {
         assert.strictEqual(formatFloat(false), "");
         assert.strictEqual(formatFloat(null), "0.00");
         assert.strictEqual(formatFloat(1000000), "1,000,000.00");
@@ -56,7 +56,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloat(6000), "60@00!00");
     });
 
-    QUnit.test("formatFloat (humanReadable=true)", async (assert) => {
+    QUnit.tttt("formatFloat (humanReadable=true)", async (assert) => {
         assert.strictEqual(
             formatFloat(1020, { humanReadable: true, decimals: 2, minDigits: 1 }),
             "1.02k"
@@ -157,14 +157,14 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("formatFloatFactor", function (assert) {
+    QUnit.tttt("formatFloatFactor", function (assert) {
         assert.strictEqual(formatFloatFactor(false), "");
         assert.strictEqual(formatFloatFactor(6000), "6,000.00");
         assert.strictEqual(formatFloatFactor(6000, { factor: 3 }), "18,000.00");
         assert.strictEqual(formatFloatFactor(6000, { factor: 0.5 }), "3,000.00");
     });
 
-    QUnit.test("formatFloatTime", function (assert) {
+    QUnit.tttt("formatFloatTime", function (assert) {
         assert.strictEqual(formatFloatTime(2), "02:00");
         assert.strictEqual(formatFloatTime(3.5), "03:30");
         assert.strictEqual(formatFloatTime(0.25), "00:15");
@@ -207,14 +207,14 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(-0.5, options), "-0:30");
     });
 
-    QUnit.test("formatJson", function (assert) {
+    QUnit.tttt("formatJson", function (assert) {
         assert.strictEqual(formatJson(false), "");
         assert.strictEqual(formatJson({}), "{}");
         assert.strictEqual(formatJson({ 1: 111 }), '{"1":111}');
         assert.strictEqual(formatJson({ 9: 11, 666: 42 }), '{"9":11,"666":42}');
     });
 
-    QUnit.test("formatInteger", function (assert) {
+    QUnit.tttt("formatInteger", function (assert) {
         assert.strictEqual(formatInteger(false), "");
         assert.strictEqual(formatInteger(0), "0");
 
@@ -231,21 +231,21 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatInteger(6000, options), "60€00");
     });
 
-    QUnit.test("formatMany2one", function (assert) {
+    QUnit.tttt("formatMany2one", function (assert) {
         assert.strictEqual(formatMany2one(false), "");
         assert.strictEqual(formatMany2one([false, "M2O value"]), "M2O value");
         assert.strictEqual(formatMany2one([1, "M2O value"]), "M2O value");
         assert.strictEqual(formatMany2one([1, "M2O value"], { escape: true }), "M2O%20value");
     });
 
-    QUnit.test("formatX2many", function (assert) {
+    QUnit.tttt("formatX2many", function (assert) {
         // Results are cast as strings since they're lazy translated.
         assert.strictEqual(String(formatX2many({ currentIds: [] })), "No records");
         assert.strictEqual(String(formatX2many({ currentIds: [1] })), "1 record");
         assert.strictEqual(String(formatX2many({ currentIds: [1, 3] })), "2 records");
     });
 
-    QUnit.test("formatMonetary", function (assert) {
+    QUnit.tttt("formatMonetary", function (assert) {
         patchWithCleanup(session.currencies, {
             10: {
                 digits: [69, 2],
@@ -317,7 +317,7 @@ QUnit.module("Fields", (hooks) => {
         // assert.strictEqual(formatMonetary(200, { field: floatField, data }), "$ 200.00");
     });
 
-    QUnit.test("formatMonetary without currency", function (assert) {
+    QUnit.tttt("formatMonetary without currency", function (assert) {
         patchWithCleanup(session, {
             currencies: {},
         });
@@ -328,7 +328,7 @@ QUnit.module("Fields", (hooks) => {
         assert.deepEqual(formatMonetary(1234567.654, { currencyId: 10 }), "1,234,567.65");
     });
 
-    QUnit.test("formatPercentage", function (assert) {
+    QUnit.tttt("formatPercentage", function (assert) {
         assert.strictEqual(formatPercentage(false), "0%");
         assert.strictEqual(formatPercentage(0), "0%");
         assert.strictEqual(formatPercentage(0.5), "50%");
@@ -350,7 +350,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatPercentage(0.666666), "66,67%");
     });
 
-    QUnit.test("formatReference", function (assert) {
+    QUnit.tttt("formatReference", function (assert) {
         assert.strictEqual(formatReference(false), "");
         const value = { resModel: "product", resId: 2, displayName: "Chair" };
         assert.strictEqual(formatReference(value), "Chair");

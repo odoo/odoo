@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { kanbanView } from "@web/views/kanban/kanban_view";
-import { CrmKanbanModel } from "@crm/views/crm_kanban/crm_kanban_model";
+// import { CrmKanbanModel } from "@crm/views/crm_kanban/crm_kanban_model";
 import { CrmKanbanArchParser } from "@crm/views/crm_kanban/crm_kanban_arch_parser";
 import { CrmKanbanRenderer } from "@crm/views/crm_kanban/crm_kanban_renderer";
 
@@ -11,7 +11,7 @@ export const crmKanbanView = {
     ArchParser: CrmKanbanArchParser,
     // Makes it easier to patch
     Controller: class extends kanbanView.Controller {},
-    Model: CrmKanbanModel,
+    // Model: CrmKanbanModel,
     Renderer: CrmKanbanRenderer,
 };
 

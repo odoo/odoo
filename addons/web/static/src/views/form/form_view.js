@@ -2,7 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { FormRenderer } from "./form_renderer";
-import { RelationalModel } from "../basic_relational_model";
+import { RelationalModel } from "../relational_model/relational_model";
 import { FormArchParser } from "./form_arch_parser";
 import { FormController } from "./form_controller";
 import { FormCompiler } from "./form_compiler";

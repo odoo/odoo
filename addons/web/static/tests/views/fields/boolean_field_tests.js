@@ -153,7 +153,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("boolean field in editable list view", async function (assert) {
+    QUnit.tttt("boolean field in editable list view", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",

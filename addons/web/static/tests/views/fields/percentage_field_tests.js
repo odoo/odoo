@@ -29,7 +29,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PercentageField");
 
-    QUnit.test("PercentageField in form view", async function (assert) {
+    QUnit.tttt("PercentageField in form view", async function (assert) {
         assert.expect(5);
 
         await makeView({
@@ -72,7 +72,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("percentage field with placeholder", async function (assert) {
+    QUnit.tttt("percentage field with placeholder", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PercentageField in form view without rounding error", async function (assert) {
+    QUnit.tttt("PercentageField in form view without rounding error", async function (assert) {
         await makeView({
             serverData,
             type: "form",

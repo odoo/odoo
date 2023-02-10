@@ -26,6 +26,10 @@ export class Pager extends Component {
         });
         this.inputRef = useAutofocus();
         useExternalListener(document, "mousedown", this.onClickAway, { capture: true });
+
+        owl.onWillRender(() => {
+            console.log("render pager");
+        });
     }
 
     /**

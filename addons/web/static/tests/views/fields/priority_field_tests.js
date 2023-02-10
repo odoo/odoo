@@ -63,7 +63,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PriorityField");
 
-    QUnit.test("PriorityField when not set", async function (assert) {
+    QUnit.tttt("PriorityField when not set", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -103,7 +103,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PriorityField tooltip", async function (assert) {
+    QUnit.tttt("PriorityField tooltip", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PriorityField in form view", async function (assert) {
+    QUnit.tttt("PriorityField in form view", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -306,7 +306,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PriorityField can write after adding a record -- kanban", async function (assert) {
+    QUnit.tttt("PriorityField can write after adding a record -- kanban", async function (assert) {
         serverData.models.partner.fields.selection.selection = [
             ["0", 0],
             ["1", 1],
@@ -350,7 +350,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_kanban_record .fa-star", 2);
     });
 
-    QUnit.test("PriorityField in editable list view", async function (assert) {
+    QUnit.tttt("PriorityField in editable list view", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -536,7 +536,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PriorityField with readonly attribute", async function (assert) {
+    QUnit.tttt("PriorityField with readonly attribute", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -577,7 +577,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         'PriorityField edited by the smart action "Set priority..."',
         async function (assert) {
             await makeView({

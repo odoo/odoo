@@ -1,8 +1,9 @@
 /** @odoo-module **/
 
 import { useBus, useService } from "@web/core/utils/hooks";
-import { RelationalModel } from "@web/views/relational_model";
-import { Component, xml, onWillStart, onWillUpdateProps } from "@odoo/owl";
+import { pick } from "@web/core/utils/objects";
+import { RelationalModel } from "@web/views/relational_model/relational_model";
+import { Component, xml, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 const defaultActiveField = { attrs: {}, options: {}, domain: "[]", string: "" };
 
@@ -25,16 +26,17 @@ class _Record extends Component {
             modelServices.orm = useService("orm");
         }
 
-        this.model = new RelationalModel(this.env, modelParams, modelServices);
-        useBus(this.model, "update", () => this.render(true));
+        this.model = useState(new RelationalModel(this.env, modelParams, modelServices));
 
         let loadKey;
         const load = (props) => {
             const loadParams = {
                 resId: props.info.resId,
                 mode: props.info.mode,
-                values: props.values,
             };
+            if (props.values) {
+                loadParams.values = pick(props.values, ...Object.keys(modelParams.activeFields));
+            }
             const nextLoadKey = JSON.stringify(loadParams);
             if (loadKey === nextLoadKey) {
                 return;
@@ -49,16 +51,9 @@ class _Record extends Component {
         });
 
         if (this.props.info.onRecordChanged) {
-            const load = this.model.load;
-            this.model.load = async (...args) => {
-                const res = await load.call(this.model, ...args);
-                const root = this.model.root;
-                root.onChanges = async () => {
-                    const changes = root.getChanges();
-                    this.props.info.onRecordChanged(root, changes);
-                };
-                return res;
-            };
+            useBus(this.model.bus, "RELATIONAL_MODEL:RECORD_UPDATED", ({ detail }) => {
+                this.props.info.onRecordChanged(detail.record, detail.changes);
+            });
         }
     }
 

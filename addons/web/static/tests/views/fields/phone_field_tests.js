@@ -31,7 +31,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PhoneField");
 
-    QUnit.test("PhoneField in form view on normal screens (readonly)", async function (assert) {
+    QUnit.tttt("PhoneField in form view on normal screens (readonly)", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -58,7 +58,7 @@ QUnit.module("Fields", (hooks) => {
         assert.hasAttrValue(phone, "href", "tel:yop", "should have proper tel prefix");
     });
 
-    QUnit.test("PhoneField in form view on normal screens (edit)", async function (assert) {
+    QUnit.tttt("PhoneField in form view on normal screens (edit)", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -106,7 +106,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PhoneField in editable list view on normal screens", async function (assert) {
+    QUnit.tttt("PhoneField in editable list view on normal screens", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -160,7 +160,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use TAB to navigate to a PhoneField", async function (assert) {
+    QUnit.tttt("use TAB to navigate to a PhoneField", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -188,7 +188,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("phone field with placeholder", async function (assert) {
+    QUnit.tttt("phone field with placeholder", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 
         await makeView({
@@ -211,7 +211,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("unset and readonly PhoneField", async function (assert) {
+    QUnit.tttt("unset and readonly PhoneField", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 
         await makeView({

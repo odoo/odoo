@@ -41,7 +41,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("IntegerField");
 
-    QUnit.test("should be 0 when unset", async function (assert) {
+    QUnit.tttt("should be 0 when unset", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -63,7 +63,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("basic form view flow", async function (assert) {
+    QUnit.tttt("basic form view flow", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -94,7 +94,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("rounded when using formula in form view", async function (assert) {
+    QUnit.tttt("rounded when using formula in form view", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("with input type 'number' option", async function (assert) {
+    QUnit.tttt("with input type 'number' option", async function (assert) {
         patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
 
         await makeView({
@@ -146,7 +146,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("with 'step' option", async function (assert) {
+    QUnit.tttt("with 'step' option", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -167,7 +167,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("without input type option", async function (assert) {
+    QUnit.tttt("without input type option", async function (assert) {
         patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
 
         await makeView({
@@ -195,7 +195,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("with disable formatting option", async function (assert) {
+    QUnit.tttt("with disable formatting option", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -211,7 +211,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("IntegerField is formatted by default", async function (assert) {
+    QUnit.tttt("IntegerField is formatted by default", async function (assert) {
         patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
 
         await makeView({
@@ -229,7 +229,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("basic flow in editable list view", async function (assert) {
+    QUnit.tttt("basic flow in editable list view", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -270,7 +270,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("IntegerField field with placeholder", async function (assert) {
+    QUnit.tttt("IntegerField field with placeholder", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",

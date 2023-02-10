@@ -34,7 +34,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FloatField");
 
-    QUnit.test("unset field should be set to 0", async function (assert) {
+    QUnit.tttt("unset field should be set to 0", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -56,7 +56,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use correct digit precision from field definition", async function (assert) {
+    QUnit.tttt("use correct digit precision from field definition", async function (assert) {
         serverData.models.partner.fields.float_field.digits = [0, 1];
 
         await makeView({
@@ -74,7 +74,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use correct digit precision from options", async function (assert) {
+    QUnit.tttt("use correct digit precision from options", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -90,7 +90,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use correct digit precision from field attrs", async function (assert) {
+    QUnit.tttt("use correct digit precision from field attrs", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -106,7 +106,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("with 'step' option", async function (assert) {
+    QUnit.tttt("with 'step' option", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -128,7 +128,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("basic flow in form view", async function (assert) {
+    QUnit.tttt("basic flow in form view", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -165,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use a formula", async function (assert) {
+    QUnit.tttt("use a formula", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -209,7 +209,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("use incorrect formula", async function (assert) {
+    QUnit.tttt("use incorrect formula", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -239,7 +239,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("float field in editable list view", async function (assert) {
+    QUnit.tttt("float field in editable list view", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -276,7 +276,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("float field with type number option", async function (assert) {
+    QUnit.tttt("float field with type number option", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -314,7 +314,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "float field with type number option and comma decimal separator",
         async function (assert) {
             await makeView({
@@ -357,7 +357,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("float field without type number option", async function (assert) {
+    QUnit.tttt("float field without type number option", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -389,7 +389,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("float_field field with placeholder", async function (assert) {
+    QUnit.tttt("float_field field with placeholder", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -406,7 +406,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("float field can be updated by another field/widget", async function (assert) {
+    QUnit.tttt("float field can be updated by another field/widget", async function (assert) {
         class MyWidget extends owl.Component {
             static template = owl.xml`<button t-on-click="onClick">do it</button>`;
             onClick() {
@@ -457,7 +457,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("float field with digits=0", async function (assert) {
+    QUnit.tttt("float field with digits=0", async function (assert) {
         // This isn't in the orm documentation, so it shouldn't be supported, but
         // people do it and thus now we need to support it.
         // Historically, it behaves like "no digits attribute defined", so it

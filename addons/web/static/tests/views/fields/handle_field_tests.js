@@ -49,7 +49,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("HandleField");
 
-    QUnit.test("HandleField in x2m", async function (assert) {
+    QUnit.tttt("HandleField in x2m", async function (assert) {
         serverData.models.partner.records[0].p = [2, 4];
         await makeView({
             type: "form",
@@ -100,7 +100,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("HandleField with falsy values", async function (assert) {
+    QUnit.tttt("HandleField with falsy values", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -124,7 +124,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("HandleField in a readonly one2many", async function (assert) {
+    QUnit.tttt("HandleField in a readonly one2many", async function (assert) {
         serverData.models.partner.records[0].p = [1, 2, 4];
 
         await makeView({

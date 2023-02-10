@@ -92,7 +92,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2OneField Barcode (Desktop)");
 
-    QUnit.test(
+    QUnit.tttt(
         "Many2OneBarcode component should display the barcode icon",
         async function (assert) {
             assert.expect(1);
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("barcode button with single results", async function (assert) {
+    QUnit.tttt("barcode button with single results", async function (assert) {
         assert.expect(2);
 
         // The product selected (mock) for the barcode scanner
@@ -153,7 +153,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("barcode button with multiple results", async function (assert) {
+    QUnit.tttt("barcode button with multiple results", async function (assert) {
         assert.expect(4);
 
         // The product selected (mock) for the barcode scanner

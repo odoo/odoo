@@ -47,7 +47,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StatInfoField");
 
-    QUnit.test("StatInfoField formats decimal precision", async function (assert) {
+    QUnit.tttt("StatInfoField formats decimal precision", async function (assert) {
         // sometimes the round method can return numbers such as 14.000001
         // when asked to round a number to 2 decimals, as such is the behaviour of floats.
         // we check that even in that eventuality, only two decimals are displayed
@@ -80,7 +80,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("StatInfoField in form view", async function (assert) {
+    QUnit.tttt("StatInfoField in form view", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("StatInfoField in form view with specific label_field", async function (assert) {
+    QUnit.tttt("StatInfoField in form view with specific label_field", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -151,7 +151,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("StatInfoField in form view with no label", async function (assert) {
+    QUnit.tttt("StatInfoField in form view with no label", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",

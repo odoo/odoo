@@ -19,6 +19,7 @@ import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { addFieldDependencies, getActiveFieldsFromArchInfo } from "../relational_model/utils";
 
 import { Component, onRendered, onWillStart, toRaw, useEffect, useRef, useState } from "@odoo/owl";
 
@@ -108,7 +109,10 @@ export class FormController extends Component {
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
-        const activeFields = this.archInfo.activeFields;
+        const activeFields = getActiveFieldsFromArchInfo(this.archInfo, {
+            isSmall: this.env.isSmall,
+        });
+        addFieldDependencies(activeFields, [{ name: "display_name", type: "string" }]);
 
         this.beforeLoadResolver = null;
         const beforeLoadProm = new Promise((r) => {
@@ -124,7 +128,11 @@ export class FormController extends Component {
             mode = "readonly";
         }
 
-        this.model = useModel(
+        owl.onWillRender(() => {
+            console.log("render form controller");
+        });
+
+        const model = useModel(
             this.props.Model,
             {
                 resModel: this.props.resModel,
@@ -144,6 +152,7 @@ export class FormController extends Component {
                 ignoreUseSampleModel: true,
             }
         );
+        this.model = useState(model);
 
         this.cpButtonsRef = useRef("cpButtons");
 
@@ -159,12 +168,12 @@ export class FormController extends Component {
         });
 
         // enable the archive feature in Actions menu only if the active field is in the view
-        this.archiveEnabled =
-            "active" in activeFields
-                ? !this.props.fields.active.readonly
-                : "x_active" in activeFields
-                ? !this.props.fields.x_active.readonly
-                : false;
+        this.archiveEnabled = false;
+        "active" in activeFields
+            ? !this.props.fields.active.readonly
+            : "x_active" in activeFields
+            ? !this.props.fields.x_active.readonly
+            : false;
 
         // select footers that are not in subviews and move them to another arch
         // that will be moved to the dialog's footer (if we are in a dialog)
@@ -367,7 +376,10 @@ export class FormController extends Component {
 
     async shouldExecuteAction(item) {
         if ((this.model.root.isDirty || this.model.root.isNew) && !item.skipSave) {
-            return this.model.root.save({ stayInEdition: true, useSaveErrorDialog: true });
+            return this.model.root.save({
+                stayInEdition: true,
+                useSaveErrorDialog: true,
+            });
         }
         return true;
     }
@@ -402,7 +414,11 @@ export class FormController extends Component {
         if (clickParams.special !== "cancel") {
             const noReload = this.env.inDialog && clickParams.close;
             return this.model.root
-                .save({ stayInEdition: true, useSaveErrorDialog: !this.env.inDialog, noReload })
+                .save({
+                    stayInEdition: true,
+                    useSaveErrorDialog: !this.env.inDialog,
+                    noReload,
+                })
                 .then((saved) => {
                     if (saved && this.props.onSave) {
                         this.props.onSave(this.model.root);

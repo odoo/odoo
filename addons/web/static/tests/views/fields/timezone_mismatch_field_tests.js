@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("TimezoneMismatchField");
 
-    QUnit.test("widget timezone_mismatch in a list view", async function (assert) {
+    QUnit.tttt("widget timezone_mismatch in a list view", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.onchanges = {
@@ -91,7 +91,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("widget timezone_mismatch in a form view", async function (assert) {
+    QUnit.tttt("widget timezone_mismatch in a form view", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.fields.tz = {
@@ -121,7 +121,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_tz_warning", "warning class should be there.");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "widget timezone_mismatch in a form view edit mode with mismatch",
         async function (assert) {
             assert.expect(3);

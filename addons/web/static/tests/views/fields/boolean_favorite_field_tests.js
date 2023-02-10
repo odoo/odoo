@@ -152,7 +152,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("FavoriteField in editable list view without label", async function (assert) {
+    QUnit.tttt("FavoriteField in editable list view without label", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",

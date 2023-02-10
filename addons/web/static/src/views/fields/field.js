@@ -66,6 +66,10 @@ export class Field extends Component {
             const fieldType = this.props.record.fields[this.props.name].type;
             this.field = getFieldFromRegistry(fieldType, this.props.type);
         }
+
+        owl.onWillRender(() => {
+            console.log("render Field");
+        });
     }
 
     get classNames() {
@@ -213,40 +217,44 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 
     if (X2M_TYPES.includes(fields[name].type)) {
         const views = {};
-        for (const child of node.children) {
-            const viewType = child.tagName === "tree" ? "list" : child.tagName;
-            const { ArchParser } = viewRegistry.get(viewType);
-            const xmlSerializer = new XMLSerializer();
-            const subArch = xmlSerializer.serializeToString(child);
-            const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
-            views[viewType] = {
-                ...archInfo,
-                fields: models[fields[name].relation],
-            };
-            fieldInfo.relatedFields = models[fields[name].relation];
-        }
-
-        let viewMode = node.getAttribute("mode");
-        if (!viewMode) {
-            if (views.list && !views.kanban) {
-                viewMode = "list";
-            } else if (!views.list && views.kanban) {
-                viewMode = "kanban";
-            } else if (views.list && views.kanban) {
-                viewMode = "list,kanban";
+        let fieldsToFetch = fieldInfo.field.fieldsToFetch;
+        if (fieldsToFetch) {
+            if (fieldsToFetch instanceof Function) {
+                fieldsToFetch = fieldsToFetch(fieldInfo);
             }
+            fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+            views.default = { fieldNodes: fieldsToFetch, fields: fieldsToFetch };
+            fieldInfo.viewMode = "default";
         } else {
-            viewMode = viewMode.replace("tree", "list");
-        }
-        fieldInfo.viewMode = viewMode;
-        fieldInfo.views = views;
-
-        let relatedFields = field.relatedFields;
-        if (relatedFields) {
-            if (relatedFields instanceof Function) {
-                relatedFields = relatedFields(fieldInfo);
+            for (const child of node.children) {
+                const viewType = child.tagName === "tree" ? "list" : child.tagName;
+                const { ArchParser } = viewRegistry.get(viewType);
+                const xmlSerializer = new XMLSerializer();
+                const subArch = xmlSerializer.serializeToString(child);
+                const archInfo = new ArchParser().parse(subArch, models, fields[name].relation);
+                views[viewType] = {
+                    ...archInfo,
+                    fields: models[fields[name].relation],
+                };
             }
-            fieldInfo.relatedFields = Object.fromEntries(relatedFields.map((f) => [f.name, f]));
+
+            let viewMode = node.getAttribute("mode");
+            if (!viewMode) {
+                if (views.list && !views.kanban) {
+                    viewMode = "list";
+                } else if (!views.list && views.kanban) {
+                    viewMode = "kanban";
+                } else if (views.list && views.kanban) {
+                    viewMode = "list,kanban";
+                }
+            } else {
+                viewMode = viewMode.replace("tree", "list");
+            }
+            fieldInfo.viewMode = viewMode;
+        }
+        if (Object.keys(views).length) {
+            fieldInfo.relatedFields = models[field.relation];
+            fieldInfo.views = views;
         }
     }
 

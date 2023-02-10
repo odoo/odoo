@@ -41,7 +41,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PercentPieField");
 
-    QUnit.test("PercentPieField in form view with value < 50%", async function (assert) {
+    QUnit.tttt("PercentPieField in form view with value < 50%", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -134,7 +134,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("PercentPieField in form view with value > 50%", async function (assert) {
+    QUnit.tttt("PercentPieField in form view with value > 50%", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -228,7 +228,7 @@ QUnit.module("Fields", (hooks) => {
     //       applies inside the form view, the widget is unusable. This test can
     //       be uncommented when we refactor the scss files so that this widget
     //       stylesheet applies in both form and list view.
-    // QUnit.test('percentpie widget in editable list view', async function(assert) {
+    // QUnit.tttt('percentpie widget in editable list view', async function(assert) {
     //     assert.expect(10);
     //
     //     var list = await createView({

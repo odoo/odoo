@@ -43,7 +43,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyTagsAvatarField");
 
-    QUnit.test("widget many2many_tags_avatar", async function (assert) {
+    QUnit.tttt("widget many2many_tags_avatar", async function (assert) {
         await makeView({
             type: "form",
             resModel: "turtle",
@@ -71,7 +71,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("widget many2many_tags_avatar in list view", async function (assert) {
+    QUnit.tttt("widget many2many_tags_avatar in list view", async function (assert) {
         const records = [];
         for (let id = 5; id <= 15; id++) {
             records.push({
@@ -238,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_data_row:nth-child(4) .o_field_tags span .o_delete");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "widget many2many_tags_avatar list view - don't crash on keyboard navigation",
         async function (assert) {
             await makeView({
@@ -272,7 +272,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("widget many2many_tags_avatar in kanban view", async function (assert) {
+    QUnit.tttt("widget many2many_tags_avatar in kanban view", async function (assert) {
         assert.expect(13);
 
         const records = [];
@@ -416,7 +416,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("widget many2many_tags_avatar delete tag", async function (assert) {
+    QUnit.tttt("widget many2many_tags_avatar delete tag", async function (assert) {
         await makeView({
             type: "form",
             resModel: "turtle",

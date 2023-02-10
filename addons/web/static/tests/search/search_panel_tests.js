@@ -2072,7 +2072,7 @@ QUnit.module("Search", (hooks) => {
         const webclient = await createWebClient({
             serverData,
             async mockRPC(route, { kwargs, method }) {
-                if (method === "web_search_read") {
+                if (method === "unity_read") {
                     assert.step(JSON.stringify(kwargs.domain));
                 }
             },
@@ -2120,7 +2120,7 @@ QUnit.module("Search", (hooks) => {
         const webclient = await createWebClient({
             serverData,
             async mockRPC(route, { kwargs, method }) {
-                if (method === "web_search_read") {
+                if (method === "unity_read" && kwargs.method === "search") {
                     assert.step(JSON.stringify(kwargs.domain));
                 }
             },
@@ -3461,19 +3461,22 @@ QUnit.module("Search", (hooks) => {
         );
     });
 
-    QUnit.test("Don't display empty state message when some filters are availible", async (assert) => {
-        const { TestComponent } = makeTestComponent();
-        await makeWithSearch({
-            serverData,
-            Component: TestComponent,
-            resModel: "partner",
-            searchViewId: false,
-        });
+    QUnit.test(
+        "Don't display empty state message when some filters are availible",
+        async (assert) => {
+            const { TestComponent } = makeTestComponent();
+            await makeWithSearch({
+                serverData,
+                Component: TestComponent,
+                resModel: "partner",
+                searchViewId: false,
+            });
 
-        assert.containsNone(
-            target,
-            ".o_search_panel_empty_state",
-            "Search panel does not have the empty state container"
-        );
-    });
+            assert.containsNone(
+                target,
+                ".o_search_panel_empty_state",
+                "Search panel does not have the empty state container"
+            );
+        }
+    );
 });

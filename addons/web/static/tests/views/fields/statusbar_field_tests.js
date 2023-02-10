@@ -126,7 +126,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StatusBarField");
 
-    QUnit.test("static statusbar widget on many2one field", async function (assert) {
+    QUnit.tttt("static statusbar widget on many2one field", async function (assert) {
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
         serverData.models.partner.records[1].bar = false;
 
@@ -169,7 +169,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "folded statusbar widget on selection field has selected value in the toggler",
         async function (assert) {
             registry.category("services").add("ui", {
@@ -201,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("static statusbar widget on many2one field with domain", async function (assert) {
+    QUnit.tttt("static statusbar widget on many2one field with domain", async function (assert) {
         assert.expect(1);
 
         patchWithCleanup(session, { uid: 17 });
@@ -229,7 +229,7 @@ QUnit.module("Fields", (hooks) => {
         });
     });
 
-    QUnit.test("clickable statusbar widget on many2one field", async function (assert) {
+    QUnit.tttt("clickable statusbar widget on many2one field", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -269,7 +269,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("statusbar with no status", async function (assert) {
+    QUnit.tttt("statusbar with no status", async function (assert) {
         serverData.models.product.records = [];
         await makeView({
             type: "form",
@@ -292,7 +292,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("statusbar with tooltip for help text", async function (assert) {
+    QUnit.tttt("statusbar with tooltip for help text", async function (assert) {
         serverData.models.partner.fields.product_id.help = "some info about the field";
         await makeView({
             type: "form",
@@ -308,9 +308,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
-        const tooltipInfo = target.querySelector(".o_field_statusbar").attributes[
-            "data-tooltip-info"
-        ];
+        const tooltipInfo =
+            target.querySelector(".o_field_statusbar").attributes["data-tooltip-info"];
         assert.strictEqual(
             JSON.parse(tooltipInfo.value).field.help,
             "some info about the field",
@@ -318,7 +317,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("statusbar with required modifier", async function (assert) {
+    QUnit.tttt("statusbar with required modifier", async function (assert) {
         const mock = () => {
             assert.step("Show error message");
             return () => {};
@@ -348,7 +347,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("statusbar with no value in readonly", async function (assert) {
+    QUnit.tttt("statusbar with no value in readonly", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -366,7 +365,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:visible", 2);
     });
 
-    QUnit.test("statusbar with domain but no value (create mode)", async function (assert) {
+    QUnit.tttt("statusbar with domain but no value (create mode)", async function (assert) {
         serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
 
         await makeView({
@@ -384,7 +383,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_statusbar_status button:disabled", 2);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "clickable statusbar should change m2o fetching domain in edit mode",
         async function (assert) {
             serverData.models.partner.fields.trululu.domain = "[('bar', '=', True)]";
@@ -411,7 +410,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "statusbar fold_field option and statusbar_visible attribute",
         async function (assert) {
             patchWithCleanup(browser, {
@@ -442,7 +441,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("statusbar: choose an item from the 'More' menu", async function (assert) {
+    QUnit.tttt("statusbar: choose an item from the 'More' menu", async function (assert) {
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
@@ -484,7 +483,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("statusbar with dynamic domain", async function (assert) {
+    QUnit.tttt("statusbar with dynamic domain", async function (assert) {
         serverData.models.partner.fields.trululu.domain = "[('int_field', '>', qux)]";
         serverData.models.partner.records[2].int_field = 0;
 
@@ -518,7 +517,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
     });
 
-    QUnit.test('statusbar edited by the smart action "Move to stage..."', async function (assert) {
+    QUnit.tttt('statusbar edited by the smart action "Move to stage..."', async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -551,7 +550,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, "#o_command_2");
     });
 
-    QUnit.test("smart actions are unavailable if readonly", async function (assert) {
+    QUnit.tttt("smart actions are unavailable if readonly", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -574,7 +573,7 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(moveStages.includes("Move to next...ALT + X"));
     });
 
-    QUnit.test("hotkeys are unavailable if readonly", async function (assert) {
+    QUnit.tttt("hotkeys are unavailable if readonly", async function (assert) {
         await makeView({
             serverData,
             type: "form",

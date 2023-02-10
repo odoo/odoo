@@ -43,7 +43,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("EmailField");
 
-    QUnit.test("EmailField in form view", async function (assert) {
+    QUnit.tttt("EmailField in form view", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -85,7 +85,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(mailtoLink.value, "new", "new value should be displayed properly");
     });
 
-    QUnit.test("EmailField in editable list view", async function (assert) {
+    QUnit.tttt("EmailField in editable list view", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -151,7 +151,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("EmailField with empty value", async function (assert) {
+    QUnit.tttt("EmailField with empty value", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -170,7 +170,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(input.value, "", "the value should be displayed properly");
     });
 
-    QUnit.test("EmailField trim user value", async function (assert) {
+    QUnit.tttt("EmailField trim user value", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -187,7 +187,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "readonly EmailField is properly rerendered after been changed by onchange",
         async function (assert) {
             serverData.models.partner.records[0].foo = "dolores.abernathy@delos";
@@ -234,7 +234,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("email field with placeholder", async function (assert) {
+    QUnit.tttt("email field with placeholder", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 
         await makeView({

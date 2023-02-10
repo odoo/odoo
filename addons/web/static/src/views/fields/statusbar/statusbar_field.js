@@ -5,11 +5,12 @@ import { useCommand } from "@web/core/commands/command_hook";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { groupBy } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { Domain } from "@web/core/domain";
 import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "../standard_field_props";
-import { Component } from "@odoo/owl";
+import { Component, onWillStart } from "@odoo/owl";
 
 export class StatusBarField extends Component {
     static template = "web.StatusBarField";
@@ -25,10 +26,13 @@ export class StatusBarField extends Component {
         isDisabled: { type: Boolean, optional: true },
         visibleSelection: { type: Array, optional: true },
         withCommand: { type: Boolean, optional: true },
+        foldField: { type: String, optional: true },
+        domain: { type: typeof Domain, optional: true },
     };
     static defaultProps = {
         visibleSelection: [],
     };
+    static specialDataCache = {};
 
     setup() {
         if (this.props.withCommand) {
@@ -90,6 +94,44 @@ export class StatusBarField extends Component {
                 }
             );
         }
+
+        this.orm = useService("orm");
+        onWillStart(async () => {
+            const fieldName = this.props.name;
+            const field = this.props.record.fields[fieldName];
+            if (field.type === "selection") {
+                return;
+            }
+            // FIXME: find a way to invalidate this at some point? e.g. when leaving action?
+            const fieldNames = ["id", "display_name"];
+            if (this.props.foldField) {
+                fieldNames.push(this.props.foldField);
+            }
+
+            const value = this.props.record.data[fieldName];
+            const context = this.props.record.evalContext;
+            let domain = this.domain.toList(context);
+            if (domain.length && value) {
+                domain = Domain.or([[["id", "=", value[0]]], domain]).toList(context);
+            }
+            const relation = field.relation;
+            const key = JSON.stringify({ fieldNames, domain, relation });
+            const cache = this.constructor.specialDataCache;
+            if (!cache[key]) {
+                cache[key] = this.orm.searchRead(relation, domain, fieldNames);
+            }
+            this.specialData = await cache[key];
+        });
+    }
+
+    get domain() {
+        if (this.props.domain) {
+            return this.props.domain;
+        }
+        if (this.props.record.fields[this.props.name].domain) {
+            return new Domain(this.props.record.fields[this.props.name].domain);
+        }
+        return new Domain();
     }
 
     get currentName() {
@@ -114,7 +156,7 @@ export class StatusBarField extends Component {
     get options() {
         switch (this.type) {
             case "many2one":
-                return this.props.record.preloadedData[this.props.name];
+                return this.specialData;
             case "selection":
                 return this.props.record.fields[this.props.name].selection;
             default:
@@ -234,7 +276,6 @@ export const statusBarField = {
     displayName: _lt("Status"),
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
-    legacySpecialData: "_fetchSpecialStatus",
     extractProps: ({ attrs, options, viewType }) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
@@ -242,32 +283,9 @@ export const statusBarField = {
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
         withCommand: viewType === "form",
+        foldField: options.fold_field,
+        domain: attrs.domain ? new Domain(attrs.domain) : undefined,
     }),
 };
 
 registry.category("fields").add("statusbar", statusBarField);
-
-export async function preloadStatusBar(orm, record, fieldName) {
-    const fieldNames = ["id", "display_name"];
-    const foldField = record.activeFields[fieldName].options.fold_field;
-    if (foldField) {
-        fieldNames.push(foldField);
-    }
-
-    const context = record.evalContext;
-    let domain = record.getFieldDomain(fieldName).toList(context);
-    if (domain.length && record.data[fieldName]) {
-        domain = Domain.or([[["id", "=", record.data[fieldName][0]]], domain]).toList(context);
-    }
-
-    const relation = record.fields[fieldName].relation;
-    return await orm.searchRead(relation, domain, fieldNames);
-}
-
-registry.category("preloadedData").add("statusbar", {
-    loadOnTypes: ["many2one"],
-    extraMemoizationKey: (record, fieldName) => {
-        return record.data[fieldName];
-    },
-    preload: preloadStatusBar,
-});

@@ -12,8 +12,8 @@ import {
 } from "@web/core/l10n/dates";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
-import { intersection } from "@web/core/utils/arrays";
-import { deepCopy } from "@web/core/utils/objects";
+import { intersection, unique } from "@web/core/utils/arrays";
+import { deepCopy, omit } from "@web/core/utils/objects";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
 
@@ -654,6 +654,8 @@ export class MockServer {
                 return this.mockSearchPanelSelectMultiRange(args.model, args.args, args.kwargs);
             case "search_read":
                 return this.mockSearchRead(args.model, args.args, args.kwargs);
+            case "unity_read":
+                return this.mockUnityRead(args.model, args.args, args.kwargs);
             case "unlink":
                 return this.mockUnlink(args.model, args.args);
             case "web_search_read":
@@ -1923,6 +1925,46 @@ export class MockServer {
             context: kwargs.context,
         });
         return result.records;
+    }
+
+    mockUnityRead(modelName, args, kwargs) {
+        const unityReadRecords = (modelName, fields, records) => {
+            for (const fieldName in fields) {
+                const field = this.models[modelName].fields[fieldName];
+                if (["one2many", "many2many"].includes(field.type)) {
+                    if (typeof fields[fieldName] === "object") {
+                        const subUnityResponse = this.mockUnityRead(field.relation, [], {
+                            method: "read",
+                            ids: unique(records.map((r) => r[fieldName]).flat()),
+                            fields: omit(fields[fieldName], "__context"),
+                            context: fields[fieldName].__context,
+                        });
+                        const relRecords = {};
+                        for (const relRecord of subUnityResponse[0]) {
+                            relRecords[relRecord.id] = relRecord;
+                        }
+                        for (const record of records) {
+                            record[fieldName] = record[fieldName].map((resId) => relRecords[resId]);
+                        }
+                    }
+                }
+            }
+        };
+        if (kwargs.method === "search") {
+            const _kwargs = {
+                ...omit(kwargs, "method"),
+                fields: Object.keys(kwargs.fields),
+            };
+            const result = this.mockWebSearchRead(modelName, [], _kwargs);
+            unityReadRecords(modelName, kwargs.fields, result.records);
+            return [result, {}];
+        } else if (kwargs.method === "read") {
+            const { fields, ids } = kwargs;
+            const result = this.mockRead(modelName, [ids, Object.keys(fields)]);
+            unityReadRecords(modelName, fields, result);
+            return [result, {}];
+        }
+        throw new Error(`Wrong method ${kwargs.method} given to unityRead`);
     }
 
     mockWebSearchRead(modelName, args, kwargs) {

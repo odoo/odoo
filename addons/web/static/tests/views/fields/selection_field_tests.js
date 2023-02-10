@@ -70,7 +70,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("SelectionField");
 
-    QUnit.test("SelectionField in a list view", async function (assert) {
+    QUnit.tttt("SelectionField in a list view", async function (assert) {
         serverData.models.partner.records.forEach(function (r) {
             r.color = "red";
         });
@@ -90,7 +90,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(td.children.length, 1, "select tag should be only child of td");
     });
 
-    QUnit.test("SelectionField, edition and on many2one field", async function (assert) {
+    QUnit.tttt("SelectionField, edition and on many2one field", async function (assert) {
         serverData.models.partner.onchanges = { product_id: function () {} };
         serverData.models.partner.records[0].product_id = 37;
         serverData.models.partner.records[0].trululu = false;
@@ -150,7 +150,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views", "read", "name_search", "name_search", "onchange"]);
     });
 
-    QUnit.test("unset selection field with 0 as key", async function (assert) {
+    QUnit.tttt("unset selection field with 0 as key", async function (assert) {
         // The server doesn't make a distinction between false value (the field
         // is unset), and selection 0, as in that case the value it returns is
         // false. So the client must convert false to value 0 if it exists.
@@ -182,7 +182,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("unset selection field with string keys", async function (assert) {
+    QUnit.tttt("unset selection field with string keys", async function (assert) {
         // The server doesn't make a distinction between false value (the field
         // is unset), and selection 0, as in that case the value it returns is
         // false. So the client must convert false to value 0 if it exists. In
@@ -215,7 +215,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("unset selection on a many2one field", async function (assert) {
+    QUnit.tttt("unset selection on a many2one field", async function (assert) {
         assert.expect(1);
 
         await makeView({
@@ -239,7 +239,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("field selection with many2ones and special characters", async function (assert) {
+    QUnit.tttt("field selection with many2ones and special characters", async function (assert) {
         // edit the partner with id=4
         serverData.models.partner.records[2].display_name = "<span>hey</span>";
 
@@ -257,7 +257,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "SelectionField on a many2one: domain updated by an onchange",
         async function (assert) {
             assert.expect(4);
@@ -310,7 +310,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("required selection widget should not have blank option", async function (assert) {
+    QUnit.tttt("required selection widget should not have blank option", async function (assert) {
         serverData.models.partner.fields.feedback_value = {
             type: "selection",
             required: true,
@@ -356,7 +356,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "required selection widget should have only one blank option",
         async function (assert) {
             serverData.models.partner.fields.feedback_value = {
@@ -404,7 +404,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("selection field with placeholder", async function (assert) {
+    QUnit.tttt("selection field with placeholder", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",

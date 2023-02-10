@@ -121,7 +121,7 @@ QUnit.module("Record Component", (hooks) => {
         );
         assert.verifySteps([
             "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/unity_read",
         ]);
     });
 
@@ -137,7 +137,7 @@ QUnit.module("Record Component", (hooks) => {
         Parent.template = xml`
             <Record resModel="'partner'" resId="state.resId" fieldNames="['foo']" t-slot-scope="data">
                 <Field name="'foo'" record="data.record"/>
-                <button t-on-click="() => this.state.resId++">Next</button>
+                <button class="my-btn" t-on-click="() => this.state.resId++">Next</button>
             </Record>`;
         const env = await makeTestEnv({
             serverData,
@@ -148,12 +148,12 @@ QUnit.module("Record Component", (hooks) => {
         await mount(Parent, target, { env, dev: true });
         assert.verifySteps([
             "/web/dataset/call_kw/partner/fields_get",
-            "/web/dataset/call_kw/partner/read",
+            "/web/dataset/call_kw/partner/unity_read",
         ]);
         assert.containsOnce(target, ".o_field_char:contains(yop)");
-        await click(target.querySelector("button"));
+        await click(target.querySelector("button.my-btn"));
         assert.containsOnce(target, ".o_field_char:contains(blip)");
-        assert.verifySteps(["/web/dataset/call_kw/partner/read"]);
+        assert.verifySteps(["/web/dataset/call_kw/partner/unity_read"]);
     });
 
     QUnit.test("predefined fields and values", async function (assert) {
@@ -264,7 +264,7 @@ QUnit.module("Record Component", (hooks) => {
                     },
                 };
                 this.values = {
-                    foo: [1, undefined],
+                    foo: [1, "bar1"],
                 };
             }
 
@@ -289,7 +289,7 @@ QUnit.module("Record Component", (hooks) => {
                 },
             }),
         });
-        assert.verifySteps(["/web/dataset/call_kw/bar/name_get"]);
+        assert.verifySteps([]);
         assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
         await editInput(target, ".o_field_many2one_selection input", "abc");
         assert.verifySteps(["/web/dataset/call_kw/bar/name_search"]);
@@ -337,7 +337,7 @@ QUnit.module("Record Component", (hooks) => {
                 env: await makeTestEnv({
                     serverData,
                     mockRPC(route) {
-                        assert.step(route);
+                        throw new Error("should not do any rpc");
                     },
                 }),
             });
@@ -383,12 +383,16 @@ QUnit.module("Record Component", (hooks) => {
             env: await makeTestEnv({
                 serverData,
                 mockRPC(route, args) {
-                    assert.step(`${args.method} : ${JSON.stringify(args.args)}`);
+                    assert.step(
+                        `${args.method} : ${JSON.stringify(args.kwargs.ids)} - ${JSON.stringify(
+                            args.kwargs.fields
+                        )}`
+                    );
                 },
             }),
         });
 
-        assert.verifySteps([`read : [[1],["foo"]]`]);
+        assert.verifySteps([`unity_read : [1] - {"foo":1}`]);
         const increment = target.querySelector("#increment");
         const field = target.querySelector("div[name='foo']");
         assert.strictEqual(increment.textContent, "0");
@@ -401,7 +405,7 @@ QUnit.module("Record Component", (hooks) => {
         assert.strictEqual(field.textContent, "yop");
 
         await click(target.querySelector("#next"));
-        assert.verifySteps([`read : [[5],["foo"]]`]);
+        assert.verifySteps([`unity_read : [5] - {"foo":1}`]);
         assert.strictEqual(increment.textContent, "2");
         assert.strictEqual(field.textContent, "blop");
     });

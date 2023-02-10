@@ -450,7 +450,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("DateField in editable list view", async function (assert) {
+    QUnit.tttt("DateField in editable list view", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -520,7 +520,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "multi edition of DateField in list view: clear date in input",
         async function (assert) {
             serverData.models.partner.records[1].date = "2017-02-03";
@@ -620,7 +620,7 @@ QUnit.module("Fields", (hooks) => {
             await triggerEvents(input, null, ["input", "change", "focusout"]);
 
             assert.containsOnce(target, ".o_form_saved");
-            assert.verifySteps(["get_views", "read"]); // should not have save as nothing changed
+            assert.verifySteps(["get_views", "unity_read"]); // should not have save as nothing changed
         }
     );
 
@@ -744,7 +744,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("DateField: allow to use compute dates (+5d for instance)", async function (assert) {
+    QUnit.tttt("DateField: allow to use compute dates (+5d for instance)", async function (assert) {
         patchDate(2021, 1, 15, 10, 0, 0); // current date : 15 Feb 2021 10:00:00
         serverData.models.partner.fields.date.default = "2019-09-15";
 

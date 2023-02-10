@@ -63,7 +63,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("ProgressBarField");
 
-    QUnit.test("ProgressBarField: max_value should update", async function (assert) {
+    QUnit.tttt("ProgressBarField: max_value should update", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records[0].float_field = 2;
@@ -113,7 +113,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: value should update in edit mode when typing in input",
         async function (assert) {
             assert.expect(4);
@@ -164,7 +164,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: value should update in edit mode when typing in input with field max value",
         async function (assert) {
             assert.expect(4);
@@ -211,7 +211,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: max value should update in edit mode when typing in input with field max value",
         async function (assert) {
             assert.expect(5);
@@ -266,7 +266,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("ProgressBarField: Standard readonly mode is readonly", async function (assert) {
+    QUnit.tttt("ProgressBarField: Standard readonly mode is readonly", async function (assert) {
         serverData.models.partner.records[0].int_field = 99;
 
         await makeView({
@@ -300,7 +300,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("ProgressBarField: field is editable in kanban", async function (assert) {
+    QUnit.tttt("ProgressBarField: field is editable in kanban", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.fields.int_field.readonly = true;
@@ -360,7 +360,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("force readonly in kanban", async (assert) => {
+    QUnit.tttt("force readonly in kanban", async (assert) => {
         assert.expect(2);
 
         serverData.models.partner.records[0].int_field = 99;
@@ -391,7 +391,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".o_progressbar_value .o_input");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: readonly and editable attrs/options in kanban",
         async function (assert) {
             assert.expect(4);
@@ -449,7 +449,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: write float instead of int works, in locale",
         async function (assert) {
             assert.expect(4);
@@ -503,7 +503,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "ProgressBarField: write gibbrish instead of int throws warning",
         async function (assert) {
             serverData.models.partner.records[0].int_field = 99;

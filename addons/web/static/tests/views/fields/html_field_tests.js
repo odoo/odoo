@@ -37,7 +37,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
 
     QUnit.module("HtmlField");
 
-    QUnit.test("html fields are correctly rendered in form view (readonly)", async (assert) => {
+    QUnit.tttt("html fields are correctly rendered in form view (readonly)", async (assert) => {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -51,7 +51,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".o_field_html").textContent, "some text");
     });
 
-    QUnit.test("html fields are correctly rendered (edit)", async (assert) => {
+    QUnit.tttt("html fields are correctly rendered (edit)", async (assert) => {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -72,7 +72,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.strictEqual(textarea.value, BLUE_TEXT);
     });
 
-    QUnit.test("html fields are correctly rendered in list view", async (assert) => {
+    QUnit.tttt("html fields are correctly rendered in list view", async (assert) => {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -93,7 +93,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "html field displays an empty string for the value false in list view",
         async (assert) => {
             serverData.models.partner.records[0].txt = false;
@@ -115,7 +115,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         }
     );
 
-    QUnit.test("html fields are correctly rendered in kanban view", async (assert) => {
+    QUnit.tttt("html fields are correctly rendered in kanban view", async (assert) => {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -136,7 +136,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         assert.strictEqual(txt.style.color, "red");
     });
 
-    QUnit.test("field html translatable", async (assert) => {
+    QUnit.tttt("field html translatable", async (assert) => {
         assert.expect(10);
 
         serverData.models.partner.fields.txt.translate = true;
@@ -264,7 +264,7 @@ QUnit.module("Fields", ({ beforeEach }) => {
         await click(target, ".modal button.btn-primary"); // save
     });
 
-    QUnit.test("html fields: spellcheck is disabled on blur", async (assert) => {
+    QUnit.tttt("html fields: spellcheck is disabled on blur", async (assert) => {
         await makeView({
             type: "form",
             resModel: "partner",

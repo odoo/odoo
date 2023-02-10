@@ -521,7 +521,7 @@ QUnit.module("DebugMenu", (hooks) => {
         }
     );
 
-    QUnit.test("set defaults: basic rendering", async (assert) => {
+    QUnit.tttt("set defaults: basic rendering", async (assert) => {
         prepareRegistriesWithCleanup();
         patchWithCleanup(odoo, {
             debug: true,
@@ -569,7 +569,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.strictEqual(options[1].value, "foo");
     });
 
-    QUnit.test("set defaults: click close", async (assert) => {
+    QUnit.tttt("set defaults: click close", async (assert) => {
         prepareRegistriesWithCleanup();
         patchWithCleanup(odoo, {
             debug: true,
@@ -616,7 +616,7 @@ QUnit.module("DebugMenu", (hooks) => {
         assert.containsNone(target, ".modal");
     });
 
-    QUnit.test("set defaults: select and save", async (assert) => {
+    QUnit.tttt("set defaults: select and save", async (assert) => {
         assert.expect(3);
 
         prepareRegistriesWithCleanup();

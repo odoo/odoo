@@ -33,7 +33,7 @@ export function addFieldDependencies(activeFields, fields, dependencies = []) {
             });
         }
         if (!(name in fields)) {
-            fields[name] = { ...dependency };
+            fields[name] = { ...dependency, name };
         }
     }
 }

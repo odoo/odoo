@@ -145,13 +145,14 @@ export class HtmlField extends Component {
                         // Ensure all external links are opened in a new tab.
                         retargetLinks(this.readonlyElementRef.el);
 
-                        const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.name));
-                        if (!hasReadonlyModifiers) {
-                            const $el = $(this.readonlyElementRef.el);
-                            $el.off('.checklistBinding');
-                            $el.on('click.checklistBinding', 'ul.o_checklist > li', this._onReadonlyClickChecklist.bind(this));
-                            $el.on('click.checklistBinding', '.o_stars .fa-star, .o_stars .fa-star-o', this._onReadonlyClickStar.bind(this));
-                        }
+                        // FIXME WOWL
+                        // const hasReadonlyModifiers = Boolean(this.props.record.isReadonly(this.props.name));
+                        // if (!hasReadonlyModifiers) {
+                        //     const $el = $(this.readonlyElementRef.el);
+                        //     $el.off('.checklistBinding');
+                        //     $el.on('click.checklistBinding', 'ul.o_checklist > li', this._onReadonlyClickChecklist.bind(this));
+                        //     $el.on('click.checklistBinding', '.o_stars .fa-star, .o_stars .fa-star-o', this._onReadonlyClickStar.bind(this));
+                        // }
                     }
                 } else {
                     const codeViewEl = this._getCodeViewEl();

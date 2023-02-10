@@ -4,6 +4,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
+import { evalDomain } from "@web/views/utils";
 
 import { Component } from "@odoo/owl";
 
@@ -71,6 +72,10 @@ export class CalendarCommonPopover extends Component {
                 ? start.toFormat("DDDD")
                 : start.toFormat("DDD") + " - " + end.toFormat("DDD");
         }
+    }
+    isInvisible(fieldName, record) {
+        const { invisible } = this.props.model.popoverFields[fieldName].modifiers;
+        return evalDomain(invisible, record.evalContext);
     }
 
     onEditEvent() {
