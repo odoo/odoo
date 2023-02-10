@@ -7,6 +7,7 @@
 
 import itertools
 import logging
+import os
 import sys
 import threading
 import time
@@ -22,6 +23,11 @@ from .module import adapt_version, initialize_sys_path, load_openerp_module
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
 
+# On databases with a lot of data, the init hooks may forbid modules installation due to
+# installation time or memory issues. For such cases, administrators can globally disable
+# init hooks by setting the `ODOO_DISABLE_INIT_HOOKS` environment variable. Those init hooks
+# should then be executed manually before/after install in an efficient way (SQL or in batches).
+DISABLE_INIT_HOOKS = tools.str2bool(os.getenv("ODOO_DISABLE_INIT_HOOKS", "0"), False)
 
 def load_data(cr, idref, mode, kind, package):
     """
@@ -183,7 +189,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
-                getattr(py_module, pre_init)(cr)
+                if DISABLE_INIT_HOOKS:
+                    _logger.warning("skip pre-init hook for module %s", module_name)
+                else:
+                    getattr(py_module, pre_init)(cr)
 
         model_names = registry.load(cr, package)
 
@@ -237,7 +246,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
-                    getattr(py_module, post_init)(cr, registry)
+                    if DISABLE_INIT_HOOKS:
+                        _logger.warning("skip post-init hook for module %s", module_name)
+                    else:
+                        getattr(py_module, post_init)(cr, registry)
 
             if mode == 'update':
                 # validate the views that have not been checked yet
@@ -520,8 +532,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 for pkg in pkgs:
                     uninstall_hook = pkg.info.get('uninstall_hook')
                     if uninstall_hook:
-                        py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
-                        getattr(py_module, uninstall_hook)(cr, registry)
+                        if DISABLE_INIT_HOOKS:
+                            _logger.warning("skip uninstall hook for module %s", pkg.name)
+                        else:
+                            py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
+                            getattr(py_module, uninstall_hook)(cr, registry)
 
                 Module = env['ir.module.module']
                 Module.browse(modules_to_remove.values()).module_uninstall()
