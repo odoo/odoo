@@ -167,7 +167,7 @@ class PosOrder(models.Model):
                 } for orderline in order['lines'] if orderline[2]['is_reward_line'] and orderline[2]['reward_id']
             ]
 
-            order_reward_ids = self.env['loyalty.reward'].browse([reward_id['reward_id'] for reward_id in rewards_list])
+            order_reward_ids = self.env['loyalty.reward'].browse(set([reward_id['reward_id'] for reward_id in rewards_list]))
 
             for reward in rewards_list:
                 order_reward_id = order_reward_ids.filtered(lambda order_reward: order_reward.id == reward['reward_id'])
