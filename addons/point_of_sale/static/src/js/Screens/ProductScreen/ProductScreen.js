@@ -299,6 +299,7 @@ export class ProductScreen extends ControlButtonsMixin(LegacyComponent) {
             });
         }
         this.currentOrder.add_product(product, options);
+        this.numberBuffer.reset();
     }
     _barcodePartnerAction(code) {
         const partner = this.env.pos.db.get_partner_by_barcode(code.code);
