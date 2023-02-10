@@ -95,6 +95,10 @@ export class BarcodeDialog extends Component {
         });
     }
 
+    isZXingBarcodeDetector() {
+        return this.detector && this.detector.__proto__.constructor.name === "ZXingBarcodeDetector";
+    }
+
     /**
      * Check for camera preview element readiness
      *
@@ -113,6 +117,11 @@ export class BarcodeDialog extends Component {
 
     onResize(overlayInfo) {
         this.overlayInfo = overlayInfo;
+        if (this.isZXingBarcodeDetector()) {
+            // TODO need refactoring when ZXing will support multiple result in one scan
+            // https://github.com/zxing-js/library/issues/346
+            this.detector.setCropArea(this.adaptValuesWithRatio(this.overlayInfo, true));
+        }
     }
 
     /**
@@ -142,12 +151,8 @@ export class BarcodeDialog extends Component {
         try {
             const codes = await this.detector.detect(this.videoPreviewRef.el);
             for (const code of codes) {
-                let { x, y, width, height } = code.boundingBox;
-                x *= this.zoomRatio;
-                y *= this.zoomRatio;
-                width *= this.zoomRatio;
-                height *= this.zoomRatio;
-                if (this.overlayInfo.x && this.overlayInfo.y) {
+                if (!this.isZXingBarcodeDetector() && this.overlayInfo.x && this.overlayInfo.y) {
+                    const { x, y, width, height } = this.adaptValuesWithRatio(code.boundingBox);
                     if (
                         x < this.overlayInfo.x ||
                         x + width > this.overlayInfo.x + this.overlayInfo.width ||
@@ -163,6 +168,18 @@ export class BarcodeDialog extends Component {
         } catch (err) {
             this.onError(err);
         }
+    }
+
+    adaptValuesWithRatio(object, dividerRatio = false) {
+        const newObject = Object.assign({}, object);
+        for (const key of Object.keys(newObject)) {
+            if (dividerRatio) {
+                newObject[key] /= this.zoomRatio;
+            } else {
+                newObject[key] *= this.zoomRatio;
+            }
+        }
+        return newObject;
     }
 }
 

@@ -66,12 +66,34 @@ export function buildZXingBarcodeDetector(ZXing) {
                 throw new DOMException("HTMLVideoElement is not ready", "InvalidStateError");
             }
             const canvas = document.createElement("canvas");
+
+            let barcodeArea;
+            if (this.cropArea && (this.cropArea.x || this.cropArea.y)) {
+                barcodeArea = this.cropArea;
+            } else {
+                barcodeArea = {
+                    x: 0,
+                    y: 0,
+                    width: video.videoWidth,
+                    height: video.videoHeight,
+                };
+            }
+            canvas.width = barcodeArea.width;
+            canvas.height = barcodeArea.height;
+
             const ctx = canvas.getContext("2d");
 
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-
-            ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
+            ctx.drawImage(
+                video,
+                barcodeArea.x,
+                barcodeArea.y,
+                barcodeArea.width,
+                barcodeArea.height,
+                0,
+                0,
+                barcodeArea.width,
+                barcodeArea.height
+            );
 
             const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
             const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
@@ -103,6 +125,10 @@ export function buildZXingBarcodeDetector(ZXing) {
                 }
                 throw err;
             }
+        }
+
+        setCropArea(cropArea) {
+            this.cropArea = cropArea;
         }
     }
 
