@@ -98,7 +98,9 @@ wTourUtils.registerWebsitePreviewTour('course_publisher_standard', {
 }, {
     content: "eLearning: use breadcrumb to go back to channel",
     trigger: 'iframe .o_wslides_course_nav a:contains("Déboulonnate")',
-}]
+}],
+    slidesTourTools.addImageToSection('Introduction', 'Overview', true),
+    slidesTourTools.addPdfToSection('Introduction', 'Exercise', true),
 //     [
 // {
 //     content: 'eLearning: move new course inside introduction',
