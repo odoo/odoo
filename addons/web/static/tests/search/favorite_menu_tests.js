@@ -2,7 +2,6 @@
 
 import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
@@ -20,7 +19,6 @@ import {
 } from "@web/../tests/search/helpers";
 
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
-const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
@@ -52,7 +50,6 @@ QUnit.module("Search", (hooks) => {
         };
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
     });
 
     QUnit.module("FavoriteMenu");
