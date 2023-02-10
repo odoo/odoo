@@ -570,16 +570,13 @@ var SlideUploadDialog = Dialog.extend({
                 if (isImage) {
                     preview.src = dataURL;
                 }
-                this.file.data = dataURL.split(',', 1)[1];
+                this.file.data = dataURL.split(',', 2)[1];
                 this._showPreviewColumn();
             });
         } else {
-            var ArrayReader = new FileReader();
             this.set('can_submit_form', false);
-            // file read as ArrayBuffer for pdfjsLib get_Document API
-            ArrayReader.readAsArrayBuffer(file);
-            ArrayReader.onload = async function (evt) {
-                var buffer = evt.target.result;
+            utils.getDataURLFromFile(file).then(async dataURL => {
+                this.file.data = dataURL.split(',', 2)[1];
                 /**
                  * The following line fixes pdfjsLib 'Util' global variable.
                  * This is (most likely) related to #32181 which lazy loads most assets.
@@ -598,7 +595,8 @@ var SlideUploadDialog = Dialog.extend({
                  * cause much harm.
                  */
                 window.Util = window.pdfjsLib.Util;
-                const pdfTask = window.pdfjsLib.getDocument(new Uint8Array(buffer));
+                // pdf is stored in file.data in base64 and converted in binary (atob) to generate the preview
+                const pdfTask = window.pdfjsLib.getDocument({ data: atob(this.file.data) });
                 pdfTask.onPassword = () => {
                     this._alertDisplay(_t("You can not upload password protected file."));
                     this._fileReset();
@@ -608,7 +606,7 @@ var SlideUploadDialog = Dialog.extend({
                 const pdf = await pdfTask.promise;
 
                 self._formSetFieldValue('duration', (pdf.numPages || 0) * 5);
-                const page = await pdf.getPage(1)
+                const page = await pdf.getPage(1);
                 var viewport = page.getViewport({scale: 1});
                 var canvas = document.getElementById('data_canvas');
                 var context = canvas.getContext('2d');
@@ -625,7 +623,7 @@ var SlideUploadDialog = Dialog.extend({
                 }
                 loaded = true;
                 self._showPreviewColumn();
-            };
+            });
         }
 
         if (!preventOnchange) {
