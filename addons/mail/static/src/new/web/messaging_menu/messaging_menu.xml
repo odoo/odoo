@@ -76,11 +76,11 @@
                     </t>
                     <t t-if="preview.mostRecentMsg" t-set-slot="body-icon">
                         <t t-if="preview.mostRecentMsg.isSelfAuthored">
-                            <i class="fa fa-mail-reply me-1"/>You
+                            <i class="fa fa-mail-reply me-1"/>You:
                         </t>
                         <t t-else="">
-                            <t t-esc="preview.mostRecentMsg.author?.name"/>
-                        </t>:
+                            <t t-esc="preview.mostRecentMsg.author?.name"/>:
+                        </t>
                     </t>
                 </NotificationItem>
             </t>
@@ -101,7 +101,7 @@
     </div>
     <div t-if="store.isSmall" class="o-mail-messaging-menu-navbar d-flex border-top bg-view shadow-lg w-100">
         <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-messaging-menu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
-            'text-primary fw-bolder o-active': store.discuss.activeTab === tab.id,
+            'text-primary fw-bolder': store.discuss.activeTab === tab.id,
             'border-end': !tab_last,
         }" t-on-click="() => this.onClickNavTab(tab.id)">
             <i t-attf-class="p-2 fs-4 {{ tab.icon }}"/>

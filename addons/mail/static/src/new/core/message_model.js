@@ -145,7 +145,7 @@ export class Message {
         if (!this.author) {
             return false;
         }
-        return this.author.id === this._store.self.id;
+        return this.author.id === this._store.self.id && this.author.type === this._store.self.type;
     }
 
     get isNeedaction() {

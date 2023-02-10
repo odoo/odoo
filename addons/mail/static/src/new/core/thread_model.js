@@ -241,10 +241,10 @@ export class Thread {
 
     /** @returns {import("@mail/new/core/message_model").Message | undefined} */
     get mostRecentMsg() {
-        if (!this.mostRecentMsgId) {
+        if (this.messages.length === 0) {
             return undefined;
         }
-        return this._store.messages[this.mostRecentMsgId];
+        return this._store.messages[Math.max(...this.messages.map((m) => m.id))];
     }
 
     get mostRecentNeedactionMsg() {
@@ -253,13 +253,6 @@ export class Thread {
             return undefined;
         }
         return this._store.messages[mostRecentNeedactionMsgId];
-    }
-
-    get mostRecentMsgId() {
-        if (this.messages.length === 0) {
-            return undefined;
-        }
-        return Math.max(...this.messages.map((m) => m.id));
     }
 
     get mostRecentNeedactionMsgId() {

@@ -54,7 +54,7 @@ QUnit.test("show call UI in chat window when in call", async function (assert) {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-messaging-menu .o-mail-notification-item:contains(General)");
+    await click(".o-mail-notification-item:contains(General)");
     assert.containsOnce(target, ".o-mail-chat-window");
     assert.containsNone(target, ".o-mail-call");
     assert.containsOnce(target, ".o-mail-chat-window-header .o-mail-command[title='Start a Call']");

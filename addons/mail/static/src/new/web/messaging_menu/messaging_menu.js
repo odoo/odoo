@@ -69,7 +69,7 @@ export class MessagingMenu extends Component {
      * @returns Thread types matching the given tab.
      */
     tabToThreadType(tab) {
-        return tab === "chats" ? ["chat", "group"] : tab;
+        return tab === "chat" ? ["chat", "group"] : tab;
     }
 
     get hasPreviews() {
@@ -125,6 +125,7 @@ export class MessagingMenu extends Component {
                     displayName: thread.displayName,
                     imgUrl: thread.imgUrl,
                     hasMarkAsReadButton: this.threadService.isUnread(thread),
+                    mostRecentMsg,
                     thread: thread,
                     isNeedaction: false,
                 });
@@ -138,6 +139,7 @@ export class MessagingMenu extends Component {
                     displayName: thread.displayName,
                     imgUrl: mostRecentNeedactionMsg.module_icon,
                     hasMarkAsReadButton: true,
+                    mostRecentMsg,
                     thread: thread,
                     isNeedaction: true,
                 });

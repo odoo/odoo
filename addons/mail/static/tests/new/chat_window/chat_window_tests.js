@@ -67,7 +67,7 @@ QUnit.test(
         patchUiSize({ size: SIZES.SM });
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-messaging-menu .o-mail-notification-item");
+        await click(".o-mail-notification-item");
         await insertText(".o-mail-chat-window .o-mail-composer-textarea", "Test");
         await afterNextRender(() => triggerHotkey("control+Enter"));
         assert.containsOnce(target, ".o-mail-message");
@@ -90,7 +90,7 @@ QUnit.test("load messages from opening chat window from messaging menu", async f
     }
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-messaging-menu .o-mail-notification-item");
+    await click(".o-mail-notification-item");
     assert.containsN(target, ".o-mail-message", 21);
 });
 
@@ -99,7 +99,7 @@ QUnit.test("chat window: basic rendering", async function (assert) {
     pyEnv["mail.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
-    await click(".o-mail-messaging-menu .o-mail-notification-item");
+    await click(".o-mail-notification-item");
     assert.containsOnce(target, ".o-mail-chat-window");
     assert.containsOnce(target, ".o-mail-chat-window-header");
     assert.containsOnce($(target).find(".o-mail-chat-window-header"), ".o-mail-chatwindow-icon");
@@ -129,7 +129,7 @@ QUnit.test(
         patchUiSize({ size: SIZES.SM });
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        await click(".o-mail-messaging-menu .o-mail-notification-item");
+        await click(".o-mail-notification-item");
         const [member] = pyEnv["mail.channel.member"].searchRead([
             ["channel_id", "=", channelId],
             ["partner_id", "=", pyEnv.currentPartnerId],
