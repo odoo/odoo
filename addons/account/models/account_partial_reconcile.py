@@ -520,10 +520,17 @@ class AccountPartialReconcile(models.Model):
 
                 moves_to_create.append(move_vals)
 
-        moves = self.env['account.move'].create(moves_to_create)
+        moves = self.env['account.move']\
+            .with_context(
+                skip_invoice_sync=True,
+                skip_invoice_line_sync=True,
+                skip_account_move_synchronization=True,
+            )\
+            .create(moves_to_create)
         moves._post(soft=False)
 
         # Reconcile the tax lines being on a reconcile tax basis transfer account.
+        reconciliation_plan = []
         for lines, move_index, sequence in to_reconcile_after:
 
             # In expenses, all move lines are created manually without any grouping on tax lines.
@@ -538,6 +545,8 @@ class AccountPartialReconcile(models.Model):
             if counterpart_line.reconciled:
                 continue
 
-            (lines + counterpart_line).reconcile()
+            reconciliation_plan.append((counterpart_line + lines))
+
+        self.env['account.move.line']._reconcile_plan(reconciliation_plan)
 
         return moves
