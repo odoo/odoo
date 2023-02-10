@@ -28,21 +28,23 @@ export class Typing extends Component {
     /** @returns {boolean|string} */
     get text() {
         if (this.props.channel.hasTypingMembers) {
-            const typingMembers = this.props.channel.typingMembers;
-            if (typingMembers.length === 1) {
-                return sprintf(_t("%s is typing..."), typingMembers[0].persona.name);
+            const typingMemberNames = this.props.channel.typingMembers.map(({ persona }) =>
+                this.props.channel.getMemberName(persona)
+            );
+            if (typingMemberNames.length === 1) {
+                return sprintf(_t("%s is typing..."), typingMemberNames[0]);
             }
-            if (typingMembers.length === 2) {
+            if (typingMemberNames.length === 2) {
                 return sprintf(
                     _t("%s and %s are typing..."),
-                    typingMembers[0].persona.name,
-                    typingMembers[1].persona.name
+                    typingMemberNames[0],
+                    typingMemberNames[1]
                 );
             }
             return sprintf(
                 _t("%s, %s and more are typing..."),
-                typingMembers[0].persona.name,
-                typingMembers[1].persona.name
+                typingMemberNames[0],
+                typingMemberNames[1]
             );
         }
         return false;

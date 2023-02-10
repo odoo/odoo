@@ -32,17 +32,13 @@ patch(Thread.prototype, "im_livechat", {
         if (this.type !== "livechat" || !this.correspondent) {
             return this._super();
         }
-        const correspondentName =
-            this.correspondent.user_livechat_username ||
-            this.anonymous_name ||
-            this.correspondent.name;
         if (!this.correspondent.is_public && this.correspondent.country) {
-            return `${correspondentName} (${this.correspondent.country.name})`;
+            return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
         }
         if (this.anonymous_country) {
-            return `${correspondentName} (${this.anonymous_country.name})`;
+            return `${this.getMemberName(this.correspondent)} (${this.anonymous_country.name})`;
         }
-        return correspondentName;
+        return this.getMemberName(this.correspondent);
     },
 
     get imgUrl() {
@@ -50,5 +46,22 @@ patch(Thread.prototype, "im_livechat", {
             return `/web/image/res.partner/${this.correspondent.id}/avatar_128`;
         }
         return this._super();
+    },
+
+    /**
+     *
+     * @param {import("@mail/new/core/persona_model").Persona} persona
+     */
+    getMemberName(persona) {
+        if (this.type !== "livechat") {
+            return this._super(persona);
+        }
+        if (persona.user_livechat_username) {
+            return persona.user_livechat_username;
+        }
+        if (persona.is_public && this.anonymous_name) {
+            return this.anonymous_name;
+        }
+        return this._super(persona);
     },
 });

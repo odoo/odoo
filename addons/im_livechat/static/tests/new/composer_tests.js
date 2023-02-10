@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { click, dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
+import { afterNextRender, click, dragenterFiles, start } from "@mail/../tests/helpers/test_utils";
 import { editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 let target;
@@ -65,4 +65,41 @@ QUnit.test("Can execute help command on livechat channels", async function (asse
     triggerHotkey("Enter");
     await nextTick();
     assert.verifySteps(["execute_command_help"]);
+});
+
+QUnit.test('Receives visitor typing status "is typing"', async function (assert) {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 20",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss(channelId);
+
+    assert.strictEqual(
+        document.querySelector(".o-mail-composer-is-typing-space-holder").textContent,
+        "",
+        "Should display no one is currently typing"
+    );
+    const mailChannel1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    // simulate receive typing notification from livechat visitor "is typing"
+    await afterNextRender(() =>
+        env.services.rpc("/im_livechat/notify_typing", {
+            context: {
+                mockedPartnerId: pyEnv.publicPartnerId,
+            },
+            is_typing: true,
+            uuid: mailChannel1.uuid,
+        })
+    );
+    assert.containsOnce(
+        target,
+        ".o-mail-composer-is-typing-space-holder:contains(Visitor 20 is typing...)",
+        "Should display that visitor is typing"
+    );
 });

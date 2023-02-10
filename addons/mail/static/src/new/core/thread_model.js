@@ -369,4 +369,12 @@ export class Thread {
     get videoCount() {
         return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
     }
+
+    /**
+     *
+     * @param {import("@mail/new/core/persona_model").Persona} persona
+     */
+    getMemberName(persona) {
+        return persona.name;
+    }
 }
