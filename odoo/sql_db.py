@@ -307,7 +307,8 @@ class Cursor(BaseCursor):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        _logger.debug("query: %s", self._format(query, params))
+        if _logger.isEnabledFor(logging.DEBUG):
+            _logger.debug("query: %s", self._format(query, params))
 
         start = real_time()
         try:
