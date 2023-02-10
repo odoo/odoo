@@ -1694,6 +1694,7 @@ var SnippetsMenu = Widget.extend({
         'click #snippet_custom .o_rename_btn': '_onRenameBtnClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
         'mousedown': '_onMouseDown',
+        'mouseup': '_onMouseUp',
         'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
         'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
         'click .o_we_website_top_actions button[data-action=save]': '_onSaveRequest',
@@ -3797,9 +3798,13 @@ var SnippetsMenu = Widget.extend({
             clearTimeout(enableTimeoutID);
             reenable();
         });
-
+    },
+    /**
+     * @private
+     */
+    _onMouseUp(ev) {
         const snippetEl = ev.target.closest('.oe_snippet');
-        if (snippetEl && !snippetEl.querySelector('.o_we_already_dragging')) {
+        if (snippetEl) {
             this._showSnippetTooltip($(snippetEl));
         }
     },
@@ -3808,26 +3813,24 @@ var SnippetsMenu = Widget.extend({
      * If in the meantime the user has started to drag the snippet, it won't be
      * shown.
      *
+     * TODO: remove delay param in master
+     *
      * @private
      * @param {jQuery} $snippet
      * @param {Number} [delay=1500]
      */
     _showSnippetTooltip($snippet, delay = 1500) {
-        this.__showSnippetTooltip = true;
-        setTimeout(() => {
-            if (this.__showSnippetTooltip) {
-                $snippet.tooltip('show');
-                this._hideSnippetTooltips(1500);
-            }
-        }, delay);
+        this.$snippets.not($snippet).tooltip('hide');
+        $snippet.tooltip('show');
+        this._hideSnippetTooltips(1500);
     },
     /**
      * @private
      * @param {Number} [delay=0]
      */
     _hideSnippetTooltips(delay = 0) {
-        this.__showSnippetTooltip = false;
-        setTimeout(() => {
+        clearTimeout(this.__hideSnippetTooltipTimeout);
+        this.__hideSnippetTooltipTimeout = setTimeout(() => {
             this.$snippets.tooltip('hide');
         }, delay);
     },
