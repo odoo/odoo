@@ -1,42 +1,39 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
+import { Component } from "@odoo/owl";
 
-/**
- * props: {
- *  onClick: callback,
- *  table: table object,
- * }
- */
-export class TableWidget extends LegacyComponent {
-    static template = "TableWidget";
+export class Table extends Component {
+    static template = "pos_restaurant.Table";
+    static props = {
+        onClick: Function,
+        table: {
+            type: Object,
+            shape: {
+                position_h: Number,
+                position_v: Number,
+                width: Number,
+                height: Number,
+                shape: String,
+                color: [String, { value: false }],
+                name: String,
+                seats: Number,
+                "*": true,
+            },
+        },
+    };
 
-    setup() {
-        owl.onMounted(this.onMounted);
-    }
-    onMounted() {
+    get style() {
         const table = this.props.table;
-        function unit(val) {
-            return `${val}px`;
-        }
-        const style = {
-            width: unit(table.width),
-            height: unit(table.height),
-            "line-height": unit(table.height),
-            top: unit(table.position_v),
-            left: unit(table.position_h),
-            "border-radius": table.shape === "round" ? unit(1000) : "3px",
-        };
-        if (table.color) {
-            style.background = table.color;
-        }
-        if (table.height >= 150 && table.width >= 150) {
-            style["font-size"] = "32px";
-        }
-        Object.assign(this.el.style, style);
-
-        const tableCover = this.el.querySelector(".table-cover");
-        Object.assign(tableCover.style, { height: `${Math.ceil(this.fill * 100)}%` });
+        return `
+            width: ${table.width}px;
+            height: ${table.height}px;
+            line-height: ${table.height}px;
+            top: ${table.position_v}px;
+            left: ${table.position_h}px;
+            border-radius: ${table.shape === "round" ? 1000 : 3}px;
+            background: ${table.color || "rgb(53, 211, 116)"};
+            font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
+        `;
     }
     get fill() {
         const customerCount = this.env.pos.getCustomerCount(this.props.table.id);

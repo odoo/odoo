@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.EditableTable" owl="1">
+        <Draggable limitArea="'.floor-map'">
+            <div class="table selected" t-on-click.stop="" t-ref="root" t-on-drag-end="onDragEnd">
+                <span class="label drag-handle">
+                    <t t-esc="props.table.name" />
+                </span>
+                <span class="table-seats">
+                    <t t-esc="props.table.seats" />
+                </span>
+                <t t-foreach="handles" t-as="handle" t-key="handle">
+                    <ResizeHandle class="'table-handle'" onMove="(delta) => this.onHandleMove(handle, delta)" onMoveStart.bind="onHandleMoveStart" style="computeHandleStyle(handle)"/>
+                </t>
+            </div>
+        </Draggable>
+    </t>
+
+</templates>

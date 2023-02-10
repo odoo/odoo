@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="FloorScreen" owl="1">
+    <t t-name="pos_restaurant.FloorScreen" owl="1">
         <div class="floor-screen screen">
             <div class="screen-content-flexbox">
                 <t t-if="env.pos.floors.length > 1">
@@ -29,8 +29,8 @@
                     </div>
                     <div t-else="" class="tables">
                         <t t-foreach="activeTables" t-as="table" t-key="table.id">
-                            <TableWidget t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table" />
-                            <EditableTable t-else="" table="table" onSaveTable.bind="onSaveTable" />
+                            <Table t-if="table.id !== state.selectedTableId" onClick.bind="onSelectTable" table="table" />
+                            <EditableTable t-else="" table="table" onSaveTable.bind="onSaveTable" limit="floorMapRef" />
                         </t>
                     </div>
                     <span t-if="env.pos.user.role == 'manager'" class="edit-button editing" t-att-class="{ active: state.isEditMode }" t-on-click.stop="toggleEditMode"

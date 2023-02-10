@@ -4,7 +4,7 @@ import { ReceiptScreen } from "@point_of_sale/js/Screens/ReceiptScreen/ReceiptSc
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { patch } from "@web/core/utils/patch";
 import { onWillUnmount } from "@odoo/owl";
-import { FloorScreen } from "@pos_restaurant/js/Screens/FloorScreen/FloorScreen";
+import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
 patch(ReceiptScreen, "pos_restaurant.ReceiptScreen", {
     showBackToFloorButton: true,
