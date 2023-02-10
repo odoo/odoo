@@ -4,7 +4,6 @@ import { formatFloat, formatMonetary } from "@web/views/fields/formatters";
 import { parseFloat } from "@web/views/fields/parsers";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { registry } from "@web/core/registry";
-import { session } from "@web/session";
 
 const { Component, onPatched, onWillUpdateProps, useRef, useState } = owl;
 
@@ -118,12 +117,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     get currencyId() {
-        const recordCurrency = this.props.record.data.currency_id;
-        return recordCurrency ? recordCurrency[0] : session.company_currency_id;
-    }
-
-    get currency() {
-        return session.currencies[this.currencyId];
+        return this.props.record.data.currency_id;
     }
 
     invalidate() {
