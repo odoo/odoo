@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
@@ -8,27 +7,24 @@ import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
-import { EditableTable } from "./EditableTable";
-import { EditBar } from "./EditBar";
-import { TableWidget } from "./TableWidget";
+import { EditableTable } from "./editable_table";
+import { EditBar } from "./edit_bar";
+import { Table } from "./table";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { Component, onPatched, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 
-const { onPatched, onMounted, onWillUnmount, useRef, useState } = owl;
-
-export class FloorScreen extends LegacyComponent {
-    static components = { EditableTable, EditBar, TableWidget };
-    static template = "FloorScreen";
+export class FloorScreen extends Component {
+    static components = { EditableTable, EditBar, Table };
+    static template = "pos_restaurant.FloorScreen";
+    static props = { isShown: Boolean, floor: { type: true, optional: true } };
     static storeOnOrder = false;
 
-    /**
-     * @param {Object} props
-     * @param {Object} props.floor
-     */
     setup() {
         super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
+        this.rpc = useService("rpc");
         const floor = this.props.floor ? this.props.floor : this.env.pos.floors[0];
         this.state = useState({
             selectedFloorId: floor.id,
@@ -93,6 +89,7 @@ export class FloorScreen extends LegacyComponent {
                 height: 75,
                 shape: "square",
                 seats: 1,
+                color: "rgb(53, 211, 116)",
             };
         }
         newTable.name = this._getNewTableName(newTable.name);
@@ -298,6 +295,7 @@ export class FloorScreen extends LegacyComponent {
             return;
         }
         const originalSelectedTableId = this.state.selectedTableId;
+        this.env.pos.tables_by_id[originalSelectedTableId].active = false;
         await this.rpc({
             model: "restaurant.table",
             method: "create_from_ui",
