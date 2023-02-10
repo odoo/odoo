@@ -12,29 +12,6 @@ export class PriorityField extends Component {
         this.state = useState({
             index: -1,
         });
-        if (this.props.record.activeFields[this.props.name].viewType === "form") {
-            const commandName = this.env._t("Set priority...");
-            useCommand(
-                commandName,
-                () => {
-                    return {
-                        placeholder: commandName,
-                        providers: [
-                            {
-                                provide: () =>
-                                    this.options.map((value) => ({
-                                        name: value[1],
-                                        action: () => {
-                                            this.props.update(value[0]);
-                                        },
-                                    })),
-                            },
-                        ],
-                    };
-                },
-                { category: "smart_action", hotkey: "alt+r" }
-            );
-        }
     }
 
     get options() {
@@ -50,7 +27,9 @@ export class PriorityField extends Component {
     }
 
     getTooltip(value) {
-        return this.props.tooltipLabel && this.props.tooltipLabel !== value ? `${this.props.tooltipLabel}: ${value}` : value;
+        return this.props.tooltipLabel && this.props.tooltipLabel !== value
+            ? `${this.props.tooltipLabel}: ${value}`
+            : value;
     }
     /**
      * @param {string} value
@@ -64,7 +43,6 @@ export class PriorityField extends Component {
         }
     }
 }
-
 PriorityField.template = "web.PriorityField";
 PriorityField.props = {
     ...standardFieldProps,
@@ -80,4 +58,31 @@ PriorityField.extractProps = ({ field }) => {
     };
 };
 
-registry.category("fields").add("priority", PriorityField);
+export class FormPriorityField extends PriorityField {
+    setup() {
+        super.setup();
+        const commandName = this.env._t("Set priority...");
+        useCommand(
+            commandName,
+            () => {
+                return {
+                    placeholder: commandName,
+                    providers: [
+                        {
+                            provide: () =>
+                                this.options.map((value) => ({
+                                    name: value[1],
+                                    action: () => {
+                                        this.props.update(value[0]);
+                                    },
+                                })),
+                        },
+                    ],
+                };
+            },
+            { category: "smart_action", hotkey: "alt+r" }
+        );
+    }
+}
+
+registry.category("fields").add("form.priority", FormPriorityField);
