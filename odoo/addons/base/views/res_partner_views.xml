@@ -211,7 +211,7 @@
                                         attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 </div>
                             </div>
-                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
+                            <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('is_company','=',False),('parent_id','!=',False)]}"/>
                         </group>
                         <group>
                             <field name="function" placeholder="e.g. Sales Director"
