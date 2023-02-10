@@ -189,7 +189,7 @@
             <field name="name">Employees</field>
             <field name="res_model">hr.employee.public</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="domain">[]</field>
+            <field name="domain">[('company_id', 'in', allowed_company_ids)]</field>
             <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="hr_employee_public_view_search"/>
