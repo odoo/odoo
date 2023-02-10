@@ -273,6 +273,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             });
         }
         this.currentOrder.add_product(product, options);
+        NumberBuffer.reset();
     }
     _barcodePartnerAction(code) {
         const partner = this.env.pos.db.get_partner_by_barcode(code.code);
