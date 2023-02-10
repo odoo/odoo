@@ -1446,7 +1446,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         assert.strictEqual($(target).find(".o-mail-discuss-thread-name").val(), "Inbox");
-        assert.containsOnce(target, ".o-mail-messaging-menu-navbar:contains(Mailboxes) .o-active");
+        assert.containsOnce(target, ".o-mail-messaging-menu-navbar:contains(Mailboxes) .fw-bolder");
         assert.containsOnce(target, "button:contains(Inbox).o-active");
         assert.containsOnce(target, "h4:contains(Congratulations, your inbox is empty)");
     }
