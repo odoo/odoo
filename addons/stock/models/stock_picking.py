@@ -10,6 +10,7 @@ from markupsafe import escape
 
 from odoo import SUPERUSER_ID, _, api, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, format_datetime, format_date, groupby
@@ -84,6 +85,9 @@ class PickingType(models.Model):
     auto_show_reception_report = fields.Boolean(
         "Show Reception Report at Validation",
         help="If this checkbox is ticked, Odoo will automatically show the reception report (if there are moves to allocate to) when validating.")
+    auto_print_delivery_slip = fields.Boolean(
+        "Auto Print Delivery Slip",
+        help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
 
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
     count_picking_ready = fields.Integer(compute='_compute_picking_count')
@@ -1150,7 +1154,8 @@ class Picking(models.Model):
         pickings_to_backorder = self - pickings_not_to_backorder
         pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
         pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
-
+        report_actions = self._get_autoprint_report_actions()
+        another_action = False
         if self.user_has_groups('stock.group_reception_report'):
             pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_reception_report)
             lines = pickings_show_report.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
@@ -1166,7 +1171,18 @@ class Picking(models.Model):
                         ('product_id', 'in', lines.product_id.ids)], limit=1):
                     action = pickings_show_report.action_view_reception_report()
                     action['context'] = {'default_picking_ids': pickings_show_report.ids}
-                    return action
+                    if not report_actions:
+                        return action
+                    another_action = action
+        if report_actions:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'do_multi_print',
+                'params': {
+                    'reports': report_actions,
+                    'anotherAction': another_action,
+                }
+            }
         return True
 
     def action_set_quantities_to_reservation(self):
@@ -1690,3 +1706,12 @@ class Picking(models.Model):
 
     def _get_report_lang(self):
         return self.move_ids and self.move_ids[0].partner_id.lang or self.partner_id.lang or self.env.lang
+
+    def _get_autoprint_report_actions(self):
+        report_actions = []
+        pickings_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_delivery_slip)
+        if pickings_to_print:
+            action = self.env.ref("stock.action_report_delivery").report_action(pickings_to_print.ids, config=False)
+            clean_action(action, self.env)
+            report_actions.append(action)
+        return report_actions
