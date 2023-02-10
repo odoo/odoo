@@ -57,7 +57,7 @@ class AccountMove(models.Model):
                     move.l10n_in_state_id = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
                 else:
                     move.l10n_in_state_id = move.company_id.state_id
-            elif move.country_code == 'IN' and move.journal_id.type == 'purchase':
+            elif move.country_code == 'IN' and move.journal_id.type != 'sale':
                 move.l10n_in_state_id = move.company_id.state_id
             else:
                 move.l10n_in_state_id = False
