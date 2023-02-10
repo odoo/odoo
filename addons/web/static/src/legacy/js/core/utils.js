@@ -409,7 +409,12 @@ const utils = {
         return new Promise(function (resolve, reject) {
             var reader = new FileReader();
             reader.addEventListener('load', function () {
-                resolve(reader.result);
+                // Handle Chrome bug that creates invalid data URLs for empty files
+                if (reader.result === "data:") {
+                    resolve(`data:${file.type};base64,`);
+                } else {
+                    resolve(reader.result);
+                }
             });
             reader.addEventListener('abort', reject);
             reader.addEventListener('error', reject);
