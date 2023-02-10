@@ -3,7 +3,7 @@
 import { patch } from "@web/core/utils/patch";
 import { PosStore } from "@point_of_sale/app/pos_store";
 import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
-import { FloorScreen } from "@pos_restaurant/js/Screens/FloorScreen/FloorScreen";
+import { FloorScreen } from "@pos_restaurant/app/floor_screen/floor_screen";
 
 const NON_IDLE_EVENTS = [
     "mousemove",

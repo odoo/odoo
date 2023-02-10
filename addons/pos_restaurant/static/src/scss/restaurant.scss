@@ -77,7 +77,7 @@
     border-radius: 3px;
     cursor: pointer;
     box-shadow: 0px 3px rgba(0,0,0,0.07);
-    transition: background, background-color 300ms ease-in-out;
+    transition: background-color 300ms ease-in-out;
     overflow: hidden;
 }
 .floor-map .table .table-cover {
@@ -217,26 +217,19 @@
     position: absolute;
     width: 48px;
     height: 48px;
-    left: 50%;
-    top: 50%;
     border-radius: 24px;
     background: white;
     box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
     /* See o-grab-cursor mixin */
     cursor: url(/web/static/img/openhand.cur), grab;
-    transition: all 150ms linear;
+    transition: width 150ms linear, height 150ms linear;
     z-index: 100;
-    transform: translate(-50%, -50%);
 }
 .floor-map .table.selected .table-handle:hover {
     width: 60px;
     height: 60px;
     border-radius: 30px;
 }
-.floor-map .table .table-handle.top {      top: 0;         }
-.floor-map .table .table-handle.bottom {   top: 100%;      }
-.floor-map .table .table-handle.left {     left: 0;        }
-.floor-map .table .table-handle.right {    left: 100%;     }
 
 .floor-map .table .order-count {
     position: absolute;
