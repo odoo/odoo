@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.attachment_viewer" owl="1">
-        <div class="modal fixed-top bottom-0 d-flex justify-content-center">
+        <div class="d-flex justify-content-center" t-att-class="{ 'modal fixed-top bottom-0': props.modal }">
             <div class="o-mail-attachment-viewer flex-column align-items-center d-flex w-100 h-100" tabindex="0">
-                <div class="o-mail-attachment-viewer-header d-flex w-100 bg-black-75 text-400">
+                <div class="o-mail-attachment-viewer-header position-absolute top-0 d-flex w-100 bg-black-75 text-400">
                     <div t-if="isViewable" class="o-mail-attachment-viewer-headerItem d-flex align-items-center ms-4 me-2">
                         <i t-if="state.attachment.isImage" class="fa fa-picture-o" role="img" title="Image"/>
                         <i t-if="state.attachment.isPdf" class="fa fa-file-text" role="img" title="PDF file"/>
@@ -21,11 +21,11 @@
                             <span>Download</span>
                         </a>
                     </div>
-                    <div t-on-click="close" class="o-mail-attachment-viewer-headerItem o-mail-attachment-viewer-headerItemButton o-mail-attachment-viewer-headerItemButtonClose d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
+                    <div t-on-click.stop="close" class="o-mail-attachment-viewer-headerItem o-mail-attachment-viewer-headerItemButton o-mail-attachment-viewer-headerItemButtonClose d-flex align-items-center mb-0 px-3 h4 text-reset cursor-pointer" role="button" title="Close (Esc)" aria-label="Close">
                         <i class="fa fa-fw fa-times" role="img"/>
                     </div>
                 </div>
-                <div t-on-click="close" t-on-mousemove="onMousemoveView" class="o-mail-attachment-viewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.attachment.isImage }">
+                <div t-on-click.stop="close" t-on-mousemove="onMousemoveView" class="o-mail-attachment-viewer-main position-absolute top-0 bottom-0 start-0 end-0 align-items-center justify-content-center d-flex" t-att-class="{ 'o_with_img overflow-hidden': state.attachment.isImage }">
                     <div t-if="state.attachment.isImage" class="o-mail-attachment-viewer-zoomer position-absolute align-items-center justify-content-center d-flex w-100 h-100" t-ref="zoomer">
                         <div t-if="!state.imageLoaded" class="o-mail-attachment-viewer-loading position-absolute">
                             <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>

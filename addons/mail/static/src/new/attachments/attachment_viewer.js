@@ -10,7 +10,10 @@ import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 export class AttachmentViewer extends Component {
     static template = "mail.attachment_viewer";
     static components = {};
-    static props = ["attachments", "startIndex", "close"];
+    static props = ["attachments", "startIndex", "close", "modal?"];
+    static defaultProps = {
+        modal: true,
+    };
 
     setup() {
         this.imageRef = useRef("image");
@@ -30,7 +33,7 @@ export class AttachmentViewer extends Component {
             y: 0,
         };
 
-        useExternalListener(window, "keydown", this.onKeydown);
+        useExternalListener(document, "keydown", this.onKeydown);
         this.state = useState({
             index: this.props.startIndex,
             attachment: this.props.attachments[this.props.startIndex],

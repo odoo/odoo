@@ -192,7 +192,9 @@ async function setupMessagingServiceRegistries({
     }
     patchWithCleanup(session, { show_effect: true });
     Object.entries(services).forEach(([serviceName, service]) => {
-        serviceRegistry.add(serviceName, service);
+        if (!serviceRegistry.contains(serviceName)) {
+            serviceRegistry.add(serviceName, service);
+        }
     });
     registry
         .category("wowlToLegacyServiceMappers")
