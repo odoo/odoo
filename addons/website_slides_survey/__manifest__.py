@@ -44,5 +44,6 @@
             'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
         ],
     },
+    'uninstall_hook': 'uninstall_hook',
     'license': 'LGPL-3',
 }
