@@ -65,7 +65,9 @@ TranslateWebsiteSystray.template = "website.TranslateWebsiteSystray";
 
 export const systrayItem = {
     Component: TranslateWebsiteSystray,
-    isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.translatable,
+    isDisplayed: env => env.services.website.isRestrictedEditor
+        && env.services.website.currentWebsite
+        && env.services.website.currentWebsite.metadata.translatable,
 };
 
 registry.category("website_systray").add("TranslateWebsiteSystray", systrayItem, { sequence: 8 });
