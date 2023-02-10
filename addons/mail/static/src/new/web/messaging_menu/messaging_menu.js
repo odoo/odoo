@@ -65,11 +65,11 @@ export class MessagingMenu extends Component {
     }
 
     /**
-     * @param {'all' | 'chat' | 'group'} tab
+     * @param {'chat' | 'group'} tab
      * @returns Thread types matching the given tab.
      */
     tabToThreadType(tab) {
-        return tab === "chat" ? ["chat", "group"] : tab;
+        return tab === "chat" ? ["chat", "group"] : [tab];
     }
 
     get hasPreviews() {
