@@ -9,12 +9,8 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
-
-const serviceRegistry = registry.category("services");
 
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
@@ -70,7 +66,6 @@ QUnit.module("ViewDialogs", (hooks) => {
         };
         target = getFixture();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
     });
 
     QUnit.module("FormViewDialog");

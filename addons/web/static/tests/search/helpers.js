@@ -10,6 +10,8 @@ import {
     nextTick,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { dialogService } from "@web/core/dialog/dialog_service";
+import { Component, xml } from "@odoo/owl";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
@@ -20,12 +22,12 @@ import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 
-import { Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
 
 export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("action", actionService);
+    serviceRegistry.add("dialog", dialogService);
     serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);

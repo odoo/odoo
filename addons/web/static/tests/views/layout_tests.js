@@ -2,8 +2,6 @@
 
 import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { registry } from "@web/core/registry";
 import { Layout } from "@web/search/layout";
 import { getDefaultConfig } from "@web/views/view";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -11,8 +9,6 @@ import { SearchModel } from "@web/search/search_model";
 
 import { Component, xml, onWillStart, useChildSubEnv, useSubEnv } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
-
-const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -45,7 +41,6 @@ QUnit.module("Views", (hooks) => {
         };
 
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
 
         target = getFixture();
     });
