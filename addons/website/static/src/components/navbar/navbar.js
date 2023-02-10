@@ -57,12 +57,17 @@ patch(NavBar.prototype, {
      * @override
      */
     get systrayItems() {
-        if (this.shouldDisplayWebsiteSystray) {
-            return websiteSystrayRegistry
+        if (this.websiteService.currentWebsite) {
+            const websiteItems = websiteSystrayRegistry
                 .getEntries()
                 .map(([key, value], index) => ({ key, ...value, index }))
                 .filter((item) => ('isDisplayed' in item ? item.isDisplayed(this.env) : true))
                 .reverse();
+            // Do not override the regular Odoo navbar if the only visible
+            // elements are the debug items.
+            if (!websiteItems.every((item) => ['burger_menu', 'web.debug_mode_menu'].includes(item.key))) {
+                return websiteItems;
+            }
         }
         return super.systrayItems;
     },
