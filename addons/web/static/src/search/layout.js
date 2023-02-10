@@ -23,6 +23,10 @@ export class Layout extends Component {
     setup() {
         this.components = extractLayoutComponents(this.env.config);
         this.contentRef = useRef("content");
+
+        owl.onWillRender(() => {
+            console.log("render layout");
+        });
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };

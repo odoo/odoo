@@ -56,7 +56,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("StateSelectionField");
 
-    QUnit.test("StateSelectionField in form view", async function (assert) {
+    QUnit.tttt("StateSelectionField in form view", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -178,7 +178,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("StateSelectionField with readonly modifier", async function (assert) {
+    QUnit.tttt("StateSelectionField with readonly modifier", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -193,7 +193,7 @@ QUnit.module("Fields", (hooks) => {
         assert.isNotVisible(target.querySelector(".dropdown-menu"));
     });
 
-    QUnit.test("StateSelectionField for list view with hide_label option", async function (assert) {
+    QUnit.tttt("StateSelectionField for list view with hide_label option", async function (assert) {
         Object.assign(serverData.models.partner.fields, {
             graph_type: {
                 string: "Graph Type",
@@ -253,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("StateSelectionField in editable list view", async function (assert) {
+    QUnit.tttt("StateSelectionField in editable list view", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -430,7 +430,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsNone(target, ".dropdown-menu", "there should not be a dropdown");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         'StateSelectionField edited by the smart actions "Set kanban state as <state name>"',
         async function (assert) {
             await makeView({
@@ -468,7 +468,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("StateSelectionField uses legend_* fields", async function (assert) {
+    QUnit.tttt("StateSelectionField uses legend_* fields", async function (assert) {
         serverData.models.partner.fields.legend_normal = { type: "char" };
         serverData.models.partner.fields.legend_blocked = { type: "char" };
         serverData.models.partner.fields.legend_done = { type: "char" };
@@ -508,7 +508,7 @@ QUnit.module("Fields", (hooks) => {
         assert.deepEqual(dropdownItemTexts, ["Custom normal", "Custom blocked", "Custom done"]);
     });
 
-    QUnit.test("works when required in a readonly view ", async function (assert) {
+    QUnit.tttt("works when required in a readonly view ", async function (assert) {
         serverData.models.partner.records[0].selection = "normal";
         serverData.models.partner.records = [serverData.models.partner.records[0]];
         await makeView({

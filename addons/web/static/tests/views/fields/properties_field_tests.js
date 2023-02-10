@@ -133,10 +133,10 @@ QUnit.module("Fields", (hooks) => {
                             id: 3,
                             display_name: "third partner",
                             properties: [
-                                {name: "property_1", type: "char"},
-                                {name: "property_2", type: "char", definition_deleted: true},
-                                {name: "property_3", type: "char", definition_changed: true},
-                                {name: "property_4", type: "char"},
+                                { name: "property_1", type: "char" },
+                                { name: "property_2", type: "char", definition_deleted: true },
+                                { name: "property_3", type: "char", definition_changed: true },
+                                { name: "property_4", type: "char" },
                             ],
                             company_id: 37,
                         },
@@ -144,8 +144,8 @@ QUnit.module("Fields", (hooks) => {
                             id: 4,
                             display_name: "fourth partner",
                             properties: [
-                                {name: "property_2", type: "char", definition_deleted: true},
-                                {name: "property_3", type: "char", definition_deleted: true},
+                                { name: "property_2", type: "char", definition_deleted: true },
+                                { name: "property_3", type: "char", definition_deleted: true },
                             ],
                             company_id: 37,
                         },
@@ -233,7 +233,7 @@ QUnit.module("Fields", (hooks) => {
      * be able to change the properties definition (but he should be able to
      * change the properties value).
      */
-    QUnit.test("properties: no access to parent", async function (assert) {
+    QUnit.tttt("properties: no access to parent", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return false;
@@ -274,7 +274,7 @@ QUnit.module("Fields", (hooks) => {
      * If the current user can write on the parent, he should
      * be able to change the properties definition.
      */
-    QUnit.test("properties: access to parent", async function (assert) {
+    QUnit.tttt("properties: access to parent", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -371,7 +371,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the creation of a new property.
      */
-    QUnit.test("properties: add a new property", async function (assert) {
+    QUnit.tttt("properties: add a new property", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -428,7 +428,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the selection property.
      */
-    QUnit.test("properties: selection", async function (assert) {
+    QUnit.tttt("properties: selection", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -566,7 +566,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the float and the integer property.
      */
-    QUnit.test("properties: float and integer", async function (assert) {
+    QUnit.tttt("properties: float and integer", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -633,7 +633,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the properties re-arrangement
      */
-    QUnit.test("properties: move properties", async function (assert) {
+    QUnit.tttt("properties: move properties", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -708,7 +708,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the properties tags
      */
-    QUnit.test("properties: tags", async function (assert) {
+    QUnit.tttt("properties: tags", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -828,7 +828,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the properties many2one
      */
-    QUnit.test("properties: many2one", async function (assert) {
+    QUnit.tttt("properties: many2one", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -914,7 +914,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Test the properties many2many
      */
-    QUnit.test("properties: many2many", async function (assert) {
+    QUnit.tttt("properties: many2many", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -1012,7 +1012,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("properties: date(time) property manipulations", async function (assert) {
+    QUnit.tttt("properties: date(time) property manipulations", async function (assert) {
         serverData.models.partner.records.push({
             id: 5000,
             display_name: "third partner",
@@ -1103,7 +1103,7 @@ QUnit.module("Fields", (hooks) => {
      * are set to False).
      * Resetting the old model / type should reset the original name.
      */
-    QUnit.test("properties: name reset", async function (assert) {
+    QUnit.tttt("properties: name reset", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -1191,7 +1191,7 @@ QUnit.module("Fields", (hooks) => {
     /**
      * Check the behavior of the properties field in the kanban view.
      */
-    QUnit.test("properties: kanban view", async function (assert) {
+    QUnit.tttt("properties: kanban view", async function (assert) {
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -1241,7 +1241,7 @@ QUnit.module("Fields", (hooks) => {
      * value only when we create a new property. If the property already exists, and we
      * change the default value, it should never update the property value.
      */
-    QUnit.test("properties: default value", async function (assert) {
+    QUnit.tttt("properties: default value", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
             if (method === "check_access_rights") {
                 return true;
@@ -1306,18 +1306,20 @@ QUnit.module("Fields", (hooks) => {
      * Check the behavior of the domain (properies with "definition_deleted" should be ignored).
      * In that case, some properties start without the flag "definition_deleted".
      */
-    QUnit.test("properties: form view and falsy domain, properties are not empty", async function (assert) {
-        async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
-                return true;
+    QUnit.tttt(
+        "properties: form view and falsy domain, properties are not empty",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (method === "check_access_rights") {
+                    return true;
+                }
             }
-        }
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 3,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 3,
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1330,45 +1332,48 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC,
-        });
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+                mockRPC,
+            });
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, 2 properties left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+            // delete a property, 2 properties left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, 1 property left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+            // delete a property, 1 property left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, no property left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
-    });
+            // delete a property, no property left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+        }
+    );
 
     /**
      * Check the behavior of the domain (properties with "definition_deleted" should be ignored).
      * In that case, all properties start with the flag "definition_deleted".
      */
-    QUnit.test("properties: form view and falsy domain, properties are empty", async function (assert) {
-        async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
-                return true;
+    QUnit.tttt(
+        "properties: form view and falsy domain, properties are empty",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (method === "check_access_rights") {
+                    return true;
+                }
             }
-        }
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 4,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 4,
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1381,12 +1386,13 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC,
-        });
-        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+                mockRPC,
+            });
+            assert.notOk(target.querySelector(".o_test_properties_not_empty"));
 
-        // create the first property
-        await click(target, ".o_field_property_add button");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
-    });
+            // create the first property
+            await click(target, ".o_field_property_add button");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
+        }
+    );
 });

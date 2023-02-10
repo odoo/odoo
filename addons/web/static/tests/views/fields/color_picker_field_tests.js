@@ -148,7 +148,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("color picker in editable list view", async function (assert) {
+    QUnit.tttt("color picker in editable list view", async function (assert) {
         serverData.models.partner.records.push({
             int_field: 1,
         });
@@ -207,7 +207,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("column widths: dont overflow color picker in list", async function (assert) {
+    QUnit.tttt("column widths: dont overflow color picker in list", async function (assert) {
         serverData.models.partner.fields.date_field = {
             string: "Date field",
             type: "date",

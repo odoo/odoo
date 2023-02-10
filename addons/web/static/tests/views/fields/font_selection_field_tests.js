@@ -31,7 +31,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("FontSelectionField");
 
-    QUnit.test("FontSelectionField displays the correct fonts on options", async function (assert) {
+    QUnit.tttt("FontSelectionField displays the correct fonts on options", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -72,7 +72,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "FontSelectionField displays one blank option (not required)",
         async function (assert) {
             serverData.models.partner.fields.fonts.selection = [

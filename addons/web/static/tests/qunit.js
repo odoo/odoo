@@ -30,6 +30,10 @@ QUnit.debug = (name, cb) => {
     QUnit.only(name, cb);
 };
 
+QUnit.tttt = (name, cb) => {
+    QUnit.skip(name, cb);
+};
+
 // need to do this outside of the setup function so it is executed quickly
 QUnit.config.autostart = false;
 

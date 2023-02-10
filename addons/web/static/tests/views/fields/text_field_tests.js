@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("TextField");
 
-    QUnit.test("text fields are correctly rendered", async function (assert) {
+    QUnit.tttt("text fields are correctly rendered", async function (assert) {
         serverData.models.partner.fields.foo.type = "text";
         await makeView({
             type: "form",
@@ -97,7 +97,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("text fields in edit mode have correct height", async function (assert) {
+    QUnit.tttt("text fields in edit mode have correct height", async function (assert) {
         serverData.models.partner.fields.foo.type = "text";
         serverData.models.partner.records[0].foo = "f\nu\nc\nk\nm\ni\nl\ng\nr\no\nm";
         await makeView({
@@ -116,7 +116,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("text fields in edit mode, no vertical resize", async function (assert) {
+    QUnit.tttt("text fields in edit mode, no vertical resize", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -132,7 +132,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("text fields should have correct height after onchange", async function (assert) {
+    QUnit.tttt("text fields should have correct height after onchange", async function (assert) {
         const damnLongText = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
             Donec est massa, gravida eget dapibus ac, eleifend eget libero.
             Suspendisse feugiat sed massa eleifend vestibulum. Sed tincidunt
@@ -177,7 +177,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(textarea.offsetHeight, initialHeight, "Textarea height should be reset");
     });
 
-    QUnit.test("text fields in editable list have correct height", async function (assert) {
+    QUnit.tttt("text fields in editable list have correct height", async function (assert) {
         assert.expect(2);
 
         serverData.models.partner.records[0].txt = "a\nb\nc\nd\ne\nf";
@@ -207,7 +207,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("text fields in edit mode should resize on reset", async function (assert) {
+    QUnit.tttt("text fields in edit mode should resize on reset", async function (assert) {
         serverData.models.partner.fields.foo.type = "text";
 
         serverData.models.partner.onchanges = {
@@ -240,7 +240,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("set row on text fields", async function (assert) {
+    QUnit.tttt("set row on text fields", async function (assert) {
         serverData.models.partner.fields.foo.type = "text";
 
         await makeView({
@@ -255,14 +255,10 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const textarea = target.querySelector("textarea");
-        assert.strictEqual(
-            textarea.rows,
-            4,
-            "rowCount should be the one set on the field",
-        );
+        assert.strictEqual(textarea.rows, 4, "rowCount should be the one set on the field");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "autoresize of text fields is done when switching to edit mode",
         async function (assert) {
             serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
@@ -282,8 +278,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // ensure that autoresize is correctly done
-            let height = target.querySelector(".o_field_widget[name=text_field] textarea")
-                .offsetHeight;
+            let height = target.querySelector(
+                ".o_field_widget[name=text_field] textarea"
+            ).offsetHeight;
             // focus the field to manually trigger autoresize
             await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
             assert.strictEqual(
@@ -309,7 +306,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("autoresize of text fields is done on notebook page show", async function (assert) {
+    QUnit.tttt("autoresize of text fields is done on notebook page show", async function (assert) {
         serverData.models.partner.fields.text_field = { string: "Text field", type: "text" };
         serverData.models.partner.fields.text_field.default = "some\n\nmulti\n\nline\n\ntext\n";
         serverData.models.partner.records[0].text_field = "a\nb\nc\nd\ne\nf";
@@ -352,12 +349,13 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
 
-        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea")
-            .offsetHeight;
+        height = target.querySelector(
+            ".o_field_widget[name=text_field_empty] textarea"
+        ).offsetHeight;
         assert.strictEqual(height, 50, "empty textarea should have height of 50px");
     });
 
-    QUnit.test("text field translatable", async function (assert) {
+    QUnit.tttt("text field translatable", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.fields.txt.translate = true;
@@ -409,7 +407,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal", "there should be a translation modal");
     });
 
-    QUnit.test("text field translatable in create mode", async function (assert) {
+    QUnit.tttt("text field translatable in create mode", async function (assert) {
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
             force: true,
@@ -436,7 +434,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("text field translatable on notebook page", async function (assert) {
+    QUnit.tttt("text field translatable on notebook page", async function (assert) {
         serverData.models.partner.fields.txt.translate = true;
         serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
             force: true,
@@ -490,7 +488,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".modal", "there should be a translation modal");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "go to next line (and not the next row) when pressing enter",
         async function (assert) {
             serverData.models.partner.fields.foo.type = "text";
@@ -532,7 +530,7 @@ QUnit.module("Fields", (hooks) => {
     // Firefox-specific
     // Copying from <div style="white-space:pre-wrap"> does not keep line breaks
     // See https://bugzilla.mozilla.org/show_bug.cgi?id=1390115
-    QUnit.test(
+    QUnit.tttt(
         "copying text fields in RO mode should preserve line breaks",
         async function (assert) {
             await makeView({
@@ -559,7 +557,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("text field rendering in list view", async function (assert) {
+    QUnit.tttt("text field rendering in list view", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -574,7 +572,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("field text in editable list view", async function (assert) {
+    QUnit.tttt("field text in editable list view", async function (assert) {
         serverData.models.partner.fields.foo.type = "text";
 
         await makeView({

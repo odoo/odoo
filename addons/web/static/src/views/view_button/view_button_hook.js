@@ -87,9 +87,8 @@ export function useViewButtons(model, ref, options = {}) {
                     buttonContext,
                     onClose: async () => {
                         if (!closeDialog && status(comp) !== "destroyed") {
-                            const reload = options.reload || (() => model.root.load());
+                            const reload = options.reload || (() => model.load({ resId }));
                             await reload();
-                            comp.render(true); // FIXME WOWL reactivity
                         }
                     },
                 });
@@ -113,8 +112,12 @@ export function useViewButtons(model, ref, options = {}) {
             if (clickParams.confirm) {
                 await new Promise((resolve) => {
                     const dialogProps = {
-                        ...(clickParams['confirm-title'] && { title: clickParams['confirm-title'] }),
-                        ...(clickParams['confirm-label'] && { confirmLabel: clickParams['confirm-label'] }),
+                        ...(clickParams["confirm-title"] && {
+                            title: clickParams["confirm-title"],
+                        }),
+                        ...(clickParams["confirm-label"] && {
+                            confirmLabel: clickParams["confirm-label"],
+                        }),
                         body: clickParams.confirm,
                         confirm: execute,
                         cancel: () => {},

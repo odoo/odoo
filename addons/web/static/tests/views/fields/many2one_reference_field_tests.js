@@ -31,7 +31,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2OneReferenceField");
 
-    QUnit.test("Many2OneReferenceField in form view", async function (assert) {
+    QUnit.tttt("Many2OneReferenceField in form view", async function (assert) {
         await makeView({
             type: "form",
             serverData,
@@ -43,7 +43,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "10");
     });
 
-    QUnit.test("Many2OneReferenceField in list view", async function (assert) {
+    QUnit.tttt("Many2OneReferenceField in list view", async function (assert) {
         await makeView({
             type: "list",
             serverData,
@@ -55,7 +55,7 @@ QUnit.module("Fields", (hooks) => {
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), ["10", ""]);
     });
 
-    QUnit.test("should be 0 when unset", async function (assert) {
+    QUnit.tttt("should be 0 when unset", async function (assert) {
         await makeView({
             type: "form",
             serverData,

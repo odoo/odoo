@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { registry } from "@web/core/registry";
-import { RelationalModel } from "../relational_model";
+import { RelationalModel } from "../relational_model/relational_model";
 import { ListArchParser } from "./list_arch_parser";
 import { ListController } from "./list_controller";
 import { ListRenderer } from "./list_renderer";
@@ -16,6 +16,8 @@ export const listView = {
     ArchParser: ListArchParser,
     Model: RelationalModel,
     buttonTemplate: "web.ListView.Buttons",
+
+    limit: 80,
 
     props: (genericProps, view) => {
         const { ArchParser } = view;

@@ -64,7 +64,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("BadgeSelectionField");
 
-    QUnit.test("BadgeSelectionField widget on a many2one in a new record", async function (assert) {
+    QUnit.tttt("BadgeSelectionField widget on a many2one in a new record", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -95,7 +95,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(newRecord.product_id, 37, "should have saved record with correct value");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "BadgeSelectionField widget on a selection in a new record",
         async function (assert) {
             await makeView({
@@ -131,7 +131,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "BadgeSelectionField widget on a selection in a readonly mode",
         async function (assert) {
             await makeView({

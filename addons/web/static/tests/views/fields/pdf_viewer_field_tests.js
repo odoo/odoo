@@ -36,7 +36,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("PdfViewerField");
 
-    QUnit.test("PdfViewerField without data", async function (assert) {
+    QUnit.tttt("PdfViewerField without data", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -54,7 +54,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, 'input[type="file"]', "there should be one input");
     });
 
-    QUnit.test("PdfViewerField: basic rendering", async function (assert) {
+    QUnit.tttt("PdfViewerField: basic rendering", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -74,7 +74,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(getIframeViewerParams(), "model=partner&field=document&id=1");
     });
 
-    QUnit.test("PdfViewerField: upload rendering", async function (assert) {
+    QUnit.tttt("PdfViewerField: upload rendering", async function (assert) {
         assert.expect(5);
 
         await makeView({

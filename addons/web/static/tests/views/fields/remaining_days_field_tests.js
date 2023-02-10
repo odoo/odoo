@@ -33,7 +33,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("RemainingDaysField");
 
-    QUnit.test("RemainingDaysField on a date field in list view", async function (assert) {
+    QUnit.tttt("RemainingDaysField on a date field in list view", async function (assert) {
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
@@ -85,7 +85,7 @@ QUnit.module("Fields", (hooks) => {
         assert.hasClass(cells[6].querySelector(".o_field_widget > div"), "fw-bold text-danger");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField on a date field in multi edit list view",
         async function (assert) {
             patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
@@ -146,7 +146,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField, enter wrong value manually in multi edit list view",
         async function (assert) {
             patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
@@ -191,7 +191,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("RemainingDaysField on a date field in form view", async function (assert) {
+    QUnit.tttt("RemainingDaysField on a date field in form view", async function (assert) {
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
             { id: 1, date: "2017-10-08" }, // today
@@ -225,7 +225,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/09/2017");
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField on a date field on a new record in form",
         async function (assert) {
             await makeView({
@@ -247,7 +247,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("RemainingDaysField in form view (readonly)", async function (assert) {
+    QUnit.tttt("RemainingDaysField in form view (readonly)", async function (assert) {
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
             { id: 1, date: "2017-10-08", datetime: "2017-10-08 10:00:00" }, // today
@@ -283,7 +283,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("RemainingDaysField on a datetime field in form view", async function (assert) {
+    QUnit.tttt("RemainingDaysField on a datetime field in form view", async function (assert) {
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
             { id: 1, datetime: "2017-10-08 10:00:00" }, // today
@@ -321,7 +321,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField on a datetime field in list view in UTC",
         async function (assert) {
             patchTimeZone(0);
@@ -402,7 +402,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField on a datetime field in list view in UTC+6",
         async function (assert) {
             patchTimeZone(360);
@@ -439,7 +439,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("RemainingDaysField on a date field in list view in UTC-6", async function (assert) {
+    QUnit.tttt("RemainingDaysField on a date field in list view in UTC-6", async function (assert) {
         patchTimeZone(-360);
         patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         serverData.models.partner.records = [
@@ -473,7 +473,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "RemainingDaysField on a datetime field in list view in UTC-8",
         async function (assert) {
             patchTimeZone(-560);

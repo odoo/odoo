@@ -199,16 +199,12 @@ class SetDefaultDialog extends Component {
             condition: "",
             scope: "self",
         };
-        const root = this.props.component.model.root;
-        this.fields = root.fields;
-        this.fieldsInfo = root.activeFields;
-        this.fieldNamesInView = root.fieldNames;
+        this.fields = this.props.record.fields;
+        this.activeFields = this.props.record.activeFields;
+        this.fieldNamesInView = this.props.record.fieldNames;
         this.fieldNamesBlackList = ["message_attachment_count"];
-        this.fieldsValues = root.data;
+        this.fieldsValues = this.props.record.data;
         this.modifierDatas = {};
-        this.fieldNamesInView.forEach((fieldName) => {
-            this.modifierDatas[fieldName] = this.fieldsInfo[fieldName].modifiers;
-        });
         this.defaultFields = this.getDefaultFields();
         this.conditions = this.getConditions();
     }
@@ -217,26 +213,22 @@ class SetDefaultDialog extends Component {
         return this.fieldNamesInView
             .filter((fieldName) => !this.fieldNamesBlackList.includes(fieldName))
             .map((fieldName) => {
-                const modifierData = this.modifierDatas[fieldName];
-                let invisibleOrReadOnly;
-                if (modifierData) {
-                    const evalContext = this.props.component.model.root.evalContext;
-                    invisibleOrReadOnly =
-                        evalDomain(modifierData.invisible, evalContext) ||
-                        evalDomain(modifierData.readonly, evalContext);
-                }
                 const fieldInfo = this.fields[fieldName];
                 const valueDisplayed = this.display(fieldInfo, this.fieldsValues[fieldName]);
                 const value = valueDisplayed[0];
                 const displayed = valueDisplayed[1];
+                const evalContext = this.props.record.evalContext;
                 // ignore fields which are empty, invisible, readonly, o2m or m2m
                 if (
                     !value ||
-                    invisibleOrReadOnly ||
+                    evalDomain(this.activeFields[fieldName].invisible, evalContext) ||
+                    evalDomain(this.activeFields[fieldName].readonly, evalContext) ||
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||
-                    this.fieldsInfo[fieldName].options.isPassword
+                    Object.entries(this.props.fieldNodes)
+                        .filter(([key, value]) => value.name === fieldName)
+                        .some(([key, value]) => value.options.isPassword)
                 ) {
                     return false;
                 }
@@ -292,7 +284,7 @@ class SetDefaultDialog extends Component {
             return field.name === this.state.fieldToSet;
         }).value;
         await this.orm.call("ir.default", "set", [
-            this.props.resModel,
+            this.props.record.resModel,
             this.state.fieldToSet,
             fieldToSet,
             this.state.scope === "self",
@@ -305,8 +297,8 @@ class SetDefaultDialog extends Component {
 SetDefaultDialog.template = "web.DebugMenu.SetDefaultDialog";
 SetDefaultDialog.components = { Dialog };
 SetDefaultDialog.props = {
-    resModel: { type: String },
-    component: { type: Component },
+    record: { type: Object },
+    fieldNodes: { type: Object },
     close: { type: Function },
 };
 
@@ -316,8 +308,8 @@ export function setDefaults({ component, env }) {
         description: env._t("Set Defaults"),
         callback: () => {
             env.services.dialog.add(SetDefaultDialog, {
-                resModel: component.props.resModel,
-                component,
+                record: component.model.root,
+                fieldNodes: component.props.archInfo.fieldNodes,
             });
         },
         sequence: 310,

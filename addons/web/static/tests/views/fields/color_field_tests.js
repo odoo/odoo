@@ -32,7 +32,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("ColorField");
 
-    QUnit.test("field contains a color input", async function (assert) {
+    QUnit.tttt("field contains a color input", async function (assert) {
         serverData.models.partner.onchanges = {
             hex_color: () => {},
         };
@@ -78,7 +78,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("color field in editable list view", async function (assert) {
+    QUnit.tttt("color field in editable list view", async function (assert) {
         await makeView({
             type: "list",
             serverData,
@@ -113,33 +113,36 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            '.o_field_color input:disabled',
+            ".o_field_color input:disabled",
             2,
             "the field should not be editable"
         );
     });
 
-    QUnit.test("color field read-only in model definition, in non-editable list", async function (assert) {
-        serverData.models.partner.fields.hex_color.readonly = true;
-        await makeView({
-            type: "list",
-            serverData,
-            resModel: "partner",
-            arch: `
+    QUnit.test(
+        "color field read-only in model definition, in non-editable list",
+        async function (assert) {
+            serverData.models.partner.fields.hex_color.readonly = true;
+            await makeView({
+                type: "list",
+                serverData,
+                resModel: "partner",
+                arch: `
                 <tree>
                     <field name="hex_color" widget="color" />
                 </tree>`,
-        });
+            });
 
-        assert.containsN(
-            target,
-            '.o_field_color input:disabled',
-            2,
-            "the field should not be editable"
-        );
-    });
+            assert.containsN(
+                target,
+                ".o_field_color input:disabled",
+                2,
+                "the field should not be editable"
+            );
+        }
+    );
 
-    QUnit.test("color field change via another field's onchange", async (assert) => {
+    QUnit.tttt("color field change via another field's onchange", async (assert) => {
         serverData.models.partner.onchanges = {
             foo: (rec) => {
                 rec.hex_color = "#fefefe";

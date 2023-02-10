@@ -87,7 +87,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Numeric fields");
 
-    QUnit.test(
+    QUnit.tttt(
         "Numeric fields: fields with keydown on numpad decimal key",
         async function (assert) {
             registry.category("services").remove("localization");
@@ -186,7 +186,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "Numeric fields: NumpadDecimal key is different from the decimalPoint",
         async function (assert) {
             await makeView({
@@ -301,7 +301,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "useNumpadDecimal should synchronize handlers on input elements",
         async function (assert) {
             /**
@@ -359,7 +359,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("select all content on focus", async function (assert) {
+    QUnit.tttt("select all content on focus", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",

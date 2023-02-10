@@ -4,7 +4,6 @@ import { extractAttributes, XMLParser } from "@web/core/utils/xml";
 import { Field } from "@web/views/fields/field";
 import { Widget } from "@web/views/widgets/widget";
 import {
-    addFieldDependencies,
     archParseBoolean,
     getActiveActions,
     processButton,
@@ -60,10 +59,9 @@ export class KanbanArchParser extends XMLParser {
         const type = xmlDoc.getAttribute("type");
         const openAction = action && type ? { action, type } : null;
         const templateDocs = {};
-        const activeFields = {};
         let headerButtons = [];
         const creates = [];
-        let buttonId = 0;
+        let button_id = 0;
         // Root level of the template
         this.visitXML(xmlDoc, (node) => {
             if (node.hasAttribute("t-name")) {
@@ -76,7 +74,7 @@ export class KanbanArchParser extends XMLParser {
                     .map((node) => ({
                         ...processButton(node),
                         type: "button",
-                        id: buttonId++,
+                        id: button_id++,
                     }))
                     .filter((button) => button.modifiers.invisible !== true);
                 return false;
@@ -119,29 +117,19 @@ export class KanbanArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = name;
                 }
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    fieldInfo.field.fieldDependencies
-                );
             }
             if (node.tagName === "widget") {
                 const widgetInfo = Widget.parseWidgetNode(node);
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    widgetInfo.widget.fieldDependencies
-                );
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
                 if (attSrc && /\bkanban_image\b/.test(attSrc) && !fieldNodes.write_date) {
-                    fieldNodes.write_date = { type: "datetime" };
+                    fieldNodes.write_date = { name: "write_date", type: "datetime" };
                 }
             }
         });
@@ -170,14 +158,9 @@ export class KanbanArchParser extends XMLParser {
             defaultOrder = stringToOrderBy(handleField);
         }
 
-        for (const [key, field] of Object.entries(fieldNodes)) {
-            activeFields[key] = field; // TODO process
-        }
-
         return {
             arch,
             activeActions,
-            activeFields,
             className,
             creates,
             defaultGroupBy,

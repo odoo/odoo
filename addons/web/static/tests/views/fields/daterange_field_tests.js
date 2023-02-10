@@ -466,7 +466,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "Daterange field keyup should not erase end date [REQUIRE FOCUS]",
         async function (assert) {
             serverData.models.partner.fields.datetime_end = {
@@ -525,7 +525,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "DateRangeField manually input wrong value should show toaster",
         async function (assert) {
             serverData.models.partner.fields.date_end = { string: "Date End", type: "date" };

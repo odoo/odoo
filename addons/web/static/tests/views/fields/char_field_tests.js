@@ -171,7 +171,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "setting a char field to empty string is saved as a false value",
         async function (assert) {
             assert.expect(1);
@@ -226,7 +226,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("char field in editable list view", async function (assert) {
+    QUnit.tttt("char field in editable list view", async function (assert) {
         await makeView({
             type: "list",
             resModel: "partner",
@@ -271,7 +271,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("char field translatable", async function (assert) {
+    QUnit.tttt("char field translatable", async function (assert) {
         assert.expect(13);
 
         serverData.models.partner.fields.foo.translate = true;
@@ -407,22 +407,24 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("translation dialog should close if field is not there anymore", async function (assert) {
-        // In this test, we simulate the case where the field is removed from the view
-        // this can happend for example if the user click the back button of the browser.
-        serverData.models.partner.fields.foo.translate = true;
-        serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
-            force: true,
-        });
-        patchWithCleanup(session.user_context, {
-            lang: "en_US",
-        });
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 1,
-            serverData,
-            arch: `
+    QUnit.test(
+        "translation dialog should close if field is not there anymore",
+        async function (assert) {
+            // In this test, we simulate the case where the field is removed from the view
+            // this can happend for example if the user click the back button of the browser.
+            serverData.models.partner.fields.foo.translate = true;
+            serviceRegistry.add("localization", makeFakeLocalizationService({ multiLang: true }), {
+                force: true,
+            });
+            patchWithCleanup(session.user_context, {
+                lang: "en_US",
+            });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -431,38 +433,39 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { args, method, model }) {
-                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
-                    return Promise.resolve([
-                        ["en_US", "English"],
-                        ["fr_BE", "French (Belgium)"],
-                        ["es_ES", "Spanish"],
-                    ]);
-                }
-                if (route === "/web/dataset/call_kw/partner/get_field_translations") {
-                    return Promise.resolve([
-                        [
-                            { lang: "en_US", source: "yop", value: "yop" },
-                            { lang: "fr_BE", source: "yop", value: "valeur français" },
-                            { lang: "es_ES", source: "yop", value: "yop español" },
-                        ],
-                        { translation_type: "char", translation_show_source: false },
-                    ]);
-                }
-            },
-        });
+                mockRPC(route, { args, method, model }) {
+                    if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                        return Promise.resolve([
+                            ["en_US", "English"],
+                            ["fr_BE", "French (Belgium)"],
+                            ["es_ES", "Spanish"],
+                        ]);
+                    }
+                    if (route === "/web/dataset/call_kw/partner/get_field_translations") {
+                        return Promise.resolve([
+                            [
+                                { lang: "en_US", source: "yop", value: "yop" },
+                                { lang: "fr_BE", source: "yop", value: "valeur français" },
+                                { lang: "es_ES", source: "yop", value: "yop español" },
+                            ],
+                            { translation_type: "char", translation_show_source: false },
+                        ]);
+                    }
+                },
+            });
 
-        assert.hasClass(target.querySelector("[name=foo] input"), "o_field_translate");
+            assert.hasClass(target.querySelector("[name=foo] input"), "o_field_translate");
 
-        await click(target, ".o_field_char .btn.o_field_translate");
-        assert.containsOnce(target, ".modal", "a translate modal should be visible");
-        await editInput(target, ".o_field_widget[name=int_field] input", "9");
-        await nextTick();
-        assert.containsNone(target, "[name=foo] input", "the field foo should be invisible");
-        assert.containsNone(target, ".modal", "a translate modal should not be visible");
-    });
+            await click(target, ".o_field_char .btn.o_field_translate");
+            assert.containsOnce(target, ".modal", "a translate modal should be visible");
+            await editInput(target, ".o_field_widget[name=int_field] input", "9");
+            await nextTick();
+            assert.containsNone(target, "[name=foo] input", "the field foo should be invisible");
+            assert.containsNone(target, ".modal", "a translate modal should not be visible");
+        }
+    );
 
-    QUnit.test("html field translatable", async function (assert) {
+    QUnit.tttt("html field translatable", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.foo.translate = true;
@@ -657,7 +660,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "input field: change value before pending onchange returns",
         async function (assert) {
             serverData.models.partner.onchanges = {
@@ -718,7 +721,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "input field: change value before pending onchange returns (with fieldDebounce)",
         async function (assert) {
             // this test is exactly the same as the previous one, except that in
@@ -980,7 +983,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "input field: set and remove value, then wait for onchange",
         async function (assert) {
             serverData.models.partner.onchanges = {

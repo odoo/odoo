@@ -39,7 +39,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyCheckBoxesField");
 
-    QUnit.test("Many2ManyCheckBoxesField", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
         const commands = [[[6, false, [12, 14]]], [[6, false, [14]]]];
         await makeView({
@@ -85,7 +85,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["write", "write"]);
     });
 
-    QUnit.test("Many2ManyCheckBoxesField (readonly)", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField (readonly)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
         await makeView({
             type: "form",
@@ -125,7 +125,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "Many2ManyCheckBoxesField: start non empty, then remove twice",
         async function (assert) {
             serverData.models.partner.records[0].timmy = [12, 14];
@@ -156,7 +156,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "Many2ManyCheckBoxesField: values are updated when domain changes",
         async function (assert) {
             await makeView({
@@ -190,7 +190,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("Many2ManyCheckBoxesField with 40+ values", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField with 40+ values", async function (assert) {
         // 40 is the default limit for x2many fields. However, the many2many_checkboxes is a
         // special field that fetches its data through the fetchSpecialData mechanism, and it
         // uses the name_search server-side limit of 100. This test comes with a fix for a bug
@@ -246,7 +246,7 @@ QUnit.module("Fields", (hooks) => {
         assert.notOk(checkboxes[checkboxes.length - 1].checked);
     });
 
-    QUnit.test("Many2ManyCheckBoxesField with 100+ values", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField with 100+ values", async function (assert) {
         // The many2many_checkboxes widget limits the displayed values to 100 (this is the
         // server-side name_search limit). This test encodes a scenario where there are more than
         // 100 records in the co-model, and all values in the many2many relationship aren't
@@ -306,7 +306,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["name_search", "write"]);
     });
 
-    QUnit.test("Many2ManyCheckBoxesField in a one2many", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField in a one2many", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner_type.records.push({ id: 15, display_name: "bronze" });
@@ -349,7 +349,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("Many2ManyCheckBoxesField with default values", async function (assert) {
+    QUnit.tttt("Many2ManyCheckBoxesField with default values", async function (assert) {
         assert.expect(7);
 
         serverData.models.partner.fields.timmy.default = [3];

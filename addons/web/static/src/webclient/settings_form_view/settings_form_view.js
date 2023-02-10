@@ -6,24 +6,19 @@ import { formView } from "@web/views/form/form_view";
 import { SettingsFormController } from "./settings_form_controller";
 import { SettingsFormRenderer } from "./settings_form_renderer";
 import { SettingsFormCompiler } from "./settings_form_compiler";
-import BasicModel from "web.BasicModel";
 
-const BaseSettingsModel = BasicModel.extend({
-    isNew(id) {
-        return this.localData[id].model === "res.config.settings"
-            ? true
-            : this._super.apply(this, arguments);
-    },
-});
-
-class SettingsRelationalModel extends formView.Model {}
-SettingsRelationalModel.LegacyModel = BaseSettingsModel;
+class SettingModel extends formView.Model {
+    async load(params = {}) {
+        delete params.resId;
+        return super.load(params);
+    }
+}
 
 export const settingsFormView = {
     ...formView,
     display: {},
     buttonTemplate: "web.SettingsFormView.Buttons",
-    Model: SettingsRelationalModel,
+    Model: SettingModel,
     ControlPanel: ControlPanel,
     Controller: SettingsFormController,
     Compiler: SettingsFormCompiler,

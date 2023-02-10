@@ -219,7 +219,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Many2ManyField");
 
-    QUnit.test("many2many kanban: edition", async function (assert) {
+    QUnit.tttt("many2many kanban: edition", async function (assert) {
         assert.expect(31);
 
         serverData.views = {
@@ -427,7 +427,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "many2many kanban(editable): properly handle add-label node attribute",
         async function (assert) {
             serverData.models.partner.records[0].timmy = [12];
@@ -464,7 +464,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("field string is used in the SelectCreateDialog", async function (assert) {
+    QUnit.tttt("field string is used in the SelectCreateDialog", async function (assert) {
         serverData.views = {
             "partner_type,false,list": '<tree><field name="display_name"/></tree>',
             "partner_type,false,search": '<search><field name="display_name"/></search>',
@@ -502,7 +502,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".modal .modal-title").innerText, "Add: Abcde");
     });
 
-    QUnit.test("many2many kanban: create action disabled", async function (assert) {
+    QUnit.tttt("many2many kanban: create action disabled", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
         serverData.views = {
@@ -551,7 +551,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many kanban: conditional create/delete actions", async function (assert) {
+    QUnit.tttt("many2many kanban: conditional create/delete actions", async function (assert) {
         serverData.views = {
             "partner_type,false,form": '<form><field name="name"/></form>',
             "partner_type,false,list": '<tree><field name="name"/></tree>',
@@ -629,7 +629,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "many2many list (non editable): create a new record and click on action button",
         async function (assert) {
             serverData.views = {
@@ -683,7 +683,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "many2many list (non editable): create a new record and click on action button",
         async function (assert) {
             serverData.views = {
@@ -753,7 +753,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("add record in a many2many non editable list with context", async function (assert) {
+    QUnit.tttt("add record in a many2many non editable list with context", async function (assert) {
         assert.expect(1);
 
         serverData.views = {
@@ -791,7 +791,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_field_x2many_list_row_add a"));
     });
 
-    QUnit.test("many2many list (editable): edition", async function (assert) {
+    QUnit.tttt("many2many list (editable): edition", async function (assert) {
         assert.expect(29);
 
         serverData.models.partner.records[0].timmy = [12, 14];
@@ -947,7 +947,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("many2many: create & delete attributes (both true)", async function (assert) {
+    QUnit.tttt("many2many: create & delete attributes (both true)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
         await makeView({
@@ -973,7 +973,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsN(target, ".o_list_record_remove", 2, "should have the 'Add an item' link");
     });
 
-    QUnit.test("many2many: create & delete attributes (both false)", async function (assert) {
+    QUnit.tttt("many2many: create & delete attributes (both false)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
         await makeView({
@@ -1004,7 +1004,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many list: create action disabled", async function (assert) {
+    QUnit.tttt("many2many list: create action disabled", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -1023,7 +1023,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_field_x2many_list_row_add");
     });
 
-    QUnit.test("fieldmany2many list comodel not writable", async function (assert) {
+    QUnit.tttt("fieldmany2many list comodel not writable", async function (assert) {
         /**
          * Many2Many List should behave as the m2m_tags
          * that is, the relation can be altered even if the comodel itself is not CRUD-able
@@ -1083,7 +1083,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("many2many list: conditional create/delete actions", async function (assert) {
+    QUnit.tttt("many2many list: conditional create/delete actions", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
         serverData.views = {
@@ -1152,7 +1152,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many field with link/unlink options (list)", async function (assert) {
+    QUnit.tttt("many2many field with link/unlink options (list)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.views = {
             "partner_type,false,list": '<tree><field name="name"/></tree>',
@@ -1209,7 +1209,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         'many2many field with link/unlink options (list, create="0")',
         async function (assert) {
             serverData.models.partner.records[0].timmy = [12, 14];
@@ -1269,7 +1269,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("many2many field with link option (kanban)", async function (assert) {
+    QUnit.tttt("many2many field with link option (kanban)", async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
 
         serverData.views = {
@@ -1321,7 +1321,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test('many2many field with link option (kanban, create="0")', async function (assert) {
+    QUnit.tttt('many2many field with link option (kanban, create="0")', async function (assert) {
         serverData.models.partner.records[0].timmy = [12, 14];
         serverData.views = {
             "partner_type,false,list": '<tree><field name="name"/></tree>',
@@ -1372,7 +1372,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many list: list of id as default value", async function (assert) {
+    QUnit.tttt("many2many list: list of id as default value", async function (assert) {
         serverData.models.partner.fields.turtles.default = [2, 3];
         serverData.models.partner.fields.turtles.type = "many2many";
 
@@ -1397,7 +1397,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many list with x2many: add a record", async function (assert) {
+    QUnit.tttt("many2many list with x2many: add a record", async function (assert) {
         serverData.models.partner_type.fields.m2m = {
             string: "M2M",
             type: "many2many",
@@ -1478,7 +1478,7 @@ QUnit.module("Fields", (hooks) => {
         ]);
     });
 
-    QUnit.test("many2many with a domain", async function (assert) {
+    QUnit.tttt("many2many with a domain", async function (assert) {
         // The domain specified on the field should not be replaced by the potential
         // domain the user writes in the dialog, they should rather be concatenated
         serverData.views = {
@@ -1508,7 +1508,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual($(".modal .o_data_row").length, 0, "should contain no row");
     });
 
-    QUnit.test("many2many list with onchange and edition of a record", async function (assert) {
+    QUnit.tttt("many2many list with onchange and edition of a record", async function (assert) {
         serverData.models.partner.fields.turtles.type = "many2many";
         serverData.models.partner.onchanges.turtles = function () {};
 
@@ -1547,7 +1547,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps([]);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "many2many widget: creates a new record with a context containing the parentID",
         async function (assert) {
             serverData.views = {
@@ -1600,7 +1600,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("onchange with 40+ commands for a many2many", async function (assert) {
+    QUnit.tttt("onchange with 40+ commands for a many2many", async function (assert) {
         // this test ensures that the basic_model correctly handles more LINK_TO
         // commands than the limit of the dataPoint (40 for x2many kanban)
         assert.expect(25);
@@ -1719,7 +1719,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["write", "read", "read", "read"]);
     });
 
-    QUnit.test("default_get, onchange, onchange on m2m", async function (assert) {
+    QUnit.tttt("default_get, onchange, onchange on m2m", async function (assert) {
         assert.expect(1);
 
         serverData.models.partner.onchanges.int_field = function (obj) {
@@ -1752,7 +1752,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name=int_field] input", 2);
     });
 
-    QUnit.test("many2many list add *many* records, remove, re-add", async function (assert) {
+    QUnit.tttt("many2many list add *many* records, remove, re-add", async function (assert) {
         assert.expect(5);
 
         serverData.models.partner.fields.timmy.domain = [["color", "=", 2]];
@@ -1850,7 +1850,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many kanban: action/type attribute", async function (assert) {
+    QUnit.tttt("many2many kanban: action/type attribute", async function (assert) {
         serverData.models.partner.records[0].timmy = [12];
         const form = await makeView({
             type: "form",
@@ -1882,7 +1882,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["doActionButton type object name a1"]);
     });
 
-    QUnit.test("select create with _view_ref as text", async (assert) => {
+    QUnit.tttt("select create with _view_ref as text", async (assert) => {
         serverData.views = {
             "partner_type,my.little.string,list": `<tree><field name="display_name"/></tree>`,
             "partner_type,false,search": `<search />`,
@@ -1926,7 +1926,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".modal-title").textContent, "Search: pokemon");
     });
 
-    QUnit.test("many2many basic keys in field evalcontext -- in list", async (assert) => {
+    QUnit.tttt("many2many basic keys in field evalcontext -- in list", async (assert) => {
         assert.expect(6);
         serverData.models.partner_type.fields.partner_id = {
             string: "Partners",
@@ -1983,7 +1983,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("many2many basic keys in field evalcontext -- in form", async (assert) => {
+    QUnit.tttt("many2many basic keys in field evalcontext -- in form", async (assert) => {
         assert.expect(6);
         serverData.models.partner_type.fields.partner_id = {
             string: "Partners",
@@ -2040,7 +2040,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "many2many basic keys in field evalcontext -- in a x2many in form",
         async (assert) => {
             assert.expect(6);

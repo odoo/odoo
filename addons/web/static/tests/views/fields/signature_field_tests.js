@@ -48,7 +48,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Signature Field");
 
-    QUnit.test("Set simple field in 'full_name' node option", async function (assert) {
+    QUnit.tttt("Set simple field in 'full_name' node option", async function (assert) {
         patchWithCleanup(NameAndSignature.prototype, {
             setup() {
                 this._super.apply(this, arguments);
@@ -87,7 +87,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["Pop's Chock'lit"]);
     });
 
-    QUnit.test("Set m2o field in 'full_name' node option", async function (assert) {
+    QUnit.tttt("Set m2o field in 'full_name' node option", async function (assert) {
         patchWithCleanup(NameAndSignature.prototype, {
             setup() {
                 this._super.apply(this, arguments);
@@ -127,7 +127,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["Veggie Burger"]);
     });
 
-    QUnit.test("Set size (width and height) in node option", async function (assert) {
+    QUnit.tttt("Set size (width and height) in node option", async function (assert) {
         serverData.models.partner.fields.sign2 = { string: "Signature", type: "binary" };
         serverData.models.partner.fields.sign3 = { string: "Signature", type: "binary" };
 

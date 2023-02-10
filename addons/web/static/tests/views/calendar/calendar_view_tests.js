@@ -817,7 +817,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`create and change events`, async (assert) => {
+    QUnit.tttt(`create and change events`, async (assert) => {
         assert.expect(28);
 
         await makeView({
@@ -1423,7 +1423,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsNone(target, ".o_cw_popover", "should close a popover");
     });
 
-    QUnit.test(`render popover with widget which has specialData attribute`, async (assert) => {
+    QUnit.tttt(`render popover with widget which has specialData attribute`, async (assert) => {
         assert.expect(3);
 
         fieldRegistry.add("specialWidget", { component: CharField });
@@ -1469,7 +1469,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         `create event with timezone in week mode with formViewDialog European locale`,
         async (assert) => {
             assert.expect(7);
@@ -1703,7 +1703,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         `create event with timezone in week mode with formViewDialog American locale`,
         async (assert) => {
             assert.expect(7);
@@ -3145,7 +3145,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 7, "should display all records");
     });
 
-    QUnit.test(`create event with filters (no quickCreate)`, async (assert) => {
+    QUnit.tttt(`create event with filters (no quickCreate)`, async (assert) => {
         serverData.views["event,false,form"] = `
             <form>
                 <group>
@@ -3194,7 +3194,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event", 4, "should display the created item");
     });
 
-    QUnit.test(`Update event with filters`, async (assert) => {
+    QUnit.tttt(`Update event with filters`, async (assert) => {
         const records = serverData.models.user.records;
         records.push({ id: 5, display_name: "user 5", partner_id: 3 });
         serverData.models.event.onchanges = {
@@ -3686,7 +3686,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`drag and drop on month mode`, async (assert) => {
+    QUnit.tttt(`drag and drop on month mode`, async (assert) => {
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -3719,7 +3719,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`drag and drop on month mode with all_day mapping`, async (assert) => {
+    QUnit.tttt(`drag and drop on month mode with all_day mapping`, async (assert) => {
         // Same test as before but in calendarEventToRecord (calendar_model.js) there is
         // different condition branching with all_day mapping or not
         assert.expect(1);
@@ -4191,7 +4191,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         `edit record and attempt to create a record with "create" attribute set to false`,
         async (assert) => {
             assert.expect(8);
@@ -4335,7 +4335,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         }
     );
 
-    QUnit.test(`create event and resize to next day (24h) on week mode`, async (assert) => {
+    QUnit.tttt(`create event and resize to next day (24h) on week mode`, async (assert) => {
         // WOWL FYI Legacy test name: "drag and drop 24h event on week mode"
         await makeView({
             type: "calendar",

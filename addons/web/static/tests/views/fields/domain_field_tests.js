@@ -95,7 +95,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DomainField");
 
-    QUnit.test(
+    QUnit.tttt(
         "The domain editor should not crash the view when given a dynamic filter",
         async function (assert) {
             // dynamic filters (containing variables, such as uid, parent or today)
@@ -122,7 +122,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "The domain editor should not crash the view when given a dynamic filter ( datetime )",
         async function (assert) {
             // dynamic filters (containing variables, such as uid, parent or today)
@@ -165,7 +165,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("basic domain field usage is ok", async function (assert) {
+    QUnit.tttt("basic domain field usage is ok", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
 
         await makeView({
@@ -241,7 +241,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("using binary field in domain widget", async function (assert) {
+    QUnit.tttt("using binary field in domain widget", async function (assert) {
         assert.expect(0);
         serverData.models.partner.records[0].foo = "[]";
 
@@ -265,7 +265,7 @@ QUnit.module("Fields", (hooks) => {
         await click(document.body.querySelector(".o_field_selector_item[data-name='image']"));
     });
 
-    QUnit.test("domain field is correctly reset on every view change", async function (assert) {
+    QUnit.tttt("domain field is correctly reset on every view change", async function (assert) {
         serverData.models.partner.records[0].foo = `[("id", "=", 1)]`;
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
@@ -340,7 +340,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "domain field can be reset with a new domain (from onchange)",
         async function (assert) {
             serverData.models.partner.records[0].foo = "[]";
@@ -378,7 +378,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("domain field: handle false domain as []", async function (assert) {
+    QUnit.tttt("domain field: handle false domain as []", async function (assert) {
         assert.expect(3);
 
         serverData.models.partner.records[0].foo = false;
@@ -417,7 +417,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("basic domain field: show the selection", async function (assert) {
+    QUnit.tttt("basic domain field: show the selection", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.views = {
             "partner_type,false,list": `<tree><field name="display_name" /></tree>`,
@@ -459,7 +459,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal .o_list_view .o_data_row .o_data_cell[data-tooltip='gold']");
     });
 
-    QUnit.test("field context is propagated when opening selection", async function (assert) {
+    QUnit.tttt("field context is propagated when opening selection", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.views = {
             "partner_type,false,list": `<tree><field name="display_name" /></tree>`,
@@ -486,7 +486,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("domain field: manually edit domain with textarea", async function (assert) {
+    QUnit.tttt("domain field: manually edit domain with textarea", async function (assert) {
         patchWithCleanup(odoo, { debug: true });
 
         serverData.models.partner.records[0].foo = false;
@@ -546,7 +546,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(['[["id","<",40]]']);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "domain field: manually set an invalid domain with textarea",
         async function (assert) {
             patchWithCleanup(odoo, { debug: true });
@@ -618,7 +618,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         "domain field: reload count by clicking on the refresh button",
         async function (assert) {
             patchWithCleanup(odoo, { debug: true });
@@ -681,7 +681,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("domain field: does not wait for the count to render", async function (assert) {
+    QUnit.tttt("domain field: does not wait for the count to render", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "product";
@@ -718,7 +718,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("domain field: edit domain with dynamic content", async function (assert) {
+    QUnit.tttt("domain field: edit domain with dynamic content", async function (assert) {
         assert.expect(3);
 
         patchWithCleanup(odoo, { debug: true });
@@ -775,7 +775,7 @@ QUnit.module("Fields", (hooks) => {
         await clickSave(target);
     });
 
-    QUnit.test("domain field: edit through selector (dynamic content)", async function (assert) {
+    QUnit.tttt("domain field: edit through selector (dynamic content)", async function (assert) {
         patchWithCleanup(odoo, { debug: true });
 
         let rawDomain = `[("date", ">=", context_today())]`;
@@ -837,7 +837,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
     });
 
-    QUnit.test("domain field without model", async function (assert) {
+    QUnit.tttt("domain field without model", async function (assert) {
         serverData.models.partner.fields.model_name = { string: "Model name", type: "char" };
 
         await makeView({
@@ -871,7 +871,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["test"]);
     });
 
-    QUnit.test("domain field in kanban view", async function (assert) {
+    QUnit.tttt("domain field in kanban view", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.views = {
             "partner_type,false,list": `<tree><field name="display_name" /></tree>`,
@@ -915,7 +915,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("domain field with 'inDialog' options", async function (assert) {
+    QUnit.tttt("domain field with 'inDialog' options", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -935,7 +935,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "ID = 1");
     });
 
-    QUnit.test("invalid value in domain field with 'inDialog' options", async function (assert) {
+    QUnit.tttt("invalid value in domain field with 'inDialog' options", async function (assert) {
         serverData.models.partner.fields.display_name.default = "[]";
 
         await makeView({

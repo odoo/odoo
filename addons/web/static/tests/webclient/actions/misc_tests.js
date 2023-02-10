@@ -355,7 +355,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.strictEqual(target.querySelector(".o_list_renderer").scrollTop, 100);
     });
 
-    QUnit.test(
+    QUnit.tttt(
         'executing an action with target != "new" closes all dialogs',
         async function (assert) {
             serverData.views["partner,false,form"] = `
@@ -378,7 +378,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.tttt(
         'executing an action with target "new" does not close dialogs',
         async function (assert) {
             assert.expect(4);

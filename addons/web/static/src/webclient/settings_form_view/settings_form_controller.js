@@ -54,7 +54,7 @@ export class SettingsFormController extends formView.Controller {
         ) {
             return this._confirmSave();
         } else {
-            return this.model.root.save({ stayInEdition: true });
+            return this.model.root.save({ force: true, stayInEdition: true });
         }
     }
 
@@ -115,7 +115,7 @@ export class SettingsFormController extends formView.Controller {
                 },
                 cancel: async () => {
                     await this.model.root.discard();
-                    await this.model.root.save({ stayInEdition: true });
+                    await this.model.root.save({ force: true });
                     _continue = true;
                     resolve();
                 },

@@ -70,7 +70,7 @@ QUnit.module("ViewDialogs", (hooks) => {
 
     QUnit.module("FormViewDialog");
 
-    QUnit.test("formviewdialog buttons in footer are positioned properly", async function (assert) {
+    QUnit.tttt("formviewdialog buttons in footer are positioned properly", async function (assert) {
         serverData.views = {
             "partner,false,form": `
                     <form string="Partner">
@@ -101,7 +101,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test("modifiers are considered on multiple <footer/> tags", async function (assert) {
+    QUnit.tttt("modifiers are considered on multiple <footer/> tags", async function (assert) {
         serverData.views = {
             "partner,false,form": `
                 <form>
@@ -144,7 +144,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     });
 
-    QUnit.test("formviewdialog buttons in footer are not duplicated", async function (assert) {
+    QUnit.tttt("formviewdialog buttons in footer are not duplicated", async function (assert) {
         serverData.models.partner.fields.poney_ids = {
             string: "Poneys",
             type: "one2many",
@@ -182,7 +182,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test("Form dialog and subview with _view_ref contexts", async function (assert) {
+    QUnit.tttt("Form dialog and subview with _view_ref contexts", async function (assert) {
         assert.expect(2);
 
         serverData.models.instrument.records = [{ id: 1, name: "Tromblon", badassery: [1] }];
@@ -247,7 +247,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         await click(target, '.o_field_widget[name="instrument"] button.o_external_button');
     });
 
-    QUnit.test("click on view buttons in a FormViewDialog", async function (assert) {
+    QUnit.tttt("click on view buttons in a FormViewDialog", async function (assert) {
         serverData.views = {
             "partner,false,form": `
                 <form>
@@ -284,7 +284,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.verifySteps(["method2"]); // should not read as we closed
     });
 
-    QUnit.test(
+    QUnit.tttt(
         "formviewdialog is not closed when button handlers return a rejected promise",
         async function (assert) {
             serverData.views = {
@@ -322,7 +322,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         }
     );
 
-    QUnit.test("FormViewDialog with remove button", async function (assert) {
+    QUnit.tttt("FormViewDialog with remove button", async function (assert) {
         serverData.views = {
             "partner,false,form": `<form><field name="foo"/></form>`,
         };

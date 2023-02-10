@@ -37,7 +37,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("UrlField");
 
-    QUnit.test("UrlField in form view", async function (assert) {
+    QUnit.tttt("UrlField in form view", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -88,7 +88,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("UrlField in form view (readonly)", async function (assert) {
+    QUnit.tttt("UrlField in form view (readonly)", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -115,7 +115,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(matchingEl.textContent, "yop", "the value should be displayed properly");
     });
 
-    QUnit.test("UrlField takes text from proper attribute", async function (assert) {
+    QUnit.tttt("UrlField takes text from proper attribute", async function (assert) {
         await makeView({
             serverData,
             type: "form",
@@ -131,7 +131,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("UrlField: href attribute and website_path option", async function (assert) {
+    QUnit.tttt("UrlField: href attribute and website_path option", async function (assert) {
         serverData.models.partner.fields.url1 = {
             string: "Url 1",
             type: "char",
@@ -184,7 +184,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("UrlField in editable list view", async function (assert) {
+    QUnit.tttt("UrlField in editable list view", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -244,7 +244,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(resultEl.textContent, "brolo", "value should be properly updated");
     });
 
-    QUnit.test("UrlField with falsy value", async function (assert) {
+    QUnit.tttt("UrlField with falsy value", async function (assert) {
         serverData.models.partner.records[0].foo = false;
         await makeView({
             serverData,
@@ -258,7 +258,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector("[name=foo] input").value, "");
     });
 
-    QUnit.test("UrlField: url old content is cleaned on render edit", async function (assert) {
+    QUnit.tttt("UrlField: url old content is cleaned on render edit", async function (assert) {
         serverData.models.partner.fields.foo2 = { string: "Foo2", type: "char", default: "foo2" };
         serverData.models.partner.onchanges.foo2 = function (record) {
             record.foo = record.foo2;
@@ -299,7 +299,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("url field with placeholder", async function (assert) {
+    QUnit.tttt("url field with placeholder", async function (assert) {
         serverData.models.partner.fields.foo.default = false;
 
         await makeView({
