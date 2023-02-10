@@ -1078,9 +1078,10 @@ class MrpProduction(models.Model):
                 if move.procure_method == 'make_to_order':
                     procurement_qty = new_qty - old_qty
                     values = move._prepare_procurement_values()
+                    origin = move._prepare_procurement_origin()
                     procurements.append(self.env['procurement.group'].Procurement(
                         move.product_id, procurement_qty, move.product_uom,
-                        move.location_id, move.name, move.origin, move.company_id, values))
+                        move.location_id, move.name, origin, move.company_id, values))
                 update_info.append((move, old_qty, new_qty))
         moves_to_assign._action_assign()
         if procurements:
