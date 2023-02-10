@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.activity_menu" t-inherit-mode="extension">
+        <xpath expr="//*[@name='activityGroups']" position="after">
+            <div t-if="!state.addingNote" class="d-grid" t-on-click="() => this.state.addingNote = true">
+                <button type="button" class="btn text-center" t-on-click="() => this.state.addingNote = true">Add new note</button>
+            </div>
+            <div t-if="state.addingNote" class="o-note-activity-menu-show d-flex p-2 border-bottom">
+                <img class="o-mail-activity-img" src="/note/static/description/icon.svg" alt="Addnote"/>
+                <div class="flex-grow-1">
+                    <div class="d-flex px-2">
+                        <span class="o-note-activity-menu-text flex-grow-1"><strong>Add a note</strong></span>
+                        <DatePicker
+                            date="addingNoteDate"
+                            onDateTimeChanged="date => this.addingNoteDate = date ? date : false"
+                            placeholder="'Today'"
+                        />
+                    </div>
+                    <div class="d-flex">
+                        <input class="o-note-activity-menu-input py-0 px-2 border-0" type="text" placeholder="Remember..." t-on-keydown="onKeydownNoteInput" t-ref="noteInput"/>
+                        <span class="flex-grow-1"/>
+                        <span class="ml8 mr4">
+                            <button type="button" class="o-note-activity-menu-save fw-bold btn btn-link py-0 px-2" t-on-click="saveNote">SAVE</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>

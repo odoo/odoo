@@ -25,6 +25,9 @@
     'installable': True,
     'application': True,
     'assets': {
+        'mail.assets_backend': [
+            'note/static/src/new/**/*',
+        ],
         'mail.assets_messaging': [
             'note/static/src/models/*.js',
         ],

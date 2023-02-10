@@ -29,6 +29,11 @@ export class ActivityMenu extends Component {
         }
         this.store.activityCounter = total;
         this.store.activityGroups = groups;
+        this.sortActivityGroups();
+    }
+
+    sortActivityGroups() {
+        this.store.activityGroups.sort((g1, g2) => g1.id - g2.id);
     }
 
     onBeforeOpen() {
