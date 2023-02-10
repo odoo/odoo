@@ -4,10 +4,9 @@ import { Printer } from "@point_of_sale/js/printers";
 import { is_email } from "web.utils";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import { AbstractReceiptScreen } from "@point_of_sale/js/Misc/AbstractReceiptScreen";
+import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
 import { registry } from "@web/core/registry";
-
 import { OrderReceipt } from "./OrderReceipt";
-
 import { onMounted, useRef, status } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
@@ -137,6 +136,15 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             name: partner ? partner.name : this.orderUiState.inputEmail,
         };
         const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
+        if (!order_server_id) {
+            this.popup.add(OfflineErrorPopup, {
+                title: this.env._t("Unsynced order"),
+                body: this.env._t(
+                    "This order is not yet synced to server. Make sure it is synced then try again."
+                ),
+            });
+            return Promise.reject();
+        }
         await this.rpc({
             model: "pos.order",
             method: "action_receipt_to_customer",
