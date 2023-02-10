@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
-import { click, getFixture, nextTick } from "@web/../tests/helpers/utils";
+import { click, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { makeWithSearch, setupControlPanelServiceRegistry } from "./helpers";
+import { Component, xml } from "@odoo/owl";
+import { makeTestEnv } from "../helpers/mock_env";
 
 let target;
 let serverData;
@@ -130,6 +132,24 @@ QUnit.module("Search", (hooks) => {
         pagerProps.total = 0;
         controlPanel.render();
         await nextTick();
+        assert.containsNone(target, ".o_pager");
+    });
+
+    QUnit.test("control panel without bottom-right specifics", async (assert) => {
+        class CustomPage extends Component {}
+        CustomPage.components = { ControlPanel };
+        CustomPage.template = xml `
+            <ControlPanel display="{'top-right':false}">
+                <t t-set-slot="control-panel-bottom-right">
+                    <div class="o_new_bottom_right">Something else</div>
+                </t>
+            </ControlPanel>
+        `;
+        // Minimal config, still needs at least an empty breadcrumbs to setup a control_panel 
+        const env = { ...await makeTestEnv(), config: { breadcrumbs: [], } };
+        parent = await mount(CustomPage, target, { env });
+        assert.containsOnce(target, ".o_new_bottom_right");
+        assert.containsNone(target, ".o_cp_switch_buttons");
         assert.containsNone(target, ".o_pager");
     });
 });

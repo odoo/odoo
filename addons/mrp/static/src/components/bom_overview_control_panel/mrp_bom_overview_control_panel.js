@@ -10,8 +10,6 @@ const { Component } = owl;
 export class BomOverviewControlPanel extends Component {
     setup() {
         this.controlPanelDisplay = {};
-        // Cannot use 'control-panel-bottom-right' slot without this, as viewSwitcherEntries doesn't exist in this.env.config here.
-        this.env.config.viewSwitcherEntries = [];
     }
 
     //---- Handlers ----
