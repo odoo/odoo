@@ -9547,6 +9547,31 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, getCard(0), "the first card should be focussed");
     });
 
+    QUnit.test("keyboard navigation on kanban basic rendering does not crash when the focus is inside a card", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                '<kanban><templates><t t-name="kanban-box">' +
+                "<div>" +
+                '<t t-esc="record.foo.value"/>' +
+                '<field name="foo"/>' +
+                '<a href="#" class="o-this-is-focussable">ho! this is focussable</a>' +
+                "</div>" +
+                "</t></templates></kanban>",
+        });
+
+        getCard(0).querySelector(".o-this-is-focussable").focus();
+        triggerHotkey("ArrowDown");
+
+        assert.strictEqual(
+            document.activeElement,
+            getCard(1),
+            "the second card should be focussed"
+        );
+    });
+
     QUnit.test("keyboard navigation on kanban grouped rendering", async (assert) => {
         await makeView({
             type: "kanban",
