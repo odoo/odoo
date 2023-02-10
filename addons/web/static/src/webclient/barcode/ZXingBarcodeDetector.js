@@ -77,12 +77,22 @@ export function buildZXingBarcodeDetector(ZXing) {
             const binaryBitmap = new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(luminanceSource));
             try {
                 const result = this.reader.decode(binaryBitmap);
+                const { resultPoints } = result;
+                const boundingBox = DOMRectReadOnly.fromRect({
+                    x: resultPoints[0].x,
+                    y: resultPoints[0].y,
+                    height: Math.max(1, Math.abs(resultPoints[1].y - resultPoints[0].y)),
+                    width: Math.max(1, Math.abs(resultPoints[1].x - resultPoints[0].x)),
+                });
+                const cornerPoints = resultPoints;
                 const format = Array.from(ZXingFormats).find(
                     ([k, val]) => val === result.getBarcodeFormat()
                 );
                 const rawValue = result.getText();
                 return [
                     {
+                        boundingBox,
+                        cornerPoints,
                         format,
                         rawValue,
                     },
