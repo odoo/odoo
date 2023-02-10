@@ -296,6 +296,7 @@ class NewContentSystray extends Component {
 
 export const systrayItem = {
     Component: NewContentSystray,
+    isDisplayed: (env) => env.services.website.isRestrictedEditor,
 };
 
 registry.category("website_systray").add("NewContent", systrayItem, { sequence: 9 });
