@@ -146,6 +146,9 @@ class StockPicking(models.Model):
     def _subcontracted_produce(self, subcontract_details):
         self.ensure_one()
         for move, bom in subcontract_details:
+            # do not create extra production for move that have their quantity updated
+            if move.move_orig_ids.production_id:
+                continue
             if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
                 # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
                 continue
