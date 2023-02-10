@@ -79,7 +79,13 @@
             <field name="write_date" optional="hide"/>
             <field name="track" optional="hide"/>
 
+            <!-- website_id should be shown only in multi website environment
+            when the group is enabled, but we need the field to be there all the
+            time for `PageRendererMixin`'s `recordFilter' to be able to filter
+            correctly. -->
+            <field name="website_id" invisible="1"/>
             <field name="website_id" groups="website.group_multi_website"/>
+
             <button name="action_page_debug_view" type="object" title="Settings" icon="fa-bug fa-lg" groups="base.group_no_one"/>
         </tree>
     </field>
