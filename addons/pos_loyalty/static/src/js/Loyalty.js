@@ -75,10 +75,242 @@ function computeFreeQuantity(numberItems, n, m) {
     return Math.floor(free + adjustment);
 }
 
+<<<<<<< HEAD
 const PosLoyaltyGlobalState = (PosGlobalState) =>
     class PosLoyaltyGlobalState extends PosGlobalState {
         //@override
         async _processData(loadedData) {
+||||||| parent of 71e8903e135 (temp)
+const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState extends PosGlobalState {
+    //@override
+    async _processData(loadedData) {
+        this.couponCache = {};
+        await super._processData(loadedData);
+        this.productId2ProgramIds = loadedData['product_id_to_program_ids'];
+        this.programs = loadedData['loyalty.program'] || []; //TODO: rename to `loyaltyPrograms` etc
+        this.rules = loadedData['loyalty.rule'] || [];
+        this.rewards = loadedData['loyalty.reward'] || [];
+        this._loadLoyaltyData();
+    }
+
+    async _getTableOrdersFromServer(tableIds) {
+        const oldOrders = this.orders;
+        const orders = await super._getTableOrdersFromServer(tableIds);
+
+        const oldOrderlinesWithCoupons = [].concat(...oldOrders.map(oldOrder =>
+            oldOrder.orderlines.filter(orderline => orderline.is_reward_line && orderline.coupon_id < 1)
+        ));
+
+        // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+        if (oldOrderlinesWithCoupons.length) {
+            for (const oldOrderline of oldOrderlinesWithCoupons) {
+                const matchingOrderline = orders
+                    .map((order) => order.lines.map((line) => line[2]))
+                    .find(line => line.reward_id === oldOrderline.reward_id);
+
+                if (matchingOrderline) {
+                    matchingOrderline.coupon_id = nextId;
+                }
+            }
+
+            for (const order of orders) {
+                const oldOrder = oldOrders.find(oldOrder => oldOrder.uid === order.uid);
+
+                if (oldOrder) {
+                    if (oldOrder.partner && oldOrder.partner.id === order.partner_id) {
+                        order.partner = oldOrder.partner;
+                    }
+
+                    order.couponPointChanges = oldOrder.couponPointChanges;
+
+                    Object.keys(order.couponPointChanges).forEach(index => {
+                        order.couponPointChanges[nextId] = {...order.couponPointChanges[index]};
+                        order.couponPointChanges[nextId].coupon_id = nextId;
+                        delete order.couponPointChanges[index];
+                    });
+                }
+            }
+        }
+
+        return orders;
+    }
+
+    _loadLoyaltyData() {
+        this.program_by_id = {};
+        this.reward_by_id = {};
+
+        for (const program of this.programs) {
+            this.program_by_id[program.id] = program;
+            if (program.date_to) {
+                program.date_to = new Date(program.date_to);
+            }
+            program.rules = [];
+            program.rewards = [];
+        }
+        for (const rule of this.rules) {
+            rule.valid_product_ids = new Set(rule.valid_product_ids);
+            rule.program_id = this.program_by_id[rule.program_id[0]];
+            rule.program_id.rules.push(rule);
+        }
+        for (const reward of this.rewards) {
+            this.reward_by_id[reward.id] = reward
+            reward.program_id = this.program_by_id[reward.program_id[0]];;
+            reward.discount_line_product_id = this.db.get_product_by_id(reward.discount_line_product_id[0]);
+            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+            reward.program_id.rewards.push(reward);
+        }
+    }
+    async load_server_data() {
+        await super.load_server_data(...arguments);
+        if (this.selectedOrder) {
+            this.selectedOrder._updateRewards();
+        }
+    }
+    set_order(order) {
+        const result = super.set_order(...arguments);
+        // FIXME - JCB: This is a temporary fix.
+        // When an order is selected, it doesn't always contain the reward lines.
+        // And the list of active programs are not always correct. This is because
+        // of the use of DropPrevious in _updateRewards.
+        if (order) {
+            order._updateRewards();
+        }
+        return result;
+    }
+    /**
+     * Fetches `loyalty.card` records from the server and adds/updates them in our cache.
+     *
+     * @param {domain} domain For the search
+     * @param {int} limit Default to 1
+     */
+    async fetchCoupons(domain, limit=1) {
+        const result = await this.env.services.rpc({
+            model: 'loyalty.card',
+            method: 'search_read',
+            kwargs: {
+                domain: domain,
+                fields: ['id', 'points', 'code', 'partner_id', 'program_id'],
+                limit: limit,
+                context: session.user_context,
+            }
+        });
+        if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
+=======
+const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState extends PosGlobalState {
+    //@override
+    async _processData(loadedData) {
+        this.couponCache = {};
+        await super._processData(loadedData);
+        this.productId2ProgramIds = loadedData['product_id_to_program_ids'];
+        this.programs = loadedData['loyalty.program'] || []; //TODO: rename to `loyaltyPrograms` etc
+        this.rules = loadedData['loyalty.rule'] || [];
+        this.rewards = loadedData['loyalty.reward'] || [];
+        this._loadLoyaltyData();
+    }
+
+    async _getTableOrdersFromServer(tableIds) {
+        const oldOrders = this.orders;
+        const orders = await super._getTableOrdersFromServer(tableIds);
+
+        const oldOrderlinesWithCoupons = [].concat(...oldOrders.map(oldOrder =>
+            oldOrder.orderlines.filter(orderline => orderline.is_reward_line && orderline.coupon_id < 1)
+        ));
+
+        // Remapping of coupon_id for both couponPointChanges and Orderline.coupon_id
+        if (oldOrderlinesWithCoupons.length) {
+            for (const oldOrderline of oldOrderlinesWithCoupons) {
+                const matchingOrderline = orders
+                    .flatMap((order) => order.lines.map((line) => line[2]))
+                    .find(line => line.reward_id === oldOrderline.reward_id);
+
+                if (matchingOrderline) {
+                    matchingOrderline.coupon_id = nextId;
+                }
+            }
+
+            for (const order of orders) {
+                const oldOrder = oldOrders.find(oldOrder => oldOrder.uid === order.uid);
+
+                if (oldOrder) {
+                    if (oldOrder.partner && oldOrder.partner.id === order.partner_id) {
+                        order.partner = oldOrder.partner;
+                    }
+
+                    order.couponPointChanges = oldOrder.couponPointChanges;
+
+                    Object.keys(order.couponPointChanges).forEach(index => {
+                        order.couponPointChanges[nextId] = {...order.couponPointChanges[index]};
+                        order.couponPointChanges[nextId].coupon_id = nextId;
+                        delete order.couponPointChanges[index];
+                    });
+                }
+            }
+        }
+
+        return orders;
+    }
+
+    _loadLoyaltyData() {
+        this.program_by_id = {};
+        this.reward_by_id = {};
+
+        for (const program of this.programs) {
+            this.program_by_id[program.id] = program;
+            if (program.date_to) {
+                program.date_to = new Date(program.date_to);
+            }
+            program.rules = [];
+            program.rewards = [];
+        }
+        for (const rule of this.rules) {
+            rule.valid_product_ids = new Set(rule.valid_product_ids);
+            rule.program_id = this.program_by_id[rule.program_id[0]];
+            rule.program_id.rules.push(rule);
+        }
+        for (const reward of this.rewards) {
+            this.reward_by_id[reward.id] = reward
+            reward.program_id = this.program_by_id[reward.program_id[0]];;
+            reward.discount_line_product_id = this.db.get_product_by_id(reward.discount_line_product_id[0]);
+            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+            reward.program_id.rewards.push(reward);
+        }
+    }
+    async load_server_data() {
+        await super.load_server_data(...arguments);
+        if (this.selectedOrder) {
+            this.selectedOrder._updateRewards();
+        }
+    }
+    set_order(order) {
+        const result = super.set_order(...arguments);
+        // FIXME - JCB: This is a temporary fix.
+        // When an order is selected, it doesn't always contain the reward lines.
+        // And the list of active programs are not always correct. This is because
+        // of the use of DropPrevious in _updateRewards.
+        if (order) {
+            order._updateRewards();
+        }
+        return result;
+    }
+    /**
+     * Fetches `loyalty.card` records from the server and adds/updates them in our cache.
+     *
+     * @param {domain} domain For the search
+     * @param {int} limit Default to 1
+     */
+    async fetchCoupons(domain, limit=1) {
+        const result = await this.env.services.rpc({
+            model: 'loyalty.card',
+            method: 'search_read',
+            kwargs: {
+                domain: domain,
+                fields: ['id', 'points', 'code', 'partner_id', 'program_id'],
+                limit: limit,
+                context: session.user_context,
+            }
+        });
+        if (Object.keys(this.couponCache).length + result.length > COUPON_CACHE_MAX_SIZE) {
+>>>>>>> 71e8903e135 (temp)
             this.couponCache = {};
             await super._processData(loadedData);
             this.productId2ProgramIds = loadedData["product_id_to_program_ids"];
