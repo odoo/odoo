@@ -99,7 +99,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
         if (oldOrderlinesWithCoupons.length) {
             for (const oldOrderline of oldOrderlinesWithCoupons) {
                 const matchingOrderline = orders
-                    .map((order) => order.lines.map((line) => line[2]))
+                    .flatMap((order) => order.lines.map((line) => line[2]))
                     .find(line => line.reward_id === oldOrderline.reward_id);
 
                 if (matchingOrderline) {

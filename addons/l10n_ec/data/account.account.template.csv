@@ -1,5 +1,5 @@
 id,code,name,reconcile,account_type,chart_template_id/id
-l10n_ec_ifrs_liquidity_transfer,111010301,Transferencias interbancarias,TRUE,asset_current,l10n_ec_ifrs
+l10n_ec_ifrs_liquidity_transfer,11010301,Transferencias interbancarias,TRUE,asset_current,l10n_ec_ifrs
 ec11010401,11010401,Valores en custodia,FALSE,asset_current,l10n_ec_ifrs
 ec110201,110201,Activos financieros a valor razonable con cambios en resultados,FALSE,asset_current,l10n_ec_ifrs
 ec110202,110202,Activos financieros disponibles para la venta,FALSE,asset_current,l10n_ec_ifrs
@@ -29,13 +29,13 @@ ec110401,110401,Seguros pagados por anticipado,TRUE,asset_prepayments,l10n_ec_if
 ec110402,110402,Arriendos pagados por anticipado,TRUE,asset_prepayments,l10n_ec_ifrs
 ec110403,110403,Anticipos a proveedores,TRUE,asset_prepayments,l10n_ec_ifrs
 ec_other_downpayments,11040401,Otros anticipos entregados,TRUE,asset_prepayments,l10n_ec_ifrs
-ec_purchase_vat,11050101,Iva pagado en compras locales,FALSE,asset_current,l10n_ec_ifrs
-ec_purchase_vat_assets,11050102,Iva pagado en compras locales de activos fijos,FALSE,asset_current,l10n_ec_ifrs
-ec_purchase_vat_service_imports,11050103,Iva pagado en importacion de servicios,FALSE,asset_current,l10n_ec_ifrs
-ec_purchase_vat_goods_imports,11050104,Iva pagado en importacion de bienes,FALSE,asset_current,l10n_ec_ifrs
-ec_purchase_vat_assets_imports,11050105,Iva pagado en importacion de activos fijos,FALSE,asset_current,l10n_ec_ifrs
-ec_sale_vat_outstanding_withholds,11050106,Iva pagado en retenciones de la fuente,FALSE,asset_current,l10n_ec_ifrs
-ec_purchase_vat_zero,11050107,Iva en compras 0%,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat,11050101,IVA pagado en compras locales,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_assets,11050102,IVA pagado en compras locales de activos fijos,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_service_imports,11050103,IVA pagado en importacion de servicios,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_goods_imports,11050104,IVA pagado en importacion de bienes,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_assets_imports,11050105,IVA pagado en importacion de activos fijos,FALSE,asset_current,l10n_ec_ifrs
+ec_sale_vat_outstanding_withholds,11050106,IVA pagado en retenciones de la fuente,FALSE,asset_current,l10n_ec_ifrs
+ec_purchase_vat_zero,11050107,IVA en compras 0%,FALSE,asset_current,l10n_ec_ifrs
 ec110502,110502,Credito tributario a favor de la empresa(i.r.),FALSE,asset_current,l10n_ec_ifrs
 ec110503,110503,Anticipo de impuesto a la renta,FALSE,asset_current,l10n_ec_ifrs
 ec_sale_profit_withhold,110504,Retenciones en la fuente pagadas,FALSE,asset_current,l10n_ec_ifrs
@@ -132,11 +132,11 @@ ec2110,2110,Anticipos de clientes,TRUE,liability_payable,l10n_ec_ifrs
 ec2111,2111,Pasivos directamente asociados con los activos no corrientes y operaciones discontinuadas,FALSE,liability_current,l10n_ec_ifrs
 ec211201,211201,Otros beneficios a largo plazo para los empleados,TRUE,liability_payable,l10n_ec_ifrs
 ec211301,211301,Retenciones judiciales,FALSE,liability_current,l10n_ec_ifrs
-ec_sale_vat,2114010101,Iva cobrado en ventas locales,FALSE,liability_current,l10n_ec_ifrs
-ec_sale_vat_assets,2114010102,Iva cobrado en ventas de activos fijos,FALSE,liability_current,l10n_ec_ifrs
-ec_sale_vat_goods_exports,2114010103,Iva cobrado en exportacion de bienes,FALSE,liability_current,l10n_ec_ifrs
-ec_sale_vat_services_exports,2114010104,Iva cobrado en exportacion de servicios,FALSE,liability_current,l10n_ec_ifrs
-ec_sale_vat_zero,2114010105,Iva en ventas 0%,FALSE,liability_current,l10n_ec_ifrs
+ec_sale_vat,2114010101,IVA cobrado en ventas locales,FALSE,liability_current,l10n_ec_ifrs
+ec_sale_vat_assets,2114010102,IVA cobrado en ventas de activos fijos,FALSE,liability_current,l10n_ec_ifrs
+ec_sale_vat_goods_exports,2114010103,IVA cobrado en exportacion de bienes,FALSE,liability_current,l10n_ec_ifrs
+ec_sale_vat_services_exports,2114010104,IVA cobrado en exportacion de servicios,FALSE,liability_current,l10n_ec_ifrs
+ec_sale_vat_zero,2114010105,IVA en ventas 0%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_1x100,2114010201,Retenciones de la fuente 1%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_1_75x100,2114010202,Retenciones de la fuente 1.75%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_2x100,2114010203,Retenciones de la fuente 2%,FALSE,liability_current,l10n_ec_ifrs
@@ -147,12 +147,12 @@ ret_ir_10x100,2114010207,Retenciones de la fuente 10%,FALSE,liability_current,l1
 ret_ir_15x100,2114010208,Retenciones de la fuente 15%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_22x100,2114010209,Retenciones de la fuente 22%,FALSE,liability_current,l10n_ec_ifrs
 ret_ir_others,2114010210,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_10,2114010301,Retenciones de iva 10%,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_20,2114010302,Retenciones de iva 20%,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_30,2114010303,Retenciones de iva 30%,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_50,2114010304,Retenciones de iva 50%,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_70,2114010305,Retenciones de iva 70%,FALSE,liability_current,l10n_ec_ifrs
-ec_vat_withhold_100,2114010306,Retenciones de iva 100%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_10,2114010301,Retenciones de IVA 10%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_20,2114010302,Retenciones de IVA 20%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_30,2114010303,Retenciones de IVA 30%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_50,2114010304,Retenciones de IVA 50%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_70,2114010305,Retenciones de IVA 70%,FALSE,liability_current,l10n_ec_ifrs
+ec_vat_withhold_100,2114010306,Retenciones de IVA 100%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_others,2114010307,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
 ec2201,2201,Pasivos por contratos de arrendamiento financiero,TRUE,liability_payable,l10n_ec_ifrs
 ec220201,220201,Cuentas y documentos por pagar locales,TRUE,liability_payable,l10n_ec_ifrs
@@ -274,6 +274,8 @@ ec510405,510405,Gasto por garantias en venta de productos o servicios,FALSE,expe
 ec510406,510406,Mantenimiento y reparaciones,FALSE,expense_direct_cost,l10n_ec_ifrs
 ec510407,510407,Suministros materiales y repuestos,FALSE,expense_direct_cost,l10n_ec_ifrs
 ec51040801,51040801,Otros costos de produccion,FALSE,expense_direct_cost,l10n_ec_ifrs
+ec51040802,51040802,Faltantes y sobrantes de ajustes de inventario,FALSE,expense_direct_cost,l10n_ec_ifrs
+ec51040803,51040803,Desperdicios en el proceso productivo,FALSE,expense_direct_cost,l10n_ec_ifrs
 ec52010101,52010101,"Sueldos, salarios y demas remuneraciones",FALSE,expense,l10n_ec_ifrs
 ec52010102,52010102,Horas extra,FALSE,expense,l10n_ec_ifrs
 ec52010103,52010103,Bonificaciones por desempeño,FALSE,expense,l10n_ec_ifrs

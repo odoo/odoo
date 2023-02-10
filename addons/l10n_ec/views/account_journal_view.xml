@@ -7,17 +7,25 @@
             <field name="inherit_id" ref="l10n_latam_invoice_document.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <field name="l10n_latam_use_documents" position="after">
+                    <field name="l10n_ec_require_emission" invisible="1"/>
                     <field name="l10n_ec_entity"
-                           attrs="{'invisible':['|', '|', ('country_code', '!=', 'EC'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('sale', 'purchase'))], 'required':[('country_code', '=', 'EC'), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('sale', 'purchase'))]}"/>
+                           placeholder="001"
+                           attrs="{'invisible':[('l10n_ec_require_emission', '!=', True)],
+                                   'required':[('l10n_ec_require_emission', '=', True)]}"
+                           />
                     <field name="l10n_ec_emission"
-                           attrs="{'invisible':['|', '|', ('country_code', '!=', 'EC'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('sale', 'purchase'))], 'required':[('country_code', '=', 'EC'), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('sale', 'purchase'))]}"
-                    />
+                           placeholder="001"
+                           attrs="{'invisible':[('l10n_ec_require_emission', '!=', True)],
+                                   'required':[('l10n_ec_require_emission', '=', True)]}"
+                           />
                     <field name="l10n_ec_emission_address_id"
-                           attrs="{'invisible':['|', '|', ('country_code', '!=', 'EC'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('sale', 'purchase'))], 'required':[('country_code', '=', 'EC'), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('sale', 'purchase'))]}"
-                    />
-                    <field name="l10n_ec_emission_type"
-                           attrs="{'invisible':['|', '|', ('country_code', '!=', 'EC'), ('l10n_latam_use_documents', '=', False), ('type', 'not in', ('sale', 'purchase'))], 'required':[('country_code', '=', 'EC'), ('l10n_latam_use_documents', '=', True), ('type', 'not in', ('sale', 'purchase'))]}"
-                    />
+                           attrs="{'invisible':[('l10n_ec_require_emission', '!=', True)],
+                                   'required':[('l10n_ec_require_emission', '=', True)]}"
+                           context="{'default_parent_id': company_partner_id, 
+                                     'default_type': 'invoice',
+                                     'form_view_ref': 'base.view_partner_address_form'
+                                     }"
+                           />
                 </field>
             </field>
         </record>
