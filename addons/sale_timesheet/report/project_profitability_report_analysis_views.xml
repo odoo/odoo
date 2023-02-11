@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_profitability_report_view_pivot" model="ir.ui.view">
+        <field name="name">project.profitability.report.pivot</field>
+        <field name="model">project.profitability.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Profitability Analysis" display_quantity="1" sample="1">
+                <field name="project_id" type="row"/>
+                <field name="amount_untaxed_to_invoice" type="measure"/>
+                <field name="amount_untaxed_invoiced" type="measure"/>
+                <field name="timesheet_cost" type="measure"/>
+                <field name="margin" type="measure"/>
+                <field name="timesheet_unit_amount" widget="timesheet_uom" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="project_profitability_report_view_graph" model="ir.ui.view">
+        <field name="name">project.profitability.report.graph</field>
+        <field name="model">project.profitability.report</field>
+        <field name="arch" type="xml">
+            <graph string="Profitability Analysis" sample="1" js_class="hr_timesheet_graphview">
+                <field name="project_id"/>
+                <field name="product_id"/>
+                <field name="amount_untaxed_to_invoice" type="measure"/>
+                <field name="amount_untaxed_invoiced" type="measure"/>
+                <field name="timesheet_cost" type="measure"/>
+                <field name="other_revenues" type="measure"/>
+                <field name="margin" type="measure"/>
+                <field name="timesheet_unit_amount" widget="timesheet_uom" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+    <record id="project_profitability_report_view_tree" model="ir.ui.view">
+        <field name="name">project.profitability.report.view.tree</field>
+        <field name="model">project.profitability.report</field>
+        <field name="arch" type="xml">
+            <tree string="Profitability Analysis">
+                <field name="project_id"/>
+                <field name="user_id" optional="hide"/>
+                <field name="task_id" optional="hide"/>
+                <field name="partner_id" optional="hide"/>
+                <field name="analytic_account_id" optional="hide"/>
+                <field name="line_date" optional="show"/>
+                <field name="currency_id" optional="show" invisible="1"/>
+                <field name="amount_untaxed_to_invoice" optional="show" sum="Sum of Amount to Invoice"
+                       widget="monetary"/>
+                <field name="amount_untaxed_invoiced" optional="hide" sum="Sum of Amount Invoiced" widget="monetary"/>
+                <field name="other_revenues" optional="hide" widget="monetary"/>
+                <field name="timesheet_cost" optional="show" sum="Sum of Timesheet Cost" widget="monetary"/>
+                <field name="expense_cost" optional="hide" widget="monetary"/>
+                <field name="margin" optional="show" sum="Sum of Margin" widget="monetary"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_profitability_report_view_search" model="ir.ui.view">
+        <field name="name">project.profitability.report.search</field>
+        <field name="model">project.profitability.report</field>
+        <field name="arch" type="xml">
+            <search string="Profitability Analysis">
+                <field name="project_id"/>
+                <field name="user_id"/>
+                <field name="product_id"/>
+                <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter string="My Projects" name="my_project" domain="[('user_id','=', uid)]"/>
+                <group expand="1" string="Group By">
+                    <filter string="Project" name="group_by_project" context="{'group_by':'project_id'}"/>
+                    <filter string="Project Manager" name="group_by_user_id" context="{'group_by':'user_id'}"/>
+                    <filter string="Task" name="group_by_task_id" context="{'group_by':'task_id'}"/>
+                    <filter string="Customer" name="group_by_partner_id" context="{'group_by':'partner_id'}"/>
+                    <filter string="Company" name="group_by_company" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Date" name="group_by_line_date" context="{'group_by':'line_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>

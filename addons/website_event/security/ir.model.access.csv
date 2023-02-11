@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_event_event,event.event,model_event_event,,1,0,0,0
+access_event_event_ticket,event.event.ticket,event.model_event_event_ticket,,1,0,0,0
+access_event_type,event.type,event.model_event_type,,0,0,0,0
+access_event_tag_category,event.tag.category,event.model_event_tag_category,,1,0,0,0
+access_event_tag,event.tag,event.model_event_tag,,1,0,0,0
+access_website_event_menu,website.event.menu,model_website_event_menu,,1,0,0,0
+access_website_event_menu_user,website.event.menu.user,model_website_event_menu,event.group_event_user,1,1,1,1
+access_website_visitor_user,website.visitor.user,model_website_visitor,event.group_event_user,1,1,0,0

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.CashMovePopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup drag-handle">
+                    <main class="body">
+                        <div class="cash-move">
+                            <div class="input-amount">
+                                <span t-on-click="onClickButton('in')" class="input-type" t-att-class="{ highlight: state.inputType == 'in' }">
+                                    Cash In
+                                </span>
+                                <span t-on-click="onClickButton('out')" class="input-type" t-att-class="{ highlight: state.inputType == 'out' }">
+                                    Cash Out
+                                </span>
+                                <div class="input-field">
+                                    <input type="text" name="amount" t-model="state.inputAmount" t-ref="input-amount-ref"/>
+                                    <span class="currency" t-esc="env.pos.currency.symbol" />
+                                </div>
+                            </div>
+                            <textarea name="reason" t-model="state.inputReason" placeholder="Reason"></textarea>
+                            <span t-if="state.inputHasError" class="error-message">
+                                <t t-esc="errorMessage" />
+                            </span>
+                        </div>
+                    </main>
+                    <footer class="footer">
+                        <div class="button confirm disable" t-on-click="confirm">
+                            Confirm
+                        </div>
+                        <div class="button cancel" t-on-click="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

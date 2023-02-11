@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="res_users_view_search">
+        <field name="name">res.users.view.search.inherit.auth.totp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_search" />
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter name="totp_enabled" string="Two-factor authentication Enabled" domain="[('totp_secret','!=',False)]"/>
+                <separator/>
+                <filter name="totp_disabled" string="Two-factor authentication Disabled" domain="[('totp_secret','=',False)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_form">
+        <field name="name">user form: add totp status</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='preferences']" position="after">
+                <page string="Account Security" name="security" attrs="{'invisible': [('id', '=', False)]}">
+                    <field name="totp_enabled" invisible="1"/>
+                    <!-- For own user, allow to activate the two-factor Authentication -->
+                    <group>
+                        <div>
+                            <div class="o_horizontal_separator d-flex align-items-center mt-0">Two-factor Authentication
+                                <div attrs="{'invisible': [('totp_enabled', '!=', False)]}">
+                                    <button attrs="{'invisible': &quot;[('id', '=', uid)]&quot;}" name="action_totp_enable_wizard"
+                                            disabled="1" type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
+                                    <button attrs="{'invisible': &quot;[('id', '!=', uid)]&quot;}" name="action_totp_enable_wizard"
+                                        type="object" class="fa fa-toggle-off o_auth_2fa_btn disabled" aria-label="Enable 2FA"></button>
+                                </div>
+                                <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable" type="object"
+                                        class="fa fa-toggle-on o_auth_2fa_btn text-primary enabled" aria-label="Disable 2FA"></button>
+                            </div>
+                            <div colspan="2" attrs="{'invisible': [('totp_trusted_device_ids', '=', [])]}">
+                                <field name="totp_trusted_device_ids" nolabel="1" colspan="4" readonly="1">
+
+                                    <tree create="false" delete="false">
+                                        <field name="name" string="Trusted Devices"/>
+                                        <field name="create_date" string="Added On"/>
+                                        <button type="object" name="remove" icon="fa-trash"/>
+                                    </tree>
+                                    <form string="Trusted Device">
+                                        <group>
+                                            <group>
+                                                <field name="name" string="Device Name"/>
+                                                <field name="create_date" string="Added On"/>
+                                            </group>
+                                        </group>
+                                        <footer>
+                                            <button name="remove" string="Revoke" type="object" icon="fa-trash"/>
+                                            <button name="preference_cancel" string="Cancel" special="cancel" class="btn-secondary"/>
+                                        </footer>
+                                    </form>
+
+                                </field>
+                                <button name="revoke_all_devices" string="Revoke All" type="object" class="btn btn-secondary"
+                                        confirm="Are you sure? Two-factor authentication will be required again on all your devices"/>
+                            </div>
+                            <span attrs="{'invisible': [('totp_enabled', '!=', False)]}" class="text-muted">
+                                Two-factor Authentication ("2FA") is a system of double authentication.
+                                The first one is done with your password and the second one with a code you get from a dedicated mobile app.
+                                Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
+                                <a href="https://www.odoo.com/documentation/15.0/applications/general/auth/2fa.html"
+                                   title="Learn More" target="_blank">Learn More</a>
+                            </span>
+                            <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">Your account is protected!</span>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_field">
+        <field name="name">users preference: totp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <group name="auth" position="after">
+                <field name="totp_enabled" invisible="1"/>
+                <group>
+                    <div>
+                        <div class="o_horizontal_separator mt-0">Two-factor Authentication
+                            <button attrs="{'invisible': [('totp_enabled', '!=', False)]}" name="action_totp_enable_wizard"
+                               type="object" class="fa fa-toggle-off o_auth_2fa_btn mb-1" aria-label="Enable 2FA"/>
+                            <button attrs="{'invisible': [('totp_enabled', '=', False)]}" name="action_totp_disable"
+                               type="object" class="fa fa-toggle-on o_auth_2fa_btn text-primary" aria-label="Disable 2FA"/>
+                        </div>
+                        <span attrs="{'invisible': [('totp_enabled', '!=', False)]}" class="text-muted">
+                            Two-factor Authentication ("2FA") is a system of double authentication.
+                            The first one is done with your password and the second one with a code you get from a dedicated mobile app.
+                            Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.
+                            <a href="https://www.odoo.com/documentation/15.0/applications/general/auth/2fa.html"
+                               title="Learn More" target="_blank">Learn More</a>
+                        </span>
+                        <span attrs="{'invisible': [('totp_enabled', '=', False)]}" class="text-muted">Your account is protected!</span>
+                    </div>
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>

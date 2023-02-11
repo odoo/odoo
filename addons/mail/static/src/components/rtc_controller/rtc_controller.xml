@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcController" owl="1">
+        <div class="o_RtcController">
+            <t t-if="rtcController and messaging">
+                <div class="o_RtcController_buttons">
+                    <t t-if="rtcController.callViewer.threadView.thread.rtc and messaging.rtc.currentRtcSession">
+                        <t t-if="messaging.rtc.currentRtcSession.isMuted"><t t-set="microphoneTitle">Unmute</t></t>
+                        <t t-else=""><t t-set="microphoneTitle">Mute</t></t>
+                        <button class="o_RtcController_button"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isMuted, 'o-isSmall': rtcController.isSmall }"
+                            t-att-aria-label="microphoneTitle"
+                            t-att-title="microphoneTitle"
+                            t-on-click="rtcController.onClickMicrophone">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa" t-att-class="{
+                                    'fa-lg': !rtcController.isSmall,
+                                    'fa-microphone': !messaging.rtc.currentRtcSession.isMuted,
+                                    'fa-microphone-slash': messaging.rtc.currentRtcSession.isMuted,
+                                    'text-danger': messaging.rtc.currentRtcSession.isMuted,
+                                }"/>
+                            </div>
+                        </button>
+                        <t t-if="messaging.rtc.currentRtcSession.isDeaf"><t t-set="headphoneTitle">Undeafen</t></t>
+                        <t t-else=""><t t-set="headphoneTitle">Deafen</t></t>
+                        <button class="o_RtcController_button"
+                            t-att-class="{ 'o-isActive': !messaging.rtc.currentRtcSession.isDeaf, 'o-isSmall': rtcController.isSmall }"
+                            t-att-aria-label="headphoneTitle"
+                            t-att-title="headphoneTitle"
+                            t-on-click="rtcController.onClickDeafen">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa" t-att-class="{
+                                    'fa-lg': !rtcController.isSmall,
+                                    'fa-headphones': !messaging.rtc.currentRtcSession.isDeaf,
+                                    'fa-deaf': messaging.rtc.currentRtcSession.isDeaf,
+                                    'text-danger': messaging.rtc.currentRtcSession.isDeaf,
+                                }"/>
+                            </div>
+                        </button>
+                        <t t-if="messaging.rtc.sendUserVideo"><t t-set="cameraTitle">Stop camera</t></t>
+                        <t t-else=""><t t-set="cameraTitle">Turn camera on</t></t>
+                        <button class="o_RtcController_button o_RtcController_videoButton"
+                            t-att-class="{
+                                'o-isActive': messaging.rtc.sendUserVideo,
+                                'o-isSmall': rtcController.isSmall,
+                            }"
+                            t-att-aria-label="cameraTitle"
+                            t-att-title="cameraTitle"
+                            t-on-click="rtcController.onClickCamera">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            </div>
+                        </button>
+                        <t t-if="messaging.rtc.sendDisplay"><t t-set="displayTitle">Stop screen sharing</t></t>
+                        <t t-else=""><t t-set="displayTitle">Share screen</t></t>
+                        <button class="o_RtcController_button o_RtcController_videoButton"
+                            t-if="!env.device.isMobileDevice"
+                            t-att-class="{
+                                'o-isActive': messaging.rtc.sendDisplay,
+                                'o-isSmall': rtcController.isSmall,
+                            }"
+                            t-att-aria-label="displayTitle"
+                            t-att-title="displayTitle"
+                            t-on-click="rtcController.onClickScreen">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-desktop" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            </div>
+                        </button>
+                        <Popover position="'top'">
+                            <button class="o_RtcController_button"
+                                aria-label="More"
+                                title="More"
+                                t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                            >
+                                <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                    <i class="fa fa-ellipsis-h" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                                </div>
+                            </button>
+                            <t t-set="opened">
+                                <RtcOptionList localId="rtcController.rtcOptionList.localId"/>
+                            </t>
+                        </Popover>
+                    </t>
+                    <t t-if="!rtcController.callViewer.threadView.thread.rtc">
+                        <button class="o_RtcController_button o_RtcController_callToggle"
+                            t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                            aria-label="Join Video Call"
+                            title="Join Video Call"
+                            t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
+                            t-on-click="rtcController.onClickToggleVideoCall">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-video-camera" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            </div>
+                        </button>
+                    </t>
+                    <t t-if="rtcController.callViewer.threadView.thread">
+                        <t t-if="rtcController.callViewer.threadView.thread.rtcInvitingSession and !rtcController.callViewer.threadView.thread.rtc">
+                            <button class="o_RtcController_button o_RtcController_callToggle o-isActive"
+                                t-att-class="{ 'o-isSmall': rtcController.isSmall }"
+                                aria-label="Reject"
+                                title="Reject"
+                                t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
+                                t-on-click="rtcController.onClickRejectCall">
+                                <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                    <i class="fa fa-phone" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                                </div>
+                            </button>
+                        </t>
+                        <t t-if="rtcController.callViewer.threadView.thread.rtc"><t t-set="phoneTitle">Disconnect</t></t>
+                        <t t-else=""><t t-set="phoneTitle">Join Call</t></t>
+                        <button class="o_RtcController_button o_RtcController_callToggle"
+                            t-att-aria-label="phoneTitle"
+                            t-att-class="{ 'o-isActive': !!rtcController.callViewer.threadView.thread.rtc, 'o-isSmall': rtcController.isSmall }"
+                            t-att-disabled="rtcController.callViewer.threadView.thread.hasPendingRtcRequest"
+                            t-att-title="phoneTitle"
+                            t-on-click="rtcController.onClickToggleAudioCall">
+                            <div class="o_RtcController_buttonIconWrapper" t-att-class="{ 'o-isSmall': rtcController.isSmall }">
+                                <i class="fa fa-phone" t-att-class="{ 'fa-lg': !rtcController.isSmall }"/>
+                            </div>
+                        </button>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

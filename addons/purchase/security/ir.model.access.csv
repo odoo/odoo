@@ -1,0 +1,39 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_order,purchase.order,model_purchase_order,group_purchase_user,1,1,1,1
+access_purchase_order_manager,purchase.order,model_purchase_order,group_purchase_manager,1,1,1,1
+access_purchase_order_invoicing_payments_readonly,purchase.order,model_purchase_order,account.group_account_readonly,1,0,0,0
+access_purchase_order_invoicing_payments,purchase.order,model_purchase_order,account.group_account_invoice,1,1,0,0
+access_purchase_order_portal,purchase.order.portal,purchase.model_purchase_order,base.group_portal,1,0,0,0
+access_purchase_order_line,purchase.order.line user,model_purchase_order_line,group_purchase_user,1,1,1,1
+access_purchase_order_line_manager,purchase.order.line,model_purchase_order_line,group_purchase_manager,1,1,1,1
+access_purchase_order_line_invoicing_payments_readonly,purchase.order.line,model_purchase_order_line,account.group_account_readonly,1,0,0,0
+access_purchase_order_line_invoicing_payments,purchase.order.line,model_purchase_order_line,account.group_account_invoice,1,1,0,0
+access_purchase_order_line_portal,purchase.order.line.portal,purchase.model_purchase_order_line,base.group_portal,1,0,0,0
+access_account_tax_purchase_user,account.tax,account.model_account_tax,group_purchase_user,1,0,0,0
+access_account_tag_purchase_user,account.account.tag,account.model_account_account_tag,group_purchase_user,1,0,0,0
+access_account_tax_purchase_user_manager,account.tax,account.model_account_tax,group_purchase_manager,1,0,0,0
+access_product_product_purchase_user,product.product.purchase.user,product.model_product_product,group_purchase_user,1,0,0,0
+access_product_product_purchase_manager,product.product purchase_manager,product.model_product_product,purchase.group_purchase_manager,1,1,1,1
+access_product_template_purchase_user,product.template purchase_user,product.model_product_template,group_purchase_user,1,0,0,0
+access_account_fiscal_position_purchase_user,account.fiscal.position purchase,account.model_account_fiscal_position,group_purchase_user,1,0,0,0
+access_res_partner_purchase_user,res.partner purchase,base.model_res_partner,group_purchase_user,1,0,0,0
+access_account_journal,account.journal,account.model_account_journal,group_purchase_user,1,0,0,0
+access_account_journal_manager,account.journal,account.model_account_journal,group_purchase_manager,1,0,0,0
+access_account_move,account.move,account.model_account_move,group_purchase_user,1,1,1,1
+access_account_move_line_manager,account.move.line,account.model_account_move_line,group_purchase_manager,1,1,1,1
+access_account_move_line,account.move.line,account.model_account_move_line,group_purchase_user,1,1,1,0
+access_account_analytic_line,account.analytic.line,account.model_account_analytic_line,group_purchase_user,1,0,0,0
+access_account_type,account.acount.type.purchase.user,account.model_account_account_type,group_purchase_user,1,0,0,0
+account_partial_reconcile,account.partial.reconcile.purchase.user,account.model_account_partial_reconcile,group_purchase_user,1,0,0,0
+access_res_partner_purchase_manager,res.partner.purchase.manager,base.model_res_partner,group_purchase_manager,1,1,1,0
+access_uom_category_purchase_manager,uom.category purchase_manager,uom.model_uom_category,purchase.group_purchase_manager,1,1,1,1
+access_uom_uom_purchase_manager,uom.uom purchase_manager,uom.model_uom_uom,purchase.group_purchase_manager,1,1,1,1
+access_product_category_purchase_manager,product.category purchase_manager,product.model_product_category,purchase.group_purchase_manager,1,1,1,1
+access_product_template_purchase_manager,product.template purchase_manager,product.model_product_template,purchase.group_purchase_manager,1,1,1,1
+access_product_packaging_purchase_manager,product.packaging purchase_manager,product.model_product_packaging,purchase.group_purchase_manager,1,1,1,1
+access_product_supplierinfo_purchase_manager,product.supplierinfo purchase_manager,product.model_product_supplierinfo,purchase.group_purchase_manager,1,1,1,1
+access_product_pricelist_item_purchase_manager,product.pricelist.item purchase_manager,product.model_product_pricelist_item,purchase.group_purchase_manager,1,1,1,1
+access_account_account_purchase_manager,account.account purchase manager,account.model_account_account,purchase.group_purchase_manager,1,0,0,0
+access_purchase_bill_union,access_purchase_bill_union,model_purchase_bill_union,purchase.group_purchase_user,1,0,0,0
+access_report_purchase_order,purchase.stock.report,model_purchase_report,purchase.group_purchase_manager,1,0,0,0
+access_report_purchase_order_user,purchase.stock.report user,model_purchase_report,purchase.group_purchase_user,1,0,0,0

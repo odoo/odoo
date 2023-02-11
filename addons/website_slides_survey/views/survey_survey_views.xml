@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_action_slides" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('certification', '=', True)]</field>
+        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new certification
+            </p>
+        </field>
+    </record>
+
+    <record id="survey_survey_action_slides_report" model="ir.actions.act_window">
+        <field name="name">Certifications</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">tree,kanban,form,graph</field>
+        <field name="domain">[('certification', '=', True)]</field>
+        <field name="context">{'default_certification': True, 'default_scoring_type': 'scoring_with_answers'}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add a new certification
+            </p>
+        </field>
+    </record>
+
+    <record id="survey_survey_view_form" model="ir.ui.view">
+        <field name="name">survey.survey.view.form.inherit.website_slides</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_survey_user_input_certified']" position="before">
+                <button name="action_survey_view_slide_channels"
+                    type="object"
+                    class="oe_stat_button"
+                    attrs="{'invisible': [('slide_channel_count', '=', 0)]}"
+                    icon="fa-graduation-cap"
+                    groups="website_slides.group_website_slides_officer">
+                    <field string="Courses" name="slide_channel_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

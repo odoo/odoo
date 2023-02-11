@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <div t-name="mass_mailing.theme_selector" class="o_mail_theme_selector">
+        <t t-foreach="themes" t-as="theme">
+            <a t-att-id="theme.name" href="#" class="dropdown-item">
+                <div class="o_thumb logo" t-attf-style="background-image: url(#{theme.img}_logo.png)"/>
+            </a>
+        </t>
+    </div>
+    <div t-name="mass_mailing.theme_selector_new" class="o_mail_theme_selector_new">
+        <t t-foreach="themes" t-as="theme">
+            <a t-att-id="theme.name" role="menuitem" href="#" class="dropdown-item">
+                <div class="o_thumb small"  t-attf-style="background-image: url(#{theme.img}_small.png)"/>
+                <div class="o_thumb large" t-attf-style="background-image: url(#{theme.img}_large.png)"/>
+            </a>
+        </t>
+    </div>
+</templates>

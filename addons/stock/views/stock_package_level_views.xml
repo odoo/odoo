@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="package_level_form_view" model="ir.ui.view">
+        <field name="name">Package Level</field>
+        <field name="model">stock.package_level</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <header>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" />
+                </header>
+                <group>
+                    <field name="picking_id" invisible="1"/>
+                    <field name="show_lots_m2o" invisible="1"/>
+                    <field name="show_lots_text" invisible="1"/>
+                    <field name="picking_type_code" invisible="1"/>
+                    <group>
+                        <field name="package_id"/>
+                        <field name="location_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                        <field name="location_dest_id" options="{'no_create': True}" attrs="{'invisible': [('picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
+                        <field name="is_done"/>
+                        <field name="company_id" groups="base.main_company"/>
+                    </group>
+                    <field name="move_ids" attrs="{'invisible': [('state', 'in', ('new', 'draft', 'assigned', 'done'))]}">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="product_uom_qty"/>
+                            <field name="quantity_done"/>
+                            <field name="product_uom" groups="uom.group_uom"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                    <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}">
+                        <tree>
+                            <field name="product_id"/>
+                            <field name="lot_id" attrs="{'column_invisible': [('parent.show_lots_m2o', '=', False)]}" groups="stock.group_production_lot"/>
+                            <field name="lot_name" attrs="{'column_invisible': [('parent.show_lots_text', '=', False)]}" groups="stock.group_production_lot"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner"/>
+                            <field name="product_uom_qty"/>
+                            <field name="qty_done"/>
+                            <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': [('product_uom_qty', '!=', 0.0)]}" string="Unit of Measure" groups="uom.group_uom"/>
+                            <field name="state" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+
+    <record id="package_level_form_edit_view" model="ir.ui.view">
+        <field name="name">Package Level</field>
+        <field name="model">stock.package_level</field>
+        <field name="inherit_id" ref="stock.package_level_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr='//form' position='inside'>
+                <footer class="oe_edit_only">
+                    <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
+                    <button string="Discard" special="cancel" data-hotkey="z"/>
+                </footer>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="package_level_tree_view_picking" model="ir.ui.view">
+        <field name="name">Package Level Tree Picking</field>
+        <field name="model">stock.package_level</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom" decoration-muted="state == 'done'">
+                <field name="is_fresh_package" invisible="1"/>
+                <field name="company_id" invisible="1"/>
+                <field name="package_id" attrs="{'readonly': [('state', 'in', ('confirmed', 'assigned', 'done', 'cancel'))]}" options="{'no_create': True}"/>
+                <field name="location_id" options="{'no_create': True}" attrs="{'column_invisible': [('parent.picking_type_code', '=', 'incoming')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="location_dest_id" options="{'no_create': True}"  attrs="{'column_invisible': [('parent.picking_type_code', '=', 'outgoing')]}" groups="stock.group_stock_multi_locations"/>
+                <field name="state"/>
+                <field name="is_done" attrs="{'readonly': ['|', ('parent.state', 'in', ('draft', 'new', 'done')), ('is_fresh_package', '=', True)]}"/>
+                <button name="action_show_package_details" title="Display package content" type="object" icon="fa-list" />
+            </tree>
+        </field>
+    </record>
+</odoo>

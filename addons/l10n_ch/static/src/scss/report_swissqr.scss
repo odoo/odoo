@@ -1,0 +1,315 @@
+@font-face {
+    font-family: LiberationSans;
+    src: url('../font/LiberationSans-Bold.woff') format('woff');
+    font-weight: bold;
+}
+@font-face {
+    font-family: LiberationSans;
+    src: url('../font/LiberationSans-Regular.woff') format('woff');
+}
+
+body.l10n_ch_qr, body[data-oe-report="l10n_ch.l10n_ch_qr_report"] {
+    padding: 0;
+
+    /* Disable custom bakground */
+    .o_report_layout_striped {
+        background: none;
+        min-height: 0;
+    }
+}
+
+.swissqr_title, .swissqr_page_title {
+    position: absolute;
+    padding: 15px;
+    padding-top: 150px;
+}
+
+.swissqr_content {
+    position: static;
+
+        /* Old QR Bill code, to be superseded by the swissqr_content_v2 class below
+        -------------------------------------------------------------------------- */
+
+        .swissqr_receipt {
+            position: absolute;
+            background-color: white;
+            border-color:black;
+            border-width: 1pt 1pt 1pt 1pt;
+            border-style: solid;
+            height: 131mm;    /* 105 * 1.25 - 0.25 mm to cope for rendering issues due to header (probably a rounding issue) */
+            width: 77.5mm;    /* 62 * 1.25 */
+            top: 240mm;       /* 192 * 1.25 */
+            left: 0mm;
+            /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+        }
+
+        .swissqr_body {
+            position: absolute;
+            background-color: white;
+            border-color:black;
+            border-width: 1pt 1pt 1pt 1pt;
+            border-style: solid;
+            height: 131mm;    /* 105 * 1.25 - 0.25mm to cope for rendering issues due to header (probably a rounding issue)*/
+            width: 185mm;     /* 148 * 1.25 */
+            top: 240mm;       /* 192 * 1.25 */
+            left: 77.5mm;     /* 62 * 1.25 */
+            /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+
+        }
+
+        .swissqr {
+            position: absolute;
+            height: 57.5mm; /* 46 * 1.25 */
+            width: 57.5mm; /* 46 * 1.25 */
+            top: 20mm; /* 16 * 1.25 */
+            left: 6.25mm;  /* 5 * 1.25 min readability margin for QR */
+            /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+        }
+
+        .ch_cross {
+            position: absolute;
+            background-color: white;
+            height: 8.75mm; /* 7 * 1.25 */
+            width: 8.75mm; /* 7 * 1.25 */
+            top: 44.375mm;  /* (16 + 23 - 7/2) * 1.25 = 41.5 * 1.25 */
+            left: 30.625mm; /* (5 + 23 - 7/2) * 1.25 = 24.5 * 1.25 */
+            /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+        }
+
+        .swissqr_text {
+            font-family: Arial, Frutiger, Helvetica;
+            color: black;
+            line-height: 1;
+            padding-top: 1em;
+
+            .title {
+                font-size: 8pt;
+                font-weight: bold;
+                margin-top: 2mm;
+            }
+            .content {
+                font-size: 10pt;
+            }
+
+        }
+
+        .main_title {
+            margin-top: 5mm;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+
+        .swissqr_column_left {
+            position: absolute;
+            left: 5mm;
+        }
+
+        .swissqr_column_right {
+            position: absolute;
+            left: 70mm; /* (5 + 46 + 5) * 1.25 */
+            max-width: 90mm;
+        }
+
+        .procedure_zone {
+            top: 15mm;
+        }
+
+        .receipt_indication_zone {
+            top: 10mm;
+        }
+
+        .indication_zone {
+            top: 10mm;
+        }
+
+        .receipt_amount_zone {
+            position: absolute;
+            top: 86mm;
+
+            .column {
+                margin-right: 5mm;
+                float: left;
+            }
+        }
+
+        .receipt_acceptance_point_zone {
+            position: relative;
+            top: 100mm;
+
+            .content {
+                float: right;
+                padding-right: 1em;
+            }
+
+        }
+
+        .amount_zone {
+            position: absolute;
+            top: 86mm;
+
+            .column {
+                margin-right: 5mm;
+                float: left;
+            }
+        }
+}
+
+.swissqr_content_v2 {
+
+    /* New QR Bill code */
+    background-color: white;
+
+    /* Disable custom font-family */
+    .o_company_2_layout {
+        font-family: revert;
+    }
+
+    $ratio: 1.25;
+    $receipt_width: 52mm * $ratio;
+    $left_col_width: 46mm * $ratio;
+    $right_col_width: 87mm * $ratio;
+    $rounding_offset: 0.25mm;
+
+    @mixin font {
+        font-family: LiberationSans;
+        color: black;
+    }
+    @mixin title {
+        @include font;
+        font-weight: bold;
+    }
+    .title {
+        @include title;
+    }
+
+    .swissqr_text {
+        @include font;
+    }
+
+    .swissqr_page_title {
+        @include title;
+        height: 7mm * $ratio;
+        padding: 15px;
+        padding-top: 200px;
+    }
+
+    .swissqr_section_title {
+        @include title;
+        width: $receipt_width;
+        height: 7mm * $ratio;
+        font-size: 11pt * $ratio;
+        line-height: 9pt * $ratio;
+    }
+
+    .swissqr_receipt {
+        position: absolute;
+        left: 0mm;
+        top: 192mm * $ratio;
+        width: 62mm * $ratio;
+        height: 105mm * $ratio - $rounding_offset;
+        border: 0.75pt * $ratio dashed black;
+        border-right: 0pt;
+        padding: 5mm * $ratio;
+        .title {
+            font-size: 6pt * $ratio;
+            line-height: 9pt * $ratio;
+        }
+        .content {
+            font-size: 8pt * $ratio;
+            line-height: 9pt * $ratio;
+        }
+        .receipt_indication_zone {
+            width: $receipt_width;
+            height: 56mm * $ratio;
+        }
+        .receipt_amount_zone {
+            width: $receipt_width;
+            height: 14mm * $ratio;
+            .column {
+                float: left;
+                margin-right: 5mm;
+            }
+            .content {
+                font-size: 8pt * $ratio;
+                line-height: 11pt * $ratio;
+            }
+        }
+        .receipt_acceptance_point_zone {
+            width: $receipt_width;
+            height: 18mm * $ratio;
+            .content {
+                float: right;
+                padding-right: 2mm * $ratio;
+                font-size: 6pt * $ratio;
+                line-height: 8pt * $ratio;
+            }
+        }
+    }
+
+    .swissqr_body {
+        position: absolute;
+        top: 192mm * $ratio;
+        left: 62mm * $ratio;
+        width: 148mm * $ratio;
+        height: 105mm * $ratio - $rounding_offset;
+        border: 0.75pt * $ratio dashed black;
+        padding: 5mm * $ratio;
+        .title {
+            font-size: 8pt * $ratio;
+            line-height: 11pt * $ratio;
+        }
+        .content {
+            font-size: 10pt * $ratio;
+            line-height: 11pt * $ratio;
+        }
+        .swissqr_column_left {
+            float: left;
+            width: $left_col_width;
+            .swissqr_section_title{
+                height: 7mm * $ratio;
+            }
+            .swissqr {
+                margin-top: 5mm * $ratio;
+                margin-bottom: 5mm * $ratio;
+                height: 46mm * $ratio;
+                width: 46mm * $ratio;
+            }
+            .amount_zone {
+                width: $left_col_width;
+                height: 22mm * $ratio;
+                .column {
+                    margin-right: 3mm;
+                    float: left;
+                }
+                .title {
+                    font-size: 8pt * $ratio;
+                    line-height: 11pt * $ratio;
+                }
+                .content {
+                    font-size: 10pt * $ratio;
+                    line-height: 13pt * $ratio;
+                }
+            }
+        }
+        .swissqr_column_right {
+            float: right;
+            width: $right_col_width;
+        }
+    }
+
+    .scissors {
+        width: 16px;
+        height: 16px;
+    }
+    .vertical_scissors {
+        position: absolute;
+        top: 5mm * $ratio;
+        left: -1.8mm * $ratio;
+    }
+    .horizontal_scissors {
+        position: absolute;
+        top: -2mm * $ratio;
+        left: 6mm * $ratio;
+    }
+
+}

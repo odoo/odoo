@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.WarningDialogBody" owl="1">
+      <div role="alert" class="o_dialog_warning">
+        <p t-esc="message" style="white-space: pre-wrap;"/>
+      </div>
+    </t>
+
+    <t t-name="web.RedirectWarningDialogBody" owl="1">
+      <div role="alert">
+        <p t-esc="message" style="white-space: pre-wrap;"/>
+      </div>
+    </t>
+
+    <t t-name="web.RedirectWarningDialogFooter" owl="1">
+      <button  class="btn btn-primary" t-on-click="onClick"><t t-esc="env._t(buttonText)"/></button>
+      <button  class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+    </t>
+
+    <t t-name="web.Error504DialogBody" owl="1">
+        <div role="alert">
+            <p style="white-space: pre-wrap;">
+            The operation was interrupted. This usually means that the current operation is taking too much time.
+            </p>
+        </div>
+    </t>
+
+    <t t-name="web.SessionExpiredDialogBody" owl="1">
+      <div role="alert">
+        <p style="white-space: pre-wrap;">
+          Your Odoo session expired. The current page is about to be refreshed.
+        </p>
+      </div>
+    </t>
+
+    <t t-name="web.SessionExpiredDialogFooter" owl="1">
+        <button class="btn btn-primary" t-on-click="onClick">Ok</button>
+    </t>
+
+     <t t-name="web.ErrorDialogBody" owl="1">
+      <div class="alert alert-warning clearfix" role="alert">
+          <div class="float-right ml8 btn-group-vertical">
+              <button class="btn btn-primary" t-on-click="onClickClipboard">
+                  <i class="fa fa-clipboard mr8"/><t>Copy the full error to clipboard</t>
+              </button>
+          </div>
+          <p><b>An error occurred</b></p>
+          <p>Please use the copy button to report the error to your support service.</p>
+      </div>
+
+
+      <button class="btn btn-link" t-on-click="state.showTraceback = !state.showTraceback">See details</button>
+      <div t-if="state.showTraceback and (props.name or props.message)" class="alert clearfix" style="background-color:#ececec;" role="alert">
+        <code t-if="props.name" t-esc="props.name"></code>
+        <p t-if="props.message" t-esc="props.message"></p>
+      </div>
+      <div t-if="state.showTraceback" class="alert alert-danger o_error_detail" role="alert">
+          <pre t-esc="traceback or props.traceback"/>
+      </div>
+    </t>
+
+</templates>

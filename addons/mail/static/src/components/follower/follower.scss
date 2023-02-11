@@ -1,0 +1,56 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Follower {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+    padding: map-get($spacers, 0);
+}
+
+.o_Follower_avatar {
+    width: 24px;
+    height: 24px;
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Follower_details {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    padding-left: map-get($spacers, 3);
+    padding-right: map-get($spacers, 3);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Follower_avatar {
+    border-radius: 50%;
+}
+
+.o_Follower_button {
+    border-radius: 0;
+
+    &:hover {
+        background: gray('400');
+        color: $black;
+    }
+}
+
+.o_Follower_details {
+    color: gray('700');
+
+    &:hover {
+        background: gray('400');
+        color: $black;
+    }
+
+    &.o-inactive {
+        opacity: 0.25;
+        font-style: italic;
+    }
+}

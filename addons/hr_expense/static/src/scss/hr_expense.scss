@@ -1,0 +1,59 @@
+.o_content {
+    .o_expense_card {
+        border-bottom: 1px solid darken($o-control-panel-background-color, 20%);
+        border-right: 1px solid darken($o-control-panel-background-color, 20%);
+        text-align: center;
+        padding: 10px;
+        .content_center {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+        div {
+            line-height: 1;
+        }
+    }
+
+    .o_expense_container {
+        @include o-position-sticky($left: 0px);
+        &.o_form_statusbar {
+            margin: 0;  // reset margins for correct view of title header in dashboard
+        }
+    }
+
+    .o_expense_card_last {
+        border-right: 0px;
+    }
+
+    .o_expense_purple {
+        color: $o-enterprise-color;
+    }
+}
+.hr_expense {
+    &.o_list_view, &.o_kanban_view {
+        height: auto;
+        min-height: auto;
+    }
+
+    &.o_kanban_view {
+        position: relative;
+    }
+}
+.hr_expense .o_view_nocontent {
+    top: 10%;
+}
+.o_view_nocontent {
+    .o_nocontent_help {
+        .o_view_nocontent_expense_receipt:before {
+            @extend %o-nocontent-init-image;
+            @include size(300px, 230px);
+            background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
+            background-size: 300px 230px;
+            margin-bottom: 1rem;
+        }
+    }
+}
+.o_control_panel .o_list_buttons {
+    .o_button_upload_expense {
+        margin-left: 3px;
+    }
+}

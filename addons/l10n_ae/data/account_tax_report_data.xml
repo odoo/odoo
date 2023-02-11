@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.ae"/>
+    </record>
+
+    <record id="tax_report_line_base_all_sales" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Base)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base" model="account.tax.report.line">
+        <field name="name">1. Standard Rated supplies (Base)</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_abu_dhabi" model="account.tax.report.line">
+        <field name="name">a. Abu Dhabi</field>
+        <field name="tag_name">a. Abu Dhabi (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_AB</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_dubai" model="account.tax.report.line">
+        <field name="name">b. Dubai</field>
+        <field name="tag_name">b. Dubai (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_DB</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_sharjah" model="account.tax.report.line">
+        <field name="name">c. Sharjah</field>
+        <field name="tag_name">c. Sharjah (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_SJ</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_ajman" model="account.tax.report.line">
+        <field name="name">d. Ajman</field>
+        <field name="tag_name">d. Ajman (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_AJ</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_umm_al_quwain" model="account.tax.report.line">
+        <field name="name">e. Umm Al Quwain</field>
+        <field name="tag_name">e. Umm Al Quwain (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_UM</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_ras_al_khaima" model="account.tax.report.line">
+        <field name="name">f. Ras Al-Khaima</field>
+        <field name="tag_name">f. Ras Al-Khaima (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_RA</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_fujairah" model="account.tax.report.line">
+        <field name="name">g. Fujairah</field>
+        <field name="tag_name">g. Fujairah (Base)</field>
+        <field name="code">STD_RATE_SUPP_BASE_FU</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_base_subtotal" model="account.tax.report.line">
+        <field name="name">Sub Total</field>
+        <field name="formula">STD_RATE_SUPP_BASE_AB + STD_RATE_SUPP_BASE_DB + STD_RATE_SUPP_BASE_SJ + STD_RATE_SUPP_BASE_AJ + STD_RATE_SUPP_BASE_UM + STD_RATE_SUPP_BASE_RA + STD_RATE_SUPP_BASE_FU</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_base"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+    </record>
+
+    <record id="tax_report_line_tax_refund_tourist_base" model="account.tax.report.line">
+        <field name="name">2. Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</field>
+        <field name="tag_name">2. Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme (Base)</field>
+        <field name="code">TAX_REF_TOUR_SCHEME_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_supplies_reverse_charge_base" model="account.tax.report.line">
+        <field name="name">3. Supplies subject to reverse charge provisions</field>
+        <field name="tag_name">3. Supplies subject to reverse charge provisions (Base)</field>
+        <field name="code">REVERSE_CHARGE_PRO_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_zero_rated_supplies_base" model="account.tax.report.line">
+        <field name="name">4. Zero rated supplies</field>
+        <field name="tag_name">4. Zero rated supplies (Base)</field>
+        <field name="code">ZERO_RATE_SUPP_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_exempt_supplies_base" model="account.tax.report.line">
+        <field name="name">5. Exempt supplies</field>
+        <field name="tag_name">5. Exempt supplies (Base)</field>
+        <field name="code">EXAMPT_SUPP_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_line_supplies_out_of_scope_base" model="account.tax.report.line">
+        <field name="name">6. Out of scope</field>
+        <field name="code">OUT_OF_SCOPE_BASE_0</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_line_import_uae_base" model="account.tax.report.line">
+        <field name="name">7. Goods imported into the UAE</field>
+        <field name="tag_name">7. Goods imported into the UAE (Base)</field>
+        <field name="code">GOODS_IMPORT_IN_UAE_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_line_adjustment_import_uae_base" model="account.tax.report.line">
+        <field name="name">8. Adjustments to goods imported into the UAE</field>
+        <field name="code">ADJUST_GOODS_IMPORT_IN_UAE_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+    </record>
+
+    <record id="tax_report_line_base_all_sales_total" model="account.tax.report.line">
+        <field name="name">9. Total</field>
+        <field name="formula">ADJUST_GOODS_IMPORT_IN_UAE_BASE + GOODS_IMPORT_IN_UAE_BASE + OUT_OF_SCOPE_BASE_0 + EXAMPT_SUPP_BASE + ZERO_RATE_SUPP_BASE + REVERSE_CHARGE_PRO_BASE + TAX_REF_TOUR_SCHEME_BASE + (STD_RATE_SUPP_BASE_AB + STD_RATE_SUPP_BASE_DB + STD_RATE_SUPP_BASE_SJ + STD_RATE_SUPP_BASE_AJ + STD_RATE_SUPP_BASE_UM + STD_RATE_SUPP_BASE_RA + STD_RATE_SUPP_BASE_FU)</field>
+        <field name="parent_id" ref="tax_report_line_base_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+    </record>
+
+    <record id="tax_report_line_base_all_expense" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Base)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_expense_base" model="account.tax.report.line">
+        <field name="name">10. Standard rated expenses</field>
+        <field name="tag_name">10. Standard rated expenses (Base)</field>
+        <field name="code">STD_RATE_EXPENSES_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_expense_supplies_reverse_base" model="account.tax.report.line">
+        <field name="name">11. Supplies subject to the reverse charge provisions</field>
+        <field name="tag_name">11. Supplies subject to the reverse charge provisions (Base)</field>
+        <field name="code">SUPP_REV_CHARGE_PRO_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_expense_out_of_scope" model="account.tax.report.line">
+        <field name="name">12. Out of scope</field>
+        <field name="code">OUT_OF_SCOPE_1_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_base_all_expense_total" model="account.tax.report.line">
+        <field name="name">13. Totals</field>
+        <field name="formula">OUT_OF_SCOPE_1_BASE + SUPP_REV_CHARGE_PRO_BASE + STD_RATE_EXPENSES_BASE</field>
+        <field name="parent_id" ref="tax_report_line_base_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_vat_all_sales" model="account.tax.report.line">
+        <field name="name">VAT on Sales and all other Outputs (Tax)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat" model="account.tax.report.line">
+        <field name="name">1. Standard Rated supplies (Tax)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_abu_dhabi" model="account.tax.report.line">
+        <field name="name">a. Abu Dhabi</field>
+        <field name="tag_name">a. Abu Dhabi (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_AB</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_dubai" model="account.tax.report.line">
+        <field name="name">b. Dubai</field>
+        <field name="tag_name">b. Dubai (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_DB</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_sharjah" model="account.tax.report.line">
+        <field name="name">c. Sharjah</field>
+        <field name="tag_name">c. Sharjah (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_SJ</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_ajman" model="account.tax.report.line">
+        <field name="name">d. Ajman</field>
+        <field name="tag_name">d. Ajman (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_AJ</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_umm_al_quwain" model="account.tax.report.line">
+        <field name="name">e. Umm Al Quwain</field>
+        <field name="tag_name">e. Umm Al Quwain (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_UM</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_ras_al_khaima" model="account.tax.report.line">
+        <field name="name">f. Ras Al-Khaima</field>
+        <field name="tag_name">f. Ras Al-Khaima (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_RA</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_fujairah" model="account.tax.report.line">
+        <field name="name">g. Fujairah</field>
+        <field name="tag_name">g. Fujairah (Tax)</field>
+        <field name="code">STD_RATE_SUPP_TAX_FU</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_supplies_vat_subtotal" model="account.tax.report.line">
+        <field name="name">Sub Total</field>
+        <field name="formula">STD_RATE_SUPP_TAX_AB + STD_RATE_SUPP_TAX_DB + STD_RATE_SUPP_TAX_SJ + STD_RATE_SUPP_TAX_AJ + STD_RATE_SUPP_TAX_UM + STD_RATE_SUPP_TAX_RA + STD_RATE_SUPP_TAX_FU</field>
+        <field name="parent_id" ref="tax_report_line_standard_rated_supplies_vat"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+    </record>
+
+    <record id="tax_report_line_tax_refund_tourist_vat" model="account.tax.report.line">
+        <field name="name">2. Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme</field>
+        <field name="tag_name">2. Tax Refunds provided to Tourists under the Tax Refunds for Tourists Scheme (Tax)</field>
+        <field name="code">TAX_REF_TOUR_SCHEME_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_supplies_reverse_charge_vat" model="account.tax.report.line">
+        <field name="name">3. Supplies subject to reverse charge provisions</field>
+        <field name="tag_name">3. Supplies subject to reverse charge provisions (Tax)</field>
+        <field name="code">REVERSE_CHARGE_PRO_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_zero_rated_supplies_vat" model="account.tax.report.line">
+        <field name="name">4. Zero rated supplies</field>
+        <field name="tag_name">4. Zero rated supplies (Tax)</field>
+        <field name="code">ZERO_RATE_SUPP_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_exempt_supplies_vat" model="account.tax.report.line">
+        <field name="name">5. Exempt supplies</field>
+        <field name="tag_name">5. Exempt supplies (Tax)</field>
+        <field name="code">EXAMPT_SUPP_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_line_supplies_out_of_scope_vat" model="account.tax.report.line">
+        <field name="name">6. Out of scope</field>
+        <field name="code">OUT_OF_SCOPE_TAX_0</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_line_import_uae_vat" model="account.tax.report.line">
+        <field name="name">7. Goods imported into the UAE</field>
+        <field name="tag_name">7. Goods imported into the UAE (Tax)</field>
+        <field name="code">GOODS_IMPORT_IN_UAE_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_line_adjustment_import_uae_vat" model="account.tax.report.line">
+        <field name="name">8. Adjustments to goods imported into the UAE</field>
+        <field name="code">ADJUST_GOODS_IMPORT_IN_UAE_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+    </record>
+
+    <record id="tax_report_line_vat_all_sales_total" model="account.tax.report.line">
+        <field name="name">9. Total</field>
+        <field name="formula">(STD_RATE_SUPP_TAX_AB + STD_RATE_SUPP_TAX_DB + STD_RATE_SUPP_TAX_SJ + STD_RATE_SUPP_TAX_AJ + STD_RATE_SUPP_TAX_UM + STD_RATE_SUPP_TAX_RA + STD_RATE_SUPP_TAX_FU) + OUT_OF_SCOPE_TAX_0 + ADJUST_GOODS_IMPORT_IN_UAE_TAX + GOODS_IMPORT_IN_UAE_TAX + EXAMPT_SUPP_TAX + ZERO_RATE_SUPP_TAX + REVERSE_CHARGE_PRO_TAX + TAX_REF_TOUR_SCHEME_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_sales"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+    </record>
+
+    <record id="tax_report_line_vat_all_expense" model="account.tax.report.line">
+        <field name="name">VAT on Expenses and all other Inputs (Tax)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_standard_rated_expense_vat" model="account.tax.report.line">
+        <field name="name">10. Standard rated expenses</field>
+        <field name="tag_name">10. Standard rated expenses (Tax)</field>
+        <field name="code">STD_RATE_EXPENSES_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_expense_supplies_reverse_vat" model="account.tax.report.line">
+        <field name="name">11. Supplies subject to the reverse charge provisions</field>
+        <field name="tag_name">11. Supplies subject to the reverse charge provisions (Tax)</field>
+        <field name="code">SUPP_REV_CHARGE_PRO_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_expense_out_of_scope_vat" model="account.tax.report.line">
+        <field name="name">12. Out of scope</field>
+        <field name="code">OUT_OF_SCOPE_1_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_line_vat_all_expense_total" model="account.tax.report.line">
+        <field name="name">13. Totals</field>
+        <field name="formula">OUT_OF_SCOPE_1_TAX + SUPP_REV_CHARGE_PRO_TAX + STD_RATE_EXPENSES_TAX</field>
+        <field name="parent_id" ref="tax_report_line_vat_all_expense"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_line_net_vat_due" model="account.tax.report.line">
+        <field name="name">Net VAT Due</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="formula">((STD_RATE_SUPP_TAX_AB + STD_RATE_SUPP_TAX_DB + STD_RATE_SUPP_TAX_SJ + STD_RATE_SUPP_TAX_AJ + STD_RATE_SUPP_TAX_UM + STD_RATE_SUPP_TAX_RA + STD_RATE_SUPP_TAX_FU) + OUT_OF_SCOPE_TAX_0 + ADJUST_GOODS_IMPORT_IN_UAE_TAX + GOODS_IMPORT_IN_UAE_TAX + EXAMPT_SUPP_TAX + ZERO_RATE_SUPP_TAX + REVERSE_CHARGE_PRO_TAX + TAX_REF_TOUR_SCHEME_TAX) - (OUT_OF_SCOPE_1_TAX + SUPP_REV_CHARGE_PRO_TAX + STD_RATE_EXPENSES_TAX)</field>
+    </record>
+
+    <record id="tax_report_line_total_value_due_tax_period" model="account.tax.report.line">
+        <field name="name">14. Total value of due tax for the period</field>
+        <field name="formula">(STD_RATE_SUPP_TAX_AB + STD_RATE_SUPP_TAX_DB + STD_RATE_SUPP_TAX_SJ + STD_RATE_SUPP_TAX_AJ + STD_RATE_SUPP_TAX_UM + STD_RATE_SUPP_TAX_RA + STD_RATE_SUPP_TAX_FU) + OUT_OF_SCOPE_TAX_0 + ADJUST_GOODS_IMPORT_IN_UAE_TAX + GOODS_IMPORT_IN_UAE_TAX + EXAMPT_SUPP_TAX + ZERO_RATE_SUPP_TAX + REVERSE_CHARGE_PRO_TAX + TAX_REF_TOUR_SCHEME_TAX</field>
+        <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_line_total_value_recoverable_tax_period" model="account.tax.report.line">
+        <field name="name">15. Total value of recoverable tax for the period</field>
+        <field name="formula">OUT_OF_SCOPE_1_TAX + SUPP_REV_CHARGE_PRO_TAX + STD_RATE_EXPENSES_TAX</field>
+        <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_line_net_vat_due_period" model="account.tax.report.line">
+        <field name="name">16. Net VAT due (or reclaimed) for the period</field>
+        <field name="formula">((STD_RATE_SUPP_TAX_AB + STD_RATE_SUPP_TAX_DB + STD_RATE_SUPP_TAX_SJ + STD_RATE_SUPP_TAX_AJ + STD_RATE_SUPP_TAX_UM + STD_RATE_SUPP_TAX_RA + STD_RATE_SUPP_TAX_FU) + OUT_OF_SCOPE_TAX_0 + ADJUST_GOODS_IMPORT_IN_UAE_TAX + GOODS_IMPORT_IN_UAE_TAX + EXAMPT_SUPP_TAX + ZERO_RATE_SUPP_TAX + REVERSE_CHARGE_PRO_TAX + TAX_REF_TOUR_SCHEME_TAX) - (OUT_OF_SCOPE_1_TAX + SUPP_REV_CHARGE_PRO_TAX + STD_RATE_EXPENSES_TAX)</field>
+        <field name="parent_id" ref="tax_report_line_net_vat_due"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+</odoo>

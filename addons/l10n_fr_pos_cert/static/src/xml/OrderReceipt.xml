@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('pos-receipt-order-data')]" position="inside">
+            <t t-if="receipt.l10n_fr_hash !== false">
+                <br/>
+                <div style="word-wrap:break-word;"><t t-esc="receipt.l10n_fr_hash"/></div>
+            </t>
+        </xpath>
+    </t>
+
+    <t t-name="OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
+            <t t-if="receipt.l10n_fr_hash !== false and line.price_manually_set === true">
+                <div class="pos-receipt-right-padding">
+                    Old unit price:
+                    <span class="oldPrice">
+                        <s>
+                            <t t-esc="env.pos.format_currency(line.fixed_lst_price, 'Product Price')" /> / Units
+                        </s>
+                    </span>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

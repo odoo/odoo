@@ -1,0 +1,379 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_drive
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"<b>To create a new filter:</b><br/>\n"
+"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
+"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+msgstr ""
+"<b>Vytvoření nového filtru:</b><br/>\n"
+"- Přejděte do dokumentu Odoo, který chcete filtrovat. Například přejděte na Příležitosti a vyhledejte Oddělení prodeje.<br/>\n"
+"- V tomto zobrazení \"Hledání\" vyberte možnost \"Uložit aktuální filtr\", zadejte název (např.: Oddělení prodeje).<br/>\n"
+"- Pokud vyberete možnost \"Sdílet se všemi uživateli\", zobrazí se odkaz na dokument Google v možnostech \"Více\" pro všechny uživatele v příležitostech Oddělení prodeje.<br/>\n"
+"- Pokud nezvolíte možnost \"Sdílet se všemi uživateli\", odkaz na dokument Google v možnostech \"Více\" se nezobrazí pro ostatní uživatele v příležitostech oddělení prodeje.<br/>\n"
+"- Pokud není filtr zadán, odkaz na dokument google se zobrazí v možnosti \"Více\" pro všechny uživatele u všech příležitostí."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Resetovat token"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Nastavit token"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; Není "
+"nastaven žádný obnovovací token"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Obnovit sadu tokenů"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr "<span>Získejte autorizační kód a nastavte jej do pole níže.</span>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Active</strong>"
+msgstr "<strong>Aktivní</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Model</strong>"
+msgstr "<strong>Model</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Template</strong>"
+msgstr "<strong>Šablona</strong>"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
+msgid "Active"
+msgstr "Aktivní"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid "Add a new template"
+msgstr "Přidejte novou šablonu"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "Archivováno"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "At least one key cannot be found in your Google Drive name pattern."
+msgstr "Ve vzoru názvu vašeho disku Google nelze najít alespoň jeden klíč."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
+msgid "Authorization Code"
+msgstr "Autorizační kód"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "Zrušit"
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
+msgid ""
+"Choose how the new google drive will be named, on google side. Eg. "
+"gdoc_%(field_name)s"
+msgstr ""
+"Vyberte, jak bude nový disk Google pojmenován na straně google. Eg. "
+"gdoc_%(field_name)s"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr "Nastavení konfigurace"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "Potvrdit"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Creating google drive may only be done by one at a time."
+msgstr "Vytvoření Google Drive může provádět pouze jeden po druhém."
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Zákazník"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
+msgid "Filter"
+msgstr "Filtr"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Přejít na panel konfigurace"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
+msgid "Google Client"
+msgstr "Klient Google"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
+msgid "Google Drive Configuration"
+msgstr "Konfigurace disku Google Drive"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
+msgid "Google Drive Name Pattern"
+msgstr "Vzor názvu Google Drive"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "Google Drive Templates"
+msgstr "Šablony disků Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Google Drive is not yet configured. Please contact your administrator."
+msgstr "Google Drive ještě není nakonfigurován. Obraťte se na svého správce."
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_google_drive_config
+msgid "Google Drive templates config"
+msgstr "Konfigurace šablon služby Disk Google"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid ""
+"Link your own google drive templates to any record of Odoo. If you have "
+"really specific documents you want your collaborator fill in, e.g. Use a "
+"spreadsheet to control the quality of your product or review the delivery "
+"checklist for each order in a foreign country, ... Its very easy to manage "
+"them, link them to Odoo and use them to collaborate with your employees."
+msgstr ""
+"Propojte své vlastní šablony z Google Drive s jakýmkoli záznamem Odoo. Pokud"
+" máte opravdu konkrétní dokumenty, které chcete, aby váš spolupracovník "
+"vyplnil, např. Použijte tabulku k řízení kvality svého produktu nebo si "
+"prohlédněte kontrolní seznam dodávek pro každou objednávku v cizí zemi, ... "
+"Je velmi snadné je spravovat, propojit je s Odoo a použít je ke spolupráci "
+"se svými zaměstnanci."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Please enter a valid Google Document URL."
+msgstr "Zadejte platnou adresu URL dokumentu Google."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr "Byl vygenerován obnovovací token"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
+msgid "Related Model"
+msgstr "Související model"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
+msgid "Resource Id"
+msgstr "ID zdroje"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
+msgstr "Prohledat konfiguraci disku Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr "Nastavit obnovovací token"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code ."
+msgstr ""
+"Během generování tokenu se něco pokazilo. Požádejte prosím znovu o "
+"autorizační kód."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
+msgid "Template Name"
+msgstr "Název šablony"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
+msgid "Template URL"
+msgstr "URL šablony"
+
+#. module: google_drive
+#: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
+msgid "Templates"
+msgstr "Šablony"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "The Google Template cannot be found. Maybe it has been deleted."
+msgstr "Šablonu Google nelze najít. Možná byla smazána."
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr "Adresa URL pro generování autorizačního kódu od společnosti Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+"Filtr dokumentů nesmí obsahovat žádnou „dynamickou“ část, proto by například"
+" neměl být založen na aktuálním čase nebo aktuálním uživateli."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"                                'Deco_Addict_SO0001_Sales'."
+msgstr ""
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The permission 'reader' for 'anyone with the link' has not been written on "
+"the document"
+msgstr ""
+"Oprávnění „čtenář“ pro „kohokoli s odkazem“ nebylo v dokumentu napsáno"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
+"Pro Disk Google není nastaven žádný obnovovací kód. Můžete jej nastavit z "
+"konfiguračního panelu."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
+msgid "URI"
+msgstr "URI"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

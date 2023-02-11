@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+         <record id="wizard_update_translations" model="ir.ui.view">
+            <field name="name">Generate Missing Terms</field>
+            <field name="model">base.update.translations</field>
+            <field name="arch" type="xml">
+                <form string="Generate Missing Terms">
+                    <group string="Generate Missing Terms">
+                        <field name="lang"/>
+                    </group>
+                    <footer>
+                        <button name="act_update" string="Update" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button special="cancel" data-hotkey="z" string="Cancel" type="object" class="btn-secondary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="action_wizard_update_translations" model="ir.actions.act_window">
+            <field name="name">Generate Missing Terms</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">base.update.translations</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <menuitem action="action_wizard_update_translations" id="menu_wizard_update_translations" parent="menu_translation_app"/>
+
+    </data>
+</odoo>

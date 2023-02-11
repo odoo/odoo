@@ -1,0 +1,84 @@
+.o_timeoff_calendar .o_content {
+    .o_timeoff_container {
+        height: auto;
+        box-shadow: inset 0 -1px 0 $border-color;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background-color: $o-webclient-background-color;
+    }
+
+    .o_timeoff_card {
+        border-right: $border-color solid 2px;
+        text-align: center;
+        div {
+            line-height: 1;
+        }
+    }
+
+    .fc-dayGridYear-view {
+        .fc-bgevent {
+            border-radius: 25px;
+        }
+        > .fc-month-container {
+            > .fc-month {
+                .fc-dayGridMonth-view {
+                    .fc-has-event {
+                        background-color: unset;
+                    }
+                }
+                .fc-content-skeleton {
+                    padding: 0;
+
+                    tbody { 
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_timeoff_card_last {
+        border-right: 0px;
+    }
+
+    .o_timeoff_big {
+        font-size: 15px;
+    }
+
+    .o_timeoff_huge {
+        font-size: 30px;
+    }
+
+    .o_timeoff_purple {
+        color: $o-enterprise-color;
+    }
+
+    .o_timeoff_green {
+        color: $o-enterprise-primary-color;
+    }
+
+    .o_calendar_filter {
+        > h5 {
+            font-weight: bold;
+        }
+    }
+    .fc-week-number {
+        color: #adb5bd;
+    }
+
+    .o_calendar_view .o_calendar_widget .fc-dayGridMonth-view {
+        .fc-week-number {
+            padding-top: 0.2rem !important;
+            padding-bottom: 0.3rem !important;
+            padding-left: 0.3rem !important;
+            line-height: unset;
+            span {
+                font-size: 0.85rem;
+            }
+        }
+        .fc-week-number.fc-widget-header {
+            font-size: 0.85rem;
+        }
+    }
+}

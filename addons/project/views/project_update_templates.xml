@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project.milestone_deadline">
+<t t-if="milestone['deadline']">
+(due <t t-esc="milestone['deadline']" t-options='{"widget": "date"}'/><t t-if="not milestone['is_reached'] or not milestone['reached_date']">)</t><t t-else=""> - reached on<t t-if="milestone['reached_date'] &gt; milestone['deadline']">
+<font t-att-style="'color: rgb(' + str(color_level) + ', 0, 0)'"><b><t t-esc="milestone['reached_date']" t-options='{"widget": "date"}'/></b></font>)</t><t t-else="">
+<font t-att-style="'color: rgb(0, ' + str(color_level) + ', 0)'"><b><t t-esc="milestone['reached_date']" t-options='{"widget": "date"}'/></b></font>)</t></t>
+</t>
+    </template>
+
+    <template id="project_update_default_description" name="Project Update Description">
+<!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+<div name="summary">
+<br/><h1 style="font-weight: bolder;">Sprint Summary</h1>
+<br/><p>How’s this project going?</p><br/><br/>
+</div>
+
+<div name="activities" t-if="show_activities">
+<h1 style="font-weight: bolder;">Activities</h1>
+</div>
+
+<div name="milestone" t-if="milestones['show_section']">
+<t t-if="milestones['show_section']">
+<br/>
+<h3 style="font-weight: bolder"><u>Milestones</u></h3>
+
+<ul class="o_checklist" t-if="milestones['list']">
+<t t-foreach="milestones['list']" t-as="milestone" t-key="milestone['id']">
+<li t-attf-class="{{milestone['is_reached'] and 'o_checked' or ''}}">
+<t t-esc="milestone['name']"/>
+<span t-if="milestone['is_deadline_future'] and not milestone['is_reached']"><font style="color: rgb(190, 190, 190);"><t t-set="color_level" t-value="64"/><t t-call="project.milestone_deadline"/></font></span>
+<span t-else=""><t t-set="color_level" t-value="128"/><t t-call="project.milestone_deadline"/></span>
+</li>
+</t>
+</ul>
+
+<t t-if="milestones['updated']">
+<t t-if="milestones['last_update_date']">Since <t t-esc="milestones['last_update_date']" t-options='{"widget": "date"}'/> (last project update), </t>
+<t t-if="len(milestones['updated']) > 1">the deadline of the following milestones has been updated:</t>
+<t t-else="">the deadline of the following milestone has been updated:</t>
+<ul>
+<t t-foreach="milestones['updated']" t-as="milestone" t-key="milestone['id']">
+<li>
+<t t-esc="milestone['name']"/> (<t t-esc="milestone['old_value']" t-options='{"widget": "date"}'/> =&gt; <t t-esc="milestone['new_value']"  t-options='{"widget": "date"}'/>)
+</li>
+</t>
+</ul>
+</t>
+
+<t t-if="milestones['created']">
+<t t-if="len(milestones['created']) > 1">The following milestones have been added:</t>
+<t t-else="">The following milestone has been added:</t>
+<ul>
+<t t-foreach="milestones['created']" t-as="milestone" t-key="milestone['id']">
+<li>
+<t t-esc="milestone['name']"/><span t-if="milestone['is_deadline_future'] and not milestone['is_reached']">
+<font style="color: rgb(190, 190, 190);">
+<t t-set="color_level" t-value="64"/>
+<t t-call="project.milestone_deadline"/>
+</font>
+</span>
+<span t-else="">
+<t t-set="color_level" t-value="128"/>
+<t t-call="project.milestone_deadline"/>
+</span>
+</li>
+</t>
+</ul>
+</t>
+</t>
+</div>
+    </template>
+
+</odoo>

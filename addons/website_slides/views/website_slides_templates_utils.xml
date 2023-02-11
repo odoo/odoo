@@ -1,0 +1,83 @@
+<?xml version="1.0" ?>
+<odoo><data>
+
+<!-- Share on social networks -->
+<template id='slide_share_social' name="Slides Media Share">
+    <div class="btn-group" role="group">
+        <a t-attf-href="https://www.facebook.com/sharer/sharer.php?u=#{record.website_url}" class="btn border bg-white o_wslides_js_social_share" social-key="facebook" aria-label="Share on Facebook" title="Share on Facebook"><i class="fa fa-facebook-square fa-fw"/></a>
+        <a t-attf-href="https://twitter.com/intent/tweet?text=#{record.name}&amp;url=#{record.website_url}" class="btn border bg-white o_wslides_js_social_share"  social-key="twitter" aria-label="Share on Twitter" title="Share on Twitter"><i class="fa fa-twitter fa-fw"/></a>
+        <a t-attf-href="http://www.linkedin.com/sharing/share-offsite/?url=#{record.website_url}" social-key="linkedin" class="btn border bg-white o_wslides_js_social_share" aria-label="Share on LinkedIn" title="Share on LinkedIn"><i class="fa fa-linkedin fa-fw"/></a>
+    </div>
+</template>
+
+<!-- Share: social media -->
+<template id='slide_share_modal'>
+    <t t-if="not website_url">
+        <t t-set="website_url" t-value="record.website_url"/>
+    </t>
+    <div class="modal fade" t-att-id="'slideChannelShareModal_%s' % record.id" tabindex="-1" role="dialog" aria-labelledby="slideChannelShareModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <t t-call="website_slides.slide_share_modal_header"/>
+                <t t-call="website_slides.slide_share_modal_body"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="slide_share_modal_header">
+    <div class="modal-header">
+        <h5 class="modal-title" id="slideChannelShareModalLabel">
+            Share
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span>×</span>
+        </button>
+    </div>
+</template>
+
+<template id="slide_share_modal_body">
+    <div class="modal-body">
+        <h5>Share on Social Networks</h5>
+        <t t-call="website_slides.slide_share_social"/>
+        <t t-call="website_slides.slide_share_link"/>
+    </div>
+</template>
+
+<template id="slide_share_link">
+    <h5 class="mt16">Share Link</h5>
+    <div class="input-group">
+        <input type="text" t-att-id="'wslides_share_link_id_%s' % record.id" class="form-control o_wslides_js_share_link" readonly="readonly" onclick="this.select();"
+            t-att-value="website_url"/>
+        <div class="input-group-append">
+            <button t-att-id="'share_link_clipboard_button_id_%s' % record.id" class="btn btn-sm btn-primary o_clipboard_button" >
+                <span class="fa fa-clipboard"> Copy Text</span>
+            </button>
+        </div>
+    </div>
+</template>
+
+<!-- Website edit page -->
+<template id="slide_edit_options" inherit_id="website.user_navbar" name="Edit Slide Options">
+    <xpath expr="//div[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'slide.slide'" t-set="action" t-value="'website_slides.slide_slide_action'"/>
+    </xpath>
+</template>
+
+<!-- User Navbar -->
+<template id="user_navbar_inherit_website_slides" inherit_id="website.user_navbar">
+    <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_slides']" position="attributes">
+        <attribute name="name"/>
+        <attribute name="t-att-data-module-id"/>
+        <attribute name="t-att-data-module-shortdesc"/>
+        <attribute name="t-if">env.user.has_group('website_slides.group_website_slides_officer')</attribute>
+    </xpath>
+</template>
+
+<template id="join_course_link" name="Join Course Link">
+    <a class="o_wslides_js_course_join_link" href="#" t-att-data-channel-enroll="slide.channel_id.enroll"
+       t-att-data-channel-id="slide.channel_id.id">
+        Join Course</a> to download resources
+</template>
+
+</data></odoo>

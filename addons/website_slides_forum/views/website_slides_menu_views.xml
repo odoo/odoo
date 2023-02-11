@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem name="Forum"
+        id="website_slides_menu_forum"
+        parent="website_slides.website_slides_menu_root"
+        sequence="2"/>
+    <menuitem name="Forums"
+        id="website_slides_menu_forum_forum"
+        parent="website_slides_menu_forum"
+        sequence="1"
+        action="forum_forum_action_channel"/>
+    <menuitem name="Posts"
+        id="website_slides_menu_forum_post"
+        parent="website_slides_menu_forum"
+        sequence="2"
+        action="forum_post_action_channel"/>
+
+    <menuitem name="Forum"
+        id="website_slides_menu_report_forum"
+        parent="website_slides.website_slides_menu_report"
+        sequence="20"
+        action="forum_post_action_report"/>
+</odoo>

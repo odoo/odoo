@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.PivotView.Buttons" owl="1">
+        <div class="btn-group" role="toolbar" aria-label="Main actions"  t-on-dropdown-item-selected="onMeasureSelected">
+            <t t-call="web.ReportViewMeasures">
+                <t t-set="measures" t-value="model.metaData.measures"/>
+                <t t-set="activeMeasures" t-value="model.metaData.activeMeasures"/>
+            </t>
+        </div>
+        <div class="btn-group" role="toolbar" aria-label="Pivot settings">
+            <t t-set="noDataDisplayed" t-value="!model.hasData() || !model.metaData.activeMeasures.length"/>
+            <button class="btn btn-secondary fa fa-exchange o_pivot_flip_button" t-on-click="onFlipButtonClicked" data-tooltip="Flip axis" aria-label="Flip axis" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+            <button class="btn btn-secondary fa fa-arrows o_pivot_expand_button" t-on-click="onExpandButtonClicked" data-tooltip="Expand all" aria-label="Expand all" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+            <button class="btn btn-secondary fa fa-download o_pivot_download" t-on-click="onDownloadButtonClicked" data-tooltip="Download xlsx" aria-label="Download xlsx" t-attf-disabled="{{noDataDisplayed ? 'disabled' : false}}"/>
+        </div>
+    </t>
+
+    <t t-name="web.PivotView" owl="1">
+        <Layout viewType="'pivot'" useSampleModel="model.useSampleModel">
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}"/>
+            </t>
+            <t t-set="displayNoContent" t-value="
+                props.info.noContentHelp !== false and (
+                    !(model.hasData() and model.metaData.activeMeasures.length) or
+                    model.useSampleModel
+                )"
+            />
+            <t t-if="displayNoContent">
+                <t t-if="props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                </t>
+                <t t-else="" t-call="web.NoContentHelper"/>
+            </t>
+            <t t-if="model.hasData() and model.metaData.activeMeasures.length">
+                <Renderer model="model" onCellClicked="cell => onOpenView(cell)"/>
+            </t>
+        </Layout>
+    </t>
+
+</templates>

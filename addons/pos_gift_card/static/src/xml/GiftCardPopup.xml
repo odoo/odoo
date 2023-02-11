@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="GiftCardPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup popup-textarea">
+                    <header class="title drag-handle">
+                        Gift Card
+                    </header>
+
+                    <main class="giftCardPopupMain">
+                        <div class="giftCardPopupContainer" t-if="!state.showBarcodeGeneration">
+                            <span t-if="state.giftCardConfig == 'create_set'"
+                                  class="giftCardPopupButton button"
+                                  t-on-click="switchBarcodeView">Generate barcode</span>
+                            <span t-if="state.giftCardConfig == 'scan_set'"
+                                  class="giftCardPopupButton button"
+                                  t-on-click="switchBarcodeView">Scan and set price on gift card</span>
+                            <span t-if="state.giftCardConfig == 'scan_use'"
+                                  class="giftCardPopupButton button"
+                                  t-on-click="switchBarcodeView">Scan gift card</span>
+                        </div>
+
+                        <div t-if="!state.showUseGiftCardMenu &amp;&amp; !state.showGiftCardDetails">
+                            <div class="giftCardPopupContainer"
+                                 t-if="state.showBarcodeGeneration &amp;&amp; state.giftCardConfig == 'create_set'">
+                                <div>
+                                    <span>Amount of the gift card:</span><br/>
+                                    <div>
+                                        <input t-model.number="state.amountToSet" class="giftCardPopupInput" type="text"/>
+                                        <span class="currency">
+                                            <t t-esc="env.pos.getCurrencySymbol()" />
+                                        </span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="button confirm" t-on-click="generateBarcode">
+                                        Confirm
+                                    </div>
+                                        <div class="button confirm" t-on-click="switchBarcodeView">
+                                        Cancel
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="giftCardPopupContainer"
+                                 t-if="state.showBarcodeGeneration &amp;&amp; state.giftCardConfig == 'scan_set'">
+                                <div>
+                                    Gift Card Barcode: <br/>
+                                    <input t-model="state.giftCardBarcode" class="giftCardPopupInput" type="text"/>
+                                </div>
+                                <div>
+                                    Amount of the gift card: <br/>
+                                    <input t-model.number="state.amountToSet" class="giftCardPopupInput" type="text"/>
+                                </div>
+                                <div>
+                                    <span class="button confirm" t-on-click="scanAndUseGiftCard">
+                                        Confirm
+                                    </span>
+                                    <span class="button cancel" t-on-click="switchBarcodeView">
+                                        Discard
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="giftCardPopupContainer"
+                                 t-if="state.showBarcodeGeneration &amp;&amp; state.giftCardConfig == 'scan_use'">
+                                <div>
+                                    Gift Card Barcode:
+                                    <input t-model="state.giftCardBarcode" class="giftCardPopupInput" type="text"/>
+                                </div>
+                                <div>
+                                    <span class="button confirm" t-on-click="scanAndUseGiftCard">
+                                        Confirm
+                                    </span>
+                                    <span class="button cancel" t-on-click="switchBarcodeView">
+                                        Discard
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="giftCardPopupContainer"
+                             t-if="state.showBarcodeGeneration &amp;&amp; state.showUseGiftCardMenu">
+                            <div>
+                                Gift Card Barcode:
+                                <input t-model="state.giftCardBarcode" class="giftCardPopupInput" type="text"/>
+                            </div>
+                            <div>
+                                <span class="button confirm" t-on-click="payWithGiftCard">
+                                    Confirm
+                                </span>
+                                <span class="button cancel" t-on-click="switchBarcodeView">
+                                    Discard
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="giftCardPopupContainer"
+                             t-if="state.showBarcodeGeneration &amp;&amp; state.showGiftCardDetails">
+                            <div>
+                                Gift Card Barcode:
+                                <input t-model="state.giftCardBarcode" class="giftCardPopupInput" type="text"/>
+                            </div>
+                            <div>
+                                Remaining amount of the gift card:
+                                <t t-esc="state.amountToSet"/>
+                            </div>
+                            <div>
+                                <span class="button confirm" t-on-click="ShowRemainingAmount">
+                                    Confirm
+                                </span>
+                                <span class="button cancel" t-on-click="switchBarcodeView">
+                                    Discard
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="giftCardPopupContainer" t-if="!state.showBarcodeGeneration">
+                            <div class="button giftCardPopupConfirmButton" t-on-click="switchToUseGiftCardMenu">
+                                Use a gift card
+                            </div>
+                                <div class="button giftCardPopupConfirmButton" t-on-click="switchToShowGiftCardDetails">
+                                Check a gift card
+                            </div>
+                        </div>
+                    </main>
+
+                    <footer class="footer giftCardPopupFooter">
+                        <div class="button cancel" t-on-click="cancel">
+                            Cancel
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+        </div>
+    </t>
+
+</templates>

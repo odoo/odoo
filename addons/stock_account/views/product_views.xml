@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="product_template_tree_view" model="ir.ui.view">
+            <field name="name">product.template.tree.inherit.stock.account</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="standard_price" position="attributes">
+                    <attribute name="readonly">1</attribute>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_category_property_form_stock" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit.stock</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="stock.product_category_form_view_inherit"/>
+            <field name="arch" type="xml">
+                <group name="logistics" position="after">
+                    <group string="Inventory Valuation">
+                        <field name="property_cost_method"/>
+                        <field name="property_valuation" groups="account.group_account_readonly,stock.group_stock_manager"/>
+                    </group>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.stock.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
+            <field name="arch" type="xml">
+                <group name="account_property" position="inside">
+                    <group name="account_stock_property" string="Account Stock Properties" groups="account.group_account_readonly" attrs="{'invisible':[('property_valuation', '=', 'manual_periodic')]}">
+                        <field name="property_stock_valuation_account_id" options="{'no_create': True}" attrs="{'required':[('property_valuation', '=', 'real_time')]}"/>
+                        <field name="property_stock_journal" attrs="{'required':[('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_input_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <field name="property_stock_account_output_categ_id" attrs="{'required':[ ('property_valuation', '=', 'real_time')]}" />
+                        <div colspan="2" class="alert alert-info mt16" role="status">
+                            <b>Set other input/output accounts on specific </b><button name="%(stock.action_prod_inv_location_form)d" role="button" type="action" class="btn-link" style="padding: 0;vertical-align: baseline;" string="locations"/>.
+                        </div>
+                    </group>
+                </group>
+            </field>
+        </record>
+   </data>
+</odoo>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcInvitationCard" owl="1">
+        <div class="o_RtcInvitationCard">
+            <t t-if="thread and thread.rtcInvitingSession">
+                <div class="o_RtcInvitationCard_partnerInfo">
+                    <img class="o_RtcInvitationCard_partnerInfoImage rounded-circle"
+                         t-att-src="thread.rtcInvitingSession.avatarUrl"
+                         t-on-click="_onClickAvatar"
+                         alt="Avatar"/>
+                    <span class="o_RtcInvitationCard_partnerInfoName" t-esc="thread.rtcInvitingSession.name"/>
+                    <span class="o_RtcInvitationCard_partnerInfoText">Incoming Call...</span>
+                </div>
+            </t>
+            <div class="o_RtcInvitationCard_buttonList">
+                <div class="o_RtcInvitationCard_buttonListButton o_RtcInvitationCard_buttonListRefuse"
+                    aria-label="Refuse"
+                    title="Refuse"
+                    t-on-click="_onClickRefuse">
+                    <i class="o_RtcInvitationCard_buttonListButtonIcon fa fa-lg fa-times"/>
+                </div>
+                <div class="o_RtcInvitationCard_buttonListButton o_RtcInvitationCard_buttonListAccept"
+                    aria-label="Accept"
+                    title="Accept"
+                    t-on-click="_onClickAccept">
+                    <i class="o_RtcInvitationCard_buttonListButtonIcon fa fa-lg fa-phone"/>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

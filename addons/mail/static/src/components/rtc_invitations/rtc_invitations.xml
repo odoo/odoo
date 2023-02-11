@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcInvitations" owl="1">
+        <div class="o_RtcInvitations">
+            <t t-if="messaging.ringingThreads">
+                <t t-foreach="messaging.ringingThreads" t-as="thread" t-key="thread.localId">
+                    <RtcInvitationCard threadLocalId="thread.localId"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

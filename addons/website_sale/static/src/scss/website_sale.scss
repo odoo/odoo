@@ -1,0 +1,845 @@
+// Prevent grid gutter to be higher that bootstrap gutter width to make sure
+// the negative margin layout does not overflow on elements. This prevents the
+// use of an ugly overflow: hidden which would break box-shadows.
+$o-wsale-products-layout-grid-gutter-width: $grid-gutter-width / 2 !default;
+$o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale-products-layout-grid-gutter-width);
+
+@mixin wsale-break-table-to-list() {
+    .o_wsale_products_grid_table_wrapper > table,
+    .o_wsale_products_grid_table_wrapper > table > tbody,
+    .o_wsale_products_grid_table_wrapper > table > tbody > tr,
+    .o_wsale_products_grid_table_wrapper > table > tbody > tr > td {
+        display: block;
+        width: 100%;
+    }
+}
+
+.oe_website_sale {
+    ul ul {
+        margin-left: 1.5rem;
+    }
+    .o_payment_form .card {
+        border-radius: 4px !important;
+    }
+    .address-inline address {
+        display: inline-block;
+    }
+    table#cart_products tr td, table#suggested_products tr td {
+        vertical-align: middle;
+    }
+
+    table#cart_products {
+        margin-bottom: 0;
+
+        td, th {
+            &:first-child {
+                padding-left: $grid-gutter-width*0.5;
+            }
+        }
+    }
+
+    h1[itemprop="name"], .td-product_name {
+        word-break: break-word;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    h1[itemprop="name"] {
+        font-size: $h3-font-size;
+        font-weight: $font-weight-bold;
+    }
+
+    @include media-breakpoint-down(sm) {
+        .td-img {
+            display: none;
+        }
+    }
+
+    .toggle_summary_div {
+        @include media-breakpoint-up(xl) {
+            max-width: 400px;
+        }
+    }
+    input.js_quantity {
+        min-width: 48px;
+        text-align: center;
+    }
+    input.quantity {
+        padding: 0;
+    }
+
+    .breadcrumb {
+        background-color: gray('100');
+        padding: 0.6rem 0.75rem;
+        font-size: 0.9rem;
+
+        a {
+            color: theme-color('primary');
+            font-weight: bold;
+        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            font-family: 'FontAwesome';
+            content: "\f105";
+            padding-right: 0.2rem;
+        }
+    }
+
+    .o_wsale_products_searchbar_form {
+        flex-grow: 1;
+        @include media-breakpoint-up(md) {
+            max-width: 450px;
+        }
+    }
+
+    .table-striped tbody tr:nth-of-type(even) {
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0);
+    }
+    *:not(#product_attributes_simple) > .table-sm tbody td {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    #products_grid_before {
+        @include media-breakpoint-up(lg) {
+            border-right: 1px solid gray('400');
+        }
+        #wsale_products_categories_collapse {
+            label {
+                &:hover {
+                    color: theme-color('primary');
+                    cursor: pointer;
+                }
+            }
+            .nav-hierarchy {
+                padding-left: map-get($spacers, 2);
+            }
+            i.fa {
+                color: gray('500');
+            }
+        }
+        .o_categories_collapse_title, .o_products_attributes_title {
+            font-size: 0.9rem;
+        }
+        .custom-control.custom-checkbox {
+            .custom-control-input {
+                ~ .custom-control-label:before {
+                    outline: none;
+                    border: 0px;
+                    border: 2px solid gray('400');
+                    border-radius: 0px;
+                    cursor: pointer;
+                }
+                &:checked {
+                    ~ .custom-control-label:before {
+                        background-color: theme-color('primary');
+                        border: 2px solid theme-color('primary');
+                    }
+                }
+            }
+            label:hover {
+                color: theme-color('primary');
+                cursor: pointer;
+            }
+        }
+        .css_attribute_color {
+            height: 32px;
+            width: 32px;
+            margin-bottom: 0.2rem;
+        }
+    }
+    .o_pricelist_dropdown, .o_sortby_dropdown {
+        min-width: fit-content;
+
+        > .btn {
+            &, &:hover, &:focus, &:active {
+                background-color: transparent !important;
+                box-shadow: none !important;
+            }
+        }
+    }
+    .o_wsale_apply_layout > .btn {
+        color: gray('500');
+        background-color: transparent;
+        border-radius: 0%;
+
+        &.active, &:focus {
+            color: gray('600');
+            background-color: gray('200');
+            box-shadow: none !important;
+        }
+    }
+}
+
+#product_detail ~ .oe_structure.oe_empty > section:first-child,
+.o_shop_discussion_rating {
+    border-top: 1px solid gray('400');
+}
+
+.o_alternative_product {
+    margin: auto;
+}
+
+// Base style for a product card with image/description
+.oe_product_cart {
+    .oe_product_image {
+        height: 0;
+        text-align: center;
+
+        img {
+            height: 100%;
+            width: 100%;
+            object-fit: scale-down;
+        }
+    }
+    .o_wsale_product_information {
+        position: relative;
+        flex: 0 0 auto;
+        transition: .3s ease;
+    }
+    .oe_subdescription {
+        max-height: 0;
+        overflow: hidden;
+        font-size: $font-size-sm;
+        margin-bottom: map-get($spacers, 1);
+        opacity: 0;
+        transform: scale(1, 0);
+        transition: all ease 0.3s;
+    }
+    .o_wsale_product_btn {
+        @include o-position-absolute(auto, auto, 100%, 0);
+        padding-bottom: map-get($spacers, 1);
+        z-index: 2;
+
+        .btn {
+            width: 46px;
+            padding: 0.375rem 0.75rem; // prevent default Bootstrap padding from being modified by theme variables
+            line-height: 32px;
+            border-radius: 50%;
+            transform: scale(0);
+            opacity: 0;
+            transition: transform ease 200ms 0s, opacity ease 50ms;
+        }
+
+        &:empty {
+            display: none !important;
+        }
+    }
+
+    &:hover {
+        .o_wsale_product_information {
+            background-color: white !important;
+        }
+        .oe_subdescription {
+            max-height: $line-height-base * 1em; // Max 1 line
+            @include media-breakpoint-up(lg) {
+                max-height: $line-height-base * 2em; // Max 2 lines
+            }
+            @include media-breakpoint-up(xl) {
+                max-height: $line-height-base * 3em; // Max 3 lines
+            }
+        }
+        .oe_subdescription,
+        .o_wsale_product_btn .btn {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        &, &:hover {
+            .oe_subdescription {
+                max-height: $line-height-base * 3em; // Max 3 lines
+            }
+        }
+        .oe_subdescription,
+        .o_wsale_product_btn .btn {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .o_ribbon_left, .o_ribbon_right {
+        box-shadow: 0px -10px 70px 30px rgba(black, 0.05);
+    }
+
+    .o_product_link {
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: 1;
+    }
+}
+
+// Options relative to where the product card is put
+.oe_product {
+    // Image full option
+    &.oe_image_full {
+        .oe_product_image {
+            @include border-bottom-radius($card-inner-border-radius);
+        }
+        .o_wsale_product_information {
+            @include o-position-absolute(auto, 0, 0, 0); // The wrapper is always relatively positioned
+        }
+    }
+}
+
+#products_grid {
+    .o_wsale_products_grid_table_wrapper > .table {
+        table-layout: fixed;
+
+        > tbody {
+            > tr > td {
+                margin-top: $o-wsale-products-layout-grid-gutter-width; // For list and mobile design
+                padding: 0;
+
+                @if $o-wsale-products-layout-grid-gutter-width <= 0 {
+                    border: $card-border-width solid $card-border-color;
+                }
+            }
+
+            > tr:first-child > td:first-child {
+                margin-top: 0; // For list and mobile design
+            }
+        }
+
+        .o_wsale_product_grid_wrapper {
+            position: relative;
+
+            @for $x from 1 through 4 {
+                @for $y from 1 through 4 {
+                    &.o_wsale_product_grid_wrapper_#{$x}_#{$y} {
+                        padding-top: 100% * $o-wsale-products-layout-grid-ratio * $y / $x;
+                    }
+                }
+            }
+
+            > * {
+                $-pos: ($o-wsale-products-layout-grid-gutter-width / 2);
+                @include o-position-absolute($-pos, $-pos, $-pos, $-pos);
+
+                &.card {
+                    border: none;
+
+                    @if $o-wsale-products-layout-grid-gutter-width > 0 {
+                        border-bottom: 1px solid gray('400');
+                    }
+
+                    &, .card-body {
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .o_wsale_products_grid_table_wrapper {
+        // Necessary to compensate the outer border-spacing of the table. No
+        // overflow will occur as the gutter width cannot be higher than the
+        // BS4 grid gutter and the vertical margins of the wrapper's parent are
+        // set accordingly.
+        // Note: a possible layout could also be ok by removing the wrapper
+        // related spacings and setting a background to it, thus including the
+        // outer border spacing as part of the design.
+        margin: (-$o-wsale-products-layout-grid-gutter-width / 2);
+    }
+
+    @include media-breakpoint-down(sm) {
+        @include wsale-break-table-to-list();
+
+        .table .o_wsale_product_grid_wrapper {
+            padding-top: 100% !important;
+        }
+    }
+
+    &.o_wsale_layout_list {
+        @include media-breakpoint-up(sm) {
+            @include wsale-break-table-to-list();
+
+            .o_wsale_products_grid_table_wrapper {
+                margin: 0;
+            }
+
+            .table .o_wsale_product_grid_wrapper {
+                padding-top: 0 !important;
+
+                > * {
+                    @include o-position-absolute(0, 0, 0, 0);
+                    position: relative;
+                }
+            }
+
+            .oe_product_cart {
+                $-wsale-list-layout-height: 12rem;
+
+                flex-flow: row nowrap;
+                min-height: $-wsale-list-layout-height;
+
+                .oe_product_image {
+                    flex: 0 0 auto;
+                    width: $-wsale-list-layout-height;
+                    max-width: 35%;
+                    min-width: 100px;
+                    height: auto;
+                    padding: $spacer/2 !important;
+                }
+                .o_wsale_product_information {
+                    position: static;
+                    display: flex;
+                    flex: 1 1 auto;
+                    text-align: left !important;
+                }
+                .o_wsale_product_information_text {
+                    flex: 1 1 auto;
+                    margin-left: $spacer*2;
+                    margin-right: $spacer;
+
+                    .o_wsale_products_item_title {
+                        font-size: $h5-font-size;
+                        padding-bottom: $spacer/3;
+                        border-bottom: 1px solid gray('300');
+                    }
+                    .oe_subdescription {
+                        font-size: 0.9rem;
+                        margin-top: $spacer/2;
+                    }
+                }
+                .o_wsale_product_btn {
+                    flex: 0 0 auto;
+                    position: static;
+                    display: flex;
+                    align-items: flex-end;
+                    padding: map-get($spacers, 2);
+
+                    .btn + .btn {
+                        margin-left: map-get($spacers, 2);
+                    }
+                }
+
+                .oe_subdescription {
+                    max-height: none !important;
+                }
+                .oe_subdescription,
+                .o_wsale_product_btn .btn {
+                    transform: scale(1) !important;
+                    opacity: 1;
+                }
+
+                &:hover {
+                    .o_wsale_product_information {
+                        background-color: $white !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.o_wsale_products_main_row {
+    // Special case. Normally vertical margins would be set using the BS4
+    // mt-* / my-* / mb-* utility classes, but here we need to use the shop max
+    // grid gutter width to prevent the grid wrapper to overflow because of its
+    // negative margins.
+    margin-top: $grid-gutter-width / 2;
+    margin-bottom: $grid-gutter-width / 2;
+}
+
+.oe_cart {
+    table td:first-child {
+        min-width: 76px;
+    }
+
+    > .oe_structure {
+        clear: both;
+    }
+}
+
+div#payment_method {
+    div.list-group {
+        margin-left: 40px;
+    }
+
+    .list-group-item {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+}
+
+ul.wizard {
+    padding: 0;
+    margin-top: 20px;
+    list-style: none outside none;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.065);
+
+    li {
+        border: 1px solid gray('200');
+        border-right-width: 0;
+        position: relative;
+        float: left;
+        padding: 0 10px 0 20px;
+        margin: 0;
+        line-height: 38px;
+        background: #fbfbfb;
+
+        .chevron {
+            position: absolute;
+            top: 0;
+            right: -10px;
+            z-index: 1;
+            display: block;
+            border: 20px solid transparent;
+            border-right: 0;
+            border-left: 10px solid gray('200');
+        }
+
+        .chevron:before {
+            position: absolute;
+            top: -20px;
+            right: 1px;
+            display: block;
+            border: 20px solid transparent;
+            border-right: 0;
+            border-left: 10px solid #fbfbfb;
+            content: "";
+        }
+
+        .o_link_disable {
+            text-decoration: none;
+            color: inherit;
+            cursor: text;
+        }
+
+        &.text-success {
+            background: #f3f4f5;
+        }
+
+        &.text-success .chevron:before {
+            border-left: 10px solid #f5f5f5;
+        }
+
+        &.text-primary {
+            background: #f1f6fc;
+        }
+
+        &.text-primary .chevron:before {
+            border-left: 10px solid #f1f6fc;
+        }
+
+        &:first-child {
+            padding-left: 15px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        &:last-child {
+            border-radius: 0 4px 4px 0;
+            border-right-width: 1px;
+
+            .chevron {
+                display: none;
+            }
+        }
+    }
+}
+
+#o_shop_collapse_category li {
+    width: 100%;
+
+    a {
+        display: inline-block;
+        width: 80%;
+        padding-left: 3px;
+    }
+
+    i.fa {
+        cursor: pointer;
+    }
+}
+
+.mycart-popover {
+    max-width: 500px;
+    min-width: 250px;
+
+    .cart_line {
+        border-bottom: 1px #EEE solid;
+    }
+    .popover-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+tr#empty {
+    display: none;
+}
+
+.js_change_shipping {
+    cursor: pointer;
+}
+
+a.no-decoration {
+    cursor: pointer;
+    text-decoration: none !important;
+}
+
+#o-carousel-product {
+    transition: top 200ms;
+
+    &.css_not_available {
+        opacity: 0.2;
+    }
+
+    .carousel-outer {
+        height: 400px;
+        max-height: 90vh;
+
+        .carousel-inner {
+            img {
+                height: 100%;
+                width: 100%;
+                object-fit: scale-down;
+            }
+        }
+    }
+
+    .carousel-control-prev .fa {
+        padding-right: 2px;
+    }
+    .carousel-control-next .fa {
+        padding-left: 2px;
+    }
+
+    .carousel-control-prev, .carousel-control-next {
+        height: 70%;
+        top: 15%;
+        opacity: 0.5;
+        cursor: pointer;
+        transition: opacity 0.8s;
+
+        &:focus {
+            opacity: 0.65;
+        }
+        &:hover {
+            opacity: 0.8;
+        }
+        > span {
+            width: 2.5rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            color: gray('900');
+            background: white;
+            font-size: 1.15rem;
+            border: 1px solid gray('400');
+            border-radius: 50%;
+        }
+        @include media-breakpoint-down(md) {
+            > span {
+                width: 2rem;
+                height: 2rem;
+                line-height: 2rem;
+                font-size: 1rem;
+            }
+        }
+    }
+
+    @include media-breakpoint-up(xl) {
+        &:not(:hover) {
+            .carousel-control-prev, .carousel-control-next {
+                opacity: 0;
+            }
+        }
+    }
+
+    .carousel-item, .o_carousel_product_indicators, .carousel-indicators {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .o_carousel_product_indicators {
+        max-height: 400px;
+
+        @include media-breakpoint-up(lg) {
+            .carousel-indicators {
+                justify-content: start;
+
+                li {
+                    width: 64px;
+                    height: 64px;
+                    text-indent: unset;
+                    border: 1px solid gray('500');
+                    opacity: 0.5;
+                    position: relative;
+                    transition: opacity 0.3s;
+
+                    .o_product_video_thumb {
+                        @include o-position-absolute(0, 0, 0, 0);
+                        background-color: rgba(black, 0.5);
+                        color: #e0e0e0;
+                        text-align: center;
+                        line-height: 64px;
+                    }
+                    &.active {
+                        border: 1px solid theme-color('primary');
+                        box-shadow: 0 0 2px 2px rgba(theme-color('primary'), 0.5);
+                    }
+                    &.active, &:hover {
+                        opacity: 1;
+                    }
+                }
+            }
+        }
+    }
+
+    @include media-breakpoint-down(md) {
+        &.o_carousel_product_left_indicators {
+            flex-direction: column-reverse;
+        }
+
+        .carousel-indicators {
+            padding-top: 0px !important;
+            justify-content: center;
+
+            li {
+                width: 8px;
+                height: 8px;
+                min-width: 8px;
+                border-radius: 50%;
+                border: 2px solid gray('500');
+
+                &.active {
+                    background-color: gray('500');
+                }
+                > div {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+.ecom-zoomable {
+    &:not(.ecom-autozoom) {
+        img[data-zoom] {
+            cursor: zoom-in;
+        }
+    }
+    &.ecom-autozoom {
+        img[data-zoom] {
+            cursor: crosshair;
+        }
+    }
+    .o_editable img[data-zoom] {
+        cursor: pointer;
+    }
+    .zoomodoo-flyout {
+        box-shadow: 0 0 20px 2px rgba(black, 0.2);
+    }
+}
+
+#coupon_box form {
+    max-width: 300px;
+}
+
+.o_website_sale_animate {
+    opacity: 0.7;
+    position: absolute !important;
+    height: 150px;
+    width: 150px;
+    z-index: 1020;
+}
+
+.o_red_highlight {
+    background: theme-color('danger') !important;
+    box-shadow: 0 0 0 0 rgba(240,8,0,0.4);
+    transition: all 0.5s linear;
+}
+
+.o_shadow_animation {
+    box-shadow: 0 0 5px 10px rgba(240,8,0,0.4)!important;
+}
+
+.o_mycart_zoom_animation {
+    transform: scale(1.4);
+    transition: all 0.3s ease-in-out;
+}
+
+/* product recently viewed snippet */
+
+.o_carousel_product_card {
+    .o_carousel_product_card_img_top {
+        object-fit: scale-down;
+        @include media-breakpoint-down(sm) {
+            height: 12rem;
+        }
+        @include media-breakpoint-up(md) {
+            height: 8rem;
+        }
+        @include media-breakpoint-up(lg) {
+            height: 12rem;
+        }
+    }
+    .o_carousel_product_img_link:hover + .o_carousel_product_remove {
+        display: block;
+    }
+}
+
+.o_carousel_product_card_wrap {
+    @include media-breakpoint-up(sm) {
+        float: left;
+    }
+}
+
+.o_carousel_product_control {
+    top: percentage(1/3);
+    bottom: percentage(1/3);
+    width: 2rem;
+    border-radius: 5px;
+    background-color: $o-enterprise-primary-color;
+}
+
+.o_carousel_product_remove {
+    position: absolute;
+    display: none;
+    cursor: pointer;
+    right: 5%;
+    top: 5%;
+}
+
+.o_carousel_product_remove:hover {
+    display: block;
+}
+
+// customer reviews
+.o_product_page_reviews_title {
+    .fa {
+        font-size: 1.4rem;
+        color: theme-color('primary');
+
+        &:before {
+            content: "\f067";
+        }
+    }
+    &:not(.collapsed) {
+        .fa:before {
+            content: "\f068";
+        }
+    }
+}
+
+#o_product_page_reviews_content {
+    .o_website_rating_avg {
+        h1 {
+            font-size: 3.5rem;
+        }
+    }
+    .o_portal_chatter_composer {
+        position: sticky;
+        transition: top 200ms;
+    }
+    .o_portal_chatter_messages > .o_portal_chatter_message {
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);;
+        padding: 1rem 0;
+        margin-bottom: 1rem;
+    }
+    .o_portal_chatter_avatar {
+        border-radius: 50%;
+    }
+}

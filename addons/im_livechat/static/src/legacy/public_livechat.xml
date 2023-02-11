@@ -1,0 +1,658 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="im_livechat.legacy.im_livechat.FeedBack">
+        <div class="o_livechat_rating text-center">
+            <div class="o_livechat_rating_box">
+                <div class="o_livechat_rating_feedback_text">
+                    Did we correctly answer your question ?
+                </div>
+                <div class="o_livechat_rating_choices">
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_5.png'" alt="Good" data-value="5"/>
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_3.png'" alt="OK" data-value="3"/>
+                    <img t-att-src="widget.server_origin + '/rating/static/src/img/rating_1.png'" alt="Bad" data-value="1" />
+                </div>
+            </div>
+            <div class="o_livechat_rating_reason">
+                <textarea id="reason" placeholder="Explain your note"></textarea>
+                <div class="o_livechat_rating_reason_button">
+                    <input type="button" class="btn btn-primary btn-sm o_rating_submit_button" value="Send" />
+                </div>
+            </div>
+            <div class="o_livechat_email text-left">
+                <span class="text-muted">Receive a copy of this conversation</span>
+                <div class="input-group">
+                    <input id="o_email" type="text" class="form-control" placeholder="mail@example.com"/>
+                    <button type="button" class="o_email_chat_button btn btn-primary rounded-0">
+                        <i class="fa fa-paper-plane"/>
+                    </button>
+                </div>
+            </div>
+            <div class="alert alert-danger px-0 o_livechat_email_error" style="display: none;" role="alert">
+                Oops! Something went wrong.<br />Please check your internet connection.<br />
+                <a href="#" class="alert-link">Try again</a>
+            </div>
+            <div class="o_livechat_no_feedback text-muted">
+                <span>Close conversation</span>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {im_livechat.legacy.mail.AbstractThreadWindow} widget
+    -->
+    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow">
+        <div class="o_thread_window o_in_home_menu" t-att-data-thread-id="widget.getID()">
+            <div class="o_thread_window_header">
+                <t t-call="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+                    <t t-set="status" t-value="widget.getThreadStatus()"/>
+                    <t t-set="title" t-value="widget.getTitle()"/>
+                    <t t-set="unreadCounter" t-value="widget.getUnreadCounter()"/>
+                    <t t-set="thread" t-value="widget.getThread()"/>
+                </t>
+            </div>
+            <div class="o_thread_window_content">
+            </div>
+            <div t-if="widget.needsComposer()" class="o_thread_composer o_chat_mini_composer">
+                <input class="o_composer_text_field" t-att-placeholder="widget.options.placeholder"/>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {string} [status] e.g. 'online', 'offline'.
+        @param {string} title the title of the thread window, e.g. the record
+          name of the document.
+        @param {integer} [unreadCounter] the number of unread messages on the
+          thread.
+        @param {im_livechat.legacy.mail.model.Thread|undefined} thread
+        @param {Object} widget
+        @param {function} widget.isMobile function without any param that
+          states whether it should render for desktop or mobile screen.
+    -->
+    <t t-name="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
+        <span t-if="widget.isMobile()">
+            <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
+        </span>
+        <span class="o_thread_window_title">
+            <t t-esc="title"/>
+            <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
+            <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
+        </span>
+        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
+            <a href="#" class="o_thread_window_close fa fa-close"/>
+        </span>
+    </t>
+
+    <!--
+        @param {string} status
+        @param {integer|undefined} [partnerID]
+    -->
+    <t t-name="im_livechat.legacy.mail.UserStatus">
+        <span t-att-class="partnerID ? 'o_updatable_im_status' : ''" t-att-data-partner-id="partnerID">
+            <i t-if="status == 'online'" class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+            <i t-if="status == 'away'" class="o_mail_user_status o_user_idle fa fa-circle" title="Idle" role="img" aria-label="User is idle"/>
+            <i t-if="status == 'offline'" class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
+        </span>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayEmptyThread]
+        @param {boolean} [options.displayModerationCommands]
+        @param {boolean} [options.displayNoMatchFound]
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread">
+        <t t-if="thread.hasMessages({ 'domain': options.domain || [] })">
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Content"/>
+        </t>
+    </t>
+
+    <!-- Rendering of thread when messaging not yet ready -->
+    <div t-name="im_livechat.legacy.mail.widget.ThreadLoading" class="o_mail_thread_loading">
+        <i class="o_mail_thread_loading_icon fa fa-circle-o-notch fa-spin"/>
+        <span>Please wait...</span>
+    </div>
+
+    <!--
+        @param {im_livechat.legacy.mail.DocumentViewer} widget
+    -->
+    <t t-name="im_livechat.legacy.mail.DocumentViewer.Content">
+        <div class="o_viewer_content">
+            <t t-set="model" t-value="widget.modelName"/>
+            <div class="o_viewer-header">
+                <span class="o_image_caption">
+                    <i class="fa fa-picture-o mr8" t-if="widget.activeAttachment.fileType == 'image'" role="img" aria-label="Image" title="Image"/>
+                    <i class="fa fa-file-text mr8" t-if="widget.activeAttachment.fileType == 'application/pdf'" role="img" aria-label="PDF file" title="PDF file"/>
+                    <i class="fa fa-video-camera mr8" t-if="widget.activeAttachment.fileType == 'video'" role="img" aria-label="Video" title="Video"/>
+                    <t t-esc="widget.activeAttachment.name"/>
+                    <a role="button" href="#" class="o_download_btn ml8 small" data-toggle="tooltip" data-placement="right" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                </span>
+                <a role="button" class="o_close_btn float-right" href="#" aria-label="Close" title="Close">×</a>
+            </div>
+            <div class="o_viewer_img_wrapper">
+                <div class="o_viewer_zoomer">
+                    <t t-if="widget.activeAttachment.fileType === 'image'">
+                        <div class="o_loading_img text-center">
+                            <i class="fa fa-circle-o-notch fa-spin text-gray-light fa-3x fa-fw" role="img" aria-label="Loading" title="Loading"/>
+                        </div>
+                        <t t-set="unique" t-value="widget.activeAttachment.checksum ? widget.activeAttachment.checksum.slice(-8) : ''"/>
+                        <img class="o_viewer_img" t-attf-src="/web/image/#{widget.activeAttachment.id}?unique=#{unique}&amp;model=#{model}" alt="Viewer"/>
+                    </t>
+                    <iframe t-if="widget.activeAttachment.fileType == 'application/pdf'" class="mt32 o_viewer_pdf"  t-attf-src="/web/static/lib/pdfjs/web/viewer.html?file=/web/content/#{widget.activeAttachment.id}?model%3D#{model}" />
+                    <iframe t-if="(widget.activeAttachment.fileType || '').indexOf('text') !== -1" class="mt32 o_viewer_text" t-attf-src="/web/content/#{widget.activeAttachment.id}?model=#{model}" />
+                    <iframe t-if="widget.activeAttachment.fileType == 'youtu'" class="mt32 o_viewer_text"  allow="autoplay; encrypted-media" width="560" height="315" t-attf-src="https://www.youtube.com/embed/#{widget.activeAttachment.youtube}"/>
+                    <video t-if="widget.activeAttachment.fileType == 'video'" class="o_viewer_video" controls="controls">
+                        <source t-attf-src="/web/image/#{widget.activeAttachment.id}?model=#{model}" t-att-data-type="widget.activeAttachment.mimetype"/>
+                    </video>
+                </div>
+            </div>
+            <div t-if="widget.activeAttachment.fileType == 'image'" class="o_viewer_toolbar btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group">
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_in" data-toggle="tooltip" title="Zoom In"><i class="fa fa-fw fa-plus" role="img" aria-label="Zoom In"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_reset disabled" data-toggle="tooltip" title="Reset Zoom"><i class="fa fa-fw fa-search" role="img" aria-label="Reset Zoom"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_zoom_out disabled" data-toggle="tooltip" title="Zoom Out"><i class="fa fa-fw fa-minus" role="img" aria-label="Zoom Out"/></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_rotate" data-toggle="tooltip" title="Rotate"><i class="fa fa-fw fa-repeat" role="img" aria-label="Rotate"/></a>
+                </div>
+                <div class="btn-group" role="group">
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_print_btn" data-toggle="tooltip" title="Print"><i class="fa fa-fw fa-print" role="img" aria-label="Print"/></a>
+                    <a role="button" href="#" class="o_viewer_toolbar_btn btn o_download_btn" data-toggle="tooltip" title="Download"><i class="fa fa-fw fa-download" role="img" aria-label="Download"/></a>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {im_livechat.legacy.mail.DocumentViewer} widget
+    -->
+    <t t-name="im_livechat.legacy.mail.DocumentViewer">
+        <div class="modal o_modal_fullscreen" tabindex="-1" data-keyboard="false" role="dialog">
+            <t class="o_document_viewer_content_call" t-call="im_livechat.legacy.mail.DocumentViewer.Content"/>
+
+            <t t-if="widget.attachment.length !== 1">
+                <a class="arrow arrow-left move_previous" href="#">
+                    <span class="fa fa-chevron-left" role="img" aria-label="Previous" title="Previous"/>
+                </a>
+                <a class="arrow arrow-right move_next" href="#">
+                    <span class="fa fa-chevron-right" role="img" aria-label="Next" title="Next"/>
+                </a>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {string} src
+    -->
+    <t t-name="im_livechat.legacy.mail.PrintImage">
+        <html>
+            <head>
+                <script>
+                    function onload_img() {
+                        setTimeout('print_img()', 10);
+                    }
+                    function print_img() {
+                        window.print();
+                        window.close();
+                    }
+                </script>
+            </head>
+            <body onload='onload_img()'>
+                <img t-att-src='src' alt=""/>
+            </body>
+        </html>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {integer} [options.displayOrder] 1 or -1 ascending (respectively, descending) order for
+          the thread messages (from top to bottom)
+        @param {Array} [options.domain=[]] the domain to restrict messages on the thread.
+        @param {Object} ORDER
+        @param {integer} ORDER.ASC=1 messages are ordered by ascending order of IDs, (from top to bottom)
+        @param {integer} ORDER.DESC=-1 messages are ordered by descending IDs, (from top to bottom)
+
+                    _____________            _____________
+                   |             |          |             |
+                   |  message 1  |          |  message n  |
+                   |  message 2  |          |  ...        |
+                   |  ...        |          |  message 2  |
+                   |  message n  |          |  message 1  |
+                   |_____________|          |_____________|
+
+        ORDER:           ASC                     DESC
+
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content">
+        <t t-set="messages" t-value="thread.getMessages({ 'domain': options.domain || [] })"/>
+        <t t-if="options.displayOrder === ORDER.ASC" t-call="im_livechat.legacy.mail.widget.Thread.Content.ASC"/>
+        <t t-else="" t-call="im_livechat.legacy.mail.widget.Thread.Content.DESC"/>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayBottomThreadFreeSpace=false]
+        @param {boolean} [options.displayLoadMore=false]
+
+                     _____________
+                    |             |
+                    |  message 1  |
+                    |  message 2  |
+                    |  ...        |
+                    |  message n  |
+                    |_____________|
+
+                      ASC Order
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content.ASC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
+            <t t-if="options.displayBottomThreadFreeSpace">
+                <div class="o_thread_bottom_free_space"/>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {Object} options
+        @param {boolean} [options.displayLoadMore=false]
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+
+                     _____________
+                    |             |
+                    |  message n  |
+                    |  ...        |
+                    |  message 2  |
+                    |  message 1  |
+                    |_____________|
+
+                      DESC Order
+
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Content.DESC">
+        <div class="o_mail_thread_content">
+            <t t-if="options.messagesSeparatorPosition == 'top'" t-call="im_livechat.legacy.mail.MessagesSeparator"/>
+            <t t-set="messages" t-value="messages.slice().reverse()"/>
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Messages"/>
+            <t t-if="options.displayLoadMore" t-call="im_livechat.legacy.mail.widget.Thread.LoadMore"/>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractMessage[]} messages messages are ordered based
+          on desired display order
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Messages">
+        <t t-set="current_day" t-value="0"/>
+        <t t-foreach="messages" t-as="message">
+            <div t-if="current_day !== message.getDateDay()" class="o_thread_date_separator">
+                <span class="o_thread_date">
+                    <t t-esc="message.getDateDay()"/>
+                </span>
+                <t t-set="current_day" t-value="message.getDateDay()"/>
+            </div>
+
+            <t t-call="im_livechat.legacy.mail.widget.Thread.Message"/>
+        </t>
+    </t>
+
+    <!--
+        @param {mail.model.AbstractThread} thread
+        @param {string} dateFormat
+        @param {Object} options
+        @param {mail.model.AbstractMessage} message
+        @param {Object} options
+        @param {boolean} [options.displayAvatars]
+        @param {boolean} [options.displayDocumentLinks]
+        @param {boolean} [options.displayNotificationIcons]
+        @param {boolean} [options.displayMarkAsRead]
+        @param {boolean} [options.displayModerationCommands] when set, display the moderation commands on
+          the message. This includes the moderation checkboxes (needs a control panel such as in Discuss app).
+        @param {boolean} [options.displayReplyIcons]
+        @param {boolean} [options.displayStars]
+        @param {boolean} [options.displaySubjectsOnMessages]
+        @param {boolean} options.hasMessageAttachmentDeletable
+        @param {string|integer} [options.messagesSeparatorPosition] 'top' or
+            message ID, the separator is placed just after this message.
+        @param {integer} [options.selectedMessageID]
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Message">
+        <div t-if="!message.isEmpty()" t-att-class="'o_thread_message ' + (message.getID() === options.selectedMessageID ? 'o_thread_selected_message ' : ' ') + (message.isDiscussion() or message.isNotification() ? ' o_mail_discussion ' : ' o_mail_not_discussion ')" t-att-data-message-id="message.getID()">
+            <div t-if="options.displayAvatars" class="o_thread_message_sidebar">
+                <t t-if="message.hasAuthor()">
+                    <div t-if="displayAuthorMessages[message.getID()]" class="o_thread_message_sidebar_image">
+                        <img
+                            alt=""
+                            t-att-src="message.getAvatarSource()"
+                            data-oe-model="res.partner"
+                            t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_message_avatar rounded-circle #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}"/>
+                        <t t-call="im_livechat.legacy.mail.UserStatus">
+                            <t t-set="status" t-value="message.getAuthorImStatus()"/>
+                            <t t-set="partnerID" t-value="message.getAuthorID()"/>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <img t-if="displayAuthorMessages[message.getID()]"
+                        alt=""
+                        t-att-src="message.getAvatarSource()"
+                        class="o_thread_message_avatar rounded-circle"/>
+                </t>
+                <span t-if="!displayAuthorMessages[message.getID()]" t-att-title="message.getDate().format(dateFormat)" class="o_thread_message_side_date">
+                    <t t-esc="message.getDate().format('hh:mm')"/>
+                </span>
+                <i t-if="!displayAuthorMessages[message.getID()] and options.displayStars and message.getType() !== 'notification'"
+                    t-att-class="'fa o_thread_message_star o_thread_icon ' + (message.isStarred() ? 'fa-star' : 'fa-star-o')"
+                    t-att-data-message-id="message.getID()" title="Mark as Todo" role="img" aria-label="Mark as todo"/>
+                <t t-if="!displayAuthorMessages[message.getID()] and thread.hasSeenFeature()" t-call="im_livechat.legacy.mail.widget.Thread.Message.SeenIcon"/>
+            </div>
+            <div class="o_thread_message_core">
+                <p t-if="displayAuthorMessages[message.getID()]" class="o_mail_info text-muted">
+                    <t t-if="message.isNote()">
+                        Note by
+                    </t>
+
+                    <strong t-if="message.hasAuthor()"
+                            data-oe-model="res.partner" t-att-data-oe-id="message.shouldRedirectToAuthor() ? message.getAuthorID() : ''"
+                            t-attf-class="o_thread_author #{message.shouldRedirectToAuthor() ? 'o_mail_redirect' : ''}">
+                        <t t-esc="message.getDisplayedAuthor()"/>
+                    </strong>
+                    <strong t-elif="message.hasEmailFrom()">
+                        <a class="text-muted" t-attf-href="mailto:#{message.getEmailFrom()}?subject=Re: #{message.hasSubject() ? message.getSubject() : ''}">
+                            <t t-esc="message.getEmailFrom()"/>
+                        </a>
+                    </strong>
+                    <strong t-else="" class="o_thread_author">
+                        <t t-esc="message.getDisplayedAuthor()"/>
+                    </strong>
+
+                    - <small class="o_mail_timestamp" t-att-title="message.getDate().format(dateFormat)"><t t-esc="message.getTimeElapsed()"/></small>
+                    <t t-if="message.isLinkedToDocumentThread() and options.displayDocumentLinks">
+                        <small>on</small> <a t-att-href="message.getURL()" t-att-data-oe-model="message.getDocumentModel()" t-att-data-oe-id="message.getDocumentID()" class="o_document_link"><t t-esc="message.getDocumentName()"/></a>
+                    </t>
+                    <t t-if="message.originatesFromChannel() and (message.getOriginChannelID() !== thread.getID())">
+                        (<small>from</small> <a t-att-data-oe-id="message.getOriginChannelID()" href="#">#<t t-esc="message.getOriginChannelName()"/></a>)
+                    </t>
+                    <span t-if="options.displayNotificationIcons and message.hasNotifications()" class="o_thread_tooltip_container">
+                        <span name="notification_icon" t-attf-class="d-inline-flex align-items-center o_thread_tooltip o_thread_message_notification {{ message.hasNotificationsError() ? 'o_thread_message_notification_error' : '' }}" t-att-data-message-id="message.getID()" t-att-data-message-type="message.getType()">
+                            <i t-att-class="message.getNotificationIcon()"/>
+                            <small t-if="message.getNotificationText()" t-esc="message.getNotificationText()" class="font-weight-bold ml-1"/>
+                        </span>
+                    </span>
+                    <span t-attf-class="o_thread_icons">
+                        <t t-if="thread.hasSeenFeature()" t-call="im_livechat.legacy.mail.widget.Thread.Message.SeenIcon"/>
+                       <i t-if="message.isLinkedToDocumentThread() and options.displayReplyIcons"
+                           class="fa fa-reply o_thread_icon o_thread_message_reply"
+                           t-att-data-message-id="message.getID()" title="Reply" role="img" aria-label="Reply"/>
+                        <i t-if="message.isNeedaction() and options.displayMarkAsRead"
+                           class="fa fa-check o_thread_icon o_thread_message_needaction"
+                           t-att-data-message-id="message.getID()" title="Mark as Read" role="img" aria-label="Mark as Read"/>
+                    </span>
+                </p>
+                <div class="o_thread_message_content">
+                    <t t-out="message.getBody()"/>
+                    <t t-if="message.hasTrackingValues()">
+                        <t t-if="message.hasSubtypeDescription()">
+                            <p><t t-esc="message.getSubtypeDescription()"/></p>
+                        </t>
+                        <t t-call="im_livechat.legacy.mail.widget.Thread.MessageTracking"/>
+                    </t>
+                    <t t-if="message.hasAttachments()">
+                        <div t-if="message.hasImageAttachments()" class="o_attachments_previews">
+                            <t t-foreach="message.getImageAttachments()" t-as="attachment">
+                                <t t-call="im_livechat.legacy.mail.AttachmentPreview">
+                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
+                                </t>
+                            </t>
+                        </div>
+                        <div t-if="message.hasNonImageAttachments()" class="o_attachments_list">
+                            <t t-foreach="message.getNonImageAttachments()" t-as="attachment">
+                                <t t-call="im_livechat.legacy.mail.Attachment">
+                                    <t t-set="isDeletable" t-value="options.hasMessageAttachmentDeletable"/>
+                                </t>
+                            </t>
+                        </div>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <t t-if="options.messagesSeparatorPosition == message.getID()">
+            <t t-call="im_livechat.legacy.mail.MessagesSeparator"/>
+        </t>
+    </t>
+
+    <!--
+        Display the seen icon of a message in the thread.
+        It shows the fetch 'check' before the seen 'check'. We change the order in the template
+        so that fetch 'check' is on top of 'seen' check (z-index does not work with absolute positioning)
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Message.SeenIcon">
+        <t t-if="message.isMyselfAuthor() and message.getID() >= thread.getLastMessageIDSeenByEveryone()">
+            <span t-attf-class="o_mail_thread_message_seen_icon #{thread.hasEveryoneSeen(message) ? 'o_all_seen' : ''}" t-att-data-message-id="message.getID()">
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <i class="fa fa-check"/>
+                </t>
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <i class="fa fa-check"/>
+                </t>
+            </span>
+        </t>
+    </t>
+
+    <!--
+        Display the popover content when clicking the seen icion of a message in the thread.
+
+        List the members that have received the messages, and the members that have seen it.
+
+        @param {mail.model.Thread} thread
+        @param {mail.model.Message} message
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Message.SeenIconPopoverContent">
+        <div class="o_mail_thread_message_seen_icon_content">
+            <t t-if="thread.hasEveryoneSeen(message)">
+                <p>Seen by Everyone</p>
+            </t>
+            <t t-else="">
+                <t t-if="thread.hasSomeoneSeen(message)">
+                    <t t-set="seen_members" t-value="thread.getSeenMembers(message)"/>
+                    Seen by:
+                    <ul>
+                        <li t-foreach="seen_members" t-as="member">
+                            <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                        </li>
+                    </ul>
+                </t>
+                <t t-if="thread.hasSomeoneFetched(message)">
+                    <t t-if="thread.hasEveryoneFetched(message)">
+                        <p>Received by Everyone</p>
+                    </t>
+                    <t t-else="">
+                        <t t-set="fetched_members" t-value="thread.getFetchedNotSeenMembers(message)"/>
+                        <t t-if="!_.isEmpty(fetched_members)">
+                            Received by:
+                            <ul>
+                                <li t-foreach="fetched_members" t-as="member">
+                                    <t t-esc="member.name"/> (<t t-esc="member.email"/>)
+                                </li>
+                            </ul>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {Object[]} notifications: list of notifications
+           A notification is an object with at least the following keys:
+           {notification_status, partner_name}
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.Message.MailTooltip">
+        <div t-foreach="notifications" t-as="notification">
+            <span name="notification_status" class="d-inline-block text-center o_thread_tooltip_icon">
+                <i t-if="notification.notification_status === 'sent'" class='fa fa-check' title="Sent" role="img" aria-label="Sent"/>
+                <i t-if="notification.notification_status === 'bounce'" class='fa fa-exclamation text-danger' title="Bounced" role="img" aria-label="Bounced"/>
+                <i t-if="notification.notification_status === 'exception'" class='fa fa-exclamation text-danger' title="Error" role="img" aria-label="Error"/>
+                <i t-if="notification.notification_status === 'ready'" class='fa fa-send-o' title="Ready" role="img" aria-label="Ready"/>
+                <i t-if="notification.notification_status === 'canceled'" class='fa fa-trash-o' title="Canceled" role="img" aria-label="Canceled"/>
+            </span>
+            <span name="partner_name" t-esc="notification.partner_name"/>
+        </div>
+    </t>
+
+    <t t-name="im_livechat.legacy.mail.MessagesSeparator">
+        <div class="o_thread_new_messages_separator">
+            <span class="o_thread_separator_label">New messages</span>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.Message} message
+    -->
+    <t t-name="im_livechat.legacy.mail.widget.Thread.MessageTracking">
+        <ul class="o_mail_thread_message_tracking">
+            <t t-foreach='message.getTrackingValues()' t-as='value'>
+                <li>
+                    <t t-esc="value.changed_field"/>:
+                    <t t-if="value.old_value">
+                        <span> <t t-esc="value.old_value || ((value.field_type !== 'boolean') and '')"/> </span>
+                        <span t-if="value.old_value !== value.new_value" class="fa fa-long-arrow-right" role="img" aria-label="Changed" title="Changed"/>
+                    </t>
+                    <span t-if="value.old_value !== value.new_value">
+                        <t t-esc="value.new_value || ((value.field_type !== 'boolean') and '')"/>
+                    </span>
+                </li>
+            </t>
+        </ul>
+    </t>
+
+    <!--
+        @param {Array} attachments
+    -->
+    <t t-name="im_livechat.legacy.mail.composer.Attachments">
+        <div t-if="attachments.length > 0" class="o_attachments o_attachments_list">
+            <t t-foreach="attachments" t-as='attachment'>
+                <t t-call="im_livechat.legacy.mail.Attachment">
+                     <t t-set="editable" t-value="true"/>
+                </t>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {Object} attachment
+        @param {integer} attachment.id
+        @param {string} attachment.name
+        @param {string} attachment.url
+        @param {boolean} [isDeletable=false]
+    -->
+    <t t-name="im_livechat.legacy.mail.AttachmentPreview">
+        <div class="o_attachment" t-att-title="attachment.name">
+            <div class="o_attachment_wrap">
+                <div class="o_image_box">
+                    <div class="o_attachment_image" t-attf-style="background-image:url('/web/image/#{attachment.id}/160x160/?crop=true')"/>
+                    <div t-attf-class="o_image_overlay o_attachment_view"  t-att-data-id="attachment.id">
+                        <span t-if="isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                        <span class="o_attachment_title text-white"><t t-esc="attachment.name"/></span>
+                        <a class="o_attachment_download" t-att-href='attachment.url'>
+                            <i t-attf-class="fa fa-download text-white" t-att-title="'Download ' + attachment.name" role="img" aria-label="Download"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {Object} attachment
+        @param {string} attachment.filename
+        @param {integer} attachment.id
+        @param {string} [attachment.mimetype]
+        @param {string} attachment.name
+        @param {boolean} attachment.upload
+        @param {string} attachment.url
+        @param {boolean} [editable=false] if set, it means the attachment is rendered in the composer.
+          Some changes are required in that case, such as "delete" button is not visible (pretty unlink is used instead).
+        @param {boolean} [isDeletable=false]
+    -->
+    <t t-name="im_livechat.legacy.mail.Attachment">
+        <t t-set="type" t-value="attachment.mimetype and attachment.mimetype.split('/').shift()"/>
+        <div t-attf-class="o_attachment #{ editable ? 'o_attachment_editable' : '' } #{attachment.upload ? 'o_attachment_uploading' : ''}" t-att-title="attachment.name">
+            <div class="o_attachment_wrap">
+                <span t-if="!editable and isDeletable" class="fa fa-times o_attachment_delete_cross" t-att-title="'Delete ' + attachment.name" t-att-data-id="attachment.id" t-att-data-name="attachment.name"/>
+                <t t-set="has_preview" t-value="type == 'image' or type == 'video' or attachment.mimetype == 'application/pdf'"/>
+                <t t-set="ext" t-value="attachment.filename.split('.').pop()"/>
+
+                <div t-attf-class="o_image_box float-left #{has_preview ? 'o_attachment_view' : ''}" t-att-data-id="attachment.id">
+                    <div t-if="has_preview"
+                         class="o_image o_hover"
+                         t-att-style="type == 'image' ? 'background-image:url(/web/image/' + attachment.id + '/38x38/?crop=true' : '' "
+                         t-att-data-mimetype="attachment.mimetype">
+                    </div>
+                    <a t-elif="!editable" t-att-href='attachment.url' t-att-title="'Download ' + attachment.name" aria-label="Download">
+                        <span class="o_image o_hover" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext"/>
+                    </a>
+                    <span t-else="" class="o_image" t-att-data-mimetype="attachment.mimetype" t-att-data-ext="ext" role="img" aria-label="Document not downloadable"/>
+                </div>
+
+                <div class="caption">
+                    <span t-if="has_preview or editable" t-attf-class="ml4 #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc='attachment.name'/></span>
+                    <a t-else="" class="ml4" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><t t-esc='attachment.name'/></a>
+                </div>
+                <div t-if="editable" class="caption small">
+                    <b t-attf-class="ml4 small text-uppercase #{has_preview? 'o_attachment_view' : ''}" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
+                    <div class="progress o_attachment_progress_bar">
+                        <div class="progress-bar progress-bar-striped active" style="width: 100%">Uploading</div>
+                    </div>
+                </div>
+                <div t-if="!editable" class="caption small">
+                    <b t-if="has_preview" class="ml4 small text-uppercase o_attachment_view" t-att-data-id="attachment.id"><t t-esc="ext"/></b>
+                    <a t-else="" class="ml4 small text-uppercase" t-att-href="attachment.url" t-att-title="'Download ' + attachment.name"><b><t t-esc='ext'/></b></a>
+                    <a class="ml4 o_attachment_download float-right" t-att-title="'Download ' + attachment.name" t-att-href='attachment.url'><i t-attf-class="fa fa-download" role="img" aria-label="Download"/></a>
+                </div>
+                <div t-if="editable" class="o_attachment_uploaded"><i class="text-success fa fa-check" role="img" aria-label="Uploaded" title="Uploaded"/></div>
+                <div t-if="editable" class="o_attachment_delete" t-att-data-id="attachment.id"><span class="text-white" role="img" aria-label="Delete" title="Delete">×</span></div>
+            </div>
+        </div>
+    </t>
+
+    <!--
+        @param {Object} options
+        @param {boolean} [options.loadMoreOnScroll]
+    -->
+     <t t-name="im_livechat.legacy.mail.widget.Thread.LoadMore">
+        <div class="o_thread_show_more">
+            <t t-if="options.loadMoreOnScroll">
+                <span><i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Please wait" title="Please wait"/> Loading older messages... </span>
+            </t>
+            <t t-else="">
+                <button class="btn btn-link">-------- Show older messages --------</button>
+            </t>
+        </div>
+    </t>
+
+    <!--
+        @param {mail.model.Thread} thread with typing feature
+    -->
+    <t t-name="im_livechat.legacy.mail.ThreadTypingIcon">
+        <span class="o_mail_thread_typing_icon" t-att-title="thread.getTypingMembersToText()">
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+            <span class="o_mail_thread_typing_icon_dot"/>
+        </span>
+    </t>
+
+</templates>

@@ -1,0 +1,117 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_sips
+# 
+# Translators:
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2022
+# Martin Trigaux, 2022
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2022\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment_transaction.py:0
+#, python-format
+msgid "Incorrect amount: received %(received).2f, expected %(expected).2f"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_version
+msgid "Interface Version"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "Merchant ID"
+msgstr ""
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model,name:payment_sips.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Stjecatelj plaćanja"
+
+#. module: payment_sips
+#: model:ir.model,name:payment_sips.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Načini plaćanja"
+
+#. module: payment_sips
+#: model:ir.model,name:payment_sips.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transakcija plaćanja"
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_prod_url
+msgid "Production URL"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Davatelj "
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
+msgid "SIPS Secret Key"
+msgstr ""
+
+#. module: payment_sips
+#: model_terms:ir.ui.view,arch_db:payment_sips.payment_acquirer_form
+msgid "Secret Key"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
+msgid "Secret Key Version"
+msgstr ""
+
+#. module: payment_sips
+#: model:account.payment.method,name:payment_sips.payment_method_sips
+#: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
+msgid "Sips"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
+msgid "Test URL"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "The ID solely used to identify the merchant account with Sips"
+msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr ""
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment_transaction.py:0
+#, python-format
+msgid "This currency is not supported: %s."
+msgstr ""
+
+#. module: payment_sips
+#: code:addons/payment_sips/models/payment_transaction.py:0
+#, python-format
+msgid "Unrecognized response received from the payment provider."
+msgstr ""

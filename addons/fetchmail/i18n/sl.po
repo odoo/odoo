@@ -1,0 +1,394 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* fetchmail
+# 
+# Translators:
+# laznikd <laznik@mentis.si>, 2022
+# Jasmina Macur <jasmina@hbs.si>, 2022
+# matjaz k <matjaz@mentis.si>, 2022
+# Matjaz Mozetic <m.mozetic@matmoz.si>, 2022
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Slovenian (https://www.transifex.com/odoo/teams/41243/sl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sl\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || n%100==4 ? 2 : 3);\n"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Actions to Perform on Incoming Mails"
+msgstr "Aktivnosti, ki se naj izvedeno na vhodni pošti"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__active
+msgid "Active"
+msgstr "Aktivno"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced"
+msgstr "Napredno"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Advanced Options"
+msgstr "Napredne možnosti"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Archived"
+msgstr "Arhivirano"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__configuration
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Configuration"
+msgstr "Nastavitve"
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__done
+msgid "Confirmed"
+msgstr "Potrjeno"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid "Connection test failed: %s"
+msgstr "Neuspešen test povezave: %s"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__is_ssl
+msgid ""
+"Connections are encrypted with SSL/TLS through a dedicated port (default: "
+"IMAPS=993, POP3S=995)"
+msgstr ""
+"Povezave so šifrirane s SSL/TLS preko namenskih vrat (privzeto: IMAPS=993, "
+"POPS=995)"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
+msgid "Create a New Record"
+msgstr "Ustvari nov zapis"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_uid
+msgid "Created by"
+msgstr "Ustvaril"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_date
+msgid "Created on"
+msgstr "Ustvarjeno"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
+msgid "Defines the order of processing, lower values mean higher priority"
+msgstr "Določa vrstni red izvajanja, nižja vrednost pomeni višjo prioriteto"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
+msgid "Display Name"
+msgstr "Prikazani naziv"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "Email Count"
+msgstr "Štetje e-pošte"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Fetch Now"
+msgstr "Sinhroniziraj zdaj"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__server
+msgid "Hostname or IP of the mail server"
+msgstr "Ime ali IP poštnega strežnika"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__id
+msgid "ID"
+msgstr "ID"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "IMAP"
+msgstr "IMAP"
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__imap
+msgid "IMAP Server"
+msgstr "IMAP Strežnik"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "If SSL required."
+msgstr "Če je zahtevan SSL."
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__fetchmail_server_id
+msgid "Inbound Mail Server"
+msgstr "Strežnik vhodne pošte"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Incoming Email Servers"
+msgstr "Vhodni poštni strežniki"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_fetchmail_server
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Incoming Mail Server"
+msgstr "Strežnih vhodne pošte"
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.action_email_server_tree
+#: model:ir.ui.menu,name:fetchmail.menu_action_fetchmail_server_tree
+msgid "Incoming Mail Servers"
+msgstr "Vhodni poštni strežniki"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Invalid server name !\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
+msgid "Keep Attachments"
+msgstr "Obdrži priponke"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__original
+msgid "Keep Original"
+msgstr "Ohrani izvirnik"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__date
+msgid "Last Fetch Date"
+msgstr "Datum zadnje sinhronizacije"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
+msgid "Last Modified on"
+msgstr "Zadnjič spremenjeno"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_uid
+msgid "Last Updated by"
+msgstr "Zadnji posodobil"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__write_date
+msgid "Last Updated on"
+msgstr "Zadnjič posodobljeno"
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__local
+msgid "Local Server"
+msgstr "Lokalni strežnik"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Login Information"
+msgstr "Prijavni podatki"
+
+#. module: fetchmail
+#: model:ir.actions.server,name:fetchmail.ir_cron_mail_gateway_action_ir_actions_server
+#: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
+#: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
+msgid "Mail: Fetchmail Service"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.actions.act_window,name:fetchmail.act_server_history
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__message_ids
+msgid "Messages"
+msgstr "Sporočila"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"No response received. Check server information.\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
+msgid "Not Confirmed"
+msgstr "Nepotrjeno"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.res_config_settings_view_form
+msgid "Outgoing Email Servers"
+msgstr "Izhodni e-poštni strežniki"
+
+#. module: fetchmail
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr "Odhajajoča sporočila"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "POP"
+msgstr "POP"
+
+#. module: fetchmail
+#: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__pop
+msgid "POP Server"
+msgstr "POP Strežnik"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
+msgid "POP/IMAP Servers"
+msgstr "POP/IMAP Strežniki"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__password
+msgid "Password"
+msgstr "Geslo"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__port
+msgid "Port"
+msgstr "Vrata"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__object_id
+msgid ""
+"Process each incoming mail as part of a conversation corresponding to this "
+"document type. This will create new documents for new conversations, or "
+"attach follow-up emails to the existing conversations (documents)."
+msgstr ""
+"Obdelaj vsako vhodno sporočilo kot del pogovora ustrezajočega temu tipu "
+"dokumenta. Ustvarjeni bodo novi dokumenti za nove pogovore, pri nadaljevanju"
+" obstoječih pogovorov pa priloženi obstoječim dokumentom."
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Reset Confirmation"
+msgstr "Ponastavi potrditev"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "SSL"
+msgstr "SSL"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__script
+msgid "Script"
+msgstr "Skript"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Search Incoming Mail Servers"
+msgstr "Išči strežnike vhodne pošte"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server & Login"
+msgstr "Strežnik in Prijava"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Server Information"
+msgstr "Podatki o strežniku"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server
+msgid "Server Name"
+msgstr "Ime strežnika"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__priority
+msgid "Server Priority"
+msgstr "Prioriteta strežnika"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
+msgid "Server Type"
+msgstr "Tip Strežnika"
+
+#. module: fetchmail
+#: code:addons/fetchmail/models/fetchmail.py:0
+#, python-format
+msgid ""
+"Server replied with following exception:\n"
+" %s"
+msgstr ""
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type IMAP."
+msgstr "Strežnik tipa IMAP"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
+msgid "Server type POP."
+msgstr "POP strežnik"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__state
+msgid "Status"
+msgstr "Status"
+
+#. module: fetchmail
+#: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
+msgid "Test & Confirm"
+msgstr "Preveri & potrdi"
+
+#. module: fetchmail
+#: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__user
+msgid "Username"
+msgstr "Uporabniško ime"
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__original
+msgid ""
+"Whether a full original copy of each email should be kept for reference and "
+"attached to each processed message. This will usually double the size of "
+"your message database."
+msgstr ""
+"Ali se naj ohrani originalna kopja vsakega elektronskega sporočila kot sklic"
+" in priloga k vsakemu obdelanemu sporočilu. To običajno podvoji velikost "
+"vaše baze sporočil."
+
+#. module: fetchmail
+#: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
+msgid ""
+"Whether attachments should be downloaded. If not enabled, incoming emails "
+"will be stripped of any attachments before being processed"
+msgstr ""
+"Opcija prenosa prilog. Če ni omogočeno, bodo sporočila pred obdelavo "
+"prikrajšana za priloge."

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SaleOrderRow" owl="1">
+        <div class="order-row"
+        t-att-class="{ highlight: highlighted }"
+        t-on-click="trigger('click-sale-order', props.order)">
+            <div class="col name">
+                <div t-if="env.isMobile">Order</div>
+                <div><t t-esc="name"/></div>
+            </div>
+            <div class="col date">
+                <div t-if="env.isMobile">Date</div>
+                <div><t t-esc="date"/></div>
+            </div>
+            <div class="col customer">
+                <div t-if="env.isMobile">Customer</div>
+                <div><t t-esc="customer"/></div>
+            </div>
+            <div class="col salesman">
+                <div t-if="env.isMobile">Salesman</div>
+                <div><t t-esc="salesman"/></div>
+            </div>
+            <div class="col end total">
+                <div t-if="env.isMobile">Total</div>
+                <div><t t-esc="total"/></div>
+            </div>
+            <div class="col state">
+                <div t-if="env.isMobile">State</div>
+                <div><t t-esc="state"/></div>
+            </div>
+        </div>
+    </t>
+
+</templates>

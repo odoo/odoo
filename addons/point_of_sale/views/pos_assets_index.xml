@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- This contains the tour assets. They are included during testing. -->
+<template id="point_of_sale.index" name="POS Index">&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <title>Odoo POS</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <link rel="shortcut icon"    sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png"/>
+        <link rel="shortcut icon"    sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png"/>
+        <link rel="apple-touch-icon"                 href="/point_of_sale/static/src/img/touch-icon-iphone.png"/>
+        <link rel="apple-touch-icon" sizes="76x76"   href="/point_of_sale/static/src/img/touch-icon-ipad.png"/>
+        <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
+        <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
+
+        <style> body { background: #222; } </style>
+
+        <link rel="shortcut icon" href="/point_of_sale/static/src/img/favicon.ico" type="image/x-icon"/>
+
+        <script type="text/javascript">
+            var odoo = <t t-out="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                '__session_info__': session_info,
+                'login_number': login_number,
+                'debug': debug,
+            })"/>;
+            // Prevent the menu_service to load anything. In an ideal world, POS assets would only contain
+            // what is genuinely necessary, and not the whole backend.
+            odoo.loadMenusPromise = Promise.resolve();
+            odoo.loadTemplatesPromise = fetch(`/web/webclient/qweb/${odoo.__session_info__.cache_hashes.qweb}?bundle=web.assets_qweb`).then(doc => doc.text());
+        </script>
+
+        <t t-call="point_of_sale.assets_common"/>
+        <t t-call="web.conditional_assets_tests"/>
+        <t t-call-assets="point_of_sale.assets_backend_prod_only" />
+    </head>
+    <body>
+    </body>
+</html>
+</template>
+
+</odoo>

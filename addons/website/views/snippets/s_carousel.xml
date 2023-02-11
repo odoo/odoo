@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_carousel" name="Carousel">
+    <section class="s_carousel_wrapper" data-vxml="001">
+        <t t-set="uniq" t-value="datetime.datetime.now().microsecond"/>
+        <div t-attf-id="myCarousel{{uniq}}" class="s_carousel s_carousel_default carousel slide" data-interval="10000">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="0" class="active"/>
+                <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="1"/>
+                <li t-attf-data-target="#myCarousel{{uniq}}" data-slide-to="2"/>
+            </ol>
+            <!-- Content -->
+            <!-- TODO in master: remove the `content` classes in the div with
+                the class `row`, to avoid having unwanted dropzones when
+                dragging inner content. -->
+            <div class="carousel-inner">
+                <!-- #01 -->
+                <div class="carousel-item active oe_img_bg o_bg_img_center pt152 pb152" style="background-image: url('/web/image/website.s_carousel_default_image_1');" data-name="Slide">
+                    <div class="container oe_unremovable">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-6">
+                                 <h2><font style="font-size: 62px;">Slide Title</font></h2>
+                                <p class="lead">Use this snippet to presents your content in a slideshow-like format. Don't write about products or services here, write about solutions.</p>
+                                <p>
+                                    <a href="/contactus" class="btn btn-primary mb-2">Contact us</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #02 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt96 pb96" style="background-image: url('/web/image/website.s_carousel_default_image_2');" data-name="Slide">
+                    <div class="container oe_unremovable">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-8 offset-lg-2 bg-black-50 text-center pt48 pb40">
+                                <h2 style="font-size: 62px;">Clever Slogan</h2>
+                                <div class="s_hr pt8 pb24" data-snippet="s_hr" data-name="Separator">
+                                    <hr class="w-25 mx-auto" style="border-top-width: 1px; border-top-style: solid;"/>
+                                </div>
+                                <p class="lead">Storytelling is powerful.<br/> It draws readers in and engages them.</p>
+                                <p><a href="/" class="btn btn-primary mb-2">Start your journey</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- #03 -->
+                <div class="carousel-item oe_img_bg o_bg_img_center pt128 pb128" style="background-image: url('/web/image/website.s_carousel_default_image_3');" data-name="Slide">
+                    <div class="container oe_unremovable">
+                        <div class="row content">
+                            <div class="carousel-content col-lg-6 offset-lg-6">
+                                <h2><font style="font-size: 62px; background-color: rgb(255, 255, 255);">Edit this title</font></h2>
+                                <h4><font style="background-color: rgb(255, 255, 255);">Good writing is simple, but not simplistic.</font></h4>
+                                <p><br/></p>
+                                <p>Good copy starts with understanding how your product or service helps your customers. Simple words communicate better than big words and pompous language.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Controls -->
+            <a class="carousel-control-prev o_not_editable" contenteditable="false" t-attf-href="#myCarousel{{uniq}}" data-slide="prev" role="img" aria-label="Previous" title="Previous">
+                <span class="carousel-control-prev-icon"/>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next o_not_editable" contenteditable="false" t-attf-href="#myCarousel{{uniq}}" data-slide="next" role="img" aria-label="Next" title="Next">
+                <span class="carousel-control-next-icon"/>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </section>
+</template>
+
+</odoo>

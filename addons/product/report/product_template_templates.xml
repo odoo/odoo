@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<template id="report_producttemplatelabel">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-call="product.report_productlabel">
+                <t t-set="products" t-value="products"/>
+            </t>
+        </div>
+    </t>
+</template>
+
+<template id="report_producttemplatelabel_dymo">
+    <t t-call="web.basic_layout">
+        <div class="page">
+            <t t-call="product.report_productlabel_dymo">
+                <t t-set="products" t-value="products"/>
+            </t>
+        </div>
+    </t>
+</template>
+
+</odoo>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcLayoutMenu" owl="1">
+        <div class="o_RtcLayoutMenu">
+            <t t-if="layoutMenu">
+                <t t-if="layoutMenu and layoutMenu.callViewer.threadView.thread.videoCount > 0">
+                    <label class="o_RtcLayoutMenu_radio">
+                        <div class="o_RtcLayoutMenu_radioInputContainer">
+                            <input class="o_RtcLayoutMenu_radioInput" type="radio" name="filter" value="all" t-on-click="layoutMenu.onClickFilter" t-att-checked="!layoutMenu.callViewer.filterVideoGrid"/>
+                            <span class="o_RtcLayoutMenu_inputText">Show All</span>
+                        </div>
+                    </label>
+                    <label class="o_RtcLayoutMenu_radio">
+                        <div class="o_RtcLayoutMenu_radioInputContainer">
+                            <input class="o_RtcLayoutMenu_radioInput" type="radio" name="filter" value="video" t-on-click="layoutMenu.onClickFilter" t-att-checked="layoutMenu.callViewer.filterVideoGrid"/>
+                            <span class="o_RtcLayoutMenu_inputText">Show only video</span>
+                        </div>
+                    </label>
+                    <hr class="o_RtcLayoutMenu_separator"/>
+                </t>
+                <label class="o_RtcLayoutMenu_radio">
+                    <div class="o_RtcLayoutMenu_radioInputContainer">
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="tiled" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'tiled'"/>
+                        <span class="o_RtcLayoutMenu_inputText">Tiled</span>
+                    </div>
+                    <span class="o_RtcLayoutMenu_radioIcon">
+                        <t t-call="mail.RtcLayoutMenu_gridSvg"/>
+                    </span>
+                </label>
+                <label class="o_RtcLayoutMenu_radio">
+                    <div class="o_RtcLayoutMenu_radioInputContainer">
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="spotlight" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'spotlight'"/>
+                        <span class="o_RtcLayoutMenu_inputText">Spotlight</span>
+                    </div>
+                    <span class="o_RtcLayoutMenu_radioIcon">
+                        <t t-call="mail.RtcLayoutMenu_spotlightSvg"/>
+                    </span>
+                </label>
+                <label class="o_RtcLayoutMenu_radio">
+                    <div class="o_RtcLayoutMenu_radioInputContainer">
+                        <input class="o_RtcLayoutMenu_radioInput" type="radio" name="layout" value="sidebar" t-on-click="layoutMenu.onClickLayout" t-att-checked="messaging.userSetting.rtcLayout === 'sidebar'"/>
+                        <span class="o_RtcLayoutMenu_inputText">Sidebar</span>
+                    </div>
+                    <span class="o_RtcLayoutMenu_radioIcon">
+                        <t t-call="mail.RtcLayoutMenu_sidebarSvg"/>
+                    </span>
+                </label>
+            </t>
+        </div>
+    </t>
+
+    <!-- TODO TEMPORARY ICONS -->
+
+    <t t-name="mail.RtcLayoutMenu_gridSvg" owl="1">
+        <svg viewBox="0 0 300 300">
+            <g transform="matrix(1.08 0 0 1.29 63.85 96.61)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 150 96.61)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 236 96.61)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 63.85 150)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 63.85 204)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 150 150)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 150 204)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 236 150)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(1.08 0 0 1.29 236 204)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="mail.RtcLayoutMenu_spotlightSvg" owl="1">
+        <svg viewBox="0 0 300 300">
+            <g transform="matrix(3.38 0 0 4.04 150 150)">
+                <rect style="fill: currentColor" x="-38" y="-20" rx="0" ry="0" width="75" height="39"/>
+            </g>
+        </svg>
+    </t>
+
+    <t t-name="mail.RtcLayoutMenu_sidebarSvg" owl="1">
+        <svg viewBox="0 0 300 300">
+            <g transform="matrix(2.66 0 0 4.04 122.89 150.02)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(0.63 0 0 0.77 252.6 150.07)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+                <g transform="matrix(0.63 0 0 0.77 252.6 118.07)">
+            <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+                </g>
+            <g transform="matrix(0.63 0 0 0.77 252.6 86.07)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(0.63 0 0 0.77 252.6 182.07)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+            <g transform="matrix(0.63 0 0 0.77 252.6 214.07)">
+                <rect style="fill: currentColor" x="-37.46" y="-19.415" rx="0" ry="0" width="74.92" height="38.83"/>
+            </g>
+        </svg>
+    </t>
+
+</templates>

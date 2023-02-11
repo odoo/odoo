@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="s_dynamic_snippet_products" name="Products">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet_products'"/>
+        </t>
+    </template>
+    <template id="s_dynamic_snippet_products_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.dynamic_snippet_carousel_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet_products'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet_products'"/>
+            </t>
+        </xpath>
+    </template>
+    <template id="s_dynamic_snippet_products_template_options" inherit_id="website.s_dynamic_snippet_options_template">
+        <xpath expr="//we-select[@data-name='filter_opt']" position="after">
+            <t t-if="snippet_name == 'dynamic_snippet_products'">
+                <we-select string="Category" data-name="product_category_opt" data-attribute-name="productCategoryId" data-no-preview="true">
+                    <we-button data-select-data-attribute="all">All Products</we-button>
+                    <we-button data-select-data-attribute="current">Current Category or All</we-button>
+                </we-select>
+                <we-input string="Product names" class="o_we_large" data-name="product_names_opt"
+                    data-attribute-name="productNames" data-no-preview="true" data-select-data-attribute=""
+                    placeholder="e.g. lamp,bin" title="Comma-separated list of parts of product names"/>
+            </t>
+        </xpath>
+    </template>
+
+    <record id="website_sale.s_dynamic_snippet_products_000_js" model="ir.asset">
+        <field name="name">Dynamic snippet products 000 JS</field>
+        <field name="bundle">web.assets_frontend</field>
+        <field name="path">website_sale/static/src/snippets/s_dynamic_snippet_products/000.js</field>
+    </record>
+
+</odoo>

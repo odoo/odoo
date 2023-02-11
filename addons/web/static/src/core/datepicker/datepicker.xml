@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+
+    <t t-name="web.DatePicker" owl="1">
+        <div class="o_datepicker" aria-atomic="true" t-att-id="datePickerId" data-target-input="nearest">
+            <input type="text"
+                class="o_datepicker_input o_input datetimepicker-input"
+                autofocus=""
+                t-att-name="props.name"
+                t-att-placeholder="props.placeholder"
+                t-attf-data-target="#{{ datePickerId }}"
+                t-att-readonly="props.readonly"
+                t-ref="input"
+                t-on-change="() => this.onDateChange()"
+                t-on-click="onInputClick"
+            />
+            <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
+                <t>This date is on the future. Make sure it is what you expected.</t>
+            </span>
+            <span class="o_datepicker_button" />
+        </div>
+    </t>
+
+</templates>

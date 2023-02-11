@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_ro_statements_menu" name="Romania" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_readonly"/>
+
+    <!-- Chart template -->
+    <record id="ro_chart_template" model="account.chart.template">
+        <field name="name">Romania - Chart of Accounts</field>
+        <field name="bank_account_code_prefix">512</field>
+        <field name="cash_account_code_prefix">531</field>
+        <field name="transfer_account_code_prefix">581</field>
+        <field name="code_digits">6</field>
+        <field name="currency_id" ref="base.RON"/>
+        <field name="country_id" ref="base.ro"/>
+    </record>
+</odoo>

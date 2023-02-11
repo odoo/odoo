@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="base.user_demo" model="res.users">
+            <field eval="[(4, ref('group_purchase_user'))]" name="groups_id"/>
+        </record>
+
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="receipt_reminder_email">True</field>
+        </record>
+
+        <record id="purchase_order_1" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_01'),
+                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
+                    'price_unit': 79.80,
+                    'product_qty': 15.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=3)}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_25'),
+                    'name': obj().env.ref('product.product_product_25').partner_ref,
+                    'price_unit': 286.70,
+                    'product_qty': 5.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=3)}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_27'),
+                    'name': obj().env.ref('product.product_product_27').partner_ref,
+                    'price_unit': 99.00,
+                    'product_qty': 4.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=3)})
+            ]"/>
+        </record>
+
+        <record id="purchase_order_2" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_3"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_02'),
+                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
+                    'price_unit': 132.50,
+                    'product_qty': 20.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=1)}),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_01'),
+                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
+                    'price_unit': 89.0,
+                    'product_qty': 5.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=1)}),
+            ]"/>
+        </record>
+
+        <record id="purchase_order_3" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_12"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_2'),
+                    'name': obj().env.ref('product.product_product_2').partner_ref,
+                    'price_unit': 25.50,
+                    'product_qty': 10.0,
+                    'product_uom': ref('uom.product_uom_hour'),
+                    'date_planned': DateTime.today() + relativedelta(days=1)}),
+            ]"/>
+        </record>
+
+        <record id="purchase_order_4" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_02'),
+                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
+                    'price_unit': 85.50,
+                    'product_qty': 6.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=5)}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_20'),
+                    'name': obj().env.ref('product.product_product_20').partner_ref,
+                    'price_unit': 1690.0,
+                    'product_qty': 5.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=5)}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_6'),
+                    'name': obj().env.ref('product.product_product_6').partner_ref,
+                    'price_unit': 800.0,
+                    'product_qty': 7.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today() + relativedelta(days=5)})
+            ]"/>
+        </record>
+        <function model="purchase.order" name="write">
+            <value eval="[ref('purchase_order_4')]"/>
+            <value eval="{'state': 'sent'}"/>
+        </function>
+
+        <record id="purchase_order_5" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_22'),
+                    'name': obj().env.ref('product.product_product_22').partner_ref,
+                    'price_unit': 2010.0,
+                    'product_qty': 3.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+                (0, 0, {
+                    'product_id': ref('product.product_product_24'),
+                    'name': obj().env.ref('product.product_product_24').partner_ref,
+                    'price_unit': 876.0,
+                    'product_qty': 3.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+            ]"/>
+        </record>
+
+        <record id="purchase_order_6" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_02'),
+                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
+                    'price_unit': 58.0,
+                    'product_qty': 9.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_01'),
+                    'name': obj().env.ref('product.product_delivery_01').partner_ref,
+                    'price_unit': 65.0,
+                    'product_qty': 3.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+                (0, 0, {
+                    'product_id': ref('product.consu_delivery_01'),
+                    'name': obj().env.ref('product.consu_delivery_01').partner_ref,
+                    'price_unit': 154.5,
+                    'product_qty': 4.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+            ]"/>
+        </record>
+
+        <record id="purchase_order_7" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_12'),
+                    'name': obj().env.ref('product.product_product_12').partner_ref,
+                    'price_unit': 130.5,
+                    'product_qty': 5.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+                (0, 0, {
+                    'product_id': ref('product.product_delivery_02'),
+                    'name': obj().env.ref('product.product_delivery_02').partner_ref,
+                    'price_unit': 38.0,
+                    'product_qty': 15.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+            ]"/>
+        </record>
+
+        <record id="purchase_activity_1" model="mail.activity">
+            <field name="res_id" ref="purchase.purchase_order_2"/>
+            <field name="res_model_id" ref="purchase.model_purchase_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Send specifications</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="purchase_activity_2" model="mail.activity">
+            <field name="res_id" ref="purchase.purchase_order_5"/>
+            <field name="res_model_id" ref="purchase.model_purchase_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="DateTime.today().strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Get approval</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="purchase_activity_3" model="mail.activity">
+            <field name="res_id" ref="purchase.purchase_order_6"/>
+            <field name="res_model_id" ref="purchase.model_purchase_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Check optional products</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+        <record id="purchase_activity_4" model="mail.activity">
+            <field name="res_id" ref="purchase.purchase_order_7"/>
+            <field name="res_model_id" ref="purchase.model_purchase_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="summary">Check competitors</field>
+            <field name="create_uid" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_admin"/>
+        </record>
+
+    </data>
+</odoo>
+

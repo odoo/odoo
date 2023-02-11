@@ -1,0 +1,85 @@
+// This code has been more that widely inspired by the multirange library
+// which can be found on https://github.com/LeaVerou/multirange.
+// The license file can be found in the same folder as this file.
+
+ input[type="range"][multiple] {
+    pointer-events: none;
+    visibility: hidden;
+
+    &::-webkit-slider-thumb {
+        pointer-events: auto;
+    }
+
+    &::-moz-range-thumb {
+        pointer-events: auto;
+    }
+
+    &.reverse {
+        direction: rtl;
+    }
+
+    &.multirange {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+        vertical-align: top;
+
+
+        &::-webkit-slider-thumb {
+            height: 16px;
+            width: 16px;
+        }
+
+        &.original {
+            position: absolute;
+
+            &::-webkit-slider-thumb {
+                position: relative;
+                z-index: 2;
+            }
+
+            &::-moz-range-thumb {
+                transform: scale(1); /* Firefox doesn't apply position it seems */
+                z-index: 1;
+            }
+        }
+
+        &::-moz-range-track {
+            border-color: transparent; /* needed to switch Firefox to "styleable" control */
+        }
+
+        &.ghost {
+            border-radius: 45%;
+            position: relative;
+            background: var(--track-background);
+            --track-background: linear-gradient(to right, transparent var(--low), #{theme-color('primary')} var(--low) var(--high), transparent 0) no-repeat 50% / 100% 35%;
+
+            &::-webkit-slider-runnable-track {
+                background: var(--track-background);
+            }
+
+            &::-moz-range-track {
+                background: var(--track-background);
+            }
+        }
+    }
+}
+
+.multirange-wrapper {
+    position: relative;
+    margin: 3rem 0;
+    visibility: hidden;
+
+    input[type="range"][multiple] {
+        visibility: initial;
+    }
+
+    [x-out-of-boundaries] {
+        display: none;
+    }
+}
+
+.tip-locator {
+    position: absolute;
+}

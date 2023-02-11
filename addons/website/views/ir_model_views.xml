@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_model_view" model="ir.ui.view">
+        <field name="name">website.ir.model.view.form</field>
+        <field name="model">ir.model</field>
+        <field name="inherit_id" ref="base.view_model_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Website Forms" name="website_forms">
+                    <group>
+                        <field name="website_form_access"/>
+                        <field name="website_form_label"/>
+                        <field name="website_form_default_field_id"/>
+                    </group>
+                </page>
+            </xpath>
+
+            <xpath expr="//page[@name='base']/group/group/field[@name='translate']" position="after">
+                <field name="website_form_blacklisted"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ir_model_fields_view" model="ir.ui.view">
+        <field name="name">website.ir.model.fields.view.form</field>
+        <field name="model">ir.model.fields</field>
+        <field name="inherit_id" ref="base.view_model_fields_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='translate']" position="after">
+                <field name="website_form_blacklisted"/>
+            </xpath>
+        </field>
+    </record>
+
+
+</odoo>

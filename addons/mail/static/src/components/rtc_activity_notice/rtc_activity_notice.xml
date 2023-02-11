@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcActivityNotice" owl="1">
+        <div class="o_RtcActivityNotice dropdown">
+            <t t-if="messaging">
+                <RtcInvitations/>
+                <t t-if="messaging.rtc.channel">
+                    <t t-set="title">Open conference: <t t-esc="messaging.rtc.channel.displayName"/></t>
+                    <a class="o_RtcActivityNotice_button" t-att-title="title" role="button" t-on-click="_onClick">
+                        <div class="o_RtcActivityNotice_buttonContent">
+                            <span class="o_RtcActivityNotice_buttonTitle" t-esc="messaging.rtc.channel.displayName"/>
+                            <i class="o_RtcActivityNotice_outputIndicator fa" t-att-class="{
+                                'fa-microphone': !messaging.rtc.sendDisplay and !messaging.rtc.sendUserVideo,
+                                'fa-video-camera': messaging.rtc.sendUserVideo,
+                                'fa-desktop': messaging.rtc.sendDisplay,
+                            }"/>
+                        </div>
+                    </a>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

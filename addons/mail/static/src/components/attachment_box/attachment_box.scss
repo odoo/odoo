@@ -1,0 +1,46 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_AttachmentBox {
+    position: relative;
+}
+
+.o_AttachmentBox_buttonAdd {
+    align-self: center;
+}
+
+.o_AttachmentBox_content {
+    display: flex;
+    flex-direction: column;
+}
+
+.o_AttachmentBox_dashedLine {
+    flex-grow: 1;
+}
+
+.o_AttachmentBox_fileInput {
+    display: none;
+}
+
+.o_AttachmentBox_title {
+    display: flex;
+    align-items: center;
+}
+
+.o_AttachmentBox_titleText {
+    padding: map-get($spacers, 3);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_AttachmentBox_dashedLine {
+    border-style: dashed;
+    border-color: gray('300');
+}
+
+.o_AttachmentBox_title {
+    font-weight: bold;
+}

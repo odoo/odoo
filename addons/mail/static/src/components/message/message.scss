@@ -1,0 +1,248 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Message_actionListContainer {
+    @include o-position-absolute($top: - map-get($spacers, 3), $right: 0);
+
+    &.o-squashed {
+        @include o-position-absolute($top: - map-get($spacers, 4), $right: 0);
+    }
+}
+
+.o_Message_authorAvatar {
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
+    object-fit: cover;
+}
+
+.o_Message_authorAvatarContainer {
+    position: relative;
+    height: 36px;
+    width: 36px;
+}
+
+.o_Message_authorName {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Message_Composer {
+    flex: 1 1 auto;
+}
+
+.o_Message_content {
+    word-wrap: break-word;
+    word-break: break-word;
+
+    *:not(li):not(li div) {
+        // Message content can contain arbitrary HTML that might overflow and break
+        // the style without this rule.
+        // Lists are ignored because otherwise bullet style become hidden from overflow.
+        // It's acceptable not to manage overflow of these tags for the moment.
+        // It also excludes all div in li because 1st leaf and div child of list overflow
+        // may impact the bullet point (at least it does on Safari).
+        max-width: map-get($sizes, 100);
+        overflow-x: auto;
+
+        // overflow: auto can break rendering of next element of a frequent broken Outlook 365
+        // warning table. If detected, we prevent the issue by removing flotation.
+        &table[align="left"][width="100%"] {
+            float: none;
+        }
+    }
+
+    img {
+        max-width: map-get($sizes, 100);
+        height: auto;
+    }
+}
+
+.o_Message_core {
+    min-width: 0; // allows this flex child to shrink more than its content
+    margin-inline-end: map-get($spacers, 4);
+}
+
+.o_Message_header {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: baseline;
+}
+
+.o_Message_headerDate {
+    margin-inline-end: map-get($spacers, 2);
+    font-size: 0.8em;
+}
+
+.o_Message_highlightIndicator {
+    @include o-position-absolute($top: 0, $left: 0);
+    height: 100%;
+    width: $o-mail-discuss-message-highlight-indicator-width;
+    transition: background-color .5s ease-out;
+}
+
+.o_Message_originThread {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Message_partnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_Message_prettyBody {
+
+    > p {
+        margin-bottom: 0;
+    }
+
+}
+
+.o_Message_readMoreLess {
+    display: block;
+}
+
+.o_Message_seenIndicator {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+.o_Message_sidebar {
+    flex: 0 0 $o-mail-message-sidebar-width;
+    max-width: $o-mail-message-sidebar-width;
+    display: flex;
+    justify-content: center;
+}
+
+.o_Message_sidebarItem {
+    margin-left: map-get($spacers, 1);
+    margin-right: map-get($spacers, 1);
+}
+
+.o_Message_trackingValues {
+    margin-top: map-get($spacers, 2);
+}
+
+.o_Message_trackingValue {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.o_Message_trackingValueItem {
+    margin-inline-end: map-get($spacers, 1);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Message {
+    background-color: $white;
+    transition: background-color .5s ease-out;
+
+    .o_Message_partnerImStatusIcon {
+        color: $white;
+    }
+
+    &.o-not-discussion {
+        background-color: gray('100');
+
+        &.o_Message_active {
+            background-color: mix(gray('100'), gray('200'));
+        }
+
+        .o_Message_partnerImStatusIcon {
+            color: gray('100'); // same color as background of parent
+        }
+
+        &.o-selected {
+            border-bottom: 1px solid darken(gray('400'), 5%);
+        }
+    }
+
+    &.o-selected {
+        background-color: gray('400');
+
+        .o_Message_partnerImStatusIcon {
+            color: gray('400');
+        }
+    }
+
+    &.o-has-message-selection:not(.o-selected) {
+        opacity: 0.5;
+    }
+
+    &.o-highlighted {
+        background-color: rgba($o-brand-primary, .1);
+    }
+
+    &.o_Message_active {
+        background-color: gray('100');
+    }
+}
+
+.o_Message_authorName {
+    font-weight: $font-weight-bold;
+}
+
+.o_Message_authorRedirect {
+    cursor: pointer;
+}
+
+.o_Message_content .o_mention {
+    color: $o-brand-primary;
+    cursor: pointer;
+
+    &:hover {
+        color: darken($o-brand-primary, 15%);
+    }
+}
+
+.o_Message_date {
+    font-size: 0.8em;
+    color: gray('500');
+
+    &.o-message-selected {
+        color: gray('600');
+    }
+}
+
+.o_Message_highlightIndicator.o-active {
+    background-color: $o-brand-primary;
+}
+
+.o_Message_originThread {
+    font-size: 0.8em;
+    color: gray('500');
+
+    &.o-message-selected {
+        color: gray('600');
+    }
+}
+
+.o_Message_originThreadLink {
+    font-size: 1.25em; // original size
+}
+
+.o_Message_partnerImStatusIcon:not(.o_Message_partnerImStatusIcon-mobile) {
+    font-size: x-small;
+}
+
+.o_Message_notificationIconClickable {
+    color: gray('600');
+    cursor: pointer;
+
+    &.o-error {
+        color: o-text-color('danger');
+    }
+}
+
+.o_Message_subject {
+    font-style: italic;
+}
+
+// Used to hide buttons on rating emails in chatter
+.o_Chatter .o_Message_content [summary~="o_mail_notification"] {
+    display: none;
+}

@@ -1,0 +1,108 @@
+// ------------------------------------------------------------------
+// Variables
+// ------------------------------------------------------------------
+
+$o-thread-typing-icon-size-medium: 5px;
+$o-thread-typing-icon-size-small: 3px;
+
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadTypingIcon {
+    display: flex;
+    align-items: center;
+}
+
+.o_ThreadTypingIcon_dot {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.o_ThreadTypingIcon_separator {
+    min-width: 1px;
+    flex: 1 0 auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadTypingIcon_dot {
+    border-radius: 50%;
+    background: gray('500');
+
+    &.o-sizeMedium {
+        width: $o-thread-typing-icon-size-medium;
+        height: $o-thread-typing-icon-size-medium;
+    }
+
+    &.o-sizeSmall {
+        width: $o-thread-typing-icon-size-small;
+        height: $o-thread-typing-icon-size-small;
+    }
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+.o_ThreadTypingIcon_dot.o-animationBounce {
+
+    // Note: duplicated animation because dependent on size, and current SASS version doesn't support var()
+    &.o-sizeMedium {
+        animation: o_ThreadTypingIcon_dot_animationBounce_sizeMedium_animation 1.5s linear infinite;
+    }
+
+    &.o-sizeSmall {
+        animation: o_ThreadTypingIcon_dot_animationBounce_sizeSmall_animation 1.5s linear infinite;
+    }
+
+    &.o_ThreadTypingIcon_dot2 {
+        animation-delay: -1.35s;
+    }
+
+    &.o_ThreadTypingIcon_dot3 {
+        animation-delay: -1.2s;
+    }
+}
+
+.o_ThreadTypingIcon_dot.o-animationPulse {
+    animation: o_ThreadTypingIcon_dot_animationPulse_animation 1.5s linear infinite;
+
+    &.o_ThreadTypingIcon_dot2 {
+        animation-delay: -1.35s;
+    }
+
+    &.o_ThreadTypingIcon_dot3 {
+        animation-delay: -1.2s;
+    }
+}
+
+@keyframes o_ThreadTypingIcon_dot_animationBounce_sizeMedium_animation {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-$o-thread-typing-icon-size-medium);
+    }
+}
+
+@keyframes o_ThreadTypingIcon_dot_animationBounce_sizeSmall_animation {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-$o-thread-typing-icon-size-small);
+    }
+}
+
+
+@keyframes o_ThreadTypingIcon_dot_animationPulse_animation {
+    0%, 40%, 100% {
+        opacity: initial;
+    }
+    20% {
+        opacity: 25%;
+    }
+}

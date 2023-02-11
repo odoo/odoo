@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="crm_case_form_view_oppor" model="ir.ui.view">
+            <field name="name">crm.lead.oppor.inherited.crm</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_set_won_rainbowman']" position="before">
+                    <button string="New Quotation" name="action_sale_quotations_new" type="object" class="oe_highlight" data-hotkey="q"
+                        title="Create new quotation"
+                        attrs="{'invisible': ['|', ('type', '=', 'lead'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
+                </xpath>
+                <button name="action_set_won_rainbowman" position="attributes">
+                    <attribute name="class" remove="oe_highlight"/>
+                </button>
+                <button name="action_schedule_meeting" position="after">
+                    <button class="oe_stat_button" type="object"
+                        name="action_view_sale_quotation" icon="fa-pencil-square-o" attrs="{'invisible': [('type', '=', 'lead')]}">
+                        <field name="quotation_count" widget="statinfo" string="Quotations"/>
+                    </button>
+                    <button class="oe_stat_button" type="object" attrs="{'invisible': ['|', ('sale_order_count', '=', 0), ('type', '=', 'lead')]}"
+                        name="action_view_sale_order" icon="fa-usd">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_value"><field name="sale_amount_total" widget="monetary" options="{'currency_field': 'company_currency'}"/></span>
+                            <span class="o_stat_text"> Orders</span>
+                            <field name="sale_order_count" invisible="1"/>
+                        </div>
+                    </button>
+                </button>
+            </field>
+        </record>
+
+        <!-- add needaction_menu_ref to reload quotation needaction when opportunity needaction is reloaded -->
+        <record id="crm.crm_lead_opportunities" model="ir.actions.act_window">
+            <field name="context">{'default_type': 'opportunity', 'default_user_id': uid}</field>
+        </record>
+
+        <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
+            <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['crm.lead', 'sale.order', 'res.partner', 'product.template', 'product.product'])]</field>
+        </record>
+
+</odoo>

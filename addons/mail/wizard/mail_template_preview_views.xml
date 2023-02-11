@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_preview_view_form" model="ir.ui.view">
+            <field name="name">mail.template.preview.view.form</field>
+            <field name="model">mail.template.preview</field>
+            <field name="arch" type="xml">
+                <form string="Email Preview">
+                    <h3>Preview of <field name="mail_template_id" readonly="1" nolabel="1" options="{'no_open' : True}"/></h3>
+                    <div class="alert alert-danger" role="alert" attrs="{'invisible' : [('error_msg', '=', False)]}">
+                        <field name="error_msg" />
+                    </div>
+                    <field name="no_record" invisible="1"/>
+                    <div class="container">
+                        <div class="row">
+                            <span class="col-md-5 col-lg-4 col-sm-12 pl-0">Choose an example <field name="model_id" readonly="1"/> record:</span>
+                            <div class="col-md-7 col-lg-6 col-sm-12 pl-0">
+                                <field name="resource_ref" readonly="False"
+                                    options="{'hide_model': True, 'no_create': True, 'no_edit': True, 'no_open': True}"
+                                    attrs="{'invisible': [('no_record', '=', True)]}"/>
+                                <b attrs="{'invisible': [('no_record', '=', False)]}" class="text-warning">No record for this model</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <span class="col-md-5 col-lg-4 col-sm-12 pl-0">Force a language: </span>
+                            <div class="col-md-7 col-lg-6 col-sm-12 pl-0">
+                                <field name="lang"/>
+                            </div>
+                        </div>
+                    </div>
+                    <group>
+                        <field name="subject"/>
+                        <field name="email_from" attrs="{'invisible':[('email_from','=', False)]}"/>
+                        <field name="partner_ids" widget="many2many_tags" attrs="{'invisible':[('partner_ids', '=', [])]}"/>
+                        <field name="email_to" attrs="{'invisible':[('email_to','=', False)]}"/>
+                        <field name="email_cc" attrs="{'invisible':[('email_cc','=', False)]}"/>
+                        <field name="reply_to" attrs="{'invisible':[('reply_to','=', False)]}"/>
+                        <field name="scheduled_date" attrs="{'invisible':[('scheduled_date','=', False)]}"/>
+                    </group>
+                    <field name="body_html" widget="html" nolabel="1" options='{"safe": True}'/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
+                    <footer>
+                        <button string="Close" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="mail_template_preview_action" model="ir.actions.act_window">
+            <field name="name">Template Preview</field>
+            <field name="res_model">mail.template.preview</field>
+            <field name="binding_model_id" eval="False"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="mail_template_preview_view_form"/>
+            <field name="target">new</field>
+            <field name="context">{'default_mail_template_id':active_id}</field>
+        </record>
+
+    </data>
+</odoo>

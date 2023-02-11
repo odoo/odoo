@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+# 
+# Translators:
+# Miku Laitinen <miku.laitinen@gmail.com>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Jussi Heikkilä <jussi.heikkila@panimo.com>, 2021\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Konfiguraatioasetukset"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Salasanan minimipituus"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"Salasanan merkkien vähimmäismäärä. Aseta 0 jos haluat tämän pois käytöstä."
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "Salasanassa on oltava ainakin %d merkkiä, saatiin %d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid ""
+"Required: %s.\n"
+"\n"
+"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+msgstr ""
+"Vaaditaan: %s.\n"
+"\n"
+"Vinkki: kasvata pituutta, käytä useita sanoja ja muita merkkejä kuin kirjaimia parantaaksesi salasanan vahvuutta."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "Users"
+msgstr "Käyttäjät"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d character classes"
+msgstr "vähintään %d merkkityyppiä"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d characters"
+msgstr "vähintään %d merkkiä"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d words"
+msgstr "vähintään %d sanaa"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "no requirements"
+msgstr "ei vaatimuksia"

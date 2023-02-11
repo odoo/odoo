@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Chrome" owl="1">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
+            <div class="pos-receipt-print"></div>
+            <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
+                <div t-if="tempScreen.isShown" class="block-top-header" />
+                <div class="pos-branding" t-if= "!env.isMobile">
+                    <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                         src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    <CashMoveButton t-if="showCashMoveButton()" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                </div>
+                <div class="pos-rightheader">
+                    <CashMoveButton t-if="showCashMoveButton() and env.isMobile and !state.mobileSearchBarIsShown" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile and !state.mobileSearchBarIsShown" />
+                    <div class="search-bar-portal" />
+                    <div class="status-buttons-portal" t-att-class="{ oe_hidden: state.mobileSearchBarIsShown }"/>
+                </div>
+            </div>
+            <t t-if="state.uiState === 'READY'">
+                <Portal target="'.pos .status-buttons-portal'">
+                    <div class="status-buttons">
+                        <CashierName />
+                        <SaleDetailsButton t-if="env.pos.proxy.printer" />
+                        <ProxyStatus t-if="env.pos.config.use_proxy" />
+                        <ClientScreenButton t-if="clientScreenButtonIsShown" />
+                        <SyncNotification />
+                        <HeaderButton />
+                    </div>
+                </Portal>
+                <div class="pos-content">
+                    <div class="window">
+                        <div class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix screens">
+                                    <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
+                                       t-props="mainScreenPropsFielded" t-key="mainScreen.name" />
+                                    <t t-if="tempScreen.isShown" t-component="tempScreen.component"
+                                       t-props="tempScreenProps" t-key="tempScreen.name" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown"
+                                 t-transition="fade" />
+                </div>
+            </t>
+
+            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
+                <div class="loader-feedback">
+                    <h1 class="message">
+                        <t t-esc="loading.message" />
+                    </h1>
+                    <div class="progressbar">
+                        <div class="progress" t-ref="progressbar"></div>
+                    </div>
+                    <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">
+                        Skip
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allow popups to be visible at any state of the ui. -->
+            <div t-if="popup.isShown" class="popups">
+                <t t-component="popup.component" t-props="popupProps"
+                   t-key="popup.name" />
+            </div>
+
+            <Notification t-if="state.notification.isShown" message="state.notification.message" duration="state.notification.duration" t-transition="fade"/>
+
+            <NotificationSound t-if="state.sound.src" sound="state.sound" />
+        </div>
+    </t>
+
+</templates>

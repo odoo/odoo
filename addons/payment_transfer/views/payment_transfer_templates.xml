@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="redirect_form">
+        <form t-att-action="api_url" method="post">
+            <input type="hidden" name="reference" t-att-value="reference"/>
+        </form>
+    </template>
+
+    <template id="transfer_transaction_status" inherit_id="payment.transaction_status">
+        <xpath expr="//span[@t-out='tx.acquirer_id.sudo().pending_msg']" position="after">
+            <t t-if="tx.acquirer_id.sudo().provider == 'transfer'">
+                <div t-if="tx.reference">
+                    <strong>Communication: </strong><span t-esc="tx.reference"/>
+                </div>
+                <div t-if="tx.acquirer_id.sudo().qr_code">
+                    <t t-set="qr_code" t-value="tx.company_id.sudo().partner_id.bank_ids[:1].build_qr_code_base64(tx.amount, tx.reference, None, tx.currency_id, tx.partner_id)"/>
+                    <div t-if="qr_code" class="mt-2">
+                        <h3>Or scan me with your banking app.</h3>
+                        <img class="border border-dark rounded" t-att-src="qr_code"/>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

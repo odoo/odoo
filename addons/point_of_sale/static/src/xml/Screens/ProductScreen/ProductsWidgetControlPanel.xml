@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductsWidgetControlPanel" owl="1">
+        <div class="products-widget-control">
+            <t t-if="!props.hasNoCategories">
+                <div class="rightpane-header" t-att-class="{
+                    'green-border-bottom': !displayCategImages,
+                    'grey-border-bottom': displayCategImages,
+                }">
+                    <!-- Breadcrumbs -->
+                    <div class="breadcrumbs">
+                        <HomeCategoryBreadcrumb subcategories="props.subcategories" currentCat="props.breadcrumbs[props.breadcrumbs.length - 1]"/>
+                        <t t-foreach="props.breadcrumbs" t-as="category" t-key="category.id">
+                            <CategoryBreadcrumb category="category" />
+                        </t>
+                    </div>
+                    <!-- Subcategories -->
+                    <div t-if="props.subcategories.length > 0 and !displayCategImages"  class="category-list simple">
+                        <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                            <CategorySimpleButton category="category" />
+                        </t>
+                    </div>
+                </div>
+                <t t-if="props.subcategories.length > 0 and displayCategImages">
+                    <div class="categories">
+                        <div class="category-list-scroller">
+                            <div class="category-list">
+                                <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                                    <CategoryButton category="category" />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+            <Portal target="'.pos .search-bar-portal'">
+                <div class="search-box">
+                    <span t-if="env.isMobile" class="icon" t-on-click="_toggleMobileSearchbar">
+                        <i t-attf-class="fa {{props.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                    </span>
+                    <span t-else="" class="icon">
+                        <i class="fa fa-search"/>
+                    </span>
+                    <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
+                        <span t-on-click="clearSearch" class="clear-icon">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </span>
+                        <span class="database-icon">
+                            <i class="fa fa-database" t-on-click="loadProductFromDB"/>
+                        </span>
+                        <input t-ref="search-word-input" autofocus="autofocus" type="text" placeholder="Search Products..." t-on-keyup="updateSearch" />
+                    </t>
+                </div>
+            </Portal>
+        </div>
+    </t>
+
+</templates>

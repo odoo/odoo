@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale_report_view_graph_slides" model="ir.ui.view">
+         <field name="name">sale.report.view.graph.slides</field>
+         <field name="model">sale.report</field>
+         <field name="arch" type="xml">
+             <graph string="eLearning Sales Analysis" type="line" sample="1">
+                 <field name="date" interval="day"/>
+                 <field name="price_subtotal" type="measure"/>
+             </graph>
+         </field>
+    </record>
+
+	<record id="sale_report_action_slides" model="ir.actions.act_window">
+        <field name="name">eLearning Revenues</field>
+        <field name="res_model">sale.report</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">graph,pivot</field>
+        <field name="domain">[("product_id.channel_ids", "!=", False)]</field>
+        <field name="context">{'group_by': ['date', 'product_id']}</field>
+        <field name="view_id" ref="sale_report_view_graph_slides"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
+    </record>
+</odoo>

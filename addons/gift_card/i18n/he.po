@@ -1,0 +1,193 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Yihya Hugirat <hugirat@gmail.com>, 2021
+# hed shefer <hed@laylinetech.com>, 2021
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2021
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
+# Netta Waizer, 2022
+# Roy Sayag, 2022
+# Ha Ketem <haketem@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Ha Ketem <haketem@gmail.com>, 2022\n"
+"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,help:gift_card.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"מוצר מנוהל מלאי הוא מוצר שעבורו מתבצע ניהול מלאי במערכת. יש להתקין את יישום "
+"המלאי.מוצר לא מנוהל מלאי הוא מוצר אשר לא מתבצע עבורו ניהול מלאי במערכת.שירות"
+" הוא מוצר לא חומרי שאתה מספק."
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__balance
+msgid "Balance"
+msgstr "יתרה"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__code
+msgid "Code"
+msgstr "קוד"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__company_id
+msgid "Company"
+msgstr "חברה"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_uid
+msgid "Created by"
+msgstr "נוצר על-ידי"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_date
+msgid "Created on"
+msgstr "נוצר ב-"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__currency_id
+msgid "Currency"
+msgstr "מטבע"
+
+#. module: gift_card
+#: code:addons/gift_card/models/product.py:0
+#, python-format
+msgid "Deleting the Gift Card Pay product is not allowed."
+msgstr "אי אפשר למחוק מוצר כרטיס מתנה ששולם"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__display_name
+msgid "Display Name"
+msgstr "שם לתצוגה"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__expired
+msgid "Expired"
+msgstr "פג תוקף"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__expired_date
+msgid "Expired Date"
+msgstr "תאריך תפוגה"
+
+#. module: gift_card
+#: code:addons/gift_card/models/gift_card.py:0
+#, python-format
+msgid "Gift #%s"
+msgstr "מתנה מספר%s"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__product_template__detailed_type__gift
+#: model:product.product,name:gift_card.gift_card_product_50
+#: model:product.product,name:gift_card.pay_with_gift_card_product
+#: model:product.template,name:gift_card.gift_card_product_50_product_template
+#: model:product.template,name:gift_card.pay_with_gift_card_product_product_template
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_tree
+msgid "Gift Card"
+msgstr "כרטיס מתנה"
+
+#. module: gift_card
+#: model:ir.actions.act_window,name:gift_card.gift_card_action
+msgid "Gift Cards"
+msgstr "כרטיסי מתנה / Gift cards"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__id
+msgid "ID"
+msgstr "תעודה מזהה"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_gift_card__partner_id
+msgid "If empty, all users can use it"
+msgstr "אם ריק, יהיה זמין לכל משתמש"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__initial_amount
+msgid "Initial Amount"
+msgstr "סכום התחלתי"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card____last_update
+msgid "Last Modified on"
+msgstr "שינוי אחרון ב"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_uid
+msgid "Last Updated by"
+msgstr "עודכן לאחרונה על-ידי"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_date
+msgid "Last Updated on"
+msgstr "עדכון אחרון ב"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__name
+msgid "Name"
+msgstr "שם"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__partner_id
+msgid "Partner"
+msgstr "לקוח/ספק"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_product_template
+msgid "Product Template"
+msgstr "תבנית מוצר "
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:gift_card.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "סוג מוצר"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__state
+msgid "State"
+msgstr "סטטוס"
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_unique_gift_card_code
+msgid "The gift card code must be unique."
+msgstr "קוד כרטיס המתנה צריך להיות ייחודי"
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_check_amount
+msgid "The initial amount must be positive."
+msgstr "סכום התחלתי צריך להיות מספר חיובי"
+
+#. module: gift_card
+#: model:product.product,uom_name:gift_card.gift_card_product_50
+#: model:product.product,uom_name:gift_card.pay_with_gift_card_product
+#: model:product.template,uom_name:gift_card.gift_card_product_50_product_template
+#: model:product.template,uom_name:gift_card.pay_with_gift_card_product_product_template
+msgid "Units"
+msgstr "יחידה"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__valid
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+msgid "Valid"
+msgstr "תקף"

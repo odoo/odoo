@@ -1,0 +1,265 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Composer {
+    display: grid;
+    grid-template-areas:
+        "sidebar-header core-header"
+        "sidebar-main core-main"
+        "sidebar-footer core-footer";
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr auto;
+
+    &.o-has-current-partner-avatar {
+        grid-template-columns: 50px 1fr;
+        padding: map-get($spacers, 3) map-get($spacers, 3) map-get($spacers, 4) map-get($spacers, 1);
+
+        &:not(.o-has-footer) {
+            padding-bottom: map-get($spacers, 4);
+        }
+
+        &:not(.o-has-header) {
+            padding-top: map-get($spacers, 4);
+        }
+    }
+}
+
+.o_Composer_actionButtons {
+    &.o-composer-is-compact {
+        display: flex;
+    }
+    &:not(.o-composer-is-compact) {
+        margin-top: map-get($spacers, 2);
+    }
+}
+
+.o_Composer_attachmentList {
+    flex: 1 1 auto;
+
+    &.o-composer-is-compact {
+        max-height: 100px;
+    }
+
+    &:not(.o-composer-is-compact) {
+        overflow-y: auto;
+        max-height: 300px;
+    }
+}
+
+.o_Composer_buttons {
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+    flex: 0 0 auto;
+    min-height: 41px; // match minimal-height of input, including border width
+
+    &:not(.o-composer-is-compact) {
+        border: 0;
+        height: auto;
+        padding: 0 10px;
+        width: 100%;
+    }
+}
+
+.o_Composer_coreFooter {
+    grid-area: core-footer;
+    overflow-x: hidden;
+
+    &:not(.o-composer-is-compact) {
+        margin-left: 0;
+    }
+}
+
+.o_Composer_coreHeader {
+    grid-area: core-header;
+}
+
+.o_Composer_cancelReply {
+    cursor: pointer;
+}
+
+.o_Composer_coreMain {
+    grid-area: core-main;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    flex: 1 1 auto;
+
+    &:not(.o-composer-is-compact) {
+        flex-direction: column;
+    }
+}
+
+.o_Composer_currentPartnerAvatar {
+    width: 36px;
+    height: 36px;
+}
+
+.o_Composer_EmojiIcon {
+    overflow: visible !important;
+}
+
+.o_Composer_followers,
+.o_Composer_suggestedPartners {
+    flex: 0 0 100%;
+    margin-bottom: $o-mail-chatter-gap * 0.5;
+}
+
+.o_Composer_primaryToolButtons {
+    display: flex;
+    align-items: center;
+
+    &.o-composer-is-compact {
+        padding-left: map-get($spacers, 2);
+        padding-right: map-get($spacers, 2);
+    }
+}
+
+.o_Composer_sidebarMain {
+    grid-area: sidebar-main;
+    justify-self: center;
+}
+
+.o_Composer_textInput {
+    flex: 1 1 auto;
+    align-self: stretch;
+
+    &:not(.o-composer-is-compact) {
+        border: 0;
+        min-height: 40px;
+    }
+}
+
+.o_Composer_threadTextualTypingStatus {
+    font-size: $font-size-sm;
+
+    &:before {
+        // invisible character so that typing status bar has constant height, regardless of text content.
+        content: "\200b"; /* unicode zero width space character */
+    }
+}
+
+.o_Composer_toolButton {
+    // keep a margin between the buttons to prevent their focus shadow from overlapping
+    margin-left: map-get($spacers, 1);
+    margin-right: map-get($spacers, 1);
+}
+
+.o_Composer_toolButtons {
+    display: flex;
+    padding-top: map-get($spacers, 1);
+    padding-bottom: map-get($spacers, 1);
+
+    &:not(.o-composer-is-compact) {
+        flex-direction: row;
+        justify-content: space-between;
+        flex: 100%;
+    }
+}
+
+.o_Composer_toolButtonSeparator {
+    flex: 0 0 auto;
+    margin-top: map-get($spacers, 2);
+    margin-bottom: map-get($spacers, 2);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+// TODO FIXME o-open on the button should be enough.
+// Style of button when popover is "open" comes from web.Popover, and we can't
+// define a modifier on .o_Composer_button due to not being aware of Popover's
+// state in context of template. https://github.com/odoo/owl/issues/693
+.o_is_open .o_Composer_toolButton {
+    background-color: gray('200');
+}
+
+.o_Composer {
+    &:not(.o-messaging-in-editing) {
+        background-color: gray('100');
+    }
+}
+
+.o_Composer_actionButton.o-last.o-has-current-partner-avatar.o-composer-is-compact {
+    border-radius: 0 $o-mail-rounded-rectangle-border-radius-lg $o-mail-rounded-rectangle-border-radius-lg 0;
+}
+
+.o_Composer_button.o-composer-is-compact {
+    border-left: none; // overrides bootstrap button style
+
+    :last-child {
+        border-radius: 0 3px 3px 0;
+    }
+}
+
+.o_Composer_buttonDiscard {
+    border: $border-width solid lighten(gray('400'), 5%);
+}
+
+.o_Composer_buttons {
+    border: 0;
+
+    &.o-messaging-in-editing {
+        border-right: $border-width solid $border-color;
+    }
+}
+
+.o_Composer_coreMain:not(.o-composer-is-compact) {
+    background: $white;
+    border: $border-width solid $border-color;
+    border-radius: $o-mail-rounded-rectangle-border-radius-lg;
+}
+
+.o_Composer_currentPartnerAvatar {
+    object-fit: cover;
+}
+
+.o_Composer_textInput {
+    appearance: none;
+    outline: none;
+    background-color: $white;
+    border: $border-width solid $border-color;
+    border-right: 0;
+
+    &:not(.o-composer-is-compact) {
+        border: 0;
+        border-radius: $o-mail-rounded-rectangle-border-radius-lg;
+    }
+
+    &.o-has-current-partner-avatar.o-composer-is-compact {
+        border-radius: $o-mail-rounded-rectangle-border-radius-lg 0 0 $o-mail-rounded-rectangle-border-radius-lg;
+    }
+}
+
+.o_Composer_toolButton {
+    border: 0; // overrides bootstrap btn
+    background-color: $white; // overrides bootstrap btn-light
+    color: gray('600'); // overrides bootstrap btn-light
+    border-radius: 50%;
+
+    &.o-open {
+        background-color: gray('200');
+    }
+}
+
+.o_Composer_toolButtons {
+    background-color: $white;
+    border-top: $border-width solid $border-color;
+    border-bottom: $border-width solid $border-color;
+
+    &:not(.o-composer-is-compact) {
+        border-bottom: 0;
+        border-radius: initial;
+    }
+
+    &:last-child:not(.o-composer-has-current-partner-avatar) {
+        border-right: $border-width solid lighten(gray('400'), 5%);
+    }
+}
+
+.o_Composer_toolButtonSeparator {
+    border-left: $border-width solid $border-color;
+}

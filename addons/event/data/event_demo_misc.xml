@@ -1,0 +1,96 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- Event Type -->
+    <record id="event_type_0" model="event.type">
+        <field name="name">Exhibition</field>
+        <field name="auto_confirm" eval="False"/>
+    </record>
+    <record id="event_type_1" model="event.type">
+        <field name="name">Training</field>
+        <field name="auto_confirm" eval="False"/>
+    </record>
+    <record id="event_type_2" model="event.type">
+        <field name="name">Sport</field>
+        <field name="auto_confirm" eval="False"/>
+        <field name="default_timezone">US/Pacific</field>
+    </record>
+    <record id="event_type_data_conference" model="event.type">
+        <field name="default_timezone">Europe/Brussels</field>
+    </record>
+
+    <!-- Category and Tags -->
+    <record id="event_tag_category_1" model="event.tag.category">
+        <field name="name">Age</field>
+        <field name="sequence">3</field>
+    </record>
+    <record id="event_tag_category_2" model="event.tag.category">
+        <field name="name">Activity</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="event_tag_category_3" model="event.tag.category">
+        <field name="name">Type</field>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="event_tag_category_1_tag_1" model="event.tag">
+        <field name="name">5-10</field>
+        <field name="sequence">1</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+        <field name="color">1</field>
+    </record>
+
+    <record id="event_tag_category_1_tag_2" model="event.tag">
+        <field name="name">10-14</field>
+        <field name="sequence">2</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+        <field name="color">2</field>
+    </record>
+
+    <record id="event_tag_category_1_tag_3" model="event.tag">
+        <field name="name">15-18</field>
+        <field name="sequence">3</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+        <field name="color">3</field>
+    </record>
+
+    <record id="event_tag_category_1_tag_4" model="event.tag">
+        <field name="name">18+</field>
+        <field name="sequence">4</field>
+        <field name="category_id" ref="event_tag_category_1"/>
+        <field name="color">4</field>
+    </record>
+
+    <record id="event_tag_category_2_tag_1" model="event.tag">
+        <field name="name">Culture</field>
+        <field name="sequence">10</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+        <field name="color">5</field>
+    </record>
+    <record id="event_tag_category_2_tag_2" model="event.tag">
+        <field name="name">Music</field>
+        <field name="sequence">11</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+        <field name="color">6</field>
+    </record>
+    <record id="event_tag_category_2_tag_3" model="event.tag">
+        <field name="name">Sport</field>
+        <field name="sequence">12</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+        <field name="color">7</field>
+    </record>
+
+    <record id="event_tag_category_3_tag_1" model="event.tag">
+        <field name="name">Online</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="event_tag_category_3"/>
+        <field name="color">8</field>
+    </record>
+    <record id="event_tag_category_3_tag_2" model="event.tag">
+        <field name="name">Conference</field>
+        <field name="sequence">21</field>
+        <field name="category_id" ref="event_tag_category_3"/>
+        <field name="color">9</field>
+    </record>
+
+</data></odoo>

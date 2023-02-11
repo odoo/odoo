@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id='view_mrp_landed_costs_form' model='ir.ui.view'>
+        <field name="name">mrp.landed.cost.form</field>
+        <field name="model">stock.landed.cost</field>
+        <field name="inherit_id" ref="stock_landed_costs.view_stock_landed_cost_form"/>
+        <field name="arch" type="xml">
+            <field name="target_model" position="attributes">
+                <attribute name="invisible">0</attribute>
+                <attribute name="groups">stock.group_stock_manager</attribute>
+            </field>
+            <field name="picking_ids" position="after">
+                <field name="mrp_production_ids" 
+                    widget="many2many_tags" options="{'no_create_edit': True}"
+                    attrs="{'invisible': [('target_model', '!=', 'manufacturing')]}"
+                    domain="[('company_id', '=', company_id), ('move_finished_ids.stock_valuation_layer_ids', '!=', False)]"/>
+            </field>
+        </field>
+    </record>
+</odoo>

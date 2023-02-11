@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.FollowerListMenu" owl="1">
+        <div class="o_FollowerListMenu" t-on-keydown="_onKeydown">
+            <div class="o_FollowerListMenu_followers" t-ref="dropdown">
+                <button class="o_FollowerListMenu_buttonFollowers btn btn-link" t-att-disabled="props.isDisabled" title="Show Followers" t-att-aria-expanded="state.isDropdownOpen ? 'true' : 'false'" t-on-click="_onClickFollowersButton">
+                    <i class="fa fa-user" role="img" aria-label="Followers"/>
+                    <span class="o_FollowerListMenu_buttonFollowersCount pl-1" t-esc="thread.followers.length"/>
+                </button>
+
+                <t t-if="state.isDropdownOpen">
+                    <div class="o_FollowerListMenu_dropdown dropdown-menu dropdown-menu-right" role="menu">
+                        <t t-if="thread.channel_type !== 'chat'">
+                            <a class="o_FollowerListMenu_addFollowersButton dropdown-item" href="#" role="menuitem" t-on-click="_onClickAddFollowers">
+                                Add Followers
+                            </a>
+                        </t>
+                        <t t-if="thread.followers.length > 0">
+                            <div role="separator" class="dropdown-divider"/>
+                            <t t-foreach="thread.followers" t-as="follower" t-key="follower.localId">
+                                <Follower
+                                    class="o_FollowerMenu_follower dropdown-item"
+                                    followerLocalId="follower.localId"
+                                    t-on-click="_onClickFollower"
+                                    t-on-o-hide-follower-list-menu="_hide"
+                                />
+                            </t>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

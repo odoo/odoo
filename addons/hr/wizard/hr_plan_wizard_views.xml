@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="plan_wizard" model="ir.ui.view">
+            <field name="name">plan wizard</field>
+            <field name="model">hr.plan.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="plan_id"/>
+                            <field name="employee_id" invisible="1"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_launch" string="Launch Plan" type="object" class="oe_highlight" groups="hr.group_hr_manager" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="plan_wizard_action" model="ir.actions.act_window">
+            <field name="name">Launch Plan</field>
+            <field name="res_model">hr.plan.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,44 @@
+.o_form_project_tasks div.o_field_many2many[name=depend_on_ids] tr.o_selected_row td.o_list_button {
+    background-color: $table-border-color !important;
+}
+
+.o_form_project_project, .o_form_project_tasks {
+    .note-editable {
+        border: 0;
+        padding: 0;
+    }
+}
+
+.o_form_view.o_form_project_tasks .o_notebook > .tab-content > .tab-pane > :first-child.oe_form_field_html .o_readonly {
+    padding: $o-horizontal-padding $o-horizontal-padding;
+}
+
+.o_form_view.o_form_project_update:not(.o_form_readonly), .o_form_view.o_form_project_update:not(.o_form_readonly) .o_form_sheet {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.o_project_update_description {
+    .note-editable, .o_wysiwyg_resizer {
+        border: 0;
+    }
+    &.oe_form_field_html, .o_wysiwyg_wrapper {
+        margin-bottom: 0;
+    }
+    &.oe_form_field_html .o_readonly {
+        padding: $o-horizontal-padding $o-horizontal-padding;
+    }
+}
+
+.o_form_view .btn.oe_stat_button.o_project_not_clickable {
+    &:hover, &:focus {
+        background-color: transparent;
+        opacity: 0.8;
+        color: $o-main-text-color;
+    }
+}
+
+.o_form_project_tasks .o_project_task_project_field input::placeholder {
+    color: darkred;
+    font-style: italic;
+}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TextInputPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-textinput">
+                <header class="title">
+                    <t t-esc="props.title" />
+                </header>
+                <div class="div">
+                    <p>
+                        <t t-esc="props.body" />
+                    </p>
+                    <input type="text" t-model="state.inputValue" t-ref="input" />
+                </div>
+                <div class="footer">
+                    <div class="button confirm" t-on-click="confirm">
+                        <t t-esc="props.confirmText" />
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        <t t-esc="props.cancelText" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

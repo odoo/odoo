@@ -1,0 +1,65 @@
+.o_form_project_tasks.o_form_editable .oe_title {
+  max-width: initial;
+}
+
+.o_form_project_tasks.o_form_editable .oe_title .o_task_name {
+  /*
+   * should be (coming from addons/web/static/src/legacy/scss/form_view.scss):
+   * max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
+   */
+  max-width: 688px;
+  margin-right: auto;
+}
+
+.o_form_project_tasks .note-editable {
+  border: 0;
+}
+.o_form_project_tasks .o_wysiwyg_resizer {
+  border: 0;
+  margin: 0 0px -40px 0px;
+}
+.o_form_project_tasks .o_form_sheet, .o_form_project_tasks .oe_form_field_html, .o_form_project_tasks .o_wysiwyg_wrapper {
+  margin-bottom: 0 !important;
+}
+
+.o_kanban_project_tasks .oe_kanban_align.badge {
+  background: inherit;
+  color: inherit;
+  border: 1px solid var(--success);
+}
+
+.o_kanban_project_tasks .oe_kanban_align.badge-warning {
+  border-color: var(--warning);
+}
+
+.o_kanban_project_tasks .oe_kanban_align.badge-danger {
+  border-color: var(--danger);
+}
+
+.o_kanban_project_tasks .o_field_one2many_sub_task {
+  margin-top:2px;
+  margin-right: 6px;
+}
+
+.o_form_project_tasks .ribbon:not(.o_invisible_modifier) + div > h1 > div[name="kanban_state"] {
+  margin-right: 150px;
+  padding-left: 1rem;
+}
+
+.o_form_project_recurrence_message *:last-child {
+  margin-bottom: 0;
+}
+
+.o_project_portal_warning_dl {
+    width: 100%;
+    padding: 0;
+    margin: 0
+}
+.o_project_portal_warning_dt {
+    width: 4%;
+    float: left;
+}
+.o_project_portal_warning_dd {
+    width: 96%;
+    float: left;
+}

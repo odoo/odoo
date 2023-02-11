@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_tag_view_form" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <form string="Tags">
+                    <sheet>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="name"/>
+                            <field name="applicability"/>
+                            <field name="tax_negate" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                            <field name="country_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible': [('applicability', '!=', 'taxes')], 'readonly': [('tax_report_line_ids', '!=', [])]}"/>
+                            <field name="tax_report_line_ids" readonly="1" attrs="{'invisible': [('applicability', '!=', 'taxes')]}"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="account_tag_view_tree" model="ir.ui.view">
+            <field name="name">Tags</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <tree string="Tags">
+                    <field name="name"/>
+                    <field name="applicability"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_tag_view_search" model="ir.ui.view">
+            <field name="name">account.tag.view.search</field>
+            <field name="model">account.account.tag</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <separator/>
+                    <filter name="archived" string="Archived" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Chatter templates -->
+<template id="event_track_template_new">
+    <p>
+        <span>New track proposal</span>
+        <a href="#" t-att-data-oe-model="track._name" t-att-data-oe-id="track.id" t-esc="track.name"/>
+    </p>
+    <ul>
+        <!-- "contact" information (the ones from partner_id) take precedence over public information -->
+        <t t-set="speaker_name" t-value="track.partner_id.name or track.partner_name or track.partner_email" />
+        <li t-if="speaker_name">
+            <b>Proposed By</b>: <span t-esc="speaker_name"/>
+        </li>
+        <t t-set="speaker_email" t-value="track.contact_email or track.partner_email" />
+        <li t-if="speaker_email">
+            <b>Mail</b>: <a t-attf-href="mailto:#{speaker_email}" t-esc="speaker_email"></a>
+        </li>
+        <li t-if="track.contact_phone or track.partner_phone">
+            <b>Phone</b>: <span t-esc="track.contact_phone or track.partner_phone"/>
+        </li>
+        <li t-if="not is_html_empty(track.partner_biography)">
+            <b>Speaker Biography</b>: <div t-field="track.partner_biography"/>
+        </li>
+        <li t-if="not is_html_empty(track.description)">
+            <b>Talk Introduction</b>: <div t-field="track.description"/>
+        </li>
+    </ul>
+</template>
+
+</odoo>

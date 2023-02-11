@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatterContainer" owl="1">
+        <div class="o_ChatterContainer" data-command-category="mail">
+            <t t-if="chatter">
+                <Chatter chatterLocalId="chatter.localId"/>
+            </t>
+            <t t-else="">
+                <div class="o_ChatterContainer_noChatter"><i class="o_ChatterContainer_noChatterIcon fa fa-circle-o-notch fa-spin"/>Please wait...</div>
+            </t>
+        </div>
+    </t>
+
+</templates>

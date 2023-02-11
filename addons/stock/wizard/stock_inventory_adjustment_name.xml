@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="stock_inventory_adjustment_name_form_view" model="ir.ui.view">
+        <field name="name">stock.inventory.adjustment.name.form.view</field>
+        <field name="model">stock.inventory.adjustment.name</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <form>
+                <div>
+                    <div attrs="{'invisible': [('show_info', '=', False)]}">
+                        Some selected lines don't have any quantities set, they will be ignored.
+                    </div>
+                    <group>
+                        <field name="inventory_adjustment_name" string="Inventory Reference / Reason"/>
+                        <field name="show_info" invisible="1"/>
+                    </group>
+                </div>
+                <footer>
+                    <button name="action_apply" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button name="cancel_button" string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_stock_inventory_adjustement_name" model="ir.actions.act_window">
+        <field name="name">Inventory Adjustment Reference / Reason</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.inventory.adjustment.name</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="stock_inventory_adjustment_name_form_view"/>
+        <field name="context">{
+            'default_quant_ids': active_ids
+        }</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

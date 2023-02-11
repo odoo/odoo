@@ -1,0 +1,14 @@
+<templates>
+    <t t-name="GoogleDriveMenu" owl="1">
+        <li>
+            <ul class="o_embed_menu p-0">
+                <li t-foreach="props.items" t-as="gdriveItem" t-key="gdriveItem.id"
+                    role="menuitem"
+                    class="o_menu_item oe_share_gdoc_item dropdown-item"
+                    >
+                    <a href="#" t-esc="gdriveItem.name" t-on-click.prevent="_onGoogleDocItemClick(gdriveItem.id)"/>
+                </li>
+            </ul>
+        </li>
+    </t>
+</templates>

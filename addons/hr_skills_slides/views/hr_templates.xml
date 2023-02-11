@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="resume_slides_line_view_form" model="ir.ui.view">
+        <field name="name">hr.resume.line.form</field>
+        <field name="model">hr.resume.line</field>
+        <field name="inherit_id" ref="hr_skills.resume_line_view_form"/>
+        <field eval="20" name="priority"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='line_type_id']" position="after">
+                <field name="channel_id" attrs="{'invisible': [('display_type', '!=', 'course')]}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

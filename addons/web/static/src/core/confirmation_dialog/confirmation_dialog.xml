@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+  <t t-name="web.ConfirmationDialogBody" owl="1">
+    <t t-esc="props.body" />
+  </t>
+
+  <t t-name="web.ConfirmationDialogFooter" owl="1">
+    <button class="btn btn-primary" t-on-click="_confirm">
+      Ok
+    </button>
+    <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel">
+      Cancel
+    </button>
+  </t>
+
+</templates>

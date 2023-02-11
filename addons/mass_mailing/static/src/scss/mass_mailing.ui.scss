@@ -1,0 +1,317 @@
+.o_form_view .o_form_sheet .o_notebook .tab-content .tab-pane .o_mail_body {
+    // cancel padding of form_sheet
+    margin-top: -$o-sheet-cancel-tpadding;
+    margin-left: -$o-sheet-cancel-hpadding;
+    margin-right: -$o-sheet-cancel-hpadding;
+    margin-bottom: -$o-sheet-cancel-bpadding;
+}
+
+html, body {
+    overflow: visible !important;
+}
+
+.o_mail_theme_selector {
+    > a {
+        height: $o-we-toolbar-height;
+        line-height: $o-we-toolbar-height;
+        border-radius: 0;
+        background-color: $o-we-sidebar-bg;
+        color: #212629;
+        box-shadow: none !important;
+        display: flex;
+
+        &:first-child {
+            display: none;
+        }
+
+        .o_thumb {
+            background-size: cover;
+            border: 1px solid $o-we-border-color;
+            flex: 1;
+        }
+
+
+        &:hover {
+            background-color: $o-we-sidebar-bg;
+
+            .o_thumb {
+                border: 1px solid black;
+            }
+        }
+
+        &.selected .o_thumb {
+            border: 2px solid $o-brand-odoo;
+            background-color: $o-we-sidebar-bg;
+        }
+
+        &:hover, &:focus, &:active {
+            color: #4e525b;
+        }
+    }
+}
+
+.o_mail_theme_selector_new {
+    display: block;
+    position: absolute;
+    overflow: auto;
+    background-color: $o-we-sidebar-bg;
+    z-index: 1050;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    .dropdown-item {
+        padding: 10px 10px;
+        &:first-child {
+            display: none;
+        }
+
+        .o_thumb {
+            display: none;
+            background-size: cover;
+            padding-top: 50%;
+            border: 1px solid $o-we-border-color;
+
+            &.logo {
+                display: block;
+            }
+        }
+
+        &:hover {
+            background-color: $o-we-sidebar-bg;
+
+            .o_thumb {
+                border: 1px solid black;
+            }
+        }
+
+        &:focus {
+            background-color: $o-we-sidebar-bg;
+        }
+
+        &.selected .o_thumb {
+            border: 2px solid $o-brand-odoo;
+            background-color: $o-we-sidebar-bg;
+        }
+    }
+
+    .dropdown-item {
+        margin: 0;
+        float: left;
+        clear: none;
+        width: 100%;
+        max-width: 25%;
+        transition: all 0.3s ease 0s;
+
+        &:first-child {
+            display: block;
+        }
+
+        .o_thumb {
+            display: none;
+            padding-top: 107%;
+            border: 1px solid #4e525b;
+            border-top: 1px solid $o-we-border-color;
+            box-shadow: 0 5px 10px rgba(black, 0.8);
+            will-change: transform;
+            backface-visibility: hidden;
+            transition: all 0.3s ease 0s;
+
+            &.small {
+                display: block;
+            }
+
+            @media screen and (min-width: 900px) {
+                &.small {
+                    display: none;
+                }
+                &.large {
+                    display: block;
+                }
+            }
+        }
+
+        &:hover {
+            background-color: #212629;
+
+            .o_thumb {
+                box-shadow: 0 5px 30px 1px rgba(black, 0.6);
+            }
+        }
+
+        &.o_mass_mailing_themes_upgrade .o_thumb {
+            position: relative;
+            display: block;
+            border: 1px dashed white;
+            opacity: 0.2;
+
+            > .fa {
+                @include o-position-absolute(0, 0, 0, 0);
+                text-align: center;
+                font-size: 50px;
+                color: white;
+
+                &::before {
+                    vertical-align: middle;
+                }
+                &::after {
+                    content: "";
+                    display: inline-block;
+                    height: 100%;
+                    vertical-align: middle;
+                }
+            }
+        }
+    }
+}
+
+body.o_force_mail_theme_choice {
+    #oe_snippets {
+        width: 100%;
+
+        .o_mail_theme_selector, .o_mail_theme_selector_new {
+            .dropdown-toggle {
+                display: none;
+            }
+
+            .dropdown-menu {
+                display: block;
+
+                .dropdown-item {
+                    margin: 0;
+                    float: left;
+                    clear: none;
+                    width: 100%;
+                    max-width: 25%;
+                    transition: all 0.3s ease 0s;
+
+                    &:first-child {
+                        display: block;
+                    }
+
+                    .o_thumb {
+                        display: none;
+                        padding-top: 107%;
+                        border: 1px solid #4e525b;
+                        border-top: 1px solid $o-we-border-color;
+                        box-shadow: 0 5px 10px rgba(black, 0.8);
+                        will-change: transform;
+                        backface-visibility: hidden;
+                        transition: all 0.3s ease 0s;
+
+                        &.small {
+                            display: block;
+                        }
+
+                        @media screen and (min-width: 900px) {
+                            &.small {
+                                display: none;
+                            }
+                            &.large {
+                                display: block;
+                            }
+                        }
+                    }
+
+                    &:hover {
+                        background-color: #212629;
+
+                        .o_thumb {
+                            box-shadow: 0 5px 30px 1px rgba(black, 0.6);
+                        }
+                    }
+
+                    &.o_mass_mailing_themes_upgrade .o_thumb {
+                        position: relative;
+                        display: block;
+                        border: 1px dashed white;
+                        opacity: 0.2;
+
+                        > .fa {
+                            @include o-position-absolute(0, 0, 0, 0);
+                            text-align: center;
+                            font-size: 50px;
+                            color: white;
+
+                            &::before {
+                                vertical-align: middle;
+                            }
+                            &::after {
+                                content: "";
+                                display: inline-block;
+                                height: 100%;
+                                vertical-align: middle;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .note-editor {
+        display: none;
+    }
+}
+
+body.editor_enable.o_basic_theme.o_in_iframe {
+    padding-right: 0px !important;
+
+    #web_editor-top-edit .note-popover .popover {
+        right: 0 !important;
+    }
+
+    #oe_snippets {
+        display: none;
+    }
+}
+
+.note-editable .o_layout {
+    overflow: initial;
+}
+
+.oe_structure {
+    width: 100%;
+}
+
+:root {
+    font-size: 14px;
+}
+
+.editor_enable .o_mass_mailing_iframe {
+    .o_editable:empty, .o_editable > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
+        background-color: white;
+        border: 2px dashed #999999;
+        padding: 112px 0px;
+        text-align: center !important;
+        color: #999999;
+        margin: 5px;
+        height: auto;
+        width: -moz-available;          /* WebKit-based browsers will ignore this. */
+        width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+        width: stretch;
+
+        &:before {
+            content: attr(data-editor-message);
+            display: block;
+            font-size: 20px;
+            line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
+        }
+        &:after {
+            content: attr(data-editor-sub-message);
+            display: block;
+        }
+    }
+}
+
+
+.o_mass_mailing_iframe {
+    //this will display the email body without padding
+    .note-editable {
+        padding: 0;
+    }
+
+    //this will display the editor wrapper and the snippets at the same level
+    .iframe-editor-wrapper {
+        margin-top: -2px;
+    }
+}

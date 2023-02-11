@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.AttachmentImage" owl="1">
+        <div role="menu" t-att-aria-label="attachmentImage and attachmentImage.attachment.displayName">
+            <t t-if="attachmentImage">
+                <div class="o_AttachmentImage d-flex o-details-overlay position-relative"
+                    t-att-class="{
+                        'o-isUploading': attachmentImage.attachment.isUploading,
+                    }"
+                    t-att-title="attachmentImage.attachment.displayName ? attachmentImage.attachment.displayName : undefined"
+                    t-att-data-id="attachmentImage.attachment.localId"
+                    tabindex="0"
+                    aria-label="View image"
+                    role="menuitem"
+                    t-on-click="attachmentImage.onClickImage"
+                    t-att-data-mimetype="attachmentImage.attachment.mimetype"
+                >
+                    <t t-if="!attachmentImage.attachment.isUploading">
+                        <img class="img img-fluid" t-att-src="attachmentImage.imageUrl" t-att-alt="attachmentImage.attachment.name" t-attf-style="max-width: min(100%, {{ attachmentImage.width }}px); max-height: {{ attachmentImage.height }}px;"/>
+                    </t>
+                    <t t-if="attachmentImage.attachment.isUploading">
+                        <div class="o_AttachmentImageUploading d-flex align-items-center justify-content-center position-absolute" title="Uploading">
+                            <i class="fa fa-spin fa-spinner"/>
+                        </div>
+                    </t>
+                    <div class="o_AttachmentImage_imageOverlay d-flex flex-row justify-content-end position-absolute">
+                        <div class="o_AttachmentImage_actions d-flex flex-column">
+                            <t t-if="attachmentImage.attachment.isEditable">
+                                <div class="o_AttachmentImage_action o_AttachmentImage_actionUnlink text-center"
+                                     t-att-class="{'o-pretty': attachmentImage.attachmentList.composerView}" tabindex="0" aria-label="Remove" role="menuitem" t-on-click="attachmentImage.onClickUnlink" title="Remove"
+                                >
+                                    <i class="fa fa-trash"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <t t-if="attachmentImage.hasDeleteConfirmDialog">
+                        <AttachmentDeleteConfirmDialog
+                            attachmentLocalId="attachmentImage.attachment.localId"
+                            t-on-dialog-closed="attachmentImage.onDeleteConfirmDialogClosed"
+                        />
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>

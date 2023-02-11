@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_layout" name="Event Booth Layout">
+        <t t-call="website_event.layout">
+            <div class="o_wbooth_registration" t-att-data-event-id="event.id"
+                 itemscope="itemscope" itemtype="http://schema.org/Event">
+                <t t-call="website.record_cover">
+                    <t t-set="_record" t-value="event"/>
+                    <t t-set="use_filters" t-value="True"/>
+                    <t t-set="use_text_align" t-value="True"/>
+                    <t t-set="additionnal_classes" t-value="'pb128'"/>
+
+                    <div class="container d-flex flex-column flex-grow-1">
+                        <h1 class="text-white my-5">Get A Booth</h1>
+                        <div t-if="event.is_finished" class="alert alert-info">
+                            <span>This event is finished. It's no longer possible to book a booth.</span>
+                        </div>
+                        <div t-elif="not event_booths" class="alert alert-info">
+                            <span>This event is not open to exhibitors registration,
+                                <span t-if="request.env.user.has_group('event.group_event_manager')">
+                                    you can
+                                    <a class="text-nowrap" t-attf-href="/web#id=#{event.id}&amp;view_type=form&amp;model=event.event">
+                                        <i class="fa fa-gear mr-1" role="img" aria-label="Configure" title="Configure event booths"/><em>Configure Booths</em>
+                                    </a>
+                                    for this event.
+                                </span>
+                                <span t-else="">
+                                    check our <a href="/event">list of future events</a>.
+                                </span>
+                            </span>
+                        </div>
+
+                    </div>
+                </t>
+                <section class="mt-n5">
+                    <div class="container overflow-hidden">
+                        <div class="row mb64 bg-white no-gutters rounded shadow-sm">
+                            <t t-out="0"/>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="event_booth_registration" name="Event Booth Registration">
+        <t t-call="website_event_booth.event_booth_layout">
+            <t t-if="event_booths and not event.is_finished">
+                <div t-attf-class="#{'col-lg-9' if available_booth_category_ids else 'col-lg-12'} p-4">
+                    <form method="post" class="form-horizontal justify-content-center mt32 js_website_submit_form o_wbooth_registration_form"
+                          t-attf-action="/event/#{slug(event)}/booth/register" t-att-data-event-id="event.id">
+                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                        <div class="row form-group justify-content-center">
+                            <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
+                                <t t-set="booth_category_unavailable" t-value="booth_category not in available_booth_category_ids"/>
+                                <div class="col-md-4">
+                                    <label t-attf-class="d-block #{'o_wbooth_category_unavailable' if booth_category_unavailable else ''}">
+                                        <input type="radio" name="booth_category_id" t-att-value="booth_category.id"
+                                               t-att-disabled="booth_category_unavailable"/>
+                                        <div>
+                                            <h5 name="booth_category_name" class="m-0 text-truncate" t-esc="booth_category.name"/>
+                                            <span class="img img-responsive">
+                                                <img class="img img-fluid mt-2" t-att-title="booth_category.name"
+                                                     t-att-src="image_data_uri(booth_category.image_256) if booth_category.image_256 else '/web/static/img/placeholder.png'"/>
+                                            </span>
+                                        </div>
+                                        <div t-if="booth_category_unavailable" class="o_ribbon_right bg-danger">
+                                            <span class="text-nowrap">Sold Out</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </t>
+                        </div>
+                        <t t-if="available_booth_category_ids">
+                            <div t-if="event.exhibition_map" class="row">
+                                <div class="col-sm-6 offset-sm-3 mb-4">
+                                    <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#mapModal">View Floor Plan</button>
+                                    <div role="dialog" id="mapModal" class="modal" tabindex="-1">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <div t-field="event.exhibition_map" t-options="{'widget': 'image'}" class="img img-responsive"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-2 offset-sm-1">
+                                    <label for="booth_id" class="control-label">Booths</label>
+                                </div>
+                                <div class="col-sm-6 o_wbooth_booths"/>
+                            </div>
+                            <div class="row">
+                                <div class="alert alert-danger col-12 o_wbooth_unavailable_booth_alert d-none" role="alert">
+                                    <i class="fa fa-exclamation-triangle"/>
+                                    <span>Sorry, several booths are now sold out. Please change your choices before validating again.</span>
+                                </div>
+                            </div>
+                            <div class="row" name="booth_registration_submit">
+                                <div class="col-sm-6 offset-sm-3 mt-5">
+                                    <button type="submit" class="btn btn-primary btn-block font-weight-bold o_wbooth_registration_submit" disabled="true">
+                                        <span>Book my Booths</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </t>
+                        <div t-else="" class="alert alert-info">
+                            <span>Sorry, all the booths are sold out. <a href="/contactus">Contact Us</a> if you have any question.</span>
+                        </div>
+                    </form>
+                </div>
+                <div t-if="available_booth_category_ids" class="col-lg-3 bg-200 hidden-sm hidden-xs p-4">
+                    <t t-foreach="event.event_booth_category_ids" t-as="booth_category">
+                        <div t-attf-id="o_wbooth_booth_description_#{booth_category.id}"
+                             class="o_wbooth_booth_description d-none" t-field="booth_category.description"/>
+                    </t>
+                </div>
+            </t>
+        </t>
+    </template>
+
+</data></odoo>

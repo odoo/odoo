@@ -1,0 +1,642 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_automation
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2021
+# Michal Veselý <michal@veselyberanek.net>, 2021
+# trendspotter <jirka.p@volny.cz>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"\"\n"
+"                (ID:"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__help
+msgid "Action Description"
+msgstr "Popis akce"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__name
+msgid "Action Name"
+msgstr "Název akce"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__state
+msgid "Action To Do"
+msgstr "Akce k provedení"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__type
+msgid "Action Type"
+msgstr "Typ akce"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__active
+msgid "Active"
+msgstr "Aktivní"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_type_id
+msgid "Activity"
+msgstr "Činnost"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
+msgid "Activity User Type"
+msgstr "Typ uživatelské aktivity"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
+msgid "Add Followers"
+msgstr "Přidat sledující"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_domain
+msgid "Apply on"
+msgstr "Použít na"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
+msgid "Archived"
+msgstr "Archivováno"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
+msgid "Automated Action"
+msgstr "Automatizovaná akce"
+
+#. module: base_automation
+#: model:ir.actions.act_window,name:base_automation.base_automation_act
+#: model:ir.ui.menu,name:base_automation.menu_base_automation_form
+msgid "Automated Actions"
+msgstr "Automatizované akce"
+
+#. module: base_automation
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
+msgid "Automation"
+msgstr "Automatizace"
+
+#. module: base_automation
+#: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
+#: model:ir.cron,cron_name:base_automation.ir_cron_data_base_automation_check
+#: model:ir.cron,name:base_automation.ir_cron_data_base_automation_check
+msgid "Base Action Rule: check and execute"
+msgstr "Základní pravidlo akce: zkontrolujte a proveďte"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_change
+msgid "Based on Form Modification"
+msgstr "Na základě úpravy formuláře"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_time
+msgid "Based on Timed Condition"
+msgstr "Založeno na časovaném stavu"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__filter_pre_domain
+msgid "Before Update Domain"
+msgstr "Před aktualizací domény"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_model_id
+msgid "Binding Model"
+msgstr "Vazebný model"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_type
+msgid "Binding Type"
+msgstr "Typ vazby"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__binding_view_types
+msgid "Binding View Types"
+msgstr "Vazba typů zobrazení"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
+msgid "Child Actions"
+msgstr "Podřízené akce"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
+msgid ""
+"Child server actions that will be executed. Note that the last return "
+"returned action value will be used as global return value."
+msgstr ""
+"Podřízené akce serveru, které budou provedeny. Všimněte si, že poslední "
+"vrácená zpětná hodnota akce bude použita jako globální návratová hodnota."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
+msgid "Days"
+msgstr "Dny"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
+msgid ""
+"Delay after the trigger date.\n"
+"                                    You can put a negative number if you need a delay before the\n"
+"                                    trigger date, like sending a reminder 15 minutes before a meeting."
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
+msgid "Delay after trigger date"
+msgstr "Po datu spuštění"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range_type
+msgid "Delay type"
+msgstr "Typ zpoždění"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Action"
+msgstr "Zakázat akci"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"Disabling this automated action will enable you to continue your workflow\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
+"                important and/or required fields."
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
+msgid "Due Date In"
+msgstr "Datum vypršení"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
+msgid "Due type"
+msgstr "Typ termínu"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit action"
+msgstr "Zakázat akci"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
+msgid "Email Template"
+msgstr "Šablona e-mailu"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
+msgid "External ID"
+msgstr "Externí ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
+msgid "Fields that trigger the onchange."
+msgstr "Pole, která spouští výměnu."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
+msgid "Groups"
+msgstr "Skupiny"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__hour
+msgid "Hours"
+msgstr "Hodiny"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
+msgid "ID of the action if defined in a XML file"
+msgstr "ID akce, pokud je definována v souboru XML"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
+msgid ""
+"If present, this condition must be satisfied before executing the action "
+"rule."
+msgstr ""
+"Pokud je tato podmínka přítomna, musí být splněna před provedením pravidla "
+"akce."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
+msgid ""
+"If present, this condition must be satisfied before the update of the "
+"record."
+msgstr "Existuje-li, musí být podmínka spolněna po aktualizaci záznamu."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
+msgid "Last Run"
+msgstr "Naposledy spuštěno"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
+msgid "Least Delay Msg"
+msgstr "Zpráva o nejmenším zpoždění"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
+msgid "Link Field"
+msgstr "Pole odkazu"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
+msgid "Minutes"
+msgstr "Minut"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
+msgid "Model"
+msgstr "Model"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
+msgid "Model Name"
+msgstr "Název modelu"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
+msgid ""
+"Model for record creation / update. Set this field only to specify a "
+"different model than the base model."
+msgstr ""
+"Model pro tvorbu / aktualizaci záznamů. Nastavte toto pole pouze pro zadání "
+"jiného modelu než pro základní model."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__model_id
+msgid "Model on which the server action runs."
+msgstr "Model, na kterém je spuštěna akce serveru."
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__month
+msgid "Months"
+msgstr "měsíců"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
+msgid "Note"
+msgstr "Poznámka"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"Note that this action can be trigged up to %d minutes after its schedule."
+msgstr "Tuto akci lze spustit až %d minut po jeho harmonogramu."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
+msgid "On Change Fields Trigger"
+msgstr "Při změně polí se spustí"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
+msgid "On Creation"
+msgstr "Na stvoření"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
+msgid "On Creation & Update"
+msgstr "Při vytváření a aktualizaci"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
+msgid "On Deletion"
+msgstr "Při mazání"
+
+#. module: base_automation
+#: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_write
+msgid "On Update"
+msgstr "Při aktualizaci"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__help
+msgid ""
+"Optional help text for the users with a description of the target view, such"
+" as its usage and purpose."
+msgstr ""
+"Volitelný text nápovědy pro uživatele s popisem cílového zobrazení, jako je "
+"jeho použití a účel."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
+msgid ""
+"Provide the field used to link the newly created record on the record used "
+"by the server action."
+msgstr ""
+"Zadejte pole použité k propojení nově vytvořeného záznamu se záznamem "
+"použitým akcí serveru."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__code
+msgid "Python Code"
+msgstr "Python kód"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
+msgid "Responsible"
+msgstr "Odpovědný"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
+msgid "Sequence"
+msgstr "Číselná řada"
+
+#. module: base_automation
+#: model:ir.model,name:base_automation.model_ir_actions_server
+msgid "Server Action"
+msgstr "Akce serveru"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
+msgid "Server Actions"
+msgstr "Akce serveru"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
+msgid ""
+"Setting a value makes this action available in the sidebar for the given "
+"model."
+msgstr ""
+"Nastavením hodnoty je tato akce k dispozici v postranním panelu daného "
+"modelu."
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid "Setup a new automated automation"
+msgstr "Nastavit novou automatizovanou automatizaci"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
+msgid "Summary"
+msgstr "Shrnutí"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
+msgid "Target Model"
+msgstr "Cílový model"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model Name"
+msgstr "Název cílového modelu"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
+msgid "Technical name of the user on the record"
+msgstr "Technické jméno uživatele v záznamu"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
+"\"%(state_value)s\" action type"
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid ""
+"The action will be triggered if and only if one of these fields is "
+"updated.If empty, all fields are watched."
+msgstr ""
+"Akce bude spuštěna, pouze pokud je jedno z těchto polí aktualizováno. Pokud "
+"jsou prázdné, všechna pole jsou sledována."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"The error occurred during the execution of the automated action\n"
+"                \""
+msgstr ""
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
+msgid "Trigger"
+msgstr "Spouštěč"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
+msgid "Trigger Date"
+msgstr "Datum spouštěče"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Trigger Fields"
+msgstr "Spouštěcí pole"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__state
+msgid ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)"
+msgstr ""
+"Typ akce serveru. K dispozici jsou následující hodnoty:\n"
+"- 'Execute Python Code': blok kódu Pythonu, který bude spuštěn\n"
+"- 'Create': vytvoření nového záznamu s novými hodnotami\n"
+"- 'Update a Record': aktualizuje hodnoty záznamu\n"
+"- 'Execute several actions': definujte akci, která spustí několik dalších akcí serveru\n"
+"- 'Send Email': automaticky odešle e-mail (u Diskuse)\n"
+"- 'Add Followers': přidá sledující k záznamu (u Diskuse)\n"
+"- 'Create Next Activity': vytvoří novou aktivitu (u Diskuse)"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
+msgid "Usage"
+msgstr "Použití"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
+msgid ""
+"Use 'Specific User' to always assign the same user on the next activity. Use"
+" 'Generic User From Record' to specify the field name of the user to choose "
+"on the record."
+msgstr ""
+"Pomocí funkce „Specifický uživatel“ vždy přiřadíte stejného uživatele k "
+"další aktivitě. Pomocí možnosti „Obecný uživatel ze záznamu“ zadejte název "
+"pole uživatele, který chcete v záznamu vybrat."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
+msgid "Use Calendar"
+msgstr "Použít kalendář"
+
+#. module: base_automation
+#: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
+msgid ""
+"Use automated actions to automatically trigger actions for\n"
+"                various screens. Example: a lead created by a specific user may\n"
+"                be automatically set to a specific Sales Team, or an\n"
+"                opportunity which still has status pending after 14 days might\n"
+"                trigger an automatic reminder email."
+msgstr ""
+"Použite automatizované akcie na automatické spustenie akcií pre\n"
+"rôzne obrazovky. Príklad: potenciálny zákazník vytvorený konkrétnym používateľom môže\n"
+"byť automaticky nastavený na konkrétny predajný tím alebo\n"
+"príležitosť, ktorá po 14 dňoch stále má stav čakajúci\n"
+"spustiť automatický e-mail s pripomenutím."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
+msgid "User field name"
+msgstr "Název uživatelského pole"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
+msgid "Value Mapping"
+msgstr "Mapování hodnot"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Warning"
+msgstr "Varování"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
+msgid ""
+"When calculating a day-based timed condition, it is possible to use a "
+"calendar to compute the date based on working days."
+msgstr ""
+"Při výpočtu denního časového stavu je možné pro výpočet data podle "
+"pracovních dnů použít kalendář."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__sequence
+msgid ""
+"When dealing with multiple actions, the execution order is based on the "
+"sequence. Low number means high priority."
+msgstr ""
+"Při řešení více akcí je pořadí provedení založeno na pořadí. Nízké číslo "
+"znamená vysokou prioritu."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
+msgid ""
+"When should the condition be triggered.\n"
+"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+msgstr ""
+"Kdy má být podmínka spuštěna.\n"
+"Pokud je přítomno, bude zkontrolováno plánovačem. Pokud je prázdné, bude zkontrolováno při vzniku a aktualizaci."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__active
+msgid "When unchecked, the rule is hidden and will not be executed."
+msgstr "Pokud neoznačíte, pravidlo nebude vidět neprovede se."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__code
+msgid ""
+"Write Python code that the action will execute. Some variables are available"
+" for use; help about python expression is given in the help tab."
+msgstr ""
+"Napište kód Pythonu, který provede akce. Některé proměnné jsou k dispozici "
+"pro použití; Nápověda k výrazu Python je uvedena na kartě nápovědy."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"You can ask an administrator to disable or correct this automated action."
+msgstr ""
+"Můžete požádat správce, aby tuto automatizovanou akci deaktivoval nebo "
+"opravil."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "You can disable this automated action or edit it to solve the issue."
+msgstr ""
+"Tuto automatizovanou akci můžete deaktivovat nebo upravit tak, aby se "
+"problém vyřešil."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""
+"Ke smazanému záznamu nelze odeslat e-mail, přidat následovníky ani vytvořit "
+"aktivitu. Jednoduše to nefunguje."

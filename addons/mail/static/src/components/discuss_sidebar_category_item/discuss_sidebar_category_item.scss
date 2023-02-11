@@ -1,0 +1,114 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_DiscussSidebarCategoryItem {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: map-get($spacers, 2) 0;
+
+    &:hover .o_DiscussSidebarCategoryItem_commands {
+        display: flex;
+    }
+}
+
+.o_DiscussSidebarCategoryItem_callIndicator {
+    margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+
+    &.o-isCalling {
+        color: red;
+    }
+}
+
+.o_DiscussSidebarCategoryItem_command {
+    margin-left: $o-mail-discuss-sidebar-category-item-margin;
+    margin-right: $o-mail-discuss-sidebar-category-item-margin;
+
+    &:first-child {
+        margin-left: 0px;
+    }
+
+    &:last-child {
+        margin-right: 0px;
+    }
+}
+
+.o_DiscussSidebarCategoryItem_commands {
+    display: none;
+}
+
+.o_DiscussSidebarCategoryItem_image {
+    object-fit: cover;
+    width: map-get($sizes, 100);
+    height: map-get($sizes, 100);
+}
+
+
+.o_DiscussSidebarCategoryItem_imageContainer {
+    position: relative;
+    width: $o-mail-discuss-sidebar-category-item-avatar-size;
+    height: $o-mail-discuss-sidebar-category-item-avatar-size;
+}
+
+.o_DiscussSidebarCategoryItem_item {
+    margin-left: $o-mail-discuss-sidebar-category-item-margin;
+    margin-right: $o-mail-discuss-sidebar-category-item-margin;
+
+    &:first-child {
+        margin-left: $o-mail-discuss-sidebar-category-item-avatar-left-margin;
+    }
+
+    &:last-child {
+        margin-right: $o-mail-discuss-sidebar-scrollbar-width;
+    }
+}
+
+.o_DiscussSidebarCategoryItem_threadIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 13px;
+    height: 13px;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_DiscussSidebarCategoryItem {
+
+    .o_DiscussSidebarCategoryItem_threadIcon {
+        font-size: xx-small;
+        background-color: gray('100');
+        border-radius: 50%;
+    }
+
+    &.o-active {
+        background-color: gray('200');
+    }
+
+    &:hover {
+        background-color: gray('300');
+    }
+}
+
+.o_DiscussSidebarCategoryItem_command {
+
+    &:not(:hover) {
+        color: gray('600');
+    }
+}
+
+.o_DiscussSidebarCategoryItem_counter {
+    background-color: $o-brand-primary;
+    color: gray('300');
+}
+
+.o_DiscussSidebarCategoryItem_name {
+    &.o-item-unread {
+        font-weight: bold;
+    }
+}

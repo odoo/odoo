@@ -1,0 +1,171 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_paypal
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"<br/><br/>\n"
+"                Thanks,<br/>\n"
+"                <b>The Odoo Team</b>"
+msgstr ""
+"<br/><br/>\n"
+"                شكراً لك،<br/>\n"
+"                <b>فريق أودو</b> "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_acquirer.py:0
+#, python-format
+msgid "Add your PayPal account to Odoo"
+msgstr "إضافة حساب PayPal إلى أودو "
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid "Email"
+msgstr "البريد الإلكتروني"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid ""
+"Hello,\n"
+"                <br/><br/>\n"
+"                You have received a payment through PayPal.<br/>\n"
+"                Kindly follow the instructions given by PayPal to create your account.<br/>\n"
+"                Then, help us complete your Paypal credentials in Odoo.<br/><br/>"
+msgstr ""
+"مرحباً،\n"
+"                <br/><br/>\n"
+"                لقد استلمت مبلغاً عن طريق PayPal.<br/>\n"
+"                يرجى اتباع الإرشادات الموضحة على PayPal لإنشاء حسابك.<br/>\n"
+"                ثم ساعدنا على إكمال بيانات اعتماد PayPal الخاصة بك في أودو.<br/><br/>"
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.payment_acquirer_form
+msgid "How to configure your paypal account?"
+msgstr "كيف تقوم بإعداد حسابك على paypal؟"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_seller_account
+msgid "Merchant Account ID"
+msgstr "معرف حساب التاجر "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Missing value for txn_id (%(txn_id)s) or txn_type (%(txn_type)s)."
+msgstr "قيمة مفقودة لـ txn_id (%(txn_id)s) أو txn_type (%(txn_type)s). "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid "Notification data were not acknowledged."
+msgstr "لم يتم الاعتراف ببيانات الإشعار. "
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_pdt_token
+msgid "PDT Identity Token"
+msgstr "رمز هوية PDT "
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_transaction__paypal_type
+msgid "PayPal Transaction Type"
+msgstr "نوع معاملة PayPal "
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "بوابة الدفع "
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_account_payment_method
+msgid "Payment Methods"
+msgstr "طرق الدفع "
+
+#. module: payment_paypal
+#: model:ir.model,name:payment_paypal.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: payment_paypal
+#: model:account.payment.method,name:payment_paypal.payment_method_paypal
+#: model:ir.model.fields.selection,name:payment_paypal.selection__payment_acquirer__provider__paypal
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Paypal Instant Payment Notification"
+msgstr "تنبيه PayPal الفوري للدفع"
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment status: %s"
+msgstr "البيانات المستلمة مع حالة دفع غير صالحة: %s "
+
+#. module: payment_paypal
+#: code:addons/payment_paypal/controllers/main.py:0
+#, python-format
+msgid ""
+"Received unrecognized authentication check response code: received %s, "
+"expected VERIFIED or INVALID."
+msgstr ""
+"تم استلام مصادقة لم يتم التعرف عليها، تحقق من كود الرد: ما تم استلامه %s، "
+"المتوقع تم التحقق منه أو غير صالح. "
+
+#. module: payment_paypal
+#: model_terms:ir.ui.view,arch_db:payment_paypal.mail_template_paypal_invite_user_to_configure
+msgid "Set Paypal credentials"
+msgstr "تعيين بيانات اعتماد PayPal "
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "مقدم خدمة الدفع لاستخدامه مع بوابة الدفع هذه "
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_acquirer__paypal_email_account
+msgid ""
+"The public business email solely used to identify the account with PayPal"
+msgstr ""
+"عنوان البريد الإلكتروني العام للعمل الذي يُستخدم فقط لتعريف الحساب مع PayPal"
+" "
+
+#. module: payment_paypal
+#: model:ir.model.fields,help:payment_paypal.field_payment_transaction__paypal_type
+msgid "This has no use in Odoo except for debugging."
+msgstr "لا يُستخدم لأي غرض آخر في أودو سوى تصحيح الأخطاء. "
+
+#. module: payment_paypal
+#: model:ir.model.fields,field_description:payment_paypal.field_payment_acquirer__paypal_use_ipn
+msgid "Use IPN"
+msgstr "استخدام تنبيهات الدفع الفورية"

@@ -1,0 +1,107 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o-autogrow {
+    flex: 1 1 auto;
+}
+
+.o_Discuss {
+    display: flex;
+    height: map-get($sizes, 100);
+    min-height: 0;
+
+    &.o-mobile {
+        flex-flow: column;
+        align-items: center;
+    }
+}
+
+.o_Discuss_chatWindowHeader {
+    width: map-get($sizes, 100);
+    flex: 0 0 auto;
+}
+
+.o_Discuss_content {
+    height: map-get($sizes, 100);
+    overflow: auto;
+    flex: 1 1 auto;
+    display: flex;
+    flex-flow: column;
+}
+
+.o_Discuss_messagingNotInitialized {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_Discuss_messagingNotInitializedIcon {
+    margin-right: map-get($spacers, 1);
+}
+
+.o_Discuss_mobileAddItemHeader {
+    display: flex;
+    justify-content: center;
+    width: map-get($sizes, 100);
+    padding: map-get($spacers, 3);
+}
+
+.o_Discuss_mobileAddItemHeaderInput {
+    flex: 1 1 auto;
+    margin-bottom: map-get($spacers, 3);
+    padding: map-get($spacers, 2);
+}
+
+.o_Discuss_mobileMailboxSelection {
+    width: map-get($sizes, 100);
+}
+
+.o_Discuss_mobileNavbar {
+    width: map-get($sizes, 100);
+}
+
+.o_Discuss_noThread {
+    display: flex;
+    flex: 1 1 auto;
+    width: map-get($sizes, 100);
+    align-items: center;
+    justify-content: center;
+}
+
+.o_Discuss_sidebar {
+    height: map-get($sizes, 100);
+    overflow: auto;
+    padding-top: map-get($spacers, 3);
+    flex: 0 0 auto;
+}
+
+.o_Discuss_thread {
+    flex: 1 1 0;
+    min-width: 0;
+
+    &.o-mobile {
+        width: map-get($sizes, 100);
+    }
+}
+
+.o_Discuss_notificationList {
+    width: map-get($sizes, 100);
+    flex: 1 1 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Discuss.o-mobile {
+    background-color: $white;
+}
+
+.o_Discuss_mobileAddItemHeaderInput {
+    appearance: none;
+    border: $border-width solid gray('400');
+    border-radius: 5px;
+    outline: none;
+}

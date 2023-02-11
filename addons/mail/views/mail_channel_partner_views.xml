@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <!-- mail.channel.partner -->
+    <record id="mail_channel_partner_view_tree" model="ir.ui.view">
+        <field name="name">mail.channel.partner.tree</field>
+        <field name="model">mail.channel.partner</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Channels">
+                <field name="display_name"/>
+                <field name="channel_id"/>
+                <field name="seen_message_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mail_channel_partner_view_form" model="ir.ui.view">
+        <field name="name">mail.channel.partner.form</field>
+        <field name="model">mail.channel.partner</field>
+        <field name="arch" type="xml">
+            <form string="Channel">
+                <sheet>
+                    <group>
+                        <field name="partner_id"/>
+                        <field name="guest_id"/>
+                        <field name="channel_id"/>
+                        <field name="seen_message_id"/>
+                        <field name="rtc_inviting_session_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_channel_partner_action" model="ir.actions.act_window">
+        <field name="name">Channels/Partner</field>
+        <field name="res_model">mail.channel.partner</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</data></odoo>

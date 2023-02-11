@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="product_wishlist" inherit_id="website_sale_wishlist.product_wishlist">
+        <xpath expr="//button[hasclass('o_wish_rm')]" position="before">
+            <small class="text-danger d-md-block" t-if="wish.product_id._is_sold_out()">Temporarily out of stock</small>
+        </xpath>
+        <xpath expr="//button[hasclass('o_wish_rm')]" position="after">
+            <t t-set="notify" t-value="wish.stock_notification"/>
+            <button groups="base.group_user,base.group_portal" t-att-data-notify="notify" t-if="notify or wish.product_id._is_sold_out()" type="button" class="btn btn-link o_notify_stock no-decoration">
+                <small><i t-attf-class="fa #{'fa-check-square-o' if notify else 'fa-square-o'}"></i> Be notified when back in stock</small>
+            </button>
+        </xpath>
+    </template>
+</odoo>

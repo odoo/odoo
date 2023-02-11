@@ -1,0 +1,205 @@
+:root {
+  font-size: $o-root-font-size;
+}
+
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+// ------------------------------------------------------------------
+//  General
+// ------------------------------------------------------------------
+.o_web_client {
+  direction: ltr;
+  position: relative; // normally useless but required by bootstrap-datepicker
+  background-color: $o-webclient-background-color;
+}
+
+// ------------------------------------------------------------------
+// Misc. widgets
+// ------------------------------------------------------------------
+
+// Buttons
+.o_icon_button {
+  background-color: transparent;
+  border: 0;
+  padding: 0;
+  outline: none;
+}
+
+// Boolean Toggle widget
+div.o_boolean_toggle.custom-control.custom-checkbox {
+  $line-height-computed: $line-height-base * $font-size-base;
+  $slider-width: $line-height-computed * 1.5;
+  $font-size: $font-size-base * 1.2;
+
+  display: inline-block;
+  padding-left: $slider-width + 0.25rem;
+
+  > label.custom-control-label {
+    > i {
+      color: white;
+      cursor: pointer;
+      font-size: $font-size;
+      position: absolute;
+      top: 2px;
+      &.fa-times-circle {
+        right: 15px;
+      }
+      &.fa-check-circle {
+        right: 7px;
+      }
+    }
+    &::before,
+    &::after {
+      content: "";
+      top: 0;
+      left: -($slider-width + 0.25rem);
+    }
+    &::before {
+      width: $slider-width;
+      height: 100%;
+      background-color: #a0a0a0 !important;
+      border-radius: 100px;
+      outline: none !important;
+    }
+  }
+  > input.custom-control-input:checked + label.custom-control-label {
+    &::before {
+      background-color: $o-brand-primary !important;
+    }
+    &::after {
+      background-image: none;
+    }
+  }
+}
+
+//== Backgound light colors variations (bootstrap extensions)
+@each $-name, $-bg-color in $theme-colors {
+  $-safe-text-color: color-yiq(mix($-bg-color, $o-view-background-color));
+  @include bg-variant(".bg-#{$-name}-light", rgba(theme-color($-name), 0.5), $-safe-text-color);
+}
+
+.bg-muted {
+  @extend .bg-200;
+}
+
+.o_web_accesskey_overlay {
+  font-family: $font-family-sans-serif;
+}
+
+// == Extend default border-radius utility classes
+//------------------------------------------------------------------------------
+// Allows to use small and large variations for directional border-radius
+// utility classes (eg. 'rounded-lg-left')
+
+.rounded {
+  $sizes: ('-sm': $border-radius-sm, '-lg': $border-radius-lg);
+
+  @each $size, $radius in $sizes {
+    @each $side in ('left', 'right') {
+      &#{$size}-#{$side} {
+        border-top-#{$side}-radius: $radius !important;
+        border-bottom-#{$side}-radius: $radius !important;
+      }
+    }
+
+    @each $direction in ('top', 'bottom') {
+      &#{$size}-#{$direction} {
+        border-#{$direction}-left-radius: $radius !important;
+        border-#{$direction}-right-radius: $radius !important;
+      }
+    }
+  }
+}
+
+//== Badges
+.badge {
+  margin: 1px 2px 1px 0;
+}
+
+//== Btn-link
+.btn-link {
+  font-weight: $btn-font-weight;
+
+  // -- Btn-link variations
+  // Adapt the behavieur of .btn-link buttons when in conjuction with contextual
+  // classes (eg. text-warning). 'muted' is set as default text color, while
+  // the contextual-class color will be used on ':hover'.
+
+  // Apply all theme-colors variations except "secondary"
+  @each $-name, $-color in map-remove($theme-colors, "secondary") {
+    &.btn-#{$-name}, &.text-#{$-name} {
+      @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+    }
+  }
+
+  // Specific behavieur for "secondary"
+  &.btn-secondary {
+    @include o-btn-link-variant($body-color, $headings-color);
+  }
+}
+
+// == Boostrap Dropdown
+// ----------------------------------------------------------------------------
+.dropdown-menu {
+  max-height: 70vh;
+  overflow: auto;
+  background-clip: border-box;
+  box-shadow: $o-dropdown-box-shadow;
+}
+
+.dropdown-item {
+  &.active, &.selected {
+    position: relative;
+    font-weight: $font-weight-bold;
+
+    &:focus, &:hover {
+      background-color: $dropdown-link-hover-bg;
+    }
+
+    &:not(.dropdown-item_active_noarrow) {
+      &:before {
+        @include o-position-absolute(0);
+        transform: translate(-1.5em, 90%);
+        font: .7em/1em FontAwesome;
+        color: $primary;
+        content: "\f00c";
+      }
+
+      &.disabled:before {
+        color: $dropdown-link-disabled-color;
+      }
+    }
+  }
+}
+
+.dropdown-header {
+  font-weight: $font-weight-bold;
+  padding-bottom: .1em;
+
+  &:not(:first-child) {
+    margin-top: .3em;
+  }
+}
+
+.dropdown-divider:first-child {
+  display: none;
+}
+
+//== Printing improvements
+@media print {
+  .table-responsive {
+    overflow-x: initial;
+  }
+}
+
+//== Action manager
+// ensure special links are styled as pointers even when they don't
+// have an href
+[type="action"],
+[type="toggle"] {
+  cursor: pointer !important;
+}

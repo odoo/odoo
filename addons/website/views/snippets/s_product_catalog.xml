@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_product_catalog" name="Pricelist">
+    <section class="s_product_catalog oe_img_bg o_bg_img_center oe_custom_bg pt48 pb32" style="background-image: url('/web/image/website.s_product_catalog_default_image');" data-vcss="001">
+        <div class="container">
+            <h2>Menu</h2>
+            <p>Add a menu description.</p>
+            <div class="row">
+                <div class="col-lg-6 pt16 pb16">
+                    <h3>Starter</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Cheese Onion Rings</t>
+                            <t t-set="price">$9.00</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Chefs Fresh Soup of the Day</t>
+                            <t t-set="price">$7.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Beef Carpaccio</t>
+                            <t t-set="price">$10.50</t>
+                        </t>
+                    </ul>
+                </div>
+                <div class="col-lg-6 pt16 pb16">
+                    <h3>Main Course</h3>
+                    <ul class="list-unstyled my-3">
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Filet Mignon 8oz</t>
+                            <t t-set="price">$15.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Farm Friendly Chicken Supreme</t>
+                            <t t-set="price">$15.50</t>
+                        </t>
+                        <t t-call="website.s_product_catalog_dish">
+                            <t t-set="name">Tuna and Salmon Burger</t>
+                            <t t-set="price">$12.00</t>
+                        </t>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_product_catalog_dish">
+    <li class="s_product_catalog_dish" data-name="Product">
+        <p class="s_product_catalog_dish_title d-flex align-items-baseline pb-2">
+            <span t-esc="name" class="s_product_catalog_dish_name s_product_catalog_dish_dot_leaders"/>
+            <span t-esc="price" class="s_product_catalog_dish_price ml-auto pl-2"/>
+        </p>
+    </li>
+</template>
+
+<template id="s_product_catalog_add_product_widget">
+    <we-row string="Product">
+        <we-button data-add-item="" data-item=".s_product_catalog_dish:last" data-select-item=""
+                   t-att-data-apply-to="apply_to"
+                   data-no-preview="true" class="o_we_bg_brand_primary">
+            Add Product
+        </we-button>
+    </we-row>
+</template>
+
+<template id="s_product_catalog_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+        <div data-js="MultipleItems"
+             data-selector=".s_product_catalog">
+            <t t-call="website.s_product_catalog_add_product_widget">
+                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish):not(:has(.row > div:has(.s_product_catalog_dish)))"/>
+            </t>
+        </div>
+        <div data-js="MultipleItems"
+             data-selector=".s_product_catalog .row > div">
+            <t t-call="website.s_product_catalog_add_product_widget">
+                <t t-set="apply_to" t-valuef="> :has(.s_product_catalog_dish)"/>
+            </t>
+        </div>
+    </xpath>
+    <xpath expr="." position="inside">
+        <div data-js="ProductCatalog" data-selector=".s_product_catalog">
+            <we-checkbox string="Descriptions" data-toggle-description="true" data-no-preview="true"/>
+            <t t-call="website.snippet_options_border_line_widgets">
+                <t t-set="label">&#8985; Separator</t>
+                <t t-set="direction" t-value="'top'"/>
+                <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
+                <!-- Note: no need of extra dependency thanks to the apply-to -->
+            </t>
+        </div>
+        <div data-selector=".s_product_catalog_dish" data-drop-near=".s_product_catalog_dish"/>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove']" position="attributes">
+        <attribute name="data-selector" add=".s_product_catalog_dish" separator=","/>
+    </xpath>
+</template>
+
+<record id="website.s_product_catalog_001_scss" model="ir.asset">
+    <field name="name">Product catalog 001 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_product_catalog/001.scss</field>
+</record>
+
+</odoo>

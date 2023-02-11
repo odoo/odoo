@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_registration_details" name="Event Booth Registration Details">
+        <t t-call="website_event_booth.event_booth_layout">
+            <form method="post"
+                id="o_wbooth_contact_details_form"
+                t-attf-action="/event/#{slug(event)}/booth/confirm"
+                class="col-12 px-5 py-2 js_website_submit_form">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <input type="hidden" name="booth_category_id" t-att-value="booth_category.id"/>
+                <input type="hidden" name="event_booth_ids" t-att-value="event_booths.ids"/>
+                <div id="o_wbooth_contact_details">
+                    <h4 class="mt32">
+                        <strong>Contact Details</strong>
+                    </h4>
+                    <div class="row form-group">
+                        <label class="col-form-label col-sm-auto">
+                            <span>Name</span>
+                            <span> *</span>
+                        </label>
+                        <div class="col-sm">
+                            <input type="text" class="form-control" name="contact_name" required="True"
+                                   t-att-value="default_contact.get('name', '')"/>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-form-label col-sm-auto">
+                            <span>Email</span>
+                            <span> *</span>
+                        </label>
+                        <div class="col-sm">
+                            <input type="email" class="form-control" name="contact_email" required="True"
+                                   t-att-value="default_contact.get('email', '')"/>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-form-label col-sm-auto">Phone</label>
+                        <div class="col-sm">
+                            <input type="tel" class="form-control" name="contact_phone"
+                                   t-att-value="default_contact.get('phone', '')"/>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-form-label col-sm-auto">Mobile</label>
+                        <div class="col-sm">
+                            <input type="tel" class="form-control" name="contact_mobile"
+                                   t-att-value="default_contact.get('mobile', '')"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-6 offset-sm-3 mt-5">
+                        <button type="submit" class="btn btn-primary btn-block font-weight-bold">Book my Booths</button>
+                    </div>
+                </div>
+            </form>
+        </t>
+    </template>
+
+    <template id="event_booth_registration_complete" name="Event Booth Registration Complete">
+        <t t-call="website_event_booth.event_booth_layout">
+            <div class="col-12 p-5">
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <h3>Booth Registration completed!</h3>
+                        <span class="h4 text-muted" t-esc="event.name"/>
+                    </div>
+                </div>
+                <div class="d-flex flex-column">
+                    <span t-if="contact_name" class="font-weight-bold">
+                        <t t-esc="contact_name"/>
+                    </span>
+                    <span t-if="contact_email">
+                        <i class="fa fa-fw fa-envelope mr-2"/>
+                        <t t-esc="contact_email"/>
+                    </span>
+                    <span t-if="contact_phone">
+                        <i class="fa fa-fw fa-phone mr-2"/>
+                        <t t-esc="contact_phone"/>
+                    </span>
+                    <span t-if="contact_mobile">
+                        <i class="fa fa-fw fa-mobile mr-2"/>
+                        <t t-esc="contact_mobile"/>
+                    </span>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</data></odoo>

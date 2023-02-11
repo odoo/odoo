@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussPublicView" owl="1">
+        <div class="o_DiscussPublicView d-flex flex-column h-100">
+            <t t-if="discussPublicView">
+                <ThreadView t-if="discussPublicView.threadView"
+                    hasComposerThreadTyping="true"
+                    threadViewLocalId="discussPublicView.threadView.localId"
+                />
+                <WelcomeView t-if="discussPublicView.welcomeView"
+                    localId="discussPublicView.welcomeView.localId"
+                />
+            </t>
+        </div>
+    </t>
+</templates>

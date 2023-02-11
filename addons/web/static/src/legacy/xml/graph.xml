@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <t t-name="web.Legacy.GraphRenderer" owl="1">
+        <div class="o_legacy_graph_renderer">
+            <label t-if="props.title" t-esc="props.title"/>
+            <t t-if="noContentHelperData" t-call="web.NoContentHelper">
+                <t t-set="title" t-value="noContentHelperData.title"/>
+                <t t-set="description" t-value="noContentHelperData.description"/>
+            </t>
+            <t t-else="">
+                <t t-if="props.isSample and !props.isEmbedded">
+                    <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                        <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                    </t>
+                    <t t-else="" t-call="web.NoContentHelper"/>
+                </t>
+                <div class="o_graph_canvas_container" t-ref="container">
+                    <canvas t-ref="canvas"/>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

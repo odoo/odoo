@@ -1,0 +1,369 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_badge_received" model="mail.template">
+            <field name="name">Received Badge</field>
+            <field name="subject">New badge {{ object.badge_id.name }} granted</field>
+            <field name="model_id" ref="gamification.model_gamification_badge_user"/>
+            <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" width="590" cellpadding="0" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;" summary="o_mail_notification">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your Badge</span><br/>
+                    <span style="font-size: 20px; font-weight: bold;" t-out="object.badge_id.name or ''"></span>
+                </td><td valign="middle" align="right">
+                    <img t-attf-src="/logo.png?company={{ object.user_id.company_id.id }}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="object.user_id.company_id.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="top" style="font-size: 14px;">
+                    <div>
+                        Congratulations <t t-out="object.user_id.name or ''"></t> !<br/>
+                        You just received badge <strong t-out="object.badge_id.name or ''"></strong> !<br/>
+                        <table t-if="is_html_empty(object.badge_id.description)" cellspacing="0" cellpadding="0" border="0" style="width: 560px; margin-top: 5px;">
+                            <tbody><tr>
+                                <td valign="center">
+                                    <img t-attf-src="/web/image/gamification.badge/{{ object.badge_id.id }}/image_128/80x80" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="user.company_id.name"/>
+                                </td>
+                                <td valign="center">
+                                    <cite t-out="object.badge_id.description or ''"></cite>
+                                </td>
+                            </tr></tbody>
+                        </table>
+                        <br/>
+                        <t t-if="object.sender_id">
+                            This badge was granted by <strong t-out="object.sender_id.name or ''"></strong>.
+                        </t>
+                        <br/>
+                        <t t-if="object.comment" t-out="object.comment or ''"></t>
+                        <br/><br/>
+                        Thank you,
+                        <t t-if="object.sender_id.signature">
+                            <br />
+                            <t t-out="object.sender_id.signature or ''"></t>
+                        </t>
+                    </div>
+                </td></tr>
+                <tr><td style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" style="min-width: 590px; background-color: white; font-size: 12px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr><td valign="middle" align="left">
+                    <t t-out="object.user_id.company_id.name or ''">YourCompany</t>
+                </td></tr>
+                <tr><td valign="middle" align="left" style="opacity: 0.7;">
+                    <t t-out="object.user_id.company_id.phone or ''">+1 650-123-4567</t>
+                    <t t-if="object.user_id.company_id.email">
+                        | <a t-attf-href="'mailto:%s' % {{ object.user_id.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.user_id.company_id.email or ''">info@yourcompany.com</a>
+                    </t>
+                    <t t-if="object.user_id.company_id.website">
+                        | <a t-attf-href="'%s' % {{ object.user_id.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.user_id.company_id.website or ''">http://www.example.com</a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table width="590" border="0" cellpadding="0" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+      <tr><td style="text-align: center; font-size: 14px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=gamification" style="color: #875A7B;">Odoo</a>
+      </td></tr>
+    </table>
+</td></tr>
+</table></field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_goal_reminder" model="mail.template">
+            <field name="name">Goal: Reminder for Goal Update</field>
+            <field name="model_id" ref="gamification.model_gamification_goal"/>
+            <field name="partner_to">{{ object.user_id.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div>
+    <strong>Reminder</strong><br/>
+    You have not updated your progress for the goal <t t-out="object.definition_id.name or ''"></t> (currently reached at <t t-out="object.completeness or ''"></t>%) for at least <t t-out="object.remind_update_delay or ''"></t> days. Do not forget to do it.
+    <br/><br/>
+    Thank you,
+    <t t-if="object.challenge_id.manager_id.signature">
+        <br />
+        <t t-out="object.challenge_id.manager_id.signature or ''"></t>
+    </t>
+</div></field>
+            <field name="lang">{{ object.user_id.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+        
+        <record id="simple_report_template" model="mail.template">
+            <field name="name">Challenge: Simple Challenge Report Progress</field>
+            <field name="model_id" ref="gamification.model_gamification_challenge"/>
+            <field name="body_html" type="html">
+<table cellspacing="0" cellpadding="0" width="100%" style="background-color: #EEE; border-collapse: collapse;">
+<tr>
+    <td valign="top" align="center">
+        <t t-set="object_ctx" t-value="ctx.get('object')"/>
+        <t t-set="company" t-value="object_ctx and object_ctx.company_id or user.company_id"/>
+        <t t-set="challenge_lines" t-value="ctx.get('challenge_lines', [])"/>
+        <table cellspacing="0" cellpadding="0" width="600" style="margin: 0 auto; width: 570px;">
+            <tr><td>
+                <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                        <div>
+                            <t t-if="object.visibility_mode == 'ranking'">
+                                <td style="padding:15px;">
+                                    <p style="font-size:20px;color:#666666;" align="center">Leaderboard</p>
+                                </td>
+                            </t>
+                        </div>
+                    </tr>
+                </table>
+                <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#fff" style="background-color:#fff;">
+                    <tr><td style="padding: 15px;">
+                        <t t-if="object.visibility_mode == 'personal'">
+                            <span style="color:#666666;font-size:13px;">Here is your current progress in the challenge <strong t-out="object.name or ''"></strong>.</span>
+                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:20px;">
+                                <tr>
+                                    <td align="center">
+                                        <div>Personal Performance</div>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:30px;color:#666666;">
+                                <thead>
+                                    <tr style="color:#9A6C8E; font-size:12px;">
+                                        <th align="left" style="padding-bottom: 0px;width:40%;text-align:left;">Goals</th>
+                                        <th style="width:20%;text-align:right;" align="left">Target</th>
+                                        <th style="width:20%;text-align:right;" align="right">Current</th>
+                                        <th style="width:20%;text-align:right;" align="right">Completeness</th>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="height:1px;background-color:#9A6C8E;"></td>
+                                    </tr>
+                                </thead>
+                                <tbody t-foreach="challenge_lines" t-as="line">
+                                    <tr style="font-weight:bold;">
+                                        <td style="padding: 20px 0;" align="left">
+                                            <t t-out="line['name'] or ''"></t>
+                                            <t t-if="line['suffix'] or line['monetary']">
+                                                (<t t-out="line['full_suffix'] or ''"></t>)
+                                            </t>
+                                        </td>
+                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['target'] or ''"></t>
+                                            <t t-if="line['suffix']" t-out="line['suffix'] or ''"></t>
+                                        </td>
+                                        <td style="padding: 20px 0;" align="right"><t t-out="&quot;%.2f&quot; % line['current'] or ''"></t>
+                                            <t t-if="line['suffix']" t-out="line['suffix'] or ''"></t>
+                                        </td>
+                                        <td style="padding: 20px 0;font-size:25px;color:#9A6C8E;" align="right"><strong><t t-out="int(line['completeness']) or ''"></t>%</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5" style="height:1px;background-color:#e3e3e3;"></td>
+                                    </tr>
+                                </tbody>
+                            </table>                   
+                        </t>
+                        <t t-else="">
+                            <span style="color:#A8A8A8;font-size:13px;">
+                                Challenge: <strong t-out="object.name or ''"></strong>.
+                            </span> 
+                            <t t-foreach="challenge_lines" t-as="line">
+                                <!-- Header + Button table -->
+                                <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:35px;">
+                                    <tr>
+                                        <td width="50%">
+                                            <div>Top Achievers for goal <strong t-out="line['name'] or ''"></strong></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- Podium -->
+                                <t t-if="len(line['goals']) == 2">
+                                    <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:10px;">
+                                        <tr><td style="padding:0 30px;">
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="table-layout: fixed;">
+                                                <tr>
+                                                    <t t-set="top_goals" t-value="line['goals'][:3]"/>
+                                                    <t t-foreach="top_goals" t-as="goal">
+                                                        <td align="center" style="width:32%;">
+                                                            <t t-if="loop.index == 1">
+                                                                <t t-set="extra_div" t-value="'&lt;div style=&quot;height:40px;&quot;&gt;&lt;/div&gt;'"/>
+                                                                <t t-set="heightA" t-value="95"/>
+                                                                <t t-set="heightB" t-value="75"/>
+                                                                <t t-set="bgColor" t-value="'#b898b0'"/>
+                                                                <t t-set="fontSize" t-value="50"/>
+                                                                <t t-set="podiumPosition" t-value="'2'"/>
+                                                            </t>
+                                                            <t t-elif="loop.index == 2">
+                                                                <t t-set="extra_div" t-value="''"/>
+                                                                <t t-set="heightA" t-value="55"/>
+                                                                <t t-set="heightB" t-value="115"/>
+                                                                <t t-set="bgColor" t-value="'#9A6C8E'"/>
+                                                                <t t-set="fontSize" t-value="85"/>
+                                                                <t t-set="podiumPosition" t-value="'1'"/>
+                                                            </t>
+                                                            <t t-elif="loop.index == 3">
+                                                                <t t-set="extra_div" t-value="'&lt;div style=&quot;height:60px;&quot;&gt;&lt;/div&gt;'"/>
+                                                                <t t-set="heightA" t-value="115"/>
+                                                                <t t-set="heightB" t-value="55"/>
+                                                                <t t-set="bgColor" t-value="'#c8afc1'"/>
+                                                                <t t-set="fontSize" t-value="35"/>
+                                                                <t t-set="podiumPosition" t-value="'3'"/>
+                                                            </t>
+                                                            <div style="margin:0 3px 0 3px;height:220px;">
+                                                                <div t-attf-style="height:{{ heightA }}px;">
+                                                                    <t t-out="extra_div or ''"></t>
+                                                                    <div style="height:55px;">
+                                                                        <img style="margin-bottom:5px;width:50px;height:50px;border-radius:50%;object-fit:cover;" t-att-src="image_data_uri(object.env['res.users'].browse(goal['user_id']).partner_id.image_128)" t-att-alt="goal['name']"/>
+                                                                    </div>
+                                                                    <div align="center" t-attf-style ="color:{{ bgColor }};height:20px">
+                                                                        <t t-out="goal['name'] or ''"></t>
+                                                                    </div>
+                                                                </div>
+                                                                <div t-attf-style="background-color:{{ bgColor }};height:{{ heightB }}px;">
+                                                                    <strong><span t-attf-style="color:#fff;font-size:{{ fontSize }}px;" t-out="podiumPosition or ''"></span></strong>
+                                                                </div>
+                                                                <div style="height:30px;">
+                                                                    <t t-out="&quot;%.2f&quot; % goal['current'] or ''"></t>
+                                                                    <t t-if="line['suffix'] or line['monetary']">
+                                                                        <t t-out="line['full_suffix'] or ''"></t>
+                                                                    </t>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </t>
+                                                </tr>
+                                            </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </t>
+                                <!-- data table -->
+                                <table cellspacing="0" cellpadding="0" width="100%" style="margin-bottom:5px">
+                                    <tr>
+                                        <td>
+                                            <table cellspacing="0" cellpadding="0" width="100%" style="margin-top:30px;margin-bottom:5px;color:#666666;">
+                                                <thead>
+                                                    <tr style="color:#9A6C8E; font-size:12px;">
+                                                        <th style="width:15%;text-align:center;">Rank</th>
+                                                        <th style="width:25%;text-align:left;">Name</th>
+                                                        <th style="width:30%;text-align:right;">Performance 
+                                                            <t t-if="line['suffix']">
+                                                                (<t t-out="line['suffix'] or ''"></t>)
+                                                            </t>
+                                                            <t t-elif="line['monetary']">
+                                                                (<t t-out="company.currency_id.symbol or ''"></t>)
+                                                            </t>
+                                                        </th>
+                                                        <th style="width:30%;text-align:right;">Completeness</th>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="height:1px;background-color:#9A6C8E;"></td>
+                                                    </tr>
+                                                </thead>
+                                                <tbody t-foreach="line['goals']" t-as="goal">
+                                                    <tr>
+                                                        <t t-set="tdBgColor" t-value="'#fff'"/>
+                                                        <t t-set="tdColor" t-value="'gray'"/>
+                                                        <t t-set="mutedColor" t-value="'#AAAAAA'"/>
+                                                        <t t-set="tdPercentageColor" t-value="'#9A6C8E'"/>
+                                                        <td width="15%" align="center" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:20px;"><t t-out="goal['rank']+1 or ''"></t>
+                                                        </td>
+                                                        <td width="25%" align="left" valign="middle" t-attf-style="background-color:{{ tdBgColor }};padding :5px 0;font-size:13px;"><t t-out="goal['name'] or ''"></t></td>
+                                                        <td width="30%" align="right" t-attf-style="background-color:{{ tdBgColor }};padding:5px 0;line-height:1;"><t t-out="&quot;%.2f&quot; % goal['current'] or ''"></t><br/><span t-attf-style="font-size:13px;color:{{ mutedColor }};">on <t t-out="&quot;%.2f&quot; % line['target'] or ''"></t></span>
+                                                        </td>
+                                                        <td width="30%" t-attf-style="color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;" align="right"><strong><t t-out="int(goal['completeness']) or ''"></t>%</strong></td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="5" style="height:1px;background-color:#DADADA;"></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table> 
+                            </t>
+                        </t>
+                    </td></tr>
+                </table>
+            </td></tr>
+        </table>
+    </td>
+</tr>
+</table>
+            </field>
+        </record>
+
+        <record id="mail_template_data_new_rank_reached" model="mail.template">
+            <field name="name">User: New rank reached</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">New rank: {{ object.rank_id.name }}</field>
+            <field name="email_to"></field>
+            <field name="partner_to">{{ object.partner_id.id }}</field>
+            <field name="body_html" type="html">
+<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+    <tbody>
+        <tr>
+            <td style="padding:15px 20px 10px 20px;">
+                <p>
+                    Congratulations
+                    <span t-out="object.name or ''">Joel Willis</span>!
+                </p>
+                <p>
+                    You just reached a new rank : <strong t-out="object.rank_id.name or ''">Newbie</strong>
+                </p>
+                <t t-if="object.next_rank_id.name">
+                    <p>Continue your work to become a <strong t-out="object.next_rank_id.name or ''">Student</strong> !</p>
+                </t>
+                <div style="margin: 16px 0px 16px 0px;">
+                    <t t-set="gamification_redirection_data" t-value="object.get_gamification_redirection_data()"/>
+                    <t t-foreach="gamification_redirection_data" t-as="data">
+                        <t t-set="url" t-value="data['url']"/>
+                        <t t-set="label" t-value="data['label']"/>
+                        <a t-att-href="url" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;" t-out="label or ''">LABEL</a>
+                    </t>
+                </div>
+            </td>
+            <td style="padding:15px 20px 10px 20px;">
+                <p style="text-align: center;">
+                    <img t-attf-src="/web/image/gamification.karma.rank/{{ object.rank_id.id }}/image_128"/>
+                </p>
+            </td>
+        </tr>
+        <tr t-if="user.signature">
+            <td style="padding:15px 20px 10px 20px;">
+                <t t-out="user.signature or ''">--<br/>Mitchell Admin</t>
+            </td>
+        </tr>
+    </tbody>
+ </table>
+</div></field>
+            <field name="lang">{{ object.lang }}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

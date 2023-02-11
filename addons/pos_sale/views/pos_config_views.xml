@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_config_view_form_pos_sale" model="ir.ui.view">
+        <field name="name">pos.config.form.pos.sale</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <div id="accounting_section" position="after">
+                <h2>Sales</h2>
+                <div class="row mt16 o_settings_container">
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Sales Team</span>
+                            <div class="text-muted">
+                                Sales are reported to the following sales team
+                            </div>
+                            <field name="crm_team_id" kanban_view_ref="%(sales_team.crm_team_view_kanban)s" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6 o_setting_box">
+                        <div class="o_setting_right_pane">
+                            <span class="o_form_label">Down Payment Product</span>
+                            <div class="text-muted">
+                                This product will be applied when down payment is made
+                            </div>
+                            <field
+                                name="down_payment_product_id"
+                                domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                context="{'default_detailed_type': 'service', 'default_taxes_id': False }"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<!-- Search Bar autocomplete item -->
+<div t-name="website.s_searchbar.autocomplete"
+    class="dropdown-menu show w-100">
+    <t t-if="fuzzySearch and results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
+        <span class="dropdown-item-text text-muted">No results found for '<t t-esc="search"/>'. Showing results for '<a href="#" class="s_searchbar_fuzzy_submit" t-esc="fuzzySearch"/>'.</span>
+    </t>
+    <t t-elif="!results.length">
+        <!-- TODO adapt in master, this is patched in JS so that text-muted -->
+        <!-- is not on the same element as dropdown-item-text -->
+        <span class="dropdown-item-text text-muted">No results found. Please try another search.</span>
+    </t>
+    <a t-foreach="results" t-as="result"
+        t-att-href="result['website_url']" class="dropdown-item p-2 text-wrap">
+        <div class="media align-items-center o_search_result_item">
+            <t t-if="widget.displayImage">
+                <img t-if="result['image_url']" t-att-src="result['image_url']" class="flex-shrink-0 o_image_64_contain"/>
+                <i t-else="" t-attf-class="o_image_64_contain text-center pt16 fa #{result['_fa']}" style="font-size: 34px;"/>
+            </t>
+            <div class="media-body px-3">
+                <t t-set="description" t-value="parts['description'] and widget.displayDescription and result['description']"/>
+                <t t-set="extra_link" t-value="parts['extra_link'] and widget.displayExtraLink and result['extra_link_url'] and result['extra_link']"/>
+                <div t-attf-class="h6 font-weight-bold #{description ? '' : 'mb-0'}" t-out="result['name']"/>
+                <p t-if="description" class="mb-0" t-out="description"/>
+                <t t-if="extra_link">
+                    <t t-if="!extra_link['extra_link_title']">
+                        <button t-if="extra_link" class="extra_link btn btn-link btn-sm"
+                                t-att-data-target="result['extra_link_url']" t-out="extra_link"/>
+                    </t>
+                    <t t-else="">
+                        <button class="btn btn-link btn-sm pr-0" disabled="disabled" t-out="extra_link['extra_link_title']"/>
+                        <t t-foreach="Object.keys(extra_link)" t-as="link">
+                            <button t-if="result['extra_link_url'][link]" class="extra_link btn btn-link btn-sm p-0"
+                                    t-att-data-target="result['extra_link_url'][link]" t-out="extra_link[link]"/>
+                        </t>
+                    </t>
+                </t>
+            </div>
+            <div t-if="parts['detail'] and widget.displayDetail" class="flex-shrink-0">
+                <t t-if="result['detail_strike']">
+                    <span class="text-danger text-nowrap" style="text-decoration: line-through;">
+                        <t t-out="result['detail_strike']"/>
+                    </span>
+                    <br/>
+                </t>
+                <b t-if="result['detail']" class="text-nowrap">
+                    <t t-out="result['detail']"/>
+                </b>
+                <t t-if="result['detail_extra']">
+                    <br/>
+                    <span class="text-nowrap" t-out="result['detail_extra']"/>
+                </t>
+            </div>
+        </div>
+    </a>
+    <t t-if="hasMoreResults">
+        <button type="submit" class="dropdown-item text-center text-primary">All results</button>
+    </t>
+</div>
+
+</templates>

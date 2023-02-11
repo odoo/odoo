@@ -1,0 +1,868 @@
+///
+/// This files regroups the variables and mixins which are specific to the editor.
+///
+
+//------------------------------------------------------------------------------
+// Odoo Editor UI
+//------------------------------------------------------------------------------
+
+$o-we-bg-darkest: #000000 !default;
+$o-we-bg-darker: #141217 !default;
+$o-we-bg-dark: #191922 !default;
+$o-we-bg-light: #2b2b33 !default;
+$o-we-bg-lighter: #3e3e46 !default;
+$o-we-bg-lightest: #595964 !default;
+
+$o-we-fg-darker: #9d9d9d !default;
+$o-we-fg-dark: #C6C6C6 !default;
+$o-we-fg-light: #D9D9D9 !default;
+$o-we-fg-lighter: #FFFFFF !default;
+
+$o-we-color-danger: #e6586c !default;
+$o-we-color-warning: #f0ad4e !default;
+$o-we-color-success: #40ad67 !default;
+$o-we-color-info: #6999a8 !default;
+
+$o-we-bg: $o-we-bg-light !default;
+$o-we-color: $o-we-fg-light !default;
+$o-we-font-size: 13px !default;
+$o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$o-we-accent: #01bad2 !default;
+$o-we-border-width: 1px !default;
+$o-we-border-color: $o-we-bg-light !default;
+
+$o-we-ace-color: #2F3129 !default;
+
+$o-we-handles-offset-to-hide: 10000px !default;
+$o-we-handles-btn-size: 20px !default;
+$o-we-handles-accent-color: $o-we-accent !default;
+$o-we-handles-accent-color-preview: $o-enterprise-color !default;
+$o-we-handle-edge-size: 8px !default;
+$o-we-handle-border-width: 2px !default;
+
+$o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
+$o-we-dropzone-border-width: 2px !default;
+$o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
+
+// Translations
+$o-we-content-to-translate-color: rgb(255, 255, 90) !default;
+$o-we-translated-content-color: rgb(120, 215, 110) !default;
+
+$o-we-toolbar-height: 40px !default;
+
+$o-we-item-spacing: 8px !default;
+$o-we-item-border-width: 1px !default;
+$o-we-item-border-color: $o-we-bg-darkest !default;
+$o-we-item-border-radius: 2px !default;
+$o-we-item-clickable-bg: $o-we-bg-lightest!default;
+$o-we-item-clickable-color: $o-we-fg-light!default;
+$o-we-item-clickable-hover-bg: $o-we-bg-dark!default;
+$o-we-item-pressed-bg: $o-we-bg-light !default;
+$o-we-item-pressed-color: $o-we-fg-lighter !default;
+
+$o-we-item-standup-color-light: $o-we-fg-lighter;
+$o-we-item-standup-color-dark: $o-we-bg-darkest;
+$o-we-item-standup-top: inset 0 1px 0;
+$o-we-item-standup-bottom: inset 0 -1px 0;
+
+$o-we-dropdown-spacing: $o-we-item-spacing !default;
+$o-we-dropdown-bg: $o-we-bg-darker !default;
+$o-we-dropdown-border-width: 1px !default;
+$o-we-dropdown-border-color: $o-we-bg-darkest !default;
+$o-we-dropdown-shadow: 0 2px 8px 0 rgba(black, 0.5) !default;
+$o-we-dropdown-item-height: 34px !default;
+$o-we-dropdown-item-spacing: 1px !default;
+$o-we-dropdown-item-bg: $o-we-bg-lightest !default;
+$o-we-dropdown-item-bg-hover: $o-we-bg-light !default;
+$o-we-dropdown-item-color: $o-we-fg-dark !default;
+$o-we-dropdown-item-hover-color: $o-we-fg-light !default;
+$o-we-dropdown-item-active-bg: mix($o-we-dropdown-item-bg, $o-we-dropdown-item-bg-hover) !default;
+$o-we-dropdown-item-active-color: $o-we-fg-lighter !default;
+$o-we-dropdown-caret-spacing: 2px !default;
+
+$o-we-sidebar-bg: $o-we-bg !default;
+$o-we-sidebar-color: $o-we-color !default;
+$o-we-sidebar-font-size: 12px !default;
+$o-we-sidebar-border-width: $o-we-border-width !default;
+$o-we-sidebar-border-color: $o-we-border-color !default;
+$o-we-sidebar-width: $o-we-sidebar-border-width + 290px !default;
+
+$o-we-sidebar-top-height: 46px !default;
+
+$o-we-sidebar-tabs-size-ratio: 1 !default;
+$o-we-sidebar-tabs-bg: $o-we-bg-darker !default;
+$o-we-sidebar-tabs-color: $o-we-sidebar-color !default;
+$o-we-sidebar-tabs-disabled-color: $o-we-fg-darker !default;
+$o-we-sidebar-tabs-active-border-width: 2px !default;
+$o-we-sidebar-tabs-active-border-color: $o-we-accent !default;
+$o-we-sidebar-tabs-active-color: $o-we-fg-lighter !default;
+
+$o-we-sidebar-blocks-content-bg: $o-we-bg-dark !default;
+$o-we-sidebar-blocks-content-spacing: 10px !default;
+$o-we-sidebar-blocks-content-snippet-spacing: 2px !default;
+$o-we-sidebar-blocks-content-snippet-bg: $o-we-bg-lighter !default;
+
+$o-we-sidebar-content-highlight-bar-width: 2px !default;
+$o-we-sidebar-content-highlight-bar-color: $o-we-accent !default;
+
+$o-we-sidebar-content-gutter-item-indent: 5px !default;
+$o-we-sidebar-content-padding-base: 10px !default;
+$o-we-sidebar-content-indent: $o-we-sidebar-content-gutter-item-indent + $o-we-sidebar-content-padding-base !default;
+$o-we-sidebar-content-backdrop-bg: rgba(black, 0.2) !default;
+$o-we-sidebar-content-available-room: $o-we-sidebar-width - $o-we-sidebar-content-padding-base - $o-we-sidebar-content-indent !default;
+
+$o-we-sidebar-content-main-title-height: 32px !default;
+$o-we-sidebar-content-main-title-color: $o-we-fg-lighter !default;
+$o-we-sidebar-content-main-title-font-size: 13px !default;
+
+$o-we-sidebar-content-block-spacing: 10px !default;
+
+$o-we-sidebar-content-fold-block-bg: $o-we-bg-light !default;
+
+$o-we-sidebar-content-field-spacing: $o-we-item-spacing !default;
+$o-we-sidebar-content-field-color: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-control-item-color: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-control-item-size: 1em !default;
+$o-we-sidebar-content-field-control-item-spacing: 0.5em !default;
+$o-we-sidebar-content-field-label-spacing: 6px !default;
+
+$o-we-sidebar-content-field-label-width: $o-we-sidebar-content-available-room * .4 !default;
+$o-we-sidebar-content-field-multi-spacing: $o-we-sidebar-content-field-label-spacing * .5 !default;
+$o-we-sidebar-content-field-height: 22px !default;
+
+$o-we-sidebar-content-field-border-width: $o-we-item-border-width !default;
+$o-we-sidebar-content-field-border-color:$o-we-item-border-color !default;
+$o-we-sidebar-content-field-border-radius: $o-we-item-border-radius !default;
+$o-we-sidebar-content-field-disabled-color: $o-we-sidebar-content-field-control-item-color !default;
+$o-we-sidebar-content-field-clickable-bg: $o-we-item-clickable-bg !default;
+$o-we-sidebar-content-field-clickable-color: $o-we-item-clickable-color !default;
+$o-we-sidebar-content-field-clickable-spacing: $o-we-sidebar-content-field-label-spacing !default;
+$o-we-sidebar-content-field-pressed-bg: $o-we-item-pressed-bg !default;
+$o-we-sidebar-content-field-pressed-color: $o-we-item-pressed-color !default;
+
+$o-we-sidebar-content-field-dropdown-spacing: $o-we-dropdown-spacing !default;
+$o-we-sidebar-content-field-dropdown-bg: $o-we-dropdown-bg !default;
+$o-we-sidebar-content-field-dropdown-border-width: $o-we-dropdown-border-width !default;
+$o-we-sidebar-content-field-dropdown-border-color: $o-we-dropdown-border-color !default;
+$o-we-sidebar-content-field-dropdown-shadow: $o-we-dropdown-shadow !default;
+$o-we-sidebar-content-field-dropdown-item-height: $o-we-dropdown-item-height !default;
+$o-we-sidebar-content-field-dropdown-item-spacing: $o-we-dropdown-item-spacing !default;
+$o-we-sidebar-content-field-dropdown-item-bg: $o-we-dropdown-item-bg !default;
+$o-we-sidebar-content-field-dropdown-item-bg-hover: $o-we-dropdown-item-bg-hover !default;
+$o-we-sidebar-content-field-dropdown-item-color: $o-we-dropdown-item-color !default;
+$o-we-sidebar-content-field-dropdown-item-hover-color: $o-we-dropdown-item-hover-color !default;
+$o-we-sidebar-content-field-dropdown-item-active-bg: $o-we-dropdown-item-active-bg !default;
+$o-we-sidebar-content-field-dropdown-item-active-color: $o-we-dropdown-item-active-color !default;
+$o-we-sidebar-content-field-dropdown-grid-item-height: 60px !default;
+$o-we-sidebar-content-field-dropdown-grid-item-width: 80px !default;
+
+$o-we-sidebar-content-field-colorpicker-size: 20px !default;
+$o-we-sidebar-content-field-colorpicker-size-large: 26px !default;
+$o-we-sidebar-content-field-colorpicker-shadow: inset 0 0 0 1px rgba(white, 0.5) !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-lighter !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-color: $o-we-fg-light !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-active-color: $o-we-fg-lighter !default;
+$o-we-sidebar-content-field-colorpicker-cc-width: 208px !default;
+$o-we-sidebar-content-field-colorpicker-cc-height: 26px !default;
+
+$o-we-sidebar-content-field-input-max-width: 60px !default;
+$o-we-sidebar-content-field-input-bg: $o-we-bg-light !default;
+$o-we-sidebar-content-field-input-font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$o-we-sidebar-content-field-input-unit-font-size: 11px !default;
+$o-we-sidebar-content-field-input-border-color: $o-we-accent !default;
+
+$o-we-sidebar-content-field-button-group-button-spacing: $o-we-sidebar-content-field-clickable-spacing;
+
+$o-we-sidebar-content-field-progress-height: 4px !default;
+$o-we-sidebar-content-field-progress-control-height: 10px !default;
+$o-we-sidebar-content-field-progress-color: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-progress-active-color: $o-we-accent !default;
+
+$o-we-sidebar-content-field-toggle-width: 20px !default;
+$o-we-sidebar-content-field-toggle-height: 12px !default;
+$o-we-sidebar-content-field-toggle-bg: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-toggle-active-bg: $o-we-accent !default;
+$o-we-sidebar-content-field-toggle-control-width: 11px !default;
+$o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-toggle-height - 2px !default;
+$o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
+$o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest !default;
+
+$o-we-technical-modal-zindex: 2001;
+
+//------------------------------------------------------------------------------
+// Preview component Mixins
+//------------------------------------------------------------------------------
+
+@mixin o-we-preview-box($color-text: white) {
+    border-top: 1px solid black;
+    border-bottom: 1px solid white;
+    background-image: linear-gradient(-150deg, $o-we-bg-light, $o-we-bg-dark);
+
+    color:  $color-text;
+}
+
+@mixin o-we-preview-content {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    box-shadow: 0 0 15px 2px #000;
+}
+
+//------------------------------------------------------------------------------
+// Mixins to shield UI from themed bootstrap
+//------------------------------------------------------------------------------
+
+@mixin o-w-preserve-base {
+    font-size: $o-we-font-size;
+    font-family: $o-we-font-family;
+    line-height: 1.5;
+    color: #33363e;
+
+    .text-muted {
+        color: #999999 !important;
+    }
+}
+
+@mixin o-w-preserve-headings {
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        font-family: $o-we-font-family;
+        line-height: 1.5;
+        color: $o-we-bg-light;
+        font-weight: bold;
+    }
+    h1, .h1 {
+        font-size: 2.4 * $o-we-font-size;
+    }
+    h2, .h2 {
+        font-size: 1.5 * $o-we-font-size;
+    }
+    h3, .h3 {
+        font-size: 1.3 * $o-we-font-size;
+    }
+    h4, .h4 {
+        font-size: 1.2 * $o-we-font-size;
+    }
+    h5, .h5 {
+        font-size: 1.1 * $o-we-font-size;
+    }
+    h6, .h6 {
+        font-size: $o-we-font-size;
+    }
+}
+
+@mixin o-w-preserve-links {
+    a:not(.o_btn_preview) {
+        color: $o-brand-primary;
+
+        &:focus, &:active, &:focus:active {
+            outline: none!important;
+        }
+    }
+
+    .badge {
+        &:hover a, a {
+            color: #fff;
+        }
+    }
+}
+
+@mixin o-w-preserve-forms {
+    :not(.input-group):not(.form-group):not(.input-group-append):not(.input-group-prepend) > .form-control {
+        height: 34px;
+    }
+    .form-control {
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.5;
+        border: 1px solid #d4d5d7;
+        color: #555;
+        background-color: #fff;
+        border-radius: 0;
+
+        &.is-invalid {
+            border-color: $danger;
+        }
+    }
+    .input-group .form-control {
+        height: auto;
+    }
+    .input-group-text {
+        background-color: #e9ecef;
+    }
+
+    .was-validated {
+        .form-control:invalid {
+            border-color: $danger;
+        }
+    }
+
+    select.form-control {
+        appearance: none;
+        background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPScxLjEnIHhtbG5zPSdodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZycgeG1 sbnM6eGxpbms9J2h0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsnIHdpZHRoPScyNCcgaGVpZ2 h0PScyNCcgdmlld0JveD0nMCAwIDI0IDI0Jz48cGF0aCBpZD0nc3ZnXzEnIGQ9J203LjQwNiw3L jgyOGw0LjU5NCw0LjU5NGw0LjU5NCwtNC41OTRsMC40MDYsMS40MDZsLTUsNC43NjZsLTUsLTQu NzY2bDAuNDA2LC0xLjQwNnonIGZpbGw9JyM4ODgnLz48L3N2Zz4=');
+        background-position: 100% 65%;
+        background-repeat: no-repeat;
+    }
+}
+
+@mixin o-w-preserve-modals {
+    .modal-content {
+        border-radius: 0;
+        background-color: white;
+
+        .modal-header {
+            border-bottom-color: #e9ecef;
+        }
+        .modal-body {
+            background-color: white;
+        }
+        .modal-footer {
+            border-top-color: #e9ecef;
+            text-align: left;
+        }
+    }
+
+    .close {
+        font-size: 1.5 * $o-we-font-size;
+    }
+}
+
+@mixin o-w-preserve-tabs {
+    .nav-tabs {
+        border-bottom: 1px solid #e9ecef;
+
+        > li  {
+            > a {
+                line-height: 1.5;
+                color: #4e525b;
+
+                &:hover {
+                    border-color: #dee2e6;
+                }
+
+                &.active {
+                    &, &:hover, &:focus {
+                        color: #3D4047;
+                        background-color: white;
+                        border-color: #dee2e6 #dee2e6 #FFFFFF;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@mixin o-w-preserve-btn {
+    .btn:not(.o_btn_preview) {
+        border-radius: 0;
+        font-weight: normal;
+        text-transform: none;
+        @include button-size(.375rem, .75rem, 0.875rem, 1.5, 0);
+
+        &.btn-primary {
+            @include button-variant($o-brand-primary, $o-brand-primary);
+            color: white;
+        }
+        &.btn-secondary {
+            @include button-variant(white, white);
+            color: $o-brand-primary;
+        }
+        &.btn-link {
+            @include button-variant(white, white);
+            color: $o-brand-primary;
+        }
+        &.btn-success {
+            @include button-variant($o-we-color-success, $o-we-color-success);
+            color: white;
+        }
+        &.btn-info {
+            @include button-variant($o-we-color-info, $o-we-color-info);
+            color: white;
+        }
+        &.btn-warning {
+            @include button-variant($o-we-color-warning, $o-we-color-warning);
+            color: #33363e;
+        }
+        &.btn-danger {
+            @include button-variant($o-we-color-danger, $o-we-color-danger);
+            color: #33363e;
+        }
+    }
+}
+
+@mixin o-w-preserve-cards {
+    .card {
+        padding: 19px;
+        margin-bottom: 20px;
+        background-color: white;
+        border: 1px solid darken(white, 5%);
+        border-radius: 0;
+        box-shadow: none;
+    }
+}
+
+@mixin o-w-preserve-dropdown-menus {
+    .dropdown-menu {
+        background-color: white;
+    }
+    .dropdown-item {
+        color: #212529;
+
+        @include hover-focus {
+            color: darken(#212529, 5%);
+        }
+        &.active,
+        &:active {
+            color: white;
+            @include gradient-bg($o-brand-primary);
+        }
+    }
+}
+
+// ------------------------------------------------------------------
+// Selection wrapper
+// ------------------------------------------------------------------
+
+@mixin o-we-active-wrapper($icon: '\f00c', $top: auto, $right: auto, $bottom: auto, $left: auto) {
+    box-shadow: 0 0 0 3px $o-brand-primary;
+
+    &:not(.fa) {
+        border: 3px solid $o-brand-primary;
+        box-shadow: none;
+        &:before {
+            content: $icon;
+            @include o-position-absolute($top, $right, $bottom, $left);
+            width: 19px;
+            height: 19px;
+            background-color: $o-brand-primary;
+            font-family: 'FontAwesome';
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            z-index: 1;
+            box-shadow: $box-shadow;
+        }
+    }
+}
+
+//------------------------------------------------------------------------------
+// Edited content
+//------------------------------------------------------------------------------
+
+$o-support-13-0-color-system: false !default;
+
+$o-checklist-margin-left: 20px;
+$o-checklist-checkmark-width: 2px;
+$o-checklist-before-size: 13px;
+
+
+// Edition colors
+
+// Note: the "base" palettes contain all possible keys a palette should or
+// must contain, with a default value which should work in use cases where it
+// will be used. Any palette defined by an app will be merged with the base
+// palette once selected to ensure it works.
+
+// Colors
+$o-base-color-palette: (
+    'o-color-1': transparent,
+    'o-color-2': transparent,
+    'o-color-3': transparent,
+    'o-color-4': transparent,
+    'o-color-5': transparent,
+) !default;
+$o-color-palettes: (
+    'base-1': (
+        'o-color-1': scale-color($o-enterprise-primary-color, $saturation: -50%, $lightness: 20%),
+        'o-color-2': scale-color($o-enterprise-color, $saturation: -50%),
+        'o-color-3': #F6F6F6,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #383E45,
+    ),
+    'base-2': (
+        'o-color-1': #337ab7,
+        'o-color-2': #e9ecef,
+        'o-color-3': #F8F9FA,
+        'o-color-4': #FFFFFF,
+        'o-color-5': #343a40,
+    ),
+) !default;
+$o-color-palette-name: 'base-1' !default;
+
+// Theme colors
+$o-base-theme-color-palette: () !default;
+$o-theme-color-palettes: (
+    // alpha -> epsilon are old color names kept for compatibility.
+    // They should not be used in the code base anymore and ideally they will
+    // not generate any classes for >= 13.4 databases.
+    'base-1': (
+        'alpha': $o-enterprise-primary-color,
+        'beta': $o-enterprise-color,
+        'gamma': #5C5B80,
+        'delta': #5B899E,
+        'epsilon': #E46F78,
+    ),
+) !default;
+$o-theme-color-palette-name: 'base-1' !default;
+
+// Greyscale transparent colours
+
+// Note: BS values are forced by default in every palette as the values can
+// be used in bootstrap_overridden.scss files through the o-color function.
+// Also, all of the gray colors generates bg- classes in Odoo so black and white
+// are added for the same reason.
+
+$o-base-gray-color-palette: (
+    'white': #FFFFFF,
+    '100': #F8F9FA,
+    '200': #E9ECEF,
+    '300': #DEE2E6,
+    '400': #CED4DA,
+    '500': #ADB5BD,
+    '600': #6C757D,
+    '700': #495057,
+    '800': #343A40,
+    '900': #212529,
+    'black': #000000,
+) !default;
+$o-transparent-grays: (
+    'black-15': rgba(black, 0.15),
+    'black-25': rgba(black, 0.25),
+    'black-50': rgba(black, 0.5),
+    'black-75': rgba(black, 0.75),
+    'white-25': rgba(white, 0.25),
+    'white-50': rgba(white, 0.5),
+    'white-75': rgba(white, 0.75),
+    'white-85': rgba(white, 0.85),
+) !default;
+$o-gray-color-palettes: () !default;
+$o-gray-color-palette-name: '' !default;
+
+// Color combinations
+$o-base-color-combination: (
+    'bg': 'white',
+    'text': null, // Default to better contrast with the 'bg'
+    'headings': null, // Default to 'text'
+    'h2': null, // Default to 'h(x-1)'
+    'h3': null,
+    'h4': null,
+    'h5': null,
+    'h6': null,
+    'link': null, // Default to BS 'primary' (= first odoo color)
+    'btn-primary': null, // Default to BS 'primary' (= first odoo color)
+    'btn-primary-border': null, // Default to 'btn-primary'
+    'btn-secondary': null, // Default to BS 'secondary' (= second odoo color)
+    'btn-secondary-border': null, // Default to 'btn-secondary'
+);
+$o-color-combinations-presets: (
+    (
+        (
+            'bg': 'o-color-4',
+        ),
+        (
+            'bg': 'o-color-3',
+            'headings': 'o-color-1',
+        ),
+        (
+            'bg': 'o-color-2',
+            'btn-secondary': 'o-color-3',
+        ),
+        (
+            'bg': 'o-color-1',
+            'link': 'o-color-5',
+            'btn-primary': 'o-color-5',
+            'btn-secondary': 'o-color-3',
+        ),
+        (
+            'bg': 'o-color-5',
+            'headings': 'o-color-4',
+            'btn-secondary': 'o-color-3',
+        ),
+    ),
+) !default;
+$o-color-combinations-preset-number: 1;
+
+// We allow snippets to be colored and elements like card and columns to be
+// colored as well. We need components targeted by those colored classes to
+// use the deepest coloring element config. We only allow here for this to
+// work for one level of nesting. Note: snippets which can contain other
+// snippets will have problem because of this; this is a limitation of the
+// system until a better solution is found.
+$o-color-extras-nesting-selector: '&, .o_colored_level &';
+
+// Apply colors according to the given identifier. Can either be a preset
+// number, a color name or a css color.
+@mixin o-apply-colors($identifier, $with-extras: true, $background: $body-bg) {
+    $-related-color: o-related-color($identifier, $max-recursions: 10);
+    @if type-of($-related-color) == 'number' {
+        // This is a preset to be applied, just extend it. This should probably
+        // be avoided and use the class in XML if possible.
+        @extend .o_cc;
+        @extend .o_cc#{$-related-color};
+    } @else {
+        @include o-bg-color(o-color($-related-color), $with-extras: $with-extras, $background: $background, $important: false);
+    }
+}
+
+// Function which returns if a color has contrast enough in comparaison to
+// another given color.
+@function has-enough-contrast($color1, $color2, $threshold: 500) {
+    $r: (max(red($color1), red($color2))) - (min(red($color1), red($color2)));
+    $g: (max(green($color1), green($color2))) - (min(green($color1), green($color2)));
+    $b: (max(blue($color1), blue($color2))) - (min(blue($color1), blue($color2)));
+    $sum-rgb: $r + $g + $b;
+    @return ($sum-rgb >= $threshold);
+}
+
+// Function which transforms a color to increase its contrast in comparison to
+// another given color.
+@function increase-contrast($color1, $color2) {
+    @if not $color1 or not $color2 {
+        @return null;
+    }
+    $luma-c1: luma($color1);
+    $luma-c2: luma($color2);
+    $lightness-c1: lightness($color1);
+    $lightness-inc: if($luma-c1 < $luma-c2, -1%, 1%);
+    $i: 0;
+    // Max 15% lightness change even if not contrasted enough
+    @while ($lightness-c1 > 0.1% and $lightness-c1 < 99.9% and $i < 15 and not has-enough-contrast($color1, $color2)) {
+        $color1: adjust-color($color1, $lightness: $lightness-inc);
+        $lightness-c1: $lightness-c1 + $lightness-inc;
+        $i: $i + 1;
+    }
+    @return $color1;
+}
+
+// Given a primary color (and eventually a secondary one), the function returns
+// a basic odoo palette in sass-map format. The palette will be generated using
+// the safest readability values possible.
+@function o-make-palette($-primary, $-secondary: null, $-overrides-map: null) {
+    $-o-color-2: $-secondary or increase-contrast(desaturate(mix(complement($-primary), #FFFFFF, 80%), 20%), $-primary);
+
+    $-palette: (
+        'o-color-1': $-primary,
+        'o-color-2': $-o-color-2,
+        'o-color-3': change-color(#F5F0F0, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#F5F0F0))),
+        'o-color-4': #FFFFFF,
+        'o-color-5': change-color(#2e1414, $hue: hue($-primary), $saturation: min(saturation($-primary), saturation(#2e1414))),
+    );
+
+    // Check if primary/dark contrast is enough. If not adapt cc4 & cc5 schemes accordingly
+    @if not (has-enough-contrast(map-get($-palette, 'o-color-5'), map-get($-palette, 'o-color-1'), 300)) {
+        @each $-cc in (4, 5) {
+            $-palette: map-merge($-palette, (
+                'o-cc#{$-cc}-btn-primary': 'o-color-4',
+                'o-cc#{$-cc}-btn-secondary': 'o-color-2',
+                'o-cc#{$-cc}-text': 'o-color-3',
+                'o-cc#{$-cc}-link': 'o-color-4'
+            ));
+        }
+    }
+
+    @if $-overrides-map {
+        $-palette: map-merge($-palette, $-overrides-map);
+    }
+
+    @return $-palette;
+}
+
+// format: (module_name: (shape_filename: ('position': X, 'size': Y, 'colors': (1, [3], ...)), ...))
+$o-bg-shapes: ('web_editor': (
+    'Airy/01': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Airy/02': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Airy/03': ('position': top, 'size': 100% auto, 'colors': (5)),
+    'Airy/03_001': ('position': top, 'size': 100% auto, 'colors': (5)),
+    'Airy/04': ('position': center, 'size': 100% 100%, 'colors': (1)),
+    'Airy/04_001': ('position': center, 'size': 100% 100%, 'colors': (1)),
+    'Airy/05': ('position': center, 'size': 100% 100%, 'colors': (1)),
+    'Airy/05_001': ('position': center, 'size': 100% 100%, 'colors': (1)),
+    'Airy/06': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Airy/07': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Airy/08': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Airy/09': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Airy/10': ('position': bottom, 'size': 100% auto, 'colors': (5)),
+    'Airy/11': ('position': top, 'size': 100% auto, 'colors': (5)),
+    'Airy/12': ('position': top, 'size': 100% auto, 'colors': (1, 3)),
+    'Airy/12_001': ('position': top, 'size': 100% auto, 'colors': (1, 3)),
+    'Airy/13': ('position': bottom, 'size': 100% auto, 'colors': (1, 4)),
+    'Airy/13_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 4)),
+    'Airy/14': ('position': bottom, 'size': 100% auto, 'colors': (1, 4)),
+    'Blobs/01': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Blobs/01_001': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Blobs/02': ('position': bottom, 'size': 100% auto, 'colors': (1, 2)),
+    'Blobs/03': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Blobs/04': ('position': center, 'size': 100% auto, 'colors': (5)),
+    'Blobs/05': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Blobs/06': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Blobs/07': ('position': top, 'size': 100% auto, 'colors': (5)),
+    'Blobs/08': ('position': right, 'size': 100% auto, 'colors': (1)),
+    'Blobs/09': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Blobs/10': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Blobs/10_001': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Blobs/11': ('position': center, 'size': 100% auto, 'colors': (1)),
+    'Blobs/12': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Blocks/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Blocks/01_001': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Blocks/02': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Blocks/02_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Blocks/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 4)),
+    'Blocks/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3, 5)),
+    'Bold/01': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Bold/02': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3)),
+    'Bold/03': ('position': bottom, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Bold/04': ('position': top, 'size': 100% auto, 'colors': (2, 3)),
+    'Bold/05': ('position': center, 'size': 100% auto, 'colors': (5)),
+    'Bold/05_001': ('position': center, 'size': 100% auto, 'colors': (3)),
+    'Bold/06': ('position': center, 'size': 100% auto, 'colors': (5)),
+    'Bold/06_001': ('position': center, 'size': 100% auto, 'colors': (3)),
+    'Bold/07': ('position': bottom, 'size': 100% auto, 'colors': (1, 2)),
+    'Bold/07_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 2)),
+    'Bold/08': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Bold/09': ('position': bottom, 'size': 100% auto, 'colors': (2, 3)),
+    'Bold/10': ('position': top, 'size': 100% auto, 'colors': (1, 3, 4, 5)),
+    'Bold/10_001': ('position': top, 'size': 100% auto, 'colors': (1, 4, 5)),
+    'Bold/11': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3)),
+    'Bold/11_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 2)),
+    'Bold/12': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5)),
+    'Bold/12_001': ('position': center, 'size': 100% auto, 'colors': (1, 2, 5)),
+    'Floats/01': ('position': center right, 'size': auto 100%, 'colors': (1, 2, 3, 4, 5)),
+    'Floats/02': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/03': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/04': ('position': center, 'size': 100%, 'colors': (1, 2, 4, 5)),
+    'Floats/05': ('position': center, 'size': 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/06': ('position': center, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/07': ('position': right bottom, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/08': ('position': top left, 'size': auto 100%, 'colors': (1, 2, 3, 5)),
+    'Floats/09': ('position': center right, 'size': auto 100%, 'colors': (1, 2, 3)),
+    'Floats/10': ('position': center, 'size': 100% auto, 'colors': (1, 2, 3, 5)),
+    'Floats/11': ('position': center, 'size': 100% 100%, 'colors': (1, 3)),
+    'Floats/12': ('position': top, 'size': 100% auto, 'colors': (1, 2, 3, 5), 'repeat-y': true),
+    'Origins/01': ('position': bottom, 'size': 100% auto, 'colors': (2, 5)),
+    'Origins/02': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Origins/02_001': ('position': bottom, 'size': 100% auto, 'colors': (4, 5)),
+    'Origins/03': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Origins/04': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Origins/04_001': ('position': top, 'size': 100% 100%, 'colors': (3)),
+    'Origins/05': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Origins/06': ('position': center, 'size': 100% auto, 'colors': (3)),
+    'Origins/06_001': ('position': center, 'size': 100% auto, 'colors': (3, 4)),
+    'Origins/07': ('position': center, 'size': 100% 100%, 'colors': (3)),
+    'Origins/07_001': ('position': center, 'size': 100% 100%, 'colors': (3, 5)),
+    'Origins/07_002': ('position': center, 'size': 100% 100%, 'colors': (3, 4, 5)),
+    'Origins/08': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Origins/09': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Origins/09_001': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Origins/10': ('position': bottom, 'size': 100% auto, 'colors': (2, 5)),
+    'Origins/11': ('position': top, 'size': 100% auto, 'colors': (3, 5)),
+    'Origins/11_001': ('position': top, 'size': 100% auto, 'colors': (3, 4)),
+    'Origins/12': ('position': top, 'size': 100% auto, 'colors': (3, 5)),
+    'Origins/13': ('position': center, 'size': 100% auto, 'colors': (3, 5)),
+    'Origins/14': ('position': bottom, 'size': 100% auto, 'colors': (4)),
+    'Origins/14_001': ('position': bottom, 'size': 100% auto, 'colors': (3, 4)),
+    'Origins/15': ('position': top, 'size': 100% auto, 'colors': (4)),
+    'Origins/16': ('position': center, 'size': 100% 100%, 'colors': (3)),
+    'Origins/17': ('position': center, 'size': 100% 100%, 'colors': (3)),
+    'Origins/18': ('position': center, 'size': 100% 100%, 'colors': (1)),
+    'Rainy/01': ('position': bottom, 'size': 100% auto, 'colors': (1, 5)),
+    'Rainy/01_001': ('position': bottom, 'size': 100% auto, 'colors': (1, 5)),
+    'Rainy/02': ('position': top, 'size': 100% auto, 'colors': (1, 4, 5)),
+    'Rainy/02_001': ('position': top, 'size': 100% auto, 'colors': (1, 4, 5)),
+    'Rainy/03': ('position': top, 'size': 100% auto, 'colors': (2, 4, 5), 'repeat-y': true),
+    'Rainy/03_001': ('position': top, 'size': 100% auto, 'colors': (2, 5), 'repeat-y': true),
+    'Rainy/04': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Rainy/05': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Rainy/05_001': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Rainy/06': ('position': bottom, 'size': 100% auto, 'colors': (1, 2, 3)),
+    'Rainy/07': ('position': top, 'size': 100% auto, 'colors': (1, 2, 3)),
+    'Rainy/08': ('position': top, 'size': 100% auto, 'colors': (1, 4)),
+    'Rainy/08_001': ('position': top, 'size': 100% auto, 'colors': (1, 4)),
+    'Rainy/09': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Rainy/09_001': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Rainy/10': ('position': center, 'size': 100% auto, 'colors': (1, 3)),
+    'Wavy/01': ('position': bottom, 'size': 100% auto, 'colors': (4)),
+    'Wavy/01_001': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Wavy/02': ('position': top, 'size': 100% auto, 'colors': (4)),
+    'Wavy/02_001': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Wavy/03': ('position': top, 'size': 100% auto, 'colors': (1, 2)),
+    'Wavy/04': ('position': bottom, 'size': 100% auto, 'colors': (1, 5)),
+    'Wavy/05': ('position': top, 'size': 100% auto, 'colors': (1, 5)),
+    'Wavy/06': ('position': top, 'size': 100% auto, 'colors': (1, 3, 4, 5)),
+    'Wavy/06_001': ('position': top, 'size': 100% auto, 'colors': (1, 3, 5)),
+    'Wavy/07': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Wavy/08': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Wavy/09': ('position': bottom, 'size': 100% auto, 'colors': (1, 5)),
+    'Wavy/10': ('position': center, 'size': 100% auto, 'colors': (1, 2)),
+    'Wavy/11': ('position': bottom, 'size': 100% auto, 'colors': (1, 4)),
+    'Wavy/12': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Wavy/12_001': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Wavy/13': ('position': bottom, 'size': 100% auto, 'colors': (4)),
+    'Wavy/13_001': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Wavy/14': ('position': bottom, 'size': 100% auto, 'colors': (1, 3)),
+    'Wavy/15': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Wavy/16': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Wavy/17': ('position': top, 'size': 100% auto, 'colors': (1)),
+    'Wavy/18': ('position': bottom, 'size': 100% auto, 'colors': (5)),
+    'Wavy/19': ('position': top, 'size': 100% auto, 'colors': (5)),
+    'Wavy/20': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Wavy/21': ('position': top, 'size': 100% auto, 'colors': (2)),
+    'Wavy/22': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Wavy/23': ('position': top, 'size': 100% auto, 'colors': (3)),
+    'Wavy/24': ('position': center, 'size': 100% auto, 'colors': (1, 2)),
+    'Wavy/25': ('position': top, 'size': 100% auto, 'colors': (1, 2)),
+    'Wavy/26': ('position': bottom right, 'size': auto 100%, 'colors': (1, 2)),
+    'Wavy/27': ('position': center, 'size': 100% auto, 'colors': (1, 2)),
+    'Wavy/28': ('position': center, 'size': 100% 100%, 'colors': (1, 3)),
+    'Zigs/01': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Zigs/01_001': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Zigs/02': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Zigs/02_001': ('position': bottom, 'size': 100% auto, 'colors': (2)),
+    'Zigs/03': ('position': top, 'size': 100% auto, 'colors': (1), 'repeat-y': true),
+    'Zigs/04': ('position': bottom, 'size': 100% auto, 'colors': (1)),
+    'Zigs/05': ('position': bottom, 'size': 100% auto, 'colors': (3)),
+    'Zigs/06': ('position': bottom, 'size': 30px 100%, 'colors': (4, 5), 'repeat-x': true),
+));
+
+@function change-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    $-module-shapes: map-get($shapes, $module);
+    $-modified-module-shapes: map-merge($-module-shapes, (
+        $shape-name: map-merge(map-get($-module-shapes, $shape-name), ('color-to-cc-bg-map': $mapping)),
+    ));
+    @return map-merge($shapes, (
+        $module: $-modified-module-shapes,
+    ));
+}
+
+@function add-extra-shape-colors-mapping($module, $shape-name, $mapping-name, $mapping, $shapes: $o-bg-shapes) {
+    $-module-shapes: map-get($shapes, $module);
+    $-shape-data: map-get($-module-shapes, $shape-name);
+    $-extra-mappings: map-get($-shape-data, 'extra-mappings') or ();
+    $-modified-module-shapes: map-merge($-module-shapes, (
+        $shape-name: map-merge($-shape-data, ('extra-mappings': map-merge($-extra-mappings, ($mapping-name: $mapping)))),
+    ));
+    @return map-merge($shapes, (
+        $module: $-modified-module-shapes,
+    ));
+}
+
+@function add-header-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    @return add-extra-shape-colors-mapping($module, $shape-name, 'header', $mapping, $shapes);
+}
+
+@function add-footer-shape-colors-mapping($module, $shape-name, $mapping, $shapes: $o-bg-shapes) {
+    @return add-extra-shape-colors-mapping($module, $shape-name, 'footer', $mapping, $shapes);
+}
+
+@mixin o-input-number-no-arrows() {
+    // Remove arrows/spinners from input type number
+    // => Chrome, Safari, Edge, Opera
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    // => Firefox
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+};

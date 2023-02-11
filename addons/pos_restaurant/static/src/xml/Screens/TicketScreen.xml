@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
+            <div t-if="env.pos.config.iface_floorplan" class="col" name="table">Table</div>
+            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
+        </xpath>
+        <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
+            <div t-if="env.pos.config.iface_floorplan" class="col" name="table">
+                <t t-if="order.table">
+                    <div t-if="env.isMobile">Table</div>
+                    <div><t t-esc="getTable(order)"></t></div>
+                </t>
+            </div>
+            <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
+                <div t-if="env.isMobile">Tip</div>
+                <div><TipCell order="order" /></div>
+            </div>
+        </xpath>
+        <xpath expr="//div[hasclass('buttons')]" position="inside">
+            <button class="settle-tips" t-if="_state.ui.filter == 'TIPPING'" t-on-click="settleTips">Settle</button>
+        </xpath>
+    </t>
+
+    <t t-name="TipCell" owl="1">
+        <div class="tip-cell" t-on-click.stop="editTip">
+            <t t-if="state.isEditing">
+                <input type="text" name="tip-amount" t-model="orderUiState.inputTipAmount" t-on-blur="onBlur" t-on-keydown="onKeydown" />
+            </t>
+            <div t-else="">
+                <t t-esc="tipAmountStr"></t>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_sales_order_filter_ecommerce" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.search.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="mode">primary</field> 
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Confirmed" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
+                <filter string="Unpaid" name="order_unpaid" domain="[('state', '=', 'sent')]"/>
+                <filter string="Abandoned" name="order_abandoned" domain="[('is_abandoned_cart', '=', True)]"/>
+                <separator/>
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <separator/>
+                <filter string="From Website" name="from_website" domain="[('website_id', '!=', False)]"/>
+                <separator/>
+                <!-- Dashboard filter - used by context -->
+                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_ecommerce_unpaid" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.search.unpaid.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+        <field name="mode">primary</field> 
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_sale_orders_filter']" position="before">
+                <filter string="Order Date" name="order_date" date="date_order"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_form_cart_recovery" model="ir.ui.view">
+        <field name="name">sale.order.form.abandoned.cart</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='team_id']" position="after">
+                <field name="is_abandoned_cart" invisible="1"/>
+                <field name="cart_recovery_email_sent" invisible="1"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send' and @states='draft']" position="attributes">
+                <!-- The '| and the '&amp' opertors are necessary because draft state of the parent concatenate the domain -->
+                <attribute name="attrs">{'invisible': ['|','&amp;',('is_abandoned_cart', '=', True), ('cart_recovery_email_sent', '=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="after">
+                <button name="action_recovery_email_send" data-hotkey="l"
+                    string="Send a Recovery Email"
+                    type="object"
+                    class="btn-primary"
+                    attrs="{'invisible': ['|', ('is_abandoned_cart', '=', False), ('cart_recovery_email_sent', '=', True)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_orders_ecommerce" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="domain">[]</field>
+        <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'search_default_from_website': 1}</field>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There is no confirmed order from the website
+            </p>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="action_unpaid_orders_ecommerce" model="ir.actions.act_window">
+        <field name="name">Unpaid Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,kanban,activity</field>
+        <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
+        <field name="context">{'show_sale': True, 'create': False}</field>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There is no unpaid order from the website yet
+            </p><p>
+                Process the order once the payment is received.
+            </p>
+        </field>
+    </record>
+
+    <record id="view_sales_order_filter_ecommerce_abondand" model="ir.ui.view">
+        <field name="name">sale.order.ecommerce.abondand.view</field>
+        <field name="model">sale.order</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <search string="Search Abandoned Sales Orders">
+                <field name="name"/>
+                <filter string="Creation Date" name="creation_date" date="create_date"/>
+                <separator/>
+                <filter string="Recovery Email to Send" name="recovery_email" domain="[('cart_recovery_email_sent', '=', False)]" />
+                <filter string="Recovery Email Sent" name="recovery_email_set" domain="[('cart_recovery_email_sent', '=', True)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Order Date" name="order_date" domain="[]" context="{'group_by':'date_order'}"/>
+                </group>
+                <!-- Dashboard filter - used by context -->
+                <filter string="Last Week" invisible="1" name="week" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Month" invisible="1" name="month" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last Year" invisible="1"  name="year" domain="[('date_order','&gt;', (context_today() - datetime.timedelta(days=365)).strftime('%%Y-%%m-%%d'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Dashboard Action -->
+    <record id="sale_order_action_to_invoice" model="ir.actions.act_window">
+        <field name="name">Orders To Invoice</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,form,kanban</field>
+        <field name="domain">[('state', 'in', ('sale', 'done')), ('order_line', '!=', False), ('invoice_status', '=', 'to invoice'), ('website_id', '!=', False)]</field>
+        <field name="context">{'show_sale': True, 'search_default_order_confirmed': 1, 'create': False}</field>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                You don't have any order to invoice from the website
+            </p>
+        </field>
+    </record>
+
+    <!-- Server action to send multiple recovery email-->
+    <record id="ir_actions_server_sale_cart_recovery_email" model="ir.actions.server">
+        <field name="name">Send a Cart Recovery Email</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="state">code</field>
+        <field name="code">
+            if records:
+                action = records.action_recovery_email_send()
+        </field>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_view_types">list,form</field>
+    </record>
+
+    <record id="action_view_unpaid_quotation_tree" model="ir.actions.act_window">
+        <field name="name">Unpaid Orders</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="domain">[('state', '=', 'sent'), ('website_id', '!=', False)]</field>
+        <field name="context" eval="{'show_sale': True, 'create': False}"/>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_unpaid"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There is no unpaid order from the website yet
+            </p><p>
+                Process the order once the payment is received.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_view_abandoned_tree" model="ir.actions.act_window">
+        <field name="name">Abandoned Carts</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="domain">[('is_abandoned_cart', '=', 1)]</field>
+        <field name="context" eval="{'show_sale': True, 'create': False, 'public_partner_id': ref('base.public_partner'), 'search_default_recovery_email': True}"/>
+        <field name="view_id" ref="sale.view_quotation_tree"/>
+        <field name="search_view_id" ref="view_sales_order_filter_ecommerce_abondand"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No abandoned carts found
+            </p><p>
+                You'll find here all the carts abandoned by your visitors.
+                If they completed their address, you should send them a recovery email!
+            </p><p>
+                The time to mark a cart as abandoned can be changed in the settings.
+            </p>
+        </field>
+    </record>
+
+    <!-- Main website sale menu items -->
+    <menuitem id="menu_orders" name="Orders"
+        parent="website.menu_website_configuration" sequence="2"
+        groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_catalog" name="Products"
+        parent="website.menu_website_configuration" sequence="3"
+        groups="sales_team.group_sale_salesman"/>
+    <menuitem id="menu_reporting" name="Reporting"
+        parent="website.menu_website_configuration" sequence="99"
+        groups="sales_team.group_sale_manager"/>
+    <menuitem id="website.menu_website_global_configuration" name="Configuration"
+        parent="website.menu_website_configuration" sequence="100"
+        groups="base.group_system,sales_team.group_sale_manager"/>
+
+    <menuitem id="menu_ecommerce_settings" name="eCommerce" sequence="50"
+        parent="website.menu_website_global_configuration"/>
+    <menuitem id="menu_product_settings" name="Products" sequence="80"
+        parent="website.menu_website_global_configuration"/>
+
+    <!-- Orders sub-menus -->
+    <menuitem id="menu_orders_orders" name="Orders"
+        action="action_orders_ecommerce"
+        parent="menu_orders" sequence="1"/>
+    <menuitem id="menu_orders_unpaid_orders" name="Unpaid Orders"
+        action="action_view_unpaid_quotation_tree"
+        parent="menu_orders" sequence="2"/>
+    <menuitem id="menu_orders_abandoned_orders" name="Abandoned Carts"
+        action="action_view_abandoned_tree"
+        parent="menu_orders" sequence="3"/>
+    <menuitem id="menu_orders_customers" name="Customers"
+        action="base.action_partner_customer_form"
+        parent="menu_orders" sequence="4"/>
+
+
+    <!-- Catalog sub-menus -->
+    <menuitem id="menu_catalog_products" name="Products"
+        action="product_template_action_website"
+        parent="menu_catalog" sequence="1"/>
+    <menuitem id="product_catalog_variants" name="Product Variants"
+        action="product.product_normal_action"
+        parent="menu_catalog" groups="product.group_product_variant" sequence="2"/>
+    <menuitem id="menu_catalog_pricelists" name="Pricelists"
+        action="product.product_pricelist_action2"
+        parent="menu_catalog" groups="product.group_product_pricelist" sequence="4"/>
+
+    <!-- Reporting sub-menus -->
+    <menuitem id="menu_report_sales" name="Online Sales"
+        action="sale_report_action_dashboard"
+        parent="menu_reporting" sequence="1"/>
+
+    <!-- Configuration sub-menus -->
+    <menuitem id="menu_ecommerce_payment_acquirers"
+        action="payment.action_payment_acquirer"
+        parent="menu_ecommerce_settings" name="Payment Acquirers"/>
+    <menuitem id="menu_ecommerce_payment_tokens"
+        action="payment.action_payment_token"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
+    <menuitem id="menu_ecommerce_payment_icons"
+        action="payment.action_payment_icon"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
+    <menuitem id="menu_ecommerce_payment_transactions"
+        action="payment.action_payment_transaction"
+        groups="base.group_no_one"
+        parent="menu_ecommerce_settings"/>
+    <menuitem id="menu_catalog_categories"
+        action="product_public_category_action"
+        parent="menu_product_settings" sequence="1"/>
+    <menuitem id="menu_product_attribute_action"
+        action="product.attribute_action"
+        parent="menu_product_settings"  groups="product.group_product_variant" sequence="2"/>
+
+    <record id="sale_order_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="attributes">
+                <attribute name="context">{
+                    'display_website': True,
+                    'res_partner_search_mode': 'customer',
+                    'show_address': 1,
+                    'show_vat': True,
+                }</attribute>
+            </field>
+            <field name="team_id" position="after">
+                <field name="website_id" attrs="{'invisible': [('website_id', '=', False)]}" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_quotation_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.website.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="website_id" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">sale.order.tree.inherit.website.sale</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="before">
+                <field name="website_id" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

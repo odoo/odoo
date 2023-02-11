@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.br"/>
+    </record>
+
+    <record id="tax_report_icmsst" model="account.tax.report.line">
+        <field name="name">ICMSST</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="tax_report_icmsst_1" model="account.tax.report.line">
+        <field name="name">ICMSST_1</field>
+        <field name="tag_name">ICMSST_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_icmsst"/>
+    </record>
+
+    <record id="tax_report_icmsst_2" model="account.tax.report.line">
+        <field name="name">ICMSST_2</field>
+        <field name="tag_name">ICMSST_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_icmsst"/>
+    </record>
+
+    <record id="tax_report_irpj" model="account.tax.report.line">
+        <field name="name">IRPJ</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="tax_report_irpj_1" model="account.tax.report.line">
+        <field name="name">IRPJ_1</field>
+        <field name="tag_name">IRPJ_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_irpj"/>
+    </record>
+
+    <record id="tax_report_irpj_2" model="account.tax.report.line">
+        <field name="name">IRPJ_2</field>
+        <field name="tag_name">IRPJ_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_irpj"/>
+    </record>
+
+    <record id="tax_report_ir" model="account.tax.report.line">
+        <field name="name">IR</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="tax_report_ir_1" model="account.tax.report.line">
+        <field name="name">IR_1</field>
+        <field name="tag_name">IR_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_ir"/>
+    </record>
+
+    <record id="tax_report_ir_2" model="account.tax.report.line">
+        <field name="name">IR_2</field>
+        <field name="tag_name">IR_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_ir"/>
+    </record>
+
+    <record id="tax_report_issqn" model="account.tax.report.line">
+        <field name="name">ISSQN</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="tax_report_issqn_1" model="account.tax.report.line">
+        <field name="name">ISSQN_1</field>
+        <field name="tag_name">ISSQN_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_issqn"/>
+    </record>
+
+    <record id="tax_report_issqn_2" model="account.tax.report.line">
+        <field name="name">ISSQN_2</field>
+        <field name="tag_name">ISSQN_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_issqn"/>
+    </record>
+
+
+    <record id="tax_report_csll" model="account.tax.report.line">
+        <field name="name">CSLL</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="tax_report_csll_1" model="account.tax.report.line">
+        <field name="name">CSLL_1</field>
+        <field name="tag_name">CSLL_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_csll"/>
+    </record>
+
+    <record id="tax_report_csll_2" model="account.tax.report.line">
+        <field name="name">CSLL_2</field>
+        <field name="tag_name">CSLL_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_csll"/>
+    </record>
+
+    <record id="tax_report_cofins" model="account.tax.report.line">
+        <field name="name">COFINS</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_bas" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota Básica</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_1" model="account.tax.report.line">
+        <field name="name">COFINS_1</field>
+        <field name="tag_name">COFINS_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_cofins_oper_bas"/>
+    </record>
+
+    <record id="tax_report_cofins_2" model="account.tax.report.line">
+        <field name="name">COFINS_2</field>
+        <field name="tag_name">COFINS_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_cofins_oper_bas"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_dif" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota Diferenciada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_uni" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_line12" model="account.tax.report.line">
+        <field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_sub" model="account.tax.report.line">
+        <field name="name">Operação Tributável por Substituição Tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_tri" model="account.tax.report.line">
+        <field name="name">Operação Tributável a Alíquota zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_isenta" model="account.tax.report.line">
+        <field name="name">Operação Isenta da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_sem" model="account.tax.report.line">
+        <field name="name">Operação sem Incidência da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_com" model="account.tax.report.line">
+        <field name="name">Operação com Suspensão da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_outras_oper_saida" model="account.tax.report.line">
+        <field name="name">Outras Operações de Saída</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_mercado" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_no_mercado" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_receita" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_nao_tri" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_oper_export" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação </field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_interno_export" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_no_marcado_interno_export" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_no_marcado" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_tri" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="19"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_export" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="20"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_nao_tributadas" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="21"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_tributadas" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="22"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_nao_oper_tributadas" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="23"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_oper_receitas" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="24"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_credito_outras_oper" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Outras Operações</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="25"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_sem" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição sem Direito a Crédito</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="26"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_com" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição com Isenção</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="27"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_com_sus" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição com Suspensão</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="28"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_zero" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição a Alíquota Zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="29"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_contri" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="30"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_oper_aqui_sub" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição por Substituição Tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="31"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_outras_oper_entrada" model="account.tax.report.line">
+        <field name="name">Outras Operações de Entrada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="32"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_cofins_outras_oper" model="account.tax.report.line">
+        <field name="name">Outras Operações</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="33"/>
+        <field name="parent_id" ref="tax_report_cofins"/>
+    </record>
+
+    <record id="tax_report_pis" model="account.tax.report.line">
+        <field name="name">PIS</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_basica" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota Básica</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_1" model="account.tax.report.line">
+        <field name="name">PIS_1</field>
+        <field name="tag_name">PIS_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_pis_oper_tri_basica"/>
+    </record>
+
+    <record id="tax_report_pis_2" model="account.tax.report.line">
+        <field name="name">PIS_2</field>
+        <field name="tag_name">PIS_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_pis_oper_tri_basica"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_diferenciada" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota Diferenciada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_produto" model="account.tax.report.line">
+        <field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_zero" model="account.tax.report.line">
+        <field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_sub" model="account.tax.report.line">
+        <field name="name">Operação Tributável por Substituição Tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_tri_ali_zero" model="account.tax.report.line">
+        <field name="name">Operação Tributável a Alíquota Zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_isenta" model="account.tax.report.line">
+        <field name="name">Operação Isenta da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_sem" model="account.tax.report.line">
+        <field name="name">Operação sem Incidência da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com" model="account.tax.report.line">
+        <field name="name">Operação com Suspensão da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_outras_oper_saida" model="account.tax.report.line">
+        <field name="name">Outras Operações de Saída</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_direito" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_credito" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_vinculada_ex" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_vinculada_rec" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_export" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_nao_tri" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_tri_" model="account.tax.report.line">
+        <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_tributada" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_nao_tributada" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="19"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_export" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="20"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_interno" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="21"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_interno_export" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="22"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_oper_nao_tri" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="23"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_oper_tri" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="24"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_credito_presumido_outras_oper" model="account.tax.report.line">
+        <field name="name">Crédito Presumido - Outras Operações</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="25"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_aqui_sem" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição sem Direito a Crédito</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="26"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_com_ise" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição com Isenção</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="27"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_aqui_com" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição com Suspensão</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="28"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_aqui_zero" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição a Alíquota Zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="29"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_aqui_inc" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="30"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_oper_aqui_sub" model="account.tax.report.line">
+        <field name="name">Operação de Aquisição por Substituição Tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="31"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_outras_oper_entrada" model="account.tax.report.line">
+        <field name="name">Outras Operações de Entrada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="32"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_pis_outras_oper" model="account.tax.report.line">
+        <field name="name">Outras Operações</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="33"/>
+        <field name="parent_id" ref="tax_report_pis"/>
+    </record>
+
+    <record id="tax_report_ipi" model="account.tax.report.line">
+        <field name="name">IPI</field>
+        <field name="code">BRTAX07</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+    </record>
+
+    <record id="tax_report_ipi_extrada_com" model="account.tax.report.line">
+        <field name="name">Entrada com recuperação de crédito</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_1" model="account.tax.report.line">
+        <field name="name">IPI_1</field>
+        <field name="tag_name">IPI_1</field>
+        <field name="code">BRTAX07_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_ipi_extrada_com"/>
+    </record>
+
+    <record id="tax_report_ipi_extrada_tributada" model="account.tax.report.line">
+        <field name="name">Entrada tributada com alíquota zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_2" model="account.tax.report.line">
+        <field name="name">IPI_2</field>
+        <field name="tag_name">IPI_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_ipi_extrada_tributada"/>
+    </record>
+
+    <record id="tax_report_ipi_entrada_isenta" model="account.tax.report.line">
+        <field name="name">Entrada isenta</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_entrada_nao_tributada" model="account.tax.report.line">
+        <field name="name">EEntrada não-tributada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_entrada_imune" model="account.tax.report.line">
+        <field name="name">Entrada imune</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_entrada_com_suspensao" model="account.tax.report.line">
+        <field name="name">Entrada com suspensão</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_outras_entradas" model="account.tax.report.line">
+        <field name="name">Outras entradas</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_tributada" model="account.tax.report.line">
+        <field name="name">Saída tributada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_tributada_com" model="account.tax.report.line">
+        <field name="name">Saída tributada com alíquota zero</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_isenta" model="account.tax.report.line">
+        <field name="name">Saída isenta</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_nao_tributada" model="account.tax.report.line">
+        <field name="name">Saída não-tributada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_imune" model="account.tax.report.line">
+        <field name="name">Saída imune</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_saida_com" model="account.tax.report.line">
+        <field name="name">Saída com suspensão</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_ipi_outras_saidas" model="account.tax.report.line">
+        <field name="name">Outras saídas</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref="tax_report_ipi"/>
+    </record>
+
+    <record id="tax_report_icms" model="account.tax.report.line">
+        <field name="name">ICMS</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+    </record>
+
+    <record id="tax_report_icms_tributada" model="account.tax.report.line">
+        <field name="name">Tributada integralmente</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_1" model="account.tax.report.line">
+        <field name="name">ICMS_1</field>
+        <field name="tag_name">ICMS_1</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_icms_tributada"/>
+    </record>
+
+    <record id="tax_report_icms_tributada_com" model="account.tax.report.line">
+        <field name="name">Tributada e com cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_2" model="account.tax.report.line">
+        <field name="name">ICMS_2</field>
+        <field name="tag_name">ICMS_2</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="tax_report_icms_tributada_com"/>
+    </record>
+
+    <record id="tax_report_icms_com_red" model="account.tax.report.line">
+        <field name="name">Com redução de base de cálculo</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_isenta_tributada" model="account.tax.report.line">
+        <field name="name">Isenta ou não tributada e com cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_isenta" model="account.tax.report.line">
+        <field name="name">Isenta</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+     <record id="tax_report_icms_nao_tributada" model="account.tax.report.line">
+        <field name="name">Não tributada</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_suspensao" model="account.tax.report.line">
+        <field name="name">Suspensão</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+     <record id="tax_report_icms_diferimento" model="account.tax.report.line">
+        <field name="name">Diferimento</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_cobrado" model="account.tax.report.line">
+        <field name="name">ICMS cobrado anteriormente por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_reducao" model="account.tax.report.line">
+        <field name="name">Com redução de base de cálculo e cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_outras" model="account.tax.report.line">
+        <field name="name">Outras</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_com" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_sem" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="13"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_isencao" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="14"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_tributada" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="15"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_tributada_pelo" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="16"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_isencao_icms" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="17"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_imune" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Imune</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="18"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_nao_tributada" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="19"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_icms" model="account.tax.report.line">
+        <field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="20"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+
+    <record id="tax_report_icms_simples_nacional_outras" model="account.tax.report.line">
+        <field name="name">Simples Nacional - Outros</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="21"/>
+        <field name="parent_id" ref="tax_report_icms"/>
+    </record>
+</odoo>

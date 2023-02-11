@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SaleOrderList" owl="1">
+        <div class="orders">
+            <div class="header-row" t-att-class="{ oe_hidden: env.isMobile }">
+                <div class="col name">Order</div>
+                <div class="col date">Date</div>
+                <div class="col customer">Customer</div>
+                <div class="col salesman">Salesperson</div>
+                <div class="col end total">Total</div>
+                <div class="col state">State</div>
+            </div>
+            <div class="order-list">
+                <t t-foreach="props.orders" t-as="order" t-key="order.id">
+                    <SaleOrderRow order="order" highlightedOrder="highlightedOrder" />
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

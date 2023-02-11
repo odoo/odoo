@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='action_view_invoice']" position="before">
+                    <button type="object"
+                        name="action_view_delivery"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('delivery_count', '=', 0)]}" groups="stock.group_stock_user">
+                        <field name="delivery_count" widget="statinfo" string="Delivery"/>
+                    </button>
+                </xpath>
+                <xpath expr="//group[@name='sale_shipping']" position="attributes">
+                    <attribute name="groups"></attribute><!-- Remove the res.group on the group and set it on the field directly-->
+                    <attribute name="string">Delivery</attribute>
+                </xpath>
+                <xpath expr="//label[@for='commitment_date']" position="before">
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
+                    <field name="incoterm" options="{'no_open': True, 'no_create': True}" groups="sale_stock.group_display_incoterm"/>
+                    <field name="picking_policy" required="True"/>
+                </xpath>
+                <xpath expr="//span[@name='expected_date_span']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}
+                    </attribute>
+                </xpath>
+                <xpath expr="//div[@name='commitment_date_div']" position="replace">
+                    <div class="o_row">
+                        <field name="commitment_date"/>
+                        <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
+                    </div>
+                    <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+                    <field name="show_json_popover" invisible="1"/>
+                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form/group/group/field[@name='analytic_tag_ids']" position="before">
+                    <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="after">
+                    <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
+                </xpath>
+           </field>
+        </record>
+
+        <record id="view_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_quotation_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='tag_ids']" position="after">
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree.inherit.sale.stock</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='team_id']" position="after">
+                    <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_line_tree_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.location</field>
+            <field name="inherit_id" ref="sale.view_order_line_tree"/>
+            <field name="model">sale.order.line</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='price_subtotal']" position="before">
+                    <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_order_form_inherit_sale_stock_qty" model="ir.ui.view">
+            <field name="name">sale.order.line.tree.sale.stock.qty</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="model">sale.order</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
+                    <!-- below fields are used in the widget qty_at_date_widget -->
+                    <field name="product_type" invisible="1"/>
+                    <field name="virtual_available_at_date" invisible="1"/>
+                    <field name="qty_available_today" invisible="1"/>
+                    <field name="free_qty_today" invisible="1"/>
+                    <field name="scheduled_date" invisible="1"/>
+                    <field name="forecast_expected_date" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="move_ids" invisible="1"/>
+                    <field name="qty_to_deliver" invisible="1"/>
+                    <field name="is_mto" invisible="1"/>
+                    <field name="display_qty_widget" invisible="1"/>
+                    <widget name="qty_at_date_widget" width="0.1"/>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
+                    <!-- below fields are used in the widget qty_at_date_widget -->
+                    <field name="product_type" invisible="1"/>
+                    <field name="virtual_available_at_date" invisible="1"/>
+                    <field name="qty_available_today" invisible="1"/>
+                    <field name="free_qty_today" invisible="1"/>
+                    <field name="scheduled_date" invisible="1"/>
+                    <field name="forecast_expected_date" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="move_ids" invisible="1"/>
+                    <field name="qty_to_deliver" invisible="1"/>
+                    <field name="is_mto" invisible="1"/>
+                    <field name="display_qty_widget" invisible="1"/>
+                    <widget name="qty_at_date_widget" width="20px"/>
+                </xpath>
+            </field>
+        </record>
+
+        </data>
+</odoo>

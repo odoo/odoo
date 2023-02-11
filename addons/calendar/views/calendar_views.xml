@@ -1,0 +1,432 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <!-- Calendar Events Types : Views and Actions -->
+    <record id="view_calendar_event_type_tree" model="ir.ui.view">
+        <field name="name">calendar.event.type</field>
+        <field name="model">calendar.event.type</field>
+        <field name="arch" type="xml">
+            <tree string="Meeting Types" sample="1" editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_calendar_event_type" model="ir.actions.act_window">
+        <field name="name">Meeting Types</field>
+        <field name="res_model">calendar.event.type</field>
+        <field name="view_id" ref="view_calendar_event_type_tree"/>
+    </record>
+
+    <!-- Calendar Alarm : -->
+    <record id="view_calendar_alarm_tree" model="ir.ui.view">
+        <field name="name">calendar.alarm.tree</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <tree string="Calendar Alarm" sample="1">
+                <field name="name" invisible="1"/>
+                <field name="alarm_type"/>
+                <field name="duration"/>
+                <field name="interval"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="calendar_alarm_view_form" model="ir.ui.view">
+        <field name="name">calendar.alarm.form</field>
+        <field name="model">calendar.alarm</field>
+        <field name="arch" type="xml">
+            <form string="Calendar Alarm">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" invisible="1"/>
+                            <field name="alarm_type"/>
+                        </group>
+                        <group>
+                            <label for="duration"/>
+                            <div class="o_row">
+                                <field name="duration"/>
+                                <field name="interval"/>
+                            </div>
+                        </group>
+                        <group attrs="{'invisible': [('alarm_type','=','notification')]}">
+                            <field name="mail_template_id" attrs="{'invisible': [('alarm_type','!=','email')], 'required': [('alarm_type', '=', 'email')]}"
+                                context="{'default_model': 'calendar.event'}"/>
+                        </group>
+                    </group>
+                    <group attrs="{'invisible': [('alarm_type','!=','notification')]}">
+                        <field name="body"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_calendar_alarm" model="ir.actions.act_window">
+        <field name="name">Calendar Alarm</field>
+        <field name="res_model">calendar.alarm</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_calendar_alarm_tree"/>
+    </record>
+
+    <!-- Calendar Events : Views and Actions  -->
+    <record id="view_calendar_event_tree" model="ir.ui.view">
+        <field name="name">calendar.event.tree</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <tree string="Meetings" sample="1" multi_edit="1">
+                <header>
+                    <button name="action_open_composer" type="object" context="{'composition_mode':'mass_mail'}"
+                            string="Send Mail"/>
+                </header>
+                <field name="name" string="Subject" decoration-bf="1" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="start" string="Start Date" readonly="1"/>
+                <field name="stop" string="End Date" readonly="1"/>
+                <field name="user_id" widget="many2one_avatar_user" attrs="{'readonly':[('recurrency','=',True)]}" optional="hide"/>
+                <field name="partner_ids" widget="many2many_tags" attrs="{'readonly':[('recurrency','=',True)]}" optional="show"/>
+                <field name="alarm_ids" widget="many2many_tags" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="categ_ids" widget="many2many_tags" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="recurrency" optional="hide" readonly="1"/>
+                <field name="privacy" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="show_as" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="location" optional="show" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="duration" widget="float_time" readonly="1"/>
+                <field name="description" optional="hide" attrs="{'readonly':[('recurrency','=',True)]}"/>
+                <field name="allday" invisible="1"/>
+                <field name="message_needaction" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_form" model="ir.ui.view">
+        <field name="name">calendar.event.form</field>
+        <field name="model">calendar.event</field>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <form string="Meetings">
+                <div attrs="{'invisible': [('recurrence_id','=',False)]}" class="alert alert-info oe_edit_only" role="status">
+                    <p>Edit recurring event</p>
+                    <field name="recurrence_update" widget="radio"/>
+                </div>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button string="Document" icon="fa-bars" type="object" name="action_open_calendar_event" attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', False)]}"/>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="res_model" invisible="1" />
+                    <field name="res_id" invisible="1" />
+                    <field name="attendee_status" invisible="1"/>
+                    <field name="active" invisible="1"/>
+                    <div class="oe_title mb-3">
+                        <div>
+                            <label for="name"/>
+                        </div>
+                        <h1>
+                            <field name="name" placeholder="e.g. Business Lunch"/>
+                        </h1>
+                    </div>
+                    <div class="d-flex align-items-baseline">
+                        <field name="partner_ids" widget="many2manyattendee"
+                            placeholder="Select attendees..."
+                            context="{'force_email':True}"
+                            domain="[('type','!=','private')]"
+                            class="oe_inline o_calendar_attendees"
+                        />
+                        <div name="send_buttons" class="sm-2">
+                            <button name="action_open_composer" help="Send Email to attendees" type="object" string=" EMAIL" icon="fa-envelope"/>
+                        </div>
+                    </div>
+                    <notebook>
+                        <page name="page_details" string="Meeting Details">
+                            <group>
+                                <group>
+
+                                    <field name="start_date" string="Starting at" attrs="{'required': [('allday','=',True)], 'invisible': [('allday','=',False)]}" force_save="1"/>
+                                    <field name="stop_date" string="Ending at" attrs="{'required': [('allday','=',True)],'invisible': [('allday','=',False)]}" force_save="1"/>
+
+                                    <field name="start" string="Starting at" attrs="{'required': [('allday','=',False)], 'invisible': [('allday','=',True)]}"/>
+                                    <field name="stop" string="Ending At" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <div attrs="{'invisible': [('allday','=',True)]}">
+                                        <field name="duration" widget="float_time" string="Duration" class="oe_inline" attrs="{'readonly': [('id', '!=', False), ('recurrency','=',True)]}"/>
+                                        <span> hours</span>
+                                    </div>
+                                     <field name="event_tz" attrs="{'invisible': [('recurrency', '=', False)]}"/>
+                                    <field name="allday" force_save="1"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </group>
+                                <group>
+                                    <field name="alarm_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                    <field name="location" />
+                                    <field name="videocall_location"/>
+                                    <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                                </group>
+                            </group>
+                            <group>
+                                <field name="description"/>
+                            </group>
+                        </page>
+                        <page name="page_options" string="Options">
+                            <group>
+                                <div>
+                                    <group>
+                                        <field name="recurrency"/>
+                                    </group>
+                                    <div attrs="{'invisible': [('recurrency', '=', False)]}">
+                                        <group>
+                                            <label for="interval"/>
+                                            <div class="o_col">
+                                                <div class="o_row">
+                                                    <field name="interval" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                    <field name="rrule_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                </div>
+                                                <widget name="week_days" attrs="{'invisible': [('rrule_type', '!=', 'weekly')]}"/>
+                                            </div>
+                                            <label string="Until" for="end_type"/>
+                                            <div class="o_row">
+                                                <field name="end_type" attrs="{'required': [('recurrency', '=', True)]}"/>
+                                                <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency', '=', True)]}"/>
+                                                <field name="until" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date'), ('recurrency', '=', True)]}"/>
+                                            </div>
+                                        </group>
+                                        <group attrs="{'invisible': [('rrule_type', '!=', 'monthly')]}">
+                                            <label string="Day of Month" for="month_by"/>
+                                            <div class="o_row">
+                                                <field name="month_by"/>
+                                                <field name="day"
+                                                    attrs="{'required': [('month_by', '=', 'date'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'date')]}"/>
+                                                <field name="byday" string="The"
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                                <field name="weekday" nolabel="1"
+                                                    attrs="{'required': [('recurrency', '=', True), ('month_by', '=', 'day'), ('rrule_type', '=', 'monthly')],
+                                                            'invisible': [('month_by', '!=', 'day')]}"/>
+                                            </div>
+                                        </group>
+                                    </div>
+                                </div>
+                                <group>
+                                    <field name="privacy"/>
+                                    <field name="show_as"/>
+                                    <field name="recurrence_id" invisible="1" />
+                                </group>
+                            </group>
+                        </page>
+
+                        <page name="page_invitations" string="Invitations" groups="base.group_no_one">
+                            <button name="action_sendmail" type="object" string="Send Invitations" icon="fa-envelope" class="oe_link"/>
+                            <field name="attendee_ids" widget="one2many" mode="tree,kanban" readonly="1">
+                                <tree string="Invitation details" editable="top" create="false" delete="false">
+                                    <field name="partner_id" />
+                                    <field name="email" widget="email"/>
+                                    <field name="phone" widget="phone"/>
+                                    <field name="state" />
+
+                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" icon="fa-asterisk" />
+                                    <button name="do_accept" string="Accept" states="needsAction,tentative,declined" type="object" icon="fa-check text-success"/>
+                                    <button name="do_decline" string="Decline" states="needsAction,tentative,accepted" type="object" icon="fa-times-circle text-danger"/>
+                                </tree>
+                                <kanban class="o_kanban_mobile" create="false" delete="false">
+                                    <field name="partner_id" />
+                                    <field name="state" />
+                                    <field name="email" widget="email"/>
+
+                                    <templates>
+                                        <t t-name="kanban-box">
+                                            <div class="d-flex flex-column justify-content-between">
+                                                <field name="partner_id"/>
+                                                <field name="email" widget="email"/>
+                                                <span>Status: <field name="state" /></span>
+
+                                                <div class="text-right">
+                                                    <button name="do_tentative" states="needsAction,declined,accepted" string="Uncertain" type="object" class="btn fa fa-asterisk"/>
+                                                    <button name="do_accept" states="needsAction,tentative,declined" string="Accept" type="object" class="btn fa fa-check text-success"/>
+                                                    <button name="do_decline" states="needsAction,tentative,accepted" string="Decline" type="object" class="btn fa fa-times-circle text-danger"/>
+                                                </div>
+                                            </div>
+                                        </t>
+                                    </templates>
+                                </kanban>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_calendar" model="ir.ui.view">
+        <field name="name">calendar.event.calendar</field>
+        <field name="model">calendar.event</field>
+        <field name="priority" eval="2"/>
+        <field name="arch" type="xml">
+            <calendar js_class="attendee_calendar" string="Meetings" date_start="start" date_stop="stop" date_delay="duration" all_day="allday"
+                event_open_popup="true"
+                event_limit="5"
+                color="partner_ids">
+                <field name="attendee_status" invisible="1"/>
+                <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
+                       filters="1" widget="many2manyattendee" write_model="calendar.filters"
+                       write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
+                />
+                <field name="is_highlighted" invisible="1"/>
+                <field name="is_organizer_alone" invisible="1"/>
+                <field name="display_description" invisible="1"/>
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
+                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}"/>
+                <field name="privacy"/>
+                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}"/>
+                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}"/>
+                <!-- For recurrence update Dialog -->
+                <field name="recurrency" invisible="1"/>
+                <field name="recurrence_update" invisible="1"/>
+                <field name="partner_id" string="Organizer"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="view_calendar_event_search" model="ir.ui.view">
+        <field name="name">calendar.event.search</field>
+        <field name="model">calendar.event</field>
+        <field name="arch" type="xml">
+            <search string="Search Meetings">
+                <field name="name" string="Meeting" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="partner_ids"/>
+                <field name="user_id"/>
+                <field name="location"/>
+                <field name="show_as"/>
+                <field name="categ_ids"/>
+                <field name="description"/>
+                <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
+                <separator/>
+                <filter string="Date" name="filter_start_date" date="start"/>
+                <separator/>
+                <filter string="Busy" name="busy" domain="[('show_as', '=', 'busy')]"/>
+                <filter string="Free" name="free" domain="[('show_as', '=', 'free')]"/>
+                <separator/>
+                <filter string="Public" name="public" domain="[('privacy', '=', 'public')]"/>
+                <filter string="Private" name="private" domain="[('privacy', '=', 'private')]"/>
+                <filter string="Only Internal Users" name="confidential" domain="[('privacy', '=', 'confidential')]"/>
+                <separator/>
+                <filter string="Recurrent" name="recurrent" domain="[('recurrency', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Availability" name="availability" domain="[]" context="{'group_by': 'show_as'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_calendar_event" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="view_id" ref="view_calendar_event_calendar"/>
+        <field name="search_view_id" ref="view_calendar_event_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            No meetings found. Let's schedule one!
+          </p><p>
+            The calendar is shared between employees and fully integrated with
+            other applications such as the employee leaves or the business
+            opportunities.
+          </p>
+        </field>
+    </record>
+
+    <record id="res_users_view_form" model="ir.ui.view">
+            <field name="name">res.users.view.form.inherit.calendar</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <notebook colspan="4" position="inside">
+                    <!-- Placeholder container to hold information about external accounts (Google calendar, Microsoft calendar, ...) -->
+                    <page string="Calendar" name="calendar" invisible="1" groups="base.group_system">
+                        <group name="calendar_accounts"/>
+                    </page>
+                </notebook>
+            </field>
+    </record>
+
+    <record id="action_view_calendar_event_calendar" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="action_calendar_event"/>
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">calendar</field>
+        <field name="view_id" ref="view_calendar_event_calendar"/>
+    </record>
+
+    <record id="action_view_calendar_event_tree" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="action_calendar_event"/>
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_calendar_event_tree"/>
+    </record>
+
+    <record id="action_view_calendar_event_form" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="action_calendar_event"/>
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_calendar_event_form"/>
+    </record>
+
+    <!-- Menus -->
+    <menuitem
+        id="mail_menu_calendar"
+        name="Calendar"
+        sequence="10"
+        action="action_calendar_event"
+        web_icon="calendar,static/description/icon.png"
+        groups="base.group_user"/>
+
+    <menuitem
+        id="calendar_menu_config"
+        parent="calendar.mail_menu_calendar"
+        name="Configuration"
+        sequence="40"
+        action="calendar.action_calendar_event"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="calendar_submenu_reminders"
+        parent="calendar_menu_config"
+        name="Reminders"
+        action="action_calendar_alarm"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="menu_calendar_configuration"
+        name="Calendar"
+        parent="base.menu_custom"
+        sequence="30"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="menu_calendar_event_type"
+        parent="menu_calendar_configuration"
+        action="action_calendar_event_type"
+        groups="base.group_no_one"/>
+
+    <menuitem
+        id="menu_calendar_alarm"
+        parent="menu_calendar_configuration"
+        action="action_calendar_alarm"
+        groups="base.group_no_one"/>
+
+    <!-- called in js from '/js/base_calendar.js' -->
+    <!-- TODO: remove in master -->
+    <record id="action_calendar_event_notify" model="ir.actions.act_window">
+        <field name="name">Meetings</field>
+        <field name="res_model">calendar.event</field>
+        <field name="view_mode">form,calendar,tree</field>
+        <field name="view_id" ref="view_calendar_event_form"/>
+    </record>
+
+</odoo>

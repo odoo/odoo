@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_acquirer_ogone" model="payment.acquirer">
+        <field name="provider">ogone</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">False</field>
+        <field name="support_tokenization">True</field>
+        <field name="allow_tokenization">True</field>
+        <field name="support_refund"></field>
+    </record>
+
+    <record id="payment_method_ogone" model="account.payment.method">
+        <field name="name">Ogone</field>
+        <field name="code">ogone</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+    <record model="ir.config_parameter" id="payment_ogone_hash_function" forcecreate="False">
+            <field name="key">payment_ogone.hash_function</field>
+            <field name="value">sha1</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcOptionList" owl="1">
+        <div class="o_RtcOptionList">
+            <t t-if="rtcOptionList">
+                <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickLayout">
+                    <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-th-large"/>
+                    <span class="o_RtcOptionList_buttonText">Change layout</span>
+                </button>
+                <t t-if="rtcOptionList.rtcController.callViewer.isFullScreen">
+                    <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickDeactivateFullScreen">
+                        <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-compress"/>
+                        <span class="o_RtcOptionList_buttonText">Exit full screen</span>
+                    </button>
+                </t>
+                <t t-else="">
+                    <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickActivateFullScreen">
+                        <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-arrows-alt"/>
+                        <span class="o_RtcOptionList_buttonText">Full screen</span>
+                    </button>
+                </t>
+                <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickOptions">
+                    <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-cog"/>
+                    <span class="o_RtcOptionList_buttonText">Settings</span>
+                </button>
+                <t t-if="messaging.modelManager.isDebug">
+                    <button class="o_RtcOptionList_button" t-on-click="rtcOptionList.onClickDownloadLogs">
+                        <i class="o_RtcOptionList_buttonIcon fa fa-lg fa-file-text-o"/>
+                        <span class="o_RtcOptionList_buttonText">Download logs</span>
+                    </button>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

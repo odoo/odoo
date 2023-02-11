@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="survey_form" model="ir.ui.view">
+        <field name="name">survey.survey.view.form</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <form string="Survey" class="o_survey_form">
+                <field name="id" invisible="1"/>
+                <field name="session_state" invisible="1"/>
+                <header>
+                    <button name="action_send_survey" string="Share" type="object" class="oe_highlight" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_result_survey" string="See results" type="object" class="oe_highlight"
+                      attrs="{'invisible': [('answer_done_count', '&lt;=', 0)]}"/>
+                    <button name="action_start_session" string="Create Live Session" type="object"
+                        attrs="{'invisible': ['|', ('session_state', '!=', False), '|', ('active', '=', False), ('certification', '=', True)]}" />
+                    <button name="action_open_session_manager" string="Open Session Manager" type="object"
+                        attrs="{'invisible': [('session_state', '=', False)]}" />
+                    <button name="action_end_session" string="Close Live Session" type="object"
+                        attrs="{'invisible': [('session_state', 'not in', ['ready', 'in_progress'])]}" />
+                    <button name="action_test_survey" string="Test" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_print_survey" string="Print" type="object"/>
+                    <button name="action_archive" string="Close" type="object" attrs="{'invisible': [('active', '=', False)]}"/>
+                    <button name="action_unarchive" string="Reopen" type="object" attrs="{'invisible': [('active', '=', True)]}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_survey_user_input"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('access_mode', '=', 'public')]}"
+                            icon="fa-envelope-o">
+                            <field string="Registered" name="answer_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_survey_user_input_certified"
+                            type="object"
+                            class="oe_stat_button"
+                            attrs="{'invisible': [('certification', '=', False)]}"
+                            icon="fa-trophy">
+                            <field string="Certified" name="success_count" widget="statinfo"/>
+                        </button>
+                        <button name="action_survey_user_input_completed"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                            <field string="Answers" name="answer_done_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <field name="background_image" widget="image" class="oe_avatar"/>
+                    <div class="oe_title" style="width: 100%;">
+                        <label for="title"/>
+                        <h1><field name="title" placeholder="e.g. Satisfaction Survey"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id" domain="[('share', '=', False)]"/>
+                            <field name="active" invisible="1"/>
+                            <field name="has_conditional_questions" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Questions" name="questions">
+                            <field name="question_and_page_ids" nolabel="1" widget="question_page_one2many" mode="tree,kanban" context="{'default_survey_id': active_id, 'default_questions_selection': questions_selection}">
+                                <tree decoration-bf="is_page" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="title" widget="survey_description_page"/>
+                                    <field name="question_type" />
+                                    <field name="is_page" invisible="1"/>
+                                    <field name="questions_selection" invisible="1"/>
+                                    <field name="survey_id" invisible="1"/>
+                                    <field name="triggering_question_id" invisible="1"/>
+                                    <field name="random_questions_count" attrs="{'column_invisible': [('parent.questions_selection', '=', 'all')], 'invisible': [('is_page', '=', False)]}" />
+                                    <button disabled="disabled" icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
+                                        title="This question depends on another question's answer." class="icon_rotates"/>
+                                    <control>
+                                        <create name="add_question_control" string="Add a question"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
+                                    </control>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Description" name="description">
+                            <field name="description" nolabel="1"></field>
+                        </page>
+                        <page string="End Message" name="description_done">
+                            <field name="description_done" nolabel="1"></field>
+                        </page>
+                        <page string="Options" name="options">
+                            <group name="options">
+                                <group string="Questions" name="questions">
+                                    <field name="questions_layout" widget="radio"
+                                        attrs="{'readonly': [('session_state', 'in', ['ready', 'in_progress'])]}"/>
+                                    <field name="progression_mode" widget="radio" />
+                                    <div colspan="2" class="o_checkbox_optional_field">
+                                        <label for="is_time_limited" string="Survey Time Limit"/>
+                                        <field name="is_time_limited" nolabel="1"/>
+                                        <div attrs="{'invisible': [('is_time_limited', '=', False)]}">
+                                            <field name="time_limit" widget="float_time" nolabel="1" class="oe_inline"/> minutes
+                                        </div>
+                                    </div>
+                                    <field name="questions_selection" widget="radio" />
+                                    <field name="users_can_go_back" string="Back Button" attrs="{'invisible': [('questions_layout', '=', 'one_page')]}"/>
+                                </group>
+                                <group string="Candidates" name="candidates">
+                                    <field name="access_mode"/>
+                                    <field name="users_login_required"/>
+                                    <div colspan="2" class="o_checkbox_optional_field"
+                                        attrs="{'invisible': ['|', ('has_conditional_questions', '=', True), '&amp;', ('access_mode', '=', 'public'), ('users_login_required', '=', False)]}">
+                                        <label for="is_attempts_limited" string="Attempts Limit"/>
+                                        <field name="is_attempts_limited" nolabel="1"/>
+                                        <div attrs="{'invisible': [('is_attempts_limited', '=', False)]}">
+                                            <field name="attempts_limit" nolabel="1" class="oe_inline"/> attempts
+                                        </div>
+                                    </div>
+                                </group>
+                                <group string="Scoring" name="scoring">
+                                    <field name="scoring_type" widget="radio" />
+                                    <field name="scoring_success_min" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
+                                    <field name="certification" attrs="{'invisible': [('scoring_type', '=', 'no_scoring')]}" />
+                                    <field name="certification_mail_template_id" attrs="{'invisible': [('certification', '=', False)]}" />
+                                    <label for="certification_report_layout" string="Certification Template" attrs="{'invisible': [('certification', '=', False)]}"/>
+                                    <div attrs="{'invisible': [('certification', '=', False)]}" class="d-flex">
+                                        <field name="certification_report_layout" class="oe_inline"/>
+                                        <button name="action_survey_preview_certification_template"
+                                            string="Preview" type="object"
+                                            icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
+                                    </div>
+                                    <field name="certification_give_badge" attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}" />
+                                    <field name="certification_badge_id"
+                                           attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)], 'required': [('certification_give_badge', '=', True)]}"
+                                           domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
+                                           context="{'default_name': title,
+                                                   'default_description': 'Congratulations, you have succeeded this certification',
+                                                   'default_rule_auth': 'nobody',
+                                                   'default_level': None,
+                                                   'form_view_ref': 'survey.gamification_badge_form_view_simplified',
+                                                   'default_website_published': True}"/>
+                                    <field name="certification_badge_id_dummy" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '=', False)]}"
+                                           options="{'no_create': True}"
+                                           context="{'form_view_ref': 'survey.gamification_badge_form_view_simplified'}"/>
+                                </group>
+                                <group string="Live Session">
+                                    <field name="session_speed_rating" />
+                                    <div class="o_td_label">
+                                        <label for="session_code" string="Session Code" class="oe_edit_only o_form_label" />
+                                        <label for="session_link" string="Session Link" class="oe_read_only o_form_label" />
+                                    </div>
+                                    <div class="d-flex">
+                                        <field name="session_code" nolabel="1" class="mr-2 oe_edit_only" />
+                                        <field name="session_link" nolabel="1" widget="CopyClipboardChar" class="oe_read_only" />
+                                    </div>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="survey_tree" model="ir.ui.view">
+        <field name="name">survey.survey.view.tree</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <tree string="Survey" sample="1">
+                <field name="active" invisible="1"/>
+                <field name="certification" invisible="1"/>
+                <field name="title"/>
+                <field name="answer_count"/>
+                <field name="answer_done_count"/>
+                <field name="answer_duration_avg"/>
+                <field name="success_count"/>
+                <field name="success_ratio"/>
+                <field name="answer_score_avg"/>
+                <button name="certification" type="button" disabled="disabled"
+                    icon="fa-trophy" title="Certification" aria-label="Certification"
+                    attrs="{'invisible': [('certification', '=', False)]}"/>
+                <!-- Tweak as icons aren't directly supported in xml -->
+            </tree>
+        </field>
+    </record>
+    <record id="survey_kanban" model="ir.ui.view">
+        <field name="name">survey.survey.view.kanban</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="title" />
+                <field name="answer_done_count" />
+                <field name="certification" />
+                <field name="scoring_type" />
+                <field name="color" />
+                <field name="access_mode"/>
+                <field name="activity_ids" />
+                <field name="activity_state" />
+                <field name="success_count"/>
+                <field name="success_ratio"/>
+                <field name='active'/>
+                <templates>
+                    <div t-name="kanban-box" 
+                        t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click o_kanban_card_survey 
+                            #{record.certification.raw_value ? 'o_kanban_card_survey_successed' : ''}">
+                        <div class="o_dropdown_kanban dropdown" t-if="widget.editable">
+
+                            <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                <span class="fa fa-ellipsis-v"/>
+                            </a>
+                            <div class="dropdown-menu" role="menu">
+                                <a role="menuitem" type="edit" class="dropdown-item">Edit Survey</a>
+                                <a t-if="record.active.raw_value" role="menuitem" type="object" class="dropdown-item" name="action_send_survey">Share</a>
+                                <a t-if="widget.deletable" role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                <div role="separator" class="dropdown-divider"/>
+                                <div role="separator" class="dropdown-item-text">Color</div>
+                                <ul class="oe_kanban_colorpicker" data-field="color"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_record_top">
+                                <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-10 p-0 pb-1">
+                                <div class="container o_kanban_card_content" t-if="record.answer_done_count.raw_value != 0">
+                                    <div class="row mt-4 ml-5">
+                                        <div class="col-4 p-0">
+                                            <a name="action_result_survey" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="answer_done_count"/></span>
+                                                <span class="text-muted">Answers</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"><field name="success_count"/></span>
+                                                <span class="text-muted" t-if="!record.certification.raw_value">Passed</span>
+                                                <span class="text-muted" t-else="">Certified</span>
+                                            </a>
+                                        </div>
+                                        <div class="col-4 p-0 border-left" t-if="record.scoring_type.raw_value != 'no_scoring'" >
+                                            <a name="action_survey_user_input_completed" type="object" class="d-flex flex-column align-items-center">
+                                                <span class="font-weight-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
+                                                <span class="text-muted" >Success</span>
+                                            </a> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2 align-self-end">
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left"/>
+                                    <div class="oe_kanban_bottom_right">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="survey_survey_view_search" model="ir.ui.view">
+        <field name="name">survey.survey.search</field>
+        <field name="model">survey.survey</field>
+        <field name="arch" type="xml">
+            <search string="Survey">
+                <field string="Survey" name="title"/>
+                <filter string="Certification" name="certification" domain="[('certification', '=', True)]"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Upcoming Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_survey_form">
+        <field name="name">Surveys</field>
+        <field name="res_model">survey.survey</field>
+        <field name="view_mode">kanban,tree,form,activity</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new survey
+          </p><p>
+            You can create surveys for different purposes: customer opinion, services feedback, recruitment interviews, employee's periodical evaluations, marketing campaigns, etc.
+          </p><p>
+            Design easily your survey, send invitations and analyze answers.
+          </p>
+        </field>
+    </record>
+
+    <menuitem name="Surveys" id="menu_survey_form" action="action_survey_form" parent="menu_surveys" sequence="1"/>
+
+</data>
+</odoo>

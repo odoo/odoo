@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="payment_link_wizard_view_form" model="ir.ui.view">
+        <field name="name">payment.link.wizard.form</field>
+        <field name="model">payment.link.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generate Payment Link">
+                <group>
+                    <group>
+                        <field name="res_id" invisible="1"/>
+                        <field name="res_model" invisible="1"/>
+                        <field name="partner_id" invisible="1"/>
+                        <field name="partner_email" invisible="1"/>
+                        <field name="amount_max" invisible="1"/>
+                        <field name="available_acquirer_ids" invisible="1"/>
+                        <field name="has_multiple_acquirers" invisible="1"/>
+                        <field name="description"/>
+                        <field name="amount"/>
+                        <field name="acquirer_id"
+                            placeholder="Leave empty to allow all acquirers"
+                            options="{'no_open': True, 'no_create': True}"
+                            attrs="{'invisible':[('has_multiple_acquirers', '=', False)]}"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="access_token" invisible="1"/>
+                    </group>
+                </group>
+                <group>
+                    <field name="link" readonly="1" widget="CopyClipboardChar"/>
+                </group>
+                <group attrs="{'invisible':[('partner_email', '!=', False)]}">
+                    <p class="alert alert-warning font-weight-bold" role="alert">This partner has no email, which may cause issues with some payment acquirers. Setting an email for this partner is advised.</p>
+                </group>
+                <footer>
+                    <button string="Close" class="btn-primary" special="cancel" data-hotkey="z"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_invoice_order_generate_link" model="ir.actions.act_window">
+        <field name="name">Generate a Payment Link</field>
+        <field name="res_model">payment.link.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="payment_link_wizard_view_form"/>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_account_move"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+</odoo>

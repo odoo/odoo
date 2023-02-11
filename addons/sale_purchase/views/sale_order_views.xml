@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="sale_order_inherited_form_purchase" model="ir.ui.view">
+        <field name="name">sale.order.inherited.form.purchase</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button" name="action_view_purchase_orders" type="object" icon="fa-credit-card" groups='purchase.group_purchase_user' attrs="{'invisible': [('purchase_order_count', '=', 0)]}">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value"><field name="purchase_order_count"/></span>
+                        <span class="o_stat_text">Purchase</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

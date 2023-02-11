@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_base_module_uninstall" model="ir.ui.view">
+            <field name="name">Uninstall module</field>
+            <field name="model">base.module.uninstall</field>
+            <field name="arch" type="xml">
+                <form string="Uninstall module">
+                    <field name="module_id" groups="base.group_no_one"/>
+                    <h3>The following apps will be uninstalled</h3>
+                    <field name="show_all"/> Show technical modules
+                    <field name="module_ids" mode="kanban">
+                        <kanban create="false">
+                            <field name="icon"/>
+                            <field name="state"/>
+                            <field name="summary"/>
+                                <templates>
+                                    <t t-name="kanban-box">
+                                        <div class="oe_module_vignette">
+                                            <t t-set="installed" t-value="record.state.raw_value == 'installed'" />
+                                            <img t-attf-src="#{record.icon.value}" class="oe_module_icon" alt="Icon" />
+                                            <div class="oe_module_desc" t-att-title="record.shortdesc.value">
+                                                <h4 class="o_kanban_record_title">
+                                                    <field name="shortdesc" />&amp;nbsp;
+                                                </h4>
+                                                <p class="oe_module_name">
+                                                    <field groups="!base.group_no_one" name="summary" />
+                                                    <code groups="base.group_no_one">
+                                                        <field name="name" /></code>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </templates>
+                        </kanban>
+                    </field>
+                    <h3>The following documents will be permanently lost</h3>
+                    <field name="model_ids" string="Models">
+                        <tree string="Models">
+                            <field name="name" string="Document"/>
+                            <field name="count"/>
+                        </tree>
+                    </field>
+                    <div class="alert alert-warning" role="alert">
+                        <p>
+                            Module uninstallation is not always consistent and can sometimes lead to issues,
+                            some data may be deleted, the database could be left in an unstable state,
+                            the server could crash, etc. While this is rare, we recommend testing
+                            the uninstallation procedure on a duplicate database to guarantee that
+                            it works and then doing it on your production database.
+                        </p>
+                    </div>
+                    <footer>
+                        <button string="Cancel" class="btn-primary" special="cancel" data-hotkey="z"/>
+                        <button string="Confirm" class="btn-secondary" type="object" name="action_uninstall" data-hotkey="q"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

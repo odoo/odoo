@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.google.drive</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="msg_module_google_drive" position="replace">
+                <div class="content-group"
+                     attrs="{'invisible': [('module_google_drive','=',False)]}">
+                    <div class="mt8 mb8 text-warning font-weight-bold">
+                        This module will stop working after the 3rd October 2022 due to
+                        <a href="https://developers.googleblog.com/2022/02/making-oauth-flows-safer.html#disallowed-oob">changes in Google Authentication API</a>.
+                    </div>
+                    <div class="mt8 row">
+                        <div class="col-sm">
+                            <field name="is_google_drive_token_generated" invisible="1"/>
+                            <div role="alert"
+                                 attrs="{'invisible': [('is_google_drive_token_generated', '=', False)]}">
+                                <i class="text-success fa fa-check"></i> &amp;nbsp; Refresh token set
+                            </div>
+                            <div role="alert"
+                                 attrs="{'invisible': [('is_google_drive_token_generated', '=', True)]}">
+                                <i class="fa fa-exclamation-triangle text-warning"></i> &amp;nbsp; No refresh token set
+                            </div>
+                        </div>
+                        <div class="col-sm text-center"
+                             attrs="{'invisible': [('is_google_drive_token_generated', '=', True)]}">
+                            <button class="btn btn-link"
+                                    name="action_setup_token"
+                                    type="object"><i class="fa fa-arrow-right"></i> Set up token</button>
+                        </div>
+                        <div class="col-sm text-center"
+                             attrs="{'invisible': [('is_google_drive_token_generated', '=', False)]}">
+                            <button class="btn btn-link"
+                                    name="action_setup_token"
+                                    type="object"><i class="fa fa-arrow-right"></i> Reset token</button>
+                        </div>
+                    </div>
+                    <div class="mt8">
+                        <button type="action"
+                                name="%(action_google_drive_users_config)d"
+                                string="Google Drive Templates"
+                                icon="fa-arrow-right"
+                                class="btn-link pl-0"/>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="google_drive_auth_code_wizard" model="ir.ui.view">
+        <field name="name">google.drive.authorization.wizard</field>
+        <field name="model">res.config.settings</field>
+        <field name="mode">primary</field>
+        <field name="priority">2048</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <span>Get an authorization code and set it in the field below.</span>
+                    <field name="google_drive_uri"
+                           class="fa fa-arrow-right mt-1"
+                           widget="url"
+                           text="Get Authorization Code"
+                           nolabel="1"/>
+                </group>
+                <group class="mt-3">
+                    <field name="google_drive_authorization_code" required="1"/>
+                </group>
+                <footer>
+                    <button string="Confirm"
+                            class="btn btn-primary"
+                            name="confirm_setup_token"
+                            data-hotkey="q"
+                            type="object"/>
+                    <button special="cancel" data-hotkey="z" string="Cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

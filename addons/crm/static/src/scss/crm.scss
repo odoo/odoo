@@ -1,0 +1,33 @@
+.o_opportunity_kanban {
+    .ribbon {
+        &::before, &::after {
+            display: none;
+        }
+        span {
+            background-color: $o-brand-odoo;
+            padding: 5px;
+            font-size: small;
+            z-index: 0;
+        }
+    }
+
+    .ribbon-top-right {
+        margin-top: -9px;
+        span {
+            left: 12px;
+            right: 30px;
+            height: 25px;
+            top: 18px;
+        }
+    }
+
+    .oe_kanban_card_ribbon {
+        min-height: 105px;
+        .o_kanban_record_title {
+            max-width: calc(100% - 65px);
+        }
+        .o_kanban_record_subtitle {
+            max-width: calc(100% - 35px);
+        }
+    }
+}

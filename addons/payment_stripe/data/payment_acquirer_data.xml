@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_acquirer_stripe" model="payment.acquirer">
+        <field name="provider">stripe</field>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">False</field>
+        <field name="support_refund"></field>
+        <field name="support_tokenization">True</field>
+        <field name="allow_tokenization">True</field>
+    </record>
+
+    <record id="payment_method_stripe" model="account.payment.method">
+        <field name="name">Stripe</field>
+        <field name="code">stripe</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

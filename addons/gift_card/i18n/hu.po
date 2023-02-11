@@ -1,0 +1,190 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# krnkris, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: hu\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,help:gift_card.field_product_template__detailed_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
+"A készletezett termék olyan materiális termék, mely készletre kerül. Ehhez telepíteni kell a Készlet app-ot.\n"
+"A fogyóeszköz termék olyan materiális termék, mely nem kerül készletre.\n"
+"A szolgálatás immateriális termék."
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__balance
+msgid "Balance"
+msgstr "Egyenleg"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__code
+msgid "Code"
+msgstr "Kód"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__company_id
+msgid "Company"
+msgstr "Vállalat"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_uid
+msgid "Created by"
+msgstr "Létrehozta"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__create_date
+msgid "Created on"
+msgstr "Létrehozva"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__currency_id
+msgid "Currency"
+msgstr "Pénznem"
+
+#. module: gift_card
+#: code:addons/gift_card/models/product.py:0
+#, python-format
+msgid "Deleting the Gift Card Pay product is not allowed."
+msgstr ""
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__expired
+msgid "Expired"
+msgstr "Lejárt"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__expired_date
+msgid "Expired Date"
+msgstr "Lejárati dátum"
+
+#. module: gift_card
+#: code:addons/gift_card/models/gift_card.py:0
+#, python-format
+msgid "Gift #%s"
+msgstr "Ajándék #%s"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__product_template__detailed_type__gift
+#: model:product.product,name:gift_card.gift_card_product_50
+#: model:product.product,name:gift_card.pay_with_gift_card_product
+#: model:product.template,name:gift_card.gift_card_product_50_product_template
+#: model:product.template,name:gift_card.pay_with_gift_card_product_product_template
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_tree
+msgid "Gift Card"
+msgstr "Ajándékkártya"
+
+#. module: gift_card
+#: model:ir.actions.act_window,name:gift_card.gift_card_action
+msgid "Gift Cards"
+msgstr "Ajándékkártyák"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: gift_card
+#: model:ir.model.fields,help:gift_card.field_gift_card__partner_id
+msgid "If empty, all users can use it"
+msgstr "Ha üres, minden felhasználó használhatja"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__initial_amount
+msgid "Initial Amount"
+msgstr "Kezdőösszeg"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_uid
+msgid "Last Updated by"
+msgstr "Frissítette"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__write_date
+msgid "Last Updated on"
+msgstr "Frissítve "
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__name
+msgid "Name"
+msgstr "Név"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__partner_id
+msgid "Partner"
+msgstr "Partner"
+
+#. module: gift_card
+#: model:ir.model,name:gift_card.model_product_template
+msgid "Product Template"
+msgstr "Terméksablon"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_product_product__detailed_type
+#: model:ir.model.fields,field_description:gift_card.field_product_template__detailed_type
+msgid "Product Type"
+msgstr "Terméktípus"
+
+#. module: gift_card
+#: model:ir.model.fields,field_description:gift_card.field_gift_card__state
+msgid "State"
+msgstr "Állapot"
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_unique_gift_card_code
+msgid "The gift card code must be unique."
+msgstr "Az ajándékkártya kódjának egyedinek kell lennie."
+
+#. module: gift_card
+#: model:ir.model.constraint,message:gift_card.constraint_gift_card_check_amount
+msgid "The initial amount must be positive."
+msgstr "A kezdőösszegnek pozitívnak kell lennie."
+
+#. module: gift_card
+#: model:product.product,uom_name:gift_card.gift_card_product_50
+#: model:product.product,uom_name:gift_card.pay_with_gift_card_product
+#: model:product.template,uom_name:gift_card.gift_card_product_50_product_template
+#: model:product.template,uom_name:gift_card.pay_with_gift_card_product_product_template
+msgid "Units"
+msgstr "egység"
+
+#. module: gift_card
+#: model:ir.model.fields.selection,name:gift_card.selection__gift_card__state__valid
+#: model_terms:ir.ui.view,arch_db:gift_card.gift_card_view_search
+msgid "Valid"
+msgstr "Érvényes"

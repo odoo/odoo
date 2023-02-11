@@ -1,0 +1,181 @@
+@font-face {
+    font-family: 'emojifont';
+    src: local('Segoe UI'),
+         local('Apple Color Emoji'),
+         local('Android Emoji'),
+         local('Noto Color Emoji'),
+         local('Twitter Color Emoji'),
+         local('Twitter Color'),
+         local('EmojiOne Color'),
+         local('EmojiOne'),
+         local(EmojiSymbols),
+         local(Symbola);
+}
+
+// Emoji
+.o_mail_emoji {
+    display: inline-block;
+    padding: 0;
+    font-size: 1.3rem;
+    font-family: emojifont;
+}
+.o_mail_preview .o_mail_emoji {
+    font-size: 100%;
+}
+
+@mixin o-viewer-black-btn {
+    background-color: rgba(black, 0.4);
+    color: rgba(theme-color('light'), 0.7);
+
+    &:hover {
+        background-color: rgba(black, 0.6);
+        color: white;
+    }
+
+    &.disabled {
+        color: gray('600');
+        background: none;
+    }
+}
+.o_modal_fullscreen {
+    z-index: $o-mail-thread-window-zindex + 1;
+
+    .o_viewer_content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .o_viewer-header {
+            display: flex;
+            align-items: center;
+            min-height: $o-navbar-height;
+            background-color: rgba(black, 0.8);
+            z-index: 1;
+            color: #FFFFFF;
+
+            a {
+                @include o-hover-text-color(rgba(theme-color('light'), 0.6), white);
+            }
+
+            .o_image_caption {
+                display: flex;
+                align-items: center;
+                min-width: 0;
+                margin-inline-start: map-get($spacers, 4);
+
+                .o_viewer_document_name {
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+                }
+            }
+        }
+
+        .o_loading_img {
+            @include o-position-absolute($top: 45%, $right: 0, $left: 0);
+        }
+
+        .o_viewer_img_wrapper {
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(black, 0.7);
+
+            .o_viewer_zoomer {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                img {
+                    image-orientation: from-image; // Only supported in Firefox
+                }
+
+                img, video {
+                    cursor :auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                    transition: 0.2s cubic-bezier(0, 0, 0.49, 1.6) 0s, opacity 0.15s;
+                    box-shadow: 0 0 40px black;
+                }
+
+                .o_viewer_pdf {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                }
+
+                .o_viewer_text {
+                    width: 80%;
+                    height: 100%;
+                    border: 0px;
+                    box-shadow: 1px 1px 20px 1px #000;
+                    background-color: white;
+                }
+
+                .o_viewer_video {
+                    height: 80%;
+                }
+
+                @include media-breakpoint-down(sm) {
+                    .o_viewer_pdf, .o_viewer_text {
+                        width: map-get($sizes, 100);
+                    }
+                }
+            }
+        }
+
+        .o_viewer_toolbar {
+            @include o-position-absolute($bottom: $grid-gutter-width*0.5);
+            width: 100%;
+            overflow: hidden;
+            justify-content: center;
+            border-radius: 4px;
+
+            > .btn-group {
+                background-color: rgba(black, 0.4);
+            }
+
+            .o_viewer_toolbar_btn {
+                @include o-viewer-black-btn;
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+        }
+    }
+
+    .arrow {
+        @include o-position-absolute(50%, $grid-gutter-width*0.5);
+        border-radius: 100%;
+        padding: 12px 16px 11px 18px;
+        @include o-viewer-black-btn;
+    }
+
+    .arrow-left {
+        left: $grid-gutter-width*0.5;
+        right: auto;
+        padding: 12px 18px 11px 16px;
+    }
+}
+
+.o_document_viewer_topbar_button {
+    display: flex;
+    align-items: center;
+    align-self: stretch;
+
+    &:hover {
+        background-color: rgba($white, 0.1);
+    }
+}
+
+.o_mail_composer_form {
+    .oe-bordered-editor[name=body] .o_readonly {
+        border: 1px solid $o-gray-300;
+        padding: 4px;
+    }
+}

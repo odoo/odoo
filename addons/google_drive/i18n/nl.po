@@ -1,0 +1,402 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* google_drive
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:28+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"<b>To create a new filter:</b><br/>\n"
+"                                - Go to the Odoo document you want to filter. For instance, go to Opportunities and search on Sales Department.<br/>\n"
+"                                - In this \"Search\" view, select the option \"Save Current Filter\", enter the name (Ex: Sales Department)<br/>\n"
+"                                - If you select \"Share with all users\", link of google document in \"More\" options will appear for all users in opportunities of Sales Department.<br/>\n"
+"                                - If you don't select \"Share with all users\", link of google document in \"More\" options will not appear for other users in opportunities of Sales Department.<br/>\n"
+"                                - If filter is not specified, link of google document will appear in \"More\" option for all users for all opportunities."
+msgstr ""
+"<b>Om een nieuwe filter aan te maken:</b><br/>\n"
+"                                - Ga naar het Odoo document waarop je een filter wil toepassen. Bijvoorbeeld, ga naar Verkoopkansen en zoek op Verkoopafdeling.<br/>\n"
+"                                - Klik in het uitgebreide zoekscherm op \"Favorieten\", kies de optie \"Huidige filter opslaan\", en voer een naam in (b.v.: Verkoopafdeling)<br/>\n"
+"                                - Vink je \"Delen met alle gebruikers\" aan, dan zal in de \"Meer\" optie bij de verkoopkansen van de verkoopafdeling een link naar het Google document verschijnen.<br/>\n"
+"                                - Vink je \"Delen met alle gebruikers\" niet aan, dan zal in de \"Meer\" optie bij de verkoopkansen van de verkoopafdeling geen link naar het Google document verschijnen.<br/>\n"
+"                                - Indien er geen filter werd gedefinieerd, dan zal in de \"Meer\" optie de link naar het Google document zichtbaar zijn voor alle gebruikers voor alle verkoopkansen."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Reset token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Token opnieuw instellen"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"fa fa-arrow-right\"/> Set up token"
+msgstr "<i class=\"fa fa-arrow-right\"/> Token instellen"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; No refresh"
+" token set"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-warning\"/> &amp;nbsp; Niet "
+"verversen token ingesteld"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "<i class=\"text-success fa fa-check\"/> &amp;nbsp; Refresh token set"
+msgstr ""
+"<i class=\"text-success fa fa-check\"/> &amp;nbsp; Ververs token ingesteld"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "<span>Get an authorization code and set it in the field below.</span>"
+msgstr ""
+"<span>Ontvang een autorisatiecode en stel deze in het onderstaande veld "
+"in.</span>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Active</strong>"
+msgstr "<strong>Actief</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Model</strong>"
+msgstr "<strong>Model</strong>"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_kanban
+msgid "<strong>Template</strong>"
+msgstr "<strong>Sjabloon</strong>"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__active
+msgid "Active"
+msgstr "Actief"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid "Add a new template"
+msgstr "Voeg een nieuw sjabloon toe"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Archived"
+msgstr "Gearchiveerd"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "At least one key cannot be found in your Google Drive name pattern."
+msgstr ""
+"Tenminste één sleutel kan niet gevonden worden in je Google Drive naam "
+"patroon."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_authorization_code
+msgid "Authorization Code"
+msgstr "Autorisatie code"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_google_drive_config__name_template
+msgid ""
+"Choose how the new google drive will be named, on google side. Eg. "
+"gdoc_%(field_name)s"
+msgstr ""
+"Kies hoe de nieuwe Google Drive genaamd moet worden, aan de Google kant. "
+"Bijvoorbeeld. gdoc_%(field_name)s"
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Confirm"
+msgstr "Bevestigen"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_uid
+msgid "Created by"
+msgstr "Aangemaakt door"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__create_date
+msgid "Created on"
+msgstr "Aangemaakt op"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Creating google drive may only be done by one at a time."
+msgstr "Google Drive aanmaken mag maar door één persoon per keer gebeuren."
+
+#. module: google_drive
+#: model:ir.filters,name:google_drive.filter_partner
+msgid "Customer"
+msgstr "Klant"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__display_name
+msgid "Display Name"
+msgstr "Schermnaam"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__filter_id
+msgid "Filter"
+msgstr "Filter"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_auth_code_wizard
+msgid "Get Authorization Code"
+msgstr "Krijg de autorisatiecode"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Ga naar het configuratiepaneel"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_client_id
+msgid "Google Client"
+msgstr "Google Client "
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_tree
+msgid "Google Drive Configuration"
+msgstr "Google Drive instellingen"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name_template
+msgid "Google Drive Name Pattern"
+msgstr "Google Drive naampatroon"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "Google Drive Templates"
+msgstr "Google Drive sjablonen"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Google Drive is not yet configured. Please contact your administrator."
+msgstr ""
+"Google Drive is nog niet geconfigureerd. Neem contact op met je "
+"administrator."
+
+#. module: google_drive
+#: model:ir.model,name:google_drive.model_google_drive_config
+msgid "Google Drive templates config"
+msgstr "Google Drive sjabloon configuratie"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__id
+msgid "ID"
+msgstr "ID"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Incoherent Google Drive %(drive)s: the model of the selected filter "
+"%(filter)r is not matching the model of current template (%(filter_model)r, "
+"%(drive_model)r)"
+msgstr ""
+"Incoherente Google Drive %(drive)s: het model van het geselecteerde filter "
+"%(filter)r komt niet overeen met het model van de huidige sjabloon "
+"(%(filter_model)r, %(drive_model)r)"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config____last_update
+msgid "Last Modified on"
+msgstr "Laatst gewijzigd op"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_uid
+msgid "Last Updated by"
+msgstr "Laatst bijgewerkt door"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__write_date
+msgid "Last Updated on"
+msgstr "Laatst bijgewerkt op"
+
+#. module: google_drive
+#: model_terms:ir.actions.act_window,help:google_drive.action_google_drive_users_config
+msgid ""
+"Link your own google drive templates to any record of Odoo. If you have "
+"really specific documents you want your collaborator fill in, e.g. Use a "
+"spreadsheet to control the quality of your product or review the delivery "
+"checklist for each order in a foreign country, ... Its very easy to manage "
+"them, link them to Odoo and use them to collaborate with your employees."
+msgstr ""
+"Link je Google Drive documenten aan eender welk willekeurig record van Odoo."
+" Als je zeer specifieke documenten hebt waarvan je wil dat een werknemer ze "
+"invult, gebruik dan bijvoorbeeld een rekenblad om de kwaliteitscontrole van "
+"producten bij te houden, of om een checklist van buitenlandse orders uit te "
+"voeren. Het is heel eenvoudig om Google documenten te beheren, ze met Odoo "
+"te linken en ze te gebruiken om met collega's samen te werken. "
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model_id
+msgid "Model"
+msgstr "Type"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "Please enter a valid Google Document URL."
+msgstr "Vul alsjeblieft een geldige Google Document URL in."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__is_google_drive_token_generated
+msgid "Refresh Token Generated"
+msgstr "Vernieuw token gegenereerd"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__model
+msgid "Related Model"
+msgstr "Gerelateerd model"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_resource_id
+msgid "Resource Id"
+msgstr "Bron Id"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.google_drive_config_view_search
+msgid "Search Google Drive Config"
+msgstr "Zoek Google Drive config"
+
+#. module: google_drive
+#: code:addons/google_drive/models/res_config_settings.py:0
+#, python-format
+msgid "Set up refresh token"
+msgstr "Stel vernieuwingstoken in"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"Something went wrong during the token generation. Please request again an "
+"authorization code ."
+msgstr ""
+"Er is iets fout gegaan tijdens het genereren van het token. Vraag "
+"alsjeblieft een nieuwe authenticatie code aan."
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__name
+msgid "Template Name"
+msgstr "Sjabloonnaam"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_google_drive_config__google_drive_template_url
+msgid "Template URL"
+msgstr "Sjabloon URL"
+
+#. module: google_drive
+#: model:ir.actions.act_window,name:google_drive.action_google_drive_users_config
+msgid "Templates"
+msgstr "Sjablonen"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid "The Google Template cannot be found. Maybe it has been deleted."
+msgstr ""
+"Het Google sjabloon kan niet gevonden worden. Misschien is het verwijderd."
+
+#. module: google_drive
+#: model:ir.model.fields,help:google_drive.field_res_config_settings__google_drive_uri
+msgid "The URL to generate the authorization code from Google"
+msgstr "De URL om de authenticatiecode te genereren van Google"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
+"Het documentfilter mag geen 'dynamisch' onderdeel bevatten, dus het mag "
+"bijvoorbeeld niet zijn gebaseerd op de huidige tijd of huidige gebruiker."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"The name of the attached document can use fixed or variable data. To distinguish between documents in\n"
+"                                Google Drive, use fixed words and fields. For instance, in the example above, if you wrote Deco_Addict_%(name)s_Sales\n"
+"                                in the Google Drive name field, the document in your Google Drive and in Odoo attachment will be named\n"
+"                                'Deco_Addict_SO0001_Sales'."
+msgstr ""
+"De naam van het bijgevoegde document kan vaste of variabele gegevens bevatten. Om een onderscheid te maken tussen documenten in\n"
+"                                Google Drive, gebruik vaste woorden en velden. Bijvoorbeeld, in het bovenstaande voorbeeld, als je Deco_Addict_ %(name)s_Sales hebt geschreven\n"
+"                                in het Google Drive naam veld, krijgt je document in Google Drive en in Odoo de naam\n"
+"                                'Deco_Addict_SO0001_Sales'."
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"The permission 'reader' for 'anyone with the link' has not been written on "
+"the document"
+msgstr ""
+"De rechten 'lezen' voor 'iedereen met de link' is niet ingesteld voor dit "
+"document"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:0
+#, python-format
+msgid ""
+"There is no refresh code set for Google Drive. You can set it up from the "
+"configuration panel."
+msgstr ""
+"Er is geen ververscode ingesteld voor Google Drive. Je kunt het instellen "
+"via het configuratiescherm."
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "This module will stop working after the 3rd October 2022 due to"
+msgstr "Deze module stopt met werken na 3 oktober 2022 vanwege:"
+
+#. module: google_drive
+#: model:ir.model.fields,field_description:google_drive.field_res_config_settings__google_drive_uri
+msgid "URI"
+msgstr "URL"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.res_config_settings_view_form
+msgid "changes in Google Authentication API"
+msgstr "wijzigingen in Google Authentication API"
+
+#. module: google_drive
+#: model_terms:ir.ui.view,arch_db:google_drive.view_google_drive_config_form
+msgid ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"
+msgstr ""
+"https://docs.google.com/document/d/1vOtpJK9scIQz6taD9tJRIETWbEw3fSiaQHArsJYcua4/edit"

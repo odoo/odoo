@@ -1,0 +1,112 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_address_extended
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
+msgid ""
+"Change how the system computes the full street field based on the different "
+"street subfields"
+msgstr "修改以依據不同的欄目來演算出完整的街道名稱"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_partner
+msgid "Contact"
+msgstr "聯絡人"
+
+#. module: base_address_extended
+#: model:ir.model,name:base_address_extended.model_res_country
+msgid "Country"
+msgstr "國家"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
+msgid "Door"
+msgstr "門"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
+msgid "Door Number"
+msgstr "門號"
+
+#. module: base_address_extended
+#: model:ir.model.fields,help:base_address_extended.field_res_country__street_format
+msgid ""
+"Format to use for streets belonging to this country.\n"
+"\n"
+"You can use the python-style string pattern with all the fields of the street (for example, use '%(street_name)s, %(street_number)s' if you want to display the street name, followed by a comma and the house number)\n"
+"%(street_name)s: the name of the street\n"
+"%(street_number)s: the house number\n"
+"%(street_number2)s: the door number"
+msgstr ""
+"用於屬於這個國家的街道的格式\n"
+"\n"
+"您可以在街道的所有欄位中使用python樣式的字元串模式（例如，如果要顯示街道名稱，則使用'%(street_name)s,%(street_number)s'，後跟逗號和房子數）\n"
+"%(street_name)s：街道名稱\n"
+"%(street_number)s：街道號碼\n"
+"%(street_number2)s：街道號碼2"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number
+msgid "House"
+msgstr "房屋"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
+msgid "House Number"
+msgstr "樓號"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
+msgid "Street Format"
+msgstr "街道格式"
+
+#. module: base_address_extended
+#: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_name
+#: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_name
+msgid "Street Name"
+msgstr "街道名稱"
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_address_structured_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_partner_structured_form
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_company_extended_form
+msgid "Street Name..."
+msgstr "街道名稱..."
+
+#. module: base_address_extended
+#: model_terms:ir.ui.view,arch_db:base_address_extended.view_res_country_extended_form
+msgid "Street format..."
+msgstr "街道格式..."
+
+#. module: base_address_extended
+#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/res_partner.py:0
+#, python-format
+msgid "Unrecognized field %s in street format."
+msgstr "街道格式無法識別的欄位%s"

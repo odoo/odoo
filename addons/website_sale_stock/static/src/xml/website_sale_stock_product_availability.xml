@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="website_sale_stock.product_availability">
+        <t t-if="product_type == 'product'">
+            <!-- show out_of_stock_message whatever the show_availability - pde's spec-->
+            <div id="out_of_stock_message" t-if="free_qty lte 0 and !cart_qty" t-attf-class="availability_message_#{product_template}">
+                <t t-if='has_out_of_stock_message' t-out='out_of_stock_message'/>
+                <t t-elif="!allow_out_of_stock_order">Out of Stock</t>
+            </div>
+            <div id="threshold_message" t-elif="show_availability and free_qty lte available_threshold" t-attf-class="availability_message_#{product_template}">
+                Only <t t-esc='free_qty'/> <t t-esc="uom_name" /> left in stock.
+            </div>
+
+            <div t-if="!allow_out_of_stock_order and show_availability and cart_qty" t-attf-class="availability_message_#{product_template} text-warning mt8">
+                <t t-if='!free_qty'>
+                    You already added all the available product in your cart.
+                </t>
+                <t t-else=''>
+                    You already added <t t-esc="cart_qty" /> <t t-esc="uom_name" /> in your cart.
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ScaleScreen" owl="1">
+        <div class="scale-screen screen">
+            <div class="screen-content">
+                <div class="top-content">
+                    <span class="button back" t-on-click="back">
+                        <i class="fa fa-angle-double-left"></i>
+                        Back
+                    </span>
+                    <h1 class="product-name">
+                        <t t-esc="productName" />
+                    </h1>
+                </div>
+                <div class="centered-content">
+                    <div class="weight js-weight">
+                        <t t-esc="productWeightString" />
+                    </div>
+                    <div class="product-price">
+                        <t
+                           t-esc="env.pos.format_currency(productPrice) + '/' + productUom" />
+                    </div>
+                    <div class="computed-price">
+                        <t t-esc="computedPriceString" />
+                    </div>
+                    <div class="buy-product" t-on-click="confirm">
+                        Order
+                        <i class="fa fa-angle-double-right"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

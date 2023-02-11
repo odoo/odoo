@@ -1,0 +1,578 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* note
+# 
+# Translators:
+# Algo Kärp <algokarp@gmail.com>, 2022
+# Martin Aavastik <martin@avalah.ee>, 2022
+# Triine Aavik <triine@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
+# Arma Gedonsky <armagedonsky@hot.ee>, 2022
+# Andre Roomet <andreroomet@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Piia Paurson <piia@avalah.ee>, 2022
+# Egon Raamat <egon@avalah.ee>, 2022
+# Rivo Zängov <eraser@eraser.ee>, 2022
+# Jana Jaakson, 2022
+# Leaanika Randmets, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
+"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: et\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Toiming"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction
+msgid "Action Needed"
+msgstr "Vajalik toiming"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"Toimingud võivad käivitada teatud tegevuse, näiteks kalendrivaate avamine "
+"või dokumendi üleslaadimisel automaatselt tehtuks märkimine"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__open
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Active"
+msgstr "Tegev"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_ids
+msgid "Activities"
+msgstr "Tegevused"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity
+msgid "Activity"
+msgstr "Tegevus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Tegevuse erandlik kohendus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_state
+msgid "Activity State"
+msgstr "Tegevuse seis"
+
+#. module: note
+#: model:ir.model,name:note.model_mail_activity_type
+msgid "Activity Type"
+msgstr "Tegevuse tüüp"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Tegevuse liigi sümbol"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid "Add a new personal note"
+msgstr "Lisage uus isiklik märge"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.note_tag_action
+msgid "Add a new tag"
+msgstr "Lisage uus silt"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add a note"
+msgstr "Lisa märkus"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Add new note"
+msgstr "Lisage uus märkus"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Archive"
+msgstr "Arhiveeri"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
+msgid "Attachment Count"
+msgstr "Manuste arv"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "By sticky note Category"
+msgstr "Kleepsu järgi Kategooria"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Channel"
+msgstr "Allikas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__color
+#: model:ir.model.fields,field_description:note.field_note_tag__color
+msgid "Color Index"
+msgstr "Värvikood"
+
+#. module: note
+#: model:ir.ui.menu,name:note.menu_note_configuration
+msgid "Configuration"
+msgstr "Seadistus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__create_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__create_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__create_uid
+msgid "Created by"
+msgstr "Loonud"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__create_date
+#: model:ir.model.fields,field_description:note.field_note_stage__create_date
+#: model:ir.model.fields,field_description:note.field_note_tag__create_date
+msgid "Created on"
+msgstr "Loomise kuupäev"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__date_done
+msgid "Date done"
+msgstr "Lõpetamise kuupäev"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Delete"
+msgstr "Kustuta"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__display_name
+#: model:ir.model.fields,field_description:note.field_note_stage__display_name
+#: model:ir.model.fields,field_description:note.field_note_tag__display_name
+msgid "Display Name"
+msgstr "Näidatav nimi"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Dropdown menu"
+msgstr "Rippmenüü"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage__fold
+msgid "Folded by Default"
+msgstr "Volditud vaikimisi"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "Follower"
+msgstr "Jälgija"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
+msgid "Followers"
+msgstr "Jälgijad"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Jälgijad (partnerid)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesome icon nt. fa-tasks"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Future Activities"
+msgstr "Tulevased tegevused"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Group By"
+msgstr "Grupeeri"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "On sõnum"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__id
+#: model:ir.model.fields,field_description:note.field_note_stage__id
+#: model:ir.model.fields,field_description:note.field_note_tag__id
+msgid "ID"
+msgstr "ID"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "Ikoon"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Ikoon, mis näitab erandi tegevust"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction
+#: model:ir.model.fields,help:note.field_note_note__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Kui märgitud, siis uued sõnumid nõuavad Su tähelepanu."
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
+msgid "Is Follower"
+msgstr "Jälgija"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note____last_update
+#: model:ir.model.fields,field_description:note.field_note_stage____last_update
+#: model:ir.model.fields,field_description:note.field_note_tag____last_update
+msgid "Last Modified on"
+msgstr "Viimati muudetud"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__write_uid
+#: model:ir.model.fields,field_description:note.field_note_stage__write_uid
+#: model:ir.model.fields,field_description:note.field_note_tag__write_uid
+msgid "Last Updated by"
+msgstr "Viimati uuendas"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__write_date
+#: model:ir.model.fields,field_description:note.field_note_stage__write_date
+#: model:ir.model.fields,field_description:note.field_note_tag__write_date
+msgid "Last Updated on"
+msgstr "Viimati uuendatud"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Late Activities"
+msgstr "Hilinenud tegevused"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Peamine manus"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_01
+msgid "Meeting Minutes"
+msgstr "Protokollid"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error
+msgid "Message Delivery error"
+msgstr "Sõnumi edastamise veateade"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_ids
+msgid "Messages"
+msgstr "Sõnumid"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Minu tegevuse tähtaeg"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_00
+msgid "New"
+msgstr "Uus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Järgmine tegevus kalendris"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Järgmise tegevuse kuupäev"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_summary
+msgid "Next Activity Summary"
+msgstr "Järgmise tegevuse kokkuvõte"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
+msgid "Next Activity Type"
+msgstr "Järgmise tegevuse tüüp"
+
+#. module: note
+#: model:ir.model,name:note.model_note_note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Note"
+msgstr "Märkus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__memo
+msgid "Note Content"
+msgstr "Märkme sisu"
+
+#. module: note
+#: model:ir.model,name:note.model_note_stage
+msgid "Note Stage"
+msgstr "Märkme etapp"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__name
+msgid "Note Summary"
+msgstr "Märkme kokkuvõte"
+
+#. module: note
+#: model:ir.model,name:note.model_note_tag
+msgid "Note Tag"
+msgstr "Märkme silt"
+
+#. module: note
+#: code:addons/note/models/res_users.py:0
+#: model:ir.actions.act_window,name:note.action_note_note
+#: model:ir.ui.menu,name:note.menu_note_notes
+#: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#, python-format
+msgid "Notes"
+msgstr "Märkused"
+
+#. module: note
+#: model_terms:ir.actions.act_window,help:note.action_note_note
+msgid ""
+"Notes are private, unless you share them by inviting follower on a note.\n"
+"            (Useful for meeting minutes)."
+msgstr ""
+"Märkmed on privaatsed, välja arvatud juhul, kui lisate märkmetele jälgija.\n"
+"             (Kasulik koosoleku protokollimisel)."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimingute arv"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
+msgid "Number of errors"
+msgstr "Veateadete arv"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Tegutsemist nõudvate sõnumite arv"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Kohaletoimetamise veateatega sõnumite arv"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Lugemata sõnumite arv"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__user_id
+#: model:ir.model.fields,field_description:note.field_note_stage__user_id
+msgid "Owner"
+msgstr "Omanik"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_stage__user_id
+msgid "Owner of the note stage"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity__note_id
+msgid "Related Note"
+msgstr "Seotud märkus"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Remember..."
+msgstr "Jäta meeles…."
+
+#. module: note
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
+#: model:mail.activity.type,name:note.mail_activity_data_reminder
+msgid "Reminder"
+msgstr "Meeldetuletus"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
+msgid "Responsible User"
+msgstr "Vastutav kasutaja"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "SAVE"
+msgstr "SALVESTA"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__sequence
+#: model:ir.model.fields,field_description:note.field_note_stage__sequence
+msgid "Sequence"
+msgstr "Järjestus"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:0
+#, python-format
+msgid "Set date and time"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Show all records which has next action date is before today"
+msgstr ""
+"Näita kõiki andmeid, mille järgmise tegevuse kuupäev on enne tänast kuupäeva"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__stage_id
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Stage"
+msgstr "Etapp"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_stage__name
+msgid "Stage Name"
+msgstr "Etapi nimi"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
+msgid "Stage of Notes"
+msgstr "Märkmete etapp"
+
+#. module: note
+#: model:ir.actions.act_window,name:note.action_note_stage
+#: model:ir.ui.menu,name:note.menu_notes_stage
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
+msgid "Stages"
+msgstr "Etapid"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
+msgid "Stages of Notes"
+msgstr "Märkmete etapid"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__stage_ids
+msgid "Stages of Users"
+msgstr "Kasutajate etapid"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Tegevuspõhised staatused\n"
+"Üle aja: Tähtaeg on juba möödas\n"
+"Täna: Tegevuse tähtaeg on täna\n"
+"Planeeritud: Tulevased tegevused"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_tag__name
+msgid "Tag Name"
+msgstr "Sildi nimi"
+
+#. module: note
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Sildi nimi on juba olemas!"
+
+#. module: note
+#: model:ir.actions.act_window,name:note.note_tag_action
+#: model:ir.model.fields,field_description:note.field_note_note__tag_ids
+#: model:ir.ui.menu,name:note.notes_tag_menu
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_form
+#: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_form
+msgid "Tags"
+msgstr "Sildid"
+
+#. module: note
+#. openerp-web
+#: code:addons/note/static/src/js/systray_activity_menu.js:0
+#, python-format
+msgid "Today"
+msgstr "Täna"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "Today Activities"
+msgstr "Tänased tegevused"
+
+#. module: note
+#: model:note.stage,name:note.note_stage_03
+msgid "Todo"
+msgstr "Ülesanded"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Kirjel oleva erandtegevuse tüüp."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread
+msgid "Unread Messages"
+msgstr "Lugemata sõnumid"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Lugemata sõnumite loendur"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_stage__sequence
+msgid "Used to order the note stages"
+msgstr ""
+
+#. module: note
+#: model:ir.model,name:note.model_res_users
+msgid "Users"
+msgstr "Kasutajad"

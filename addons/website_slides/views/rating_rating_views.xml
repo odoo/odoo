@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="rating_rating_view_kanban_slide_channel" model="ir.ui.view">
+        <field name="name">rating.rating.view.kanban.slides</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <kanban create="false" class="o_slide_rating_kanban">
+                <field name="rating"/>
+                <field name="res_name"/>
+                <field name="feedback"/>
+                <field name="partner_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <t t-set="val_stars" t-value="record.rating.raw_value"/>
+                        <t t-set="val_integer" t-value="Math.floor(val_stars)"/>
+                        <t t-set="val_decimal" t-value="val_stars - val_integer"/>
+                        <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="d-flex flex-row">
+                                <div class="o_slide_rating_kanban_left mr-3">
+                                    <h1 class="o_slide_rating_value text-center text-primary" t-esc="val_stars"/>
+                                    <t t-foreach="_.range(0, val_integer)" t-as="num">
+                                        <i class="fa fa-star" aria-label="A star" role="img"></i>
+                                    </t>
+                                    <t t-if="val_decimal">
+                                        <i class="fa fa-star-half-o" aria-label="Half a star" role="img"></i>
+                                    </t>
+                                    <t t-foreach="_.range(0, empty_star)" t-as="num" role="img">
+                                        <i class="fa fa-star text-black-25" aria-label="A star"></i>
+                                    </t>
+                                </div>
+                                <div>
+                                    <div class="o_kanban_card_header">
+                                        <div class="o_kanban_card_header_title">
+                                            <span class="font-weight-bold"><field name="partner_id"/></span>
+                                        </div>
+                                    </div>
+                                    <div class="o_kanban_card_content mt0 d-flex flex-column">
+                                        <span>
+                                            <i class="fa fa-folder mr-2" aria-label="Open folder"></i>
+                                            <a type="object" name="action_open_rated_object" t-att-title="record.res_name.raw_value">
+                                                <field name="res_name" />
+                                            </a>
+                                        </span>
+                                        <span><i class="fa fa-clock-o mr-2" aria-label="Create date"/> <field name="create_date" /></span>
+                                        <div class="d-flex mt-2">
+                                            <span t-esc="record.feedback.raw_value"/>
+                                        </div>
+                                    </div>
+                                </div>
+                             </div>
+                         </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_search_slide_channel" model="ir.ui.view">
+        <field name="name">rating.rating.view.search.slides</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="inherit_id" ref="rating.rating_rating_view_search"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='resource']" position="after">
+                <filter string="Course" name="groupby_course" context="{'group_by': 'res_name'}"/>
+            </xpath>
+            <xpath expr="/search" position="inside">
+                <filter string="Creation Date" name="rating_last_30_days" date="create_date" default_period="last_30_days"/>
+                <separator/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_graph_slide_channel" model="ir.ui.view">
+        <field name="name">rating.rating.view.graph.slides</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="Rating Average" sample="1">
+                <field name="res_name"/>
+                <field name="rating" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="rating_rating_view_pivot_slide_channel" model="ir.ui.view">
+        <field name="name">rating.rating.view.pivot.slides</field>
+        <field name="model">rating.rating</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot sample="1">
+                <field name="res_name" type="row"/>
+                <field name="rating_text" type="col"/>
+                <field name="rating" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_slide_channel" model="ir.actions.act_window">
+        <field name="name">Rating</field>
+        <field name="res_model">rating.rating</field>
+        <field name="view_mode">kanban,tree,graph,pivot,form</field>
+        <field name="domain">[('consumed', '=', True), ('res_model', '=', 'slide.channel')]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="rating_rating_view_search_slide_channel"/>
+        <field name="view_id" ref="rating_rating_view_kanban_slide_channel"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There are no ratings for these courses at the moment
+            </p>
+        </field>
+    </record>
+
+    <record id="rating_rating_action_slide_channel_report" model="ir.actions.act_window">
+        <field name="name">Rating</field>
+        <field name="res_model">rating.rating</field>
+        <field name="domain">[('consumed', '=', True), ('res_model', '=', 'slide.channel')]</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="rating_rating_view_search_slide_channel"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                There are no ratings for these courses at the moment
+            </p>
+        </field>
+    </record>
+    <record id="rating_rating_action_slide_channel_report_view_graph" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="rating_rating_action_slide_channel_report"/>
+        <field name="sequence">1</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="rating_rating_view_graph_slide_channel"/>
+    </record>
+    <record id="rating_rating_action_slide_channel_report_view_pivot" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="rating_rating_action_slide_channel_report"/>
+        <field name="sequence">2</field>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="rating_rating_view_pivot_slide_channel"/>
+    </record>
+    <record id="rating_rating_action_slide_channel_report_view_tree" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="rating_rating_action_slide_channel_report"/>
+        <field name="sequence">3</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" eval="False"/>
+    </record>
+</odoo>

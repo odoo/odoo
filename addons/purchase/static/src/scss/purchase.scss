@@ -1,0 +1,54 @@
+.o_purchase_dashboard {
+    flex: 1 0 100%;
+    padding: 10px 10px 18px 10px;
+
+    background-color: $o-view-background-color;
+    position: relative;
+    max-width:100%;
+
+    .row {
+        margin-right: 0;
+        margin-left: 0;
+    }
+
+    .o_dashboard_action {
+        cursor: pointer;
+    }
+    
+    .table {
+        margin-bottom: 0;
+        table-layout: fixed;
+        border-spacing: 10px 0px;
+        border-collapse: separate;
+        font-size: 13px;
+
+        > thead, tbody {
+            & > tr > td {
+                text-align: center;
+                width: 25%;
+                height: 33px;
+                vertical-align: middle;
+                border-top: 1px solid $o-view-background-color;
+                background-color: $o-brand-lightsecondary;
+                
+                &.o_text{
+                    background-color: $o-view-background-color;
+                }
+
+                > a:hover {
+                    text-decoration: none;
+                }
+
+                &.o_main {
+                    background-color: $o-brand-primary;
+                    &:hover {
+                        background-color: darken($o-brand-primary, 10%);
+                    }
+                    > a {
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+}

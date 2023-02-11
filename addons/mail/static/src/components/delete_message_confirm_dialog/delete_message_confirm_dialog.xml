@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.DeleteMessageConfirmDialog" owl="1">
+        <Dialog contentClass="'o_DeleteMessageConfirmDialog'" title="title" t-on-dialog-closed="messageActionList and messageActionList.onDeleteConfirmDialogClosed" t-ref="dialog">
+            <t t-if="messageActionList">
+                <p>Are you sure you want to delete this message?</p>
+                <blockquote class="o_DeleteMessageConfirmDialog_blockquote">
+                    <Message messageViewLocalId="messageActionList.messageViewForDelete.localId"/>
+                </blockquote>
+                <small t-if="!messageActionList.message.originThread or messageActionList.message.originThread.model !== 'mail.channel'">Pay attention: The followers of this document who were notified by email will still be able to read the content of this message and reply to it.</small>
+                <t t-set-slot="buttons">
+                    <button class="btn btn-primary" t-on-click="messageActionList.onClickConfirmDelete">Delete</button>
+                    <button class="btn btn-secondary" t-on-click="dialogRef.comp._close()">Cancel</button>
+                </t>
+            </t>
+        </Dialog>
+    </t>
+</templates>

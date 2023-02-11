@@ -1,0 +1,61 @@
+.o_kanban_view.o_kanban_dashboard.o_account_kanban {
+
+    &.o_kanban_ungrouped .o_account_dashboard_header {
+        margin: (0 - $o-kanban-record-margin) ($o-kanban-record-margin - $o-horizontal-padding) $o-kanban-record-margin;
+    }
+
+    .o_account_dashboard_header {
+        flex: 1 0 100%;
+        flex-flow: column nowrap;
+        align-self: flex-start;
+        width: 100%;
+        height: auto; // cancel o_form_view height 100%, which hides the help tip message at the bottom of the screen
+        min-height: 0%; // cancel o_form_view min-height 100%, which hides the help tip message at the bottom of the screen
+        background-color: $o-view-background-color;
+
+        .o_form_statusbar {
+            padding-right: $o-horizontal-padding;
+        }
+
+        h4 {
+            font-size: $font-size-base;
+            font-weight: 500;
+        }
+
+        .fa-gift {
+            color: #eeeeee;
+            &:hover {
+                color: #555555;
+            }
+        }
+
+        .o_arrow_button.btn-secondary {
+            color: $text-muted;
+            text-transform: none;
+            font-weight: 500;
+
+            .o_account_dashboard_index {
+                color: gray('900');
+            }
+
+            &.o_action_done {
+                color: gray('900');
+                background-color: gray('200');
+
+                &:after {
+                    border-left-color: gray('200');
+                }
+
+                .fa-check {
+                    @extend .text-success;
+                }
+            }
+
+            &:last-of-type {
+                margin-left: $o-horizontal-padding;
+                padding-left: $o-horizontal-padding*.5;
+                border-left: 1px solid gray('300');
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="act_stock_return_picking" model="ir.actions.act_window">
+        <field name="name">Reverse Transfer</field>
+        <field name="res_model">stock.return.picking</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="view_stock_return_picking_form" model="ir.ui.view">
+        <field name="name">Return lines</field>
+        <field name="model">stock.return.picking</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="move_dest_exists" invisible="1"/>
+                <field name="picking_id" invisible="1" force_save="1"/>
+                <group attrs="{'invisible': [('move_dest_exists', '=', False)]}">
+                    <div class="oe_grey">
+                        <p>This picking appears to be chained with another operation. Later, if you receive the goods you are returning now, make sure to <b>reverse</b> the returned picking in order to avoid logistic rules to be applied again (which would create duplicated operations)</p>
+                    </div>
+                </group>
+                <group>
+                    <field name="product_return_moves" nolabel="1">
+                        <tree editable="top" create="0">
+                            <field name="product_id"  options="{'no_create': True, 'no_open': True}" force_save="1"/>
+                            <field name="quantity"/>
+                            <field name="uom_id" groups="uom.group_uom"/>
+                            <field name="move_id" invisible="1"/>
+                        </tree>
+                    </field>
+                </group>
+                <group>
+                    <field name="parent_location_id" invisible="1"/>
+                    <field name="original_location_id" invisible="1"/>
+                    <field name="location_id" options="{'no_create': True, 'no_open': True}" groups="stock.group_stock_multi_locations" required="1"/>
+                    <field name="company_id" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="create_returns" string="Return" type="object" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

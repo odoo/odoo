@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="account_invoice_send_wizard_form" model="ir.ui.view">
+            <field name="name">account.invoice.send.form</field>
+            <field name="model">account.invoice.send</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Invoice send &amp; Print">
+                    <div class="alert alert-warning" role="alert"
+                         attrs="{'invisible': [('move_types', '=', False)]}">
+                        You have selected the following document types at the same time:
+                        <field name="move_types"/>
+                    </div>
+                    <!-- truly invisible fields for control and options -->
+                    <field name="composition_mode" invisible="1"/>
+                    <field name="invoice_ids" invisible="1"/>
+                    <field name="email_from" invisible="1" />
+                    <field name="mail_server_id" invisible="1"/>
+                    <div name="option_print">
+                        <field name="is_print" />
+                        <b><label for="is_print"/></b>
+                        <div name="info_form" attrs="{'invisible': ['|', ('is_print', '=', False), ('composition_mode', '=', 'mass_mail')]}" class="text-center text-muted d-inline-block">
+                            Preview as a PDF
+                        </div>
+                    </div>
+                    <div name="option_email">
+                        <field name="is_email" />
+                        <b><label for="is_email"/></b>
+                    </div>
+                    <div class="text-left d-inline-block mr8" attrs="{'invisible': ['|', ('is_email','=', False), ('invoice_without_email', '=', False)]}">
+                        <field name="invoice_without_email" class="mr4"/>
+                    </div>
+                    <div name="mail_form"  attrs="{'invisible': [('is_email', '=', False)]}">
+                        <!-- visible wizard -->
+                        <div attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                            <group>
+                                <label for="partner_ids" string="Recipients" groups="base.group_user"/>
+                                <div groups="base.group_user">
+                                    <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                                        <strong>Email mass mailing</strong> on
+                                        <span>the selected records</span>
+                                    </span>
+                                    <span>Followers of the document and</span>
+                                    <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                        context="{'force_email':True, 'show_email':True}" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
+                                </div>
+                                <field name="subject" placeholder="Subject..." attrs="{'required': [('is_email', '=', True), ('composition_mode', '=', 'comment')]}"/>
+                            </group>
+                            <field name="body" class="oe-bordered-editor" options="{'style-inline': true}"/>
+                        </div>
+                        <group>
+                            <group attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                                <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}"/>
+                            </group>
+                            <group>
+                                <field name="template_id" options="{'no_create': True, 'no_edit': True}"
+                                    context="{'default_model': 'account.move'}"/>
+                            </group>
+                        </group>
+                    </div>
+
+                    <footer>
+                        <button string="Send &amp; Print"
+                            attrs="{'invisible': ['|', ('is_email', '=', False), ('is_print', '=', False)]}" data-hotkey="q"
+                            name="send_and_print_action" type="object" class="send_and_print btn-primary o_mail_send"/>
+                        <button string="Send" data-hotkey="q"
+                            attrs="{'invisible': ['|', ('is_print', '=', True), ('is_email', '=', False)]}"
+                            name="send_and_print_action" type="object" class="send btn-primary o_mail_send"/>
+                        <button string="Print" data-hotkey="q"
+                            attrs="{'invisible': ['|', ('is_print', '=', False), ('is_email', '=', True)]}"
+                            name="send_and_print_action" type="object" class="print btn-primary o_mail_send"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                        <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
+                            attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('is_email', '=', False)]}"
+                            class="pull-right btn-secondary" help="Save as a new template" data-hotkey="w" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="invoice_send" model="ir.actions.server">
+            <field name="name">Send &amp; print</field>
+            <field name="state">code</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_account_move"/>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="binding_view_types">list</field>
+            <field name="code">
+                if records:
+                    action = records.action_send_and_print()
+            </field>
+        </record>
+
+    </data>
+
+</odoo>

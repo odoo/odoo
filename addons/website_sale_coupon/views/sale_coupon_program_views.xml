@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem action="coupon.coupon_program_action_promo_program" id="menu_promotion_type_config" name="Promotion Programs" parent="website_sale.menu_catalog" groups="sales_team.group_sale_manager" sequence="50"/>
+    <menuitem id="menu_coupon_type_config" action="coupon.coupon_program_action_coupon_program" name="Coupon Programs" parent="website_sale.menu_catalog" groups="sales_team.group_sale_manager" sequence="51"/>
+
+    <record model="ir.ui.view" id="sale_coupon_program_view_form_common_website">
+        <field name="name">coupon.program.common.form</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon.coupon_program_view_form_common"/>
+        <field name="arch" type="xml">
+            <group name="validity" position="inside">
+                <label for="website_id" groups="website.group_multi_website"/>
+                <div>
+                    <field name="website_id" options="{'no_create': True}" groups="website.group_multi_website"/>
+                </div>
+            </group>
+        </field>
+    </record>
+
+    <record id="sale_coupon_program_view_tree_website" model="ir.ui.view">
+        <field name="name">coupon.program.tree</field>
+        <field name="model">coupon.program</field>
+        <field name="inherit_id" ref="coupon.coupon_program_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="promo_code" invisible="1"/>
+                <field name="website_id" groups="website.group_multi_website"/>
+                <button name="action_program_share" string="Share" type="object" icon="fa-share-alt" attrs="{'invisible': [('promo_code', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

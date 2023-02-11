@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <template id="export_efff_invoice" 
+                  inherit_id="account_edi_ubl.export_ubl_invoice"
+                  primary="True">
+            <xpath expr="//*[local-name()='BuyerReference']" position="replace"/>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.RainbowMan" owl="1">
+        <div class="o_reward" t-on-animationend="onAnimationEnd">
+            <svg class="o_reward_rainbow" viewBox="0 0 340 180">
+                <path d="M270,170a100,100,0,0,0-200,0" style="stroke:#FF9E80;"/>
+                <path d="M290,170a120,120,0,0,0-240,0" style="stroke:#FFE57F;"/>
+                <path d="M310,170a140,140,0,0,0-280,0" style="stroke:#80D8FF;"/>
+                <path d="M330,170a160,160,0,0,0-320,0" style="stroke:#c794ba;"/>
+            </svg>
+            <div class="o_reward_stars" t-foreach="[1, 2, 3, 4]" t-as="star">
+                <t t-call="web.RainbowMan.Star">
+                    <t t-set="class" t-value="star"/>
+                </t>
+            </div>
+            <div class="o_reward_face_group">
+                <svg style="display:none">
+                    <symbol id="thumb">
+                        <path d="M10,52 C6,51 3,48 3,44 C2,42 3,39 5,38 C3,36 2,34 2,32 C2,29 3,27 5,26 C3,24 2,21 2,19 C2,15 7,12 10,12 L23,12 C23,11 23,11 23,11 L23,10 C23,8 24,6 25,4 C27,2 29,2 31,2 C33,2 35,2 36,4 C38,5 39,7 39,10 L39,38 C39,41 37,45 35,47 C32,50 28,51 25,52 L10,52 L10,52 Z" fill="#FBFBFC"/>
+                        <polygon fill="#ECF1FF" points="25 11 25 51 5 52 5 12"/>
+                        <path d="M31,0 C28,0 26,1 24,3 C22,5 21,7 21,10 L10,10 C8,10 6,11 4,12 C2,14 1,16 1,19 C1,21 1,24 2,26 C1,27 1,29 1,32 C1,34 1,36 2,38 C1,40 0,42 1,45 C1,50 5,53 10,54 L25,54 C29,54 33,52 36,49 C39,46 41,42 41,38 L41,10 C41,4 36,3.38176876e-16 31,0 M31,4 C34,4 37,6 37,10 L37,38 C37,41 35,44 33,46 C31,48 28,49 25,50 L10,50 C7,49 5,47 5,44 C4,41 6,38 9,37 L9,37 C6,37 5,35 5,32 C5,28 6,26 9,26 L9,26 C6,26 5,22 5,19 C5,16 8,14 11,14 L23,14 C24,14 25,12 25,11 L25,10 C25,7 28,4 31,4" id="Shape" fill="#A1ACBA"/>
+                    </symbol>
+                </svg>
+                <span class="o_reward_face" t-attf-style="background-image:url({{props.imgUrl}});"/>
+
+                <svg class="o_reward_thumbup" viewBox="0 0 42 60">
+                    <use href="#thumb"/>
+                </svg>
+
+                <div class="o_reward_msg_container">
+                    <svg class="o_reward_thumb_right" viewBox="0 0 100 55">
+                        <use href="#thumb" transform="scale(-1, 1.2) rotate(-90) translate(-42,-60)"/>
+                    </svg>
+                    <div class="o_reward_msg">
+                        <div class="o_reward_msg_card">
+                            <div class="o_reward_msg_content">
+                                <t t-if="!props.Component">
+                                    <t t-if="props.messageIsHtml" t-raw="props.message" />
+                                    <t t-else="" t-esc="props.message" />
+                                </t>
+                                <t t-else="" t-component="props.Component" t-props="props.props"/>
+                            </div>
+                            <div class="o_reward_shadow_container">
+                                <div class="o_reward_shadow"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="web.RainbowMan.Star" owl="1">
+        <svg t-attf-class="star{{ star }}" width="35px" height="34px" viewBox="0 0 35 34">
+            <path fill="#fff" d="M33,15.9 C26.3557814,13.6951256 21.1575294,8.45974313 19,1.8 C19,1.24771525 18.5522847,0.8 18,0.8 C17.4477153,0.8 17,1.24771525 17,1.8 C14.6431206,8.69377078 9.02624222,13.9736364 2,15.9 C1.36487254,15.9 0.85,16.4148725 0.85,17.05 C0.85,17.6851275 1.36487254,18.2 2,18.2 C8.6215326,20.3844521 13.8155479,25.5784674 16,32.2 C16,32.7522847 16.4477153,33.2 17,33.2 C17.5522847,33.2 18,32.7522847 18,32.2 C20.3568794,25.3062292 25.9737578,20.0263636 33,18.1 C33.6351275,18.1 34.15,17.5851275 34.15,16.95 C34.15,16.3148725 33.6351275,15.8 33,15.8"></path>
+        </svg>
+    </t>
+</templates>

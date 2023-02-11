@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.point_of_sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="95"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Point of sale" string="Point of Sale" data-key="point_of_sale" groups="point_of_sale.group_pos_manager">
+                    <h2>Accounting</h2>
+                    <div class="row mt16 o_settings_container" name="taxes_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="default_sales_tax_setting"
+                            title="This tax is applied to any new product created in the catalog.">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Default Sales Tax" for="sale_tax_id"/>
+                                    <div class="text-muted">
+                                        Default sales tax for products
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
+                                    </div>
+                                </div>
+                                <div class="mt8">
+                                    <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            groups="account.group_account_readonly"
+                            title="This account is used as intermediary account when nothing is set in a payment method.">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Default Intermediary Account" for="sale_tax_id"/>
+                                    <div class="text-muted">
+                                        This account is used as intermediary account when nothing is set in a payment method.
+                                    </div>
+                                    <div class="content-group mt16">
+                                        <field name="account_default_pos_receivable_account_id" colspan="4" nolabel="1" domain="[('reconcile', '=', True), ('user_type_id.type', '=', 'receivable'), ('company_id', '=', company_id)]"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Pricing</h2>
+                    <div class="row mt16 o_settings_container" name="pricing_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="multiple_prices_setting">
+                            <div class="o_setting_left_pane">
+                                <field name="group_product_pricelist"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_product_pricelist"/>
+                                <div class="text-muted">
+                                    Set multiple prices per product, automated discounts, etc.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('group_product_pricelist' ,'=', False)]}">
+                                    <div class="mt16">
+                                        <field name="group_sale_pricelist" invisible="1"/>
+                                        <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
+                                    </div>
+                                    <div class="mt8">
+                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Manage promotion and coupon programs.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_coupon"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="pos-coupon">
+                                <label for="module_pos_coupon" string="Coupons &amp; Promotions"/>
+                                <div class="text-muted">
+                                    Manage promotion &amp; coupon programs
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="Manage gift card.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_gift_card"/>
+                            </div>
+                            <div class="o_setting_right_pane" id="pos-gift-card">
+                                <label for="module_pos_gift_card" string="Gift card"/>
+                                <div class="text-muted">
+                                    Manage gift card
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Payments</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_cash_rounding"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_cash_rounding"/>
+                                <a href="https://www.odoo.com/documentation/15.0/applications/sales/point_of_sale/shop/cash_rounding.html"
+                                    title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Define the smallest coinage of the currency used to pay by cash
+                                </div>
+                                <div class="mt8">
+                                    <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                            type="action" string="Cash Roundings" class="btn-link"
+                                            attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Payment Terminals</h2>
+                    <div class="row mt16 o_settings_container" id="o_settings_use_payment_terminals">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="adyen_payment_terminal_setting"
+                            title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_adyen"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_adyen" string="Adyen"/>
+                                <div class="text-muted">
+                                    Accept payments with an Adyen payment terminal
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="vantiv_payment_terminal_setting"
+                            title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_mercury"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_mercury" string="Vantiv (US &amp; Canada)"/>
+                                <a href="https://www.odoo.com/documentation/15.0/applications/sales/point_of_sale/payment/vantiv.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Accept payments with a Vantiv payment terminal
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('module_pos_mercury', '=', False)]}">
+                                    <div class="mt16" id="btn_use_pos_mercury">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method.">
+                            <div class="o_setting_left_pane">
+                                <field name="module_pos_six"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="module_pos_six" string="Six"/>
+                                <a href="https://www.odoo.com/documentation/15.0/applications/sales/point_of_sale/payment/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <div class="text-muted">
+                                    Accept payments with a Six payment terminal
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Inventory</h2>
+                    <div class="row mt16 o_settings_container" name="product_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="update_quantities_stock_setting">
+                            <div class="o_setting_right_pane">
+                                <div>
+                                    <label string="Inventory Management" for="update_stock_quantities"/>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                                    <div class="text-muted">
+                                        Update quantities in stock
+                                    </div>
+                                    <div class="content-group mt16 o_light_label">
+                                        <field name="update_stock_quantities" colspan="4" nolabel="1" widget="radio"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_pos_configuration" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'point_of_sale', 'bin_size': False}</field>
+    </record>
+
+    <menuitem id="menu_pos_global_settings"
+        name="Settings"
+        parent="menu_point_config_product"
+        sequence="0"
+        action="action_pos_configuration"
+        groups="base.group_system"/>
+</odoo>

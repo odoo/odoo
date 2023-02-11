@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.ComparisonMenu" owl="1">
+        <Dropdown class="o_comparison_menu btn-group" togglerClass="'btn btn-light'" t-on-dropdown-item-selected="onComparisonSelected">
+            <t t-set-slot="toggler">
+                <i class="small mr-1" t-att-class="icon"/>
+                <span class="o_dropdown_title">Comparison</span>
+            </t>
+            <t t-foreach="items" t-as="item" t-key="item.id">
+                <DropdownItem
+                    class="o_menu_item"
+                    t-att-class="{ selected: item.isActive }"
+                    checked="item.isActive"
+                    payload="{ itemId: item.id }"
+                    parentClosingMode="'none'"
+                    t-esc="item.description"
+                />
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

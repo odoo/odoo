@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.GraphView.Buttons" owl="1">
+        <div class="btn-group" role="toolbar" aria-label="Main actions" t-on-dropdown-item-selected="onMeasureSelected">
+            <t t-call="web.ReportViewMeasures">
+                <t t-set="measures" t-value="model.metaData.measures"/>
+                <t t-set="activeMeasures" t-value="[model.metaData.measure]"/>
+            </t>
+        </div>
+        <t t-if="props.displayGroupByMenu">
+            <div class="btn-group" role="toolbar" aria-label="Group By">
+                <GroupByMenu showCaretDown="true"/>
+            </div>
+        </t>
+        <div class="btn-group" role="toolbar" aria-label="Change graph">
+            <button class="btn btn-secondary fa fa-bar-chart-o o_graph_button" data-tooltip="Bar Chart" aria-label="Bar Chart" data-mode="bar"
+                t-on-click="onModeSelected('bar')"
+                t-att-class="{ active: model.metaData.mode === 'bar' }"
+            />
+            <button class="btn btn-secondary fa fa-area-chart o_graph_button" data-tooltip="Line Chart" aria-label="Line Chart" data-mode="line"
+                t-on-click="onModeSelected('line')"
+                t-att-class="{ active: model.metaData.mode === 'line' }"
+            />
+            <button class="btn btn-secondary fa fa-pie-chart o_graph_button" data-tooltip="Pie Chart" aria-label="Pie Chart" data-mode="pie"
+                t-on-click="onModeSelected('pie')"
+                t-att-class="{ active: model.metaData.mode === 'pie' }"
+            />
+        </div>
+        <div t-if="model.metaData.mode === 'bar'" class="btn-group" role="toolbar" aria-label="Change graph">
+            <button class="btn btn-secondary fa fa-database o_graph_button" data-tooltip="Stacked" aria-label="Stacked"
+                t-on-click="toggleStacked"
+                t-att-class="{ active: model.metaData.stacked }"
+            />
+        </div>
+        <div t-if="model.metaData.mode !== 'pie' and model.metaData.domains.length === 1" class="btn-group" role="toolbar" aria-label="Sort graph">
+            <button class="btn btn-secondary fa fa-sort-amount-desc o_graph_button" data-tooltip="Descending" aria-label="Descending"
+                t-on-click="toggleOrder('DESC')"
+                t-att-class="{ active: model.metaData.order === 'DESC' }"
+            />
+            <button class="btn btn-secondary fa fa-sort-amount-asc o_graph_button" data-tooltip="Ascending" aria-label="Ascending"
+                t-on-click="toggleOrder('ASC')"
+                t-att-class="{ active: model.metaData.order === 'ASC' }"
+            />
+        </div>
+    </t>
+
+    <t t-name="web.GraphView" owl="1">
+        <Layout viewType="'graph'" useSampleModel="model.useSampleModel">
+            <t t-set-slot="control-panel-bottom-left">
+                <t t-call="{{ constructor.buttonTemplate }}"/>
+            </t>
+            <t t-if="model.data">
+                <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
+                    <t t-set="noContentHelp" t-value="props.info.noContentHelp"/>
+                </t>
+                <Renderer
+                    class="o_renderer"
+                    model="model"
+                    t-att-class="{ o_sample_data_disabled: model.useSampleModel }"
+                    onGraphClicked="(domain) => onGraphClicked(domain)"
+                />
+            </t>
+            <t t-else="" t-call="web.NoContentHelper">
+                <t t-set="title">Invalid data</t>
+                <t t-set="description">Pie chart cannot mix positive and negative numbers. Try to change your domain to only display positive results</t>
+            </t>
+        </Layout>
+    </t>
+
+</templates>

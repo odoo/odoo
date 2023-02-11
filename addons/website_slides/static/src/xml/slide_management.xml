@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="slides.slide.archive">
+        <div>
+            <p>Are you sure you want to archive this slide ?</p>
+        </div>
+    </t>
+
+    <t t-name="slides.category.delete">
+        <div>
+            <p>Are you sure you want to delete this category ?</p>
+        </div>
+    </t>
+
+     <t t-name="slides.category.add">
+        <div>
+            <form action="/slides/category/add" method="POST" id="slide_category_add_form">
+                <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                <input type="hidden" name="channel_id" t-att-value="widget.channelId"/>
+                <div class="form-group row">
+                    <label for="section_name" class="col-sm-3 col-form-label">Section name</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="name" id="section_name" required="required" placeholder="e.g. Introduction"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </t>
+
+</templates>

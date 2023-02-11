@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.ui.view" id="view_utm_campaign_view_search">
+        <field name="name">utm.campaign.view.search</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <search string="UTM Campaigns">
+                <field name="name" string="Campaigns"/>
+                <field name="tag_ids"/>
+                <field name="user_id"/>
+                <field name="is_auto_campaign"/>
+                <group expand="0" string="Group By">
+                    <filter string="Stage" name="group_stage_id"
+                        context="{'group_by': 'stage_id'}"/>
+                    <filter string="Responsible" name="group_user_id"
+                        context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_form">
+        <field name="name">utm.campaign.view.form</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <form string="UTM Campaign">
+                <header>
+                    <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box d-flex justify-content-end" name="button_box">
+                    </div>
+                    <group id="top-group">
+                        <field class="text-break" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                        <field name="user_id" domain="[('share', '=', False)]"/>
+                        <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    </group>
+                    <notebook>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_tree">
+        <field name="name">utm.campaign.view.tree</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <tree string="UTM Campaigns" multi_edit="1" sample="1">
+                <field name="name" readonly="1"/>
+                <field name="user_id"/>
+                <field name="stage_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="utm_campaign_view_form_quick_create" model="ir.ui.view">
+        <field name="name">utm.campaign.view.form.quick.create</field>
+        <field name="model">utm.campaign</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field class="o_text_overflow" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                    <field name="user_id" domain="[('share', '=', False)]"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_campaign_view_kanban">
+        <field name="name">utm.campaign.view.kanban</field>
+        <field name="model">utm.campaign</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by='stage_id' class="o_utm_kanban" on_create="quick_create" quick_create_view="utm.utm_campaign_view_form_quick_create" examples="utm_campaign" sample="1">
+                <field name='color'/>
+                <field name='user_id'/>
+                <field name="stage_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="o_dropdown_kanban dropdown">
+                                <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                    <span class="fa fa-ellipsis-v"/>
+                                </a>
+                                <div class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable">
+                                        <a role="menuitem" type="edit" class="dropdown-item">Edit</a>
+                                    </t>
+                                    <t t-if="widget.deletable">
+                                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                                    </t>
+                                    <div role="separator" class="dropdown-divider"/>
+                                    <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                            </div>
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <ul id="o_utm_actions" class="list-group list-group-horizontal"/>
+                                </div>
+                                <div class="o_kanban_record_bottom h5 mt-2 mb-0">
+                                    <div id="utm_statistics" class="d-flex flex-grow-1 text-600 mt-1"/>
+                                    <div class="oe_kanban_bottom_right">
+                                         <field name="user_id" widget="many2one_avatar_user"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!--  CAMPAIGN TAGS !-->
+    <record id="utm_tag_view_tree" model="ir.ui.view">
+        <field name="name">utm.tag.view.tree</field>
+        <field name="model">utm.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Campaign Tags" editable="top">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_view_utm_tag" model="ir.actions.act_window">
+        <field name="name">Campaign Tags</field>
+        <field name="res_model">utm.tag</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Tag
+            </p><p>
+                Assign tags to your campaigns to organize, filter and track them.
+            </p>
+        </field>
+    </record>
+
+    <!--  CAMPAIGN STAGE !-->
+    <record model="ir.ui.view" id="utm_stage_view_search">
+        <field name="name">utm.stage.view.search</field>
+        <field name="model">utm.stage</field>
+        <field name="arch" type="xml">
+            <search string="Stages">
+                <field name="name"/>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="utm_stage_view_tree">
+        <field name="name">utm.stage.view.tree</field>
+        <field name="model">utm.stage</field>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <tree string="Stages" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_view_utm_stage" model="ir.actions.act_window">
+        <field name="name">UTM Stages</field>
+        <field name="res_model">utm.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            Create a stage for your campaigns
+            </p><p>
+            Stages allow you to organize your workflow  (e.g. : plan, design, in progress,  done, …).
+            </p>
+        </field>
+    </record>
+</odoo>

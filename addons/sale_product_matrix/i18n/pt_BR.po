@@ -1,0 +1,120 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Martin Trigaux, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pt_BR\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+msgid "Add product mode"
+msgstr "Adicione modo do produto"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching         product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"Configurador: escolha valores de atributos para adicionar à variante correspondente do produto para o pedido.\n"
+"Grade: adicione várias variantes de uma vez a partir da grade de valores de atributos"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Modelo da Grade de Produto"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Atualizar Grade"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
+msgid ""
+"If set, the matrix of the products configurable by matrix will be shown on "
+"the report of the order."
+msgstr ""
+"Se configurada, a matriz dos produtos configuráveis ​​pela matriz será "
+"mostrada no relatório do pedido."
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "Matriz de armazenamento local"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "Entrada de Grade de Pedido"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "Imprimir Grades de Variantes"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "Configurador de Produto"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product Template"
+msgstr "Modelo de Produto"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Pedido de venda"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Seleção de Variante de Vendas"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Technical field for product_matrix functionalities."
+msgstr "Campo técnico para funcionalidades product_matrix."
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO. \n"
+"If not, represents the matrix to open."
+msgstr ""
+"Armazenamento técnico local da grade.\n"
+"Se grid_update, será carregado no Pedido.\n"
+"Caso contrário, representa a matriz a ser aberta."
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
+msgid "Whether the grid field contains a new matrix to apply or not."
+msgstr "Se o campo da grade contém uma nova matriz para aplicar ou não."
+
+#. module: sale_product_matrix
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+#, python-format
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""
+"Você não pode alterar a quantidade de um produto presente em várias linhas "
+"de venda."

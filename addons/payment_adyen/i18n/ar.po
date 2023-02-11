@@ -1,0 +1,246 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_adyen
+# 
+# Translators:
+# Malaz Abuidris <msea@odoo.com>, 2022
+# Martin Trigaux, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-11-10 15:12+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_api_key
+msgid "API Key"
+msgstr "مفتاح الواجهة البرمجية للتطبيق "
+
+#. module: payment_adyen
+#: model:account.payment.method,name:payment_adyen.payment_method_adyen
+#: model:ir.model.fields.selection,name:payment_adyen.selection__payment_acquirer__provider__adyen
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"An error occurred during the processing of your payment. Please try again."
+msgstr "حدث خطأ أثناء معالجة هذا الدفع. يرجى المحاولة مجدداً. "
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "An error occurred when displayed this payment form."
+msgstr "حدث خطأ أثناء عرض استمارة الدفع هذه. "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
+msgid "Checkout API URL"
+msgstr "رابط URL للواجهة البرمجية للدفع والخروج "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "Client Key"
+msgstr "مفتاح العميل "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "تعذر إنشاء الاتصال بالواجهة البرمجية للتطبيق. "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_hmac_key
+msgid "HMAC Key"
+msgstr "مفتاح HMAC "
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Incorrect Payment Details"
+msgstr "تفاصيل الدفع غير صحيحة "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "Merchant Account"
+msgstr "حساب التاجر"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "لم يتم العثور على معاملة تطابق المرجع %s. "
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "بوابة الدفع "
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_account_payment_method
+msgid "Payment Methods"
+msgstr "طرق الدفع "
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_token
+msgid "Payment Token"
+msgstr "رمز الدفع "
+
+#. module: payment_adyen
+#: model:ir.model,name:payment_adyen.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "معاملة الدفع "
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Please verify your payment details."
+msgstr "يرجى تأكيد تفاصيل الدفع الخاصة بك. "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "المزود"
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid payment state: %s"
+msgstr "البيانات المستلمة مع حالة دفع غير صالحة: %s "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing merchant reference"
+msgstr "البيانات المستلمة دون مرجع التاجر "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing payment state."
+msgstr "البيانات المستلمة دون حالة الدفع. "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Received refund data with missing transaction values"
+msgstr "بيانات استرداد الأموال المستلمة دون قيم المعاملة "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/controllers/main.py:0
+#, python-format
+msgid "Received tampered payment request data."
+msgstr "بيانات طلب الدفع المستلمة المتلاعب بها. "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
+msgid "Recurring API URL"
+msgstr "رابط URL المتكرر للواجهة البرمجية للتطبيق "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_token.py:0
+#, python-format
+msgid "Saved payment methods cannot be restored once they have been deleted."
+msgstr "لا يمكن استعادة طرق الدفع المحفوظة بمجرد أن يتم حذفها. "
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "Server Error"
+msgstr "خطأ في الخادم "
+
+#. module: payment_adyen
+#: model:ir.model.fields,field_description:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "Shopper Reference"
+msgstr "مرجع المتسوق "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_api_key
+msgid "The API key of the webservice user"
+msgstr "مفتاح الواجهة البرمجية للتطبيق لمستخدم خدمة الويب "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_hmac_key
+msgid "The HMAC key of the webhook"
+msgstr "مفتاح HMAC لـ webhook "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "مقدم خدمة الدفع لاستخدامه مع بوابة الدفع هذه "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_checkout_api_url
+msgid "The base URL for the Checkout API endpoints"
+msgstr "رابط URL الأساسي للنقاط النهائية لـAPI الخروج والدفع "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_recurring_api_url
+msgid "The base URL for the Recurring API endpoints"
+msgstr "رابط URL الأساسي للنقاط النهائية المتكررة لـAPI "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_client_key
+msgid "The client key of the webservice user"
+msgstr "مفتاح الالعميل لمستخدم خدمة الويب "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_acquirer__adyen_merchant_account
+msgid "The code of the merchant account to use with this acquirer"
+msgstr "كود حساب التاجر لاستخدامه مع بوابة الدفع هذه "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_acquirer.py:0
+#, python-format
+msgid "The communication with the API failed."
+msgstr "فشل الاتصال مع الواجهة البرمجية للتطبيق. "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "المعاملة غير مرتبطة برمز. "
+
+#. module: payment_adyen
+#: model:ir.model.fields,help:payment_adyen.field_payment_token__adyen_shopper_reference
+msgid "The unique reference of the partner owning this token"
+msgstr "المرجع الفريد للشريك الذي يملك هذا الرمز "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/utils.py:0
+#, python-format
+msgid "Unrecognized field %s in street format."
+msgstr "حقل مجهول %s في تنسيق العنوان."
+
+#. module: payment_adyen
+#. openerp-web
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#: code:addons/payment_adyen/static/src/js/payment_form.js:0
+#, python-format
+msgid "We are not able to process your payment."
+msgstr "لم نتمكن من معالجة الدفع الخاص بك. "
+
+#. module: payment_adyen
+#: code:addons/payment_adyen/models/payment_transaction.py:0
+#, python-format
+msgid "Your payment was refused. Please try again."
+msgstr "لقد تم رفض الدفع. يرجى المحاولة مجدداً. "

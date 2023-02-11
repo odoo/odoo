@@ -1,0 +1,90 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_discount
+# 
+# Translators:
+# Martin Trigaux, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:49+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Martin Trigaux, 2021\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
+msgid "Allow the cashier to give discounts on the whole order."
+msgstr ""
+"Permettre au caissier de faire une ristourne sur la totalité de la commande."
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
+#, python-format
+msgid "Discount"
+msgstr "Remise"
+
+#. module: pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount %"
+msgstr "Remise %"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#, python-format
+msgid "Discount Percentage"
+msgstr "Pourcentage de remise"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
+#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+msgid "Discount Product"
+msgstr "Article de remise"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No discount product found"
+msgstr "Aucun article de remise trouvé"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
+msgid "Order Discounts"
+msgstr "Remises de la commande"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "Paramétrage du point de vente"
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
+msgid "The default discount percentage"
+msgstr "Pourcentage de remise par défaut"
+
+#. module: pos_discount
+#. openerp-web
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid ""
+"The discount product seems misconfigured. Make sure it is flagged as 'Can be"
+" Sold' and 'Available in Point of Sale'."
+msgstr ""
+"L'article de remise semble mal configuré. Vérifiez qu'il est défini en tant "
+"qu'article \"Peut être vendu\" et \"Disponible pour le Point de Vente\"."
+
+#. module: pos_discount
+#: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
+msgid "The product used to model the discount."
+msgstr "Le produit utilisé pour modéliser la réduction."

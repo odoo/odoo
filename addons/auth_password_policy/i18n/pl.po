@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+# 
+# Translators:
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2021
+# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2021
+# Maksym <ms@myodoo.pl>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:20+0000\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2021\n"
+"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: pl\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ustawienia konfiguracji"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Minimalna długość hasła"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"Minimalna liczba znaków jaką musi posiadać hasło, ustaw 0 aby wyłączyć"
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "Hasła muszą posiadać przynajmniej %dznaków, obecne ma %d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid ""
+"Required: %s.\n"
+"\n"
+"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+msgstr ""
+"Wymagane: %s.\n"
+"\n"
+"Podpowiedź: zwiększenie długości, użycie wielu słów i używanie znaków innych niż litery zwiększy bezpieczeństwo."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "Users"
+msgstr "Użytkownicy"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d character classes"
+msgstr "przynajmniej %dtypów znaków"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d characters"
+msgstr "przynajmniej %dznaków"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d words"
+msgstr "przynajmniej %dsłów"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "no requirements"
+msgstr "brak wymagań"

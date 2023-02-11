@@ -1,0 +1,46 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChannelInvitationForm_selectablePartnerAvatarContainer {
+    width: 32px;
+    height: 32px;
+}
+
+.o_ChannelInvitationForm_selectablePartnerAvatar {
+    object-fit: cover;
+}
+
+.o_ChannelInvitationForm_selectablePartnerAvatarNameSeparator {
+    min-width: map-get($spacers, 2);
+}
+
+.o_ChannelInvitationForm_selectablePartnerNameSelectionSeparator {
+    min-width: map-get($spacers, 2);
+}
+
+.o_ChannelInvitationForm_selectablePartnerImStatusIcon {
+    @include o-position-absolute($bottom: 0, $right: 0);
+
+    &:not(.o_ChannelInvitationForm_selectablePartnerImStatusIcon-mobile) {
+        font-size: x-small;
+    }
+}
+
+.o_ChannelInvitationForm_selectablePartnerName {
+    min-width: 0;
+}
+
+.o_ChannelInvitationForm_selectedPartners {
+    max-height: 100px;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChannelInvitationForm_selectablePartner {
+    &:hover {
+        background-color: gray('100');
+    }
+}

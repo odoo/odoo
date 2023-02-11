@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//*[@name='failureIcon']" position="replace">
+            <t t-if="messageView.message.message_type === 'snailmail'">
+                <i class="o_Message_notificationIcon fa fa-paper-plane"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//*[@name='notificationIcon']" position="replace">
+            <t t-if="messageView.message.message_type === 'snailmail'">
+                <i class="o_Message_notificationIcon fa fa-paper-plane"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+
+        <xpath expr="//*[@name='rootCondition']" position="inside">
+            <t t-if="snailmailState.hasDialog">
+                <SnailmailErrorDialog messageLocalId="messageView.message.localId" t-on-dialog-closed="_onDialogClosedSnailmailError"/>
+            </t>
+        </xpath>
+
+        <!--
+            It was decided that the information displayed for snailmail messages
+            has to be different than for standard messages, see task-1907998.
+        -->
+        <xpath expr="//NotificationPopover" position="replace">
+            <t t-if="messageView.message.message_type === 'snailmail'">
+                <SnailmailNotificationPopover messageLocalId="messageView.message.localId"/>
+            </t>
+            <t t-else="">$0</t>
+        </xpath>
+    </t>
+
+</templates>

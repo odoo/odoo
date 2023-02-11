@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_order_form_inherit_sale_stock" model="ir.ui.view">
+            <field name="name">sale.order.form.sale.dropshipping</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(4, ref('purchase.group_purchase_user'))]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page/field[@name='order_line']/form//field[@name='product_updatable']" position="after">
+                    <field name="purchase_line_count" invisible="1"/>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/form//field[@name='product_id']" position="attributes">
+                   <attribute name="attrs">{'readonly': ['|', ('product_updatable', '=', False), ('purchase_line_count', '&gt;', 0)], 'required': [('display_type', '=', False)],}</attribute>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_updatable']" position="after">
+                    <field name="purchase_line_count" invisible="1"/>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|', ('product_updatable', '=', False), ('purchase_line_count', '&gt;', 0)], 'required': [('display_type', '=', False)],}</attribute>
+                </xpath>
+                <xpath expr="//button[@name='action_view_delivery']" position="before">
+                    <button type="object"
+                        name="action_view_dropship"
+                        class="oe_stat_button"
+                        icon="fa-truck"
+                        attrs="{'invisible': [('dropship_picking_count', '=', 0)]}" groups="stock.group_stock_user">
+                        <field name="dropship_picking_count" widget="statinfo" string="Dropship"/>
+                    </button>
+                </xpath>
+           </field>
+        </record>
+    </data>
+</odoo>

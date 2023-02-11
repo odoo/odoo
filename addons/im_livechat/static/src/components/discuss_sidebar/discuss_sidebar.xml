@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
+        <xpath expr="//DiscussSidebarCategory[contains(@class, 'o_DiscussSidebar_categoryChat')]" position="before">
+            <t t-set="categoryLivechat" t-value="messaging.discuss.categoryLivechat"/>
+            <t t-if="categoryLivechat and categoryLivechat.categoryItems.length">
+                <DiscussSidebarCategory
+                    class="o_DiscussSidebar_category o_DiscussSidebar_categoryLivechat"
+                    categoryLocalId="categoryLivechat.localId"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

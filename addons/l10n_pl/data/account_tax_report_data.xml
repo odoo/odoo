@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.pl"/>
+    </record>
+
+    <record id="account_tax_report_line_razem_c" model="account.tax.report.line">
+        <field name="name">Podstawa - Razem C</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="formula">PLTAXC_01_10 + PLTAXC_02_11 + PLTAXC_03_13 + PLTAXC_04_15 + PLTAXC_05_17 + PLTAXC_06_19 + PLTAXC_07_21 + PLTAXC_08_22 + PLTAXC_09_23 + PLTAXC_10_25 + PLTAXC_11_27 + PLTAXC_12_31</field>
+    </record>
+
+    <record id="account_tax_report_line_kraj_zwolnione" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, kraj, zwolnione</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, kraj, zwolnione</field>
+        <field name="code">PLTAXC_01_10</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_poza_kraj" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, poza kraj</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, poza kraj</field>
+        <field name="code">PLTAXC_02_11</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_uslugi_art_100_1_4" model="account.tax.report.line">
+        <field name="name">Podstawa - W tym usługi art 100.1.4</field>
+        <field name="tag_name">Podstawa - W tym usługi art 100.1.4</field>
+        <field name="code">PLTAXC_02a_12</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_poza_kraj"/>
+    </record>
+
+    <record id="account_tax_report_line_uslugi_kraj_0" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 0%</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, kraj, 0%</field>
+        <field name="code">PLTAXC_03_13</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_towary_art_129" model="account.tax.report.line">
+        <field name="name">Podstawa - W tym towary art 129</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_uslugi_kraj_0"/>
+    </record>
+
+    <record id="account_tax_report_line_kraj_3_lub_5" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+        <field name="code">PLTAXC_04_15</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_kraj_7_lub_8" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+        <field name="code">PLTAXC_05_17</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_kraj_22_lub_23" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+        <field name="tag_name">Podstawa - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+        <field name="code">PLTAXC_06_19</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_dostawa_towarow" model="account.tax.report.line">
+        <field name="name">Podstawa - Wew-wspól dostawa towarów</field>
+        <field name="tag_name">Podstawa - Wew-wspól dostawa towarów</field>
+        <field name="code">PLTAXC_07_21</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_eksport_towarow" model="account.tax.report.line">
+        <field name="name">Podstawa - Eksport towarów</field>
+        <field name="tag_name">Podstawa - Eksport towarów</field>
+        <field name="code">PLTAXC_08_22</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_nabycie_towarow" model="account.tax.report.line">
+        <field name="name">Podstawa - Wewn-wspól. nabycie towarów</field>
+        <field name="tag_name">Podstawa - Wewn-wspól. nabycie towarów</field>
+        <field name="code">PLTAXC_09_23</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_art_33a" model="account.tax.report.line">
+        <field name="name">Podstawa - Import towarów art. 33a</field>
+        <field name="tag_name">Podstawa - Import towarów art. 33a</field>
+        <field name="code">PLTAXC_10_25</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_import_uslug" model="account.tax.report.line">
+        <field name="name">Podstawa - Import usług</field>
+        <field name="tag_name">Podstawa - Import usług</field>
+        <field name="code">PLTAXC_11_27</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="11"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_art_28b" model="account.tax.report.line">
+        <field name="name">Podstawa - W tym nabycie wg art 28b</field>
+        <field name="tag_name">Podstawa - W tym nabycie wg art 28b</field>
+        <field name="code">PLTAXC_11a_29</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_import_uslug"/>
+    </record>
+
+    <record id="account_tax_report_line_podatnik_nabywca" model="account.tax.report.line">
+        <field name="name">Podstawa - Dostawa towarów, podatnik nabywca</field>
+        <field name="tag_name">Podstawa - Dostawa towarów, podatnik nabywca</field>
+        <field name="code">PLTAXC_12_31</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="12"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_razem_d" model="account.tax.report.line">
+        <field name="name">Podstawa - Razem D</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="account_tax_report_line_uslug_s_trwale" model="account.tax.report.line">
+        <field name="name">Podstawa - Nabycie towarów i usług ś.trwałe</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_uslug_pozostalych" model="account.tax.report.line">
+        <field name="name">Podstawa - Nabycie towarów i usług pozostałych</field>
+        <field name="tag_name">Podstawa - Nabycie towarów i usług pozostałych</field>
+        <field name="code">PLTAXD_02_41a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_do_przeniesienia" model="account.tax.report.line">
+        <field name="name">Podatek - Do przeniesienia</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="formula">PLTAXC - PLTAXD</field>
+    </record>
+
+    <record id="account_tax_report_line_nad_naleznym" model="account.tax.report.line">
+        <field name="name">Podatek - Nadwyżka naliczonego nad należnym</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="formula">PLTAXC - PLTAXD</field>
+        <field name="parent_id" ref="account_tax_report_line_do_przeniesienia"/>
+    </record>
+
+    <record id="account_tax_report_line_do_US" model="account.tax.report.line">
+        <field name="name">Podatek - Do wpłaty do US</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="formula">PLTAXC - PLTAXD</field>
+        <field name="parent_id" ref="account_tax_report_line_nad_naleznym"/>
+    </record>
+
+    <record id="account_tax_report_line_kasy_rejestrujace" model="account.tax.report.line">
+        <field name="name">Podatek - Wydatek na kasy rejestrujące</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_do_US"/>
+    </record>
+
+    <record id="account_tax_report_line_zaniechaniem_poboru" model="account.tax.report.line">
+        <field name="name">Podatek - Objęty zaniechaniem poboru</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_do_US"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_razem_c" model="account.tax.report.line">
+        <field name="name">Podatek - Razem C</field>
+        <field name="code">PLTAXC</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="formula">PLTAXC_04_16 + PLTAXC_05_18 + PLTAXC_06_20 + PLTAXC_09_24 + PLTAXC_10_26 + PLTAXC_11_28 + PLTAXC_12_32</field>
+        <field name="parent_id" ref="account_tax_report_line_do_US"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_kraj_3_lub_5" model="account.tax.report.line">
+        <field name="name">Podatek - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+        <field name="tag_name">Podatek - Dostawa towarów/usług, kraj, 3% lub 5%</field>
+        <field name="code">PLTAXC_04_16</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_kraj_7_lub_8" model="account.tax.report.line">
+        <field name="name">Podatek - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+        <field name="tag_name">Podatek - Dostawa towarów/usług, kraj, 7% lub 8%</field>
+        <field name="code">PLTAXC_05_18</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_kraj_22_lub_23" model="account.tax.report.line">
+        <field name="name">Podatek - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+        <field name="tag_name">Podatek - Dostawa towarów/usług, kraj, 22% lub 23%</field>
+        <field name="code">PLTAXC_06_20</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_nabycie_towarow" model="account.tax.report.line">
+        <field name="name">Podatek - Wewn-wspól. nabycie towarów</field>
+        <field name="tag_name">Podatek - Wewn-wspól. nabycie towarów</field>
+        <field name="code">PLTAXC_09_24</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_art_33a" model="account.tax.report.line">
+        <field name="name">Podatek - Import towarów art. 33a</field>
+        <field name="tag_name">Podatek - Import towarów art. 33a</field>
+        <field name="code">PLTAXC_10_26</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_import_uslug" model="account.tax.report.line">
+        <field name="name">Podatek - Import usług</field>
+        <field name="tag_name">Podatek - Import usług</field>
+        <field name="code">PLTAXC_11_28</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_art_28b" model="account.tax.report.line">
+        <field name="name">Podatek - W tym nabycie wg art 28b</field>
+        <field name="tag_name">Podatek - W tym nabycie wg art 28b</field>
+        <field name="code">PLTAXC_11a_30</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_import_uslug"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_podatnik_nabywca" model="account.tax.report.line">
+        <field name="name">Podatek - Dostawa towarów, podatnik nabywca</field>
+        <field name="tag_name">Podatek - Dostawa towarów, podatnik nabywca</field>
+        <field name="code">PLTAXC_12_32</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_art_14_5" model="account.tax.report.line">
+        <field name="name">Podatek - Ze spisu z natury art 14.5</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="8"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_transp_termin" model="account.tax.report.line">
+        <field name="name">Podatek - Wew.wspól. nabycie środk. transp. termin</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="9"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_c"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_razem_d" model="account.tax.report.line">
+        <field name="name">Podatek - Razem D</field>
+        <field name="code">PLTAXD</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_do_US"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_deklaracji" model="account.tax.report.line">
+        <field name="name">Podatek - Nadwyżka z poprzedniej deklaracji</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_pl_03_01_01_04_02" model="account.tax.report.line">
+        <field name="name">Podatek - Naliczony ze spisu z natury, art.113</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_s_trwale" model="account.tax.report.line">
+        <field name="name">Podatek - Nabycie towarów i usług ś.trwałe</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_uslug_pozostalych" model="account.tax.report.line">
+        <field name="name">Podatek - Nabycie towarów i usług pozostałych</field>
+        <field name="tag_name">Podatek - Nabycie towarów i usług pozostałych</field>
+        <field name="code">PLTAXD_02_42</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_s_trwalych" model="account.tax.report.line">
+        <field name="name">Podatek - Korekta naliczonego od nabycia ś.trwałych</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_pozostalych_nabyc" model="account.tax.report.line">
+        <field name="name">Podatek - Korekta naliczonego od pozostałych nabyć</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_razem_d"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_okresie" model="account.tax.report.line">
+        <field name="name">Podatek - Wydatek na kasy do zwrotu w tym okresie</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_nad_naleznym"/>
+    </record>
+
+    <record id="account_tax_report_line_podatek_do_zwrotu" model="account.tax.report.line">
+        <field name="name">Podatek - Do zwrotu</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_do_przeniesienia"/>
+    </record>
+
+    <record id="account_tax_report_line_do_zwrotu_25_dni" model="account.tax.report.line">
+        <field name="name">Podatek - Do zwrotu 25 dni</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_do_zwrotu"/>
+    </record>
+
+    <record id="account_tax_report_line_do_zwrotu_60_dni" model="account.tax.report.line">
+        <field name="name">Podatek - Do zwrotu 60 dni</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_do_zwrotu"/>
+    </record>
+
+    <record id="account_tax_report_line_do_zwrotu_180_dni" model="account.tax.report.line">
+        <field name="name">Podatek - Do zwrotu 180 dni</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_podatek_do_zwrotu"/>
+    </record>
+
+</odoo>

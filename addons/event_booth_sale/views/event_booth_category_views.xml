@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_category_view_form" model="ir.ui.view">
+        <field name="name">event.booth.category.view.form.inherit.sale</field>
+        <field name="model">event.booth.category</field>
+        <field name="inherit_id" ref="event_booth.event_booth_category_view_form"/>
+        <field name="priority" eval="1"/>
+        <field name="arch" type="xml">
+            <group name="main" position="inside">
+                <group string="Booth Details">
+                    <field name="currency_id" invisible="1"/>
+                    <field name="product_id" context="{'default_detailed_type': 'event_booth', 'default_detailed_type': 'service'}"/>
+                    <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <record id="event_booth_category_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.category.view.tree.inherit.sale</field>
+        <field name="model">event.booth.category</field>
+        <field name="inherit_id" ref="event_booth.event_booth_category_view_tree"/>
+        <field name="priority">3</field>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="product_id"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </field>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,157 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_sms
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Ivan Yelizariev // IEL (ellui) <yelizariev@itpp.dev>, 2021
+# Sergey Vilizhanin, 2021
+# ILMIR <karamov@it-projects.info>, 2021
+# Irina Fedulova <istartlin@gmail.com>, 2021
+# Диляра Дельтаева <dilya.kz93@gmail.com>, 2021
+# Evgeniia Kotova, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Evgeniia Kotova, 2022\n"
+"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ru\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#. module: stock_sms
+#: model:sms.template,body:stock_sms.sms_template_data_stock_delivery
+msgid ""
+"\n"
+"                {{ (object.company_id.name + ': We are glad to inform you that your order n° ' + object.origin + ' has been shipped.' if object.origin else object.company_id.name + ': We are glad to inform you that your order has been shipped.') + (' Your tracking reference is ' + (object.carrier_tracking_ref) + '.' if hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref else '') }}\n"
+"            "
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Cancel"
+msgstr "Отмена"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_company
+msgid "Companies"
+msgstr "Компании"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_res_config_settings
+msgid "Config Settings"
+msgstr "Конфигурационные настройки"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Confirm"
+msgstr "Подтвердить"
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_confirm_stock_sms
+msgid "Confirm Stock SMS"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
+msgid "Created by"
+msgstr "Создан"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_date
+msgid "Created on"
+msgstr "Создан"
+
+#. module: stock_sms
+#: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
+msgid "Delivery: Send by SMS Text Message"
+msgstr ""
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid "Disable SMS"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
+msgid "Display Name"
+msgstr "Отображаемое имя"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
+msgid "Has Received Warning Stock Sms"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
+msgid "ID"
+msgstr "Идентификатор"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
+msgid "Last Modified on"
+msgstr "Последнее изменение"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_uid
+msgid "Last Updated by"
+msgstr "Последний раз обновил"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__write_date
+msgid "Last Updated on"
+msgstr "Последнее обновление"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__pick_ids
+msgid "Pick"
+msgstr "Комплектация"
+
+#. module: stock_sms
+#: code:addons/stock_sms/models/stock_picking.py:0
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+#, python-format
+msgid "SMS"
+msgstr "СМС"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_move_sms_validation
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Confirmation"
+msgstr "SMS-подтверждение"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+#: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
+msgid "SMS Template"
+msgstr "Шаблон SMS"
+
+#. module: stock_sms
+#: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
+msgid "SMS Validation with stock move"
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
+#: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
+msgid "SMS sent to the customer once the order is done."
+msgstr ""
+
+#. module: stock_sms
+#: model:ir.model,name:stock_sms.model_stock_picking
+msgid "Transfer"
+msgstr "Перемещение"
+
+#. module: stock_sms
+#: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
+msgid ""
+"You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
+"                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
+msgstr ""

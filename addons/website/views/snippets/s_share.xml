@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_share" name="Share">
+    <div t-attf-class="s_share text-left #{_classes}">
+        <h4 t-if="not _no_title" class="s_share_title d-none">Share</h4>
+        <a t-if="not _exclude_share_links or not 'facebook' in _exclude_share_links" href="https://www.facebook.com/sharer/sharer.php?u={url}" t-attf-class="s_share_facebook #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-facebook #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'twitter' in _exclude_share_links" href="https://twitter.com/intent/tweet?text={title}&amp;url={url}" t-attf-class="s_share_twitter #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-twitter #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'linkedin' in _exclude_share_links" href="https://www.linkedin.com/sharing/share-offsite/?url={url}" t-attf-class="s_share_linkedin #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-linkedin #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'whatsapp' in _exclude_share_links" href="https://wa.me/?text={title}" t-attf-class="s_share_whatsapp #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-whatsapp #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'pinterest' in _exclude_share_links" href="https://pinterest.com/pin/create/button/?url={url}&amp;media={media}&amp;description={title}" t-attf-class="s_share_pinterest #{_link_classes}" target="_blank">
+            <i t-attf-class="fa fa-pinterest #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+        <a t-if="not _exclude_share_links or not 'email' in _exclude_share_links" href="mailto:?body={url}&amp;subject={title}" t-attf-class="s_share_email #{_link_classes}">
+            <i t-attf-class="fa fa-envelope #{not _link_classes and 'rounded shadow-sm'}"/>
+        </a>
+    </div>
+</template>
+
+<template id="s_share_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_share">
+            <we-select string="Title Position" data-apply-to=".s_share_title">
+                <we-button data-select-class="d-block">Top</we-button>
+                <we-button data-select-class="">Left</we-button>
+                <we-button data-select-class="d-none">None</we-button>
+            </we-select>
+            <we-select string="Layout" data-apply-to=".fa">
+                <we-button data-select-class="rounded shadow-sm">Square</we-button>
+                <we-button data-select-class="rounded-empty-circle shadow-sm">Circle</we-button>
+                <we-button data-select-class="rounded-circle shadow-sm">Disk</we-button>
+                <we-button data-select-class="m-1">None</we-button>
+            </we-select>
+            <we-select string="Size" data-apply-to=".fa">
+                <we-button data-select-class="">Small</we-button>
+                <we-button data-select-class="fa-2x">Medium</we-button>
+                <we-button data-select-class="fa-3x">Big</we-button>
+            </we-select>
+            <!-- Compatibility, keep reverse logical, don't use `icon_color` -->
+            <we-checkbox string="Color" data-select-class="no_icon_color|"/>
+        </div>
+    </xpath>
+</template>
+
+<record id="website.s_share_000_scss" model="ir.asset">
+    <field name="name">Share 000 SCSS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_share/000.scss</field>
+</record>
+
+<record id="website.s_share_000_js" model="ir.asset">
+    <field name="name">Share 000 JS</field>
+    <field name="bundle">web.assets_frontend</field>
+    <field name="path">website/static/src/snippets/s_share/000.js</field>
+</record>
+
+</odoo>

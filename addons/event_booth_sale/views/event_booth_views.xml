@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_view_form_from_event" model="ir.ui.view">
+        <field name="name">event.booth.view.form.inherit.sale</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth.event_booth_view_form_from_event"/>
+        <field name="priority">10</field>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_sale_order" type="object" class="oe_stat_button"
+                        icon="fa-usd" groups="sales_team.group_sale_salesman"
+                        string="Sale Order" attrs="{'invisible': [('sale_order_id', '=', False)]}">
+                </button>
+            </div>
+            <div name="button_box" position="after">
+                <field name="is_paid" invisible="1"/>
+                <widget name="web_ribbon" title="Paid" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+            </div>
+            <field name="booth_category_id" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="product_id" attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"
+                       attrs="{'invisible': [('booth_category_id', '=', False)]}"/>
+            </field>
+            <group name="renter" position="after">
+                <group name="sales" groups="base.group_no_one"
+                       attrs="{'invisible': [('sale_order_line_id', '=', False)]}">
+                    <field name="sale_order_id"/>
+                    <field name="sale_order_line_id"/>
+                </group>
+            </group>
+            <xpath expr="//sheet" position="inside">
+                <notebook groups="base.group_no_one">
+                    <page string="Registrations">
+                        <field name="event_booth_registration_ids" readonly="1"/>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_booth_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.view.tree.inherit.sale</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth.event_booth_view_tree"/>
+        <field name="arch" type="xml">
+            <field name="booth_category_id" position="after">
+                <field name="currency_id" invisible="1"/>
+                <field name="price" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="event_booth_view_search" model="ir.ui.view">
+        <field name="name">event.booth.view.search.inherit.sale</field>
+        <field name="model">event.booth</field>
+        <field name="inherit_id" ref="event_booth.event_booth_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <t t-name="mail.DiscussSidebarCategory" owl="1">
+        <div class="o_DiscussSidebarCategory" t-att-data-category-local-id="category.localId">
+            <div class="o_DiscussSidebarCategory_header">
+                <div class="o_DiscussSidebarCategory_title o_DiscussSidebarCategory_headerItem" t-on-click="category.onClick">
+                    <i class="o_DiscussSidebarCategory_titleIcon" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
+                    <span class="o_DiscussSidebarCategory_titleText"><t t-esc="category.name"/></span>
+                </div>
+                <div class="o-autogrow o_DiscussSidebarCategory_headerItem"/>
+                <div class="o_DiscussSidebarCategory_commands o_DiscussSidebarCategory_headerItem">
+                    <t t-if="category.hasViewCommand">
+                        <i class="o_DiscussSidebarCategory_command o_DiscussSidebarCategory_commandView fa fa-cog" title="View or join channels" t-on-click="category.onClickCommandView" role="img"/>
+                    </t>
+                    <t t-if="category.hasAddCommand and category.isOpen">
+                        <i class="o_DiscussSidebarCategory_command o_DiscussSidebarCategory_commandAdd fa fa-plus" t-on-click="category.onClickCommandAdd" t-att-title="category.commandAddTitleText" role="img"/>
+                    </t>
+                </div>
+                <t t-if="!category.isOpen and category.counter > 0">
+                    <div class="o_DiscussSidebarCategory_counter o_DiscussSidebarCategory_headerItem badge badge-pill">
+                        <t t-esc="category.counter"/>
+                    </div>
+                </t>
+            </div>
+            <div class="o_DiscussSidebarCategory_content">
+                <t t-if="category.isOpen">
+                    <t t-if="category.isAddingItem">
+                        <div class="o_DiscussSidebarCategory_newItem">
+                            <AutocompleteInput
+                                class="o_DiscussSidebarCategory_itemNewInput"
+                                customClass="category === messaging.discuss.categoryChannel ? 'o_DiscussSidebarCategory_newChannelAutocompleteSuggestions' : False"
+                                isFocusOnMount="true"
+                                isHtml="category === messaging.discuss.categoryChannel ? true : False"
+                                placeholder="category.newItemPlaceholderText"
+                                select="category.onAddItemAutocompleteSelect"
+                                source="category.onAddItemAutocompleteSource"
+                                t-on-o-hide="category.onHideAddingItem"
+                            />
+                        </div>
+                    </t>
+                    <t t-foreach="category.filteredCategoryItems" t-as="item" t-key="item.localId">
+                        <DiscussSidebarCategoryItem
+                            class="o_DiscussSidebarCategory_item"
+                            categoryItemLocalId="item.localId"
+                        />
+                    </t>
+                </t>
+                <t t-if="!category.isOpen and category.activeItem">
+                    <DiscussSidebarCategoryItem
+                        class="o_DiscussSidebarCategory_item"
+                        categoryItemLocalId="category.activeItem.localId"
+                    />
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

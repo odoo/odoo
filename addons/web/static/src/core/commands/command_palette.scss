@@ -1,0 +1,122 @@
+.o_command_palette {
+  &.modal-content {
+    border: none;
+    border-radius: 3px !important;
+    overflow: hidden;
+  }
+
+  > .modal-body {
+    padding: 0;
+    overflow: hidden;
+  }
+
+  &_search {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.8rem 1em;
+    font-size: 1.5rem;
+
+    .fa-search {
+      color:#C7C7C7;
+    }
+
+    input {
+      border: none;
+      padding: 0;
+      line-height: 1.8em;
+    }
+  }
+
+  &_listbox {
+    cursor: default;
+    max-height: 50vh;
+    overflow-y: auto;
+    position: relative;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    &_empty {
+      padding: 1rem 1.3em;
+      line-height: 1.8em;
+      font-style: italic;
+    }
+
+    .o_command_category {
+      padding: 0.5rem 0;
+    }
+
+    hr {
+      margin: 0;
+    }
+
+    .o_command {
+      position: relative;
+      line-height: 1.8em;
+      height: 2.8em;
+
+      &.focused {
+        background: rgba($o-brand-primary, 0.15);
+      }
+
+      &_default, &_hotkey {
+        background-color: inherit;
+        padding: 0.5rem 1.3em;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      &_hotkey {
+        kbd {
+          background-color: #f4f7f8;
+          border-radius: 3px;
+          border: 1px solid #e5e5e5;
+          $shadowvalue: 0px 1px 1px rgba(0, 0, 0, 0.2),
+            inset 0px -1px 1px 1px rgba(230, 230, 230, 0.8),
+            inset 0px 2px 0px 0px rgba(255, 255, 255, 0.8);
+          color: #4c4c4c;
+          display: inline-block;
+          font-family: Consolas, "Liberation Mono", Courier, monospace;
+          font-size: 0.85em;
+          padding: 0 0.65rem;
+        }
+      }
+
+      .o_app_icon {
+        position: relative;
+        border-radius: 4%;
+        height: 1.8em;
+        width: 1.8em;
+
+        &> i.fa {
+          text-align: center;
+          position: absolute;
+          top: 25%;
+          left: 0;
+          bottom: auto;
+          right: 0;
+        }
+      }
+    }
+  }
+
+  &_footer {
+    color: #707070;
+    background-color: #f6f7fa;
+    font-size: 1rem;
+    padding: 0.6rem 1.3em;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+
+    .o_promote {
+      color: $o-brand-primary;
+      font-weight: 900;
+    }
+  }
+}

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<record model="ir.ui.view" id="utm_campaign_view_kanban">
+    <field name="name">utm.campaign.view.kanban</field>
+    <field name="model">utm.campaign</field>
+    <field name="inherit_id" ref="utm.utm_campaign_view_kanban"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[@id='utm_statistics']" position="inside">
+            <div class="mr-3" title="Revenues" groups="sales_team.group_sale_salesman">
+                <field name="currency_id" invisible="True"/>
+                <small class="font-weight-bold">
+                    <field name="invoiced_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                </small>
+            </div>
+            <div class="mr-3" title="Quotations" groups="sales_team.group_sale_salesman">
+                <i class="fa fa-money text-muted"></i>
+                <small class="font-weight-bold">
+                    <field name="quotation_count"/>
+                </small>
+            </div>
+        </xpath>
+    </field>
+</record>
+
+<record model="ir.ui.view" id="utm_campaign_view_form">
+    <field name="name">utm.campaign.view.form</field>
+    <field name="model">utm.campaign</field>
+    <field name="inherit_id" ref="utm.utm_campaign_view_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+            <button name="action_redirect_to_invoiced"
+                type="object" class="oe_stat_button order-1" icon="fa-usd" groups="sales_team.group_sale_salesman">
+                <field name="invoiced_amount" widget="statinfo" string="Revenues"/>
+            </button>
+            <button name="action_redirect_to_quotations"
+                type="object" class="oe_stat_button order-2" icon="fa-money" groups="sales_team.group_sale_salesman">
+                <field name="quotation_count" widget="statinfo" string="Quotations"/>
+            </button>
+        </xpath>
+    </field>
+</record>
+</odoo>

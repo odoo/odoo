@@ -1,0 +1,78 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_coupon_delivery
+# 
+# Translators:
+# Wichanon Jamwutthipreecha, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2021\n"
+"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: th\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_program
+msgid "Coupon Program"
+msgstr "โปรแกรมคูปอง"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_coupon_reward
+msgid "Coupon Reward"
+msgstr "คูปองรางวัล"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,help:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid ""
+"Discount - Reward will be provided as discount.\n"
+"Free Product - Free product will be provide as reward \n"
+"Free Shipping - Free shipping will be provided as reward (Need delivery module)"
+msgstr ""
+"ส่วนลด - รางวัลจะถูกจัดให้เป็นส่วนลด\n"
+"สินค้าฟรี - สินค้าฟรีจะถูกให้เป็นรางวัล \n"
+"จัดส่งฟรี - การจัดส่งฟรีจะถูกให้เป็นรางวัล (ต้องการโมดูลการจัดส่ง)"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_order.py:0
+#, python-format
+msgid "Discount: %s"
+msgstr "ส่วนลด: %s"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon_reward.py:0
+#: model:ir.model.fields.selection,name:sale_coupon_delivery.selection__coupon_reward__reward_type__free_shipping
+#, python-format
+msgid "Free Shipping"
+msgstr "จัดส่งฟรี"
+
+#. module: sale_coupon_delivery
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_program__reward_type
+#: model:ir.model.fields,field_description:sale_coupon_delivery.field_coupon_reward__reward_type
+msgid "Reward Type"
+msgstr "ประเภทรางวัล"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order
+msgid "Sales Order"
+msgstr "คำสั่งขาย"
+
+#. module: sale_coupon_delivery
+#: model:ir.model,name:sale_coupon_delivery.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "ไลน์คำสั่งขาย"
+
+#. module: sale_coupon_delivery
+#: code:addons/sale_coupon_delivery/models/sale_coupon.py:0
+#: code:addons/sale_coupon_delivery/models/sale_coupon_program.py:0
+#, python-format
+msgid "The shipping costs are not in the order lines."
+msgstr "ค่าขนส่งไม่ได้อยู่ในไลน์คำสั่ง"

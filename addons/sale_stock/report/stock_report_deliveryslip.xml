@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_delivery_document_inherit_sale_stock" inherit_id="stock.report_delivery_document">
+        <xpath expr="//div[@name='div_sched_date']" position="after">
+            <div class="row justify-content-end" t-if="o.sudo().sale_id.client_order_ref">
+                <div class="col-auto">
+                    <strong>Customer Reference:</strong>
+                    <p t-field="o.sudo().sale_id.client_order_ref"/>
+                </div>
+            </div>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <record id="payment.payment_acquirer_buckaroo" model="payment.acquirer">
+        <field name="provider">buckaroo</field>
+        <field name="redirect_form_view_id" ref="redirect_form"/>
+        <field name="support_authorization">False</field>
+        <field name="support_fees_computation">False</field>
+        <field name="support_refund"></field>
+        <field name="support_tokenization">False</field>
+    </record>
+
+    <record id="payment_method_buckaroo" model="account.payment.method">
+        <field name="name">Buckaroo</field>
+        <field name="code">buckaroo</field>
+        <field name="payment_type">inbound</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'project' or project" class="col-lg-2" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
+                <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
+                <t t-else="">Projects</t>
+            </li>
+            <li t-if="page_name == 'project_task' and project" class="breadcrumb-item active">
+                <a t-if="project" t-attf-href="/my/project/{{ project.id }}?{{ keep_query() }}"><t t-esc="project.name"/></a>
+            </li>
+            <li t-elif="project" t-attf-class="breadcrumb-item #{'active ' if not project else ''} text-truncate col-8 col-lg-10">
+                <t t-esc="project.name"/>
+            </li>
+            <li t-if="page_name == 'task' or (task and not project)" t-attf-class="breadcrumb-item #{'active ' if not task else ''}">
+                <a t-if="task" t-attf-href="/my/tasks?{{ keep_query() }}">Tasks</a>
+                <t t-else="">Tasks</t>
+            </li>
+            <li t-if="task" class="breadcrumb-item active text-truncate">
+                <span t-field="task.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_tasks_priority_widget_template" name="Priority Widget Template">
+        <span t-attf-class="o_priority_star fa fa-star#{'' if task.priority == '1' else '-o'}"/>
+    </template>
+
+    <template id="portal_my_tasks_state_widget_template" name="Status Widget Template">
+        <span t-att-title="task.kanban_state_label" t-attf-class="o_status rounded-circle #{'bg-success' if task.kanban_state == 'done' else 'bg-danger' if task.kanban_state == 'blocked' else ''}"/>
+    </template>
+
+    <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Projects</t>
+                <t t-set="url" t-value="'/my/projects'"/>
+                <t t-set="placeholder_count" t-value="'project_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Tasks</t>
+                <t t-set="url" t-value="'/my/tasks'"/>
+                <t t-set="placeholder_count" t-value="'task_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_projects" name="My Projects">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Projects</t>
+            </t>
+            <t t-if="not projects">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no projects.
+                </div>
+            </t>
+            <t t-if="projects" t-call="portal.portal_table">
+                <tbody>
+                    <tr t-foreach="projects" t-as="project">
+                        <td>
+                            <a t-attf-href="/my/project/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
+                        </td>
+                        <td class="text-right">
+                            <t t-out="project.task_count_with_subtasks" />
+                            <t t-out="project.label_tasks" />
+                        </td>
+                    </tr>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_project" name="My Project">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=project.project&amp;id=%s&amp;view_type=kanban' % (project.id)"/>
+                </t>
+            </t>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+            <t t-if="not grouped_tasks">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+
+            <t t-call="project.portal_tasks_list"/>
+        </t>
+    </template>
+
+    <template id="portal_tasks_list" name="Tasks List">
+        <t t-if="grouped_tasks">
+            <t t-call="portal.portal_table">
+                <t t-foreach="grouped_tasks" t-as="tasks">
+                    <thead>
+                        <tr t-attf-class="{{'thead-light' if not groupby == 'none' else ''}}">
+                            <th class="text-left">Ref</th>
+                            <th t-if="groupby != 'priority'">Priority</th>
+                            <th t-if="groupby == 'none'">Name</th>
+                            <th t-if="groupby == 'project'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for project:</em>
+                                <span t-field="tasks[0].sudo().project_id.name"/></th>
+                            <th t-if="groupby == 'stage'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in stage:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().stage_id.name"/></th>
+                            <th t-if="groupby == 'priority'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in priority:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().priority"/></th>
+                            <th t-if="groupby == 'status'">
+                                <em class="font-weight-normal text-muted"><span t-field="tasks[0].sudo().project_id.label_tasks"/> in status:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().kanban_state"/></th>
+                            <th t-if="groupby == 'customer'">
+                                <em class="font-weight-normal text-muted" t-if="tasks[0].sudo().partner_id"><span t-field="tasks[0].sudo().project_id.label_tasks"/> for customer:</em>
+                                <span class="text-truncate" t-field="tasks[0].sudo().partner_id.name"/></th>
+                            <th name="project_portal_assignees">Assignees</th>
+                            <th t-if="groupby != 'status'">Status</th>
+                            <th t-if="groupby != 'project'">Project</th>
+                            <th t-if="groupby != 'stage'">Stage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="tasks" t-as="task">
+                            <tr>
+                                <td class="text-left">
+                                    #<span t-esc="task.id"/>
+                                </td>
+                                <td t-if="groupby != 'priority'">
+                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                </td>
+                                <td>
+                                    <a t-attf-href="/my/#{task_url}/#{task.id}?{{ keep_query() }}"><span t-field="task.name"/></a>
+                                </td>
+                                <td name="project_portal_assignees">
+                                    <t t-set="assignees" t-value="task.sudo().user_ids"/>
+                                    <span t-if="assignees" t-out="'%s%s' % (assignees[:1].name, ' + %s others' % len(assignees[1:]) if len(assignees.user_ids) > 1 else '')" t-att-title="'\n'.join(assignees[1:].mapped('name'))"/>
+                                </td>
+                                <td t-if="groupby != 'status'">
+                                    <t t-call="project.portal_my_tasks_state_widget_template">
+                                        <t t-set="path" t-value="'tasks'"/>
+                                    </t>
+                                </td>
+                                <td t-if="groupby != 'project'">
+                                    <span class="badge badge-pill badge-info mw-100 text-truncate" title="Current project of the task" t-esc="task.project_id.name" />
+                                </td>
+                                <td t-if="groupby != 'stage'">
+                                    <span class="badge badge-pill badge-info" title="Current stage of the task" t-esc="task.stage_id.name" />
+                                </td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="portal_my_tasks" name="My Tasks">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Tasks</t>
+            </t>
+            <t t-if="not grouped_tasks">
+                <div class="alert alert-warning mt8" role="alert">
+                    There are no tasks.
+                </div>
+            </t>
+            <t t-call="project.portal_tasks_list"/>
+        </t>
+    </template>
+
+    <template id="portal_my_task" name="My Task">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="project.group_project_user">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=project.task&amp;id=%s&amp;view_type=form' % (task.id)"/>
+                </t>
+            </t>
+
+            <t t-call="portal.portal_record_layout">
+                <t t-set="card_header">
+                    <div class="row no-gutters">
+                        <div class="col-12">
+                            <h5 class="d-flex mb-1 mb-md-0 row">
+                                <div class="col-9">
+                                    <t t-call="project.portal_my_tasks_priority_widget_template"/>
+                                    <span t-field="task.name" class="text-truncate"/>
+                                    <small class="text-muted d-none d-md-inline"> (#<span t-field="task.id"/>)</small>
+                                </div>
+                                <div class="col-3 text-right">
+                                    <small class="text-right">Stage:</small>
+                                    <span t-field="task.stage_id.name" class=" badge badge-pill badge-info" title="Current stage of this task"/>
+                                </div>
+                            </h5>
+                        </div>
+                    </div>
+                </t>
+                <t t-set="card_body">
+                    <div class="float-right">
+                        <t t-call="project.portal_my_tasks_state_widget_template">
+                            <t t-set="path" t-value="'task'"/>
+                        </t>
+                    </div>
+                    <div class="row mt-3" t-if="task.user_ids or task.partner_id">
+                        <div class="col-12 col-md-6 pb-2" t-if="task.user_ids">
+                            <strong>Assignees</strong>
+                            <div class="row">
+                                <t t-foreach="task.user_ids" t-as="user">
+                                    <div class="col d-flex align-items-center flex-grow-0 pr-3">
+                                        <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_1024)" alt="Contact"/>
+                                    </div>
+                                    <div class="col pl-md-0">
+                                        <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                        <a t-attf-href="mailto:{{user.email}}" t-if="user.email"><div t-esc="user" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                        <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 pb-2" t-if="task.partner_id">
+                            <strong>Customer</strong>
+                            <div class="row">
+                                <div class="col d-flex align-items-center flex-grow-0 pr-3">
+                                    <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_1024)" alt="Contact"/>
+                                </div>
+                                <div class="col pl-md-0">
+                                    <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                    <a t-attf-href="mailto:{{task.partner_id.email}}" t-if="task.partner_id.email"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/></a>
+                                    <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12 col-md-6">
+                            <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id"/></div>
+                            <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>
+                            <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/></div>
+                            <div name="portal_my_task_planned_hours">
+                                <t t-call="project.portal_my_task_planned_hours_template"/>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6" name="portal_my_task_second_column"></div>
+                    </div>
+
+                    <div class="row" t-if="task.description or task.attachment_ids">
+                        <div t-if="task.description" t-attf-class="col-12 col-lg-7 mb-4 mb-md-0 {{'col-lg-7' if task.attachment_ids else 'col-lg-12'}}">
+                            <hr class="mb-1"/>
+                            <div class="d-flex my-2">
+                                <strong>Description</strong>
+                            </div>
+                            <div class="py-1 px-2 bg-100 small" t-field="task.description"/>
+                        </div>
+                        <div t-if="task.attachment_ids" t-attf-class="col-12 col-lg-5 o_project_portal_attachments {{'col-lg-5' if task.description else 'col-lg-12'}}">
+                            <hr class="mb-1 d-none d-lg-block"/>
+                            <strong class="d-block mb-2">Attachments</strong>
+                            <div class="row">
+                                <div t-attf-class="col {{'col-lg-6' if not task.description else 'col-lg-12'}}">
+                                    <ul class="list-group">
+                                        <a class="list-group-item list-group-item-action d-flex align-items-center oe_attachments py-1 px-2" t-foreach='task.attachment_ids' t-as='attachment' t-attf-href="/web/content/#{attachment.id}?download=true&amp;access_token=#{attachment.access_token}" target="_blank" data-no-post-process="">
+                                            <div class='oe_attachment_embedded o_image o_image_small mr-2 mr-lg-3' t-att-title="attachment.name" t-att-data-mimetype="attachment.mimetype" t-attf-data-src="/web/image/#{attachment.id}/50x40?access_token=#{attachment.access_token}"/>
+                                            <div class='oe_attachment_name text-truncate'><t t-esc='attachment.name'/></div>
+                                        </a>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+
+            <div class="mt32">
+                <h4><strong>Message and communication history</strong></h4>
+                <t t-call="portal.message_thread">
+                    <t t-set="object" t-value="task"/>
+                    <t t-set="token" t-value="task.access_token"/>
+                    <t t-set="pid" t-value="pid"/>
+                    <t t-set="hash" t-value="hash"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="portal_my_task_planned_hours_template">
+        <strong>Planned Hours:</strong> <span t-esc="task.planned_hours" t-options='{"widget": "float_time"}'/>
+    </template>
+</odoo>

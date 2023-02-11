@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <template id="share_page_menu" inherit_id="website.user_navbar">
+            <xpath expr="//a[@data-action='promote-current-page']" position="after">
+                <a href="/r" id="o_website_links_share_page" class="dropdown-item">
+                    <span title="Track this page to count clicks">Link Tracker</span>
+                </a>
+            </xpath>
+
+        </template>
+
+        <template id="create_shorten_url">
+            <div class="o_website_links_create_tracked_url">
+                <div class="container">
+                    <h1 class="o_page_header">Link Tracker</h1>
+                    <div class="notification"></div>
+
+                    <div class="row">
+                        <div class="col-md-7">
+                            <form id="o_website_links_link_tracker_form">
+
+                                <div class="form-group row" id="url-form-group">
+                                    <label class="col-md-3 col-form-label text-left">URL</label>
+
+                                    <div class="col-md-9">
+                                        <input type="text" id="url" class="form-control required-form-control"  required="True" placeholder="e.g. https://www.odoo.com/contactus" t-att-value="u"/>
+                                    </div>
+                                </div>
+
+                                <div class="o_website_links_utm_forms">
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Campaign <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the context of your link. It might be an event you want to promote or a special promotion."></i></label>
+
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="form-control" id="campaign-select"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Medium <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the medium used to share your link. It might be an email, or a Facebook Ads for instance."></i></label>
+
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="form-control" id="channel-select" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-md-3 col-form-label">Source <i class="fa fa-info-circle" data-toggle="tooltip" data-placement="top" role="img" aria-label="Tooltip info" title="Defines the source from which your traffic will come from, Facebook or Twitter for instance."></i></label>
+
+                                        <div class="col-md-9">
+                                            <input type="hidden" class="form-control" id="source-select" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <div class="offset-md-3 col-md-9">
+                                        <button type="submit" class="btn btn-primary" id="btn_shorten_url" data-clipboard-text="">Get tracked link</button>
+
+                                        <span id="generated_tracked_link" style="display:none;" class="text-muted"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div class="offset-md-1 col-md-3 d-none d-md-block">
+                            <p class="text-muted text-justify">Share this page with a <strong>short link</strong> that includes <strong>analytics trackers</strong>.</p>
+                            <p class="text-muted text-justify">Those trackers can be used in Google Analytics to track clicks and visitors, or in Odoo reports to track opportunities and related revenues.</p>
+                        </div>
+                    </div>
+
+                    <h2 class="o_page_header">Your tracked links
+                        <small class="float-right d-none d-md-block" id="filters">
+                            <ul class="nav nav-tabs nav-tabs-inline graph-tabs" role="tablist">
+                                <li class="nav-item"><a aria-controls="filter-newest-links" href="#" class="nav-link active" id="filter-newest-links" role="tab" data-toggle="tab">Newest</a></li>
+                                <li class="nav-item"><a aria-controls="filter-most-clicked-links" href="#" class="nav-link" id="filter-most-clicked-links" role="tab" data-toggle="tab">Most Clicked</a></li>
+                                <li class="nav-item"><a aria-controls="filter-recently-used-links" href="#" class="nav-link" id="filter-recently-used-links" role="tab" data-toggle="tab">Recently Used</a></li>
+                            </ul>
+                        </small>
+                    </h2>
+
+                    <div id="o_website_links_recent_links">
+                        <div class="o_website_links_recent_links_notification"></div>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <template id="page_shorten_url" name="Link Tracker">
+            <t t-call="website.layout">
+                <t t-call="website_links.create_shorten_url"/>
+            </t>
+        </template>
+
+</odoo>

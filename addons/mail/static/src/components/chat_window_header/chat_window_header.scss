@@ -1,0 +1,99 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    display: flex;
+    align-items: center;
+    height: $o-mail-chat-window-header-height;
+
+    &.o-mobile {
+        height: $o-mail-chat-window-header-height-mobile;
+    }
+}
+
+.o_ChatWindowHeader_command {
+    padding: map-get($spacers, 0) map-get($spacers, 3);
+    display: flex;
+    height: map-get($sizes, 100);
+    align-items: center;
+
+    &:hover {
+        background-color: rgba($black, 0.1);
+    }
+}
+
+.o_ChatWindowHeader_commandBack {
+    margin-right: map-get($spacers, 2);
+}
+
+.o_ChatWindowHeader_item {
+    margin: map-get($spacers, 0) map-get($spacers, 1);
+
+    &.o_ChatWindowHeader_rightArea {
+        margin-right: map-get($spacers, 0);
+    }
+
+    &:first-child {
+        margin-left: map-get($spacers, 3);
+
+        &.o_ChatWindowHeader_command {
+            margin-left: map-get($spacers, 0); // no margin for commands
+        }
+    }
+
+    &.o_ChatWindowHeader_rightArea:last-child .o_ChatWindowHeader_command {
+        margin-right: map-get($spacers, 0); // no margin for commands
+    }
+}
+
+.o_ChatWindowHeader_name {
+    max-height: map-get($sizes, 100);
+}
+
+.o_ChatWindowHeader_rightArea {
+    display: flex;
+    height: map-get($sizes, 100);
+    align-items: center;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    background-color: $o-brand-odoo;
+    color: $white;
+
+    &:not(.o-mobile) {
+        cursor: pointer;
+    }
+
+    &:not(.o-mobile) {
+
+        &:hover .o_ChatWindowHeader_command {
+            opacity: 0.7;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &:not(:hover) .o_ChatWindowHeader_command {
+            opacity: 0.5;
+        }
+    }
+
+}
+
+.o_ChatWindowHeader_command {
+    cursor: pointer;
+
+    &.o-mobile {
+        font-size: 1.3rem;
+    }
+}
+
+.o_ChatWindowHeader_name {
+    user-select: none;
+}

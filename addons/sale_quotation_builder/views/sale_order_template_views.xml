@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sale_order_template_view_form_inherit_sale_quotation_builder" model="ir.ui.view">
+        <field name="name">sale.order.template.form.inherit.sale_quotation_builder</field>
+        <field name="inherit_id" ref="sale_management.sale_order_template_view_form"/>
+        <field name="model">sale.order.template</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position='before'>
+                <header>
+                    <button name="open_template" class="oe_highlight" string="Design Template" type="object"/>
+                </header>
+            </xpath>
+
+            <xpath expr="//notebook[@name='description']" position="inside">
+                <page string="Website Description" name="website_description">
+                    <field name="website_description" />
+                </page>
+            </xpath>
+
+            <xpath expr="//tree/field[@name='product_uom_id']" position="after">
+                <field name="website_description" invisible="1"/>
+            </xpath>
+
+            <xpath expr="//notebook[@name='main_book']" position="inside">
+                <field name="website_description" invisible="1"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

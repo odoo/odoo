@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Dialog" owl="1">
+        <div class="o_Dialog modal">
+            <t t-if="dialog">
+                <t
+                    t-component="{{ dialog.record['constructor'].name }}"
+                    class="o_Dialog_component"
+                    t-props="{ localId: dialog.record.localId }"
+                    t-ref="component"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

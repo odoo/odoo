@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="configure_optional_products_website" inherit_id="sale_product_configurator.configure_optional_products">
+        <xpath expr="//th[hasclass('td-qty')]/span[hasclass('label')]" position="attributes">
+            <attribute name='t-if'>not request.is_frontend or (request.is_frontend and is_view_active('website_sale.product_quantity'))</attribute>
+        </xpath>
+    </template>
+    <template id="product_quantity_config_website" inherit_id="sale_product_configurator.product_quantity_config" priority="18">
+        <xpath expr="//div[hasclass('css_quantity')]" position="attributes">
+            <attribute name='t-if'>not request.is_frontend or (request.is_frontend and is_view_active('website_sale.product_quantity'))</attribute>
+        </xpath>
+        <xpath expr="//div[hasclass('css_quantity')]" position="after">
+            <input t-else="" type="hidden" class="d-none js_quantity form-control quantity" name="add_qty" t-att-value="add_qty or 1"/>
+        </xpath>
+    </template>
+</odoo>

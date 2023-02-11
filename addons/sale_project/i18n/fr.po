@@ -1,0 +1,439 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project
+# 
+# Translators:
+# e2f <projects@e2f.com>, 2021
+# bb76cd9ac0cb7e20167a14728edb858b, 2021
+# fr trans <e2ffr05@hotmail.com>, 2021
+# Martin Trigaux, 2021
+# Nancy Bolognesi <nb@microcom.ca>, 2021
+# Eloïse Stilmant <est@odoo.com>, 2021
+# Nathan Grognet <ngr@odoo.com>, 2021
+# Grégory Schreiner <gregory@mokatourisme.fr>, 2022
+# Alexandra Jubert, 2022
+# Jolien De Paepe, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-10-05 10:54+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Jolien De Paepe, 2022\n"
+"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fr\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+msgid "Create Invoice"
+msgstr "Créer une facture"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
+msgid "Create on Order"
+msgstr "Créer à la commande"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
+msgid "Display project"
+msgstr "Afficher projet"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
+msgid "Generated Project"
+msgstr "Projet Généré"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
+msgid "Generated Task"
+msgstr "Tâche Générée"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
+msgid "Has SO to Invoice"
+msgstr "A une commande à facturer"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice as soon as this service is sold, and create a task in an existing "
+"project to track the time spent."
+msgstr ""
+"Facturez dès que ce service est vendu, et créez une tâche dans un projet "
+"existant pour suivre le temps passé."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create a "
+"project for the order with a task for each sales order line to track the "
+"time spent."
+msgstr ""
+"Facturez les quantités commandées dès que ce service est vendu, et créez un "
+"projet pour la commande avec une tâche pour chaque ligne de commande client "
+"pour suivre le temps passé."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"Invoice ordered quantities as soon as this service is sold, and create an "
+"empty project for the order to track the time spent."
+msgstr ""
+"Facturez les quantités commandées dès que ce service est vendu, et créez un "
+"projet vide pour la commande afin de suivre le temps passé."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Invoice ordered quantities as soon as this service is sold."
+msgstr "Facturez les quantités commandées dès la vente de cette prestation."
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
+msgid "Is a Service"
+msgstr "est un service"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "New"
+msgstr "Nouveau"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "None"
+msgstr "Aucun"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
+msgid "Nothing"
+msgstr "Rien"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
+msgid "Number of Projects"
+msgstr "Nombre de Projets"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
+msgid "Number of invoices"
+msgstr "Nombre de factures"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
+msgid ""
+"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+msgstr ""
+"A la confirmation du bon de commande, ce produit peut générer un projet et/ou une tâche. Depuis ceux-ci, vous pouvez suivre le service que vous vendez.\n"
+"         'Dans un projet de bon de commande': utilisera un projet configuré sur le bon de commande si celui-ci est défini ou, à défaut, créera une nouveau projet à partir du modèle sélectionné."
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_product
+msgid "Product"
+msgstr "Article"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_template
+msgid "Product Template"
+msgstr "Modèle d'article"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
+msgid "Project"
+msgstr "Projet"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+msgid "Project & Task"
+msgstr "Projet & Tâche"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
+msgid "Project Template"
+msgstr "Modèle de projet"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
+msgid "Project generated by the sales order item"
+msgstr "Projet généré par la ligne de vente"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
+msgid "Project's sale order"
+msgstr "Bon de commande du projet"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+#, python-format
+msgid "Projects"
+msgstr "Projets"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
+msgid "Projects used in this sales order."
+msgstr "Projets utilisés dans ce bon de commande."
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
+msgid "Sale Order"
+msgstr "Bon de commande"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
+#: model:ir.model,name:sale_project.model_sale_order
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_report_project_task_user__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
+msgid "Sales Order"
+msgstr "Commande"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
+msgid "Sales Order Id"
+msgstr "Ref. Commande"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_form
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+#, python-format
+msgid "Sales Order Item"
+msgstr "Ligne de vente"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
+msgid ""
+"Sales Order Item to which the time spent on this task will be added, in "
+"order to be invoiced to your customer."
+msgstr ""
+"Ligne de vente à laquelle le temps passé sur cette tâche sera ajouté, dans "
+"le but d'être facturé à votre client."
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de Commande"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
+msgid ""
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
+msgstr ""
+"La ligne de vente doit générer une tâche ou un projet, en fonction des "
+"paramètres du produit."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
+msgid ""
+"Sales order item to which the project is linked. Link the timesheet entry to"
+" the sales order item defined on the project. Only applies on tasks without "
+"sale order item defined, and if the employee is not in the 'Employee/Sales "
+"Order Item Mapping' of the project."
+msgstr ""
+"Ligne de vente à laquelle le projet est lié. Liez cette entrée de feuille de"
+" temps à la ligne de vente définie sur le projet. S'applique uniquement aux "
+"tâches n'ayant pas de ligne de vente définie, et si l'employé n'est pas dans"
+" le mapping 'employés/lignes de vente' du projet."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
+#: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
+msgid "Sales order to which the project is linked."
+msgstr "Bon de commande auquel le projet est lié."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
+msgid "Sales order to which the task is linked."
+msgstr "Bon de commande auquel la tâche est liée."
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Invoice"
+msgstr "Rechercher dans la Facture"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order"
+msgstr "Rechercher dans le Bon de commande"
+
+#. module: sale_project
+#: code:addons/sale_project/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order Item"
+msgstr "Rechercher dans la Ligne de vente"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__project_id
+#: model:ir.model.fields,help:sale_project.field_product_template__project_id
+msgid ""
+"Select a billable project on which tasks can be created. This setting must "
+"be set for each company."
+msgstr ""
+"Sélectionnez un projet facturable permettant de créer des tâches. Ce "
+"paramétrage doit être configuré en fonction de chaque entreprise."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
+#: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
+msgid ""
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
+msgstr ""
+"Sélectionnez un projet facturable comme squelette du nouveau projet créé "
+"lors de la vente du produit. Ses étapes et tâches seront dupliquées."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order__project_id
+msgid "Select a non billable project on which tasks can be created."
+msgstr ""
+"Sélectionnez un projet non facturable dans lequel des tâches peuvent être "
+"créées."
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
+msgid "Task"
+msgstr "Tâche"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Tâche créée (%s)<a href=# data-oe-model=project.task data-oe-id=%d> : %s</a>"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Récurrence de tâche"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
+msgid "Task generated by the sales order item"
+msgstr "Tâche générée par la ligne de vente"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Tasks"
+msgstr "Tâches"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_report_project_task_user
+msgid "Tasks Analysis"
+msgstr "Analyse des tâches"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
+msgid "Tasks associated to this sale"
+msgstr "Les tâches associées à cette vente"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
+msgstr ""
+"Le produit %s ne devrait pas avoir de projet global car il va générer un "
+"projet."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+"Le produit %s ne devrait pas avoir de projet ni de modèle de projet car il "
+"ne va pas générer de projet. "
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+"Le produit %s ne devrait pas avoir de modèle de projet car il va générer une"
+" tâche dans un projet global."
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid "There is nothing to invoice in this project."
+msgstr "Il n'y a rien à facturer dans ce projet."
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Cette tâche a été créée à partir de: <a href=# data-oe-model=sale.order "
+"data-oe-id=%d>%s</a> (%s)"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
+msgid "To invoice"
+msgstr "À facturer"
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid ""
+"You cannot link the order item %(order_id)s - %(product_id)s to this task "
+"because it is a re-invoiced expense."
+msgstr ""
+"Vous ne pouvez pas lier la ligne de vente %(order_id)s - %(product_id)s à "
+"cette tâche car il s'agit d'une note de frais refacturée."
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid ""
+"You have to unlink the task from the sale order item in order to delete it."
+msgstr ""
+"Vous devez délier la tâche du bon de commande pour pouvoir la supprimer."
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "for sale order item:"
+msgstr "pour article de bon de commande :"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.portal_tasks_list_inherit
+msgid "for sale order:"
+msgstr "pour bon de commande :"

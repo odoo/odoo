@@ -1,0 +1,52 @@
+.o_dialog {
+  > .modal {
+    display: block;
+  }
+}
+
+.modal.o_technical_modal {
+  .modal-content {
+    border-radius: 0;
+
+    .modal-header .modal-title {
+      word-break: break-word;
+    }
+
+    .modal-footer {
+      flex-wrap: wrap;
+      text-align: left;
+      justify-content: flex-start;
+
+      footer {
+        > :not(:first-child) {
+          margin-left: 0.25rem;
+        }
+        > :not(:last-child) {
+          margin-right: 0.25rem;
+        }
+        button {
+          margin-bottom: 0.5rem;
+        }
+      }
+    }
+  }
+
+  @include media-breakpoint-up(sm) {
+    .modal-dialog .modal-content.o_dialog_error .modal-body {
+      overflow: visible;
+      display: flex;
+      flex-flow: column nowrap;
+
+      > .alert,
+      > button {
+        flex: 0 0 auto;
+      }
+
+      > .o_error_detail {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow: auto;
+      }
+    }
+  }
+}

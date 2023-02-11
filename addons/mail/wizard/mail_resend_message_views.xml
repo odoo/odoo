@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_resend_message_view_form" model="ir.ui.view">
+            <field name="name">mail.resend.message.view.form</field>
+            <field name="model">mail.resend.message</field>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Edit Partners">
+                    <field name="mail_message_id" invisible="1"/>
+                    <field name="notification_ids" invisible="1"/>
+                    <field name="has_cancel" invisible="1"/>
+                    <field name="partner_readonly" invisible="1"/>
+                    <p>Select the action to do on each mail and correct the email address if needed. The modified address will be saved on the corresponding contact.</p>
+                    <field name="partner_ids">
+                        <tree string="Recipient" editable="top" create="0" delete="0">
+                            <field name="name" readonly="1"/>
+                            <field name="email" attrs="{'readonly': [('parent.partner_readonly', '=', True)]}"/>
+                            <field name="message" readonly="1"/>
+                            <field name="partner_id" invisible="1"/>
+                            <field name="resend" widget="boolean_toggle"/>
+                        </tree>
+                    </field>
+                    <div class="alert alert-warning" role="alert" attrs="{'invisible': [('has_cancel', '=', False)]}">
+                        <span class="fa fa-info-circle"/> Caution: It won't be possible to send this mail again to the recipients you did not select.
+                    </div>
+                    <footer>
+                        <button string="Resend to selected" name="resend_mail_action" type="object" class="btn-primary o_mail_send" data-hotkey="q"/>
+                        <button string="Ignore all failures" name="cancel_mail_action" type="object" class="btn-secondary" data-hotkey="w" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="mail_resend_message_action" model="ir.actions.act_window">
+            <field name="name">Resend mail</field>
+            <field name="res_model">mail.resend.message</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="hr_holidays.dashboard_calendar_header">
+        <div class="o_timeoff_container d-flex">
+            <div t-foreach="timeoffs" t-as="timeoff" t-attf-class="o_timeoff_card flex-grow-1 d-flex flex-column py-3 {{ timeoff_last ? 'o_timeoff_card_last' : '' }}">
+                <t t-set="requires_allocation" t-value="timeoff[2] === 'yes'"/>
+                <t t-set="has_icon" t-value="timeoff[1]['icon'] !== false"/>
+                <t t-set="cl" t-value="'text-muted'"/>
+
+                <b><span t-esc="timeoff[0]" class="o_timeoff_name o_timeoff_big"/></b>
+
+                <div class="mt-1">
+                    <t t-if="requires_allocation">
+                        <t t-if="has_icon"><img height="30px" t-attf-src="{{timeoff[1]['icon']}}"/></t><span t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_huge o_timeoff_purple font-weight-bold align-middle"/><br/>
+                        <t class="o_timeoff_big o_timeoff_purple" t-if="timeoff[1]['request_unit'] == 'hour'"><span class="o_timeoff_purple">HOURS</span></t><t class="o_timeoff_big o_timeoff_purple" t-else=""><span class="o_timeoff_purple">DAYS</span></t> <span class="o_timeoff_purple">AVAILABLE </span>
+                    </t>
+                    <t t-else="">
+                        <t t-if="has_icon"><img height="30px" t-attf-src="{{timeoff[1]['icon']}}"/></t><span t-esc="timeoff[1]['virtual_leaves_taken']" class="o_timeoff_huge o_timeoff_purple font-weight-bold align-middle"/><br/>
+                        <t t-if="timeoff[1]['request_unit'] == 'hour'"><span class="o_timeoff_purple">HOURS</span></t><t t-else=""><span class="o_timeoff_purple">DAYS</span></t> <span class="o_timeoff_purple">TAKEN</span>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_holidays.dashboard_calendar_header_mobile">
+        <t t-set="requires_allocation" t-value="timeoff[2] === 'yes'"/>
+        <span class="pull-right">
+            <span>
+                <t t-if="requires_allocation">
+                    <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> / <span t-esc="timeoff[1]['max_leaves']"/>
+                    <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_green ml-2">Available </span>
+                </t>
+                <t t-else="">
+                    <strong t-esc="timeoff[1]['virtual_leaves_taken']"/> <t t-if="timeoff[1]['request_unit'] == 'hour'">Hours</t><t t-else="">Days</t><span class="o_timeoff_purple ml-2">Taken</span>
+                </t>
+            </span>
+        </span>
+    </t>
+
+    <t t-name="hr_holidays.dashboard.calendar.button">
+        <button class="btn btn-primary btn-time-off" type="button">
+            <t t-esc="time_off"/>
+        </button>
+        <button class="btn btn-secondary btn-allocation" type="button">
+            <t t-esc="request"/>
+        </button>
+    </t>
+
+    <t t-name="hr_holidays.calendar.popover.placeholder">
+        <div t-attf-class="o_cw_popover popover card shadow #{typeof color === 'number' ? _.str.sprintf('o_calendar_color_%s', color) : ''}" role="tooltip">
+            <div class="arrow"/>
+            <div class="card-header d-flex justify-content-between py-2 pr-2">
+                <h4 class="popover-header border-0 p-0 pt-1"/>
+                <div class="ml-4">
+                    <i t-if="calendarIcon" t-attf-class="fa {{calendarIcon}}"></i>
+                    <span class="o_cw_popover_close ml-1"><i class="fa fa-close small"/></span>
+                </div>
+            </div>
+            <div class="o_cw_body">
+            </div>
+        </div>
+    </t>
+
+    <t t-name="hr_holidays.calendar.popover">
+        <div class="o_cw_body">
+            <ul class="list-group list-group-flush">
+                <li t-if="!widget.hideDate and widget.eventDate.date" class="list-group-item">
+                    <b class="text-capitalize" t-esc="widget.eventDate.date"/> <small t-if="widget.eventDate.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventDate.duration)"/></small>
+                </li>
+                <li t-if="!widget.hideTime and widget.eventTime.time" class="list-group-item">
+                    <b t-esc="widget.eventTime.time"/> <small t-if="widget.eventTime.duration"><b t-esc="_.str.sprintf('(%s)', widget.eventTime.duration)"/></small>
+                </li>
+            </ul>
+            <ul class="list-group list-group-flush o_cw_popover_fields_secondary" t-if="widget.display_name">
+                <li class="list-group-item">
+                    <span class="o_field_char o_field_widget" t-esc="widget.display_name" />
+                </li>
+            </ul>
+            <div class="card-footer border-top" t-if="widget.canEdit or widget.canDelete">
+                <a t-if="widget.canEdit" href="#" class="btn btn-primary o_cw_popover_edit">Edit</a>
+                <a t-if="widget.canDelete" href="#" class="btn btn-secondary o_cw_popover_delete ml-2">Delete</a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="FieldRadioIcon.button">
+        <div t-if="mode === 'edit'" class="custom-control custom-radio o_radio_item" aria-atomic="true">
+            <input type="radio" class="custom-control-input o_radio_input" t-att-checked="checked ? true : undefined" t-att-disabled="disabled ? true : undefined"
+                t-att-name="name" t-att-data-value="value[0]" t-att-data-index="index" t-att-id="id"/>
+            <label class="custom-control-label o_form_label" t-att-for="id"><img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48" /></label>
+        </div>
+        <div t-else="">
+            <img t-attf-src="/hr_holidays/static/src/img/icons/{{value[1]}}" width="48" height="48"/>
+        </div>
+    </t>
+
+    <t t-name="TimeOff.CalendarView.extend" t-extend="CalendarView">
+        <t t-jquery='.o_calendar_sidebar_container' t-operation="append">
+            <div class="o_timeoff_legend">
+                <h5>Legend</h5>
+                <img src="/hr_holidays/static/src/img/icons/Validated.svg" width="30px"/><span>Validated</span><br/>
+                <img src="/hr_holidays/static/src/img/icons/To_Approve.svg" width="30px"/><span>To Approve</span><br/>
+                <img src="/hr_holidays/static/src/img/icons/Refused.svg" width="30px"/><span>Refused</span><br/>
+            </div>
+        </t>
+    </t>
+
+</templates>

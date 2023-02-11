@@ -1,0 +1,198 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* hr_fleet
+# 
+# Translators:
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-01-24 08:19+0000\n"
+"PO-Revision-Date: 2021-09-14 12:22+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2021\n"
+"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_TW\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+#, python-format
+msgid "%(car_name)s (driven from: %(date_start)s to %(date_end)s)"
+msgstr "%(car_name)s (從: %(date_start)s 到 %(date_end)s)"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_form_inherit_hr
+msgid "<span class=\"o_stat_text\">Employee</span>"
+msgstr "<span class=\"o_stat_text\">員工</span>"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Application Settings"
+msgstr "模組設定"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_assignation_log_view_list
+msgid "Attachments"
+msgstr "附件"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/models/employee.py:0
+#, python-format
+msgid "Cannot remove address from employees with linked cars."
+msgstr "無法從關聯汽車的員工中刪除地址。"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__employee_cars_count
+#: model:ir.model.fields,field_description:hr_fleet.field_res_users__employee_cars_count
+msgid "Cars"
+msgstr "車輛"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Claim Car Report"
+msgstr "取得車輛報告"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.hr_departure_wizard_view_form
+msgid "Company Car"
+msgstr "公司車"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
+msgid "Current Driver (Employee)"
+msgstr "現任司機（員工）"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_departure_wizard
+msgid "Departure Wizard"
+msgstr "出發嚮導"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_form_inherit_hr
+msgid "Driver"
+msgstr "駕駛員"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__driver_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_contract__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_log_services__purchaser_employee_id
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_odometer__driver_employee_id
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_services_view_form_inherit_hr
+msgid "Driver (Employee)"
+msgstr "司機（員工）"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_assignation_log
+msgid "Drivers history on a vehicle"
+msgstr "車輛駕駛歷程"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_employee
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_log_contract_view_search_inherit_hr
+msgid "Employee"
+msgstr "員工"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__driver_employee_name
+msgid "Employee Name"
+msgstr "員工姓名"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid "Fleet Mobility Card"
+msgstr "車隊紀錄卡"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__future_driver_employee_id
+#: model_terms:ir.ui.view,arch_db:hr_fleet.fleet_vehicle_view_search_inherit_hr
+msgid "Future Driver (Employee)"
+msgstr "未來司機（員工）"
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_filter
+msgid "License Plate"
+msgstr "車輛牌照"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__mobility_card
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee_public__mobility_card
+msgid "Mobility Card"
+msgstr "紀錄卡"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_fleet_vehicle_assignation_log__attachment_number
+msgid "Number of Attachments"
+msgstr "附件數量"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_odometer
+msgid "Odometer log for a vehicle"
+msgstr "車輛的里程表記錄"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_hr_employee_public
+msgid "Public Employee"
+msgstr "公開員工"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/models/fleet_vehicle.py:0
+#, python-format
+msgid "Related Employee"
+msgstr "相關員工"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_departure_wizard__release_campany_car
+msgid "Release Company Car"
+msgstr "釋出公司車"
+
+#. module: hr_fleet
+#: model:ir.model.fields,help:hr_fleet.field_hr_departure_wizard__release_campany_car
+msgid "Release the company car."
+msgstr "公司車釋出"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_services
+msgid "Services for vehicles"
+msgstr "車輛服務"
+
+#. module: hr_fleet
+#: code:addons/hr_fleet/controllers/main.py:0
+#, python-format
+msgid "There is no pdf attached to generate a claim report."
+msgstr ""
+
+#. module: hr_fleet
+#: model_terms:ir.ui.view,arch_db:hr_fleet.res_users_view_form_preferences
+#: model_terms:ir.ui.view,arch_db:hr_fleet.view_employee_form
+msgid ""
+"This report will contain only PDF files. If you want all documents, please "
+"go on vehicle page. Do you want to proceed?"
+msgstr "此報告將僅包含 PDF 檔。如果您需要所有資訊，請進入車輛主頁。是否要繼續？"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_res_users
+msgid "Users"
+msgstr "使用者"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle
+msgid "Vehicle"
+msgstr "車輛"
+
+#. module: hr_fleet
+#: model:ir.model,name:hr_fleet.model_fleet_vehicle_log_contract
+msgid "Vehicle Contract"
+msgstr "車輛合約"
+
+#. module: hr_fleet
+#: model:ir.model.fields,field_description:hr_fleet.field_hr_employee__car_ids
+msgid "Vehicles (private)"
+msgstr "車輛（私人）"

@@ -1,0 +1,200 @@
+///
+/// This file regroups the CSS rules made to fix/extend bootstrap in all places
+/// where it is used in Odoo (backend / frontend / reports / ...)
+///
+
+.alert {
+    // Alerts are block elements with relative positioning.
+    // They would go over floating elements, which is never what we want.
+    clear: both;
+}
+
+// Extend bootstrap to create background and text utilities for gray colors too
+// Note: the card-body rule below needs those grays utilities to be defined
+// before so that the related o-bg-color text-muted rules work.
+@each $color, $value in $grays {
+    @include bg-variant(".bg-#{$color}", $value);
+    @include text-emphasis-variant(".text-#{$color}", $value);
+}
+
+.card-body {
+    // BS4 colored cards do not have a very popular design. This will reset them
+    // to a BS3-like one: only the header and footer are colored and the body
+    // will use the color of a default card background with a light opacity.
+    // Limitation: bg-* utilities cannot be used on card-body elements anymore.
+    @include o-bg-color(rgba($card-bg, $o-card-body-bg-opacity));
+
+    &:first-child {
+        @include border-top-radius($card-inner-border-radius);
+    }
+    &:last-child {
+        @include border-bottom-radius($card-inner-border-radius);
+    }
+
+    &.row {
+        // The 'row' class should not be used on a 'card-body' element but if
+        // it is done, our custom bg color would overflow the card. As a fix
+        // for those cases (normally only one at the time this fix is made),
+        // remove the background color.
+        // TODO remove me in master.
+        background-color: transparent !important;
+    }
+}
+.accordion {
+    .collapsing, .collapse.show {
+        > .card-body:first-child {
+            // Above background color would overflow on the card-header border
+            // without this
+            margin-top: $card-border-width;
+        }
+    }
+}
+
+.toast-header {
+    background-clip: border-box;
+}
+.toast-body {
+    // Same as card-body, see explanation above
+    @include o-bg-color(opacify($toast-background-color, 0.08));
+}
+
+// Modify modals so that their scrollable element is the modal-body (except in
+// mobile).
+@include media-breakpoint-up(sm) {
+    .modal-dialog {
+        height: 100%;
+        padding: $modal-dialog-margin-y-sm-up 0;
+        margin: 0 auto;
+    }
+    .modal-content {
+        max-height: 100%;
+    }
+    .modal-header, .modal-footer {
+        flex: 0 0 auto;
+    }
+    .modal-body {
+        overflow: auto;
+        min-height: 0;
+    }
+}
+
+// Do not display the backdrop element added by bootstrap in the body and add a
+// background on the modal to keep the same effect. The bootstrap backdrop was
+// probably useful for compatibility with <IE9 but is no longer needed. This
+// also avoids z-index issues because modals could be opened in an element
+// (e.g. the website #wrapwrap) whose stacking context is different of the body
+// one (where the backdrop is opened). This would make the backdrop appears on
+// top of the modal.
+.modal-backdrop {
+    display: none;
+}
+.modal:not([data-backdrop="false"]) {
+    background-color: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+}
+
+// Restore pointer cursor which came with the 'btn' class until BS 4.3.1
+.btn:not(:disabled):not(.disabled) {
+    cursor: pointer;
+}
+
+// Disable RTL for the dropdown position
+.dropdown-menu {
+    &[x-placement^="top"],
+    &[x-placement^="right"],
+    &[x-placement^="bottom"],
+    &[x-placement^="left"] {
+        /*rtl:ignore*/
+        right: auto;
+    }
+}
+
+// Disable RTL for the popover position
+.popover {
+    right: auto#{"/*rtl:ignore*/"};
+}
+
+// Review input group: BS allows to control button and input dimensions
+// individually but fails to make input-group correctly in all cases (for some
+// strange reasons they made it work well for sm and lg but not for the normal
+// sizing).
+.input-group-prepend,
+.input-group-append {
+    > .btn {
+        @include button-size($input-padding-y, $input-padding-x, $input-font-size, $input-line-height, $input-border-radius);
+        border-width: $input-border-width;
+    }
+}
+
+// Review $link-decoration behavior
+@if $link-decoration and $link-decoration != none {
+    .btn:not(.btn-link), .nav-link, .dropdown-item, .page-link, .breadcrumb-item > a, .badge, .fa {
+        &, &:hover, &:focus {
+            text-decoration: none;
+        }
+    }
+}
+
+// Generating bootstrap color buttons was disabled (see import_bootstrap.scss).
+// We do it ourself here with a tweak: we introduce btn-fill-* (working as the
+// normal btn-* classes (in opposition to btn-outline-* classes). We then map
+// the btn-* classes to either btn-fill-* or btn-outline-* classes depending on
+// the configuration. We also allow to define a border-color different than the
+// background color.
+$o-btn-bg-colors: () !default;
+$o-btn-border-colors: () !default;
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-fill-#{$color} {
+        @include button-variant($-bg-color, $-border-color);
+    }
+}
+@each $color, $value in $theme-colors {
+    $-bg-color: map-get($o-btn-bg-colors, $color) or $value;
+    $-border-color: map-get($o-btn-border-colors, $color) or $-bg-color;
+    .btn-outline-#{$color} {
+        @include button-outline-variant($-border-color);
+    }
+}
+$o-btn-outline-defaults: () !default;
+@each $color, $value in $theme-colors {
+    .btn-#{$color} {
+        @if index($o-btn-outline-defaults, $color) {
+            @extend .btn-outline-#{$color};
+        } @else {
+            @extend .btn-fill-#{$color};
+        }
+    }
+}
+
+// Compensate navbar brand padding if no visible border
+@if alpha($navbar-dark-toggler-border-color) < 0.001 {
+    .navbar-dark .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@if alpha($navbar-light-toggler-border-color) < 0.001 {
+    .navbar-light .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+// Review bootstrap navbar to work with different nav styles
+$o-navbar-nav-pills-link-padding-x: $nav-link-padding-x !default;
+$o-navbar-nav-pills-link-border-radius: $nav-pills-border-radius !default;
+.navbar-nav.nav-pills .nav-link {
+    // The rules is needed so that the padding is not reset to 0 in mobile.
+    // Also use default nav-link paddings instead of navbar ones.
+    padding-right: $o-navbar-nav-pills-link-padding-x;
+    padding-left: $o-navbar-nav-pills-link-padding-x;
+
+    @if $o-navbar-nav-pills-link-border-radius != $nav-pills-border-radius {
+        @include border-radius($o-navbar-nav-pills-link-border-radius);
+    }
+}
+
+.carousel-control-next .sr-only {
+    left: 50%; // Avoid horizontal scrollbar in Chrome
+}

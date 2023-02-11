@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Account Fiscal Position Template -->
+    <record id="account_fiscal_position_template_lt" model="account.fiscal.position.template">
+        <field name="name">LT</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_id" ref="base.lt"/>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="10"/>
+    </record>
+    <record id="account_fiscal_position_template_eu" model="account.fiscal.position.template">
+        <field name="name">EU</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="True"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="20"/>
+    </record>
+    <record id="account_fiscal_position_template_b2c_eu" model="account.fiscal.position.template">
+        <field name="name">B2C EU</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="vat_required" eval="False"/>
+        <field name="country_group_id" ref="base.europe"/>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="25"/>
+    </record>
+    <record id="account_fiscal_position_template_out_eu" model="account.fiscal.position.template">
+        <field name="name">Not EU</field>
+        <field name="auto_apply" eval="True"/>
+        <field name="chart_template_id" ref="account_chart_template_lithuania"/>
+        <field name="sequence" eval="30"/>
+    </record>
+    <!-- Account Fiscal Position Tax Template -->
+    <record id="account_fiscal_position_tax_template_eu_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="account_fiscal_position_template_eu"/>
+        <field name="tax_src_id" ref="account_tax_template_sales_21"/>
+        <field name="tax_dest_id" ref="account_tax_template_sales_0_vat13"/>
+    </record>
+    <record id="account_fiscal_position_tax_template_eu_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="account_fiscal_position_template_eu"/>
+        <field name="tax_src_id" ref="account_tax_template_purchase_21"/>
+        <field name="tax_dest_id" ref="account_tax_template_purchase_assumed_21"/>
+    </record>
+    <record id="account_fiscal_position_tax_template_out_eu_1" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="account_fiscal_position_template_out_eu"/>
+        <field name="tax_src_id" ref="account_tax_template_sales_21"/>
+        <field name="tax_dest_id" ref="account_tax_template_sales_0_vat12"/>
+    </record>
+    <record id="account_fiscal_position_tax_template_out_eu_2" model="account.fiscal.position.tax.template">
+        <field name="position_id" ref="account_fiscal_position_template_out_eu"/>
+        <field name="tax_src_id" ref="account_tax_template_purchase_21"/>
+        <field name="tax_dest_id" ref="account_tax_template_purchase_0"/>
+    </record>
+</odoo>

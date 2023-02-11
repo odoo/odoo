@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentList" owl="1">
+        <div class="o_AttachmentList">
+            <t t-if="attachmentList">
+                <div class="o_AttachmentList_partialList o_AttachmentList_partialListImages">
+                    <t t-foreach="attachmentList.attachmentImages" t-as="attachmentImage" t-key="attachmentImage.localId">
+                        <AttachmentImage class="o_AttachmentList_attachment" attachmentImageLocalId="attachmentImage.localId"/>
+                    </t>
+                </div>
+                <div class="o_AttachmentList_partialList o_AttachmentList_partialListNonImages">
+                    <t t-foreach="attachmentList.attachmentCards" t-as="attachmentCard" t-key="attachmentCard.localId">
+                        <AttachmentCard class="o_AttachmentList_attachment" attachmentCardLocalId="attachmentCard.localId"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

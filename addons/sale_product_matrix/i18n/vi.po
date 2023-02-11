@@ -1,0 +1,122 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_product_matrix
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Duy BQ <duybq86@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+msgid "Add product mode"
+msgstr "Chế độ thêm sản phẩm"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+msgid ""
+"Configurator: choose attribute values to add the matching         product variant to the order.\n"
+"Grid: add several variants at once from the grid of attribute values"
+msgstr ""
+"Cấu hình: chọn giá trị thuộc tính để thêm biến thể         sản phẩm vào đơn hàng.\n"
+"Lưới: thêm vài biến thể cùng lúc từ lưới giá trị thuộc tính"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Grid Product Tmpl"
+msgstr "Mẫu sản phẩm lưới"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
+msgid "Grid Update"
+msgstr "Cập nhật lưới"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
+msgid ""
+"If set, the matrix of the products configurable by matrix will be shown on "
+"the report of the order."
+msgstr ""
+"Nếu đặt, ma trận của sản phẩm có thể cấu hình bằng ma trận sẽ được hiển thị "
+"trong báo cáo của đơn hàng. "
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
+msgid "Matrix local storage"
+msgstr "Lưu trữ cục bộ ma trận"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
+msgid "Order Grid Entry"
+msgstr "Mục nhập lưới đơn hàng"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
+msgid "Print Variant Grids"
+msgstr "In lưới biến thể"
+
+#. module: sale_product_matrix
+#: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
+msgid "Product Configurator"
+msgstr "Cấu hình sản phẩm"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product Template"
+msgstr "Mẫu sản phẩm"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_sale_order
+msgid "Sales Order"
+msgstr "Đơn bán hàng"
+
+#. module: sale_product_matrix
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Lựa chọn biến thể "
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
+msgid "Technical field for product_matrix functionalities."
+msgstr "Trường kỹ thuật cho chức năng của product_matrix. "
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
+msgid ""
+"Technical local storage of grid. \n"
+"If grid_update, will be loaded on the SO. \n"
+"If not, represents the matrix to open."
+msgstr ""
+"Lưu trữ cục bộ kỹ thuật của lưới . \n"
+"Nếu là grid_update, sẽ được tải lên đơn bán hàng. \n"
+"Nếu không, đại diện ma trận để mở."
+
+#. module: sale_product_matrix
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
+msgid "Whether the grid field contains a new matrix to apply or not."
+msgstr "Liệu trường lưới có chứa ma trận mới để áp dụng hay không. "
+
+#. module: sale_product_matrix
+#: code:addons/sale_product_matrix/models/sale_order.py:0
+#, python-format
+msgid ""
+"You cannot change the quantity of a product present in multiple sale lines."
+msgstr ""
+"Bạn không thể thay đổi số lượng của sản phẩm hiện trong nhiều dòng bán hàng."
+" "

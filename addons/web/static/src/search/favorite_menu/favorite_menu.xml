@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.FavoriteMenu" owl="1">
+        <Dropdown class="o_favorite_menu btn-group" togglerClass="'btn btn-light'" t-on-dropdown-item-selected="onFavoriteSelected">
+            <t t-set-slot="toggler">
+                <i class="small mr-1" t-att-class="icon"/>
+                <span class="o_dropdown_title">Favorites</span>
+            </t>
+            <t t-set="currentGroup" t-value="null"/>
+            <t t-foreach="items" t-as="item" t-key="item.id or item.key">
+                <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                    <div role="separator" class="dropdown-divider"/>
+                </t>
+                <t t-if="item.type ==='favorite'">
+                    <DropdownItem class="o_menu_item"
+                        t-att-class="{ selected: item.isActive }"
+                        checked="item.isActive"
+                        payload="{ itemId: item.id }"
+                        parentClosingMode="'none'"
+                    >
+                        <span class="d-flex p-0 align-items-center justify-content-between">
+                            <t t-esc="item.description"/>
+                            <i class="o_icon_right fa fa-trash-o"
+                                title="Delete item"
+                                t-on-click.stop="openConfirmationDialog(item.id)"
+                            />
+                        </span>
+                    </DropdownItem>
+                </t>
+                <t t-else="">
+                    <t t-component="item.Component" t-on-dropdown-item-selected.stop=""/>
+                </t>
+                <t t-set="currentGroup" t-value="item.groupNumber"/>
+            </t>
+        </Dropdown>
+    </t>
+
+</templates>

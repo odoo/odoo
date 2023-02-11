@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.event.booth</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="priority" eval="4"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="%(event_booth_action_from_event)d"
+                        type="action" icon="fa-university">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <span attrs="{'invisible': [('event_booth_count', '=', 0)]}">
+                                <field name="event_booth_count_available"/> /
+                            </span>
+                            <field name="event_booth_count"/>
+                        </span>
+                        <span class="o_stat_text">Booths</span>
+                    </div>
+                </button>
+            </div>
+            <page name="tickets" position="after">
+                <page string="Booths" groups="base.group_no_one">
+                    <!-- The booths created from 'event_type_id' won't be saved if invisible attr is set. -->
+                    <field name="event_booth_ids"
+                        context="{
+                            'form_view_ref': 'event_booth.event_booth_view_form_simple_from_event',
+                            'tree_view_ref': 'event_booth.event_booth_view_tree_from_event',
+                        }"/>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</data></odoo>

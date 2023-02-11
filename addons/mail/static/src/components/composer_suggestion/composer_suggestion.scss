@@ -1,0 +1,43 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ComposerSuggestion {
+    display: flex;
+    width: map-get($sizes, 100);
+    padding: map-get($spacers, 2) map-get($spacers, 4);
+
+    &:active {
+        background-color: $gray-300;
+     }
+}
+
+.o_ComposerSuggestion_part1 {
+    // avoid shrinking part 1 because it is more important than part 2
+    // because no shrink, ensure it cannot overflow with a max-width
+    flex: 0 0 auto;
+    max-width: map-get($sizes, 100);
+    padding-inline-end: map-get($spacers, 2);
+}
+
+.o_ComposerSuggestion_part2 {
+    // shrink part 2 to properly ensure it cannot overflow
+    flex: 0 1 auto;
+}
+
+.o_ComposerSuggestion_partnerImStatusIcon {
+    flex: 0 0 auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ComposerSuggestion_part1 {
+    font-weight: $font-weight-bold;
+}
+
+.o_ComposerSuggestion_part2 {
+    font-style: italic;
+    color: $gray-600;
+}

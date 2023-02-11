@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- account.tax.template -->
+    <record id="tr_kdv_satis_sale_18" model="account.tax.template">
+        <field name="sequence">11</field>
+        <field name="description">KDV %18(sale)</field>
+        <field name="name">KDV %18(sale)</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="chart_template_id" ref="l10ntr_tek_duzen_hesap"/>
+        <field name="tax_group_id" ref="tax_group_kdv_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+
+    <record id="tr_kdv_satis_purchase_18" model="account.tax.template">
+        <field name="sequence">11</field>
+        <field name="description">KDV %18(purchase)</field>
+        <field name="name">KDV %18(purchase)</field>
+        <field name="price_include" eval="0"/>
+        <field name="amount">18</field>
+        <field name="amount_type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="chart_template_id" ref="l10ntr_tek_duzen_hesap"/>
+        <field name="tax_group_id" ref="tax_group_kdv_18"/>
+        <field name="invoice_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr391'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5,0,0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('tr191'),
+            }),
+        ]"/>
+    </record>
+</odoo>

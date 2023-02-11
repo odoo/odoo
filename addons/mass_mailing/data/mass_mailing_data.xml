@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Cron that processes the mass mailing queue -->
+        <record id="ir_cron_mass_mailing_queue" model="ir.cron">
+            <field name="name">Mail Marketing: Process queue</field>
+            <field name="model_id" ref="model_mailing_mailing"/>
+            <field name="state">code</field>
+            <field name="code">model._process_mass_mailing_queue()</field>
+            <field name="user_id" ref="base.user_root" />
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field eval="False" name="doall" />
+        </record>
+        <!-- Cron that processes the a/b testing -->
+        <record id="ir_cron_mass_mailing_ab_testing" model="ir.cron">
+            <field name="name">Mail Marketing: A/B Testing</field>
+            <field name="model_id" ref="model_utm_campaign"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_process_mass_mailing_ab_testing()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="active" eval="False"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="True"/>
+        </record>
+        <record id="mailing_list_data" model="mailing.list">
+            <field name="name">Newsletter</field>
+        </record>
+        <record id="mass_mailing_contact_0" model="mailing.contact">
+            <field name="name" model="res.users" eval="obj().env.ref('base.user_admin').name"/>
+            <field name="email" model="res.users" eval="obj().env.ref('base.user_admin').email"/>
+            <field name="list_ids" eval="[(6,0,[ref('mass_mailing.mailing_list_data')])]"/>
+        </record>
+        <!-- Snippets' Default Images (to be replaced by themes) -->
+        <record id="mass_mailing.s_media_list_default_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_media_list_default_image_1.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_media_list_1.jpg</field>
+        </record>
+        <record id="mass_mailing.s_media_list_default_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_media_list_default_image_2.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_media_list_2.jpg</field>
+        </record>
+        <record id="mass_mailing.s_media_list_default_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_media_list_default_image_3.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_media_list_3.jpg</field>
+        </record>
+        <record id="mass_mailing.s_company_team_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_company_team_image_1.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_team_member_1.png</field>
+        </record>
+        <record id="mass_mailing.s_company_team_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_company_team_image_2.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_team_member_2.png</field>
+        </record>
+        <record id="mass_mailing.s_company_team_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_company_team_image_3.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_team_member_3.png</field>
+        </record>
+        <record id="mass_mailing.s_company_team_image_4" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_company_team_image_4.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_team_member_4.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_demo_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_demo_image_1.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_1.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_demo_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_demo_image_2.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_2.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_demo_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_demo_image_3.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_3.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_demo_image_4" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_demo_image_4.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_4.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_demo_image_5" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_demo_image_5.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_5.png</field>
+        </record>
+        <record id="mass_mailing.s_reference_default_image_6" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_reference_default_image_6.png</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_references_6.png</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_1.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/furniture.jpg</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_2.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/clothes.jpg</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_3" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_3.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/books.jpg</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_4" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_4.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/essentials_oils.jpg</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_5" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_5.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/services.jpg</field>
+        </record>
+        <record id="mass_mailing.s_product_list_default_image_6" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_product_list_default_image_6.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/multimedia.jpg</field>
+        </record>
+        <record id="mass_mailing.s_blockquote_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_blockquote_default_image.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_team_member_2.png</field>
+        </record>
+        <record id="mass_mailing.s_blockquote_cover_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_blockquote_cover_default_image.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_blockquote_cover.jpg</field>
+        </record>
+        <record id="mass_mailing.s_masonry_block_default_image_1" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_masonry_block_default_image_1.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_masonry_block_1.jpg</field>
+        </record>
+        <record id="mass_mailing.s_masonry_block_default_image_2" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">s_masonry_block_default_image_2.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/mass_mailing/static/src/img/snippets_demo/s_cover.jpg</field>
+        </record>
+    </data>
+</odoo>

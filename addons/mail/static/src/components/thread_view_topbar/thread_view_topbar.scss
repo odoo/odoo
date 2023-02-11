@@ -1,0 +1,111 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    height: $o-statusbar-height * 1.25;
+}
+
+.o_ThreadViewTopbar_avatar {
+    height: 26px;
+    width: 26px;
+    object-fit: cover;
+}
+
+.o_ThreadViewTopbar_editableItem {
+    border: $border-width solid;
+}
+
+.o_ThreadViewTopbar_threadDescriptionSeparator {
+    width: $border-width;
+    height: $font-size-sm;
+}
+
+.o_ThreadViewTopbar_title {
+    min-width: 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ThreadViewTopbar {
+    background-color: gray('100');
+}
+
+.o_ThreadViewTopbar_button {
+    background: none;
+    border: none;
+    outline: none;
+
+    &.o-active {
+        color: gray('700');
+    }
+
+    &:not(.o-active) {
+        color: gray('500');
+    }
+
+    @include hover-focus () {
+        outline: none;
+        color: gray('600');
+    }
+}
+
+// use selector specificity to override bootstrap style
+input.o_ThreadViewTopbar_guestNameInput {
+    width: 150px;
+}
+
+.o_ThreadViewTopbar_invitePopoverView .popover-body {
+    padding: 0; // cancel unwanted padding
+}
+
+.o_ThreadViewTopbar_threadDescriptionSeparator {
+    background-color: $border-color;
+}
+
+.o_ThreadViewTopbar_threadName {
+    max-width: map-get($sizes, 75);
+
+    &:not(.o-threadNameEditable) {
+        border-color: transparent; // presence of border even if invisible to prevent flicker
+    }
+
+    &.o-threadNameEditable {
+        background-color: $white;
+        border-color: $border-color;
+    }
+}
+
+.o_ThreadViewTopbar_threadDescription {
+
+    &:not(.o-threadDescriptionEditable) {
+        border-color: transparent; // presence of border even if invisible to prevent flicker
+    }
+
+    &.o-threadDescriptionEditable {
+        background-color: $white;
+        border-color: $border-color;
+    }
+}
+
+.o_ThreadViewTopbar_threadAddDescriptionEmptyLabel {
+    color: gray('400');
+    cursor: pointer;
+
+    &:hover {
+        color: gray('900');
+    }
+}
+
+.o_ThreadViewTopbar_userName {
+    &:not(.o-userNameEditable) {
+        border-color: transparent;
+    }
+
+    &.o-userNameEditable {
+        background-color: $white;
+        border-color: $border-color;
+    }
+}

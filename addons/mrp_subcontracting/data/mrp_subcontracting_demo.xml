@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="mrp_bom_subcontract" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product.product_delivery_02"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">subcontract</field>
+            <field name="subcontractor_ids" eval="[(4, ref('base.res_partner_12'))]"/>
+        </record>
+
+        <record id="mrp_bom_line_subcontract" model="mrp.bom.line">
+            <field name="product_id" ref="mrp.product_product_computer_desk_screw"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="bom_id" ref="mrp_bom_subcontract"/>
+        </record>
+
+        <record id="product_supplierinfo_subcontracting" model="product.supplierinfo">
+            <field name="product_tmpl_id" ref="product.product_delivery_02_product_template"/>
+            <field name="name" ref="base.res_partner_12"/>
+            <field name="sequence">1</field>
+            <field name="delay">1</field>
+            <field name="min_qty">1</field>
+            <field name="price">27</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="product.product_delivery_02" model="product.product">
+            <field name="route_ids" eval="[(4,ref('stock.route_warehouse0_mto'))]"></field>
+        </record>
+
+    </data>
+</odoo>

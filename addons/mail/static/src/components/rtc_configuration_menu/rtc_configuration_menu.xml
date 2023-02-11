@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RtcConfigurationMenu" owl="1">
+        <div class="o_RtcConfigurationMenu">
+            <div class="o_RtcConfigurationMenu_option">
+                <label class="o_RtcConfigurationMenu_optionLabel" title="Input device" aria-label="Input device">
+                    <span class="o_RtcConfigurationMenu_optionName">Input device</span>
+                    <div>
+                        <select name="inputDevice" class="o_RtcConfigurationMenu_optionDeviceSelect" t-att-value="messaging.userSetting.audioInputDeviceId" t-on-change="_onChangeSelectAudioInput">
+                            <option value="">Browser default</option>
+                            <t t-if="state.userDevices" t-foreach="state.userDevices" t-as="device">
+                                <t t-if="device.kind === 'audioinput'">
+                                    <option t-att-value="device.deviceId"><t t-esc="device.label"/></option>
+                                </t>
+                            </t>
+                        </select>
+                    </div>
+                </label>
+            </div>
+            <div class="o_RtcConfigurationMenu_option">
+                <label class="o_RtcConfigurationMenu_optionLabel" title="Use Push-to-talk" aria-label="Use Push-to-talk">
+                    <span class="o_RtcConfigurationMenu_optionName">Use Push-to-talk</span>
+                    <input type="checkbox" aria-label="toggle push-to-talk" title="toggle push-to-talk" t-on-change="_onChangePushToTalk" t-att-checked="messaging.userSetting.usePushToTalk ? 'checked' : ''"/>
+                </label>
+            </div>
+            <t t-if="messaging.userSetting.usePushToTalk">
+                <div class="o_RtcConfigurationMenu_option">
+                    <label class="o_RtcConfigurationMenu_optionLabel" title="Push-to-talk key" aria-label="Push-to-talk key">
+                        <span class="o_RtcConfigurationMenu_optionName">Push-to-talk key</span>
+                        <span class="o_RtcConfigurationMenu_optionPushToTalkGroup">
+                            <t t-if="messaging.userSetting.pushToTalkKey">
+                                <span class="o_RtcConfigurationMenu_optionPushToTalkGroupKey" t-att-class="{ 'o-isRegistering': messaging.userSetting.rtcConfigurationMenu.isRegisteringKey }" t-esc="messaging.userSetting.pushToTalkKeyToString()"/>
+                            </t>
+                            <button class="o_RtcConfigurationMenu_button" t-on-click="_onClickRegisterKeyButton">
+                                <t t-if="messaging.userSetting.rtcConfigurationMenu.isRegisteringKey">
+                                    <i title="Cancel" aria-label="Cancel" class="fa fa-2x fa-times-circle"/>
+                                </t>
+                                <t t-else="">
+                                    <i title="Register new key" aria-label="Register new key" class="fa fa-2x fa-keyboard-o"/>
+                                </t>
+                            </button>
+                        </span>
+                    </label>
+
+                </div>
+                <div t-if="messaging.userSetting.rtcConfigurationMenu.isRegisteringKey">Press a key to register it as the push-to-talk shortcut</div>
+                <div class="o_RtcConfigurationMenu_option">
+                    <label class="o_RtcConfigurationMenu_optionLabel" title="Delay after releasing push-to-talk" aria-label="Delay after releasing push-to-talk">
+                        <span class="o_RtcConfigurationMenu_optionName">Delay after releasing push-to-talk</span>
+                        <div class="o_RtcConfigurationMenu_optionInputGroup">
+                        <input class="o_RtcConfigurationMenu_optionInputGroupInput" type="range" min="1" max="2000" step="1" t-att-value="messaging.userSetting.voiceActiveDuration" t-on-change="_onChangeDelay"/>
+                        <span class="o_RtcConfigurationMenu_optionInputGroupValue"><t t-esc="messaging.userSetting.voiceActiveDuration"/>ms</span>
+                        </div>
+                    </label>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_RtcConfigurationMenu_option">
+                    <label class="o_RtcConfigurationMenu_optionLabel" title="Minimum activity for voice detection" aria-label="Minimum activity for voice detection">
+                        <span class="o_RtcConfigurationMenu_optionName">Minimum activity for voice detection</span>
+                        <div class="o_RtcConfigurationMenu_optionInputGroup">
+                            <input class="o_RtcConfigurationMenu_optionInputGroupInput" type="range" min="0.001" max="1" step="0.001" t-att-value="messaging.userSetting.voiceActivationThreshold" t-on-change="_onChangeThreshold"/>
+                            <span class="o_RtcConfigurationMenu_optionInputGroupValue"><t t-esc="messaging.userSetting.voiceActivationThreshold"/></span>
+                        </div>
+                    </label>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

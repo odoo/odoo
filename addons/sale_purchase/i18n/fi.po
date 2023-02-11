@@ -1,0 +1,215 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_purchase
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2021
+# Atte Isopuro <atte.isopuro@web-veistamo.fi>, 2021
+# Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2021
+# Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:26+0000\n"
+"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2021\n"
+"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid ""
+".\n"
+"            Manual actions may be needed."
+msgstr ""
+".\n"
+"            Manuaalisia toimintoja saatetaan tarvita."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">Osto</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Myynti</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s) occurred on the purchase order(s):"
+msgstr "Ostotilauksessa tapahtui poikkeuksia:"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Exception(s) occurred on the sale order(s):"
+msgstr "Myyntitilauksessa tapahtui poikkeuksia:"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "Exception(s):"
+msgstr "Poikkeukset:"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid "Generated Purchase Lines"
+msgstr "Luodut ostorivit"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
+msgid ""
+"If ticked, each time you sell this product through a SO, a RfQ is "
+"automatically created to buy the product. Tip: don't forget to set a vendor "
+"on the product."
+msgstr ""
+"Jos valintasi on, joka kerta kun myyt tätä tuotetta väitetiedoksiannon "
+"kautta, RfQ luodaan automaattisesti tuotteen ostamista varten. Vinkki: "
+"muista asettaa myyjä tuotteelle."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "Manual actions may be needed."
+msgstr "Manuaalisia toimintoja saatetaan tarvita."
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
+msgid "Number of Purchase Order Generated"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
+msgid "Number of generated purchase items"
+msgstr "Luotujen ostoaineiden määrä"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Ordered quantity decreased!"
+msgstr "Tilattu määrä väheni!"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
+msgid "Origin Sale Item"
+msgstr "Alkuperäinen myyntituote"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_product_template
+msgid "Product Template"
+msgstr "Tuotemalli"
+
+#. module: sale_purchase
+#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
+msgid "Product that is not a service can not create RFQ."
+msgstr "Tuote, joka ei ole palvelu, ei voi luoda RFQ: ta."
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order
+msgid "Purchase Order"
+msgstr "Ostotilaus"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Ostotilausrivi"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Ostotilaus muodostettu lähteestä %s"
+
+#. module: sale_purchase
+#: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
+msgid ""
+"Purchase line generated by this Sales item on order confirmation, or when "
+"the quantity was increased."
+msgstr ""
+"Tämän myyntituotteen luoma ostorivi tilausvahvistuksen yhteydessä tai kun "
+"määrää nostettiin."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "Reordering"
+msgstr "Uudelleentilaus"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_order_id
+msgid "Sale Order"
+msgstr "Myyntitilaus"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilausrivi"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/purchase_order.py:0
+#, python-format
+msgid "Sources Sale Orders %s"
+msgstr ""
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "Alihankittu palvelu"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid ""
+"There is no vendor associated to the product %s. Please define a vendor for "
+"this product."
+msgstr ""
+"Tuotteeseen %s ei ole liitetty toimittajaa. Määritä tämän tuotteen myyjä."
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid ""
+"You are decreasing the ordered quantity! Do not forget to manually update "
+"the purchase order if needed."
+msgstr ""
+"Alennat tilattua määrää! Älä unohda päivittää tilausta manuaalisesti "
+"tarvittaessa."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "cancelled"
+msgstr "peruutettu"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
+msgid "of"
+msgstr "of"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
+msgid "ordered instead of"
+msgstr "Tilattu sen sijasta"

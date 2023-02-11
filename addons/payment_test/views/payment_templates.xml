@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="verified_token_checkmark" inherit_id="payment.verified_token_checkmark">
+        <xpath expr="//t[@name='payment_test_hook']" position="replace">
+            <t t-if="token.provider=='test'">
+                <span class="badge badge-warning">Test Token</span>
+            </t>
+        </xpath>
+    </template>
+
+</odoo>

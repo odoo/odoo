@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_account_payment_form_inherit_payment" model="ir.ui.view">
+        <field name="name">view.account.payment.form.inherit.payment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_draft']" position="after">
+                <field name="amount_available_for_refund" invisible="1"/>
+                <button type="object"
+                    name="action_refund_wizard"
+                    string="Refund"
+                    groups="account.group_account_invoice"
+                    attrs="{'invisible': [('amount_available_for_refund', '&lt;=', 0)]}"
+                    class="btn-secondary"/>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_refunds"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-money"
+                    attrs="{'invisible': [('refunds_count', '=', 0)]}">
+                    <field name="refunds_count" widget="statinfo" string="Refunds"/>
+                </button>
+            </xpath>
+            <xpath expr='//group[2]' position="inside">
+                <field name="source_payment_id" attrs="{'invisible': [('source_payment_id', '=', False)]}"/>
+                <field name="payment_transaction_id" groups="base.group_no_one" attrs="{'invisible': [('use_electronic_payment_method', '!=', True)]}"/>
+            </xpath>
+            <field name="payment_method_line_id" position="after">
+                <field name="payment_method_code" invisible="1"/>
+                <field name="suitable_payment_token_ids" invisible="1"/>
+                <field name="use_electronic_payment_method" invisible="1"/>
+                <field name="payment_token_id" options="{'no_create': True}"
+                    attrs="{'invisible': [('use_electronic_payment_method', '!=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

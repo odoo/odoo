@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Integration of a conditional "Manage payment methods" link in /my -->
+    <template id="pay_meth_link" inherit_id="portal.portal_layout">
+        <xpath expr="//div[hasclass('o_portal_my_details')]" position="inside">
+            <t t-set="partner" t-value="request.env.user.partner_id"/>
+            <t t-set="acquirers_allowing_tokenization"
+               t-value="request.env['payment.acquirer'].sudo()._get_compatible_acquirers(request.env.company.id, partner.id, force_tokenization=True, is_validation=True)"/>
+            <t t-set="existing_tokens" t-value="partner.payment_token_ids + partner.commercial_partner_id.sudo().payment_token_ids"/>
+            <!-- Only show the link if a token can be created or if one already exists -->
+            <div t-if="acquirers_allowing_tokenization or existing_tokens"
+                 class='manage_payment_method mt16'>
+                <a href="/my/payment_method">Manage payment methods</a>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Display of /payment/pay -->
+    <template id="pay">
+        <!-- Variables description:
+            - 'partner_is_different' - Whether the partner logged in is the one making the payment
+        -->
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Payment page -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <div t-if="not amount" class="alert alert-info">
+                                There is nothing to pay.
+                            </div>
+                            <div t-elif="not currency" class="alert alert-warning">
+                                <strong>Warning</strong> The currency is missing or incorrect.
+                            </div>
+                            <div t-elif="not partner_id" class="alert alert-warning">
+                                <strong>Warning</strong> You must be logged in to pay.
+                            </div>
+                            <div t-elif="not acquirers and not tokens" class="alert alert-warning">
+                                <strong>No suitable payment option could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website administrator.
+                            </div>
+                            <t t-else="">
+                                <div t-if="partner_is_different" class="alert alert-warning">
+                                    <strong>Warning</strong> Make sure your are logged in as the right partner before making this payment.
+                                </div>
+                                <t t-if="reference_prefix">
+                                    <b>Reference:</b>
+                                    <t t-esc="reference_prefix"/><br/>
+                                </t>
+                                <b>Amount:</b>
+                                <t t-esc="amount"
+                                   t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                                <t t-call="payment.checkout"/>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Display of /my/payment_methods -->
+    <template id="payment_methods" name="Payment Methods">
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment Methods'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Manage page -->
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <t t-if="acquirers or tokens" t-call="payment.manage"/>
+                            <div t-else="" class="alert alert-warning">
+                                <p><strong>No suitable payment acquirer could be found.</strong></p>
+                                <p>If you believe that it is an error, please contact the website administrator.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Display of /payment/status -->
+    <template id="payment_status" name="Payment Status">
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment Status'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Status page -->
+                    <div name="o_payment_status">
+                        <div name="o_payment_status_content"
+                             class="col-sm-6 col-sm-offset-3">
+                            <!-- The content is generated in JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Display of /payment/confirmation -->
+    <template id="confirm">
+        <!-- Variables description:
+            - 'tx' - The transaction to display
+            - 'message' - The acquirer message configured for the given transaction state
+            - 'status' - The alert class to use for the message
+        -->
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment Confirmation'"/>
+            <t t-set="additional_title"><t t-esc="page_title"/></t>
+            <div class="wrap">
+                <div class="container">
+                    <!-- Portal breadcrumb -->
+                    <t t-call="payment.portal_breadcrumb"/>
+                    <!-- Confirmation page -->
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <t t-call="payment.transaction_status"/>
+                                <div class="form-group row">
+                                    <label for="form_partner_name" class="col-md-3 col-form-label">
+                                        From
+                                    </label>
+                                    <span name="form_partner_name"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.partner_name"/>
+                                </div>
+                                <hr/>
+                                <div class="form-group row">
+                                    <label for="form_reference" class="col-md-3 col-form-label">
+                                        Reference
+                                    </label>
+                                    <span name="form_reference"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.reference"/>
+                                </div>
+                                <hr/>
+                                <div class="form-group row">
+                                    <label for="form_amount" class="col-md-3 col-form-label">
+                                        Amount
+                                    </label>
+                                    <span name="form_amount"
+                                          class="col-md-9 col-form-label"
+                                          t-esc="tx.amount"
+                                          t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                                </div>
+                                <hr/>
+                                <div class="row">
+                                    <div class="col-md-5 text-muted">
+                                        Processed by <t t-esc="tx.acquirer_id.sudo().name"/>
+                                    </div>
+                                    <div class="col-md-4 offset-md-3 mt-2 pl-0">
+                                        <a role="button"
+                                           t-attf-class="btn btn-#{status} float-right"
+                                           href="/my/home">
+                                            <i class="fa fa-arrow-circle-right"/> Back to My Account
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Breadcrumb for the portal -->
+    <template id="portal_breadcrumb">
+        <!-- Variables description:
+            - 'page_title' - The title of the breadcrumb item
+        -->
+        <div class="row">
+            <div class="col-md-6">
+                <ol class="breadcrumb mt8">
+                    <li class="breadcrumb-item">
+                        <a href="/my/home">
+                            <i class="fa fa-home"
+                               role="img"
+                               title="Home"
+                               aria-label="Home"/>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item"><t t-esc="page_title"/></li>
+                </ol>
+            </div>
+        </div>
+    </template>
+
+</odoo>

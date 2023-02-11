@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="message_notification_email">
+<div>
+<div t-if="has_button_access" itemscope="itemscope" itemtype="http://schema.org/EmailMessage">
+    <div itemprop="potentialAction" itemscope="itemscope" itemtype="http://schema.org/ViewAction">
+        <link itemprop="target" t-att-href="button_access['url']"/>
+        <link itemprop="url" t-att-href="button_access['url']"/>
+        <meta itemprop="name" t-att-content="button_access['title']"/>
+    </div>
+</div>
+<div t-if="has_button_access or len(actions) &gt; 0 or not is_discussion"
+        summary="o_mail_notification" style="padding: 0px; width:600px;">
+    <table cellspacing="0" cellpadding="0" border="0" style="width: 600px; margin-top: 5px;">
+    <tbody><tr>
+    <td valign="center">
+        <a t-if="has_button_access"
+                t-att-href="button_access['url']"
+                style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+            <t t-esc="button_access['title']"/>
+        </a>
+        <t t-if="actions">
+            <t t-foreach="actions" t-as="action">
+                |
+                <a t-att-href="action['url']" style="color: #875A7B; text-decoration:none !important;">
+                    <t t-esc="action['title']"/>
+                </a>
+            </t>
+        </t>
+    </td>
+    <td valign="center" align="right">
+        <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; max-width: 200px; max-height: 36px;" t-att-alt="'%s' % company.name"/>
+    </td>
+    </tr><tr>
+    <td colspan="2" style="text-align:center;">
+        <hr width="100%"
+            style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0 12px 0;"/>
+        <p t-if="subtype.internal" style="background-color: #f2dede; padding: 5px; margin-bottom: 16px;">
+            <strong>Internal communication</strong>: Replying will post an internal note. Followers won't receive any email notification.
+        </p>
+    </td>
+    </tr></tbody>
+    </table>
+</div>
+<div t-out="message.body"/>
+<ul t-if="tracking_values">
+    <t t-foreach="tracking_values" t-as="tracking">
+        <li><t t-esc="tracking[0]"/>: <t t-esc="tracking[1]"/> -&gt; <t t-esc="tracking[2]"/></li>
+    </t>
+</ul>
+<div t-if="signature" t-out="signature" style="font-size: 13px;"/>
+<p style="color: #555555; margin-top:32px;">
+    Sent
+    <span t-if="company.name">
+    by
+    <a t-if="website_url" t-att-href="website_url" style="text-decoration:none; color: #875A7B;">
+        <span t-esc="company.name"/>
+    </a>
+    <span t-if="not website_url" t-esc="company.name"/>
+    </span>
+    using
+    <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="text-decoration:none; color: #875A7B;">Odoo</a>.
+</p>
+</div>
+        </template>
+
+        <template id="mail_notification_borders">
+<div>
+<table border="0" width="100%" cellpadding="0" bgcolor="#ededed" style="padding: 20px; background-color: #ededed; border-collapse:separate;" summary="o_mail_notification">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size:20px; color:white; font-weight: bold;">
+                        <t t-esc="message.record_name"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: auto; width: 80px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#ffffff" style="min-width: 590px; background-color: rgb(255, 255, 255); padding: 20px; border-collapse:separate;">
+                <tbody><td valign="top" style="font-family:Arial,Helvetica,sans-serif; color: #555; font-size: 14px;">
+                    <t t-out="message.body"/>
+                </td></tbody>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table width="590" border="0" cellpadding="0" bgcolor="#875A7B" style="min-width: 590px; background-color: rgb(135,90,123); padding: 20px; border-collapse:separate;">
+                <tr><td valign="middle" align="left" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                    <t t-esc="company.name"/><br/>
+                    <t t-esc="company.phone"/>
+                </td><td valign="middle" align="right" style="color: #fff; padding-top: 10px; padding-bottom: 10px; font-size: 12px;">
+                    <t t-if="company.email">
+                        <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: white;"><t t-esc="company.email"/></a><br/>
+                    </t>
+                    <t t-if="company.website">
+                        <a t-att-href="'%s' % company.website" style="text-decoration:none; color: white;">
+                            <t t-esc="company.website"/>
+                        </a>
+                    </t>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td align="center" style="padding: 8px; font-size:11px;">
+            Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email">Odoo</a>.
+        </td>
+    </tr>
+</tbody>
+</table>
+</div>
+        </template>
+
+        <template id="mail_notification_light">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-esc="message.record_name and message.record_name.replace('/','-') or ''"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td style="min-width: 590px;">
+            <t t-out="message.body"/>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px; padding: 0 8px 0 8px; font-size:11px;">
+            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;"/>
+            <b t-esc="company.name"/><br/>
+            <div style="color: #999999;">
+                <t t-esc="company.phone"/>
+                <t t-if="company.email"> |
+                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
+                </t>
+                <t t-if="company.website"> |
+                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
+                        <t t-esc="company.website"/>
+                    </a>
+                </t>
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+        Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+</td></tr>
+</table>
+        </template>
+
+        <!-- Information on model to use this notification template
+          * if the record has an online access defined in get_access_action, having
+            a _get_share_url methods is required (like sale order and invoice);
+          * this template works best with portal-enable models although it is not
+            a complete requirement currently;
+        -->
+        <template id="mail_notification_paynow" name="Mail: Pay Now mail notification template">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 24px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <t t-set="access_action" t-value="record.with_context(force_website=True).get_access_action()"/>
+            <t t-set="is_online" t-value="access_action and access_action['type'] == 'ir.actions.act_url'"/>
+            <t t-set="base_url" t-value="record.get_base_url()"/>
+            <t t-set="share_url" t-value="is_online and record._get_share_url(redirect=True, signup_partner=notification_is_customer, share_token=notification_is_customer)"/>
+            <t t-set="access_url" t-value="is_online and share_url and base_url + share_url or ''"/>
+            <t t-set="access_name">
+                View <t t-esc="model_description or 'document'"/>
+            </t>
+            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: white; padding: 0; border-collapse:separate;">
+                <tr><td valign="middle">
+                    <span style="font-size: 10px;">Your <t t-esc="model_description or 'document'"/></span><br/>
+                    <span style="font-size: 20px; font-weight: bold;">
+                        <t t-esc="message.record_name"/>
+                    </span>
+                </td><td valign="middle" align="right">
+                    <img t-att-src="'/logo.png?company=%s' % (company.id or 0)" style="padding: 0px; margin: 0px; height: 48px;" t-att-alt="'%s' % company.name"/>
+                </td></tr>
+                <tr><td colspan="2" style="text-align:center;">
+                  <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;"/>
+                </td></tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td style="padding: 0">
+            <t t-out="message.body"/>
+            <div t-if="is_online and not record._context.get('proforma')" style="margin: 32px 0px 32px 0px; text-align: center;">
+                <a t-att-href="access_url"
+                    style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    <t t-esc="access_name"/>
+                </a>
+            </div>
+            <t t-if="'user_id' in record and record.user_id and not record.env.user._is_superuser() and signature != ''">
+                <div style="margin: 0px; padding: 0px; font-size:13px;">
+                    Best regards,
+                </div>
+                <div>&amp;nbsp;</div>
+                <div t-if="record.user_id.sudo().signature" style="font-size: 13px;">
+                    <div t-out="record.user_id.sudo().signature"/>
+                </div>
+            </t>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td style="padding: 0; font-size:11px;">
+            <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 32px 0px 4px 0px;"/>
+            <b t-esc="company.name"/><br/>
+            <div style="color: #999999">
+                <t t-esc="company.phone"/>
+                <t t-if="company.email"> |
+                    <a t-att-href="'mailto:%s' % company.email" style="text-decoration:none; color: #999999;"><t t-esc="company.email"/></a>
+                </t>
+                <t t-if="company.website"> |
+                    <a t-att-href="'%s' % company.website" style="text-decoration:none; color: #999999;">
+                        <t t-esc="company.website"/>
+                    </a>
+                </t>
+            </div>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px; padding: 8px; font-size:11px;">
+    Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=email" style="color: #875A7B;">Odoo</a>
+</td></tr>
+</table>
+        </template>
+
+        <!-- Discuss utility templates for notifications -->
+        <template id="message_user_assigned">
+<p style="margin: 0px;">
+    <span>Dear <t t-esc="object.user_id.sudo().name"/>,</span><br />
+    <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
+</p>
+<p style="padding-top: 24px; padding-bottom: 16px;">
+    <a t-att-href="access_link" t-att-data-oe-model="object._name" t-att-data-oe-id="object.id" style="background-color:#875A7B; padding: 10px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="model_description or 'document'"/>
+    </a>
+</p>
+        </template>
+
+        <template id="message_activity_done">
+<div>
+    <p>
+        <span t-attf-class="fa #{activity.activity_type_id.icon} fa-fw"/><span t-field="activity.activity_type_id.name"/> done
+        <t t-if="display_assignee"> (originally assigned to <span t-field="activity.user_id.name"/>)</t>
+        <span t-if="activity.summary">: </span><span t-if="activity.summary" t-field="activity.summary"/>
+    </p>
+    <div t-if="feedback">
+        <t t-foreach="feedback.split('\n')" t-as="feedback_line">
+            <t t-esc="feedback_line"/>
+            <br t-if="not feedback_line_last"/>
+        </t>
+    </div>
+    <t t-if="activity.note and activity.note != '&lt;p&gt;&lt;br&gt;&lt;/p&gt;'"><!-- <p></br></p> -->
+        <div class="o_mail_note_title"><strong>Original note:</strong></div>
+        <div t-field="activity.note"/>
+    </t>
+</div>
+        </template>
+
+        <template id="message_activity_assigned">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <span t-field="activity.create_uid.name"/> assigned you an activity <span t-field="activity.activity_type_id.name"/>
+    <t t-if="activity.summary">(<span t-field="activity.summary"/>)</t>
+    on <span t-field="activity.res_name"/>
+    to close for <span t-field="activity.date_deadline"/>.<br />
+    <p style="padding: 16px 0px 16px 0px;">
+        <a t-att-href="access_link" t-att-data-oe-model="activity.res_model" t-att-data-oe-id="activity.res_id"
+            style="background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
+            View <t t-esc="model_description or 'document'"/>
+        </a>
+    </p>
+    <div t-if="activity.note" style="margin-top: 8px;" t-field="activity.note"/>
+</div>
+        </template>
+
+        <template id="message_origin_link">
+            <p>
+                <t t-if="edit">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
+                <t t-else="">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                </t>
+            </p>
+        </template>
+
+        <!-- Mail gateway templates -->
+        <template id="mail_bounce_catchall">
+<div>
+    <p>Hello <t t-esc="message['email_from']"/>,</p>
+    <p>The email sent to <t t-esc="message['to']"/> cannot be processed. This address
+    is used to collect replies and should not be used to directly contact <t t-esc="res_company.name"/>.</p>
+    <p>Please contact us instead using <a t-att-href="'mailto:%s' % res_company.email"><t t-esc="res_company.email"/></a></p>
+    <p>Regards,</p>
+    <p>The <t t-esc="res_company.name"/> team.</p>
+</div>
+<blockquote><t t-esc="message['body']"/></blockquote>
+        </template>
+
+        <!-- Mail bounce alias mail template -->
+        <template id="mail_bounce_alias_security">
+<div><t t-out="body"/></div>
+<blockquote><t t-out="message['body']"/></blockquote>
+        </template>
+    </data>
+</odoo>

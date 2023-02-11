@@ -1,0 +1,290 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_gift_card
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Farid Fox, 2022
+# Malaz Abuidris <msea@odoo.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~14.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-09-14 10:29+0000\n"
+"PO-Revision-Date: 2021-09-14 12:25+0000\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
+"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "<strong>Gift Card Code</strong>"
+msgstr "<strong>رمز بطاقة الهدايا</strong> "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Amount of the gift card:"
+msgstr "مبلغ بطاقة الهدايا: "
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Barcode"
+msgstr "باركود"
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_barcode_rule
+msgid "Barcode Rule"
+msgstr "قاعدة الباركود"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order_line__generated_gift_card_ids
+msgid "Bought Gift Card"
+msgstr "بطاقة الهدايا المشتراة "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__buy_pos_order_line_id
+msgid "Buy Pos Order Line"
+msgstr "بند طلب نقطة بيع الشراء "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Cancel"
+msgstr "إلغاء "
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Card expires"
+msgstr "تنتهي صلاحية البطاقة "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Check a gift card"
+msgstr "تفقد بطاقة هدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Confirm"
+msgstr "تأكيد"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_order_line__gift_card_id
+msgid "Deducted from this Gift Card"
+msgstr "تم الخصم من بطاقة الهدايا هذه "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_settings
+msgid "Defines the way you want to set your gift cards."
+msgstr "يحدد الطريقة التي ترغب في تعيين بطاقات الهدايا فيها. "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Discard"
+msgstr "إهمال "
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__create_set
+msgid "Generate a new barcode and set a price"
+msgstr "قم بإنشاء باركود جديد ثم تعيين سعر "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Generate barcode"
+msgstr "إنشاء باركود "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardButton.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: model:ir.actions.report,name:pos_gift_card.gift_card_report_pdf
+#: model:ir.model,name:pos_gift_card.model_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__use_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order_line__gift_card_id
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__barcode_rule__type__gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.res_config_view_form_inherit_pos_coupon
+#, python-format
+msgid "Gift Card"
+msgstr "بطاقة الهدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Gift Card Barcode:"
+msgstr "باركود بطاقة الهدايا: "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_order__gift_card_count
+msgid "Gift Card Count"
+msgstr "عدد بطاقات الهدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift Card Error"
+msgstr "خطأ في بطاقة الهدايا "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__gift_card_product_id
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+msgid "Gift Card Product"
+msgstr "منتج بطاقة الهدايا "
+
+#. module: pos_gift_card
+#: model:ir.ui.menu,name:pos_gift_card.pos_gift_card_menu
+msgid "Gift Cards"
+msgstr "بطاقات الهدايا "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_pos_config__gift_card_settings
+msgid "Gift Cards settings"
+msgstr "إعدادات بطاقات الهدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift card balance is too low."
+msgstr "رصيد بطاقة الهدايا منخفض جداً. "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/PaymentScreen.js:0
+#, python-format
+msgid "Gift card is not valid."
+msgstr "بطاقة الهدايا غير صالحة. "
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.pos_gift_card_config_view_form
+msgid "Gift card settings"
+msgstr "إعدادات بطاقة الهدايا "
+
+#. module: pos_gift_card
+#: model_terms:ir.ui.view,arch_db:pos_gift_card.gift_card_template
+msgid "Here is your gift card!"
+msgstr "إليك بطاقة الهدايا الخاصة بك! "
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "تهيئة نقطة البيع "
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_order_line
+msgid "Point of Sale Order Lines"
+msgstr "بنود طلب نقطة البيع "
+
+#. module: pos_gift_card
+#: model:ir.model,name:pos_gift_card.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "طلبات نقطة البيع"
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_gift_card__buy_pos_order_line_id
+msgid "Pos Order line where this gift card has been bought."
+msgstr "بند طلب نقطة البيع الذي قد تم شراء بطاقة الهدايا هذه منه. "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_gift_card__redeem_pos_order_line_ids
+msgid "Pos Redeems"
+msgstr "استحقاقات نقطة البيع "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Remaining amount of the gift card:"
+msgstr "المبلغ المتبقي في بطاقة الهدايا: "
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_set
+msgid "Scan an existing barcode and set a price"
+msgstr "قم بمسح باركود موجود بالفعل ثم تعيين السعر "
+
+#. module: pos_gift_card
+#: model:ir.model.fields.selection,name:pos_gift_card.selection__pos_config__gift_card_settings__scan_use
+msgid "Scan an existing barcode with an existing price"
+msgstr "قم بمسح باركود موجود بالفعل بسعر موجود بالفعل "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Scan and set price on gift card"
+msgstr "المسح وتعيين سعر بطاقة الهدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Scan gift card"
+msgstr "مسح بطاقة الهدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
+#, python-format
+msgid "This gift card has already been sold"
+msgstr "لقد تم بيع بطاقة الهدايا هذه بالفعل "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/models.js:0
+#, python-format
+msgid "This gift card is already applied"
+msgstr "لقد تم استخدام بطاقة الهدايا هذه بالفعل "
+
+#. module: pos_gift_card
+#: model:ir.model.fields,help:pos_gift_card.field_pos_config__gift_card_product_id
+msgid "This product is used as reference on customer receipts."
+msgstr "يستخدم هذا المنتج كمرجع في فواتير العميل."
+
+#. module: pos_gift_card
+#: model:ir.model.fields,field_description:pos_gift_card.field_barcode_rule__type
+msgid "Type"
+msgstr "النوع"
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/xml/GiftCardPopup.xml:0
+#, python-format
+msgid "Use a gift card"
+msgstr "استخدام بطاقة هدايا "
+
+#. module: pos_gift_card
+#. openerp-web
+#: code:addons/pos_gift_card/static/src/js/GiftCardPopup.js:0
+#, python-format
+msgid "You cannot sell a gift card that has already been sold"
+msgstr "لا يمكنك بيع بطاقة هدايا قد تم بيعها بالفعل "

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="res_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.view.form</field>
+            <field name="model">res.config.settings</field>
+            <field name="arch" type="xml">
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <div class="o_control_panel">
+                        <div class="o_panel">
+                            <ol role="navigation" class="breadcrumb o_settings_title d-none d-md-block">
+                                <li class="breadcrumb-item active">Settings</li>
+                            </ol>
+                            <div class="o_setting_search">
+                                <input type="text" class="searchInput pull-right p-0 pb-1" placeholder="Search..."/>
+                                <span class="searchIcon"><i class="fa fa-search" role="img" aria-label="Search" title="Search"/></span>
+                            </div>
+                        </div>
+                        <header>
+                            <button string="Save" type="object" name="execute" class="oe_highlight" />
+                            <button string="Discard" type="object" name="cancel" special="cancel" data-hotkey="z" />
+                        </header>
+                    </div>
+                    <div class="o_setting_container">
+                        <div class="settings_tab"/>
+                        <div class="settings">
+                            <div class="notFound o_hidden">
+                                <div class="o_view_nocontent">
+                                    <div class="o_nocontent_help">
+                                        <p class="o_view_nocontent_empty_folder">
+                                            No setting found
+                                        </p><p>
+                                            Try searching for another keyword
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="res_config_setting_act_window" model="ir.actions.act_window">
+            <field name="name">Settings</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+    </data>
+</odoo>

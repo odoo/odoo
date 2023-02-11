@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+    <t t-name="mail.MessageActionList" owl="1">
+        <div class="o_MessageActionList d-flex" t-on-click="messageActionList and messageActionList.onClick">
+            <t t-if="messageActionList">
+                <Popover t-if="messageActionList.message.hasReactionIcon" class="o_MessageActionList_action o_MessageActionList_actionReaction p-2 fa fa-lg fa-smile-o" position="'top'" titleAttribute="ADD_A_REACTION" t-on-o-emoji-selection="messageActionList.onEmojiSelection" t-on-o-popover-closed="messageActionList.onReactionPopoverClosed" t-on-o-popover-opened="messageActionList.onReactionPopoverOpened" t-ref="reactionPopover">
+                    <t t-set="opened">
+                        <EmojisPopover/>
+                    </t>
+                </Popover>
+                <span t-if="messageActionList.message.canStarBeToggled" class="o_MessageActionList_action o_MessageActionList_actionStar p-2" t-att-class="{
+                        'o_MessageActionList_actionStar_active': messageActionList.message.isStarred,
+                        'fa fa-lg fa-star': messageActionList.message.isStarred,
+                        'fa fa-lg fa-star-o': !messageActionList.message.isStarred,
+                    }" title="Mark as Todo" role="button" tabindex="0" aria-label="Mark as Todo" t-att-aria-pressed="messageActionList.message.isStarred ? 'true' : 'false'" t-on-click="messageActionList.onClickToggleStar"/>
+                <span t-if="messageActionList.hasReplyIcon" class="o_MessageActionList_action o_MessageActionList_actionReply p-2 fa fa-lg fa-reply" title="Reply" role="button" tabindex="0" aria-label="Reply" t-on-click="messageActionList.onClickReplyTo"/>
+                <span t-if="messageActionList.hasMarkAsReadIcon" class="o_MessageActionList_action o_MessageActionList_actionMarkRead p-2 fa fa-lg fa-check" title="Mark as Read" role="button" tabindex="0" aria-label="Mark as Read" t-on-click="messageActionList.onClickMarkAsRead"/>
+                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionEdit p-2 fa fa-lg fa-pencil" title="Edit" role="button" tabindex="0" aria-label="Edit" t-on-click="messageActionList.onClickEdit"/>
+                <span t-if="messageActionList.message.canBeDeleted" class="o_MessageActionList_action o_MessageActionList_actionDelete p-2 fa fa-lg fa-trash" title="Delete" role="button" tabindex="0" aria-label="Delete" t-on-click="messageActionList.onClickDelete"/>
+                <DeleteMessageConfirmDialog t-if="messageActionList.showDeleteConfirm" messageActionListLocalId="messageActionList.localId"/>
+            </t>
+        </div>
+    </t>
+</templates>

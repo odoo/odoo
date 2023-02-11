@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--
+            res.partner
+        -->
+        <template id="export_bis3_invoice_partner">
+            <cac:Party
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="partner" t-value="partner_vals['partner']"/>
+                <cbc:EndpointID
+                        t-if="partner_vals.get('bis3_endpoint')"
+                        t-att-schemeID="partner_vals['bis3_endpoint_scheme']"
+                        t-esc="partner_vals['bis3_endpoint']"/>
+                <cac:PartyIdentification t-if="partner_vals.get('partner_identification')">
+                    <cbc:ID t-esc="partner_vals['partner_identification']"/>
+                </cac:PartyIdentification>
+                <cac:PartyName>
+                    <cbc:Name t-esc="partner.name"/>
+                </cac:PartyName>
+                <cac:PostalAddress>
+                    <cbc:StreetName
+                        t-if="partner.street"
+                        t-esc="partner.street"/>
+                    <cbc:AdditionalStreetName
+                        t-if="partner.street2"
+                        t-esc="partner.street2"/>
+                    <cbc:CityName
+                        t-if="partner.city"
+                        t-esc="partner.city"/>
+                    <cbc:PostalZone
+                        t-if="partner.zip"
+                        t-esc="partner.zip"/>
+                    <cbc:CountrySubentity
+                        t-if="partner.state_id"
+                        t-esc="partner.state_id.name"/>
+                    <cac:Country
+                        t-if="partner.country_id">
+                        <cbc:IdentificationCode t-esc="partner.country_id.code"/>
+                    </cac:Country>
+                </cac:PostalAddress>
+                <cac:PartyTaxScheme t-if="partner.vat">
+                    <cbc:CompanyID t-esc="partner.vat"/>
+                    <cac:TaxScheme>
+                        <cbc:ID>VAT</cbc:ID>
+                    </cac:TaxScheme>
+                </cac:PartyTaxScheme>
+                <cac:PartyLegalEntity>
+                    <cbc:RegistrationName t-esc="partner.name"/>
+                    <cbc:CompanyID
+                            t-if="partner_vals.get('legal_entity')"
+                            t-att-schemeID="partner_vals['legal_entity_scheme']"
+                            t-esc="partner_vals['legal_entity']"/>
+                </cac:PartyLegalEntity>
+                <cac:Contact>
+                    <cbc:Name t-esc="partner.name"/>
+                    <cbc:Telephone t-if="partner.phone" t-esc="partner.phone"/>
+                    <cbc:ElectronicMail t-if="partner.email" t-esc="partner.email"/>
+                  </cac:Contact>
+            </cac:Party>
+        </template>
+
+        <!--
+        account.move.line
+        -->
+        <template id="export_bis3_invoice_line">
+            <cac:InvoiceLine
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <t t-set="line" t-value="line_vals['line']"/>
+                <cbc:ID t-esc="line_vals['index']"/>
+                <cbc:Note t-if="line.discount">Discount (<t t-esc='line.discount'/> %)</cbc:Note>
+                <cbc:InvoicedQuantity unitCode="ZZ" t-esc="line.quantity"/>
+                <cbc:LineExtensionAmount
+                    t-att-currencyID="record.currency_id.name"
+                    t-esc="format_monetary(line_vals['price_subtotal_with_no_tax_closing'])"/>
+                <cac:Item>
+                    <cbc:Description t-esc="line.name.replace('\n', ', ')"/>
+                    <cbc:Name t-esc="(line.name or '').replace('\n', ', ')"/>
+                    <cac:SellersItemIdentification t-if="line.product_id.default_code">
+                        <cbc:ID t-esc="line.product_id.default_code"/>
+                    </cac:SellersItemIdentification>
+                    <cac:ClassifiedTaxCategory
+                            t-foreach="tax_details['invoice_line_tax_details'][line]['tax_details'].values()"
+                            t-as="tax_detail_vals">
+                        <cbc:ID t-esc="tax_detail_vals['tax_category']"/>
+                        <cbc:Percent t-esc="tax_detail_vals['tax_percent']"/>
+                        <cac:TaxScheme>
+                            <cbc:ID>VAT</cbc:ID>
+                        </cac:TaxScheme>
+                    </cac:ClassifiedTaxCategory>
+                </cac:Item>
+                <cac:Price>
+                    <cbc:PriceAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(line_vals['price_subtotal_with_no_tax_closing'] / line.quantity)"/>
+                    <cbc:BaseQuantity t-esc="line.quantity"/>
+                </cac:Price>
+            </cac:InvoiceLine>
+        </template>
+
+        <!--
+        invoice
+        -->
+        <template id="export_bis3_invoice">
+            <Invoice
+                xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
+                xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
+                xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">
+                <cbc:CustomizationID t-esc="customization_id"/>
+                <cbc:ProfileID t-esc="profile_id"/>
+                <cbc:ID t-esc="record.name"/>
+                <cbc:IssueDate t-esc="record.invoice_date"/>
+                <cbc:DueDate t-esc="record.invoice_date_due"/>
+                <cbc:InvoiceTypeCode t-esc="type_code"/>
+                <cbc:Note t-if="note" t-esc="note"/>
+                <cbc:DocumentCurrencyCode t-esc="record.currency_id.name"/>
+                <cbc:TaxCurrencyCode t-if="record.currency_id != record.company_currency_id"
+                                     t-esc="record.company_currency_id.name"/>
+                <cbc:BuyerReference t-esc="record.commercial_partner_id.name"/>
+                <cac:OrderReference t-if="record.ref">
+                    <cbc:ID t-esc="record.ref"/>
+                </cac:OrderReference>
+                <cac:AccountingSupplierParty t-call="account_edi_ubl_bis3.export_bis3_invoice_partner">
+                    <t t-set="partner_vals" t-value="supplier_vals"/>
+                </cac:AccountingSupplierParty>
+                <cac:AccountingCustomerParty t-call="account_edi_ubl_bis3.export_bis3_invoice_partner">
+                    <t t-set="partner_vals" t-value="customer_vals"/>
+                </cac:AccountingCustomerParty>
+                <cac:PaymentMeans>
+                    <cbc:PaymentMeansCode t-esc="payment_means_code"/>
+                    <cac:PayeeFinancialAccount t-if="bank_account">
+                        <cbc:ID t-esc="bank_account.acc_number"/>
+                    </cac:PayeeFinancialAccount>
+                </cac:PaymentMeans>
+                <cac:PaymentTerms t-if="record.invoice_payment_term_id">
+                    <cbc:Note t-esc="record.invoice_payment_term_id.name"/>
+                </cac:PaymentTerms>
+                <cac:TaxTotal>
+                    <cbc:TaxAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(balance_multiplicator * tax_details['tax_amount_currency'])"/>
+                    <cac:TaxSubtotal t-foreach="tax_details['tax_details'].values()" t-as="tax_detail_vals">
+                        <cbc:TaxableAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(balance_multiplicator * tax_detail_vals['base_amount_currency'])"/>
+                        <cbc:TaxAmount
+                                t-att-currencyID="record.currency_id.name"
+                                t-esc="format_monetary(balance_multiplicator * tax_detail_vals['tax_amount_currency'])"/>
+                        <cac:TaxCategory>
+                            <cbc:ID t-esc="tax_detail_vals['tax_category']"/>
+                            <cbc:Percent t-esc="tax_detail_vals['tax_percent']"/>
+                            <cac:TaxScheme>
+                                <cbc:ID>VAT</cbc:ID>
+                            </cac:TaxScheme>
+                        </cac:TaxCategory>
+                    </cac:TaxSubtotal>
+                </cac:TaxTotal>
+                <cac:TaxTotal t-if="record.currency_id != record.company_currency_id">
+                    <cbc:TaxAmount
+                        t-att-currencyID="record.company_currency_id.name"
+                        t-esc="format_monetary(balance_multiplicator * tax_details['tax_amount'])"/>
+                </cac:TaxTotal>
+                <cac:LegalMonetaryTotal>
+                    <cbc:LineExtensionAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(total_untaxed_amount)"/>
+                    <cbc:TaxExclusiveAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(total_untaxed_amount)"/>
+                    <cbc:TaxInclusiveAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(record.amount_total)"/>
+                    <cbc:PrepaidAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(record.amount_total - record.amount_residual)"/>
+                    <cbc:PayableAmount
+                        t-att-currencyID="record.currency_id.name"
+                        t-esc="format_monetary(record.amount_residual)"/>
+                </cac:LegalMonetaryTotal>
+                <t t-foreach="invoice_line_vals_list" t-as="line_vals">
+                    <t t-call="account_edi_ubl_bis3.export_bis3_invoice_line"/>
+                </t>
+            </Invoice>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="project_project_view_inherit_project_filter" model="ir.ui.view">
+        <field name="name">project.project.select.inherit.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project_project_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_project_view_tree_inherit_sale_project" model="ir.ui.view">
+        <field name="name">project.project.tree.inherit.sale.project</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.view_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_line_id" optional="hide" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_edit_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.project.view.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <field name="has_any_so_to_invoice" invisible="1"/>
+                <button name="action_create_invoice" string="Create Invoice" type="object" class="oe_highlight oe_read_only" groups="sales_team.group_sale_salesman_all_leads" attrs="{'invisible': [('has_any_so_to_invoice', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//button[@name='%(project.act_project_project_2_project_task_all)d']" position="before">
+                <button class="d-none d-md-inline oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman_all_leads">
+                    <field name="sale_order_id" attrs="{'invisible': True}"/> 
+                </button>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_sale_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.task.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+        <field name="inherit_id" ref="project.view_task_form2"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='action_recurring_tasks']" position="before">
+                <button class="oe_stat_button"
+                        type="object" name="action_view_so" icon="fa-dollar"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}"
+                        string="Sales Order"
+                        groups="sales_team.group_sale_salesman_all_leads"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="after">
+                <field name="sale_order_id" attrs="{'invisible': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
+                <field name="commercial_partner_id" invisible="1" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="project_task_view_form_inherit_sale_line_editable" model="ir.ui.view">
+        <field name="name">project.task.form.inherit.sale.line.editable.salesman</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="view_sale_project_inherit_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_line_id']" position="attributes">
+                <attribute name="options">{"no_create": True}</attribute>
+                <attribute name="readonly">0</attribute>
+            </xpath>
+        </field>
+        <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="project_task_view_search" model="ir.ui.view">
+        <field name="name">project.task.search.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.view_task_search_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="sale_order_id" string="Sale Order" filter_domain="['|', ('sale_order_id', 'ilike', self), ('sale_line_id', 'ilike', self)]"/>
+            </xpath>
+            <xpath expr="//search/group/filter[@name='customer']" position="after">
+                <!-- TODO: Remove me in master -->
+                <filter string="Sales Order" name="sale_order_id" context="{'group_by': 'sale_order_id'}" invisible="1"/>
+                <filter string="Sales Order Item" name="sale_line_id" context="{'group_by': 'sale_line_id'}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

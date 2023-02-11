@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebar" owl="1">
+        <div name="root" class="o_DiscussSidebar">
+            <div class="d-flex justify-content-center">
+                <button class="o_DiscussSidebar_startAMeetingButton btn btn-primary rounded" title="Start a meeting" t-on-click="discuss.onClickStartAMeetingButton" t-ref="startAMeetingButton">
+                    Start a meeting
+                </button>
+            </div>
+            <hr class="o_DiscussSidebar_separator"/>
+            <div class="o_DiscussSidebar_category o_DiscussSidebar_categoryMailbox">
+                <DiscussSidebarMailbox threadLocalId="messaging.inbox.localId"/>
+                <DiscussSidebarMailbox threadLocalId="messaging.starred.localId"/>
+                <DiscussSidebarMailbox threadLocalId="messaging.history.localId"/>
+            </div>
+            <hr class="o_DiscussSidebar_separator"/>
+            <t t-if="messaging.models['mail.thread'].all(thread => thread.isPinned and thread.model === 'mail.channel').length > 19">
+                <input class="o_DiscussSidebar_quickSearch" t-on-input="_onInputQuickSearch" placeholder="Quick search..." t-ref="quickSearchInput" t-esc="discuss.sidebarQuickSearchValue"/>
+            </t>
+            <DiscussSidebarCategory
+                class="o_DiscussSidebar_category o_DiscussSidebar_categoryChannel"
+                categoryLocalId="discuss.categoryChannel.localId"
+            />
+            <DiscussSidebarCategory
+                class="o_DiscussSidebar_category o_DiscussSidebar_categoryChat"
+                categoryLocalId="discuss.categoryChat.localId"
+            />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,133 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MessageList {
+    display: flex;
+    flex-flow: column;
+    overflow: auto;
+
+    &.o-empty {
+        align-items: center;
+        justify-content: center;
+    }
+
+    &:not(.o-empty) {
+        padding-bottom: map-get($spacers, 4);
+    }
+}
+
+.o_MessageList_empty {
+    flex: 1 1 auto;
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
+    align-self: center;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    padding: map-get($spacers, 4);
+    line-height: 2.5rem;
+}
+
+.o_MessageList_isLoadingMore {
+    align-self: center;
+}
+
+.o_MessageList_isLoadingMoreIcon {
+    margin-right: map-get($spacers, 1);
+}
+
+.o_MessageList_loadMore {
+    align-self: center;
+}
+
+.o_MessageList_separator {
+    display: flex;
+    align-items: center;
+    padding: map-get($spacers, 0) map-get($spacers, 0);
+    flex: 0 0 auto;
+}
+
+.o_MessageList_separatorLine {
+    flex: 1 1 auto;
+    width: auto;
+}
+
+.o_MessageList_separatorNewMessages {
+    // bug with safari: container does not auto-grow from child size
+    padding: map-get($spacers, 0) map-get($spacers, 0);
+    margin-right: map-get($spacers, 4);
+}
+
+.o_MessageList_separatorLabel {
+    padding: map-get($spacers, 0) map-get($spacers, 3);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MessageList {
+    background-color: $white;
+}
+
+.o_MessageList_empty {
+    text-align: center;
+    font-style: italic;
+    color: $text-muted;
+}
+
+.o_MessageList_emptyTitle {
+    font-weight: bold;
+    font-size: 1.3rem;
+
+    &.o-neutral-face-icon:before {
+        @extend %o-nocontent-init-image;
+        @include size(120px, 140px);
+        background: transparent url(/web/static/img/neutral_face.svg) no-repeat center;
+    }
+}
+
+.o_MessageList_loadMore {
+    cursor: pointer;
+}
+
+.o_MessageList_message.o-has-message-selection:not(.o-selected) {
+    opacity: 0.5;
+}
+
+.o_MessageList_separator {
+    font-weight: bold;
+}
+
+.o_MessageList_separatorLine {
+    border-color: $border-color;
+}
+
+.o_MessageList_separatorLineNewMessages {
+    border-color: lighten($o-brand-odoo, 15%);
+}
+
+.o_MessageList_separatorNewMessages {
+    color: lighten($o-brand-odoo, 15%);
+
+}
+
+.o_MessageList_separatorLabel {
+    background-color: $white;
+}
+
+// ------------------------------------------------------------------
+// Animation
+// ------------------------------------------------------------------
+
+.o_MessageList_separatorNewMessages:not(.o-disable-animation) {
+    &.fade-leave-active {
+        transition: opacity 0.5s;
+    }
+
+    &.fade-leave-to {
+        opacity: 0;
+    }
+}

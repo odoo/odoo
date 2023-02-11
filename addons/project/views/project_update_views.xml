@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="project_update_view_search" model="ir.ui.view">
+        <field name="name">project.update.view.search</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <search string="Search Update">
+                <field name="name"/>
+                <field name="project_id" invisible="1"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="project_update_view_form" model="ir.ui.view">
+        <field name="name">project.update.view.form</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <form string="Project Update" class="o_form_project_update">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" class="o_text_overflow" placeholder="Title of the Update"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id" invisible="1"/>
+                            <field name="color" invisible="1"/>
+                            <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+                            <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': '100', 'editable': true}"/>
+                        </group>
+                        <group>
+                            <field name="user_id" widget="many2one_avatar_user" readonly="1"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <separator/>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description" widget="html_with_action" nolabel="1" class="o_project_update_description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_update_view_kanban" model="ir.ui.view">
+        <field name="name">project.update.view.kanban</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <kanban class="o_pupdate_kanban" sample="1" js_class="project_update_kanban">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + record.color.raw_value : ''}} oe_kanban_global_click o_pupdate_kanban_card">
+                            <!-- Project Update Kanban View is always ungrouped - see js_class -->
+                            <div class="o_kanban_detail_ungrouped row">
+                                <div class="col-lg-4 o_pupdate_name">
+                                    <b><field name="name_cropped"/></b>
+                                    <div>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
+                                        <t t-esc="record.user_id.value"/>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <field name="color" invisible="1"/>
+                                    <b><field name="status" widget="status_with_color" options="{'color_field': 'color'}"/></b>
+                                </div>
+                                <div class="col-lg-2">
+                                    <b><field name="progress_percentage" widget="percentage"/></b>
+                                    <div>Progress</div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <b><field name="date"/></b>
+                                    <div>Date</div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="project_update_view_tree" model="ir.ui.view">
+        <field name="name">project.update.view.tree</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <tree sample="1" js_class="project_update_list">
+                <field name="name"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="progress_percentage" string="Progress" widget="percentage" optional="show"/>
+                <field name="date" optional="show"/>
+                <field name="color" invisible="1"/>
+                <field name="status" widget="status_with_color" options="{'color_field': 'color'}"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_update_all_action" model="ir.actions.act_window">
+        <field name="name">Project Updates</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">project.update</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="search_view_id" ref="project_update_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No updates found. Let's create one!
+            </p><p>
+            Get a snapshot of the status of your project and share its progress with key stakeholders.
+            </p>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_form" model="ir.ui.view">
+        <field name="name">project.milestone.view.form</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="project_id" invisible="1"/>
+                            <field name="name" placeholder="E.g: Product Launch"/>
+                            <field name="deadline"/>
+                            <field name="is_reached"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_milestone_view_tree" model="ir.ui.view">
+        <field name="name">project.milestone.view.tree</field>
+        <field name="model">project.milestone</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="is_deadline_exceeded" decoration-muted="is_reached" editable="bottom">
+                <field name="name"/>
+                <field name="deadline" optional="show"/>
+                <field name="is_reached" optional="show"/>
+                <field name="is_deadline_exceeded" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="project_milestone_all" model="ir.actions.act_window">
+        <field name="name">Milestones</field>
+        <field name="res_model">project.milestone</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_project_id': active_id}</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            No milestones found. Let's create one!
+            </p><p>
+            Track major progress points that must be reached to achieve success.
+            </p>
+        </field>
+    </record>
+</odoo>

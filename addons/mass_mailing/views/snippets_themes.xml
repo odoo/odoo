@@ -1,0 +1,1018 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Snippets & Themes Menu -->
+<template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
+    <xpath expr="//div[hasclass('o_we_website_top_actions')]" position="inside">
+        <div class="email_designer_top_actions">
+            <button class="o_codeview_btn btn btn-primary">
+                <i class="fa fa-code"></i>
+            </button>
+            <button class="o_fullscreen_btn btn btn-primary">
+                <img src="/web_editor/font_to_img/61541/rgb(255,255,255)/16" alt="Fullscreen"/>
+            </button>
+        </div>
+    </xpath>
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" class="o_we_select_template text-uppercase"><span>Select a template</span></button>
+    </xpath>
+    <xpath expr="//t[@id='default_snippets']" position="replace">
+        <t id="default_snippets">
+            <t t-set="company_id" t-value="res_company"/>
+            <div id="email_designer_themes">
+                <div data-name="basic"
+                     data-nowrap="1"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/basic_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_basic_template"/>
+                </div>
+                <div data-name="empty"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/empty_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_empty_template"/>
+                </div>
+                <div data-name="default"
+                     data-img="/mass_mailing/static/src/img/theme_imgs/default_thumb"
+                     data-images-info='{"logo": {"format": "png"}}'>
+                    <t t-call="mass_mailing.theme_default_template"/>
+                </div>
+            </div>
+            <div id="email_designer_default_headers" class="o_panel">
+                <div class="o_panel_header">Headers</div>
+                <div class="o_panel_body" id="email_designer_header_elements">
+                    <t t-snippet="mass_mailing.s_mail_block_header_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_text_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_text_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_logo" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_logo.png"/>
+                    <t t-snippet="mass_mailing.s_cover" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_cover.svg"/>
+                    <t t-snippet="mass_mailing.s_mail_block_header_view" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_browser.png"/>
+                </div>
+            </div>
+            <div id="email_designer_default_body" class="o_panel">
+                <div class="o_panel_header">Body</div>
+                <div class="o_panel_body" id="email_designer_body_elements">
+                    <t t-snippet="mass_mailing.s_title" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_title.svg"/>
+                    <t t-snippet="mass_mailing.s_text_block" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_block.svg"/>
+                    <t t-snippet="mass_mailing.s_comparisons" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_comparisons.svg"/>
+                    <t t-snippet="mass_mailing.s_color_blocks_2" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_color_blocks_2.svg"/>
+                    <t t-snippet="mass_mailing.s_three_columns" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_three_columns.svg"/>
+                    <t t-snippet="mass_mailing.s_image_text" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_image_text.svg"/>
+                    <t t-snippet="mass_mailing.s_text_image" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_image.svg"/>
+                    <t t-snippet="mass_mailing.s_picture" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_picture.svg"/>
+                    <t t-snippet="mass_mailing.s_features" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_features.svg"/>
+                    <t t-snippet="mass_mailing.s_numbers" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_numbers.svg"/>
+                    <t t-snippet="mass_mailing.s_masonry_block" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_masonry_block.svg"/>
+                    <t t-snippet="mass_mailing.s_media_list" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_media_list.svg"/>
+                    <t t-snippet="mass_mailing.s_showcase" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_showcase.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_extra" class="o_panel">
+                <div class="o_panel_header">Marketing Content</div>
+                <div class="o_panel_body" id="email_designer_marketing_elements">
+                    <t t-snippet="mass_mailing.s_company_team" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_company_team.svg"/>
+                    <t t-snippet="mass_mailing.s_call_to_action" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_call_to_action.svg"/>
+                    <t t-snippet="mass_mailing.s_references" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_references.svg"/>
+                    <t t-snippet="mass_mailing.s_coupon_code" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount2.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_discount1" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount1.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_event" t-thumbnail="/mass_mailing/static/src/img/blocks/block_event.png"/>
+                    <t t-snippet="mass_mailing.s_product_list" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_product_list.svg"/>
+                    <t t-snippet="mass_mailing.s_features_grid" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_features_grid.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_inner" class="o_panel">
+                <div class="o_panel_header">Inner Content</div>
+                <div class="o_panel_body" id="email_designer_inner_elements">
+                    <t t-snippet="mass_mailing.s_alert" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_alert.svg"/>
+                    <t t-snippet="mass_mailing.s_rating" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_rating.svg"/>
+                    <t t-snippet="mass_mailing.s_blockquote" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_blockquote.svg"/>
+                    <t t-snippet="mass_mailing.s_hr" t-thumbnail="/web_editor/static/src/img/snippets_thumbs/s_hr.svg"/>
+                    <t t-snippet="mass_mailing.s_text_highlight" t-thumbnail="/mass_mailing/static/src/img/snippets_thumbs/s_text_highlight.svg"/>
+                </div>
+            </div>
+            <div id="email_designer_default_footer" class="o_panel">
+                <div class="o_panel_header">Footers</div>
+                <div class="o_panel_body" id="email_designer_footer_elements">
+                    <t t-snippet="mass_mailing.s_mail_block_footer_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social.png"/>
+                    <t t-snippet="mass_mailing.s_mail_block_footer_social_left" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social_left.png"/>
+                </div>
+            </div>
+        </t>
+    </xpath>
+    <xpath expr="//div[@id='snippet_options']/t" position="attributes">
+        <attribute name="t-call">mass_mailing.snippet_options</attribute>
+    </xpath>
+</template>
+
+<!-- Snippet Templates -->
+<template id="s_mail_block_header_social" name="Left Logo">
+    <div class="o_mail_snippet_general o_mail_block_header_social s_header_social">
+        <div class="o_mail_table_styles container">
+            <div class="row">
+                <div class="col-lg-8 pt16 pb16">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
+                         <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;" />
+                    </a>
+                </div>
+                <div class="col-lg-4 text-right o_mail_no_resize">
+                    <div class="o_mail_header_social">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_text_social" name="Left Text">
+    <div class="o_mail_snippet_general o_mail_block_header_text_social s_header_text_social">
+        <div class="o_mail_table_styles container">
+            <div class="row">
+                <div class="col-lg-8 pt16 pb16">
+                    <h3>
+                        <a t-att-href="(company_id.website) or '#'">
+                            My Company
+                        </a>
+                    </h3>
+                </div>
+                <div class="col-lg-4 text-right o_mail_no_resize">
+                    <div class="o_mail_header_social">
+                        <t t-call="mass_mailing.social_links"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_banner" name="Banner">
+    <div class="o_mail_block_banner">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td width="100%" valign="top" class="o_mail_full_width_padding o_mail_no_colorpicker">
+                            <a href="#">
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_banner.jpg" class="d-block mx-auto"/>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_logo" name="Centered Logo">
+    <div class="o_mail_snippet_general o_mail_block_header_logo s_header_logo">
+        <div class="container o_mail_table_styles">
+            <div class="row">
+                <div class="col-lg-4"/>
+                <div class="col-lg-4 text-center pt16 pb16">
+                    <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
+                        <img t-if="company_id.logo" border="0" t-att-src="image_data_uri(company_id.logo)" style="height:auto;max-width:200px;max-height:48px;width:auto"/>
+                    </a>
+                </div>
+                <div class="col-lg-4 text-right"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_header_view" name="View Online">
+    <div class="o_mail_snippet_general o_snippet_view_in_browser pt16 pb16 px-3 text-center">
+        <a href="/view">
+            View Online
+        </a>
+    </div>
+</template>
+
+<template id="s_mail_block_title_text" name="Title Content">
+    <div class="o_mail_snippet_general o_mail_block_title_text s_title_text pt16 pb16 px-3">
+        <h2 class="mt0">Thank you for joining us!</h2>
+        <p>We want to take this opportunity to welcome you to our ever-growing community!<br/></p>
+        <p>Your platform is ready for work. It will help you reduce the costs of digital signage, attract new customers and increase sales.</p>
+        <p>Enjoy,</p>
+        <img src="/mass_mailing/static/src/img/theme_default/demo/signature.png" style="width:125px; margin-top:8px;margin-bottom:-25px;" alt="Demo Signature"/>
+        <p>
+            <small>
+                <strong>Michael Fletcher</strong><br/>
+                <small>Community Manager</small>
+            </small>
+        </p>
+        <div class="pt16 pb16 text-center">
+            <a role="button" href="#" class="btn btn-primary">LOGIN</a>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_paragraph" name="Paragraph">
+    <div class="o_mail_block_paragraph">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td width="100%" class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker">
+                            <p> The open source model of Odoo has allowed us to leverage thousands of developers and
+                                business experts to build hundreds of apps in just a few years.</p>
+                            <p> With strong technical foundations, Odoo's framework is unique.
+                                It provides top notch usability that scales across all apps.</p>
+                            <p> Usability improvements made on Odoo will automatically apply to all
+                                of our fully integrated apps.</p>
+                            <p> That way, Odoo evolves much faster than any other solution.</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_title_sub" name="Title - Subtitle">
+    <div class="o_mail_block_title_sub">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker">
+                            <h2 class="o_mail_no_margin">Check this out!</h2>
+                            <p class="o_mail_no_margin">Apps That Help You Grow Your Business!</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_comparison_table" name="Comparison">
+    <div class="o_mail_block_comparison_table">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td class="o_mail_h_padding o_mail_v_padding o_mail_col_mv">
+                            <table cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-o-color-2 o_mail_v_padding o_mail_col_mv">
+                                            <h2 class="text-center o_mail_no_margin">DEFAULT</h2>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center o_mail_col_mv bg-gray-lighter">
+                                            <p class="o_mail_display_coupon text-center" style="margin-top:10px;">$8</p>
+                                            <small>user / month (billed annually)</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p>Basic features</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p>Basic management</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p>No customization</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p>No support</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv bg-gray-lighter" style="padding-bottom: 20px;">
+                                            <a role="button" href="#" class="btn btn-block btn-primary">More</a>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </td>
+                        <td class="o_mail_h_padding o_mail_v_padding o_mail_col_mv">
+                            <table cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                                <thead>
+                                    <tr>
+                                        <th class="bg-o-color-2 o_mail_v_padding o_mail_col_mv">
+                                            <h2 class="text-center o_mail_no_margin">PRO</h2>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-center o_mail_col_mv bg-gray-lighter">
+                                            <p class="o_mail_display_coupon text-center" style="margin-top:10px;">$18</p>
+                                            <small>user / month (billed annually)</small>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p><strong>Advanced</strong> features</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p><strong>Total</strong> management</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p><strong>Fully customizable</strong></p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="o_mail_col_mv bg-gray-lighter">
+                                            <p><strong>24/7 Support</strong></p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
+                                            <div class="separator"></div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv bg-gray-lighter" style="padding-bottom: 20px;">
+                                            <a role="button" href="#" class="btn btn-block btn-primary">More</a>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_two_cols" name="Two Columns">
+    <div class="o_mail_block_two_cols">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_v_padding o_mail_col_table">
+                <tbody>
+                    <tr>
+                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_1.jpg" class="d-block mx-auto"/>
+                                <h4 class="text-center">Column title</h4>
+                                <p class="text-center o_mail_no_margin">
+                                    Write one paragraph describing your product,
+                                    services or a specific feature. To be successful
+                                    your content needs to be useful to your readers.
+                                </p>
+                                <div class="text-center" style="margin-top:15px;">
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_2.jpg" class="d-block mx-auto"/>
+                                <h4 class="text-center">Column title</h4>
+                                <p class="text-center o_mail_no_margin">
+                                    Write one paragraph describing your product,
+                                    services or a specific feature. To be successful
+                                    your content needs to be useful to your readers.
+                                </p>
+                                <div class="text-center" style="margin-top:15px;">
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_three_cols" name="Three Columns">
+    <div class="o_mail_block_three_cols">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_v_padding o_mail_col_table">
+                <tbody>
+                    <tr>
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_1.jpg" class="d-block mx-auto"/>
+                                <h4 class="text-center">Column Title</h4>
+                                <p class="text-center o_mail_no_margin">
+                                    A short description
+                                </p>
+                                <div class="text-center" style="margin-top:15px;">
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_2.jpg" class="d-block mx-auto"/>
+                                <h4 class="text-center">Column Title</h4>
+                                <p class="text-center o_mail_no_margin">
+                                    A short description
+                                </p>
+                                <div class="text-center" style="margin-top:15px;">
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_3.jpg" class="d-block mx-auto"/>
+                                <h4 class="text-center">Column Title</h4>
+                                <p class="text-center o_mail_no_margin">
+                                    A short description
+                                </p>
+                                <div class="text-center" style="margin-top:15px;">
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_image_text" name="Image - Text">
+    <div class="o_mail_block_image_text">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_col_mv o_mail_img_container o_mail_h_padding o_mail_v_padding">
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image_text.jpg" class="d-block mx-auto"/>
+                        </td>
+                        <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                            <h3>Omnichannel sales</h3>
+                            <p class="o_mail_no_margin" style="text-align:justify;">Get your inside sales (CRM) fully integrated with online sales (eCommerce), in-store sales (Point of Sale) and marketplaces like eBay and Amazon.</p>
+                            <div class="text-center" style="margin-top:15px;">
+                                <a role="button" href="#" class="btn btn-link">Read More...</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_text_image" name="Text - Image">
+    <div class="o_mail_block_text_image">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                            <h3>A unique value</h3>
+                            <p class="o_mail_no_margin" style="text-align:justify;">The open source model of Odoo has allowed us to leverage thousands of developers and business experts to build hundreds of apps in just a few years.</p>
+                            <div class="text-center" style="margin-top:15px;">
+                                <a role="button" href="#" class="btn btn-link">Read More...</a>
+                            </div>
+                        </td>
+                        <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_col_mv o_mail_img_container o_mail_h_padding o_mail_v_padding">
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_text_image.jpg" class="d-block mx-auto"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_image" name="Image">
+    <div class="o_mail_block_image">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
+                <tbody>
+                    <tr>
+                        <td width="100%" align="center" style="text-align:center" class="o_mail_h_padding">
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image.jpg" class="d-block mx-auto"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="100%" align="center" style="text-align:center" class="o_mail_h_padding">
+                            <table>
+                                <td class="bg-o-color-2 o_mail_v_padding">
+                                    <p class="text-center">With strong technical foundations, Odoo's framework is unique. It provides <strong>top notch usability that scales across all apps</strong>.</p>
+                                </td>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_footer_separator" name="Separator">
+    <div class="o_mail_block_footer_separator">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
+                <tbody>
+                    <tr>
+                        <td valign="top" style="width:100%;" class="o_mail_v_padding o_mail_no_colorpicker">
+                            <div style="width:100%;" class="separator"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_footer_tag_line" name="Tag Line">
+    <div class="o_mail_snippet_general o_mail_block_footer_tag_line s_footer_tag_line pt16 pb16 px-3 o_cc o_cc3">
+        <h3 class="text-center">Apps That Help You Grow Your Business</h3>
+        <br/>
+        <div class="text-center">
+            <a role="button" href="#" class="btn btn-primary">My Account</a>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_discount2" name="Promo Code">
+    <div class="o_mail_block_discount2 mb32">
+        <div class="o_mail_snippet_general">
+            <div class="container o_mail_table_styles o_mail_h_padding">
+                <div class="row">
+                    <div class="col o_mail_v_padding">
+                        <div class="text-center d-block mx-auto">
+                            <p class="o_mail_display_coupon o_mail_no_margin text-center text-o-color-2" style="font-weight:800;">
+                                $20
+                            </p>
+                            <h3 class="o_mail_no_margin">OFF YOUR NEXT ORDER!</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="text-center" style="margin-top:10px;">
+                            Use This Promo Code BEFORE 1st of August
+                        </p>
+                        <p class="o_mail_h_padding text-center">
+                            <span style="line-height: 30px;"><small>CODE: </small></span><strong class="o_code h3 oe_unremovable">45A9E77DGW8455</strong>
+                        </p>
+                        <p class="text-center">
+                            and save $20 on your next order!
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col mb16 mt16 text-center">
+                        <a role="button" href="#" class="btn btn-primary">Use now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_discount1" name="Discount Offer">
+    <div class="o_mail_snippet_general o_mail_block_discount1 s_discount1">
+        <div class="container o_mail_table_styles">
+            <div class="row">
+                <div class="col-lg pt16 pb16 text-center">
+                    <h4 class="text-o-color-2 text-center mt0 mb16" style="font-weight:800;">-20%</h4>
+                    <p class="text-center">ON YOUR NEXT ORDER!</p>
+                    <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
+                </div>
+                <div class="col-lg pt16 pb16">
+                    <p class="o_mail_no_margin">We are continuing to grow and we miss seeing you be a part of it! We've increased store hours and have lot's of new brands available. To welcome you back please accept this 20% discount on you next purchase by clicking the button.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_event" name="Event">
+    <div class="o_mail_snippet_general o_mail_block_event s_event bg-300">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-3 px-0 text-center">
+                    <h3 class="o_mail_no_margin">21 Jul</h3>
+                    <p class="o_mail_no_margin">ALL DAY</p>
+                </div>
+                <div class="col-lg-2 px-0">
+                    <img src="/mass_mailing/static/src/img/theme_default/s_default_image_block_event.jpg" class="img w-100"/>
+                </div>
+                <div class="col-lg-7">
+                    <h4>Cybersecurity</h4>
+                    <p>Cyber-threats continue to increase.
+                        <br/>The discussion will examine how to develop new norms and integrate them into EU
+                    </p>
+                    <div class="text-left">
+                        <a href="#" class="btn btn-primary">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- TODO: remove this template -->
+<template id="s_mail_block_steps" name="Steps">
+    <div class="o_mail_block_steps o_mail_no_colorpicker">
+        <div class="o_mail_snippet_general">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
+                <tbody>
+                    <tr>
+                        <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                            <table align="center">
+                                <tr>
+                                    <td rowspan="2" class="text-right">
+                                        &amp;nbsp;
+                                        <span class="fa fa-compass fa-2x text-o-color-4" role="img" aria-label="Choose" title="Choose"></span>
+                                        &amp;nbsp;
+                                    </td>
+                                    <td style="padding-left:10px;">
+                                        <p class="o_mail_no_margin"><small>Step 1:</small></p>
+                                        <h4 class="o_mail_no_margin">Choose</h4>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                            <table align="center">
+                                <tr>
+                                    <td rowspan="2" class="text-right">
+                                        &amp;nbsp;
+                                        <span class="fa fa-credit-card fa-2x text-o-color-4" role="img" aria-label="Order" title="Order"></span>
+                                        &amp;nbsp;
+                                    </td>
+                                    <td style="padding-left:10px;">
+                                        <p class="o_mail_no_margin"><small>Step 2:</small></p>
+                                        <h4 class="o_mail_no_margin ">Order</h4>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                            <table align="center">
+                                <tr>
+                                    <td rowspan="2" class="text-right">
+                                        &amp;nbsp;
+                                        <span class="fa fa-smile-o fa-2x text-o-color-4" role="img" aria-label="Enjoy" title="Enjoy"></span>
+                                        &amp;nbsp;
+                                    </td>
+                                    <td style="padding-left:10px;">
+                                        <p class="o_mail_no_margin"><small>Step 3:</small></p>
+                                        <h4 class="o_mail_no_margin ">Enjoy!</h4>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_footer_social" name="Footer Center">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
+        <div class="container o_mail_table_styles">
+            <div class="row">
+                <div class="col-lg o_mail_footer_social">
+                    <t t-call="mass_mailing.social_links"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg o_mail_footer_links">
+                    <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg">
+                    <p class="o_mail_no_margin o_mail_footer_copy">
+                        <span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/>
+                        <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="s_mail_block_footer_social_left" name="Footer Left">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
+        <div class="container o_mail_table_styles">
+            <div class="row">
+                <div class="col-lg o_mail_footer_description">
+                    <p t-if="res_company" class="o_mail_no_margin">
+                        <strong><t t-esc="res_company.partner_id.name"/></strong>
+                    </p>
+                    <div class="o_mail_footer_links">
+                        <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                    </div>
+                </div>
+                <div class="col-lg" align="right">
+                    <div class="o_mail_footer_social pb16"><t t-call="mass_mailing.social_links"/></div>
+                    <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <a t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
+        <span class="fa fa-facebook"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+        <span class="fa fa-linkedin"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+        <span class="fa fa-twitter"></span>
+    </a>&amp;nbsp;&amp;nbsp;
+    <a t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+        <span class="fa fa-instagram"></span>
+    </a>
+</template>
+
+<!-- Border -->
+<template id="snippet_options_border_line_widgets">
+    <we-row t-att-string="label">
+        <we-input data-name="border_width_opt"
+                t-att-data-apply-to="apply_to"
+                data-select-style="0"
+                t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}width"
+                data-unit="px"
+                t-att-data-extra-class="with_bs_class and 'border'"
+                t-att-data-variable="width_variable"/>
+        <we-select t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}style"
+                data-dependencies="border_width_opt"
+                t-att-data-apply-to="apply_to"
+                t-att-data-variable="style_variable">
+            <we-button title="Solid" data-select-style="solid"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: solid;"/></we-button>
+            <we-button title="Dashed" data-select-style="dashed"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dashed;"/></we-button>
+            <we-button title="Dotted" data-select-style="dotted"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: dotted;"/></we-button>
+            <we-button title="Double" data-select-style="double"><div class="o_we_fake_img_item o_we_border_preview" style="border-style: double; border-left: none; border-right: none;"/></we-button>
+        </we-select>
+        <we-colorpicker data-dependencies="border_width_opt"
+                        t-att-data-apply-to="apply_to"
+                        data-select-style="true"
+                        t-attf-data-css-property="border-#{direction and ('%s-' % direction) or ''}color"
+                        data-color-prefix="border-"
+                        t-att-data-color="color_variable"/>
+    </we-row>
+</template>
+
+<template id="snippet_options_border_widgets">
+    <t t-call="mass_mailing.snippet_options_border_line_widgets">
+        <t t-set="label">Border</t>
+        <t t-set="with_bs_class" t-value="True"/>
+    </t>
+    <we-input string="Round Corners"
+            t-att-data-apply-to="apply_to"
+            t-att-data-dependencies="not so_rounded_no_dependencies and 'border_width_opt,bg_color_opt'"
+            data-select-style="0" data-css-property="border-radius"
+            data-unit="px" data-extra-class="rounded"
+            t-att-data-variable="radius_variable"/>
+</template>
+
+<!-- Snippet themes Options -->
+<template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
+    <t t-out="0"/>
+
+    <!-- Border | Columns -->
+    <div data-js="Box"
+         data-selector=".row > div"
+         data-exclude=".o_mail_wrapper_td, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_image_gallery .row > div">
+        <t t-call="mass_mailing.snippet_options_border_widgets"/>
+    </div>
+    <div data-js="layout_column"
+        data-selector=".o_mail_snippet_general"
+        data-target="> *:has(> .row:not(.s_nb_column_fixed)), > .s_allow_columns">
+        <we-select string="Columns" data-no-preview="true">
+            <we-button data-select-count="0" data-name="zero_cols_opt">None</we-button>
+            <we-button data-select-count="1">1</we-button>
+            <we-button data-select-count="2">2</we-button>
+            <we-button data-select-count="3">3</we-button>
+            <we-button data-select-count="4">4</we-button>
+            <we-button data-select-count="5">5</we-button>
+            <we-button data-select-count="6">6</we-button>
+        </we-select>
+    </div>
+
+    <!-- Move snippets around -->
+    <div data-js="SnippetMove" data-selector=".o_mail_snippet_general">
+        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
+        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
+    </div>
+    <div data-js="SnippetMove"
+         data-selector=".row:not(.s_col_no_resize) > div"
+         data-exclude=".s_showcase .row > div"
+         data-name="move_horizontally_opt">
+        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
+        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
+    </div>
+
+    <!-- H-ALIGN -->
+    <div id="so_text_align" data-selector=".s_mail_text_highlight">
+        <we-button-group string="Alignment">
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="text-left"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="text-center"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="text-right"/>
+        </we-button-group>
+    </div>
+
+    <div id="so_width" data-selector=".s_mail_alert, .s_mail_blockquote, .s_mail_text_highlight">
+        <we-select string="Width">
+            <we-button data-select-class="w-25">25%</we-button>
+            <we-button data-select-class="w-50">50%</we-button>
+            <we-button data-select-class="w-75">75%</we-button>
+            <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
+        </we-select>
+    </div>
+
+    <div id="so_block_align" data-selector=".s_mail_alert, .s_mail_blockquote, .s_mail_text_highlight">
+        <we-button-group string="Alignment" data-dependencies="!so_width_100">
+            <we-button class="fa fa-fw fa-align-left" title="Left" data-select-class="mr-auto"/>
+            <we-button class="fa fa-fw fa-align-center" title="Center" data-select-class="mx-auto"/>
+            <we-button class="fa fa-fw fa-align-right" title="Right" data-select-class="ml-auto"/>
+        </we-button-group>
+    </div>
+
+    <div data-js="BodyWidth" data-selector=".o_layout" data-target=".o_mail_wrapper" data-no-check="true">
+        <we-button-group string="Body Width">
+            <we-button data-select-class="o_mail_small"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_small.svg"
+                        title="Small"/>
+            <we-button data-select-class="o_mail_regular"
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_normal.svg"
+                        title="Regular"/>
+            <we-button data-select-class=""
+                        data-img="/mass_mailing/static/src/img/snippets_options/content_width_full.svg"
+                        title="Full"/>
+        </we-button-group>
+    </div>
+    <!-- TODO there is no data-js associated to this but a data-option-name, -->
+    <!-- somehow it acts as data-js... it will be reviewed in master. -->
+    <div data-option-name="minHeight" data-selector=".o_mail_snippet_general" data-exclude=".o_mail_snippet_general .row > div *">
+        <we-button-group string="Height">
+            <we-button data-name="minheight_auto_opt" data-select-class="" title="Fit content">Auto</we-button>
+            <we-button data-select-class="o_height_400" title="400px">50%</we-button>
+            <we-button data-select-class="o_height_800" title="800px">100%</we-button>
+        </we-button-group>
+    </div>
+    <div data-js="mass_mailing_sizing_x"
+        data-selector="img, .mv, .col_mv, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col>td, .col>th"/>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col_mv, td, th"/>
+
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
+    <div data-js="content"
+        t-att-data-selector="mailing_content_selector"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <t t-set="so_snippet_addition_selector" t-translation="off">.o_mail_snippet_general</t>
+    <div id="so_snippet_addition"
+        t-att-data-selector="so_snippet_addition_selector"
+        data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
+
+    <t t-set="so_content_addition_selector" t-translation="off">.s_mail_blockquote, .s_mail_alert, .s_rating, .s_hr, .s_mail_text_highlight</t>
+    <div id="so_content_addition"
+        t-att-data-selector="so_content_addition_selector"
+        t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
+        data-drop-in=".content, nav"/>
+
+    <div data-js="sizing_y"
+        data-selector=".o_mail_snippet_general, .o_mail_snippet_general .row > div"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="sizing_x"
+        data-selector=".row > div"
+        data-drop-near=".row:not(.s_col_no_resize) > div"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-selector=".o_layout, .note-editable > div:not(.o_layout),
+        .note-editable .oe_structure > div:not(:has(> .o_mail_snippet_general)),
+        .note-editable .oe_structure > div.o_mail_snippet_general,
+        .note-editable .oe_structure > div.o_mail_snippet_general .o_cc,
+        .note-editable .oe_structure > div.o_mail_snippet_general .btn:not(.btn-link),
+        td, td.o_mail_no_colorpicker div:first-child, th"
+        data-exclude=".o_mail_no_colorpicker, .o_mail_no_options, .s_mail_color_blocks_2, .s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+
+    <div data-selector=".s_mail_color_blocks_2 .row > div">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+
+    <!-- Allow changing background images in Masonry -->
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="'.s_masonry_block .row > div'"/>
+        <t t-set="with_images" t-value="True"/>
+    </t>
+
+    <!-- COLOR | .s_three_columns | .s_comparisons -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-target=".card-body">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-no-transparency="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
+    </div>
+    <!-- BORDER | .s_three_columns | .s_comparisons -->
+    <div data-js="Box"
+         data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
+         data-target=".card">
+        <t t-call="mass_mailing.snippet_options_border_widgets">
+            <t t-set="so_rounded_no_dependencies" t-value="True"/>
+        </t>
+    </div>
+    <!-- COLOR, BORDER | .o_mail_block_discount2 -->
+    <div data-js="Box"
+         data-selector=".o_mail_block_discount2"
+         data-target="table">
+        <t t-call="mass_mailing.snippet_options_border_widgets">
+        </t>
+    </div>
+
+    <!--  Vertical Alignment -->
+    <div data-option-name="vAlignment" id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
+        <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+            <we-button title="Align Top"
+                       data-select-class="align-items-start"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_top.svg"/>
+            <we-button title="Align Middle"
+                       data-select-class="align-items-center"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_middle.svg"/>
+            <we-button title="Align Bottom"
+                       data-select-class="align-items-end"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_bottom.svg"/>
+            <we-button title="Stretch to Equal Height"
+                       data-select-class="align-items-stretch"
+                       data-img="/mass_mailing/static/src/img/snippets_options/align_stretch.svg"/>
+        </we-button-group>
+    </div>
+</template>
+</odoo>

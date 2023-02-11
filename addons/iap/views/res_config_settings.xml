@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="open_iap_account" model="ir.actions.server">
+        <field name="name">Open IAP Account</field>
+        <field name="model_id" ref="base_setup.model_res_config_settings"/>
+        <field name="binding_model_id" ref="base_setup.model_res_config_settings"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records._redirect_to_iap_account()
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.base.setup.iap</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='contacts_settings']" position="inside">
+                <div id="iap_portal">
+                    <div class='row mt16 o_settings_container iap_portal' name="iap_purchases_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="iap_credits_setting">
+                            <div class='o_setting_right_pane'>
+                                <div class="o_form_label">
+                                Odoo IAP
+                                <a href="https://www.odoo.com/documentation/15.0/applications/general/in_app_purchase.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                <a href="https://www.odoo.com/documentation/15.0/developer/misc/api/iap.html" title="Documentation" class="ml-1 o_doc_link" target="_blank"></a>
+                                </div>
+                                <div class="text-muted">
+                                    View your IAP Services and recharge your credits
+                                </div>
+                                <div class='mt8'>
+                                    <button name="%(iap.open_iap_account)d" icon="fa-arrow-right" type="action" string="View My Services" class="btn-link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

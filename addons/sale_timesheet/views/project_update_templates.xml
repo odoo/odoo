@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="project_update_default_description" inherit_id="project.project_update_default_description">
+        <!--As this template is rendered in an html field, the spaces may be interpreted as nbsp while editing. -->
+        <xpath expr="//div[@name='milestone']" position="before">
+<br/>
+<div t-if="show_sold">
+<h3 style="font-weight: bolder"><u>Sold</u></h3>
+<table class="table table-bordered">
+<tbody>
+<thead>
+<td style="font-weight: bolder">Service</td>
+<td style="font-weight: bolder">Sold</td>
+<td style="font-weight: bolder">Effective</td>
+<td style="font-weight: bolder">Remaining</td>
+</thead>
+<tr t-foreach="services['data']" t-as="service">
+<t t-set="is_unit" t-value="service['is_unit']"/>
+<td t-attf-class="#{ 'font-italic' if is_unit else ''}"><t t-esc="service['name']"/></td>
+<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_lang(service['sold_value'], 1)"/> <t t-esc="service['unit']"/></td>
+<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_lang(service['effective_value'], 1)"/> <t t-esc="service['unit']"/></td>
+<td t-attf-class="#{ 'font-italic' if is_unit else ''}" style="text-align: right; vertical-align: middle;"><t t-esc="format_lang(service['remaining_value'], 1)"/> <t t-esc="service['unit']"/></td>
+</tr>
+<tfoot>
+<td style="font-weight: bolder; text-align: right">Total</td>
+<td style="font-weight: bolder; text-align: right; vertical-align: middle;"><t t-esc="format_lang(services['total_sold'], 1)"/> <t t-esc="services['company_unit_name']"/></td>
+<td style="font-weight: bolder; text-align: right; vertical-align: middle;"><t t-esc="format_lang(services['total_effective'], 1)"/> <t t-esc="services['company_unit_name']"/></td>
+<td style="font-weight: bolder; text-align: right; vertical-align: middle;"><t t-esc="format_lang(services['total_remaining'], 1)"/> <t t-esc="services['company_unit_name']"/></td>
+</tfoot>
+</tbody>
+</table>
+<br/>
+</div>        
+        
+<div name="profitability" t-if="show_profitability">
+<t t-if="project.analytic_account_id and project.allow_billable and user.has_group('project.group_project_manager')" name="costs">
+<h3 style="font-weight: bolder"><u>Profitability</u></h3>
+The cost of the project is now at <t t-esc="profitability['costs']"/>, for a revenue of <t t-esc="profitability['revenues']"/>, leading to a
+<span>
+<font t-if="profitability['margin'] &gt; 0"  style="color: rgb(0, 128, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<font t-elif="profitability['margin'] &lt; 0" style="color: rgb(128, 0, 0)">
+<b><t t-esc="profitability['margin_formatted']"/></b>
+</font>
+<t t-else="" t-esc="profitability['margin_formatted']"/>
+</span> margin (<t t-esc="profitability['margin_percentage']"/>%).
+</t>
+</div>
+        </xpath>
+    </template>
+
+</odoo>

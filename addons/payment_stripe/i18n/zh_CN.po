@@ -1,0 +1,216 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_stripe
+# 
+# Translators:
+# Martin Trigaux, 2021
+# Benson <Benson.Dr@Gmail.com>, 2022
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2022
+# Jeffery CHEN <jeffery9@gmail.com>, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 15.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2022-02-22 14:45+0000\n"
+"PO-Revision-Date: 2021-09-14 12:24+0000\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
+"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: zh_CN\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Connect Stripe"
+msgstr "连接 Stripe"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Could not establish the connection to the API."
+msgstr "无法建立与API的连接。"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Generate your webhook"
+msgstr "生成您的webhook"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.payment_acquirer_form
+msgid "Get your Secret and Publishable keys"
+msgstr "获得您的Secret和可发布的密钥"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid ""
+"If a webhook is enabled on your Stripe account, this signing secret must be "
+"set to authenticate the messages sent from Stripe to Odoo."
+msgstr "如果在您的Stripe账户上启用了webhook，就必须设置这个签名秘密来验证从Stripe发送到Odoo的信息。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "No transaction found matching reference %s."
+msgstr "没有发现与参考文献%s相匹配的交易。"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "支付收款"
+
+#. module: payment_stripe
+#: model:ir.actions.act_window,name:payment_stripe.action_payment_acquirer_onboarding
+msgid "Payment Acquirers"
+msgstr "收款方"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_account_payment_method
+msgid "Payment Methods"
+msgstr "付款方式"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_token
+msgid "Payment Token"
+msgstr "付款令牌"
+
+#. module: payment_stripe
+#: model:ir.model,name:payment_stripe.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "付款交易"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "物流商"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "Publishable Key"
+msgstr "公共的密钥"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with invalid intent status: %s"
+msgstr "收到的数据具有无效的意图状态:%s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing intent status."
+msgstr "收到的数据有缺失的意向性状态。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "Received data with missing merchant reference"
+msgstr "收到的数据中缺少商户参考信息"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
+msgid "Secret Key"
+msgstr "密钥"
+
+#. module: payment_stripe
+#: model:account.payment.method,name:payment_stripe.payment_method_stripe
+#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+msgid "Stripe"
+msgstr "条纹"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
+msgid "Stripe Payment Intent ID"
+msgstr "Stripe 付款意向 ID"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
+msgid "Stripe Payment Method ID"
+msgstr "Stripe支付方式ID"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy error: %(error)s"
+msgstr "Stripe 代理错误：%(error)s"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy: An error occurred when communicating with the proxy."
+msgstr "Stripe代理:在与代理进行通信时发生了错误。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Stripe Proxy: Could not establish the connection."
+msgstr "Stripe代理:无法建立连接。"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__provider
+msgid "The Payment Service Provider to use with this acquirer"
+msgstr "与该收单机构一起使用的支付服务提供商"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid ""
+"The communication with the API failed.\n"
+"Stripe gave us the following info about the problem:\n"
+"'%s'"
+msgstr ""
+"与API的通信失败。\n"
+"Stripe给了我们关于这个问题的以下信息:\n"
+"'%s'"
+
+#. module: payment_stripe
+#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_publishable_key
+msgid "The key solely used to identify the account with Stripe"
+msgstr "用于识别Stripe账户的唯一密钥。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_transaction.py:0
+#, python-format
+msgid "The transaction is not linked to a token."
+msgstr "该交易没有与令牌挂钩。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_token.py:0
+#, python-format
+msgid "Unable to convert payment token to new API."
+msgstr "无法将支付令牌转换为新的API。"
+
+#. module: payment_stripe
+#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
+msgid "Webhook Signing Secret"
+msgstr "Webhook签名Secret"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "You Stripe Webhook was successfully set up!"
+msgstr "您的Stripe Webhook已经成功设置了!"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot create a Stripe Webhook if your Stripe Secret Key is not set."
+msgstr "如果您的Stripe密匙没有设置，您就不能创建一个Stripe Webhook。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid ""
+"You cannot set the acquirer to Test Mode while it is linked with your Stripe"
+" account."
+msgstr "当收单机构与您的Stripe账户连接时，您不能将其设置为测试模式。"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment_acquirer.py:0
+#, python-format
+msgid "Your Stripe Webhook is already set up."
+msgstr "您的Stripe Webhook已经设置好了。"

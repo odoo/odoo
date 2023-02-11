@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_change_product_quantity" model="ir.ui.view">
+            <field name="name">Change Product Quantity</field>
+            <field name="model">stock.change.product.qty</field>
+            <field name="arch" type="xml">
+                <form string="Update Product Quantity">
+                    <group>
+                        <field name="product_tmpl_id" invisible="1"/>
+                        <field name="product_variant_count" invisible="1"/>
+                        <field name="product_id" options="{'no_open': True, 'no_create': True}"
+                            domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                            attrs="{'invisible': [('product_variant_count', '=', 1)]}"
+                            invisible="context.get('default_product_id')"
+                            readonly="context.get('default_product_id')"/>
+                        <field name="new_quantity"/>
+                    </group>
+                    <footer>
+                        <button name="change_product_qty" string="Apply" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_change_product_quantity" model="ir.actions.act_window">
+            <field name="name">Change Product Quantity</field>
+            <field name="res_model">stock.change.product.qty</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

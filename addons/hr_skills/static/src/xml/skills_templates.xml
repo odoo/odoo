@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="hr_skill_data_row">
+    <tr class="o_data_row" t-att-data-id="id">
+        <td class="o_data_cell o_skill_cell w-100">
+            <t t-esc="data.skill_id.data.display_name"/>
+        </td>
+        <td class="o_data_cell o_skill_cell pr-3">
+            <t t-esc="data.skill_level_id.data.display_name"/>
+        </td>
+    </tr>
+</t>
+
+<t t-name="hr_default_group_row">
+    <tr class="o_group_header o_group_has_content">
+        <td class="o_group_name border-0 pr-2" colspan="99">
+            <b t-esc="display_name"/>
+        </td>
+    </tr>
+</t>
+
+
+</templates>

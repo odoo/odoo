@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SaleOrderManagementScreen" owl="1">
+        <div class="order-management-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
+            <div t-if="!env.isMobile" class="screen-full-width">
+                <div class="rightpane">
+                    <div class="flex-container">
+                        <SaleOrderManagementControlPanel />
+                        <SaleOrderList orders="orders" initHighlightedOrder="orderManagementContext.selectedOrder" />
+                    </div>
+                </div>
+            </div>
+            <MobileSaleOrderManagementScreen t-else="" />
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="pay_with_gift_card_form">
+        <form action="/shop/pay_with_gift_card" class="mb-2" method="post" name="gift_card_code">
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+            <div class="input-group w-100">
+                <input name="gift_card_code" class="form-control" type="text" required="required" placeholder="Gift card code..."/>
+                <div class="input-group-append">
+                    <button href="#" type="submit" role="button" class="btn btn-secondary a-submit">Pay</button>
+                </div>
+            </div>
+        </form>
+        <t t-if="request.params.get('gift_card_error')">
+            <div class="alert alert-danger text-left mt16" role="alert" t-esc="request.params.get('gift_card_error')"/>
+        </t>
+    </template>
+
+    <template id="cart_line_product_no_link" inherit_id="website_sale.cart_line_product_link">
+        <xpath expr="." position="replace">
+            <div>
+                <t t-if="not line.gift_card_id">
+                    <a t-att-href="line.product_id.website_url">
+                        <strong t-field="line.name_short"/>
+                    </a>
+                </t>
+                <t t-else="">
+                    <strong t-field="line.name_short"/>
+                    <t t-call="sale_gift_card.used_gift_card"/>
+                </t>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="add_gift_card" inherit_id="website_sale.total" name="Gift Card">
+        <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
+            <tr t-if="allow_pay_with_gift_card" class="oe_website_sale_gift_card">
+                <td colspan="3" class="text-center text-xl-right border-0">
+                    <span class=''>
+                        <t t-set='force_gift_card' t-value="request.params.get('gift_card_error')"/>
+                        <t t-if="not force_gift_card">
+                            <a href="#" class="js_show_gift_card">Pay with a gift card</a>
+                        </t>
+                        <div t-attf-class="gift_card_form #{not force_gift_card and 'd-none'}">
+                            <t t-call="website_sale_gift_card.pay_with_gift_card_form"/>
+                        </div>
+                    </span>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
+    <template id="cart_summary_inherit_website_gift_card_sale" inherit_id="website_sale.cart_summary">
+        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+            <t t-if="line.gift_card_id" t-call="sale_gift_card.used_gift_card"/>
+        </xpath>
+    </template>
+
+    <template id="website_sale_purchased_gift_card" inherit_id="website_sale.confirmation" >
+        <xpath expr="//div[@id='oe_structure_website_sale_confirmation_2']" position="after">
+            <t t-call="sale_gift_card.sale_purchased_gift_card"/>
+        </xpath>
+    </template>
+</odoo>
