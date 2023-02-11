@@ -510,9 +510,9 @@ class AccountChartTemplate(models.Model):
         """
         model_to_check = ['account.payment', 'account.bank.statement']
         for model in model_to_check:
-            if self.env[model].sudo().search([('company_id', '=', company_id.id)], limit=1):
+            if self.env[model].sudo().search([('company_id', '=', company_id.id)], order="id DESC", limit=1):
                 return True
-        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], limit=1):
+        if self.env['account.move'].sudo().search([('company_id', '=', company_id.id), ('state', '!=', 'draft')], order="id DESC", limit=1):
             return True
         return False
 
