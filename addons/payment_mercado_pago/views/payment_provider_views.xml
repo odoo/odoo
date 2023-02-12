@@ -14,6 +14,16 @@
                            password="True"/>
                 </group>
             </group>
+            <group name="provider_config" position="inside">
+                <group string="Notifications" name="payment_notifications" attrs="{'invisible': [('code', '!=', 'mercado_pago')]}">
+                    <field name="mercadopago_use_ipn"
+                    string="Use IPN"
+                    widget="boolean_toggle"/>
+                    <field name="mercadopago_autoreturn"
+                    string="Autoreturn"
+                    widget="boolean_toggle"/>
+                </group>
+            </group>
         </field>
     </record>
 
