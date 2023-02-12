@@ -102,7 +102,14 @@ QUnit.module("Web Components", (hooks) => {
                     this.state = useState({ value: "world" });
                     this.choices = [
                         { label: "Hello", value: "hello" },
-                        { label: "World", value: "world" },
+                    ];
+                    this.groups = [
+                        {
+                            label: "Group A",
+                            choices: [
+                                { label: "World", value: "world" },
+                            ]
+                        }
                     ];
                 }
 
@@ -114,6 +121,7 @@ QUnit.module("Web Components", (hooks) => {
             Parent.components = { SelectMenu };
             Parent.template = xml`
             <SelectMenu
+                groups="groups"
                 choices="choices"
                 value="state.value"
                 onSelect.bind="onSelect"
