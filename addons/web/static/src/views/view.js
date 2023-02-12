@@ -129,6 +129,7 @@ const STANDARD_PROPS = [
     "domain",
     "groupBy",
     "orderBy",
+    "modelReloadKey", // ensures the view and its model are aware they have to reload
 
     "useSampleModel",
     "noContentHelp",

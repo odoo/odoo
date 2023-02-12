@@ -26,6 +26,7 @@ export const standardViewProps = {
     createRecord: { type: Function, optional: true },
     display: { type: Object, optional: true },
     domain: { type: Array },
+    modelReloadKey: { type: Number, optional: true },
     fields: { type: Object, elements: Object },
     globalState: { type: Object, optional: true },
     groupBy: { type: Array, elements: String },
