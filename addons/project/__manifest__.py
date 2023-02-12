@@ -131,7 +131,6 @@
 
             'web/static/src/legacy/scss/fields.scss',
             'web/static/src/legacy/scss/views.scss',
-            'web/static/src/legacy/scss/progress_bar.scss',
 
             'base/static/src/scss/res_partner.scss',
 

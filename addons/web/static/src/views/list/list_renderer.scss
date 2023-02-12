@@ -382,18 +382,6 @@
         }
     }
 
-    // ------- Force progress bars to respect table's layout -------
-    .o_progressbar_cell {
-        .o_progressbar {
-            display: table-row;
-
-            .o_progressbar_value {
-                width: 45px;
-                min-width: 45px;
-            }
-        }
-    }
-
     .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
         border-bottom: 1px solid $o-input-border-required;
     }
