@@ -4,10 +4,8 @@ import { registry } from "@web/core/registry";
 import { progressBarField, ProgressBarField } from "./progress_bar_field";
 
 export class KanbanProgressBarField extends ProgressBarField {
-    onClick() {
-        if (this.props.isEditable) {
-            this.state.isEditing = true;
-        }
+    get isEditable() {
+        return this.props.isEditable;
     }
 }
 
