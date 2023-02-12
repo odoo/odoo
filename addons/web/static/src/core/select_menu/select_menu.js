@@ -83,11 +83,11 @@ export class SelectMenu extends Component {
     }
 
     get displayValue() {
-        if (this.props.value) {
-            const value = this.props.choices.find((c) => c.value === this.props.value);
+        if (this.props.value !== undefined) {
+            const choices = [...this.props.choices, ...this.props.groups.flatMap((g) => g.choices)];
+            const value = choices.find((c) => c.value === this.props.value);
             return value ? value.label : this.props.value;
         }
-        return this.props.value;
     }
 
     onOpened() {
