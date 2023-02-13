@@ -135,7 +135,9 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             if not fp:
                 continue
             for position_tax in position_template.tax_ids:
-                if position_tax.tax_src_id in new_taxes_template or position_tax.tax_dest_id in new_taxes_template:
+                position_tax_template_exist = fp.tax_ids.filtered_domain([('tax_src_id', '=', tax_template_ref[position_tax.tax_src_id.id]),
+                                                                 ('tax_dest_id', '=', position_tax.tax_dest_id and tax_template_ref[position_tax.tax_dest_id.id] or False)])
+                if not position_tax_template_exist and (position_tax.tax_src_id in new_taxes_template or position_tax.tax_dest_id in new_taxes_template):
                     tax_template_vals.append((position_tax, {
                         'tax_src_id': tax_template_ref[position_tax.tax_src_id.id],
                         'tax_dest_id': position_tax.tax_dest_id and tax_template_ref[position_tax.tax_dest_id.id] or False,
