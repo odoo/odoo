@@ -764,9 +764,8 @@ class AccountEdiFormat(models.Model):
                         'res_id': new_invoice.id,
                     })
 
-                    # default_res_id is had to context to avoid facturx to import his content
                     # no_new_invoice to prevent from looping on the message_post that would create a new invoice without it
-                    new_invoice.with_context(no_new_invoice=True, default_res_id=new_invoice.id).message_post(
+                    new_invoice.with_context(no_new_invoice=True).message_post(
                         body=(_("Attachment from XML")),
                         attachment_ids=[attachment_64.id]
                     )
