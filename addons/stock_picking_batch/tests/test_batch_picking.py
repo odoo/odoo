@@ -382,6 +382,11 @@ class TestBatchPicking02(TransactionCase):
             'type': 'product',
             'categ_id': self.env.ref('product.product_category_all').id,
         })
+        self.productB = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
 
     def test_same_package_several_pickings(self):
         """
@@ -429,3 +434,53 @@ class TestBatchPicking02(TransactionCase):
             {'state': 'done', 'quantity_done': 7},
         ])
         self.assertEqual(pickings.move_line_ids.result_package_id, package)
+
+
+    def test_batch_validation_without_backorder(self):
+        loc1, loc2 = self.stock_location.child_ids
+        self.env['stock.quant']._update_available_quantity(self.productA, loc1, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, loc1, 10)
+        picking_1 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_1.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+
+        picking_2 = self.env['stock.picking'].create({
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+            'picking_type_id': self.picking_type_internal.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking_2.id,
+            'location_id': loc1.id,
+            'location_dest_id': loc2.id,
+        })
+        (picking_1 | picking_2).action_confirm()
+        (picking_1 | picking_2).action_assign()
+        picking_2.move_lines.move_line_ids.write({'qty_done': 1})
+
+        batch = self.env['stock.picking.batch'].create({
+            'name': 'Batch 1',
+            'company_id': self.env.company.id,
+            'picking_ids': [(4, picking_1.id), (4, picking_2.id)]
+        })
+        batch.action_confirm()
+        action = batch.action_done()
+        Form(self.env[action['res_model']].with_context(action['context'])).save().process_cancel_backorder()
+        self.assertEqual(batch.state, 'done')
