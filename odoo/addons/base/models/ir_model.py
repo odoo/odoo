@@ -592,7 +592,7 @@ class IrModelFields(models.Model):
         """ Return the ``ir.model.fields`` record corresponding to ``self.related``. """
         names = self.related.split(".")
         last = len(names) - 1
-        model_name = self.model
+        model_name = self.model_id.model
         for index, name in enumerate(names):
             field = self._get(model_name, name)
             if not field:
