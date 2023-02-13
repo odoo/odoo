@@ -196,7 +196,7 @@ const Wysiwyg = Widget.extend({
             onChange: options.onChange,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
         }, editorCollaborationOptions));
 
         document.addEventListener("mousemove", this._signalOnline, true);
