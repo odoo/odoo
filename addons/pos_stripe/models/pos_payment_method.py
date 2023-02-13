@@ -110,7 +110,7 @@ class PosPaymentMethod(models.Model):
                 "amount_to_capture": self._stripe_calculate_amount(amount),
             }
 
-        return self._get_stripe_payment_provider()._stripe_make_request(endpoint, data)
+        return self.sudo()._get_stripe_payment_provider()._stripe_make_request(endpoint, data)
 
     def action_stripe_key(self):
         res_id = self._get_stripe_payment_provider().id

@@ -41,7 +41,7 @@
               t-esc="sheet.name"
               t-on-dblclick="(ev) => this.onDblClick(sheet.id, ev)"
             />
-            <span class="o-sheet-icon" t-on-click.stop="(ev) => this.onIconClick(sheet.id, ev)">
+            <span class="o-sheet-icon" t-on-click="(ev) => this.onIconClick(sheet.id, ev)">
               <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
             </span>
           </div>
@@ -64,6 +64,7 @@
         position="menuState.position"
         menuItems="menuState.menuItems"
         onClose="() => this.menuState.isOpen=false"
+        menuId="menuState.menuId"
       />
     </div>
   </t>
@@ -181,9 +182,11 @@
         t-on-mousedown="onMousedown"
         t-on-input="onInput"
         t-on-keyup="onKeyup"
-        t-on-click.stop="onClick"
+        t-on-click="onClick"
         t-on-blur="onBlur"
         t-on-paste.stop=""
+        t-on-compositionstart="onCompositionStart"
+        t-on-compositionend="onCompositionEnd"
       />
 
       <div
@@ -362,76 +365,65 @@
   </t>
 
   <t t-name="o-spreadsheet-FigureComponent" owl="1">
-    <div
-      class="position-absolute pe-none"
-      t-att-class="{'overflow-hidden': !dnd.isActive}"
-      t-att-style="containerStyle">
+    <div class="o-figure-wrapper pe-auto" t-att-style="wrapperStyle">
       <div
-        class="o-figure-viewport-inverse w-0 h-0 overflow-visible position-absolute"
-        t-att-style="inverseViewportPositionStyle">
-        <div class="o-figure-wrapper pe-auto" t-att-style="wrapperStyle">
-          <div
-            class="o-figure w-100 h-100"
-            t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
-            t-att-class="{'o-dragging': dnd.isActive}"
-            t-ref="figure"
-            t-att-style="figureStyle"
-            tabindex="0"
-            t-on-keydown.stop="(ev) => this.onKeyDown(ev)"
-            t-on-keyup.stop="">
-            <t
-              t-component="figureRegistry.get(this.props.figure.tag).Component"
-              t-key="this.props.figure.id"
-              sidePanelIsOpen="props.sidePanelIsOpen"
-              onFigureDeleted="props.onFigureDeleted"
-              figure="displayedFigure"
-            />
-          </div>
-          <t t-if="isSelected">
-            <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
-            <div
-              class="o-fig-resizer o-top"
-              t-att-style="this.getResizerPosition('top')"
-              t-on-mousedown="(ev) => this.resize(0,-1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-topRight"
-              t-att-style="this.getResizerPosition('top right')"
-              t-on-mousedown="(ev) => this.resize(1,-1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-right"
-              t-att-style="this.getResizerPosition('right')"
-              t-on-mousedown="(ev) => this.resize(1,0, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottomRight"
-              t-att-style="this.getResizerPosition('bottom right')"
-              t-on-mousedown="(ev) => this.resize(1,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottom"
-              t-att-style="this.getResizerPosition('bottom')"
-              t-on-mousedown="(ev) => this.resize(0,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-bottomLeft"
-              t-att-style="this.getResizerPosition('bottom left')"
-              t-on-mousedown="(ev) => this.resize(-1,1, ev)"
-            />
-            <div
-              class="o-fig-resizer o-left"
-              t-att-style="this.getResizerPosition('left')"
-              t-on-mousedown="(ev) => this.resize(-1,0, ev)"
-            />
-            <div
-              class="o-fig-resizer o-topLeft"
-              t-att-style="this.getResizerPosition('top left')"
-              t-on-mousedown="(ev) => this.resize(-1,-1, ev)"
-            />
-          </t>
-        </div>
+        class="o-figure w-100 h-100"
+        t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
+        t-ref="figure"
+        t-att-style="figureStyle"
+        tabindex="0"
+        t-on-keydown.stop="(ev) => this.onKeyDown(ev)"
+        t-on-keyup.stop="">
+        <t
+          t-component="figureRegistry.get(props.figure.tag).Component"
+          t-key="props.figure.id"
+          onFigureDeleted="props.onFigureDeleted"
+          figure="props.figure"
+        />
       </div>
+      <t t-if="isSelected">
+        <div class="w-100 h-100 o-active-figure-border position-absolute pe-none"/>
+        <div
+          class="o-fig-anchor o-top"
+          t-att-style="this.getResizerPosition('top')"
+          t-on-mousedown="(ev) => this.clickAnchor(0,-1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-topRight"
+          t-att-style="this.getResizerPosition('top right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,-1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-right"
+          t-att-style="this.getResizerPosition('right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,0, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottomRight"
+          t-att-style="this.getResizerPosition('bottom right')"
+          t-on-mousedown="(ev) => this.clickAnchor(1,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottom"
+          t-att-style="this.getResizerPosition('bottom')"
+          t-on-mousedown="(ev) => this.clickAnchor(0,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-bottomLeft"
+          t-att-style="this.getResizerPosition('bottom left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,1, ev)"
+        />
+        <div
+          class="o-fig-anchor o-left"
+          t-att-style="this.getResizerPosition('left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,0, ev)"
+        />
+        <div
+          class="o-fig-anchor o-topLeft"
+          t-att-style="this.getResizerPosition('top left')"
+          t-on-mousedown="(ev) => this.clickAnchor(-1,-1, ev)"
+        />
+      </t>
     </div>
   </t>
 
@@ -466,12 +458,25 @@
 
   <t t-name="o-spreadsheet-FiguresContainer" owl="1">
     <div>
-      <t t-foreach="getVisibleFigures()" t-as="figure" t-key="figure.id">
-        <FigureComponent
-          sidePanelIsOpen="this.props.sidePanelIsOpen"
-          onFigureDeleted="this.props.onFigureDeleted"
-          figure="figure"
-        />
+      <t t-foreach="containers" t-as="container" t-key="container.type">
+        <div
+          class="o-figure-container position-absolute pe-none overflow-hidden"
+          t-att-style="container.style"
+          t-att-data-id="container.type + 'Container'">
+          <div
+            class="o-figure-viewport-inverse w-0 h-0 overflow-visible position-absolute"
+            t-att-style="container.inverseViewportStyle">
+            <t t-foreach="container.figures" t-as="figure" t-key="figure.id">
+              <FigureComponent
+                onFigureDeleted="this.props.onFigureDeleted"
+                figure="figure"
+                style="getFigureStyle(figure)"
+                onMouseDown="(ev) => this.startDraggingFigure(figure, ev)"
+                onClickAnchor="(dirX, dirY, ev) => this.startResize(figure, dirX, dirY, ev)"
+              />
+            </t>
+          </div>
+        </div>
       </t>
     </div>
   </t>
@@ -1509,6 +1514,7 @@
         depth="props.depth + 1"
         onMenuClicked="props.onMenuClicked"
         onClose="() => this.close()"
+        menuId="props.menuId"
       />
     </Popover>
   </t>
@@ -1628,7 +1634,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -1705,7 +1711,7 @@
           Select a color...
           <span
             title="Background Color"
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="() => this.toggleMenu('backgroundColor', ev)">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -1910,7 +1916,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -2019,7 +2025,7 @@
         <div class="o-with-color-picker">
           Select a color...
           <span
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="toggleColorPicker">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>
@@ -2173,7 +2179,7 @@
           Select a color...
           <span
             title="Background Color"
-            t-attf-style="border-color:{{props.definition.background}}"
+            t-att-style="props.definition.background ? `border-color: ${props.definition.background}` : 'border-bottom-style: hidden'"
             t-on-click.stop="() => this.openColorPicker('backgroundColor')">
             <t t-call="o-spreadsheet-Icon.FILL_COLOR"/>
           </span>

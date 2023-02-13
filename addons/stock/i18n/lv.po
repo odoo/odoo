@@ -11,15 +11,15 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Martin Trigaux, 2022
 # ievaputnina <ievai.putninai@gmail.com>, 2022
-# Armīns Jeltajevs, 2023
+# Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Armīns Jeltajevs, 2023\n"
+"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
 "Language-Team: Latvian (https://www.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -228,6 +228,7 @@ msgstr ""
 #. module: stock
 #. odoo-python
 #: code:addons/stock/models/stock_rule.py:0
+#: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
 msgstr ""
@@ -348,6 +349,8 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Pārvaldīt\" "
+"title=\"Pārvaldīt\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -3041,6 +3044,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3563,6 +3573,7 @@ msgid "Invalid domain right operand %s"
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -5093,7 +5104,7 @@ msgstr "Iespējas"
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_warning_view
 #, python-format
 msgid "Order"
-msgstr "Maksājuma uzdevums"
+msgstr "Pasūtījums"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_tree_editable
@@ -5774,7 +5785,6 @@ msgstr "Produktu kategorijas"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Produkta Kategorija"
@@ -8180,6 +8190,15 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9328,6 +9347,13 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -9788,11 +9814,4 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
 msgstr ""

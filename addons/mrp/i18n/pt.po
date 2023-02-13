@@ -14,17 +14,17 @@
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2022
 # Pedro Filipe <pedro2.10@hotmail.com>, 2022
 # Pedro Castro Silva <pedrocs@exo.pt>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
 # Martin Trigaux, 2022
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
+# Manuela Silva <mmsrs@sky.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2022\n"
+"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -203,6 +203,11 @@ msgid ""
 "                        Use this feature to store any files, like drawings or specifications.\n"
 "                    </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Envie ficheiros para o seu produto\n"
+"                    </p><p>\n"
+"                        Utilize esta funcionalidade para guardar quaisquer ficheiros, como desenhos ou especificações.\n"
+"                    </p>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -557,7 +562,7 @@ msgstr "Tudo"
 #: code:addons/mrp/controller/main.py:0
 #, python-format
 msgid "All files uploaded"
-msgstr ""
+msgstr "Todos os ficheiros enviados"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_bom_line_bom_qty_zero
@@ -2644,15 +2649,6 @@ msgid "Line of issue consumption"
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Localização"
@@ -4255,6 +4251,11 @@ msgid "Scheduled Date by Month"
 msgstr "Data Programada por Mês"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
 msgid "Scheduled End Date"
@@ -5419,12 +5420,12 @@ msgstr "U.M."
 #: code:addons/mrp/static/src/xml/mrp_document_template.xml:0
 #, python-format
 msgid "Upload"
-msgstr "Carregar"
+msgstr "Enviar"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "Envie o seu ficheiro PDF."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__1
@@ -5919,8 +5920,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Poderá carregar um ficheiro a partir do seu computador ou copiar e colar um "
-"link online para o seu ficheiro."
+"Pode enviar um ficheiro a partir do seu computador ou copiar/colar uma "
+"hiperligação da Internet para o seu ficheiro."
 
 #. module: mrp
 #. odoo-python

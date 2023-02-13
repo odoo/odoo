@@ -1259,6 +1259,22 @@ class Request:
             self.session.is_dirty = was_dirty
         return self.session._geoip
 
+    @lazy_property
+    def best_lang(self):
+        lang = self.httprequest.accept_languages.best
+        if not lang:
+            return None
+
+        try:
+            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
+            if territory:
+                lang = f'{code}_{territory}'
+            else:
+                lang = babel.core.LOCALE_ALIASES[code]
+            return lang
+        except (ValueError, KeyError):
+            return None
+
     # =====================================================
     # Helpers
     # =====================================================
@@ -1321,19 +1337,7 @@ class Request:
         :returns: Preferred language if specified or 'en_US'
         :rtype: str
         """
-        lang = self.httprequest.accept_languages.best
-        if not lang:
-            return DEFAULT_LANG
-
-        try:
-            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
-            if territory:
-                lang = f'{code}_{territory}'
-            else:
-                lang = babel.core.LOCALE_ALIASES[code]
-            return lang
-        except (ValueError, KeyError):
-            return DEFAULT_LANG
+        return self.best_lang or DEFAULT_LANG
 
     def _geoip_resolve(self):
         if not (root.geoip_resolver and self.httprequest.remote_addr):
@@ -1736,9 +1740,10 @@ class HttpDispatcher(Dispatcher):
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
+            was_connected = session.uid is not None
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
-            if not session.is_explicit:
+            if not session.is_explicit and was_connected:
                 root.session_store.rotate(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
             return response

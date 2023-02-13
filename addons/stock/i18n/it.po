@@ -5,16 +5,16 @@
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
-# Francesco Foresti <francesco.foresti@ooops404.com>, 2022
+# francesco.foresti <francesco.foresti@ooops404.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -234,8 +234,8 @@ msgid ""
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
 "* Nuovo: movimento di magazzino creato ma non ancora confermato.\n"
-"* In attesa di altro movimento: stato visualizzato quando un movimento è in attesa di un'altro, per esempio in un flusso concatenato.\n"
-"* In attesa di disponibilità: stato raggiunto quando la decisione sull'approvvigionamento non è chiara, perché è necessario eseguire lo schedulatore, produrre un componente ecc...\n"
+"* In attesa di altro movimento: stato visualizzato quando un movimento è in attesa di un altro, per esempio in un flusso concatenato.\n"
+"* In attesa di disponibilità: stato raggiunto quando la decisione sull'approvvigionamento non è chiara, perché è necessario eseguire il pianificatore, produrre un componente ecc...\n"
 "* Disponibile: impostato quando i prodotti sono prenotati.\n"
 "* Completato: stato raggiunto quando viene elaborata la spedizione."
 
@@ -264,6 +264,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -3233,6 +3234,13 @@ msgstr ""
 "Fornisce la sequenza della riga quando vengono visualizzati i magazzini."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3794,6 +3802,7 @@ msgid "Invalid domain right operand %s"
 msgstr "Operando destro %s non valido per il dominio"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -6047,7 +6056,6 @@ msgstr "Categorie prodotto"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Categoria prodotto"
@@ -8541,7 +8549,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr "Nota aggiunta agli ordini di vendita."
+msgstr "Nota aggiunta agli ordini di consegna."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -8588,6 +8596,15 @@ msgstr ""
 "sconsigliato cambiare il tipo di prodotto, poichè ciò può portare ad "
 "incoerenze. Archiviare il prodotto e crearne uno nuovo rappresenta invece "
 "una soluzione migliore."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -9693,11 +9710,11 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"L'unità di misura utilizzata è più piccola di quella usata per lo stoccaggio"
-" del prodotto. Ciò può causare problemi di arrotondamento nella quantità "
+"L'unità di misura utilizzata è inferiore a quella usata per lo stoccaggio "
+"del prodotto. Ciò può causare problemi di arrotondamento nella quantità "
 "prenotata. Per valutare la giacenza usare la più piccola unità di misura "
-"possibile oppure cambiarne la precisione di arrotondamento a un valore più "
-"piccolo (esempio: 0,00001)."
+"possibile oppure cambiarne la precisione di arrotondamento a un valore "
+"inferiore (esempio: 0,00001)."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_routes_form
@@ -9804,6 +9821,13 @@ msgid ""
 msgstr ""
 "Impossibile annullare un movimento di magazzino impostato a \"Completato\". "
 "Per stornare i movimenti effettuati creare un reso."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -10317,10 +10341,3 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Buono di consegna (Ref {{ object.name or 'n/a' "
 "}})"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr ""

@@ -4,6 +4,7 @@
 import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
 
@@ -133,7 +134,7 @@ class Meeting(models.Model):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
-                'responseStatus': 'needsAction',
+                'responseStatus': 'accepted',
             }]
         emails = [a.get('email') for a in google_attendees]
         existing_attendees = self.env['calendar.attendee']
@@ -250,6 +251,8 @@ class Meeting(models.Model):
                 'useDefault': False,
             }
         }
+        if not self.google_id:
+            values['conferenceData'] = {'createRequest': {'requestId': uuid4().hex}}
         if self.privacy:
             values['visibility'] = self.privacy
         if not self.active:

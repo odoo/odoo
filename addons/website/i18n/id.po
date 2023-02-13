@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
@@ -634,14 +634,8 @@ msgstr "<b>Geser</b> tombol ini untuk mengubah ukuran kolom."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
-"<br/><br/>\n"
-"                    Contoh rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1379,6 +1373,7 @@ msgstr ""
 "belakang yang kontekstual, dan opsi tampilan yang andal."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -2122,6 +2117,7 @@ msgid "Autosizing"
 msgstr "Autosizing"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -4286,6 +4282,7 @@ msgid "Extension View"
 msgstr "Tampilan Extension"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5311,6 +5308,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6559,6 +6557,11 @@ msgstr "Menu menggunakan salinan saya"
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 msgid "Menus"
 msgstr "Menu-Menu"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -9380,6 +9383,7 @@ msgid "The full URL to access the document through the website."
 msgstr "URL lengkap untuk mengakses dokumen melalui website."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10752,6 +10756,7 @@ msgid "Website Pages"
 msgstr "Halaman Website"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10806,6 +10811,7 @@ msgid "Website URL"
 msgstr "URL Website"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"

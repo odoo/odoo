@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
@@ -1002,7 +1002,7 @@ msgstr "BoM 내역"
 #: model:ir.actions.report,name:mrp.action_report_bom_structure
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
 msgid "BoM Overview"
-msgstr ""
+msgstr "BoM 현황"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__type
@@ -2638,15 +2638,6 @@ msgid "Line of issue consumption"
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr "명세를 삭제해야 하지만, 명세에 소비할 수 있는 양이 아직 남아 있기 때문에 삭제할 수 없습니다."
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "위치"
@@ -4249,6 +4240,11 @@ msgstr "계획된 날짜"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "월별 계획일"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr "예정일: 최근 365일"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished

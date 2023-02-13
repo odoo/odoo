@@ -6,15 +6,15 @@
 # Tivisse <yti@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,16 +38,18 @@ msgstr ""
 "Définit la source de génération des prestations\n"
 "\n"
 "Horaire de travail : les prestations seront générées à partir des heures de travail ci-dessous.\n"
-"Présences : les prestations seront générées à partir des présences de l'employé. (nécessite l'application Présence)\n"
-"Planning : Les prestations seront générées à partir du planning de l'employé. (nécessite l'application Planning)"
+"Présences : les prestations seront générées à partir des présences de l'employé. (nécessite l'application Présences)\n"
+"Planning : les prestations seront générées à partir du planning de l'employé. (nécessite l'application Planning)"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid "%s does not have a contract from %s to %s."
-msgstr "%s n'a pas de de contrat de %s à %s."
+msgstr "%s n'a pas de de contrat du %s au %s."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_work_entry.py:0
 #, python-format
 msgid ""
@@ -83,7 +85,7 @@ msgstr ""
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
-msgstr "Autorisée le type de prestation à être lié aux types de congé."
+msgstr "Permettre de lier le type de prestation aux types de congé."
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -137,11 +139,11 @@ msgid "Employees"
 msgstr "Employés"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar_model.js:0
 #, python-format
 msgid "Everybody's work entries"
-msgstr "Entrées de service de tout le monde"
+msgstr "Prestations de tout le monde"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_extra_hours
@@ -156,7 +158,6 @@ msgstr "De"
 #. module: hr_work_entry_contract
 #: model:ir.actions.server,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries_ir_actions_server
 #: model:ir.cron,cron_name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
-#: model:ir.cron,name:hr_work_entry_contract.ir_cron_generate_missing_work_entries
 msgid "Generate Missing Work Entries"
 msgstr "Générer les prestations manquantes"
 
@@ -196,6 +197,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -204,8 +206,8 @@ msgid ""
 "interval defined by date_from and date_to must not contain any validated "
 "work entries."
 msgstr ""
-"Afin de régénérer les entrées de travail, vous devez fournir à l'assistant "
-"un employee_id, un date_from et un date_to. De plus, l'intervalle de temps "
+"Afin de régénérer les prestations, vous devez fournir à l'assistant un "
+"employee_id, un date_from et un date_to. De plus, l'intervalle de temps "
 "défini par date_from et date_to ne doit contenir aucune prestation validée."
 
 #. module: hr_work_entry_contract
@@ -240,8 +242,8 @@ msgstr "Dernière date"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2022"
-msgstr "Congés légaux 2022"
+msgid "Legal Leaves 2023"
+msgstr "Congés légaux 2023"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
@@ -255,7 +257,7 @@ msgid "Regenerate Employee Work Entries"
 msgstr "Regénérer les prestations de l'employé"
 
 #. module: hr_work_entry_contract
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_work_entry_contract/static/src/js/work_entries_controller_mixin.js:0
 #: code:addons/hr_work_entry_contract/static/src/views/work_entry_calendar/work_entry_calendar.xml:0
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
@@ -274,6 +276,7 @@ msgid "Sick Time Off"
 msgstr "Congé maladie"
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/models/hr_contract.py:0
 #, python-format
 msgid ""
@@ -283,6 +286,7 @@ msgstr ""
 "autorisée."
 
 #. module: hr_work_entry_contract
+#. odoo-python
 #: code:addons/hr_work_entry_contract/wizard/hr_work_entry_regeneration_wizard.py:0
 #, python-format
 msgid ""
@@ -332,7 +336,7 @@ msgstr "Prestation dans l'intervalle"
 #. module: hr_work_entry_contract
 #: model:ir.actions.act_window,name:hr_work_entry_contract.hr_work_entry_regeneration_wizard_action
 msgid "Work Entry Regeneration"
-msgstr "Regénérations des Prestations"
+msgstr "Regénérations des prestations"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source

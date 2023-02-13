@@ -162,15 +162,12 @@ class SaleOrder(models.Model):
         for order in self:
             default_warehouse_id = self.env['ir.default'].with_company(
                 order.company_id.id).get_model_defaults('sale.order').get('warehouse_id')
-            if order.company_id and order.company_id != order._origin.company_id:
-                warehouse = default_warehouse_id
-            else:
-                warehouse = self.env['stock.warehouse']
-            if order.state in ['draft', 'sent']:
-                order.warehouse_id = warehouse or order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
-            # In case we create a record in another state (eg: demo data, or business code)
-            if not order.warehouse_id:
-                order.warehouse_id = self.env.user._get_default_warehouse_id()
+            if order.state in ['draft', 'sent'] or not order.ids:
+                # Should expect empty
+                if default_warehouse_id is not None:
+                    order.warehouse_id = default_warehouse_id
+                else:
+                    order.warehouse_id = order.user_id.with_company(order.company_id.id)._get_default_warehouse_id()
 
     @api.onchange('partner_shipping_id')
     def _onchange_partner_shipping_id(self):

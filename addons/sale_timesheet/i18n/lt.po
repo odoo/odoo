@@ -3,7 +3,6 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Denis Knotko <denis_knotko@yahoo.com>, 2022
 # Arunas V. <arunas@devoro.com>, 2022
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2022
 # Anatolij, 2022
@@ -16,9 +15,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2022\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
@@ -29,6 +28,7 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/account_move.py:0
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
@@ -66,6 +66,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "%(amount)s %(label)s will be added to the new Sales Order."
@@ -198,10 +199,18 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "At least one line should be filled."
 msgstr "Turėtų būti užpildyti bent viena eilutė."
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/product.py:0
+#, python-format
+msgid "Based on Timesheets"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
@@ -270,27 +279,6 @@ msgstr "Apmokestinimas"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billing Type"
 msgstr "Apmokestinimo tipas"
-
-#. module: sale_timesheet
-#: model:project.task,legend_blocked:sale_timesheet.agr_task_1
-#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_1
-#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_2
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_2
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_4
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_5
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_6
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_7
-#: model:project.task,legend_blocked:sale_timesheet.project_task_internal
-msgid "Blocked"
-msgstr "Neleidžiamas"
-
-#. module: sale_timesheet
-#: model:project.task,legend_done:sale_timesheet.project_agr_task_3
-#: model:project.task,legend_done:sale_timesheet.project_agr_task_4
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_1
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_3
-msgid "Buzz or set as done"
-msgstr "Skambinti arba nustatyti kaip atliktą"
 
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
@@ -366,7 +354,8 @@ msgid "Create SO from project"
 msgstr "Sukurti pardavimo užsakymą iš projekto"
 
 #. module: sale_timesheet
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #: code:addons/sale_timesheet/static/src/xml/sale_project_templates.xml:0
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
@@ -416,7 +405,6 @@ msgid "Customer"
 msgstr "Klientas"
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
 msgstr "Kliento priežiūra (iš anksto apmokėtos valandos)"
@@ -496,7 +484,6 @@ msgid "Fixed price services"
 msgstr "Fiksuotos kainos paslaugos"
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Furniture Delivery (Manual)"
 msgstr ""
@@ -534,18 +521,6 @@ msgid "Hourly Cost"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_1
-#: model:product.product,uom_name:sale_timesheet.product_service_deliver_timesheet_2
-#: model:product.product,uom_name:sale_timesheet.product_service_order_timesheet
-#: model:product.product,uom_name:sale_timesheet.time_product
-#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_1_product_template
-#: model:product.template,uom_name:sale_timesheet.product_service_deliver_timesheet_2_product_template
-#: model:product.template,uom_name:sale_timesheet.product_service_order_timesheet_product_template
-#: model:product.template,uom_name:sale_timesheet.time_product_product_template
-msgid "Hours"
-msgstr "Valandos"
-
-#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__id
@@ -565,28 +540,12 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
-#: model:project.task,legend_normal:sale_timesheet.agr_task_1
-#: model:project.task,legend_normal:sale_timesheet.project_agr_task_1
-#: model:project.task,legend_normal:sale_timesheet.project_agr_task_2
-#: model:project.task,legend_normal:sale_timesheet.project_agr_task_3
-#: model:project.task,legend_normal:sale_timesheet.project_agr_task_4
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_1
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_2
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_3
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_4
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_5
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_6
-#: model:project.task,legend_normal:sale_timesheet.project_dpc_task_7
-#: model:project.task,legend_normal:sale_timesheet.project_task_internal
-msgid "In Progress"
-msgstr "Vykdoma"
-
-#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
 msgid "Info Invoice"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -604,6 +563,7 @@ msgid "Invoice Policy"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
@@ -612,6 +572,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
@@ -620,6 +581,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
@@ -628,6 +590,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #, python-format
 msgid ""
@@ -647,6 +610,7 @@ msgid "Invoice your time and material to customers"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Invoices"
@@ -688,13 +652,11 @@ msgid "Journal Item"
 msgstr "Žurnalo įrašas"
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
 msgstr "Jaunesnysis architektas (sąskaita pagal žiniaraščius)"
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.product_service_deliver_milestones
 #: model:product.template,name:sale_timesheet.product_service_deliver_milestones_product_template
 msgid "Kitchen Assembly (Milestones)"
 msgstr "Virtuvės surinkimas (pasiekimai)"
@@ -746,6 +708,14 @@ msgid "Margin"
 msgstr "Marža"
 
 #. module: sale_timesheet
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
+#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
+msgid "Materials"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
 msgstr "Pristatyto kiekio atnaujinimo būdas"
@@ -754,14 +724,6 @@ msgstr "Pristatyto kiekio atnaujinimo būdas"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Milestone services"
 msgstr "Etapinės paslaugos"
-
-#. module: sale_timesheet
-#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_3
-#: model:project.task,legend_blocked:sale_timesheet.project_agr_task_4
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_1
-#: model:project.task,legend_blocked:sale_timesheet.project_dpc_task_3
-msgid "Need functional or technical help"
-msgstr "Reikalinga funkcinė ar techninė pagalba"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
@@ -844,6 +806,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Operation not supported"
@@ -857,18 +820,6 @@ msgstr "Užsakymo numeris"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Ordered,"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_costs
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_costs
-msgid "Other Costs"
-msgstr ""
-
-#. module: sale_timesheet
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__other_revenues
-#: model:ir.model.fields.selection,name:sale_timesheet.selection__timesheets_analysis_report__timesheet_invoice_type__other_revenues
-msgid "Other Revenues"
 msgstr ""
 
 #. module: sale_timesheet
@@ -985,23 +936,11 @@ msgid "Project to make billable"
 msgstr "Projektas, daromas apmokestinamu"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Quotation"
 msgstr "Komercinis pasiūlymas"
-
-#. module: sale_timesheet
-#: model:project.task,legend_done:sale_timesheet.agr_task_1
-#: model:project.task,legend_done:sale_timesheet.project_agr_task_1
-#: model:project.task,legend_done:sale_timesheet.project_agr_task_2
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_2
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_4
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_5
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_6
-#: model:project.task,legend_done:sale_timesheet.project_dpc_task_7
-#: model:project.task,legend_done:sale_timesheet.project_task_internal
-msgid "Ready"
-msgstr "Paruošta"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_update_default_description
@@ -1065,6 +1004,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Avansinio mokėjimo sąskaita"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model,name:sale_timesheet.model_sale_order
@@ -1079,6 +1019,7 @@ msgid "Sales Order"
 msgstr "Pardavimo užsakymas"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
@@ -1124,18 +1065,21 @@ msgid "Sales order to which the task is linked."
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
 msgstr "Ieškoti pagal S/F"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
 msgstr "Ieškoti pagal pardavimo užsakymą"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
@@ -1152,7 +1096,6 @@ msgid "Sell services and invoice time spent"
 msgstr "Parduokite paslaugas ir pateikite sąskaitą už praleistą laiką"
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
 msgstr "Vyresnysis architektas (sąskaita pagal žiniaraščius)"
@@ -1176,7 +1119,6 @@ msgid "Service Upsell Threshold Ratio"
 msgstr ""
 
 #. module: sale_timesheet
-#: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
 msgstr ""
@@ -1227,6 +1169,7 @@ msgid "Tasks"
 msgstr "Užduotys"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/product.py:0
 #: code:addons/sale_timesheet/models/product.py:0
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1238,6 +1181,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid ""
@@ -1253,18 +1197,21 @@ msgid "The cost of the project is now at"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project has already a sale order."
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "The project is already linked to a sales order item."
 msgstr "Projektas jau susietas su pardavimų užsakymo įrašu."
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid ""
@@ -1275,6 +1222,7 @@ msgstr ""
 "žiniaraščių, kurie jau susieti su kitu pardavimų užsakymu."
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
@@ -1378,6 +1326,7 @@ msgid "Timesheet activities associated to this sale"
 msgstr "Žiniaraščių veiklos, susietos su šiuo pardavimu"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/account_move.py:0
 #: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_from_sales_order
@@ -1396,30 +1345,35 @@ msgid "Timesheets"
 msgstr "Darbo apskaitos žiniaraščiai"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed Manually)"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Milestones)"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Billed on Timesheets)"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Fixed Price)"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets (Non Billable)"
@@ -1451,6 +1405,7 @@ msgid "Timesheets for the"
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
@@ -1462,6 +1417,13 @@ msgid "Timesheets on project (one fare per SO/Project)"
 msgstr ""
 "Laiko apskaitos žiniaraščiai projektui (vienas kiekvienam "
 "užsakymui/projektui)"
+
+#. module: sale_timesheet
+#. odoo-python
+#: code:addons/sale_timesheet/models/project.py:0
+#, python-format
+msgid "Timesheets revenues"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_timesheets_analysis_report__margin
@@ -1533,14 +1495,7 @@ msgid "Unit price of the sales order item."
 msgstr "Pardavimo užsakymo įrašo vieneto kaina."
 
 #. module: sale_timesheet
-#: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
-#: model:product.product,uom_name:sale_timesheet.product_service_deliver_milestones
-#: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
-#: model:product.template,uom_name:sale_timesheet.product_service_deliver_milestones_product_template
-msgid "Units"
-msgstr "Vienetai"
-
-#. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Value does not exist in the pricing type"
@@ -1595,6 +1550,7 @@ msgstr ""
 "kuriuos jūs panaudojote aprašyme (antraštė 1, antraštė 2, ...)"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
@@ -1602,6 +1558,7 @@ msgid "You can only apply this action from a project."
 msgstr "Galite taikyti šį veiksmą tik iš projekto."
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid ""
@@ -1610,6 +1567,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid ""
@@ -1618,24 +1576,28 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot modify timesheets that are already invoiced."
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You cannot remove a timesheet that has already been invoiced."
 msgstr ""
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #, python-format
 msgid "day"
 msgstr "diena"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/models/sale_order.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
@@ -1643,6 +1605,7 @@ msgid "days"
 msgstr "dienos"
 
 #. module: sale_timesheet
+#. odoo-python
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "hours"

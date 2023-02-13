@@ -99,7 +99,7 @@ export default class ListCorePlugin extends CorePlugin {
                 const anchor = [col, row];
                 this._addList(id, definition, dataSourceId, linesNumber);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.nextId = parseInt(id, 10) + 1;
+                this.history.update("nextId", parseInt(id, 10) + 1)
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {

@@ -296,6 +296,9 @@ options.registry.DesignTab = options.Class.extend({
             cssTexts.push(rule.cssText);
         }
         this.styleElement.textContent = cssTexts.join('\n');
+        // Flush the rules cache for convert_inline, to make sure they are
+        // recomputed to account for the change.
+        this.options.wysiwyg._rulesCache = undefined;
     },
     /**
      * @override
@@ -377,24 +380,6 @@ options.registry.DesignTab = options.Class.extend({
      */
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
-    },
-});
-
-options.userValueWidgetsRegistry['we-colorpicker'] = options.userValueWidgetsRegistry['we-colorpicker'].extend({
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    toggleVisibility() {
-        this._super(...arguments);
-        if (this.$target.is('a')) {
-            // There is an option in link tools for that, do not duplicate it.
-            this.$el.hide();
-        }
     },
 });
 

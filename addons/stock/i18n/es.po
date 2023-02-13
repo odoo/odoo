@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
@@ -96,6 +96,9 @@ msgid ""
 "The quantity done for the product %s doesn't respect the rounding precision defined on the unit of measure %s.\n"
 "Please change the quantity done or the rounding precision of your unit of measure."
 msgstr ""
+"\n"
+"La cantidad hecha para el producto %s no respeta la precisión de redondeo definida en la unidad de medida %s.\n"
+"Por favor, cambie la cantidad hecha o la precisión de redondeo de su unidad de medida."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -161,7 +164,7 @@ msgstr "%s (copia)"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "%s [reverted]"
-msgstr ""
+msgstr "%s [revertido]"
 
 #. module: stock
 #. odoo-python
@@ -210,7 +213,7 @@ msgstr "'Tipo de operación - %s' % object.name"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking_packages
 msgid "'Packages - %s' % (object.name)"
-msgstr ""
+msgstr "'Paquetes - %s' % (object.name)"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_picking
@@ -268,6 +271,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -480,6 +484,8 @@ msgid ""
 "<span class=\"o_stat_text\">In:</span>\n"
 "                                    <span class=\"o_stat_text\">Out:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Entrada:</span>\n"
+"                                    <span class=\"o_stat_text\">Salida:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -488,6 +494,8 @@ msgid ""
 "<span class=\"o_stat_text\">Min:</span>\n"
 "                                    <span class=\"o_stat_text\">Max:</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Mín:</span>\n"
+"                                    <span class=\"o_stat_text\">Máx:</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -662,7 +670,7 @@ msgstr "<strong>Ordenado</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
 msgid "<strong>Pack Date:</strong>"
-msgstr ""
+msgstr "<strong>Fecha de empaquetado:</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode
@@ -754,6 +762,8 @@ msgstr ""
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_product_location_check
 msgid "A replenishment rule already exists for this product on this location."
 msgstr ""
+"Ya existe una regla de reabastecimiento para este producto en esta "
+"ubicación."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__detailed_type
@@ -791,6 +801,8 @@ msgid ""
 "Activate this function to get all quantities to replenish at this particular"
 " location"
 msgstr ""
+"Active esta función para obtener todas las cantidades por reabastecer en "
+"esta ubicación en particular"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__active
@@ -941,7 +953,7 @@ msgstr "Todas las transferencias"
 #: code:addons/stock/static/src/views/search/stock_report_search_panel.xml:0
 #, python-format
 msgid "All Warehouses"
-msgstr ""
+msgstr "Todos los almacenes"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__procurement_group__move_type__one
@@ -1017,6 +1029,8 @@ msgid ""
 "Another parent/sub replenish location %s exists, if you wish to change it, "
 "uncheck it first"
 msgstr ""
+"Existe otra ubicación de reabastecimiento padre/hijo %s. Si desea cambiarla,"
+" primero anule la selección."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1062,7 +1076,7 @@ msgstr "Aplicar"
 #: code:addons/stock/static/src/views/list/inventory_report_list.xml:0
 #, python-format
 msgid "Apply All"
-msgstr ""
+msgstr "Aplicar todo"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_replenish__route_ids
@@ -1282,7 +1296,7 @@ msgstr "Lector de códigos de barras"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__valid_ean
 msgid "Barcode is valid EAN"
-msgstr ""
+msgstr "El código de barras tiene un EAN válido"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_picking_batch
@@ -1563,7 +1577,7 @@ msgstr "Elegir diseño de etiquetas"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Choose Type of Labels To Print"
-msgstr ""
+msgstr "Elegir tipos de etiquetas a imprimir"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
@@ -1581,7 +1595,7 @@ msgstr "Escoja la ubicación de destino"
 #. module: stock
 #: model:ir.model,name:stock.model_lot_label_layout
 msgid "Choose the sheet layout to print lot labels"
-msgstr ""
+msgstr "Elija el diseño de la hoja para imprimir etiquetas de lotes"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_label_layout
@@ -1591,7 +1605,7 @@ msgstr "Elija el diseño de la hoja para imprimir etiquetas"
 #. module: stock
 #: model:ir.model,name:stock.model_picking_label_type
 msgid "Choose whether to print product or lot/sn labels"
-msgstr ""
+msgstr "Elija si imprimir etiquetas de producto o de número de lote/serie"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quantity_history
@@ -1611,7 +1625,7 @@ msgstr "Limpiar líneas"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "Vaciar cantidades"
 
 #. module: stock
 #. odoo-javascript
@@ -1702,7 +1716,7 @@ msgstr "Calcular los costes de envío y enviar con bpost"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__reservation_date
 msgid "Computes when a move should be reserved"
-msgstr ""
+msgstr "Calcula cuándo se debe reservar un movimiento"
 
 #. module: stock
 #: model:ir.model,name:stock.model_res_config_settings
@@ -1756,6 +1770,8 @@ msgid ""
 "Consider product forecast these many days in the future upon product replenishment, set to 0 for just-in-time.\n"
 "The value depends on the type of the route (Buy or Manufacture)"
 msgstr ""
+"Considerar la previsión de producto esta cantidad de días en el futuro en el reabastecimiento de producto. Establézcalo a 0 para que sea bajo demanda.\n"
+"El valor depende del tipo de la ruta (Comprar o Fabricar)."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
@@ -1897,7 +1913,7 @@ msgstr "¿Crear entrega parcial?"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_type_form
 msgid "Create New"
-msgstr ""
+msgstr "Crear nuevo"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__picking_type_use_create_lots
@@ -3254,6 +3270,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Da la secuencia de esta línea cuando se muestran los almacenes."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3816,6 +3839,7 @@ msgid "Invalid domain right operand %s"
 msgstr "Dominio inválido para el operante derecho %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -6078,7 +6102,6 @@ msgstr "Categorías de productos"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Categoría de producto"
@@ -8655,6 +8678,15 @@ msgstr ""
 "uno nuevo."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9878,6 +9910,13 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -10388,10 +10427,3 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Orden de entrega (Ref {{ object.name or 'n/a' "
 "}})"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr ""

@@ -15,9 +15,9 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
-# Jana Jaakson, 2022
-# Leaanika Randmets, 2022
 # Anna, 2023
+# Jana Jaakson, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -91,6 +91,7 @@ msgstr "Lisa meeskonna liige"
 msgid ""
 "Add members to automatically assign their documents to this sales team."
 msgstr ""
+"Lisage liikmeid, et määrata nende dokumendid automaatselt müügimeeskonnale."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -99,6 +100,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current team"
 " %(team_name)s."
 msgstr ""
+"Kui lisate %(user_name)s sellesse meeskonda, eemaldatakse ta praegusest "
+"meeskonnast %(team_name)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team_member.py:0
@@ -107,6 +110,8 @@ msgid ""
 "Adding %(user_name)s in this team would remove him/her from its current "
 "teams %(team_names)s."
 msgstr ""
+"Kui lisate %(user_name)s sellesse meeskonda, eemaldatakse ta selle "
+"praegustest tiimidest %(team_names)s."
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -115,6 +120,8 @@ msgid ""
 "Adding %(user_names)s in this team would remove them from their current "
 "teams (%(team_names)s)."
 msgstr ""
+"Kui lisate sellesse meeskonda %(user_names)s, eemaldatakse nad nende "
+"praegustest tiimidest (%(team_names)s)."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
@@ -321,6 +328,8 @@ msgid ""
 "If True, users may belong to several sales teams. Otherwise membership is "
 "limited to a single sales team."
 msgstr ""
+"Kui see on tõene, võivad kasutajad kuuluda mitmesse müügimeeskonda. Vastasel"
+" juhul on liikmesus piiratud ühe müügimeeskonnaga."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
@@ -341,8 +350,8 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
 msgstr ""
-"Kui see on määratud, kasutatakse seda müügimeeskonda selle partneriga seotud"
-" müügi ja ülesannetele määramiseks."
+"Kui see on määratud, kasutatakse konkreetset müügimeeskonda selle partneriga"
+" seotud müügi ja ülesannetele määramiseks."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -350,6 +359,8 @@ msgid ""
 "If the active field is set to false, it will allow you to hide the Sales "
 "Team without removing it."
 msgstr ""
+"Kui aktiivne väli on seatud väärtusele Väär, võimaldab see müügimeeskonna "
+"peita ilma seda eemaldamata."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team_member__image_1920
@@ -405,6 +416,8 @@ msgid ""
 "Main user sales team. Used notably for pipeline, or to set sales team in "
 "invoicing or subscription."
 msgstr ""
+"Peakasutaja müügimeeskond. Kasutatakse eelkõige müügitoru jaoks või "
+"müügimeeskonna seadistamiseks arveldamisel või tellimisel."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_company_ids
@@ -529,7 +542,7 @@ msgstr "Müügiesindaja"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr "Müügi meeskond"
+msgstr "Müügimeeskond"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team_member
@@ -679,12 +692,14 @@ msgstr "Treening"
 msgid ""
 "UX: Give users not to add in the currently chosen team to avoid duplicates"
 msgstr ""
+"UX: lubage kasutajatel duplikaatide vältimiseks praegu valitud meeskonda "
+"mitte lisada"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__member_company_ids
 #: model:ir.model.fields,help:sales_team.field_crm_team_member__user_company_ids
 msgid "UX: Limit to team company or all if no company"
-msgstr ""
+msgstr "UX: Piirake meeskonnaettevõttega või kõigiga, kui ettevõtet pole"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0

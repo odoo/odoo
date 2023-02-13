@@ -20,16 +20,17 @@
 # Munkhbilguun Altankhuyag <munkhbilguunaltankhuyag@gmail.com>, 2022
 # Bayarkhuu Bataa, 2022
 # Martin Trigaux, 2022
-# ariuk_4 <ariunbold.org@gmail.com>, 2023
+# Ariunbold Namnandorj <ariunbold.org@gmail.com>, 2023
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023
+# otgonbaatargino <otgonbaatar2012@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2023\n"
+"Last-Translator: otgonbaatargino <otgonbaatar2012@gmail.com>, 2023\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,7 +46,7 @@ msgstr "Цуглуулсан өгөгдөл"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sale_order_count
 msgid "# Sale Orders"
-msgstr ""
+msgstr "# Борлуулалтын захиалгын тоо"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -103,6 +104,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Баяр хүргэе</b>, Таны анхны үнийн санал илгээгдлээ!<br>Үнийн саналыг "
+"баталгаажуулахын тулд имэйлээ шалгана уу."
 
 #. module: sale
 #. odoo-javascript
@@ -2651,6 +2654,11 @@ msgstr "Захиалгын огноо"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
+msgstr "Захиалгын огноо"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
 msgstr ""
 
 #. module: sale
@@ -3086,8 +3094,10 @@ msgid "Quotation Sent"
 msgstr "Үнийн санал илгээгдсэн"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr ""
 "Үнийн саналын хүчинтэй хугацаа заавал шаардагдах бөгөөд 0-ээс их утгатай "

@@ -35,7 +35,9 @@ function translate(number, withoutSuffix, key) {
 
 var pl = moment.defineLocale('pl', {
     months : function (momentToFormat, format) {
-        if (format === '') {
+        if (!momentToFormat) {
+            return monthsNominative;
+        } else if (format === '') {
             // Hack: if format empty we know this is used to generate
             // RegExp by moment. Give then back both valid forms of months
             // in RegExp ready format.
@@ -61,7 +63,24 @@ var pl = moment.defineLocale('pl', {
     calendar : {
         sameDay: '[Dziś o] LT',
         nextDay: '[Jutro o] LT',
-        nextWeek: '[W] dddd [o] LT',
+        nextWeek: function () {
+            switch (this.day()) {
+                case 0:
+                    return '[W niedzielę o] LT';
+
+                case 2:
+                    return '[We wtorek o] LT';
+
+                case 3:
+                    return '[W środę o] LT';
+
+                case 6:
+                    return '[W sobotę o] LT';
+
+                default:
+                    return '[W] dddd [o] LT';
+            }
+        },
         lastDay: '[Wczoraj o] LT',
         lastWeek: function () {
             switch (this.day()) {
@@ -92,7 +111,7 @@ var pl = moment.defineLocale('pl', {
         y : 'rok',
         yy : translate
     },
-    ordinalParse: /\d{1,2}\./,
+    dayOfMonthOrdinalParse: /\d{1,2}\./,
     ordinal : '%d.',
     week : {
         dow : 1, // Monday is the first day of the week.

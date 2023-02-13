@@ -25,16 +25,16 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
 # abc Def <hdogan1974@gmail.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,14 +74,14 @@ msgstr "%(amount)s vadesi dolmuş %(date)s"
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
-msgstr ""
+msgstr "%(line_description)s (İptal edildi)"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Draft)"
-msgstr ""
+msgstr "%(line_description)s (Taslak)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -110,6 +110,8 @@ msgid ""
 "<b>Congratulations</b>, your first quotation is sent!<br>Check your email to"
 " validate the quote."
 msgstr ""
+"<b>Tebrikler </b>, ilk teklifiniz gönderildi!<br>Teklifi doğrulamak için "
+"e-postanızı kontrol edin."
 
 #. module: sale
 #. odoo-javascript
@@ -403,7 +405,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Authorized</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Yetkili</b>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -496,7 +498,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_form
 msgid "<span class=\"flex-grow-1\">/ Month</span>"
-msgstr ""
+msgstr "<span class=\"flex-grow-1\">/ Ay</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -549,6 +551,10 @@ msgid ""
 "                            Draft invoices for this order will be cancelled. <br/>\n"
 "                        </span>"
 msgstr ""
+"<span>Bu siparişi iptal etmek istediğinizden emin misiniz? <br/></span>\n"
+"                        <span id=\"display_invoice_alert\" attrs=\"{'invisible': [('display_invoice_alert', '=', False)]}\">\n"
+"                             Bu sipariş için taslak faturalar iptal edilecek.<br/>\n"
+"                        </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -581,7 +587,7 @@ msgstr "<span>Ödeme</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "<span>Signature</span>"
-msgstr ""
+msgstr "<span>İmza </span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -600,6 +606,9 @@ msgid ""
 "                            Shipping Address:\n"
 "                        </strong>"
 msgstr ""
+"<strong class=\"d-block mb-1\">\n"
+"                            Gönderi Adresi:\n"
+"                        </strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -729,14 +738,14 @@ msgstr ""
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Pay Quotation"
-msgstr ""
+msgstr "Kabul Et & Teklifli Öde"
 
 #. module: sale
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Accept & Sign Quotation"
-msgstr ""
+msgstr "Kabul Et & Teklifi İmzala"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1026,7 +1035,7 @@ msgstr "İptal"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Cancel %s"
-msgstr ""
+msgstr "İptal %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -1112,7 +1121,7 @@ msgstr "Şirket"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Complete your company's data"
-msgstr ""
+msgstr "Şirketinizin verilerini tamamlayın"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2673,6 +2682,11 @@ msgstr "Sipariş Tarihi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
+msgstr "Sipariş Tarihi:"
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
 msgstr ""
 
 #. module: sale
@@ -2815,12 +2829,12 @@ msgstr "Ödeme Yöntemi"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Ödeme Sağlayıcı"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Providers"
-msgstr ""
+msgstr "Ödeme Sağlayıcılar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
@@ -3046,7 +3060,7 @@ msgstr "Miktar"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "Quantity To Invoice"
-msgstr ""
+msgstr "Faturalanacak Miktar"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -3094,7 +3108,7 @@ msgstr "Teklif Tarihi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Quotation Date:"
-msgstr ""
+msgstr "Teklif Tarihi:"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.onboarding_quotation_layout_step
@@ -3108,8 +3122,10 @@ msgid "Quotation Sent"
 msgstr "Teklif Gönderildi"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "Teklifin Geçerliliği için gereklidir ve 0 dan büyük olmalıdır."
 
@@ -3486,17 +3502,17 @@ msgstr "Satış Fiyatı"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Satış: Sipariş İptali"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Satış: Sipariş Onayı"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Satış: Teklif Gönder"
 
 #. module: sale
 #. odoo-python
@@ -3610,7 +3626,7 @@ msgstr "Müşteri portalını test etmek için bir teklif gönderin."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "Gönder ve iptal et"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3707,7 +3723,7 @@ msgstr "Siparişlerde kar marjını gösterin"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Sign & Pay Quotation"
-msgstr ""
+msgstr "İmza & Teklifli Öde"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3868,7 +3884,7 @@ msgstr "Vergi Toplamı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Vergi Toplamları"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax
@@ -4438,7 +4454,7 @@ msgstr "Fiyatları Güncelle"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Update Taxes"
-msgstr ""
+msgstr "Vergileri Güncelle"
 
 #. module: sale
 #. odoo-python

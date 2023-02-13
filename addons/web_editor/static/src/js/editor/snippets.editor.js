@@ -313,7 +313,6 @@ var SnippetEditor = Widget.extend({
         if (this.isDestroyed()) {
             return;
         }
-        this.willDestroyEditors = true;
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible')
             && !this.$target.hasClass('o_snippet_mobile_invisible')
             && !this.$target.hasClass('o_snippet_desktop_invisible'));
@@ -1531,7 +1530,7 @@ var SnippetEditor = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: function (ev) {
-        if (this.willDestroyEditors) {
+        if (this.options.wysiwyg.isSaving()) {
             // Do not update the option visibilities if we are destroying them.
             return;
         }
@@ -1955,10 +1954,14 @@ var SnippetsMenu = Widget.extend({
         this._activateSnippet($autoFocusEls.length ? $autoFocusEls.first() : false);
 
         // Add tooltips on we-title elements whose text overflows
-        this.$el.tooltip({
+        new Tooltip(this.el, {
             selector: 'we-title',
             placement: 'bottom',
             delay: 100,
+            // Ensure the tooltips have a good position when in iframe.
+            container: this.el,
+            // Prevent horizontal scroll when tooltip is displayed.
+            boundary: this.el.ownerDocument.body,
             title: function () {
                 const el = this;
                 if (el.tagName !== 'WE-TITLE') {
@@ -2048,7 +2051,6 @@ var SnippetsMenu = Widget.extend({
         // when hidden, destroying the widget hides it.)
         await this._mutex.getUnlockedDef();
 
-        this.willDestroyEditors = true;
         // Then destroy all snippet editors, making them call their own
         // "clean for save" methods (and options ones).
         await this._destroyEditors();
@@ -2837,6 +2839,10 @@ var SnippetsMenu = Widget.extend({
             trigger: 'manual',
             placement: 'bottom',
             title: _t("Drag and drop the building block."),
+            // Ensure the tooltips have a good position when in iframe.
+            container: this.el,
+            // Prevent horizontal scroll when tooltip is displayed.
+            boundary: this.el.ownerDocument.body,
         });
 
         // Hide scroll if no snippets defined
@@ -3450,6 +3456,11 @@ var SnippetsMenu = Widget.extend({
      * @private
      */
     _onClick(ev) {
+        // Clicking in the page should be ignored on save
+        if (this.options.wysiwyg.isSaving()) {
+            return;
+        }
+
         var srcElement = ev.target || (ev.originalEvent && (ev.originalEvent.target || ev.originalEvent.originalTarget)) || ev.srcElement;
         if (!srcElement || this.lastElement === srcElement) {
             return;
@@ -3982,7 +3993,7 @@ var SnippetsMenu = Widget.extend({
      * @param {OdooEvent} ev
      */
     _onSnippetOptionVisibilityUpdate: async function (ev) {
-        if (this.willDestroyEditors) {
+        if (this.options.wysiwyg.isSaving()) {
             // Do not update the option visibilities if we are destroying them.
             return;
         }

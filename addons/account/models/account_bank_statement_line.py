@@ -5,6 +5,7 @@ from odoo.tools import html2plaintext
 from odoo.addons.base.models.res_bank import sanitize_account_number
 
 from xmlrpc.client import MAXINT
+from itertools import product
 
 
 class AccountBankStatementLine(models.Model):
@@ -172,7 +173,7 @@ class AccountBankStatementLine(models.Model):
             # Find the oldest index for each journal.
             self._cr.execute(
                 """
-                    SELECT first_line_index, balance_start
+                    SELECT first_line_index, COALESCE(balance_start, 0.0)
                     FROM account_bank_statement
                     WHERE
                         first_line_index < %s
@@ -197,7 +198,7 @@ class AccountBankStatementLine(models.Model):
                         st_line.id,
                         st_line.amount,
                         st.first_line_index = st_line.internal_index AS is_anchor,
-                        st.balance_start,
+                        COALESCE(st.balance_start, 0.0),
                         move.state
                     FROM account_bank_statement_line st_line
                     JOIN account_move move ON move.statement_line_id = st_line.id
@@ -343,6 +344,10 @@ class AccountBankStatementLine(models.Model):
 
             # Hack to force different account instead of the suspense account.
             counterpart_account_ids.append(vals.pop('counterpart_account_id', None))
+
+            #Set the amount to 0 if it's not specified.
+            if 'amount' not in vals:
+                vals['amount'] = 0
 
         st_lines = super().create(vals_list)
 
@@ -657,12 +662,18 @@ class AccountBankStatementLine(models.Model):
 
         # Retrieve the partner from the partner name.
         if self.partner_name:
-            domain = [
-                ('parent_id', '=', False),
-                ('name', 'ilike', self.partner_name),
-            ]
-            for extra_domain in ([('company_id', '=', self.company_id.id)], []):
-                partner = self.env['res.partner'].search(extra_domain + domain, limit=1)
+            domains = product(
+                [
+                    ('name', '=ilike', self.partner_name),
+                    ('name', 'ilike', self.partner_name),
+                ],
+                [
+                    ('company_id', '=', self.company_id.id),
+                    ('company_id', '=', False),
+                ],
+            )
+            for domain in domains:
+                partner = self.env['res.partner'].search(list(domain) + [('parent_id', '=', False)], limit=1)
                 if partner:
                     return partner
 

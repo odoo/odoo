@@ -7,24 +7,24 @@
                     <NumeroLinea t-esc="line_dict['line_number']"/>
                     <CodiceArticolo t-if="line.product_id.barcode">
                         <CodiceTipo>EAN</CodiceTipo>
-                        <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)"/>
+                        <CodiceValore t-esc="format_alphanumeric(line.product_id.barcode)[:35]"/>
                     </CodiceArticolo>
                     <CodiceArticolo t-elif="line.product_id.default_code">
                         <CodiceTipo>INTERNAL</CodiceTipo>
-                        <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)"/>
+                        <CodiceValore t-esc="format_alphanumeric(line.product_id.default_code)[:35]"/>
                     </CodiceArticolo>
-                    <Descrizione t-esc="format_alphanumeric(line_dict['description'])"/>
+                    <Descrizione t-esc="format_alphanumeric(line_dict['description'])[:1000]"/>
                     <Quantita t-esc="format_numbers(abs(line.quantity))"/>
-                    <UnitaMisura t-if="line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')"  t-esc="format_alphanumeric(line.product_uom_id.name)"/>
+                    <UnitaMisura t-if="line.product_uom_id and line.product_uom_id.category_id != env.ref('uom.product_uom_categ_unit')" t-esc="format_alphanumeric(line.product_uom_id.name)[:10]"/>
                     <PrezzoUnitario t-esc="'%.06f' % (line_dict['unit_price'])"/>
                     <ScontoMaggiorazione t-if="line.discount != 0">
                         <Tipo t-esc="discount_type(line.discount)"/>
                         <Percentuale t-esc="format_numbers(abs(line.discount))"/>
                     </ScontoMaggiorazione>
                     <PrezzoTotale t-esc="format_monetary(line_dict['subtotal_price'], currency)"/>
-                    <AliquotaIVA t-if="line.tax_ids.amount_type == 'percent'" t-esc="format_numbers(line.tax_ids.amount)"/>
-                    <AliquotaIVA t-elif="line.tax_ids.amount_type != 'percent'" t-esc="'0.00'"/>
-                    <Natura t-if="line.tax_ids.l10n_it_has_exoneration" t-esc="line.tax_ids.l10n_it_kind_exoneration"/>
+                    <AliquotaIVA t-if="vat_tax.amount_type == 'percent'" t-esc="format_numbers(vat_tax.amount)"/>
+                    <AliquotaIVA t-elif="vat_tax.amount_type != 'percent'" t-esc="'0.00'"/>
+                    <Natura t-if="vat_tax.l10n_it_has_exoneration" t-esc="vat_tax.l10n_it_kind_exoneration"/>
                     <AltriDatiGestionali t-if="conversion_rate">
                         <TipoDato>Currency</TipoDato>
                         <RiferimentoTesto t-esc="format_alphanumeric(record.currency_id.name)"/>
@@ -52,9 +52,9 @@
             <ContattiTrasmittente>
                 <Telefono t-if="sender_partner.phone" t-esc="format_alphanumeric(format_phone(sender_partner.phone))"/>
                 <Telefono t-elif="sender_partner.mobile" t-esc="format_alphanumeric(format_phone(sender_partner.mobile))"/>
-                <Email t-if="sender_partner.email" t-esc="sender_partner.email"/>
+                <Email t-if="sender_partner.email" t-esc="sender_partner.email[:256]"/>
             </ContattiTrasmittente>
-            <PECDestinatario t-if="not is_self_invoice and partner.l10n_it_pec_email" t-esc="partner.l10n_it_pec_email"/>
+            <PECDestinatario t-if="not is_self_invoice and partner.l10n_it_pec_email" t-esc="partner.l10n_it_pec_email[:256]"/>
         </DatiTrasmissione>
         <CedentePrestatore>
             <DatiAnagrafici>
@@ -159,6 +159,7 @@
         <DatiBeniServizi>
             <t t-foreach="invoice_lines" t-as="line_dict">
                 <t t-set="line" t-value="line_dict['line']"/>
+                <t t-set="vat_tax" t-value="line_dict['vat_tax']"/>
                 <t t-call="l10n_it_edi.account_invoice_line_it_FatturaPA"/>
             </t>
             <t t-foreach="tax_lines" t-as="tax_line">
@@ -208,10 +209,10 @@
 
 <template id="account_invoice_it_FatturaPA_sede">
             <Sede>
-                <Indirizzo><t t-if="partner.street" t-esc="format_alphanumeric(partner.street)"/> <t t-if="partner.street2" t-esc="format_alphanumeric(partner.street2)"/></Indirizzo>
-                <CAP><t t-if="partner.country_id.code != 'IT'" t-esc="'00000'"/><t t-else="" t-esc="partner.zip"/></CAP>
-                <Comune t-esc="format_alphanumeric(partner.city)"/>
-                <Provincia t-if="partner.country_id.code == 'IT'" t-esc="partner.state_id.code"/>
+                <Indirizzo><t t-if="partner.street or partner.street2" t-esc="format_alphanumeric((partner.street or '') + ' ' + (partner.street2 or ''))[:60]"/></Indirizzo>
+                <CAP><t t-if="partner.country_id.code != 'IT'" t-esc="'00000'"/><t t-elif="partner.zip" t-esc="partner.zip"/></CAP>
+                <Comune t-esc="format_alphanumeric(partner.city[:60])"/>
+                <Provincia t-if="partner.country_id.code == 'IT' and partner.state_id" t-esc="partner.state_id.code[:2]"/>
                 <Nazione t-esc="partner.country_id.code"/>
             </Sede>
 </template>

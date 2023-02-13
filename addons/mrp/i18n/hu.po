@@ -10,17 +10,17 @@
 # Tamás Dombos, 2022
 # Martin Trigaux, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
-# gezza <geza.nagy@oregional.hu>, 2022
 # krnkris, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2022
+# gezza <geza.nagy@oregional.hu>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2022\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -503,7 +503,7 @@ msgstr "Tevékenységek"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Tevékenység kivétel dekoráció"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -2054,7 +2054,7 @@ msgstr "Követők (Partnerek)"
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikon pld: fa-tasks"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
@@ -2208,7 +2208,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__has_message
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Van üzenet"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2269,7 +2269,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_icon
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Kivétel tevékenységet jelző ikon"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
@@ -2646,15 +2646,6 @@ msgstr "Elhagyás"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_consumption_warning_line
 msgid "Line of issue consumption"
-msgstr ""
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
 msgstr ""
 
 #. module: mrp
@@ -3121,7 +3112,7 @@ msgstr "Következő tevékenység"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_calendar_event_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Következő tevékenység naptár esemény"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_date_deadline
@@ -4266,6 +4257,11 @@ msgid "Scheduled Date by Month"
 msgstr "Tervezett idő havi lebontásban"
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__date_planned_finished
 msgid "Scheduled End Date"
@@ -5284,7 +5280,7 @@ msgstr "Művelet típusa"
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kivétel tevékenység típusa a rekordon."
 
 #. module: mrp
 #. odoo-python

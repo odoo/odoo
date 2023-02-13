@@ -15,18 +15,18 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Martin Aavastik <martin@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
-# Jana Jaakson, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Helen Sulaoja <helen@avalah.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
+# Jana Jaakson, 2023
 # Leaanika Randmets, 2023
 # Anna, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Anna, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
@@ -47,6 +47,8 @@ msgid ""
 "\"Optional\" allows guests to register from the order confirmation email to "
 "track their order."
 msgstr ""
+"\"Valikuline\" võimaldab külalistel registreeruda tellimuse kinnitusmeili "
+"kaudu, et oma tellimust jälgida."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -272,6 +274,10 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Ettevõtte nime või "
+"käibemaksukohustuslase numbri muutmine ei ole lubatud, kui teie konto jaoks "
+"on dokument välja antud. Selle toimingu tegemiseks võtke meiega otse "
+"ühendust.</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -424,17 +430,31 @@ msgstr "<span>Tellimus</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid "<span>Process Checkout</span>"
-msgstr "<span>Vormista tellimus</span>"
+msgid ""
+"<span>Proceed to Checkout</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Process Checkout</span>\n"
-"                                                <span class=\"fa fa-chevron-right\"/>"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
-"<span>Vormista tellimus</span>\n"
-"                                                <span class=\"fa fa-chevron-right\"/>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Sign In</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Sign In</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -442,6 +462,8 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
+"<span>Kahjuks ei saa Teie tellimust kinnitada, kuna maksesumma ei ühti ostukorvi summaga.\n"
+"                         Lisateabe saamiseks võtke ühendust poega.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -530,6 +552,48 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- SISU -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">MIDAGI ON TEIE KONTOL.</h1>\n"
+"                    Kas soovite oma ostu lõpuni sooritada?<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Ühikut</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            Jätka tellimusega\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>Tänan, et ostsite ettevõttest<t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -684,7 +748,7 @@ msgstr "Lisage võrdluseks läbikriipsutatud hind"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add download link for customers at the end of checkout"
-msgstr ""
+msgstr "Lisage klientide jaoks allalaadimislink kaasa enne välja logimist"
 
 #. module: website_sale
 #. odoo-javascript
@@ -736,7 +800,7 @@ msgstr "Kõik hinnakirjad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow customers to pay in person at your stores"
-msgstr ""
+msgstr "Lubage klientidel Teie kauplustes isiklikult maksta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -746,7 +810,7 @@ msgstr "Lubage ostjatel tooteid võrrelda nende atribuutide põhjal. "
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr ""
+msgstr "Lubage sisselogitud kasutajatel salvestada toode sooviloendisse"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -756,7 +820,7 @@ msgstr "Võimaldage lõppkasutajal seda hinnakirja valida"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr ""
+msgstr "Lubage oma kliendil lisada ostukorvi eelmise tellimuse tooteid."
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -906,8 +970,8 @@ msgid ""
 "products."
 msgstr ""
 "Suurendage oma müüki mitmesuguste programmide abil: kupongid, kampaaniad, "
-"kinkekaardid, püsikliendid. Võimalus seadistada konkreetsed tingimused "
-"(tooted, kliendid, minimaalne ostusumma, periood). Preemiaks võivad olla "
+"kinkekaardid, lojaalsus. Võimalus seadistada konkreetsed tingimused (tooted,"
+" kliendid, minimaalne ostusumma, periood). Preemiaks võivad olla "
 "allahindlused (% või summa) või tasuta tooted."
 
 #. module: website_sale
@@ -995,6 +1059,7 @@ msgstr "Võib avalikustada"
 #, python-format
 msgid "Can not resequence embedded image/video with a non compatible image."
 msgstr ""
+"Manustatud pilti/videot ei saa uuesti järjestada mitteühilduva pildiga."
 
 #. module: website_sale
 #. odoo-javascript
@@ -1189,7 +1254,7 @@ msgstr "Vajutage sellele nuppu, et see klientidele nähtavaks muuta."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Collapse Category Recursive"
-msgstr ""
+msgstr "Collapse Category Recursive"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1206,7 +1271,7 @@ msgstr "Veerud"
 msgid ""
 "Comma-separated list of parts of product names, barcodes or internal "
 "reference"
-msgstr ""
+msgstr "Komadega eraldatud tootenimetused, vöötkoodid või sisemised viited"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
@@ -1434,6 +1499,19 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
+"Customer needs to be signed in otherwise the mail address is not known.     \n"
+"\n"
+"- If a potential customer creates one or more abandoned checkouts and then completes a sale before the recovery email gets sent, then the email won't be sent.     \n"
+"\n"
+"- If user has manually sent a recovery email, the mail will not be sent a second time     \n"
+"\n"
+"- If a payment processing error occurred when the customer tried to complete their checkout, then the email won't be sent.     \n"
+"\n"
+"- If your shop does not support shipping to the customer's address, then the email won't be sent.     \n"
+"\n"
+"- If none of the products in the checkout are available for purchase (empty inventory, for example), then the email won't be sent.     \n"
+"\n"
+"- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1490,7 +1568,7 @@ msgstr "Vaikimisi sorteerimine"
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
 msgid ""
 "Define a custom unit to display in the price per unit of measure field."
-msgstr ""
+msgstr "Määrake kohandatud ühik, mida kuvada mõõtühiku hinna väljal."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1558,7 +1636,7 @@ msgstr "Virtuaalne sisu"
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
 msgid "Disabled (buy as guest)"
-msgstr ""
+msgstr "Disabled (buy as guest)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1570,7 +1648,7 @@ msgstr "Loobu"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Discounts, Loyalty & Gift Card"
-msgstr "Allahindlused, püsikliendiprogramm ja kinkekaardid"
+msgstr "Allahindlused, lojaalsusprogramm ja kinkekaardid"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
@@ -1584,7 +1662,7 @@ msgstr "Näidatav nimi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display Product Prices"
-msgstr ""
+msgstr "Näita toote hinnad"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1598,11 +1676,13 @@ msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
 msgstr ""
+"Kuvage oma e-kaubanduse lehtedel ühiku põhihinda. Selle toote peitmiseks "
+"määrake väärtusele 0."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 msgid "Displayed in bottom of product pages"
-msgstr ""
+msgstr "Kuvage tootelehtede alumises osas"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__base_unit_name
@@ -1611,6 +1691,8 @@ msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
 msgstr ""
+"Kui see on määratud, kuvab toodete kohandatud ühikut või muul viisil valitud"
+" mõõtühikut."
 
 #. module: website_sale
 #. odoo-python
@@ -1624,7 +1706,7 @@ msgstr "Puudub ligipääs. Jäta need andmed kasutaja kokkuvõtte kirjast välja
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
-msgstr ""
+msgstr "Kas soovite oma ostukorvi enne toodete lisamist tühjendada?"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__done
@@ -1764,7 +1846,7 @@ msgstr "Extra Product Media"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_extra_checkout_step
 msgid "Extra Step During Checkout"
-msgstr ""
+msgstr "Lisavalik välja logimise ajal"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1786,7 +1868,7 @@ msgstr "Extra Variant Media"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Featured"
-msgstr ""
+msgstr "Esiletõstetud"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1816,7 +1898,7 @@ msgstr "Täida"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid "Fill in your address"
-msgstr ""
+msgstr "Täida enda aadress"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -1852,7 +1934,7 @@ msgstr "Annab tootekategooriate nimekirja kuvamisel järjestuse järjekorra."
 #: model:ir.model.fields.selection,name:website_sale.selection__website__add_to_cart_action__go_to_cart
 #, python-format
 msgid "Go to cart"
-msgstr ""
+msgstr "Mine ostukorvi"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__grid
@@ -1882,7 +1964,7 @@ msgstr "Varjatud"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
-msgstr ""
+msgstr "Peida \"Lisa ostukorvi\", kui hind = 0"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1917,6 +1999,8 @@ msgstr "ID"
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
 msgstr ""
+"Kui toote hind on 0, asenda \"Lisa ostukorvi\" tekstiga \"Võtke meiega "
+"ühendust\"."
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -1966,27 +2050,27 @@ msgstr "Pildi nimi"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Spacing"
-msgstr ""
+msgstr "Image Spacing"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Image Zoom"
-msgstr ""
+msgstr "Pildi Zoom"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Size"
-msgstr ""
+msgstr "Pildi suurus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Images Width"
-msgstr ""
+msgstr "Pildi laius"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
-msgstr ""
+msgstr "Ostukorvi lisamise asemel pöördu otse kassasse"
 
 #. module: website_sale
 #. odoo-python
@@ -2000,7 +2084,7 @@ msgstr "E-posti aadress ei ole korrektne! Palun kirjuta korrektne e-post."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Invalid image"
-msgstr ""
+msgstr "Vigane pilt"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.action_invoices_ecommerce
@@ -2052,7 +2136,7 @@ msgstr "Kpl veebilehe müügi koguväärtus"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
-msgstr ""
+msgstr "Lamp"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
@@ -2062,7 +2146,7 @@ msgstr "Lambid"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Landscape (4/3)"
-msgstr ""
+msgstr "Landscape (4/3)"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
@@ -2136,7 +2220,7 @@ msgstr "Võimalda klientidel sisestada tarneaadress"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer select a Mondial Relay shipping point"
-msgstr ""
+msgstr "Laske kliendil valida Mondial Relay tarnepunkt"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2193,7 +2277,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
-"Hallake kampaaniaid, kuponge, püsikliendikaarte, kinkekaarte ja eWallet'it"
+"Hallake kampaaniaid, kuponge, lojaalsuskaarte, kinkekaarte ja eRahakotti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2201,6 +2285,8 @@ msgid ""
 "Manage pricelists to apply specific prices per country, customer, products, "
 "etc"
 msgstr ""
+"Halda hinnakirju, et rakendada konkreetseid hindu riigi, kliendi, toote jne "
+"kohta"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
@@ -2219,7 +2305,7 @@ msgstr "Levitamise vahend"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_delivery
 msgid "Module Website Sale Delivery"
-msgstr ""
+msgstr "\"Veebilehe tarneviisid\" moodul"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2659,7 +2745,7 @@ msgstr "Amet"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
 msgid "Prevent Sale of Zero Priced Product"
-msgstr ""
+msgstr "Väldi 0 hinnaga toote müüki"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3297,7 +3383,7 @@ msgstr "Müüki eelmisest aastast alates"
 #: model:ir.model.fields,field_description:website_sale.field_website__salesteam_id
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sales Team"
-msgstr "Müügi meeskond"
+msgstr "Müügimeeskond"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__salesperson_id
@@ -3478,7 +3564,7 @@ msgstr "Pood - Vali makseteenuse pakkuja"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_default_sort
 msgid "Shop Default Sort"
-msgstr ""
+msgstr "Poe vaikimisi sorteerimine"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
@@ -3578,6 +3664,7 @@ msgstr "Allikad"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid "Specify unit"
 msgstr "Täpsusta ühik"

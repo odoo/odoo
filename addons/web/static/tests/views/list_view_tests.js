@@ -5343,6 +5343,37 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("count_limit attrs set in arch", async function (assert) {
+        let expectedCountLimit = 4;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree limit="2" count_limit="3"><field name="foo"/><field name="bar"/></tree>',
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "web_search_read") {
+                    assert.strictEqual(args.kwargs.count_limit, expectedCountLimit);
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "3+");
+        assert.verifySteps(["get_views", "web_search_read"]);
+
+        await click(target.querySelector(".o_pager_limit"));
+        assert.containsN(target, ".o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, "1-2");
+        assert.strictEqual(target.querySelector(".o_pager_limit").innerText, "4");
+        assert.verifySteps(["search_count"]);
+
+        expectedCountLimit = undefined;
+        await click(target.querySelector(".o_pager_next"));
+        assert.verifySteps(["web_search_read"]);
+    });
+
     QUnit.test(
         "pager, grouped, pager limit should be based on the group's count",
         async function (assert) {
@@ -16381,5 +16412,90 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_pager_value", "1-2");
 
         assert.containsN(target, ".o_data_row", 2);
+    });
+
+    QUnit.test("resequenceable list items", async function (assert) {
+        serverData.models.bar = {
+            fields: {
+                titi: { string: "Char", type: "char" },
+                int_field: { string: "Integer", type: "integer" },
+            },
+            records: [
+                { id: 1, titi: "one", int_field: 1 },
+                { id: 2, titi: "two", int_field: 2 },
+            ],
+        };
+        serverData.models.foo.records[0].o2m = [1, 2];
+
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m">
+                            <tree>
+                                <field name="int_field" widget="handle"/>
+                                <field name="titi" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+        });
+        assert.hasClass(target.querySelector(".o_data_row"), "o_row_draggable");
+        await dragAndDrop(
+            ".o_data_row:nth-child(1) .o_handle_cell",
+            ".o_data_row:nth-child(2) .o_handle_cell"
+        );
+        // After drag, first and second rows should have been swapped.
+        const first = target.querySelector(".o_data_row:nth-child(1) td[name=titi]");
+        const second = target.querySelector(".o_data_row:nth-child(2) td[name=titi]");
+        assert.strictEqual(first.textContent, "two", "'two' should now be the first child");
+        assert.strictEqual(second.textContent, "one", "'one' should now be the second child");
+    });
+
+    QUnit.test("readonly field x2m, don't allow resequencing", async function (assert) {
+        serverData.models.bar = {
+            fields: {
+                titi: { string: "Char", type: "char" },
+                int_field: { string: "Integer", type: "integer" },
+            },
+            records: [
+                { id: 1, titi: "one", int_field: 1 },
+                { id: 2, titi: "two", int_field: 2 },
+            ],
+        };
+        serverData.models.foo.records[0].o2m = [1, 2];
+
+        await makeView({
+            type: "form",
+            resModel: "foo",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <sheet>
+                        <field name="o2m" readonly="1">
+                            <tree>
+                                <field name="int_field" widget="handle"/>
+                                <field name="titi" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>`,
+        });
+        assert.doesNotHaveClass(target.querySelector(".o_data_row"), "o_row_draggable");
+        await dragAndDrop(
+            ".o_data_row:nth-child(1) .o_handle_cell",
+            ".o_data_row:nth-child(2) .o_handle_cell"
+        );
+        // After drag, nothing should have changed.
+        // First row should still be 'one' and second row should still be 'two'.
+        const first = target.querySelector(".o_data_row:nth-child(1) td[name=titi]");
+        const second = target.querySelector(".o_data_row:nth-child(2) td[name=titi]");
+        assert.strictEqual(first.textContent, "one", "'one' should be kept as the first child");
+        assert.strictEqual(second.textContent, "two", "'two' should be kept as the second child");
     });
 });

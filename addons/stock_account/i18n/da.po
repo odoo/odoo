@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Martin Trigaux, 2022\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -23,18 +23,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
 msgstr "Produkt omkostning opdateret fra %(previous)s til %(new_cost)s."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -43,6 +46,7 @@ msgstr ""
 "%(user)s ændrede omkostning fra %(previous)s til %(new_price)s - %(product)s"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
@@ -171,6 +175,7 @@ msgid "Cancel"
 msgstr "Annullér"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -182,6 +187,7 @@ msgstr ""
 "denne handling."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -193,6 +199,7 @@ msgstr ""
 " på produktkategorien eller på lokationen, før du fortsætter denne handling."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -220,6 +227,7 @@ msgid "Config Settings"
 msgstr "Konfigurer opsætning"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -238,6 +246,7 @@ msgid "Costing Method"
 msgstr "Kostpris metode"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Costing method change for product category %s: from %s to %s."
@@ -339,6 +348,7 @@ msgid "Documentation"
 msgstr "Dokumentation"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -381,6 +391,7 @@ msgid "Inventory Locations"
 msgstr "Lager lokationer"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/__init__.py:0
 #: code:addons/stock_account/models/account_chart_template.py:0
@@ -459,12 +470,14 @@ msgid "Manual"
 msgstr "Manuel"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: %s."
 msgstr "Manuel Lager Evaluering: %s."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Manual Stock Valuation: No Reason Given."
@@ -500,6 +513,11 @@ msgid "New value by quantity"
 msgstr "Ny værdi per kvantitet"
 
 #. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
+msgid "Open Valuation Layer"
+msgstr ""
+
+#. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
 msgid "Other Info"
 msgstr "Anden info"
@@ -528,6 +546,7 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "Produkt bevægelser (Lagerbevægelse linje)"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 #, python-format
@@ -545,6 +564,7 @@ msgid "Product Variant"
 msgstr "Varevariant"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Product value manually modified (from %s to %s)"
@@ -606,6 +626,7 @@ msgid "Return Picking Line"
 msgstr "Returner pluk linje"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "Revaluation of %s"
@@ -676,7 +697,7 @@ msgid "Stock Request an Inventory Count"
 msgstr ""
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.js:0
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_action
 #: model:ir.actions.act_window,name:stock_account.stock_valuation_layer_report_action
@@ -729,6 +750,7 @@ msgstr ""
 "Dette felt kan bruges til hurtig søgning."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -739,6 +761,7 @@ msgstr ""
 "Evaluerings kontoen."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #, python-format
@@ -750,12 +773,14 @@ msgstr ""
 "adgangsrettigheder til."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
 msgstr "Den tilføjede værdi har ikke nogen indflydelse på lager evalueringen"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -766,6 +791,7 @@ msgstr ""
 "andre er udgående fra virksomheden."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -778,6 +804,7 @@ msgstr ""
 "transit stedet."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -901,7 +928,7 @@ msgid "Valuation Report"
 msgstr ""
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/xml/inventory_report.xml:0
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quantity_history_inherit_stock_account
 #, python-format
@@ -909,6 +936,7 @@ msgid "Valuation at Date"
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Valuation method change for product category %s: from %s to %s."
@@ -920,7 +948,7 @@ msgid "Value"
 msgstr "Værdi"
 
 #. module: stock_account
-#. openerp-web
+#. odoo-javascript
 #: code:addons/stock_account/static/src/stock_account_forecasted/forecasted_header.xml:0
 #, python-format
 msgid "Value On Hand:"
@@ -932,6 +960,7 @@ msgid "Value Svl"
 msgstr "Værdi Svl"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
@@ -973,6 +1002,7 @@ msgid "Wizard model to reavaluate a stock inventory for a product"
 msgstr "Guide model til genevaluering af et lager inventar for et produkt"
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with a standard cost method."
@@ -980,12 +1010,14 @@ msgstr ""
 "Du kan ikke genevaluerer et produkt med en standard omkostnings metode."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "You cannot revalue a product with an empty or negative stock."
 msgstr "Du kan ikke genevaluerer et produkt med et tomt eller negativt lager."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -998,6 +1030,7 @@ msgstr ""
 "adgangsrettigheder til."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1008,6 +1041,7 @@ msgstr ""
 "Du skal definere en, før behandling af denne operation."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid ""
@@ -1016,6 +1050,7 @@ msgid ""
 msgstr ""
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/stock_move.py:0
 #, python-format
 msgid ""
@@ -1026,6 +1061,7 @@ msgstr ""
 "har installeret en kontoplan."
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
 #: code:addons/stock_account/models/product.py:0
@@ -1039,6 +1075,7 @@ msgstr ""
 "skal definere en før du kan gennemføre denne handling. "
 
 #. module: stock_account
+#. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "You must set a counterpart account on your product category."

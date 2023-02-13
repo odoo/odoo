@@ -20,9 +20,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
@@ -772,7 +772,7 @@ msgstr "Tevékenységek"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Tevékenység kivétel dekoráció"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -894,6 +894,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Biztosan szeretné érvényteleníteni a jóváhagyott tranzakciót? Ezt az akciót "
+"nem lehet visszavonni."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1722,7 +1724,7 @@ msgstr "Követők (Partnerek)"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikon pld: fa-tasks"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
@@ -1759,12 +1761,12 @@ msgstr "Jövőbeni tevékenységek"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Értékesítési fizetési hivatkozás generálása"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Fizetési link létrehozása"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1811,7 +1813,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Van üzenet"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_pricelist
@@ -1846,7 +1848,7 @@ msgstr "Ikon"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Kivétel tevékenységet jelző ikon"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -2388,7 +2390,7 @@ msgstr "Új ajánlat"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Következő tevékenység naptár esemény"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
@@ -2575,6 +2577,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Opcionális fordítási nyelv (ISO kód), mely e-mail küldése során választható "
+"ki. Ha nincs beállítva, akkor az angol nyelv kerül felhasználásra. Ez "
+"általában csak egy kitöltő kifejezés, mely megadja a megfelelő nyelvet, pld:"
+" {{ object.partner_id.lang }}."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2616,6 +2622,11 @@ msgstr "Rendelés dátuma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Order Date:"
+msgstr ""
+
+#. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
 msgstr ""
 
 #. module: sale
@@ -2758,12 +2769,12 @@ msgstr "Fizetési mód"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_provider
 msgid "Payment Provider"
-msgstr ""
+msgstr "Fizetési szolgáltató"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Providers"
-msgstr ""
+msgstr "Fizetési szolgáltatók"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
@@ -3051,8 +3062,10 @@ msgid "Quotation Sent"
 msgstr "Árajánlat elküldve"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr ""
 "Kötelező megadni az árajánlat érvényességét, és nagyobbnak kell lennie mint "
@@ -3166,7 +3179,7 @@ msgstr "Ezen árajánlat visszautasítása"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Renderelő modell"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sale_report
@@ -3913,7 +3926,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Érvénytelen hozzáférési token"
 
 #. module: sale
 #. odoo-python
@@ -4005,7 +4018,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "A megadott paraméterek érvénytelenek."
 
 #. module: sale
 #. odoo-python
@@ -4245,7 +4258,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Kivétel tevékenység típusa a rekordon."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups

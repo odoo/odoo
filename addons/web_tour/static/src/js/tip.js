@@ -638,7 +638,13 @@ var Tip = Widget.extend({
  * @param {string} [run] the run parameter of the tip (only strings are useful)
  */
 Tip.getConsumeEventType = function ($element, run) {
-    if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
+    if ($element.has("input.o-autocomplete--input.o_input").length > 0) {
+        // Components that utilizes the AutoComplete component is expected to
+        // contain an input with the class o-autocomplete--input.
+        // And when an option is selected, the component triggers
+        // 'AutoComplete:OPTION_SELECTED' event.
+        return 'AutoComplete:OPTION_SELECTED';
+    } else if ($element.hasClass('o_field_many2one') || $element.hasClass('o_field_many2manytags')) {
         return 'autocompleteselect';
     } else if ($element.is("textarea") || $element.filter("input").is(function () {
         var type = $(this).attr("type");

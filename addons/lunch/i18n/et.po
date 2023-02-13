@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Egon Raamat <egon@avalah.ee>, 2022
-# Wanradt Koell <wanradt@gmail.com>, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Martin Talts <martin.t@avalah.ee>, 2022
 # Andre Roomet <andreroomet@gmail.com>, 2022
@@ -18,8 +17,8 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
-# Jana Jaakson, 2022
 # Anna, 2023
+# Jana Jaakson, 2023
 # Leaanika Randmets, 2023
 # 
 msgid ""
@@ -39,28 +38,28 @@ msgstr ""
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
 msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
-msgstr ""
+msgstr "1 Avokaado - 1 Lõhe - 1 Muna - 1 Tuunikala"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_chirashi
 msgid "2 Tempuras, Cabbages, Onions, Sesame Sauce"
-msgstr ""
+msgstr "2 tempurat, kapsas, sibul, seesami kaste"
 
 #. module: lunch
 #: model:lunch.order,name:lunch.order_line_5
 #: model:lunch.product,name:lunch.product_4formaggi
 msgid "4 Formaggi"
-msgstr ""
+msgstr "4 Formaggi"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_salmon
 msgid "4 Sushi Salmon - 6 Maki Salmon - 4 Sashimi Salmon"
-msgstr ""
+msgstr "4 Sushi lõhega - 6 Lõhemaki - 4 Sashimi lõhega"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_maki
 msgid "6 Maki Salmon - 6 Maki Tuna - 6 Maki Shrimp/Avocado"
-msgstr ""
+msgstr "6 Maki lõhega – 6 Maki tuunikalaga – 6 Maki krevetti js avokaadoga"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -131,6 +130,8 @@ msgid ""
 "<span class=\"o_form_label\">Lunch Overdraft</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Lõunasöögi krediit</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -138,6 +139,8 @@ msgid ""
 "<span class=\"o_form_label\">Reception notification</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Vastuvõtuteade</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -270,6 +273,133 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Lunch Order</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <p>\n"
+"        Dear <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"        </p><p>\n"
+"        Here is, today orders for <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Location</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Product</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Comments</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Person</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Qty</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Price</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soy sauce</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">With wasabi.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">lap</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Office 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Total</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>Do not hesitate to contact us if you have any questions.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a>\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -278,12 +408,15 @@ msgid ""
 "            An expense is automatically created at the order receipt.<br>\n"
 "            A payment represents the employee reimbursement to the company."
 msgstr ""
+"A cashmove can either be an expense or a payment.<br>\n"
+"            An expense is automatically created at the order receipt.<br>\n"
+"            A payment represents the employee reimbursement to the company."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "A product is defined by its name, category, price and vendor."
-msgstr ""
+msgstr "Toode on määratletud nime, kategooria, hinna ja müüja järgi."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__am
@@ -350,12 +483,12 @@ msgstr "Hoiatuse nimetus"
 #. module: lunch
 #: model:lunch.alert,name:lunch.alert_office_3
 msgid "Alert for Office 3"
-msgstr ""
+msgstr "Office3 märguanne"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
-msgstr ""
+msgstr "Hoiatus rakenduses"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
@@ -384,7 +517,7 @@ msgstr "Arhiveeritud"
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
 msgid "Are extras available for this product"
-msgstr ""
+msgstr "Kas selle toote jaoks on saadaval ka lisad"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
@@ -394,7 +527,7 @@ msgstr "Manuste arv"
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
 msgid "Automatic Email Sending Time should be between 0 and 12"
-msgstr ""
+msgstr "Automaatne e-posti saatmise aeg peaks olema vahemikus 0 kuni 12"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -404,56 +537,56 @@ msgstr "Saadavus"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Available Today"
-msgstr ""
+msgstr "Täna saadaval"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
 msgid "Available Toppings 1"
-msgstr ""
+msgstr "Saadaval Katted 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
 msgid "Available Toppings 2"
-msgstr ""
+msgstr "Saadaval Katted 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
 msgid "Available Toppings 3"
-msgstr ""
+msgstr "Saadaval Katted 3"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_bacon
 #: model:lunch.product,name:lunch.product_bacon_0
 msgid "Bacon"
-msgstr ""
+msgstr "Peekon"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_bacon
 #: model_terms:lunch.product,description:lunch.product_bacon_0
 msgid "Beef, Bacon, Salad, Cheddar, Fried Onion, BBQ Sauce"
-msgstr ""
+msgstr "Veiseliha, peekon, salat, Cheddari juust, praetud sibul, BBQ-kaste"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_cheese_burger_0
 #: model_terms:lunch.product,description:lunch.product_cheeseburger
 msgid "Beef, Cheddar, Salad, Fried Onions, BBQ Sauce"
-msgstr ""
+msgstr "Veiseliha, Cheddari juust, salat, praetud sibul, BBQ-kaste"
 
 #. module: lunch
 #: model:lunch.order,name:lunch.order_line_1
 #: model:lunch.product,name:lunch.product_Bolognese
 msgid "Bolognese Pasta"
-msgstr ""
+msgstr "Pasta Bolognese"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_country
 msgid "Brie, Honey, Walnut Kernels"
-msgstr ""
+msgstr "Brie juust, mesi, kreeka pähklid"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_burger
 msgid "Burger"
-msgstr ""
+msgstr "Burger"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
@@ -482,12 +615,12 @@ msgstr "Tühistatud"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr ""
+msgstr "Sularaha liikumised"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
 msgid "Cashmoves report"
-msgstr ""
+msgstr "Sularaha liikumiste aruanne"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -502,12 +635,12 @@ msgstr "Kategooria"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__chat
 msgid "Chat notification"
-msgstr ""
+msgstr "Vestluse teade"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_cheese_ham
 msgid "Cheese And Ham"
-msgstr ""
+msgstr "Juust ja sink"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_cheese_burger_0
@@ -518,18 +651,18 @@ msgstr "Juustuburger"
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_cheese_ham
 msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
-msgstr ""
+msgstr "Juust, sink, salat, tomatid, kurgid, munad"
 
 #. module: lunch
 #: model:lunch.order,name:lunch.order_line_4
 #: model:lunch.product,name:lunch.product_chicken_curry
 msgid "Chicken Curry"
-msgstr ""
+msgstr "Kana karri"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_chirashi
 msgid "Chirashi"
-msgstr ""
+msgstr "Chirashi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
@@ -544,17 +677,20 @@ msgid ""
 "            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
+"Klikake siia <span class=\"fa fa-phone text-success\" title=\"Order button\"></span>, et teavitada tellimuse kinnitamisest.<br>\n"
+"            Klikake siia <span class=\"fa fa-check text-success\" title=\"Receive button\"></span>, et teavitada tellimuse kätte saamisest.<br>\n"
+"            Klikake siia <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> punasele X-le, teavitamaks, et tellimus pole saadaval."
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
 #: model:lunch.product,name:lunch.product_club_0
 msgid "Club"
-msgstr ""
+msgstr "Klubi"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_coke_0
 msgid "Coca Cola"
-msgstr ""
+msgstr "Coca Cola"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_res_company
@@ -586,7 +722,7 @@ msgstr "Seadistus"
 #: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
 #, python-format
 msgid "Configure Your Order"
-msgstr ""
+msgstr "Looge oma tellimus"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -596,19 +732,19 @@ msgstr "Kinnita"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Kinnitam tellimused"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_control_accounts
 msgid "Control Accounts"
-msgstr ""
+msgstr "Kontrolli kontosid"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action_control_suppliers
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_control_suppliers
 msgid "Control Vendors"
-msgstr ""
+msgstr "Kontrolli tarnijaid"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__country_id
@@ -619,23 +755,23 @@ msgstr "Riik"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
 msgid "Create a new payment"
-msgstr ""
+msgstr "Loo uus makse"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Create a new product category"
-msgstr ""
+msgstr "Loo uus tootekategooria"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
-msgstr ""
+msgstr "Looge uus toode"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Create new lunch alerts"
-msgstr ""
+msgstr "Looge uued hoiatused"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -681,7 +817,7 @@ msgstr "Valuuta"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 msgid "Currently inactive"
-msgstr ""
+msgstr "Hetkel mitteaktiivne"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
@@ -729,7 +865,7 @@ msgstr "Kuva nimi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
 msgid "Display Reorder Button"
-msgstr ""
+msgstr "Kuva Telli juurde nuppu"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_drinks
@@ -741,7 +877,7 @@ msgstr "Joogid"
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Edit order"
-msgstr ""
+msgstr "Muuda tellimust"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
@@ -752,17 +888,17 @@ msgstr "E-post"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
 msgid "Employee who ordered last month"
-msgstr ""
+msgstr "Töötaja, kes tellis eelmisel kuul"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
 msgid "Employee who ordered last week"
-msgstr ""
+msgstr "Eelmisel nädalal tellinud töötaja"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
 msgid "Employee who ordered last year"
-msgstr ""
+msgstr "Eelmisel aastal tellinud töötaja"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
@@ -773,62 +909,62 @@ msgstr "Kõigilt"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
 msgid "Extra 1 Label"
-msgstr ""
+msgstr "Lisa 1 silt"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
 msgid "Extra 1 Quantity"
-msgstr ""
+msgstr "Lisa 1 kogus"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
 msgid "Extra 2 Label"
-msgstr ""
+msgstr "Lisa 2 silti"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
 msgid "Extra 2 Quantity"
-msgstr ""
+msgstr "Lisa 2 kogust"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
 msgid "Extra 3 Label"
-msgstr ""
+msgstr "Lisa 3 silti"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
 msgid "Extra 3 Quantity"
-msgstr ""
+msgstr "Ekstra 3 kogust"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
 msgid "Extras"
-msgstr ""
+msgstr "Lisad"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
 msgid "Extras 1"
-msgstr ""
+msgstr "Lisad 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_2
 msgid "Extras 2"
-msgstr ""
+msgstr "Lisad 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
 msgid "Extras 3"
-msgstr ""
+msgstr "Lisad 3"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
 msgid "Favorite Lunch Product"
-msgstr ""
+msgstr "Lemmik lõunasöögi toode"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
@@ -864,7 +1000,7 @@ msgstr "Vormindatud e-posti aadress"
 #: model_terms:lunch.order,product_description:lunch.order_line_2
 #: model_terms:lunch.product,description:lunch.product_italiana
 msgid "Fresh Tomatoes, Basil, Mozzarella"
-msgstr ""
+msgstr "Värsked tomatid, basiilik, mozzarella juust"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__fri
@@ -881,7 +1017,7 @@ msgstr "Reede"
 #: model:lunch.order,name:lunch.order_line_3
 #: model:lunch.product,name:lunch.product_gouda
 msgid "Gouda Cheese"
-msgstr ""
+msgstr "Gouda juust"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
@@ -894,7 +1030,7 @@ msgstr "Rühmitamine"
 #: model_terms:lunch.product,description:lunch.product_club
 #: model_terms:lunch.product,description:lunch.product_club_0
 msgid "Ham, Cheese, Vegetables"
-msgstr ""
+msgstr "Sink, juust, köögiviljad"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__has_message
@@ -907,16 +1043,18 @@ msgid ""
 "Helps you handle your lunch needs, if you are a manager you will be able to "
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
+"Aitab Teil tegeleda lõunasöögi vajadustega, kui olete juht, saate luua uusi "
+"tooteid, makseviise ja kinnitada või tühistada tellimusi."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Here you can access all categories for the lunch products."
-msgstr ""
+msgstr "Siin pääsete ligi kõikidele lõunasöögi toodete kategooriatele."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Here you can see today's orders grouped by vendors."
-msgstr ""
+msgstr "Siin näete tänaseid tellimusi rühmitatuna müüjate kaupa."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
@@ -924,6 +1062,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
 "            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
+"Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
+"            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -981,7 +1121,7 @@ msgstr "Pilt 128"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
 msgid "Image 1920"
-msgstr ""
+msgstr "Pilt 1920"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
@@ -998,12 +1138,12 @@ msgstr "Pilt 512"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Information, allergens, ..."
-msgstr ""
+msgstr "Informatsioon, allergeenid, ..."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
 msgid "Is Displayed Today"
-msgstr ""
+msgstr "Näidatakse täna"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
@@ -1018,12 +1158,12 @@ msgstr "Jälgija"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
 msgid "Is New"
-msgstr ""
+msgstr "Uus"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
 msgid "Last Lunch Location"
-msgstr ""
+msgstr "Viimase lõunasöögi asukoht"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
@@ -1041,7 +1181,7 @@ msgstr "Viimati muudetud"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__last_order_date
 msgid "Last Order Date"
-msgstr ""
+msgstr "Viimane tellimuse kuupäev"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_uid
@@ -1093,12 +1233,12 @@ msgstr "Lõuna"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_alert
 msgid "Lunch Alert"
-msgstr ""
+msgstr "Lõuna teavitus"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
 msgid "Lunch Alerts"
-msgstr ""
+msgstr "Lõuna teavitused"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_cashmove.py:0
@@ -1106,23 +1246,23 @@ msgstr ""
 #: model:ir.model,name:lunch.model_lunch_cashmove
 #, python-format
 msgid "Lunch Cashmove"
-msgstr ""
+msgstr "Lõuna sularahaliikumine"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_topping
 msgid "Lunch Extras"
-msgstr ""
+msgstr "Lõuna lisad"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
 msgid "Lunch Location"
-msgstr ""
+msgstr "Lõuna asukoht"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
 #: model:ir.model,name:lunch.model_lunch_location
 msgid "Lunch Locations"
-msgstr ""
+msgstr "Lõuna asukohad"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_maki
@@ -1132,27 +1272,27 @@ msgstr "Lõuna maki 18tk"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
-msgstr ""
+msgstr "Lunch Minimum Threshold"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
 msgid "Lunch Notify Message"
-msgstr ""
+msgstr "Lõuna teavitussõnum"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
 msgid "Lunch Order"
-msgstr ""
+msgstr "Lõunatellimused"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr ""
+msgstr "Lõuna toode"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr ""
+msgstr "Lõuna tootekategooria"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_salmon
@@ -1162,7 +1302,7 @@ msgstr "Lõuna lõhetükid 20tk"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
-msgstr ""
+msgstr "Lõunasöögi tarnija"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_temaki
@@ -1173,62 +1313,62 @@ msgstr "Lõuna Temaki mix 3tk"
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Lunch notification"
-msgstr ""
+msgstr "Lõuna teavitused"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
 msgid "Lunch notification message"
-msgstr ""
+msgstr "Lõuna teavitussõnumid"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
 msgid "Lunch: Cancel meals"
-msgstr ""
+msgstr "Lõuna: Tühista toidukord"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_confirm
 msgid "Lunch: Receive meals"
-msgstr ""
+msgstr "Lõuna: Söögi kättesaamine"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
-msgstr ""
+msgstr "Lõuna: Saada teavitusi"
 
 #. module: lunch
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Supplier Order"
-msgstr ""
+msgstr "Lõuna: Tarnija tellimus"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
 msgid "Lunch: alert chat notification (Alert for Office 3)"
-msgstr ""
+msgstr "Lõuna: märguanne vestluse kohta (Office 3 märguanne)"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
 msgid "Lunch: send automatic email to Coin gourmand"
-msgstr ""
+msgstr "Lõuna: saatke automaatne meil Coin gormand'ile"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
-msgstr ""
+msgstr "Lõuna: automaatne e-kirja saatmine lõunasöögi tarnijale"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
 msgid "Lunch: send automatic email to Pizza Inn"
-msgstr ""
+msgstr "Lõuna: saatke automaatne meil Pizza Inn'ile"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
 msgid "Lunch: send automatic email to Sushi Shop"
-msgstr ""
+msgstr "Lõuna: saatke automaatne meil Sushi poele"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
 msgid "Lunch: send automatic email to The Corner"
-msgstr ""
+msgstr "Lõuna: saatke automaatne meil The Corner'ile"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1248,12 +1388,12 @@ msgstr "Juhataja"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
 msgid "Maximum Allowed Overdraft"
-msgstr ""
+msgstr "Maksimaalne lubatud arvelduskrediit"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Maximum overdraft that your employees can reach"
-msgstr ""
+msgstr "Maksimaalne arvelduskrediit, mille Teie töötajad võivad saavutada"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -1273,7 +1413,7 @@ msgstr "Sõnumid"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
 msgid "Moment"
-msgstr ""
+msgstr "Hetk"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1289,12 +1429,12 @@ msgstr "Esmaspäev"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_mozzarella
 msgid "Mozzarella"
-msgstr ""
+msgstr "Mozzarella juust"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_mozzarella
 msgid "Mozzarella, Pesto, Tomatoes"
-msgstr ""
+msgstr "Mozzarella juust, pesto, tomatid"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_account
@@ -1310,7 +1450,7 @@ msgstr "Minu konto ajalugu"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "My Account grouped"
-msgstr ""
+msgstr "Minu konto rühmitatud"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__my_activity_date_deadline
@@ -1320,12 +1460,12 @@ msgstr "Minu tegevuse tähtaeg"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.menu_lunch_title
 msgid "My Lunch"
-msgstr ""
+msgstr "Minu lõuna"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "My Order History"
-msgstr ""
+msgstr "Minu tellimuste ajalugu"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action
@@ -1342,7 +1482,7 @@ msgstr "Nimi"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_Napoli
 msgid "Napoli Pasta"
-msgstr ""
+msgstr "Napoli Pasta"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_product_kanban_order
@@ -1357,7 +1497,7 @@ msgstr "Uus tellimus"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
 msgid "New Until"
-msgstr ""
+msgstr "Uus kuni"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
@@ -1382,22 +1522,22 @@ msgstr "Järgmise tegevuse tüüp"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
 msgid "No Delivery"
-msgstr ""
+msgstr "Tarne puudub"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
-msgstr ""
+msgstr "Rahaliikumisi veel pole"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
-msgstr ""
+msgstr "Lõunatellimust veel pole"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid "No previous order found"
-msgstr ""
+msgstr "Ühtegi eelnevat tellimust ei leitud"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1409,7 +1549,7 @@ msgstr "Pole"
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
 msgid "None or More"
-msgstr ""
+msgstr "Ükski või rohkem"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -1424,27 +1564,27 @@ msgstr "Märkused"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Nothing to order today"
-msgstr ""
+msgstr "Täna ei ole midagi tellida"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
 msgid "Notification Moment"
-msgstr ""
+msgstr "Teavitamise hetk"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
-msgstr ""
+msgstr "Teavitamise aeg"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
 msgid "Notification time must be between 0 and 12"
-msgstr ""
+msgstr "Teavitamise aeg peab jääma 00 ja 12 vahele"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "Teavitatud"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1471,14 +1611,14 @@ msgstr "Kohaletoimetamise veateatega sõnumite arv"
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1_more
 msgid "One or More"
-msgstr ""
+msgstr "Üks või rohkem"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1
 msgid "Only One"
-msgstr ""
+msgstr "Ainult üks"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -1495,7 +1635,7 @@ msgstr "Tellimuse kuupäev"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
 msgid "Order Deadline Passed"
-msgstr ""
+msgstr "Tellimuse tähtaeg on möödas"
 
 #. module: lunch
 #. openerp-web
@@ -1507,17 +1647,17 @@ msgstr "Telli kohe"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__automatic_email_time
 msgid "Order Time"
-msgstr ""
+msgstr "Tellimuse aeg"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action_order
 msgid "Order Your Lunch"
-msgstr ""
+msgstr "Telli Oma Lõuna"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Order lines Tree"
-msgstr ""
+msgstr "Tellimuse read"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__ordered
@@ -1532,7 +1672,7 @@ msgstr "Tellimused"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for {{ ctx['order']['company_name'] }}"
-msgstr ""
+msgstr "Tellimused {{ ctx['order']['company_name'] }}"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1543,12 +1683,12 @@ msgstr "Arvelduskrediit"
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__moment__pm
 msgid "PM"
-msgstr ""
+msgstr "PM"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pasta
 msgid "Pasta"
-msgstr ""
+msgstr "Pasta"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1573,34 +1713,34 @@ msgstr "Telefon"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_pizza
 msgid "Pizza"
-msgstr ""
+msgstr "Pitsa"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_funghi
 msgid "Pizza Funghi"
-msgstr ""
+msgstr "Funghi pitsa"
 
 #. module: lunch
 #: model:lunch.order,name:lunch.order_line_2
 #: model:lunch.product,name:lunch.product_italiana
 msgid "Pizza Italiana"
-msgstr ""
+msgstr "Itaalia pitsa"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_margherita
 #: model:lunch.product,name:lunch.product_pizza_0
 msgid "Pizza Margherita"
-msgstr ""
+msgstr "Margherita pitsa"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_vege
 msgid "Pizza Vegetarian"
-msgstr ""
+msgstr "Vegan pitsa"
 
 #. module: lunch
 #: model_terms:lunch.alert,message:lunch.alert_office_3
 msgid "Please order"
-msgstr ""
+msgstr "Palun telli"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__price
@@ -1630,7 +1770,7 @@ msgstr "Tootekategooriad"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr ""
+msgstr "Tootekategooriate vorm"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
@@ -1643,7 +1783,7 @@ msgstr "Tootekategooria"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product_category__product_count
 msgid "Product Count"
-msgstr ""
+msgstr "Toote arv"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__product_image
@@ -1659,13 +1799,13 @@ msgstr "Toote nimi"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
 msgid "Product Search"
-msgstr ""
+msgstr "Toote otsing"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Product is no longer available."
-msgstr ""
+msgstr "Toode ei ole enam saadaval."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -1679,7 +1819,7 @@ msgstr "Tooted"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_form
 msgid "Products Form"
-msgstr ""
+msgstr "Toodete vorm"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
@@ -1689,7 +1829,7 @@ msgstr "Toodete nimekiri"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
 msgid "Products Tree"
-msgstr ""
+msgstr "Products Tree"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__quantity
@@ -1751,7 +1891,7 @@ msgstr "Lõhe ja avokaado"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
-msgstr ""
+msgstr "Võileib"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sat
@@ -1784,22 +1924,23 @@ msgstr "Saada"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "Saada teavitus"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
 msgid "Send Order By"
-msgstr ""
+msgstr "Saada tellimus"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Orders"
-msgstr ""
+msgstr "Saada tellimused"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Send this message to your users when their order has been delivered."
 msgstr ""
+"Saatke see sõnum oma kasutajatele, kui nende tellimus on kohale toimetatud."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
@@ -1809,7 +1950,7 @@ msgstr "Saadetud"
 #. module: lunch
 #: model:mail.template,description:lunch.lunch_order_mail_supplier
 msgid "Sent to vendor with the order of the day"
-msgstr ""
+msgstr "Saadetakse tarnijale koos päevatellimusega"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1820,22 +1961,22 @@ msgstr "Seaded"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
 msgid "Show Confirm Button"
-msgstr ""
+msgstr "Näita kinnitamise nuppu"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
 msgid "Show Order Button"
-msgstr ""
+msgstr "Näita tellimise nuppu"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
-msgstr ""
+msgstr "Näita kuni"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_spicy_tuna
 msgid "Spicy Tuna"
-msgstr ""
+msgstr "Vürtsikas tuunikala"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__state_id
@@ -1885,6 +2026,7 @@ msgstr "Tänav2"
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "Summary of all lunch orders, grouped by vendor and by date."
 msgstr ""
+"Kõikide lõunatellimuste kokkuvõte, rühmitatuna tarnija ja kuupäeva järgi."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sun
@@ -1900,22 +2042,22 @@ msgstr "Pühapäev"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
-msgstr ""
+msgstr "Tarnija"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sushi
 msgid "Sushi"
-msgstr ""
+msgstr "Sushi"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_temaki
 msgid "Temaki"
-msgstr ""
+msgstr "Temaki"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_country
 msgid "The Country"
-msgstr ""
+msgstr "Riik"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1924,6 +2066,8 @@ msgid ""
 "The following product categories are archived. You should either unarchive the categories or change the category of the product.\n"
 "%s"
 msgstr ""
+"Järgmised tootekategooriad on arhiveeritud. Te peaksite kas kategooriad arhiveerimata jätma või muutma toote kategooriat.\n"
+"%s"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1932,28 +2076,30 @@ msgid ""
 "The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n"
 "%s"
 msgstr ""
+"Järgmised tarnijad on arhiveeritud. Te peaksite kas tarnijad arhiivist välja tooma või toote tarnijat muutma.\n"
+"%s"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
 msgid "The number of products related to this category"
-msgstr ""
+msgstr "Selle kategooriaga seotud toodete arv"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "The orders for this vendor have already been sent."
-msgstr ""
+msgstr "Selle müüja tellimused on juba saadetud."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been confirmed!"
-msgstr ""
+msgstr "Tellimused on kinnitatud!"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been sent!"
-msgstr ""
+msgstr "Tellimused on saadetud!"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -1961,13 +2107,15 @@ msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
 " used as the 'from' when sending the automatic email."
 msgstr ""
+"Vastutav on isik, kes tellib kõigile lõunasöögi. Seda kasutatakse automaatse"
+" e-kirja saatmisel lähtepunktina."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."
-msgstr ""
+msgstr "Selle tellimusega seotud tarnija ei ole täna kättesaadav."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -1975,22 +2123,24 @@ msgid ""
 "There is no previous order recorded. Click on \"My Lunch\" and then create a"
 " new lunch order."
 msgstr ""
+"Varasemat tellimust ei ole registreeritud. Klõpsake nupule \"Minu "
+"lõunasöök\" ja seejärel looge uus lõunatellimus."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
 msgid "There is no product available today"
-msgstr ""
+msgstr "Täna ei ole ühtegi toodet saadaval"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
 msgid "This field is used in order to "
-msgstr ""
+msgstr "Seda välja kasutatakse selleks, et "
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr ""
+msgstr "See on Tõene, kui tarnija on täna saadaval."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -2017,12 +2167,12 @@ msgstr "Tellida"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr ""
+msgstr "Oma kontole raha lisamiseks oma võtke palun ühendust oma halduriga."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
 msgid "To see some locations, create one using the create button"
-msgstr ""
+msgstr "Asukohtade nägemiseks looge üks, kasutades LOO nuppu"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -2030,6 +2180,8 @@ msgid ""
 "To see some products, check if your vendors are available today and that you"
 " have configured some products"
 msgstr ""
+"Toodete nägemiseks kontrollige, kas Teie tarnijad on täna saadaval ja kas "
+"olete eelnevalt seadistanud mõned tooted"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -2047,47 +2199,49 @@ msgstr "Tänased tellimused"
 #: model_terms:lunch.product,description:lunch.product_4formaggi
 msgid "Tomato sauce, Olive oil, Fresh Tomatoes, Onions, Vegetables, Parmesan"
 msgstr ""
+"Tomatikaste, oliiviõli, värsked tomatid, sibulad, köögiviljad, parmesani "
+"juust"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_Napoli
 msgid "Tomatoes, Basil"
-msgstr ""
+msgstr "Tomatid, basiilik"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_margherita
 #: model_terms:lunch.product,description:lunch.product_pizza_0
 msgid "Tomatoes, Mozzarella"
-msgstr ""
+msgstr "Tomatid, mozzarella juust"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_vege
 msgid "Tomatoes, Mozzarella, Mushrooms, Peppers, Olives"
-msgstr ""
+msgstr "Tomatid, mozzarella juust, seened, paprika, oliivid"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_funghi
 msgid "Tomatoes, Mushrooms, Mozzarella"
-msgstr ""
+msgstr "Tomatid, seened, mozzarella juust"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
-msgstr ""
+msgstr "Katete kategooria"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
 msgid "Topping Ids 1"
-msgstr ""
+msgstr "Kate Ids 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_2
 msgid "Topping Ids 2"
-msgstr ""
+msgstr "Kate Ids 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_3
 msgid "Topping Ids 3"
-msgstr ""
+msgstr "Kate Ids 3"
 
 #. module: lunch
 #. openerp-web
@@ -2119,12 +2273,12 @@ msgstr "Teisipäev"
 #. module: lunch
 #: model:lunch.product,name:lunch.product_tuna
 msgid "Tuna"
-msgstr ""
+msgstr "Tuunikala"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_tuna
 msgid "Tuna, Mayonnaise"
-msgstr ""
+msgstr "Tuunikala, majonees"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__activity_exception_decoration
@@ -2148,7 +2302,7 @@ msgstr "Kasutaja"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User : Order your meal"
-msgstr ""
+msgstr "Kasutaja : Tellige oma söök"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
@@ -2163,7 +2317,7 @@ msgstr "Partner"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr ""
+msgstr "Tarnija tellimused kuupäeva järgi"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action
@@ -2199,40 +2353,40 @@ msgstr "Kolmapäev"
 msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
-msgstr ""
+msgstr "Te üritate olla teine kasutajat, seda saab teha ainult haldur."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You have to order one and only one %s"
-msgstr ""
+msgstr "Te peate tellima ühe ja ainult ühe %s"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You should order at least one %s"
-msgstr ""
+msgstr "Te peaksite tellima vähemalt ühe %s"
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Account"
-msgstr ""
+msgstr "Teie konto"
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Cart ("
-msgstr ""
+msgstr "Teie ostukorv ("
 
 #. module: lunch
 #. openerp-web
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Order"
-msgstr ""
+msgstr "Teie tellimus"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
@@ -2241,11 +2395,13 @@ msgid ""
 "Your wallet does not contain enough money to order that. To add some money "
 "to your wallet, please contact your lunch manager."
 msgstr ""
+"Teie kontol ei ole piisavalt raha, et seda tellida. Kontole raha lisamiseks "
+"võtke palun ühendust oma halduriga."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "ZIP"
-msgstr "Indeks"
+msgstr "Postiindeks"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__zip_code
@@ -2255,41 +2411,41 @@ msgstr "Postiindeks"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "alert form"
-msgstr ""
+msgstr "hoiatusvorm"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_form
 msgid "cashmove form"
-msgstr ""
+msgstr "cashmove vorm"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_tree_2
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_tree
 msgid "cashmove tree"
-msgstr ""
+msgstr "cashmove tree"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "e.g. Order before 11am"
-msgstr ""
+msgstr "nt. tellimus enne kella 11:00"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "e.g. The Pizzeria Inn"
-msgstr ""
+msgstr "nt. Pizzeria Inn"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2
 msgid "lunch cashmove"
-msgstr ""
+msgstr "lõunasöögi cashmove"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_view_search
 msgid "lunch employee payment"
-msgstr ""
+msgstr "töötaja lõunasöögi tasu"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_kanban

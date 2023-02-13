@@ -134,15 +134,22 @@ class AccountEdiFormat(models.Model):
         if is_self_invoice and not buyer.partner_id.l10n_it_pa_index:
             errors.append(_("Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."))
 
-        # <2.2.1>
-        for invoice_line in invoice.invoice_line_ids:
-            if invoice_line.display_type not in ('line_note', 'line_section') and len(invoice_line.tax_ids) != 1:
-                errors.append(_("In line %s, you must select one and only one tax by line.", invoice_line.name))
-
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
                 errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
+        errors += self._l10n_it_edi_check_taxes_configuration(invoice)
+
+        return errors
+
+    def _l10n_it_edi_check_taxes_configuration(self, invoice):
+        """
+            Can be overridden by submodules like l10n_it_edi_withholding, which also allows for withholding and pension_fund taxes.
+        """
+        errors = []
+        for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
+            if len(invoice_line.tax_ids) != 1:
+                errors.append(_("In line %s, you must select one and only one tax.", invoice_line.name))
         return errors
 
     def _l10n_it_edi_is_simplified(self, invoice):
@@ -437,6 +444,29 @@ class AccountEdiFormat(models.Model):
             converted_date = False
         return converted_date
 
+    def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None):
+        """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
+            and matches the percentage found in the XML for the company. """
+        conditions = [
+            ('company_id', '=', company.id),
+            ('amount', '=', percentage),
+            ('amount_type', '=', 'percent'),
+            ('type_tax_use', '=', 'purchase'),
+        ] + (extra_domain or [])
+
+        # As we're importing vendor bills, we're excluding Reverse Charge Taxes
+        # which have a [100.0, 100.0, -100.0] repartition lines factor_percent distribution.
+        # We only allow for taxes that have all positive repartition lines factor_percent distribution.
+        taxes = self.env['account.tax'].search(conditions).filtered(
+            lambda tax: all([rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids]))
+
+        return taxes[0] if taxes else taxes
+
+    def _l10n_it_edi_get_extra_info(self, company, document_type, body_tree):
+        """ This function is meant to collect other information that has to be inserted on the invoice lines by submodules.
+            :return extra_info, messages_to_log"""
+        return {'simplified': self._l10n_it_is_simplified_document_type(document_type)}, []
+
     def _import_fattura_pa(self, tree, invoice):
         """ Decodes a fattura_pa invoice into an invoice.
 
@@ -484,18 +514,17 @@ class AccountEdiFormat(models.Model):
                 move_type = "in_invoice"
                 _logger.info('Document type not managed: %s. Invoice type is set by default.', document_type)
 
-            simplified = self._l10n_it_is_simplified_document_type(document_type)
-
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
                                  .with_context(default_move_type=move_type)
 
             # move could be a single record (editing) or be empty (new).
             with invoice_ctx._get_edi_creation() as invoice_form:
-                message_to_log = []
+
+                # Collect extra info from the XML that may be used by submodules to further put information on the invoice lines
+                extra_info, message_to_log = self._l10n_it_edi_get_extra_info(company, document_type, body_tree)
 
                 partner = self._l10n_it_get_partner_invoice(tree, company)
-
                 if partner:
                     invoice_form.partner_id = partner
                 else:
@@ -619,139 +648,15 @@ class AccountEdiFormat(models.Model):
                             invoice._compose_info_message(body_tree, './/DatiPagamento')))
 
                 # Invoice lines. <2.2.1>
-                if not simplified:
+                if not extra_info['simplified']:
                     elements = body_tree.xpath('.//DettaglioLinee')
                 else:
                     elements = body_tree.xpath('.//DatiBeniServizi')
 
-                if elements:
-                    for element in elements:
-                        invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
-                        if invoice_line_form:
-
-                            # Sequence.
-                            line_elements = element.xpath('.//NumeroLinea')
-                            if line_elements:
-                                invoice_line_form.sequence = int(line_elements[0].text)
-
-                            # Product.
-                            elements_code = element.xpath('.//CodiceArticolo')
-                            if elements_code:
-                                for element_code in elements_code:
-                                    type_code = element_code.xpath('.//CodiceTipo')[0]
-                                    code = element_code.xpath('.//CodiceValore')[0]
-                                    if type_code.text == 'EAN':
-                                        product = self.env['product.product'].search([('barcode', '=', code.text)])
-                                        if product:
-                                            invoice_line_form.product_id = product
-                                            break
-                                    if partner:
-                                        product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
-                                        if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
-                                            invoice_line_form.product_id = product_supplier.product_id
-                                            break
-                                if not invoice_line_form.product_id:
-                                    for element_code in elements_code:
-                                        code = element_code.xpath('.//CodiceValore')[0]
-                                        product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
-                                        if product and len(product) == 1:
-                                            invoice_line_form.product_id = product
-                                            break
-
-                            # Label.
-                            line_elements = element.xpath('.//Descrizione')
-                            if line_elements:
-                                invoice_line_form.name = " ".join(line_elements[0].text.split())
-
-                            # Quantity.
-                            line_elements = element.xpath('.//Quantita')
-                            if line_elements:
-                                invoice_line_form.quantity = float(line_elements[0].text)
-                            else:
-                                invoice_line_form.quantity = 1
-
-                            # Taxes
-                            percentage = None
-                            price_subtotal = 0
-                            if not simplified:
-                                tax_element = element.xpath('.//AliquotaIVA')
-                                if tax_element and tax_element[0].text:
-                                    percentage = float(tax_element[0].text)
-                            else:
-                                amount_element = element.xpath('.//Importo')
-                                if amount_element and amount_element[0].text:
-                                    amount = float(amount_element[0].text)
-                                    tax_element = element.xpath('.//Aliquota')
-                                    if tax_element and tax_element[0].text:
-                                        percentage = float(tax_element[0].text)
-                                        price_subtotal = amount / (1 + percentage / 100)
-                                    else:
-                                        tax_element = element.xpath('.//Imposta')
-                                        if tax_element and tax_element[0].text:
-                                            tax_amount = float(tax_element[0].text)
-                                            price_subtotal = amount - tax_amount
-                                            percentage = round(tax_amount / price_subtotal * 100)
-
-                            natura_element = element.xpath('.//Natura')
-                            invoice_line_form.tax_ids = []
-                            if percentage is not None:
-                                if natura_element and natura_element[0].text:
-                                    l10n_it_kind_exoneration = natura_element[0].text
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                        ('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration),
-                                    ], limit=1)
-                                else:
-                                    tax = self.env['account.tax'].search([
-                                        ('company_id', '=', invoice_form.company_id.id),
-                                        ('amount_type', '=', 'percent'),
-                                        ('type_tax_use', '=', 'purchase'),
-                                        ('amount', '=', percentage),
-                                    ], limit=1)
-                                    l10n_it_kind_exoneration = ''
-
-                                if tax:
-                                    invoice_line_form.tax_ids += tax
-                                else:
-                                    if l10n_it_kind_exoneration:
-                                        message_to_log.append(_("Tax not found with percentage: %s and exoneration %s for the article: %s") % (
-                                            percentage,
-                                            l10n_it_kind_exoneration,
-                                            invoice_line_form.name))
-                                    else:
-                                        message_to_log.append(_("Tax not found with percentage: %s for the article: %s") % (
-                                            percentage,
-                                            invoice_line_form.name))
-
-                            # Price Unit.
-                            if not simplified:
-                                line_elements = element.xpath('.//PrezzoUnitario')
-                                if line_elements:
-                                    invoice_line_form.price_unit = float(line_elements[0].text)
-                            else:
-                                invoice_line_form.price_unit = price_subtotal
-
-                            # Discounts
-                            discount_elements = element.xpath('.//ScontoMaggiorazione')
-                            if discount_elements:
-                                discount_element = discount_elements[0]
-                                discount_percentage = discount_element.xpath('.//Percentuale')
-                                # Special case of only 1 percentage discount
-                                if discount_percentage and len(discount_elements) == 1:
-                                    discount_type = discount_element.xpath('.//Tipo')
-                                    discount_sign = 1
-                                    if discount_type and discount_type[0].text == 'MG':
-                                        discount_sign = -1
-                                    invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
-                                # Discounts in cascade summarized in 1 percentage
-                                else:
-                                    total = float(element.xpath('.//PrezzoTotale')[0].text)
-                                    discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
-                                    invoice_line_form.discount = discount
-
+                for element in (elements or []):
+                    invoice_line_form = invoice_form.invoice_line_ids.create({'move_id': invoice_form.id})
+                    if invoice_line_form:
+                        message_to_log += self._import_fattura_pa_line(element, invoice_line_form, extra_info)
 
                 # Global discount summarized in 1 amount
                 discount_elements = body_tree.xpath('.//DatiGeneraliDocumento/ScontoMaggiorazione')
@@ -809,6 +714,120 @@ class AccountEdiFormat(models.Model):
 
         return invoices
 
+    def _import_fattura_pa_line(self, element, invoice_line_form, extra_info=None):
+        extra_info = extra_info or {}
+        company = invoice_line_form.company_id
+        partner = invoice_line_form.partner_id
+        message_to_log = []
+
+        # Sequence.
+        line_elements = element.xpath('.//NumeroLinea')
+        if line_elements:
+            invoice_line_form.sequence = int(line_elements[0].text)
+
+        # Product.
+        elements_code = element.xpath('.//CodiceArticolo')
+        if elements_code:
+            for element_code in elements_code:
+                type_code = element_code.xpath('.//CodiceTipo')[0]
+                code = element_code.xpath('.//CodiceValore')[0]
+                if type_code.text == 'EAN':
+                    product = self.env['product.product'].search([('barcode', '=', code.text)])
+                    if product:
+                        invoice_line_form.product_id = product
+                        break
+                if partner:
+                    product_supplier = self.env['product.supplierinfo'].search([('partner_id', '=', partner.id), ('product_code', '=', code.text)], limit=2)
+                    if product_supplier and len(product_supplier) == 1 and product_supplier.product_id:
+                        invoice_line_form.product_id = product_supplier.product_id
+                        break
+            if not invoice_line_form.product_id:
+                for element_code in elements_code:
+                    code = element_code.xpath('.//CodiceValore')[0]
+                    product = self.env['product.product'].search([('default_code', '=', code.text)], limit=2)
+                    if product and len(product) == 1:
+                        invoice_line_form.product_id = product
+                        break
+
+        # Label.
+        line_elements = element.xpath('.//Descrizione')
+        if line_elements:
+            invoice_line_form.name = " ".join(line_elements[0].text.split())
+
+        # Quantity.
+        line_elements = element.xpath('.//Quantita')
+        if line_elements:
+            invoice_line_form.quantity = float(line_elements[0].text)
+        else:
+            invoice_line_form.quantity = 1
+
+        # Taxes
+        percentage = None
+        price_subtotal = 0
+        if not extra_info['simplified']:
+            tax_element = element.xpath('.//AliquotaIVA')
+            if tax_element and tax_element[0].text:
+                percentage = float(tax_element[0].text)
+        else:
+            amount_element = element.xpath('.//Importo')
+            if amount_element and amount_element[0].text:
+                amount = float(amount_element[0].text)
+                tax_element = element.xpath('.//Aliquota')
+                if tax_element and tax_element[0].text:
+                    percentage = float(tax_element[0].text)
+                    price_subtotal = amount / (1 + percentage / 100)
+                else:
+                    tax_element = element.xpath('.//Imposta')
+                    if tax_element and tax_element[0].text:
+                        tax_amount = float(tax_element[0].text)
+                        price_subtotal = amount - tax_amount
+                        percentage = round(tax_amount / price_subtotal * 100)
+
+        natura_element = element.xpath('.//Natura')
+        invoice_line_form.tax_ids = []
+        if percentage is not None:
+            l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
+            conditions = (
+                l10n_it_kind_exoneration and [('l10n_it_kind_exoneration', '=', l10n_it_kind_exoneration)]
+                or [('l10n_it_has_exoneration', '=', False)]
+            )
+            tax = self._l10n_it_edi_search_tax_for_import(company, percentage, conditions)
+            if tax:
+                invoice_line_form.tax_ids += tax
+            else:
+                message_to_log.append("%s<br/>%s" % (
+                    _("Tax not found for line with description '%s'", invoice_line_form.name),
+                    self.env['account.move']._compose_info_message(element, '.'),
+                ))
+
+        # Price Unit.
+        if not extra_info['simplified']:
+            line_elements = element.xpath('.//PrezzoUnitario')
+            if line_elements:
+                invoice_line_form.price_unit = float(line_elements[0].text)
+        else:
+            invoice_line_form.price_unit = price_subtotal
+
+        # Discounts
+        discount_elements = element.xpath('.//ScontoMaggiorazione')
+        if discount_elements:
+            discount_element = discount_elements[0]
+            discount_percentage = discount_element.xpath('.//Percentuale')
+            # Special case of only 1 percentage discount
+            if discount_percentage and len(discount_elements) == 1:
+                discount_type = discount_element.xpath('.//Tipo')
+                discount_sign = 1
+                if discount_type and discount_type[0].text == 'MG':
+                    discount_sign = -1
+                invoice_line_form.discount = discount_sign * float(discount_percentage[0].text)
+            # Discounts in cascade summarized in 1 percentage
+            else:
+                total = float(element.xpath('.//PrezzoTotale')[0].text)
+                discount = 100 - (100 * total) / (invoice_line_form.quantity * invoice_line_form.price_unit)
+                invoice_line_form.discount = discount
+
+        return message_to_log
+
     # -------------------------------------------------------------------------
     # Export
     # -------------------------------------------------------------------------
@@ -817,8 +836,9 @@ class AccountEdiFormat(models.Model):
         self.ensure_one()
         if self.code != 'fattura_pa':
             return super()._prepare_invoice_report(pdf_writer, edi_document)
-        if edi_document.attachment_id:
-            pdf_writer.embed_odoo_attachment(edi_document.attachment_id)
+        attachment = edi_document.sudo().attachment_id
+        if attachment:
+            pdf_writer.embed_odoo_attachment(attachment)
 
     def _is_compatible_with_journal(self, journal):
         # OVERRIDE

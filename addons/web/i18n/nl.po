@@ -6,14 +6,14 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
@@ -481,13 +481,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "ALLE"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr "ALT"
 
 #. module: web
 #. odoo-javascript
@@ -2133,7 +2126,7 @@ msgstr "Dupliceren"
 #: code:addons/web/static/src/views/kanban/kanban_record_quick_create.xml:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: web
 #. odoo-javascript
@@ -2147,7 +2140,7 @@ msgstr "Actie bewerken"
 #: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
 #, python-format
 msgid "Edit Column"
-msgstr "Kolom wijzigen"
+msgstr "Kolom bewerken"
 
 #. module: web
 #. odoo-javascript
@@ -4976,7 +4969,7 @@ msgstr "Deel met alle gebruikers"
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5076,14 +5069,14 @@ msgstr "Status"
 #: code:addons/web/static/src/webclient/settings_form_view/settings_confirmation_dialog.xml:0
 #, python-format
 msgid "Stay Here"
-msgstr "Blijf hier"
+msgstr "Hier blijven"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr "Blijf hier"
+msgstr "Hier blijven"
 
 #. module: web
 #. odoo-javascript
@@ -5194,11 +5187,13 @@ msgstr "Tekst"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Het BTW nummer. Vul het in als het contact BTW moet betalen. Wordt gebruikt "
-"in sommige rapportages"
+"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"belastingplichtig is."
 
 #. module: web
 #. odoo-python
@@ -6275,13 +6270,6 @@ msgstr "downloaden..."
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "Bijv. Global Business Solutions"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr "expandText"
 
 #. module: web
 #. odoo-javascript

@@ -517,6 +517,24 @@ QUnit.test('post message on draft record', async function (assert) {
     );
 });
 
+QUnit.test('schedule activities on draft record should prompt with scheduling an activity (proceed with action)', async function (assert) {
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                </div>
+            </form>`,
+    };
+    const { click, openView } = await start({ serverData: { views } });
+    await openView({ res_model: 'res.partner', views: [[false, 'form']] });
+    await click('.o_ChatterTopbar_buttonScheduleActivity');
+    assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)")
+});
+
 QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
     assert.expect(3);
 

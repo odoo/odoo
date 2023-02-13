@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -865,11 +865,6 @@ msgid "<strong>Original note:</strong>"
 msgstr "<strong>Originele notitie:</strong>"
 
 #. module: mail
-#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
-msgid "<strong>Recommended Activities</strong>"
-msgstr "<strong>Aanbevolen activiteiten</strong>"
-
-#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
@@ -1460,8 +1455,8 @@ msgid "Animals & Nature"
 msgstr "Dieren & natuur"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -3346,12 +3341,12 @@ msgstr "Intensiteit van randvervaging"
 #: code:addons/mail/static/src/models/message_action_view.js:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr "Relaties wijzigen"
+msgstr "Relaties bewerken"
 
 #. module: mail
 #. odoo-javascript
@@ -5738,14 +5733,12 @@ msgstr "E-mailsjabloon met deze e-mailserver"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
-#: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
 msgstr "Mail: E-mail wachtrij manager"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_mail_gateway_action_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_mail_gateway_action
-#: model:ir.cron,name:mail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
 msgstr "Mail: Fetchmail-service"
 
@@ -6618,14 +6611,12 @@ msgstr "Soort notificatie"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_delete_notification
-#: model:ir.cron,name:mail.ir_cron_delete_notification
 msgid "Notification: Delete Notifications older than 6 Month"
 msgstr "Melding: verwijder notificaties ouder dan 6 maanden"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_send_scheduled_message_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_send_scheduled_message
-#: model:ir.cron,name:mail.ir_cron_send_scheduled_message
 msgid "Notification: Send scheduled message notifications"
 msgstr "Melding: Stuur geplande berichtmeldingen"
 
@@ -6978,6 +6969,13 @@ msgstr "Conferentie openen: %s"
 #, python-format
 msgid "Open in Discuss"
 msgstr "Openen in Chat"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/message_view.js:0
+#, python-format
+msgid "Open profile"
+msgstr "Open profiel"
 
 #. module: mail
 #. odoo-python
@@ -7541,7 +7539,6 @@ msgstr "Publisher Warranty Contract"
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
-#: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
 msgstr "Publisher: Melding bijwerken"
 
@@ -7720,6 +7717,11 @@ msgstr "Naam ontvanger"
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
 msgid "Recipients"
 msgstr "Ontvangers"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
+msgid "Recommended Activities"
+msgstr "Geadviseerde activiteiten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__recommended_activity_type_id
@@ -9137,11 +9139,13 @@ msgstr "De modus Volledig scherm is geweigerd door de browser"
 #: model:ir.model.fields,help:mail.field_res_partner__vat
 #: model:ir.model.fields,help:mail.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Het btw nummer. Vul het in als het contact btw moet betalen. Wordt gebruikt "
-"in sommige rapportages."
+"Het BTW-nummer. Waarden hier worden gevalideerd op basis van het "
+"landformaat. Je kunt '/' gebruiken om aan te geven dat de relatie niet "
+"belastingplichtig is."
 
 #. module: mail
 #. odoo-javascript
@@ -16431,8 +16435,8 @@ msgid "doctor"
 msgstr "dokter"
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0

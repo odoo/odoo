@@ -6,7 +6,7 @@
 """
 from collections import defaultdict, deque
 from collections.abc import Mapping
-from contextlib import closing, contextmanager, suppress
+from contextlib import closing, contextmanager
 from functools import partial
 from operator import attrgetter
 import logging
@@ -22,9 +22,8 @@ from odoo.modules.db import FunctionStatus
 from odoo.osv.expression import get_unaccent_wrapper
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, sql,
-                        Collector, OrderedSet)
+from odoo.tools import (config, existing_tables, lazy_classproperty,
+                        lazy_property, sql, Collector, OrderedSet)
 from odoo.tools.func import locked
 from odoo.tools.lru import LRU
 
@@ -114,6 +113,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
+        self._database_translated_fields = ()  # names of translated fields in database
         self._assertion_report = odoo.tests.runner.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
@@ -140,6 +140,10 @@ class Registry(Mapping):
         self.field_depends = Collector()
         self.field_depends_context = Collector()
         self.field_inverses = Collector()
+
+        # cache of methods get_field_trigger_tree() and is_modifying_relations()
+        self._field_trigger_trees = {}
+        self._is_modifying_relations = {}
 
         # Inter-process signaling:
         # The `base_registry_signaling` sequence indicates the whole registry
@@ -232,6 +236,8 @@ class Registry(Mapping):
         self.__cache.clear()
 
         lazy_property.reset_all(self)
+        self._field_trigger_trees.clear()
+        self._is_modifying_relations.clear()
 
         # Instantiate registered classes (via the MetaModel automatic discovery
         # or via explicit constructor call), and add them to the pool.
@@ -260,6 +266,8 @@ class Registry(Mapping):
         self.__cache.clear()
 
         lazy_property.reset_all(self)
+        self._field_trigger_trees.clear()
+        self._is_modifying_relations.clear()
         self.registry_invalidated = True
 
         # we must setup ir.model before adding manual fields because _add_manual_models may
@@ -325,71 +333,131 @@ class Registry(Mapping):
                                     model_name, ", ".join(field.name for field in fields))
         return computed
 
-    @lazy_property
-    def field_triggers(self):
-        # determine field dependencies
-        dependencies = {}
-        for Model in self.models.values():
-            if Model._abstract:
-                continue
-            for field in Model._fields.values():
-                # dependencies of custom fields may not exist; ignore that case
-                exceptions = (Exception,) if field.base_field.manual else ()
-                with suppress(*exceptions):
-                    dependencies[field] = OrderedSet(field.resolve_depends(self))
+    def get_trigger_tree(self, fields: list, select=bool) -> "TriggerTree":
+        """ Return the trigger tree to traverse when ``fields`` have been modified.
+        The function ``select`` is called on every field to determine which fields
+        should be kept in the tree nodes.  This enables to discard some unnecessary
+        fields from the tree nodes.
+        """
+        trees = [
+            self.get_field_trigger_tree(field)
+            for field in fields
+            if field in self._field_triggers
+        ]
+        return TriggerTree.merge(trees, select)
 
-        # determine transitive dependencies
-        def transitive_dependencies(field, seen=[]):
-            if field in seen:
+    def get_dependent_fields(self, field):
+        """ Return an iterable on the fields that depend on ``field``. """
+        if field not in self._field_triggers:
+            return ()
+
+        return (
+            dependent
+            for tree in self.get_field_trigger_tree(field).depth_first()
+            for dependent in tree.root
+        )
+
+    def _discard_fields(self, fields: list):
+        """ Discard the given fields from the registry's internal data structures. """
+
+        # discard fields from field triggers
+        self.__dict__.pop('_field_triggers', None)
+        self._field_trigger_trees.clear()
+        self._is_modifying_relations.clear()
+
+        # discard fields from field inverses
+        self.field_inverses.discard_keys_and_values(fields)
+
+    def get_field_trigger_tree(self, field) -> "TriggerTree":
+        """ Return the trigger tree of a field by computing it from the transitive
+        closure of field triggers.
+        """
+        try:
+            return self._field_trigger_trees[field]
+        except KeyError:
+            pass
+
+        triggers = self._field_triggers
+
+        if field not in triggers:
+            return TriggerTree()
+
+        def transitive_triggers(field, prefix=(), seen=()):
+            if field in seen or field not in triggers:
                 return
-            for seq1 in dependencies.get(field, ()):
-                yield seq1
-                for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
-                    yield concat(seq1[:-1], seq2)
+            for path, targets in triggers[field].items():
+                full_path = concat(prefix, path)
+                yield full_path, targets
+                for target in targets:
+                    yield from transitive_triggers(target, full_path, seen + (field,))
 
         def concat(seq1, seq2):
             if seq1 and seq2:
                 f1, f2 = seq1[-1], seq2[0]
-                if f1.type == 'one2many' and f2.type == 'many2one' and \
-                        f1.model_name == f2.comodel_name and f1.inverse_name == f2.name:
+                if (
+                    f1.type == 'many2one' and f2.type == 'one2many'
+                    and f1.name == f2.inverse_name
+                    and f1.model_name == f2.comodel_name
+                    and f1.comodel_name == f2.model_name
+                ):
                     return concat(seq1[:-1], seq2[1:])
             return seq1 + seq2
 
-        # determine triggers based on transitive dependencies
-        triggers = {}
-        for field in dependencies:
-            for path in transitive_dependencies(field):
-                if path:
-                    tree = triggers
-                    for label in reversed(path):
-                        tree = tree.setdefault(label, {})
-                    tree.setdefault(None, OrderedSet()).add(field)
+        tree = TriggerTree()
+        for path, targets in transitive_triggers(field):
+            current = tree
+            for label in path:
+                current = current.increase(label)
+            if current.root:
+                current.root.update(targets)
+            else:
+                current.root = OrderedSet(targets)
+
+        self._field_trigger_trees[field] = tree
+
+        return tree
+
+    @lazy_property
+    def _field_triggers(self):
+        """ Return the field triggers, i.e., the inverse of field dependencies,
+        as a dictionary like ``{field: {path: fields}}``, where ``field`` is a
+        dependency, ``path`` is a sequence of fields to inverse and ``fields``
+        is a collection of fields that depend on ``field``.
+        """
+        triggers = defaultdict(lambda: defaultdict(OrderedSet))
+
+        for Model in self.models.values():
+            if Model._abstract:
+                continue
+            for field in Model._fields.values():
+                try:
+                    dependencies = list(field.resolve_depends(self))
+                except Exception:
+                    # dependencies of custom fields may not exist; ignore that case
+                    if not field.base_field.manual:
+                        raise
+                else:
+                    for dependency in dependencies:
+                        *path, dep_field = dependency
+                        triggers[dep_field][tuple(reversed(path))].add(field)
 
         return triggers
 
-    @lazy_property
-    def fields_modifying_relations(self):
-        '''
-        Return the union of the set of relational fields that are dependencies
-        of other fields, with the set of non-relational fields that are
-        dependencies of relational fields.
-        '''
-        result = set()
-
-        for field in self.field_triggers:
-            # If the field is itself a relational field, it is also considered
-            # as triggering relational fields.
-            if field.relational or self.field_inverses[field]:
-                result.add(field)
-                continue
-
-            Model = self.models[field.model_name]
-            for dep in Model._dependent_fields(field):
-                if dep.relational or self.field_inverses[dep]:
-                    result.add(field)
-                    break
-
-        return result
+    def is_modifying_relations(self, field):
+        """ Return whether ``field`` has dependent fields on some records, and
+        that modifying ``field`` might change the dependent records.
+        """
+        try:
+            return self._is_modifying_relations[field]
+        except KeyError:
+            result = field in self._field_triggers and (
+                field.relational or self.field_inverses[field] or any(
+                    dep.relational or self.field_inverses[dep]
+                    for dep in self.get_dependent_fields(field)
+                )
+            )
+            self._is_modifying_relations[field] = result
+            return result
 
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
@@ -789,3 +857,70 @@ class DummyRLock(object):
         self.acquire()
     def __exit__(self, type, value, traceback):
         self.release()
+
+
+class TriggerTree(dict):
+    """ The triggers of a field F is a tree that contains the fields that
+    depend on F, together with the fields to inverse to find out which records
+    to recompute.
+
+    For instance, assume that G depends on F, H depends on X.F, I depends on
+    W.X.F, and J depends on Y.F. The triggers of F will be the tree:
+
+                                 [G]
+                               X/   \\Y
+                             [H]     [J]
+                           W/
+                         [I]
+
+    This tree provides perfect support for the trigger mechanism:
+    when F is # modified on records,
+     - mark G to recompute on records,
+     - mark H to recompute on inverse(X, records),
+     - mark I to recompute on inverse(W, inverse(X, records)),
+     - mark J to recompute on inverse(Y, records).
+    """
+    __slots__ = ['root']
+
+    # pylint: disable=keyword-arg-before-vararg
+    def __init__(self, root=(), *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.root = root
+
+    def __bool__(self):
+        return bool(self.root or len(self))
+
+    def increase(self, key):
+        try:
+            return self[key]
+        except KeyError:
+            subtree = self[key] = TriggerTree()
+            return subtree
+
+    def depth_first(self):
+        yield self
+        for subtree in self.values():
+            yield from subtree.depth_first()
+
+    @classmethod
+    def merge(cls, trees: list, select=bool) -> "TriggerTree":
+        """ Merge trigger trees into a single tree. The function ``select`` is
+        called on every field to determine which fields should be kept in the
+        tree nodes. This enables to discard some fields from the tree nodes.
+        """
+        root_fields = OrderedSet()              # fields in the root node
+        subtrees_to_merge = defaultdict(list)   # subtrees to merge grouped by key
+
+        for tree in trees:
+            root_fields.update(tree.root)
+            for label, subtree in tree.items():
+                subtrees_to_merge[label].append(subtree)
+
+        # the root node contains the collected fields for which select is true
+        result = cls([field for field in root_fields if select(field)])
+        for label, subtrees in subtrees_to_merge.items():
+            subtree = cls.merge(subtrees, select)
+            if subtree:
+                result[label] = subtree
+
+        return result

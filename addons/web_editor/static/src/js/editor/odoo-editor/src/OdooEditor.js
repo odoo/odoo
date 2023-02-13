@@ -323,6 +323,9 @@ export class OdooEditor extends EventTarget {
         this.idSet(editable);
         this._historyStepsActive = true;
         this.historyReset();
+        if (this.options.initialHistoryId) {
+            this.historySetInitialId(this.options.initialHistoryId);
+        }
 
         this._pluginCall('sanitizeElement', [editable]);
 
@@ -710,6 +713,19 @@ export class OdooEditor extends EventTarget {
             return false;
         }
 
+        // If the common ancestor is in a nested list, make sure to sanitize
+        // that list's parent <li> instead, so there is enough context to
+        // potentially merge sibling nested lists
+        // (eg, <ol>
+        //          <li class="oe-nested"><ul>...</ul></li>
+        //          <li class="oe-nested"><ul>...</ul></li>
+        //      </ol>: these two lists should be merged together so the common
+        // ancestor should be the <ol> element).
+        const nestedListAncestor = closestElement(commonAncestor, '.oe-nested');
+        if (nestedListAncestor && nestedListAncestor.parentElement) {
+            commonAncestor = nestedListAncestor.parentElement;
+        }
+
         // sanitize and mark current position as sanitized
         sanitize(commonAncestor);
         this._pluginCall('sanitizeElement', [commonAncestor]);
@@ -966,13 +982,37 @@ export class OdooEditor extends EventTarget {
         this._firstStepId = firstStep.id;
         this._historySnapshots = [{ step: firstStep }];
         this._historySteps.push(firstStep);
+        // The historyIds carry the ids of the steps that were dropped when
+        // doing a snapshot.
+        // Those historyIds are used to compare if the last step saved in the
+        // server is present in the current historySteps or historyIds to
+        // ensure it is the same history branch.
+        this._historyIds = [];
+    }
+    /**
+     * Set the initial document history id.
+     *
+     * To prevent a saving a document with a diverging history, we store the
+     * last history id in the first node of the document to the database.
+     * This method provide the initial document history id to the editor.
+     */
+    historySetInitialId(id) {
+        this._historyIds.unshift(id);
+    }
+    /**
+     * Get all the history ids for the current history branch.
+     *
+     * See `_historyIds` in `historyReset`.
+     */
+    historyGetBranchIds() {
+        return this._historyIds.concat(this._historySteps.map(s => s.id));
     }
     historyGetSnapshotSteps() {
         // If the current snapshot has no time, it means that there is the no
         // other snapshot that have been made (either it is the one created upon
         // initialization or reseted by historyResetFromSteps).
         if (!this._historySnapshots[0].time) {
-            return this._historySteps;
+            return { steps: this._historySteps, historyIds: this.historyGetBranchIds() };
         }
         const steps = [];
         let snapshot;
@@ -991,9 +1031,10 @@ export class OdooEditor extends EventTarget {
         steps.push(snapshot.step);
         steps.reverse();
 
-        return steps;
+        return { steps, historyIds: this.historyGetBranchIds() };
     }
-    historyResetFromSteps(steps) {
+    historyResetFromSteps(steps, historyIds) {
+        this._historyIds = historyIds;
         this.observerUnactive();
         for (const node of [...this.editable.childNodes]) {
             node.remove();
@@ -2203,7 +2244,7 @@ export class OdooEditor extends EventTarget {
     _handleSelectionInTable(ev=undefined) {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+        if (anchorNode && (closestElement(anchorNode, '[data-oe-protected="true"]') || !ancestors(anchorNode).includes(this.editable))) {
             return false;
         }
         this.deselectTable();
@@ -3268,7 +3309,9 @@ export class OdooEditor extends EventTarget {
 
     _onClipboardCut(clipboardEvent) {
         this._onClipboardCopy(clipboardEvent);
+        this._recordHistorySelection();
         this.deleteRange();
+        this.historyStep();
     }
     _onClipboardCopy(clipboardEvent) {
         if (!this.isSelectionInEditable()) {

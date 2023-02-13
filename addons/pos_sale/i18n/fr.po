@@ -26,14 +26,14 @@ msgstr ""
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderRow.xml:0
 #, python-format
 msgid "(left:"
-msgstr "(gauche:"
+msgstr "(gauche :"
 
 #. module: pos_sale
 #. openerp-web
 #: code:addons/pos_sale/static/src/xml/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "(tax incl.)"
-msgstr "TTC"
+msgstr "(toutes taxes comprises)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -43,7 +43,7 @@ msgstr "<span class=\"o_form_label\">Produit d'acompte</span>"
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Sales Team</span>"
-msgstr "<span class=\"o_form_label\">Équipe de vente</span>"
+msgstr "<span class=\"o_form_label\">Équipe commerciale</span>"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.report_invoice_document
@@ -88,7 +88,7 @@ msgstr "Impossible d'accéder à l'écran de gestion de commandes si hors ligne.
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order__currency_rate
@@ -154,7 +154,7 @@ msgstr "Produit d'acompte"
 #: code:addons/pos_sale/static/src/xml/OrderManagementScreen/SaleOrderManagementControlPanel.xml:0
 #, python-format
 msgid "E.g. customer: Steward, date: 2020-05-09"
-msgstr "Ex : Steward, 2020-05-09"
+msgstr "par ex. client : Steward, date : 2020-05-09"
 
 #. module: pos_sale
 #. openerp-web
@@ -177,7 +177,7 @@ msgid ""
 "It seems that you didn't configure a down payment product in your point of sale.\n"
 "                        You can go to your point of sale configuration to choose one."
 msgstr ""
-"Il semble que vous n'avez pas configurer de produit d'acompte dans votre point de vente.\n"
+"Il semble que vous n'ayez pas configuré de produit d'acompte dans votre point de vente.\n"
 "Allez aux paramètres de votre point de vente pour en choisir un."
 
 #. module: pos_sale
@@ -243,12 +243,12 @@ msgstr "Aucun produit d'acompte"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_sessions_open_count
 msgid "Open POS Sessions"
-msgstr "Ouvrir une session du PDV"
+msgstr "Sessions PdV ouvertes"
 
 #. module: pos_sale
 #: model:ir.actions.act_window,name:pos_sale.pos_session_action_from_crm_team
 msgid "Open Sessions"
-msgstr "Ouvrir les sessions"
+msgstr "Sessions ouvertes"
 
 #. module: pos_sale
 #. openerp-web
@@ -279,7 +279,7 @@ msgstr "Pourcentage de %s"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_config
 msgid "Point of Sale Configuration"
-msgstr "Paramétrage du point de vente"
+msgstr "Configuration du point de vente"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_pos_order_line
@@ -304,7 +304,7 @@ msgstr "Point de vente"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__pos_order_count
 msgid "Pos Order Count"
-msgstr "Décompte des commandes du PdV"
+msgstr "Nombre de commandes du PdV"
 
 #. module: pos_sale
 #: model:ir.model.fields.selection,name:pos_sale.selection__sale_report__state__pos_done
@@ -345,7 +345,7 @@ msgstr "Devis envoyé"
 #: code:addons/pos_sale/static/src/xml/SetSaleOrderButton.xml:0
 #, python-format
 msgid "Quotation/Order"
-msgstr "Devis / Commandes"
+msgstr "Devis/Commande"
 
 #. module: pos_sale
 #. openerp-web
@@ -388,7 +388,7 @@ msgstr "Commande"
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Ligne de Commande"
+msgstr "Ligne du bon de commande"
 
 #. module: pos_sale
 #: model:ir.model,name:pos_sale.model_crm_team
@@ -401,12 +401,12 @@ msgstr "Équipe commerciale"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "Sales Team (PoS)"
-msgstr "Équipe commerciale"
+msgstr "Équipe commerciale (PdV)"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
 msgid "Sales are reported to the following sales team"
-msgstr "Les ventes sont liées à l'équipe de vente suivante"
+msgstr "Les ventes sont liées à l'équipe commerciale suivante"
 
 #. module: pos_sale
 #. openerp-web
@@ -430,7 +430,7 @@ msgstr "Session en cours"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_crm_team__pos_order_amount_total
 msgid "Session Sale Amount"
-msgstr "Session Sale Amount"
+msgstr "Montant de la vente de la session"
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.crm_team_view_kanban_dashboard
@@ -460,8 +460,8 @@ msgid ""
 "Some of the products in your Sale Order are not available in POS, do you "
 "want to import them?"
 msgstr ""
-"Des produits de votre bon de commande ne sont pas disponible dans le PdV, "
-"souhaitez-vous les importer ?"
+"Certains produits de votre bon de commande ne sont pas disponible dans le "
+"PdV, souhaitez-vous les importer ?"
 
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_pos_order_line__sale_order_line_id
@@ -479,12 +479,12 @@ msgstr "État"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_report__state
 msgid "Status"
-msgstr "État"
+msgstr "Statut"
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_sale_order__amount_unpaid
 msgid "The amount due from the sale order."
-msgstr "Le montant dû du bon de commande"
+msgstr "Le montant dû du bon de commande."
 
 #. module: pos_sale
 #: model:ir.model.fields,help:pos_sale.field_pos_order__currency_rate
@@ -508,7 +508,7 @@ msgstr "Un problème est survenu lors du chargement du %s client."
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_crm_team_id
 msgid "This Point of sale's sales will be related to this Sales Team."
 msgstr ""
-"Les ventes du Point de Vente seront relatives à cette équipe commerciale."
+"Les ventes du Point de Vente seront associées à cette équipe commerciale."
 
 #. module: pos_sale
 #: model_terms:ir.ui.view,arch_db:pos_sale.res_config_settings_view_form
@@ -519,7 +519,7 @@ msgstr "Ce produit sera appliqué à la création d'un acompte"
 #: model:ir.model.fields,help:pos_sale.field_pos_config__down_payment_product_id
 #: model:ir.model.fields,help:pos_sale.field_res_config_settings__pos_down_payment_product_id
 msgid "This product will be used as down payment on a sale order."
-msgstr "Ce produit sera utilisé comme acompte sur une commande"
+msgstr "Ce produit sera utilisé comme acompte sur une commande."
 
 #. module: pos_sale
 #. openerp-web
@@ -563,7 +563,7 @@ msgstr "Unité(s)"
 #. module: pos_sale
 #: model:ir.model.fields,field_description:pos_sale.field_sale_order__amount_unpaid
 msgid "Unpaid Amount"
-msgstr "Montant non réglé"
+msgstr "Montant impayé"
 
 #. module: pos_sale
 #. openerp-web

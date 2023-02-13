@@ -13,18 +13,18 @@
 # Marcelo Pereira <marcelo.pereira@arxi.pt>, 2022
 # Pedro Castro Silva <pedrocs@exo.pt>, 2022
 # Nuno Silva <nuno.silva@arxi.pt>, 2022
-# Manuela Silva <mmsrs@sky.com>, 2022
 # Martin Trigaux, 2022
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Manuela Silva <mmsrs@sky.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Manuela Silva <mmsrs@sky.com>, 2023\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -328,7 +328,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Enviar um documento</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -388,14 +388,30 @@ msgstr "<span>Documento</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
-msgid "<span>Process Checkout</span>"
-msgstr "<span>Processar Pagamento</span>"
+msgid ""
+"<span>Proceed to Checkout</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid ""
 "<span>Process Checkout</span>\n"
-"                                                <span class=\"fa fa-chevron-right\"/>"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.cart
+msgid ""
+"<span>Sign In</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
+msgid ""
+"<span>Sign In</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
 msgstr ""
 
 #. module: website_sale
@@ -3515,6 +3531,7 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_normal_website_form_view
+#: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
 msgid "Specify unit"
 msgstr ""
@@ -3918,7 +3935,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Upload a file from your local library."
-msgstr ""
+msgstr "Envie um ficheiro da sua biblioteca local."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form

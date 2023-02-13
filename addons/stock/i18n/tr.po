@@ -30,15 +30,15 @@
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2022\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -288,6 +288,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -1116,7 +1117,7 @@ msgstr "Mümkün olduğunca kısa sürede"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__create_backorder__ask
 msgid "Ask"
-msgstr ""
+msgstr "Sor"
 
 #. module: stock
 #. odoo-javascript
@@ -1616,7 +1617,7 @@ msgstr "Satırları Temizle"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Clear quantities"
-msgstr ""
+msgstr "Miktarları temizleyin"
 
 #. module: stock
 #. odoo-javascript
@@ -3253,6 +3254,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Depoları görüntülerken bu satırın sırasını verir."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3804,6 +3812,7 @@ msgid "Invalid domain right operand %s"
 msgstr "Geçersiz domain operatörü %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -5013,7 +5022,7 @@ msgstr "İzleme Yok"
 #: model_terms:ir.ui.view,arch_db:stock.report_reception_body
 #, python-format
 msgid "No allocation need found."
-msgstr ""
+msgstr "Tahsis ihtiyacı bulunamadı."
 
 #. module: stock
 #. odoo-python
@@ -5084,7 +5093,7 @@ msgstr "Stok hareketi bulunamadı"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_product_stock_view
 msgid "No stock to show"
-msgstr ""
+msgstr "Gösterilecek stok yok"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -6048,7 +6057,6 @@ msgstr "Ürün Kategorileri"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Ürün Kategorisi"
@@ -7264,7 +7272,7 @@ msgstr "Hurda Arama"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.replenishment_option_tree_view
 msgid "Select Route"
-msgstr ""
+msgstr "Rota Seç"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
@@ -8581,6 +8589,15 @@ msgstr ""
 "arşivleyip tekrar yeni bir ürün olarak oluşturmak daha iyi bir çözümdür."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9787,6 +9804,13 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You cannot change the Scheduled Date on a done or cancelled transfer."
@@ -10289,10 +10313,3 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr ""

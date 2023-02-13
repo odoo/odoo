@@ -2,6 +2,7 @@ import {
     BasicEditor,
     testEditor,
     triggerEvent,
+    undo,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -120,6 +121,33 @@ describe('Cut', () => {
                     window.chai.expect(clipboardData.getData('text/odoo-editor')).to.be.equal('abc<br>efg');
                 },
                 contentAfter: '<p>[]<br></p>',
+            });
+        });
+        it('should cut selection and register it as a history step', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[bcd]e</p>',
+                stepFunction: async editor => {
+                    const historyStepsCount = editor._historySteps.length;
+                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    window.chai.expect(editor._historySteps.length).to.be.equal(historyStepsCount + 1);
+                    undo(editor);
+                },
+                contentAfter: '<p>a[bcd]e</p>',
+            });
+        });
+        it('should not restore cut content when cut followed by delete forward', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>a[]bcde</p>',
+                stepFunction: async editor => {
+                    // Set selection to a[bcd]e.
+                    const selection = editor.document.getSelection();
+                    selection.extend(selection.anchorNode, 4);
+                    triggerEvent(editor.editable, 'cut', { clipboardData: new DataTransfer() });
+                    triggerEvent(editor.editable, 'input', {
+                        inputType: 'deleteContentForward'
+                    });
+                },
+                contentAfter: '<p>a[]</p>',
             });
         });
     });

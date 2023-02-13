@@ -11,20 +11,21 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # CristianCruzParra, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # Jonatan Gk, 2022
 # Cristian Cruz, 2022
 # Farouk Jabiri, 2022
 # Ivan Espinola, 2022
 # marcescu, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: marcescu, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,6 +34,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -53,6 +55,7 @@ msgstr ""
 "            "
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
@@ -74,11 +77,25 @@ msgstr ""
 "- Moviments d'estoc: La quantitat prové de recollides confirmades\n"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
 msgstr "S'han carregat tots els elements"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Delivered Quantity (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Milestones"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -108,7 +125,7 @@ msgid "Customer"
 msgstr "Client"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Delivered"
@@ -122,7 +139,7 @@ msgstr "Descripció"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr "Mostra l'ordre de vendes"
+msgstr "Mostrar la comanda de venda"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
@@ -155,12 +172,14 @@ msgid "Invoice Count"
 msgstr "Comptador de factures"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "Facturi les quantitats demanades quan es vengui aquest servei."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -173,6 +192,7 @@ msgstr ""
 "vendes per a fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -183,6 +203,7 @@ msgstr ""
 "una tasca en un projecte existent per a fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -193,6 +214,7 @@ msgstr ""
 "un projecte buit per a la comanda per a fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -203,6 +225,7 @@ msgstr ""
 "línies de comandes de vendes)."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -216,6 +239,7 @@ msgstr ""
 "temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -228,6 +252,7 @@ msgstr ""
 " fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -240,12 +265,14 @@ msgstr ""
 "fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
 msgstr "Factura les fites quan s'arribi a elles."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -257,6 +284,7 @@ msgstr ""
 "del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -267,6 +295,7 @@ msgstr ""
 "existent per a fer un seguiment del temps dedicat."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -282,13 +311,14 @@ msgid "Invoice your time and material to customers"
 msgstr "Factura el teu temps i material als clients"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Invoiced"
 msgstr "Facturat"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -316,7 +346,7 @@ msgid "Journal Item"
 msgstr "Apunt comptable"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Load more"
@@ -335,6 +365,7 @@ msgstr ""
 "Crear tasca i controlar hores: Crear una tasca a la validació de la comanda de venda i realitzar un seguiment de les hores treballades."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
@@ -351,6 +382,7 @@ msgid "Milestone Count"
 msgstr "Recompte de fites"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -359,6 +391,7 @@ msgid "Milestones"
 msgstr "Fita"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New"
@@ -397,17 +430,18 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
-"En la confirmació de l'ordre de vendes, aquest producte pot generar un projecte i/o una tasca.         A partir d'ells, pot seguir el servei que està venent.\n"
-"         'En el projecte de la comanda de venda': utilitzarà el projecte configurat de la comanda de venda si està definit o no        crear un projecte nou basat en la plantilla seleccionada."
+"En la confirmació de la venda, aquest producte pot generar un projecte i/o una tasca. A partir d'aquest, pot fer seguiment del servei que està venent.\n"
+"         'En el projecte de la comanda de venda': utilitzarà el projecte configurat a la comanda de venda si està definit o, de manera predeterminada, crearà un projecte nou des de la plantilla seleccionada."
 
 #. module: sale_project
-#: code:addons/sale_project/models/project.py:0
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
 msgstr "Altres ingressos"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -421,6 +455,13 @@ msgid ""
 msgstr ""
 "Percentatge de la quantitat ordenada que es lliurarà automàticament una "
 "vegada s'hagi assolit la fita."
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Prepaid/Fixed Price"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -465,9 +506,10 @@ msgstr "Plantilla del projecte"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
 msgid "Project's sale order"
-msgstr "Ordre de venda del projecte"
+msgstr "Comanda de venda del projecte"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -502,7 +544,7 @@ msgid "Sale Order Count"
 msgstr "Nombre de comandes"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales"
@@ -514,7 +556,9 @@ msgid "Sales & Invoicing"
 msgstr "Vendes facturades"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
@@ -528,9 +572,10 @@ msgstr "Comanda de venda"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr "Identificador de l'ordre de vendes"
+msgstr "Ref. comanda"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
@@ -563,7 +608,8 @@ msgstr ""
 "Suprimiu l'element de comanda de vendes per tal que aquesta tasca no sigui facturable. També podeu canviar o eliminar l'element de comanda de vendes de cada entrada de full de temps individualment."
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -576,6 +622,7 @@ msgid "Sales Order Line"
 msgstr "Línia comanda de venda"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
@@ -594,26 +641,29 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
 msgid "Sales order to which the project is linked."
-msgstr "Ordre de vendes al qual està enllaçat el projecte."
+msgstr "Comanda de vendes a la qual està enllaçat el projecte."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "Ordre de venda al qual està enllaçada la tasca."
+msgstr "Comanda de venda a la qual està enllaçada la tasca."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
 msgstr "Cerca a la factura"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
-msgstr "Cerca a l'ordre de vendes"
+msgstr "Cerca a les comandes de venda"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
@@ -632,7 +682,7 @@ msgid "Service Invoicing Policy"
 msgstr "Política de facturació del servei"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
@@ -645,6 +695,7 @@ msgid "Task"
 msgstr "Tasca"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
@@ -672,6 +723,7 @@ msgid "Tasks associated to this sale"
 msgstr "Tasques associades a aquesta venda"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -682,6 +734,7 @@ msgstr ""
 "projecte."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -692,6 +745,7 @@ msgstr ""
 "ja que no generarà el projecte."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -702,6 +756,7 @@ msgstr ""
 "una tasca en un projecte global."
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
@@ -724,6 +779,7 @@ msgid "Vendor Bill Count"
 msgstr "Compte Bill del venedor"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -731,6 +787,7 @@ msgid "Vendor Bills"
 msgstr "Factures de proveïdors "
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid ""

@@ -30,9 +30,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
@@ -60,7 +60,7 @@ msgstr "# de línies"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr "# d'ordres de vendes"
+msgstr "# de comandes de venda"
 
 #. module: sale
 #. odoo-python
@@ -692,7 +692,7 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
-"<span class=\"d-none d-md-inline\">Ordres de vendes #</span>\n"
+"<span class=\"d-none d-md-inline\">Comandes de venda #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
@@ -1095,8 +1095,8 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "            ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
-"Una ordre és revendre quan les quantitats lliurades estan per sobre inicialment\n"
-"            Quantitats ordenades, i la política de facturació es basa en quantitats ordenades."
+"Una comanda té una venda addicional quan les quantitats lliurades són superiors a les\n"
+"            quantitats demanades i quan la política de facturació es basa en les quantitats demanades."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
@@ -2719,7 +2719,7 @@ msgstr "No s'ha trobat cap comanda per facturar"
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
 msgid "No orders to upsell found."
-msgstr "No s'ha trobat cap ordre per pujar."
+msgstr "No s'ha trobat cap venda addicional a realitzar."
 
 #. module: sale
 #. odoo-javascript
@@ -2922,6 +2922,11 @@ msgid "Order Date:"
 msgstr "Data de la comanda:"
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -2942,7 +2947,7 @@ msgstr "Estat de la comanda"
 #. module: sale
 #: model:mail.activity.type,name:sale.mail_act_sale_upsell
 msgid "Order Upsell"
-msgstr "Demanar una venda addicional"
+msgstr "Venda addicional"
 
 #. module: sale
 #. odoo-python
@@ -2995,7 +3000,7 @@ msgstr "Comandes a facturar"
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
 #: model:ir.ui.menu,name:sale.menu_sale_order_upselling
 msgid "Orders to Upsell"
-msgstr "Comandes per augmentar les vendes"
+msgstr "Comandes addicionals a realitzar"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3357,8 +3362,10 @@ msgid "Quotation Sent"
 msgstr "Pressupost enviat"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "La validesa del Pressupost és necessària i ha de ser superior a 0."
 
@@ -4211,8 +4218,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"La comanda de vendes %s vinculat al compte analític %s s'ha cancel·lat. No "
-"podeu registrar una despesa en una ordre de vendes cancel·lada."
+"La comanda de venda %s vinculada al compte analític %s s'ha cancel·lat. No "
+"podeu registrar una despesa en una comanda de venda cancel·lada."
 
 #. module: sale
 #. odoo-python
@@ -4223,9 +4230,10 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
-"La comanda de vendes %s enllaçat al compte analític %s està actualment "
-"bloquejat. No podeu registrar una despesa en una ordre de vendes bloquejada."
-" Si us plau, creu un nou SO vinculat a aquest compte analític."
+"La comanda de venda %s enllaçada al compte analític %s està actualment "
+"bloquejada. No podeu registrar una despesa en una comanda de venda "
+"bloquejada. Si us plau, crei una nova venda vinculada a aquest compte "
+"analític."
 
 #. module: sale
 #. odoo-python
@@ -4311,7 +4319,7 @@ msgstr "La quantitat demanada ha estat actualitzada."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__reference
 msgid "The payment communication of this sale order."
-msgstr "La comunicació de pagament d'aquesta ordre de venda."
+msgstr "La comunicació de pagament d'aquesta comanda de venda."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount
@@ -4525,7 +4533,7 @@ msgstr "Per facturar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
 msgid "To Upsell"
-msgstr "Per augmentar"
+msgstr "Venda addicional a fer"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4720,13 +4728,13 @@ msgstr "Actualitzar impostos"
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
 msgid "Upsell %(order)s for customer %(customer)s"
-msgstr "Venda a l'alça %(order)s per al client %(customer)s"
+msgstr "Venda addicional %(order)s per al client %(customer)s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__upselling
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__upselling
 msgid "Upselling Opportunity"
-msgstr "Oportunitat de venda incremental"
+msgstr "Oportunitat de venda addicional"
 
 #. module: sale
 #: model:mail.template,description:sale.email_template_edi_sale

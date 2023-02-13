@@ -6,7 +6,7 @@
 # Rémi CAZENAVE, 2022
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1055,8 +1055,8 @@ msgid ""
 "All \"Is a scored question = True\" and \"Question Type: Datetime\" "
 "questions need an answer"
 msgstr ""
-"Toutes les questions \"Est une question notée = Vrai\" et \"Type de "
-"question : date/heure\" nécessitent une réponse"
+"Toutes les questions \"Est une question notée = True\" et \"Type de "
+"question : datetime\" nécessitent une réponse"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -1691,7 +1691,7 @@ msgstr "Réponse de date correcte pour cette question."
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__answer_datetime
 msgid "Correct datetime answer"
-msgstr "Réponse date/heure correcte"
+msgstr "Réponse datetime correcte"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_question__answer_numerical_box
@@ -1830,19 +1830,19 @@ msgstr "Date de la réponse"
 #: model:ir.model.fields.selection,name:survey.selection__survey_question__question_type__datetime
 #: model:ir.model.fields.selection,name:survey.selection__survey_user_input_line__answer_type__datetime
 msgid "Datetime"
-msgstr "Date/Heure"
+msgstr "Datetime"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__value_datetime
 msgid "Datetime answer"
-msgstr "Réponse date/heure"
+msgstr "Réponse datetime"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_user_input__deadline
 msgid "Datetime until customer can open the survey and submit answers"
 msgstr ""
-"Date à partir de laquelle la personne peut ouvrir le sondage et soumettre "
-"des réponses"
+"Valeur datetime à partir de laquelle la personne peut ouvrir le sondage et "
+"soumettre des réponses"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__deadline
@@ -2921,7 +2921,7 @@ msgstr "La date de fin ne peut pas être inférieure à la date de début !"
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_datetime
 msgid "Max datetime cannot be smaller than min datetime!"
-msgstr "Le date maximum ne peut pas être inférieur au datetime minimum !"
+msgstr "Datetime maximum ne peut pas être inférieur au datetime minimum !"
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_question_validation_length
@@ -2947,7 +2947,7 @@ msgstr "Date maximale"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_max_datetime
 msgid "Maximum Datetime"
-msgstr "Date maximum"
+msgstr "Datetime maximum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_max
@@ -2989,7 +2989,7 @@ msgstr "Date minimum"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_min_datetime
 msgid "Minimum Datetime"
-msgstr "Date minimum"
+msgstr "Datetime minimum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__validation_length_min
@@ -4650,7 +4650,7 @@ msgid ""
 " for attendees."
 msgstr ""
 "L'heure à laquelle la question en cours a commencé, utilisée pour gérer le "
-"chronomètre des participants."
+"minuteur des participants."
 
 #. module: survey
 #: model:ir.model.constraint,message:survey.constraint_survey_survey_time_limit_check

@@ -552,11 +552,14 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.removeClass('odoo-editor-editable');
     const editable = $editable.get(0);
     const iframe = $iframe && $iframe.get(0);
+    const wysiwyg = $editable.data('wysiwyg');
     const doc = editable.ownerDocument;
-    cssRules = cssRules || doc._rulesCache;
+    cssRules = cssRules || wysiwyg && wysiwyg._rulesCache;
     if (!cssRules) {
         cssRules = getCSSRules(doc);
-        doc._rulesCache = cssRules;
+        if (wysiwyg) {
+            wysiwyg._rulesCache = cssRules;
+        }
     }
 
     // If the editable is not visible, we need to make it visible in order to
@@ -587,7 +590,7 @@ async function toInline($editable, cssRules, $iframe) {
                 value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
             }
             image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, image.getAttribute(attributeName));
+            image.style.setProperty(attributeName, value + 'px');
         };
     };
 
@@ -608,6 +611,9 @@ async function toInline($editable, cssRules, $iframe) {
     formatTables($editable);
     enforceImagesResponsivity(editable);
     await flattenBackgroundImages(editable);
+
+    // Remove contenteditable attributes
+    [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
 
     // Hide replaced cells on Outlook
     for (const toHide of editable.querySelectorAll('.mso-hide')) {
@@ -634,7 +640,7 @@ async function toInline($editable, cssRules, $iframe) {
 async function flattenBackgroundImages(editable) {
     for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
         if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
-            const canvas = await html2canvas(backgroundImage);
+            const canvas = await html2canvas(backgroundImage, { scale: 1 });
             const image = document.createElement('img');
             image.setAttribute('src', canvas.toDataURL('png'));
             image.setAttribute('width', canvas.getAttribute('width'));
@@ -1229,7 +1235,7 @@ function _getMatchedCSSRules(node, cssRules) {
         }
     };
 
-    if (processedStyle.display === 'block') {
+    if (processedStyle.display === 'block' && !(node.classList && node.classList.contains('oe-nested'))) {
         delete processedStyle.display;
     }
     if (!processedStyle['box-sizing']) {

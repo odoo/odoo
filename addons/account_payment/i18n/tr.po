@@ -8,21 +8,21 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Saban Yildiz <sabany@projetgrup.com>, 2022
 # Martin Trigaux, 2022
-# Ediz Duman <neps1192@gmail.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # omerfarukcakmak <omerfarukckmk@protonmail.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
 # abc Def <hdogan1974@gmail.com>, 2022
+# Ediz Duman <neps1192@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2022\n"
+"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2023\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -350,12 +350,12 @@ msgstr "Ödeme Yöntemleri"
 #: model:ir.model,name:account_payment.model_payment_provider
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_id
 msgid "Payment Provider"
-msgstr ""
+msgstr "Ödeme Sağlayıcı"
 
 #. module: account_payment
 #: model:ir.ui.menu,name:account_payment.payment_provider_menu
 msgid "Payment Providers"
-msgstr ""
+msgstr "Ödeme Sağlayıcılar"
 
 #. module: account_payment
 #: model:ir.model,name:account_payment.model_payment_refund_wizard
@@ -554,4 +554,13 @@ msgstr "Geçersiz İşlem"
 msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
+msgstr ""
+
+#. module: account_payment
+#. odoo-python
+#: code:addons/account_payment/models/account_journal.py:0
+#, python-format
+msgid ""
+"You must first deactivate a payment provider before deleting its journal.\n"
+"Linked providers: %s"
 msgstr ""

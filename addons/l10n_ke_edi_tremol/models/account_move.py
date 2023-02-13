@@ -183,7 +183,7 @@ class AccountMove(models.Model):
 
             uom = line.product_uom_id and line.product_uom_id.name or ''
             hscode = re.sub('[^0-9.]+', '', line.product_id.l10n_ke_hsn_code)[:10].ljust(10).encode('cp1251') if letter not in ('A', 'B') else b''.ljust(10)
-            hsname = re.sub('[^0-9.]+', '', line.product_id.l10n_ke_hsn_name)[:20].ljust(20).encode('cp1251') if letter not in ('A', 'B') else b''.ljust(20)
+            hsname = self._l10n_ke_fmt(line.product_id.l10n_ke_hsn_name, 20) if letter not in ('A', 'B') else b''.ljust(20)
             line_data = b';'.join([
                 self._l10n_ke_fmt(line.name, 36),               # 36 symbols for the article's name
                 self._l10n_ke_fmt(letter, 1),                   # 1 symbol for article's vat class ('A', 'B', 'C', 'D', or 'E')
@@ -233,7 +233,7 @@ class AccountMove(models.Model):
             error_msg = ""
             for move, error_list in errors:
                 error_list = '\n'.join(error_list)
-                error_msg += _("Invalid invoice configration on %s:\n\n%s", move, error_list)
+                error_msg += _("Invalid invoice configuration on %s:\n%s\n\n", move, error_list)
             raise UserError(error_msg)
         return {
             'type': 'ir.actions.client',

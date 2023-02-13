@@ -31,7 +31,9 @@
             <div t-if="delivery_nb == 1" id="delivery_carrier" class="mt4">
                 <b>Shipping Method: </b>
                 <t t-foreach="deliveries" t-as="delivery">
-                    <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                    <div class="o_delivery_carrier_select d-inline">
+                        <t t-call="website_sale_delivery.payment_delivery_methods"/>
+                    </div>
                 </t>
             </div>
         </xpath>

@@ -301,6 +301,37 @@ class TestSaleToInvoice(TestSaleCommon):
                 self.assertEqual(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
                 self.assertEqual(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
 
+    def test_multiple_sale_orders_on_same_invoice(self):
+        """ The model allows the association of multiple SO lines linked to the same invoice line.
+            Check that the operations behave well, if a custom module creates such a situation.
+        """
+        self.sale_order.action_confirm()
+        payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
+            'advance_payment_method': 'delivered'
+        })
+        payment.create_invoices()
+
+        # create a second SO whose lines are linked to the same invoice lines
+        # this is a way to create a situation where sale_line_ids has multiple items
+        sale_order_data = self.sale_order.copy_data()[0]
+        sale_order_data['order_line'] = [
+            (0, 0, line.copy_data({
+                'invoice_lines': [(6, 0, line.invoice_lines.ids)],
+            })[0])
+            for line in self.sale_order.order_line
+        ]
+        self.sale_order.create(sale_order_data)
+
+        # we should now have at least one move line linked to several order lines
+        invoice = self.sale_order.invoice_ids[0]
+        self.assertTrue(any(len(move_line.sale_line_ids) > 1
+                            for move_line in invoice.line_ids))
+
+        # however these actions should not raise
+        invoice.action_post()
+        invoice.button_draft()
+        invoice.button_cancel()
+
     def test_invoice_with_sections(self):
         """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
 

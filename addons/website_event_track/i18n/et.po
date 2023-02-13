@@ -16,8 +16,8 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Patrick-Jordan Kiudorv, 2022
-# Jana Jaakson, 2022
 # Leaanika Randmets, 2022
+# Jana Jaakson, 2023
 # Anna, 2023
 # 
 msgid ""
@@ -146,6 +146,23 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
+"    <br/>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -256,6 +273,8 @@ msgid ""
 "<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
 "                                    different topics. Most topics are accepted in lightning talks."
 msgstr ""
+"<strong>Välkkõned</strong>. Need 30-minutilised kõned on mõned\n"
+"                                    paljudest erinevatest teemades. Enamik teemad on välkkõnede puhul lubatud."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -268,11 +287,13 @@ msgid ""
 "<strong>Regular Talks</strong>. These are standard talks with slides,\n"
 "                                    alocated in slots of 60 minutes."
 msgstr ""
+"<<strong>Regular Talks</strong>. These are standard talks with slides,\n"
+"                                    alocated in slots of 60 minutes."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track7
 msgid "A technical explanation of how to use computer design apps"
-msgstr ""
+msgstr "Tehniline selgitus arvutidisaini rakenduste kasutamise kohta"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
@@ -282,6 +303,10 @@ msgid ""
 " * Red indicates something is preventing the progress of this track\n"
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -330,18 +355,20 @@ msgstr "Lisa kirjeldus ..."
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
-msgstr ""
+msgstr "Lisage ülesannete torusse uus etapp"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid ""
 "Add tags to your tracks to help your attendees browse your event web pages."
 msgstr ""
+"Lisage oma lugudele silte, et aidata osalejatel teie sündmuste veebilehti "
+"sirvida."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
 msgid "Advanced lead management : tips and tricks from the fields"
-msgstr ""
+msgstr "Täiustatud müügivihjete haldamine: väljade näpunäited ja nipid"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
@@ -357,19 +384,19 @@ msgstr "Päevakava"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "All Talks"
-msgstr ""
+msgstr "Kõik jutud"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
 msgid "Allow Track Proposals"
-msgstr ""
+msgstr "Lubage ettepanekuid jälgida"
 
 #. module: website_event_track
 #. openerp-web
 #: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
 #, python-format
 msgid "Allow push notifications?"
-msgstr ""
+msgstr "Kas lubada Push-märguanded?"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -377,12 +404,14 @@ msgid ""
 "Allow video and audio recording of their\n"
 "                                    presentation, for publishing on our website."
 msgstr ""
+"Lubage nende video- ja helisalvestuse\n"
+"                                     esitlemine meie veebisaidil."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Always Wishlisted"
-msgstr ""
+msgstr "Alati soovinimekirjas"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage2
@@ -407,6 +436,8 @@ msgid ""
 "As key track cannot be un-favorited, this field store the partner choice to "
 "remove the reminder for key tracks."
 msgstr ""
+"As key track cannot be un-favorited, this field store the partner choice to "
+"remove the reminder for key tracks."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_17
@@ -416,6 +447,10 @@ msgid ""
 "    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
 "    wood crates."
 msgstr ""
+"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"    wood crates."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
@@ -430,12 +465,12 @@ msgstr "Audients"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
 msgid "Available Track Tags"
-msgstr ""
+msgstr "Saadaolevad jälgimise sildid"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Bandy clamp hack"
-msgstr ""
+msgstr "Bandy clamp hack"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
@@ -519,42 +554,42 @@ msgstr "Blokeeritud"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Book your seats to the best talks"
-msgstr ""
+msgstr "Broneerige kohad parimatele vestlustele"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "Book your talks"
-msgstr ""
+msgstr "Broneerige vestlused"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_14
 msgid "Building a DIY cabin from the ground up"
-msgstr ""
+msgstr "Building a DIY cabin from the ground up"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
 msgid "Button Target URL"
-msgstr ""
+msgstr "Button Target URL"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
 msgid "Button Title"
-msgstr ""
+msgstr "Button Title"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Button appears"
-msgstr ""
+msgstr "Button appears"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr ""
+msgstr "CTA nupp on saadaval"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Call for Proposals"
-msgstr ""
+msgstr "Call for Proposals"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
@@ -564,7 +599,7 @@ msgstr "Võib avalikustada"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "Tühistatud etapp"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -584,7 +619,7 @@ msgstr "Kategooria"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_12
 msgid "Climate positive"
-msgstr ""
+msgstr "Kliima positiivne"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__color
@@ -601,12 +636,12 @@ msgstr "Värvikood"
 #: code:addons/website_event_track/controllers/event_track.py:0
 #, python-format
 msgid "Coming soon"
-msgstr ""
+msgstr "Tulekul"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Coming soon ..."
-msgstr ""
+msgstr "Tulekul..."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
@@ -626,7 +661,7 @@ msgstr "Seadistused"
 #. module: website_event_track
 #: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
 msgid "Confirmation of {{ object.name }}"
-msgstr ""
+msgstr "{{ object.name }} kinnitus"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage1
@@ -641,6 +676,9 @@ msgid ""
 "information about a construction process and final result. Step by step "
 "simple explanation! Interested?"
 msgstr ""
+"Kas kaalute puitmaja ehitamist? Ehitusprotsessi ja lõpptulemuse kohta "
+"lisateabe saamiseks vaadake seda videot. Lihtne selgitus samm-sammult! Kas "
+"olete huvitatud?"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -670,11 +708,12 @@ msgstr "Kontakttelefon"
 #: model:ir.model.fields,help:website_event_track.field_event_track__contact_email
 msgid "Contact email is private and used internally"
 msgstr ""
+"Kontakte-posti aadress on privaatne ja seda kasutatakse ettevõttesiseselt"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Contact me through a different email/phone"
-msgstr ""
+msgstr "Võtke minuga ühendust mõne muu e-posti/telefoni kaudu"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_id
@@ -684,23 +723,23 @@ msgstr "Jälgitav kontakt võib esinejast erineda. "
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__contact_phone
 msgid "Contact phone is private and used internally"
-msgstr ""
+msgstr "Kontakttelefon on privaatne ja kasutatakse ettevõttesiseselt"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Create a Track"
-msgstr ""
+msgstr "Looge jälgimine"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
 msgid "Create a Track Location"
-msgstr ""
+msgstr "Looge jälgimise asukoht"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_tag
 msgid "Create a Track Tag"
-msgstr ""
+msgstr "Looge jälgimise silt"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -730,32 +769,32 @@ msgstr "Klient"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_19
 msgid "DIY Timber Cladding Project"
-msgstr ""
+msgstr "DIY puitvoodri projekt"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Date"
-msgstr "Date"
+msgstr "Kuupäev"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_11
 msgid "Day 2 Wrapup"
-msgstr ""
+msgstr "2. päeva kokkuvõte"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_8
 msgid "Dealing with OpenWood Furniture"
-msgstr ""
+msgstr "OpenWood mööbliga tegelemine"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 msgid "Define labels explaining kanban state management."
-msgstr ""
+msgstr "Määratlege kanbani oleku haldamist selgitavad sildid."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "Define the order in which the location will appear on \"Agenda\" page"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -765,6 +804,10 @@ msgid ""
 "            You will use these stages in order to track the progress in\n"
 "            solving an event track."
 msgstr ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -781,27 +824,27 @@ msgstr "Kirjeldus"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__partner_tag_line
 msgid "Description of the partner (name, function and company name)"
-msgstr ""
+msgstr "Partneri kirjeldus (nimi, funktsioon ja ettevõtte nimi)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track25
 msgid "Design contest (entire afternoon)"
-msgstr ""
+msgstr "Disainikonkurss (terve pärastlõuna)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track24
 msgid "Design contest (entire day)"
-msgstr ""
+msgstr "Ideekonkurss (terve päev)"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track6
 msgid "Detailed roadmap of our new products"
-msgstr ""
+msgstr "Meie uute toodete üksikasjalik tegevuskava"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track11
 msgid "Discover our new design team"
-msgstr ""
+msgstr "Avastage meie uus disainimeeskond"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
@@ -819,6 +862,8 @@ msgid ""
 "Display a Call to Action button to your Attendees while they watch your "
 "Track."
 msgstr ""
+"Display a Call to Action button to your Attendees while they watch your "
+"Track."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -828,7 +873,7 @@ msgstr "Tehtud"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Dowel Hack"
-msgstr ""
+msgstr "Dowel Hack"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
@@ -843,12 +888,12 @@ msgstr "Kestus"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_3
 msgid "Easy Way To Build a Wooden House"
-msgstr ""
+msgstr "Lihtne viis puitmaja ehitamiseks"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Edit Track"
-msgstr ""
+msgstr "Redigeeri jälgimist"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
@@ -886,7 +931,7 @@ msgstr "Sündmuse asukoht"
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_location
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
 msgid "Event Locations"
-msgstr ""
+msgstr "Sündmuse asukohad"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
@@ -897,7 +942,7 @@ msgstr "Sündmuse leht"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "Ürituse ettepanekute menüüd"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_type
@@ -914,24 +959,24 @@ msgstr "Sündmuste jälgimine"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "Sündmuste jälgimise asukoht"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "Sündmuste jälgimise etapp"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr ""
+msgstr "Sündmuste jälgimise silt"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag_category
 msgid "Event Track Tag Category"
-msgstr ""
+msgstr "Sündmuste jälgimise sildi kategooria"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
@@ -939,34 +984,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
-msgstr ""
+msgstr "Sündmuste jälgimisesed"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr ""
+msgstr "Sündmuste jälgimise menüüd"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
 msgid "Event Wrapup"
-msgstr ""
+msgstr "Sündmuse kokkuvõte"
 
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "Sündmus: jälgimise kinnitus"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
 #: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
 msgid "Events App Name"
-msgstr ""
+msgstr "Sündmuse rakenduse nimi"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Events PWA"
-msgstr ""
+msgstr "Sündmused PWA"
 
 #. module: website_event_track
 #. openerp-web
@@ -975,7 +1020,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
 #, python-format
 msgid "Favorite On"
-msgstr ""
+msgstr "Favorite On"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
@@ -985,12 +1030,12 @@ msgstr "Lemmikud"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "Filter Tracks..."
-msgstr ""
+msgstr "Filtreeri jälgimisi..."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "Filtreeritud siltide järgi"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -1000,7 +1045,7 @@ msgstr "Lõpetatud"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_2
 msgid "First Day Wrapup"
-msgstr ""
+msgstr "Esimese päeva kokkuvõte"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
@@ -1030,7 +1075,7 @@ msgstr "Formaat"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_fully_accessible
 msgid "Fully accessible"
-msgstr ""
+msgstr "Täielikult ligipääsetav"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -1040,12 +1085,12 @@ msgstr "Tulevased tegevused"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
 msgid "Get prepared and"
-msgstr ""
+msgstr "Valmita ette ja"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Glue tip"
-msgstr ""
+msgstr "Glue tip"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
@@ -1076,7 +1121,7 @@ msgstr "Grupeeri"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
 msgid "Happy with OpenWood"
-msgstr ""
+msgstr "Happy with OpenWood"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__has_message
@@ -1101,52 +1146,52 @@ msgstr "Avaleht"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track21
 msgid "House of World Cultures"
-msgstr ""
+msgstr "House of World Cultures"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "How can our team get in touch with you?"
-msgstr ""
+msgstr "Kuidas saab meie meeskond Teiega ühendust võtta?"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track18
 msgid "How to build your marketing strategy within a competitive environment"
-msgstr ""
+msgstr "Kuidas luua oma turundusstrateegiat konkurentsikeskkonnas"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track15
 msgid "How to communicate with your community"
-msgstr ""
+msgstr "Kuidas oma kogukonnaga suhelda"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track1
 msgid "How to design a new piece of furniture"
-msgstr ""
+msgstr "Kuidas kujundada uut mööblit"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track4
 msgid "How to develop automated processes"
-msgstr ""
+msgstr "Kuidas arendada automatiseeritud protsesse"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track16
 msgid "How to follow us on the social media"
-msgstr ""
+msgstr "Kuidas meid sotsiaalmeedias jälgida"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track9
 msgid "How to improve your quality processes"
-msgstr ""
+msgstr "Kuidas parandada oma kvaliteediprotsesse"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track2
 msgid "How to integrate hardware materials in your pieces of furniture"
-msgstr ""
+msgstr "Kuidas integreerida riistvara materjale oma mööbliesemetesse"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track8
 msgid "How to optimize your sales, from leads to sales orders"
-msgstr ""
+msgstr "Kuidas optimeerida müüki alates müügivihjetest kuni müügitellimusteni"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__id
@@ -1174,6 +1219,8 @@ msgid ""
 "If checked, automatically publish tracks so that access links to customers "
 "are provided."
 msgstr ""
+"Kui märgitud, avaldate lood automaatselt, et klientidele oleks "
+"juurdepääsulingid."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -1189,7 +1236,7 @@ msgstr "Kui valitud, on mõningatel sõnumitel saatmiserror."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_visible_in_agenda
 msgid "If checked, the related tracks will be visible in the frontend."
-msgstr ""
+msgstr "If checked, the related tracks will be visible in the frontend."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
@@ -1197,6 +1244,8 @@ msgid ""
 "If set an email will be sent to the customer when the track reaches this "
 "step."
 msgstr ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
@@ -1204,6 +1253,8 @@ msgid ""
 "If set, the talk will be set as favorite for each attendee registered to the"
 " event."
 msgstr ""
+"If set, the talk will be set as favorite for each attendee registered to the"
+" event."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
@@ -1291,11 +1342,12 @@ msgstr "Töös"
 #: model_terms:event.track,description:website_event_track.event_7_track_15
 msgid "In this video we will see how lumber is made in a sawmill factory."
 msgstr ""
+"Selles videos näeme, kuidas saeveskitehases saematerjali valmistatakse."
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "In this video, I covered 6 tips and tricks to help out beginners:"
-msgstr ""
+msgstr "Selles videos käsitlesin 6 nõuannet ja nippi, mis aitavad algajaid:"
 
 #. module: website_event_track
 #. openerp-web
@@ -1309,12 +1361,12 @@ msgstr "Paigalda"
 #: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
 #, python-format
 msgid "Install Application"
-msgstr ""
+msgstr "Installige rakendus"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "Interactivity"
-msgstr ""
+msgstr "Interaktiivsus"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -1324,7 +1376,7 @@ msgstr "Esitlemine"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
 msgid "Is CTA Live"
-msgstr ""
+msgstr "Is CTA Live"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
@@ -1339,42 +1391,42 @@ msgstr "On avalikustatud"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
 msgid "Is Reminder On"
-msgstr ""
+msgstr "Kas meeldetuletus on sisse lülitatud"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
 msgid "Is Track Done"
-msgstr ""
+msgstr "Is Track Done"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
 msgid "Is Track Live"
-msgstr ""
+msgstr "Is Track Live"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
 msgid "Is Track Soon"
-msgstr ""
+msgstr "Is Track Soon"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
 msgid "Is Track Today"
-msgstr ""
+msgstr "Is Track Today"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
 msgid "Is Track Upcoming"
-msgstr ""
+msgstr "Is Track Upcoming"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
 msgid "Is Wishlisted"
-msgstr ""
+msgstr "On soovinimekirjas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
 msgid "Is reminder off"
-msgstr ""
+msgstr "Kas meeldetuletus on väljas"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
@@ -1414,12 +1466,12 @@ msgstr "Kanban´i kehtiv seletus"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track23
 msgid "Key Success factors selling our furniture"
-msgstr ""
+msgstr "Meie mööbli müügi peamised edutegurid"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_9
 msgid "Kitchens for the Future"
-msgstr ""
+msgstr "Köögid tulevikuks"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
@@ -1459,17 +1511,17 @@ msgstr "Hilinenud tegevused"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track12
 msgid "Latest trends"
-msgstr ""
+msgstr "Viimased trendid"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_26
 msgid "Less Furniture is More Furniture"
-msgstr ""
+msgstr "Vähem mööblit on rohkem mööblit"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_4
 msgid "Life at Home Around the World: William’s Story"
-msgstr ""
+msgstr "Life at Home Around the World: William’s Story"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_19
@@ -1477,6 +1529,8 @@ msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
 msgstr ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
@@ -1488,17 +1542,17 @@ msgstr "Online"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
 msgid "Live Now"
-msgstr ""
+msgstr "Live Now"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_10
 msgid "Live Testimonial"
-msgstr ""
+msgstr "Otseülekanne"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_25
 msgid "Live Testimonials"
-msgstr ""
+msgstr "Otseülekanded"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
@@ -1510,12 +1564,12 @@ msgstr "Asukoht"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_13
 msgid "Log House Building"
-msgstr ""
+msgstr "Palkmaja ehitus"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_15
 msgid "Logs to lumber"
-msgstr ""
+msgstr "Palgid saematerjaliks"
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
@@ -1530,7 +1584,7 @@ msgstr "Lõuna"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
 msgid "Magic Button"
-msgstr ""
+msgstr "Maagiline nupp"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
@@ -1540,7 +1594,7 @@ msgstr "Peamine manus"
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Making a center marking gauge"
-msgstr ""
+msgstr "Making a center marking gauge"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_location
@@ -1548,6 +1602,8 @@ msgid ""
 "Manage from here the places where you organize your tracks (e.g. Rooms, "
 "Channels, ...)."
 msgstr ""
+"Manage from here the places where you organize your tracks (e.g. Rooms, "
+"Channels, ...)."
 
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
@@ -1572,32 +1628,32 @@ msgstr "Sõnumid"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track22
 msgid "Minimal but efficient design"
-msgstr ""
+msgstr "Minimaalne, kuid tõhus disain"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
 msgid "Minutes before CTA starts"
-msgstr ""
+msgstr "Minutid enne CTA algust"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
 msgid "Minutes before track starts"
-msgstr ""
+msgstr "Minutid enne loo algust"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
 msgid "Minutes compare to track start"
-msgstr ""
+msgstr "Minutes compare to track start"
 
 #. module: website_event_track
 #: model_terms:event.track,description:website_event_track.event_7_track_18
 msgid "Miter saw tip"
-msgstr ""
+msgstr "Miter saw tip"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track30
 msgid "Morning break"
-msgstr ""
+msgstr "Hommikupaus"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__my_activity_date_deadline
@@ -1607,12 +1663,12 @@ msgstr "Minu tegevuse tähtaeg"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track27
 msgid "My Company global presentation"
-msgstr ""
+msgstr "Minu ettevõtte ülemaailmne esitlus"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
-msgstr ""
+msgstr "My Lood"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
@@ -1625,17 +1681,17 @@ msgstr "Nimi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
 msgid "Name of your website's Events Progressive Web Application"
-msgstr ""
+msgstr "Teie veebisaidi sündmuste progressiivse veebirakenduse nimi"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program"
-msgstr ""
+msgstr "Uus sertifitseerimise programm"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
 msgid "New Track"
-msgstr ""
+msgstr "Uus lugu"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_calendar_event_id
@@ -1660,7 +1716,7 @@ msgstr "Järgmise tegevuse tüüp"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
 msgid "No Track Visitors yet!"
-msgstr ""
+msgstr "Loo külastajaid veel pole!"
 
 #. module: website_event_track
 #. openerp-web
@@ -1964,7 +2020,7 @@ msgstr "Saematerjali kindlustamine transpordi ajal"
 #: code:addons/website_event_track/static/src/js/website_event_track_proposal_form_tags.js:0
 #, python-format
 msgid "Select categories"
-msgstr ""
+msgstr "Vali kategooriad"
 
 #. module: website_event_track
 #: model:mail.template,description:website_event_track.mail_template_data_track_confirmation
@@ -2702,24 +2758,24 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "nt. \"John Doe sündis...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "nt. \"Jutt tuleb sellest, et...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Get Yours Now !"
-msgstr ""
+msgstr "e.g. Hangi kohe!"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_view_form_quick_create
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. Inspiring Business Talk"
-msgstr ""
+msgstr "nt. Inspireeriv ärivestlus"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
@@ -2734,7 +2790,7 @@ msgstr "tundi"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "minutes after track starts"
-msgstr ""
+msgstr "minutit enne loo algust"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
@@ -2760,4 +2816,4 @@ msgstr "algab"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
 msgid "tracks"
-msgstr ""
+msgstr "jälgimine"

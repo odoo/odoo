@@ -32,19 +32,19 @@
 # Maja Stawicka <mjstwck@wp.pl>, 2022
 # Martin Trigaux, 2022
 # Mariusz, 2022
-# Maksym <ms@myodoo.pl>, 2022
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Krzysztof Przygoda, 2022
+# Maksym <ms@myodoo.pl>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Krzysztof Przygoda, 2022\n"
+"Last-Translator: Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -115,7 +115,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_routing.py:0
 #, python-format
 msgid "%i work orders"
-msgstr ""
+msgstr "%i zlecenia operacji"
 
 #. module: mrp
 #. odoo-python
@@ -986,7 +986,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__needed_by_workorder_ids
 msgid "Blocks"
-msgstr ""
+msgstr "Bloki"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__bom_id
@@ -2668,15 +2668,6 @@ msgid "Line of issue consumption"
 msgstr ""
 
 #. module: mrp
-#. odoo-python
-#: code:addons/mrp/models/mrp_production.py:0
-#, python-format
-msgid ""
-"Lines need to be deleted, but can not as you still have some quantities to "
-"consume in them. "
-msgstr ""
-
-#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warn_insufficient_qty_unbuild__location_id
 msgid "Location"
 msgstr "Miejsce"
@@ -4277,6 +4268,11 @@ msgstr "Zaplanowana data"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Scheduled Date by Month"
 msgstr "Zaplanowane daty wg miesięcy"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
+msgid "Scheduled Date: Last 365 Days"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_finished

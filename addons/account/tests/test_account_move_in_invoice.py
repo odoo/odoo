@@ -1534,6 +1534,33 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         with self.assertRaises(RedirectWarning):
             invoice_2.action_post()
 
+    @freeze_time('2023-02-01')
+    def test_in_invoice_payment_register_wizard(self):
+        # Test creating an account_move with an in_invoice_type and check payment register wizard values
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2023-01-30'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_b.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'product_id': self.product_line_vals_1['product_id'],
+                    'product_uom_id': self.product_line_vals_1['product_uom_id'],
+                    'price_unit': self.product_line_vals_1['price_unit'],
+                    'tax_ids': [Command.set(self.product_line_vals_1['tax_ids'])],
+                }),
+            ],
+        })
+        move.action_post()
+        action_data = move.action_register_payment()
+        with Form(self.env[action_data['res_model']].with_context(action_data['context'])) as wiz_form:
+            self.assertEqual(wiz_form.payment_date.strftime('%Y-%m-%d'), '2023-02-01')
+            self.assertEqual(wiz_form.amount, 920)
+            self.assertTrue(wiz_form.group_payment)
+            self.assertFalse(wiz_form._get_modifier('group_payment', 'invisible'))
+            self.assertFalse(wiz_form._get_modifier('group_payment', 'readonly'))
+
     def test_in_invoice_switch_in_refund_1(self):
         # Test creating an account_move with an in_invoice_type and switch it in an in_refund.
         move = self.env['account.move'].create({

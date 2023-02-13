@@ -41,8 +41,17 @@ $spacer: 1rem !default; // Need to predefine as used below
 //
 // Settings for the `<body>` element.
 
-$body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
-$body-color: o-color('o-cc1-text') or color-contrast(o-color('o-cc1-bg')) !default;
+// Bootstrap uses `$body-bg` as default value for multiple variables but also in
+// the creation of CSS rules (not controlled by variables). In case of Odoo
+// boxed layout, `$body-bg` should thus be used to control the box background
+// color so that components displayed inside are consistent (as they use the
+// variable to compute some of their colors too). The background color behind
+// the box will be forced by an Odoo CSS rule instead of relying on Bootstrap
+// CSS rule (the <body> background color CSS rule) which uses `$body-bg`.
+// In future bootstrap version (> 5.1.3), this should probably be reviewed.
+// grep: BOXED_BODY_BG_ODOO
+$body-bg: o-color('o-cc1-bg') !default;
+$body-color: o-color('o-cc1-text') or color-contrast($body-bg) !default;
 
 // Links
 //
@@ -50,8 +59,8 @@ $body-color: o-color('o-cc1-text') or color-contrast(o-color('o-cc1-bg')) !defau
 
 $-link-color: o-color('o-cc1-link');
 $-link-color: if($-link-color, $-link-color, o-color('primary'));
-$link-color: auto-contrast($-link-color, o-color('o-cc1-bg'), 'o-cc1-link') !default;
-$link-hover-color: auto-contrast(darken($link-color, 15%), o-color('o-cc1-bg'), 'o-cc1-link') !default;
+$link-color: auto-contrast($-link-color, $body-bg, 'o-cc1-link') !default;
+$link-hover-color: auto-contrast(darken($link-color, 15%), $body-bg, 'o-cc1-link') !default;
 $link-decoration: if(o-website-value('link-underline') == 'always', underline, none) !default;
 $link-hover-decoration: if(o-website-value('link-underline') != 'never', underline, none) !default;
 

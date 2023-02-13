@@ -132,34 +132,6 @@ def fix_import_export_id_paths(fieldname):
     fixed_external_id = re.sub(r'([^/]):id', r'\1/id', fixed_db_id)
     return fixed_external_id.split('/')
 
-def merge_trigger_trees(trees: list, select=bool) -> dict:
-    """ Merge trigger trees list into a final tree. The function ``select`` is
-    called on every field to determine which fields should be kept in the tree
-    nodes. This enables to discard some fields from the tree nodes.
-    """
-    result_tree = {}                        # the resulting tree
-    root_fields = OrderedSet()              # the fields in the root node
-    subtrees_to_merge = defaultdict(list)   # the subtrees to merge grouped by key
-
-    for tree in trees:
-        for key, val in tree.items():
-            if key is None:
-                root_fields.update(val)
-            else:
-                subtrees_to_merge[key].append(val)
-
-    # the root node contains the collected fields for which select is true
-    root_node = [field for field in root_fields if select(field)]
-    if root_node:
-        result_tree[None] = root_node
-
-    for key, subtrees in subtrees_to_merge.items():
-        subtree = merge_trigger_trees(subtrees, select)
-        if subtree:
-            result_tree[key] = subtree
-
-    return result_tree
-
 
 class MetaModel(api.Meta):
     """ The metaclass of all model classes.
@@ -2763,6 +2735,17 @@ class BaseModel(metaclass=MetaModel):
                 for field in klass._field_definitions:
                     definitions[field.name].append(field)
         for name, fields_ in definitions.items():
+            if f'{cls._name}.{name}' in cls.pool._database_translated_fields:
+                # the field is currently translated in the database; ensure the
+                # field is translated to avoid converting its column to varchar
+                # and losing data
+                translate = next((
+                    field.args['translate'] for field in reversed(fields_) if 'translate' in field.args
+                ), False)
+                if not translate:
+                    # patch the field definition by adding an override
+                    _logger.debug("Patching %s.%s with translate=True", cls._name, name)
+                    fields_.append(fields_[0].new(translate=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
@@ -3008,10 +2991,13 @@ class BaseModel(metaclass=MetaModel):
         The main difference comes from the extra function ``digest``, which may
         be used to make identifiers for old terms.
 
-        :param dict translations: if the field has ``translate=True``, it should be a dictionary
-            like ``{lang: new_value}``; if ``translate`` is a callable, it should be like
-            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when
-            ``digest`` is a callable
+        :param dict translations:
+            if the field has ``translate=True``, it should be a dictionary like ``{lang: new_value}``
+                new_value: str: the new translation for lang
+                new_value: False: void the current translation for lang and fallback to current en_US value
+            if ``translate`` is a callable, it should be like
+            ``{lang: {old_term: new_term}}``, or ``{lang: {digest(old_term): new_term}}`` when ``digest`` is callable
+                new_value: str: the new translation of old_term for lang
         :param digest: an optional digest function for the old_term
         """
         self.ensure_one()
@@ -3025,25 +3011,36 @@ class BaseModel(metaclass=MetaModel):
             # a non-related non-stored computed field cannot be translated, even if it has inverse function
             return False
 
+        # Strictly speaking, a translated related/computed field cannot be stored
+        # because the compute function only support one language
+        # `not field.store` is a redundant logic.
+        # But some developers store translated related fields.
+        # In these cases, only all translations of the first stored translation field will be updated
+        # For other stored related translated field, the translation for the flush language will be updated
+        if field.related and not field.store:
+            related_path, field_name = field.related.rsplit(".", 1)
+            return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
+        self.check_access_rights('write')
+        self.check_field_access_rights('write', [field_name])
+        self.check_access_rule('write')
+
         if field.translate is True:
-            for lang, translation in translations.items():
-                if translation is not None:
-                    self.with_context(lang=lang)[field_name] = translation
+            # falsy values (except emtpy str) are used to void the corresponding translation
+            if any(translation and not isinstance(translation, str) for translation in translations.values()):
+                raise UserError(_("Translations for model translated fields only accept falsy values and str"))
+            value_en = translations.get('en_US', True)
+            if not value_en and value_en != '':
+                translations.pop('en_US')
+            translations = {
+                lang: translation if isinstance(translation, str) else None
+                for lang, translation in translations.items()
+            }
+            self.invalidate_recordset([field_name])
+            self._cr.execute(f'''
+                UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
+            ''', (Json(translations), self.id))
+            self.modified([field_name])
         else:
-            # Strictly speaking, a translated related/computed field cannot be stored
-            # because the compute function only support one language
-            # `not field.store` is a redundant logic.
-            # But some developers store translated related fields.
-            # In these cases, only all translations of the first stored translation field will be updated
-            # For other stored related translated field, the translation for the flush language will be updated
-            if field.related and not field.store:
-                related_path, field_name = field.related.rsplit(".", 1)
-                return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
-
-            self.check_access_rights('write')
-            self.check_field_access_rights('write', [field_name])
-            self.check_access_rule('write')
-
             # Note:
             # update terms in 'en_US' will not change its value other translated values
             # record_en = Model_en.create({'html': '<div>English 1</div><div>English 2<div/>'
@@ -3077,10 +3074,9 @@ class BaseModel(metaclass=MetaModel):
         :param str field_name: field name
         :param list langs: languages
 
-        :return: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
-        In the UI, translation_dialog.js
-        for model: val_en will be shown as the translation
-        for model term: val_en will be shown as the src
+        :return: (translations, context) where
+            translations: list of dicts like [{"lang": lang, "source": source_term, "value": value_term}]
+            context: {"translation_type": "text"/"char", "translation_show_source": True/False}
         """
         self.ensure_one()
         field = self._fields[field_name]
@@ -3105,9 +3101,7 @@ class BaseModel(metaclass=MetaModel):
                 for lang, term_lang in translations.items()]
         context = {}
         context['translation_type'] = 'text' if field.type in ['text', 'html'] else 'char'
-        context['translation_show_source'] = False
-        if callable(field.translate):
-            context['translation_show_source'] = True
+        context['translation_show_source'] = callable(field.translate)
 
         return translations, context
 
@@ -3658,7 +3652,6 @@ class BaseModel(metaclass=MetaModel):
 
         field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
-        records_to_inverse = {}                     # {field: records}
         fnames_modifying_relations = []
         protected = set()
         check_company = False
@@ -3677,10 +3670,7 @@ class BaseModel(metaclass=MetaModel):
                     # order to avoid an inconsistent update.
                     self[fname]
                 determine_inverses[field.inverse].append(field)
-                # DLE P150: `test_cancel_propagation`, `test_manufacturing_3_steps`, `test_manufacturing_flow`
-                # TODO: check whether still necessary
-                records_to_inverse[field] = self.filtered('id')
-            if field in self.pool.fields_modifying_relations:
+            if self.pool.is_modifying_relations(field):
                 fnames_modifying_relations.append(fname)
             if field.inverse or (field.compute and not field.readonly):
                 if field.store or field.type not in ('one2many', 'many2many'):
@@ -5987,61 +5977,55 @@ class BaseModel(metaclass=MetaModel):
         #  - mark H to recompute on inverse(X, records),
         #  - mark I to recompute on inverse(W, inverse(X, records)),
         #  - mark J to recompute on inverse(Y, records).
-        fields = [self._fields[fname] for fname in fnames]
-        field_triggers = self.pool.field_triggers
-        trees = [field_triggers[field] for field in fields if field in field_triggers]
 
-        if not trees:
-            return
-
+        # The fields' trigger trees are merged in order to evaluate all triggers
+        # at once. For non-stored computed fields, `_modified_triggers` might
+        # traverse the tree (at the cost of extra queries) only to know which
+        # records to invalidate in cache. But in many cases, most of these
+        # fields have no data in cache, so they can be ignored from the start.
+        # This allows us to discard subtrees from the merged tree when they
+        # only contain such fields.
         cache = self.env.cache
-
-        # Merge dependency trees to evaluate all triggers at once.
-        # For non-stored computed fields, `_modified_triggers` might traverse
-        # the tree (at the cost of extra queries) only to know which records to
-        # invalidate in cache. But in many cases, most of these fields have no
-        # data in cache, so they can be ignored from the start. This allows us
-        # to discard subtrees from the merged tree when they only contain such
-        # fields.
-        tree = merge_trigger_trees(
-            trees,
+        tree = self.pool.get_trigger_tree(
+            [self._fields[fname] for fname in fnames],
             select=lambda field: (field.compute and field.store) or cache.contains_field(field),
         )
+        if not tree:
+            return
 
-        if tree:
-            # determine what to compute (through an iterator)
-            tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+        # determine what to compute (through an iterator)
+        tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
-            # When called after modification, one should traverse backwards
-            # dependencies by taking into account all fields already known to be
-            # recomputed.  In that case, we mark fieds to compute as soon as
-            # possible.
-            #
-            # When called before modification, one should mark fields to compute
-            # after having inversed all dependencies.  This is because we
-            # determine what currently depends on self, and it should not be
-            # recomputed before the modification!
-            if before:
-                tocompute = list(tocompute)
+        # When called after modification, one should traverse backwards
+        # dependencies by taking into account all fields already known to be
+        # recomputed.  In that case, we mark fieds to compute as soon as
+        # possible.
+        #
+        # When called before modification, one should mark fields to compute
+        # after having inversed all dependencies.  This is because we
+        # determine what currently depends on self, and it should not be
+        # recomputed before the modification!
+        if before:
+            tocompute = list(tocompute)
 
-            # process what to compute
-            for field, records, create in tocompute:
-                records -= self.env.protected(field)
-                if not records:
-                    continue
-                if field.compute and field.store:
-                    if field.recursive:
-                        recursively_marked = self.env.not_to_compute(field, records)
-                    self.env.add_to_compute(field, records)
-                else:
-                    # Don't force the recomputation of compute fields which are
-                    # not stored as this is not really necessary.
-                    if field.recursive:
-                        recursively_marked = records & self.env.cache.get_records(records, field)
-                    self.env.cache.invalidate([(field, records._ids)])
-                # recursively trigger recomputation of field's dependents
+        # process what to compute
+        for field, records, create in tocompute:
+            records -= self.env.protected(field)
+            if not records:
+                continue
+            if field.compute and field.store:
                 if field.recursive:
-                    recursively_marked.modified([field.name], create)
+                    recursively_marked = self.env.not_to_compute(field, records)
+                self.env.add_to_compute(field, records)
+            else:
+                # Don't force the recomputation of compute fields which are
+                # not stored as this is not really necessary.
+                if field.recursive:
+                    recursively_marked = records & self.env.cache.get_records(records, field)
+                self.env.cache.invalidate([(field, records._ids)])
+            # recursively trigger recomputation of field's dependents
+            if field.recursive:
+                recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
@@ -6052,53 +6036,52 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # first yield what to compute
-        for field in tree.get(None, ()):
+        for field in tree.root:
             yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
-        for key, val in tree.items():
-            if key is None:
-                continue
-            elif create and key.type in ('many2one', 'many2one_reference'):
+        for field, subtree in tree.items():
+            if create and field.type in ('many2one', 'many2one_reference'):
                 # upon creation, no other record has a reference to self
                 continue
-            else:
-                # val is another tree of dependencies
-                model = self.env[key.model_name]
-                for invf in model.pool.field_inverses[key]:
-                    # use an inverse of field without domain
-                    if not (invf.type in ('one2many', 'many2many') and invf.domain):
-                        if invf.type == 'many2one_reference':
-                            rec_ids = set()
-                            for rec in self:
-                                try:
-                                    if rec[invf.model_field] == key.model_name:
-                                        rec_ids.add(rec[invf.name])
-                                except MissingError:
-                                    continue
-                            records = model.browse(rec_ids)
-                        else:
-                            try:
-                                records = self[invf.name]
-                            except MissingError:
-                                records = self.exists()[invf.name]
 
-                        # TODO: find a better fix
-                        if key.model_name == records._name:
-                            if not any(self._ids):
-                                # if self are new, records should be new as well
-                                records = records.browse(it and NewId(it) for it in records._ids)
-                            break
-                else:
-                    new_records = self.filtered(lambda r: not r.id)
-                    real_records = self - new_records
-                    records = model.browse()
-                    if real_records:
-                        records = model.search([(key.name, 'in', real_records.ids)], order='id')
-                    if new_records:
-                        cache_records = self.env.cache.get_records(model, key)
-                        records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                yield from records._modified_triggers(val)
+            # subtree is another tree of dependencies
+            model = self.env[field.model_name]
+            for invf in model.pool.field_inverses[field]:
+                # use an inverse of field without domain
+                if not (invf.type in ('one2many', 'many2many') and invf.domain):
+                    if invf.type == 'many2one_reference':
+                        rec_ids = OrderedSet()
+                        for rec in self:
+                            try:
+                                if rec[invf.model_field] == field.model_name:
+                                    rec_ids.add(rec[invf.name])
+                            except MissingError:
+                                continue
+                        records = model.browse(rec_ids)
+                    else:
+                        try:
+                            records = self[invf.name]
+                        except MissingError:
+                            records = self.exists()[invf.name]
+
+                    # TODO: find a better fix
+                    if field.model_name == records._name:
+                        if not any(self._ids):
+                            # if self are new, records should be new as well
+                            records = records.browse(it and NewId(it) for it in records._ids)
+                        break
+            else:
+                new_records = self.filtered(lambda r: not r.id)
+                real_records = self - new_records
+                records = model.browse()
+                if real_records:
+                    records = model.search([(field.name, 'in', real_records.ids)], order='id')
+                if new_records:
+                    cache_records = self.env.cache.get_records(model, field)
+                    records |= cache_records.filtered(lambda r: set(r[field.name]._ids) & set(self._ids))
+
+            yield from records._modified_triggers(subtree)
 
     @api.model
     def recompute(self, fnames=None, records=None):
@@ -6177,23 +6160,13 @@ class BaseModel(metaclass=MetaModel):
     # Generic onchange method
     #
 
-    @classmethod
-    def _dependent_fields(cls, field):
-        """ Return an iterator on the fields that depend on ``field``. """
-        def traverse(node):
-            for key, val in node.items():
-                if key is None:
-                    yield from val
-                else:
-                    yield from traverse(val)
-        return traverse(cls.pool.field_triggers.get(field, {}))
-
     def _has_onchange(self, field, other_fields):
         """ Return whether ``field`` should trigger an onchange event in the
             presence of ``other_fields``.
         """
         return (field.name in self._onchange_methods) or any(
-            dep in other_fields for dep in self._dependent_fields(field.base_field)
+            dep in other_fields
+            for dep in self.pool.get_dependent_fields(field.base_field)
         )
 
     def _onchange_eval(self, field_name, onchange, result):

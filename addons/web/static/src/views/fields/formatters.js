@@ -233,9 +233,14 @@ export function formatFloatTime(value, options = {}) {
 
     let hour = Math.floor(value);
     const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
-    // Although looking quite overkill, the following line ensures that we do
+    // Although looking quite overkill, the following lines ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = Math.floor(milliSecLeft / 60000);
+    let min = milliSecLeft / 60000;
+    if (options.displaySeconds) {
+        min = Math.floor(min);
+    } else {
+        min = Math.round(min);
+    }
     if (min === 60) {
         min = 0;
         hour = hour + 1;
@@ -362,7 +367,7 @@ export function formatMonetary(value, options = {}) {
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
     const currency = session.currencies[currencyId];
-    const digits = (currency && currency.digits) || options.digits;
+    const digits = options.digits || (currency && currency.digits);
 
     let formattedValue;
     if (options.humanReadable) {
@@ -448,7 +453,7 @@ export function formatText(value) {
 }
 
 export function formatJson(value) {
-    return value && JSON.stringify(value) || "";
+    return (value && JSON.stringify(value)) || "";
 }
 
 registry

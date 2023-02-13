@@ -22,16 +22,16 @@
 # Jonatan Gk, 2022
 # jabelchi, 2022
 # Farouk Jabiri, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Ivan Espinola, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Ivan Espinola, 2023\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -284,6 +284,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
 #: code:addons/stock/models/stock_rule.py:0
 #, python-format
 msgid "+ %d day(s)"
@@ -3280,6 +3281,13 @@ msgid "Gives the sequence of this line when displaying the warehouses."
 msgstr "Dóna la seqüència d'aquesta línia quan es mostren els magatzems."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_rule.py:0
+#, python-format
+msgid "Global Visibility Days"
+msgstr "Dies globals de visibilitat"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.search_product_lot_filter
 #: model_terms:ir.ui.view,arch_db:stock.stock_move_line_view_search
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -3845,11 +3853,13 @@ msgid "Invalid domain right operand %s"
 msgstr "Domini invàlid per l'operant dret %s"
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
 "Invalid rule's configuration, the following rule causes an endless loop: %s"
 msgstr ""
+"Configuració de regla no vàlida, la següent regla causa un bucle infinit: %s"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_auto_apply
@@ -6099,7 +6109,6 @@ msgstr "Categories de producte"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model:ir.model.fields,field_description:stock.field_stock_quant__product_categ_id
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_category_id
-#: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 #: model_terms:ir.ui.view,arch_db:stock.stock_putaway_list
 msgid "Product Category"
 msgstr "Categoria del producte"
@@ -8669,6 +8678,17 @@ msgstr ""
 "Una millor solució podria ser arxivar el producte i crear-ne un de nou."
 
 #. module: stock
+#. odoo-python
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are quantities of "
+"it belonging to another company."
+msgstr ""
+"L'empresa d'aquest producte no es pot canviar mentre hi hagi quantitats que "
+"pertanyin a una altra empresa."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9850,7 +9870,7 @@ msgstr "No pots introduir quantitats negatives."
 #: code:addons/stock/models/stock_move.py:0
 #, python-format
 msgid "You can only delete draft or cancelled moves."
-msgstr ""
+msgstr "Només podeu suprimir esborranys o moviments cancel·lats."
 
 #. module: stock
 #. odoo-python
@@ -9896,6 +9916,15 @@ msgid ""
 msgstr ""
 "No podeu cancel· lar un moviment d' accions que s' ha establert a 'Done'. "
 "Crea un retorn per a revertir els moviments que han tingut lloc."
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move.py:0
+#, python-format
+msgid "You cannot change a cancelled stock move, create a new line instead."
+msgstr ""
+"No podeu canviar un moviment d'estoc cancel·lat, creeu una línia nova com "
+"alternativa."
 
 #. module: stock
 #. odoo-python
@@ -10418,10 +10447,3 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comanda d'entrega (Ref {{ object.name or 'n/a' "
 "}})"
-
-#. module: stock
-#. odoo-python
-#: code:addons/stock/models/stock_rule.py:0
-#, python-format
-msgid "Global Visibility Days"
-msgstr ""

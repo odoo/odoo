@@ -148,6 +148,45 @@ class PosOrder(models.Model):
         fields.extend(['is_reward_line', 'reward_id', 'coupon_id', 'reward_identifier_code', 'points_cost'])
         return fields
 
+    def _prepare_order_line(self, order_line):
+        order_line = super()._prepare_order_line(order_line)
+        for f in ['reward_id', 'coupon_id']:
+            if order_line.get(f):
+                order_line[f] = order_line[f][0]
+        return order_line
+
+    def _add_activated_coupon_to_draft_orders(self, table_orders):
+        table_orders = super()._add_activated_coupon_to_draft_orders(table_orders)
+
+        for order in table_orders:
+            activated_coupon = []
+
+            rewards_list = [{
+                'reward_id': orderline[2]['reward_id'],
+                'coupon_id': orderline[2]['coupon_id']
+                } for orderline in order['lines'] if orderline[2]['is_reward_line'] and orderline[2]['reward_id']
+            ]
+
+            order_reward_ids = self.env['loyalty.reward'].browse(set([reward_id['reward_id'] for reward_id in rewards_list]))
+
+            for reward in rewards_list:
+                order_reward_id = order_reward_ids.filtered(lambda order_reward: order_reward.id == reward['reward_id'])
+
+                if order_reward_id:
+                    if order_reward_id.program_type in ['gift_card', 'ewallet']:
+                        coupon_id = self.env['loyalty.card'].search([('id', '=', reward['coupon_id'])])
+
+                        activated_coupon.append({
+                            'balance': coupon_id.points,
+                            'code': coupon_id.code,
+                            'id': coupon_id.id,
+                            'program_id': coupon_id.program_id.id,
+                        })
+
+            order['codeActivatedCoupons'] = activated_coupon
+
+        return table_orders
+
     def _add_mail_attachment(self, name, ticket):
         attachment = super()._add_mail_attachment(name, ticket)
         gift_card_programs = self.config_id._get_program_ids().filtered(lambda p: p.program_type == 'gift_card' and

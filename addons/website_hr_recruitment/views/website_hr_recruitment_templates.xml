@@ -269,7 +269,7 @@
                         </div>
                     </section>
                     <section class="col-12 col-md-3 ps-5">
-                        <a role="button" t-attf-href="/jobs/detail/#{job.id}" class="btn btn-outline-primary btn-lg mb16 o_apply_description_link">
+                        <a role="button" t-attf-href="/jobs/detail/#{slug(job)}" class="btn btn-outline-primary btn-lg mb16 o_apply_description_link">
                             <i class="fa fa-arrow-left"></i> Job Description
                         </a>
                         <div t-if="job.name" class="d-flex flex-column align-items-baseline">

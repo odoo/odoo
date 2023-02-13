@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-16 09:04+0000\n"
+"POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -691,6 +691,14 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hr_reports
+msgid ""
+"\n"
+"        Accounting reports for Croatia (in EURO !)\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_de_reports
 msgid ""
 "\n"
@@ -752,6 +760,14 @@ msgstr ""
 "\n"
 "        Báo cáo kế toán cho Pakistan\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_pl_reports
+msgid ""
+"\n"
+"        Accounting reports for Poland\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_rs_reports
@@ -903,6 +919,14 @@ msgstr ""
 "\n"
 "        Tránh tự động bật tính năng tài liệu trên các dự án quản lý dịch vụ hiện trường.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_bo_reports
+msgid ""
+"\n"
+"        Base module for Bolivian reports\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bg_reports
@@ -2032,6 +2056,19 @@ msgstr ""
 "    Tạo bảng công tác có thể tùy chỉnh cho Kiểm soát Chất lượng.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hr_euro
+msgid ""
+"\n"
+"    Croatian Chart of Accounts updated (RRIF ver.2021) (in EURO !)\n"
+"    \n"
+"    Sources:\n"
+"    https://www.rrif.hr/dok/preuzimanje/Bilanca-2016.pdf\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021.PDF\n"
+"    https://www.rrif.hr/dok/preuzimanje/RRIF-RP2021-ENG.PDF\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_gantt
 msgid ""
 "\n"
@@ -2209,6 +2246,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_pe_edi_stock
+#: model:ir.module.module,description:base.module_l10n_pe_edi_stock_20
 msgid ""
 "\n"
 "    The delivery guide (Guía de Remisión) is needed as a proof\n"
@@ -2941,12 +2979,11 @@ msgid ""
 "\n"
 "Accounting reports for Luxembourg\n"
 "=================================\n"
+"Luxembourgish SAF-T (also known as FAIA) is standard file format for exporting various types of accounting transactional data using the XML format.\n"
+"The first version of the SAF-T Financial is limited to the general ledger level including customer and supplier transactions.\n"
+"Necessary master data is also included.\n"
 "    "
 msgstr ""
-"\n"
-"Báo cáo kế toán cho Luxembourg\n"
-"=================================\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -3633,6 +3670,15 @@ msgstr ""
 "Một nút đã được thêm vào sản phẩm cùng với một hành động trong chế độ xem danh sách của sản phẩm.\n"
 "Nếu tính năng định giá tồn kho tự động đang hoạt động, các bút toán kế toán cần thiết sẽ được tạo.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lu_reports_annual_vat_2023
+msgid ""
+"\n"
+"Annual VAT report for Luxembourg - 2023 update\n"
+"===============================================\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -5783,6 +5829,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_gstr
+msgid ""
+"\n"
+"GST return filing using IAP\n"
+"================================\n"
+"\n"
+"** GSTR-1: Send and view summary report\n"
+"** GSTR-2B: matching\n"
+"** GSTR-3B: view report\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -6160,25 +6219,28 @@ msgid ""
 "\n"
 "Step 1: First you need to create an API username and password in the E-invoice portal.\n"
 "Step 2: Switch to company related to that GST number\n"
-"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configuration -> Settings -> Customer Invoices or find \"E-invoice\" in search bar)\n"
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "\n"
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
+msgid ""
 "\n"
-"Ấn Độ - Hóa đơn điện tử\n"
-"====================\n"
-"Để gửi hóa đơn thông qua API cho chính phủ.\n"
-"Chúng tôi sử dụng \"Tera Software Limited\" làm GSP\n"
+"Indian - E-waybill\n"
+"====================================\n"
+"To submit E-waybill through API to the government.\n"
+"We use \"Tera Software Limited\" as GSP\n"
 "\n"
-"Bước 1: Trước tiên, bạn cần tạo tên người dùng và mật khẩu API trong cổng Hóa đơn điện tử.\n"
-"Bước 2: Chuyển sang công ty liên quan đến số GST đó\n"
-"Bước 3: Đặt tên người dùng và mật khẩu đó trong Odoo (Đi đến: Hóa đơn/Kế toán -> Cấu hình -> Cài đặt -> Hóa đơn Khách hàng hoặc tìm \"Hóa đơn điện tử\" trong thanh tìm kiếm)\n"
-"Bước 4: Lặp lại các bước 1,2,3 cho tất cả GSTIN bạn có trong Odoo. Nếu bạn có nhiều công ty có cùng số GST thì chỉ thực hiện bước 1 cho công ty đầu tiên.\n"
-"\n"
-"Để tạo tên người dùng và mật khẩu API, vui lòng tham khảo tài liệu sau:<https://service.odoo.co.in/einvoice_create_api_user>\n"
+"Step 1: First you need to create an API username and password in the E-waybill portal.\n"
+"Step 2: Switch to company related to that GST number\n"
+"Step 3: Set that username and password in Odoo (Goto: Invoicing/Accounting -> Configration -> Settings -> Indian Electronic WayBill or find \"E-waybill\" in search bar)\n"
+"Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -6258,6 +6320,18 @@ msgstr ""
 "Báo cáo Intrastat\n"
 "==================\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_upi
+msgid ""
+"\n"
+"Invoice with UPI QR code\n"
+"=========================\n"
+"This module adds QR code in invoice report for UPI payment allowing to make payment via any UPI app.\n"
+"\n"
+"To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
+"  "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8394,6 +8468,17 @@ msgstr ""
 "\n"
 "Cân nhắc lịch làm việc (nghỉ ốm, bán thời gian,...) của nhân viên khi sắp xếp lịch hẹn\n"
 "--------------------------------------------------------------------------------------------------------------\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_in_tcs_tds
+msgid ""
+"\n"
+"Tax Report TCS/TDS for India\n"
+"====================================\n"
+"\n"
+"This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -10628,6 +10713,16 @@ msgstr ""
 "* Biểu đồ phân tích chi phí\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_purchase_price_diff
+msgid ""
+"\n"
+"WMS Accounting module\n"
+"======================\n"
+"This module adds the price difference account. Used in standard perpetual valuation.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_stock_account
 msgid ""
 "\n"
@@ -10739,6 +10834,20 @@ msgstr ""
 "tài khoản ngân hàng trực tuyến của họ (dành cho các tổ chức ngân hàng được hỗ trợ) và định cấu hình \n"
 "đồng bộ hóa các sao kê ngân hàng của họ một cách định kỳ và tự động.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_it_edi_withholding
+msgid ""
+"\n"
+"Withholding and Pension Fund handling for the E-invoice implementation for Italy.\n"
+"\n"
+"    The Withholding tax and the Pension Fund tax are computed like every other tax\n"
+"    with the ordering by sequence, so please be careful with the order of the taxes\n"
+"    in your tax configuration.\n"
+"\n"
+"    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -11641,6 +11750,11 @@ msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
+msgid "<code>Command</code>: x2Many commands namespace"
+msgstr ""
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
 msgstr ""
@@ -11666,11 +11780,9 @@ msgstr "<code>env</code>: Môi trường Odoo mà hành động được kích h
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
-"<code>log(message, level='info')</code>:logging function to record debug "
+"<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
-"<code>log(message, level='info')</code>: hàm ghi nhật ký để ghi lại thông "
-"tin gỡ lỗi trong bảng <code>ir.logging</code> "
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -12564,6 +12676,13 @@ msgid "API Key Description"
 msgstr "Mô tả Khóa API"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid "API Key Ready"
+msgstr ""
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_res_users_keys_description
 msgid "API Key: description input wizard"
 msgstr "Khóa API: trình hỗ trợ nhập mô tả"
@@ -12684,11 +12803,6 @@ msgstr "Truy cập vào tính năng xuất"
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "Truy cập vào các công ty trái phép hoặc không hợp lệ."
-
-#. module: base
-#: model:ir.module.category,name:base.module_category_account
-msgid "Account"
-msgstr "Tài khoản"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -15160,6 +15274,11 @@ msgid "Bolivia - Accounting"
 msgstr "Bolivia - Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_bo_reports
+msgid "Bolivia - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.bq
 msgid "Bonaire, Sint Eustatius and Saba"
 msgstr "Bonaire, Sint Eustatius và Saba"
@@ -17268,9 +17387,19 @@ msgid "Croatia"
 msgstr "Croatia"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hr_euro
+msgid "Croatia - Accounting (EURO)"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
 msgid "Croatia - Accounting (RRIF 2012)"
 msgstr "Croatia - Kế toán (RRIF 2012)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hr_reports
+msgid "Croatia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron_trigger__cron_id
@@ -18772,6 +18901,11 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock
 msgid "Electronic Delivery Note for Peru (OSE method) and UBL 2.1"
 msgstr "Phiếu Giao hàng Điện tử cho Peru (phương pháp OSE) và UBL 2.1"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_pe_edi_stock_20
+msgid "Electronic Delivery Note for Peru (REST API method)"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi
@@ -21571,6 +21705,11 @@ msgid "IR Profile"
 msgstr "Hồ sơ IR"
 
 #. module: base
+#: model:res.country,vat_label:base.nz
+msgid "IRD/GST"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_import__code
 msgid "ISO Code"
 msgstr "ISO Code"
@@ -22090,6 +22229,16 @@ msgid "Indian - E-invoicing"
 msgstr "Indian - Lập hóa đơn điện tử"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_edi_ewaybill
+msgid "Indian - E-waybill"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
+msgid "Indian - GSTR India eFiling"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
 msgid "Indian - Point of Sale"
 msgstr "Indian - Điểm bán hàng"
@@ -22108,6 +22257,16 @@ msgstr "Ấn Độ - Báo cáo bán hàng (GST)"
 #: model:ir.module.module,shortdesc:base.module_l10n_in_stock
 msgid "Indian - Stock Report(GST)"
 msgstr "Báo cáo chứng khoán Ấn Độ (GST)"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
+msgid "Indian - TCS/TDS Accounting Report and Taxes"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_upi
+msgid "Indian - UPI"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -22620,6 +22779,7 @@ msgid "Inventory"
 msgstr "Tồn kho"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_purchase_price_diff
 #: model:ir.module.module,summary:base.module_stock_account
 msgid "Inventory, Logistic, Valuation, Accounting"
 msgstr "Kho, Vận tải, Định giá tồn kho, Kế toán kho"
@@ -22781,6 +22941,11 @@ msgstr "Ý - Báo cáo kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_it_edi
 msgid "Italy - E-invoicing"
 msgstr "Italy - Hóa đơn điện tử"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_it_edi_withholding
+msgid "Italy - E-invoicing (Withholding)"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_J
@@ -22981,11 +23146,6 @@ msgstr "Cơ sở Bản địa hóa LATAM"
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__lgpl-3
 msgid "LGPL Version 3"
 msgstr "LGPL Phiên bản 3"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
-msgid "LT - Accounting Reports"
-msgstr "LT - Báo cáo kế toán"
 
 #. module: base
 #. odoo-python
@@ -23619,6 +23779,11 @@ msgid "Lithuania - Accounting"
 msgstr "Lithuania - Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lt_reports
+msgid "Lithuania - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lt_saft
 msgid "Lithuanian Standard Audit File for Tax"
 msgstr "Hồ sơ Kiểm toán Tiêu chuẩn của Litva về Thuế"
@@ -23722,6 +23887,11 @@ msgstr "Luxembourg - Kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports
 msgid "Luxembourg - Accounting Reports"
 msgstr "Luxembourg - Báo cáo Kế toán"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_annual_vat_2023
+msgid "Luxembourg - Annual VAT Report 2023 update"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_hr_payroll
@@ -28409,6 +28579,7 @@ msgstr "Oswald"
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
+#: code:addons/base/models/res_users.py:0
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #, python-format
 msgid "Other"
@@ -28878,6 +29049,11 @@ msgid "Payment - Account"
 msgstr "Thanh toán - Tài chính"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
+msgid "Payment - Account / Invoice Online Payment Patch"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Engine"
 msgstr "Công cụ Thanh toán"
@@ -29037,6 +29213,11 @@ msgstr "Peru - Kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock
 msgid "Peruvian - Electronic Delivery Note"
 msgstr "Peru - Hướng dẫn Giao hàng Điện tử"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pe_edi_stock_20
+msgid "Peruvian - Electronic Delivery Note 2.0"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.ph
@@ -29232,6 +29413,11 @@ msgstr "Ba Lan"
 #: model:ir.module.module,shortdesc:base.module_l10n_pl
 msgid "Poland - Accounting"
 msgstr "Ba Lan - Kế toán"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_pl_reports
+msgid "Poland - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.groups,name:base.group_portal
@@ -32256,17 +32442,6 @@ msgid "Somalia"
 msgstr "Somalia"
 
 #. module: base
-#. odoo-python
-#: code:addons/fields.py:0
-#, python-format
-msgid ""
-"Someone with escalated rights previously modified this field (%s %s), you "
-"are therefore not able to modify it yourself."
-msgstr ""
-"Ai đó có quyền cao hơn đã sửa đổi trường (%s %s) trước đó, do đó bạn không "
-"thể tự sửa đổi trường này.."
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_bank__bic
 #: model:ir.model.fields,help:base.field_res_partner_bank__bank_bic
 msgid "Sometimes called BIC or Swift."
@@ -32958,6 +33133,11 @@ msgid "Switzerland - Accounting Reports"
 msgstr "Báo cáo kế toán Thụy sĩ"
 
 #. module: base
+#: model:res.country.group,name:base.ch_and_li
+msgid "Switzerland and Liechtenstein"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__symbol
 msgid "Symbol"
 msgstr "Biểu tượng"
@@ -33396,6 +33576,13 @@ msgstr "Thái Lan - Kế toán"
 #. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
+msgid "The \"%s\" action cannot be selected as home action."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_users.py:0
+#, python-format
 msgid "The \"App Switcher\" action cannot be selected as home action."
 msgstr "\"Trình chuyển đổi ứng dụng\" không thể chọn tác vụ tại trang chủ."
 
@@ -33459,11 +33646,10 @@ msgstr ""
 #: model:ir.model.fields,help:base.field_res_partner__vat
 #: model:ir.model.fields,help:base.field_res_users__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Mã số thuế. Hoàn thành nó nếu liên hệ chịu thuế chính phủ. Được sử dụng "
-"trong một số báo cáo pháp lý."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -33478,13 +33664,6 @@ msgid ""
 "The `%s` module appears to be unavailable at the moment, please try again "
 "later."
 msgstr "Module `%s` có vẻ không khả dụng vào lúc này, vui lòng thử lại sau."
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_module.py:0
-#, python-format
-msgid "The `base` module cannot be uninstalled"
-msgstr "Mô đun `base` không thể gỡ"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_category__active
@@ -33668,6 +33847,17 @@ msgstr ""
 "                                                được phân tách bằng dấu phẩy, như <code>tên và kích thước</code>. Bạn cũng có thể tham khảo\n"
 "                                                các trường có thể truy cập thông qua các trường quan hệ khác, ví dụ như\n"
 "                                                <code>partner_id.company_id.name</code>."
+
+#. module: base
+#. odoo-python
+#: code:addons/fields.py:0
+#, python-format
+msgid ""
+"The field value you're saving (%s %s) includes content that is restricted "
+"for security reasons. It is possible that someone with higher privileges "
+"previously modified it, and you are therefore not able to modify it yourself"
+" while preserving the content."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -34639,6 +34829,13 @@ msgid ""
 msgstr ""
 "Module kỹ thuật này cho phép xác định giá cho thuê trên mẫu sản phẩm và sử "
 "dụng chúng trong thứ tự bán theo thời hạn, số lượng, bảng giá."
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_module.py:0
+#, python-format
+msgid "Those modules cannot be uninstalled: %s"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__thousands_sep
@@ -36194,6 +36391,7 @@ msgid "Visible"
 msgstr "Hiện"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_purchase_price_diff
 #: model:ir.module.module,shortdesc:base.module_stock_account
 msgid "WMS Accounting"
 msgstr "Kế toán kho"
@@ -37169,6 +37367,7 @@ msgid "Zip Required"
 msgstr "Cần có mã bưu điện"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr "account"

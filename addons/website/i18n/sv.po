@@ -23,14 +23,14 @@
 # Martin Trigaux, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
-# Chrille Hedberg <hedberg.chrille@gmail.com>, 2022
+# Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
@@ -625,9 +625,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 
 #. module: website
@@ -1275,6 +1273,7 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -1989,6 +1988,7 @@ msgid "Autosizing"
 msgstr ""
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -2476,7 +2476,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
 #, python-format
 msgid "Chart"
-msgstr ""
+msgstr "Diagram"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_live_chat
@@ -3897,7 +3897,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 msgid "Edit in backend"
-msgstr ""
+msgstr "Redigera i backend"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -4107,6 +4107,7 @@ msgid "Extension View"
 msgstr "Förlängningsvy"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5102,6 +5103,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6329,6 +6331,11 @@ msgstr ""
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 msgid "Menus"
 msgstr "Menyer"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Guide för att sammanfoga partners"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -8079,7 +8086,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 msgid "Score"
-msgstr ""
+msgstr "Poäng"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
@@ -9093,6 +9100,7 @@ msgid "The full URL to access the document through the website."
 msgstr "Fullständig URL för åtkomst av dokument via webbplatsen."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10388,6 +10396,7 @@ msgid "Website Pages"
 msgstr "Webbsidor"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10442,6 +10451,7 @@ msgid "Website URL"
 msgstr "Webbplatsens URL"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"

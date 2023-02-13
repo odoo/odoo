@@ -6,16 +6,16 @@
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2022
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -506,7 +506,7 @@ msgstr "<b>Voeg </b> de geselecteerde afbeelding toe."
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
 msgstr ""
-"<b>Klik op wijzigen</b> om te starten met het ontwerpen van je startpagina."
+"<b>Klik op Bewerken</b> om te starten met het ontwerpen van je startpagina."
 
 #. module: website
 #. odoo-javascript
@@ -634,14 +634,10 @@ msgstr "<b>Verschuif</b> deze knop om de kolomgrootte te wijzigen."
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 msgid ""
 "<br/><br/>\n"
-"                    Example of rule:<br/>\n"
-"                    <code class=\"ms-4\">Disallow: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Allow: *</code>"
+"                    Example of rule:<br/>"
 msgstr ""
 "<br/><br/>\n"
-"                    Voorbeeld van een regel:<br/>\n"
-"                    <code class=\"ms-4\">Niet toestaan: /web/login</code><br/>\n"
-"                    <code class=\"ms-4\">Toestaan: *</code>"
+"                    Voorbeeld van regel:<br/>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
@@ -1379,6 +1375,7 @@ msgstr ""
 "achtergrondkleuren en krachtige weergaveopties."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_published
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,help:website.field_ir_cron__website_published
 msgid ""
@@ -2122,6 +2119,7 @@ msgid "Autosizing"
 msgstr "Automatisch aanpassen"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
 msgid "Available on the Website"
@@ -2379,7 +2377,7 @@ msgstr "Kruimelpad"
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
 msgid "Build my website"
-msgstr "Mijn website bouwen"
+msgstr "Bouw mijn website"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -4021,7 +4019,7 @@ msgstr "Volg je bezoeker eenvoudig met Plausible"
 #: model_terms:ir.ui.view,arch_db:website.s_embed_code_options
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: website
 #. odoo-javascript
@@ -4284,6 +4282,7 @@ msgid "Extension View"
 msgstr "Extensie weergave"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,field_description:website.field_ir_cron__xml_id
 #: model:ir.model.fields,field_description:website.field_website_page__xml_id
@@ -5313,6 +5312,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__xml_id
 #: model:ir.model.fields,help:website.field_ir_actions_server__xml_id
 #: model:ir.model.fields,help:website.field_ir_cron__xml_id
 msgid "ID of the action if defined in a XML file"
@@ -6563,6 +6563,11 @@ msgstr "Menu met een kopie van mij"
 #: model:ir.ui.menu,name:website.menu_website_menu_list
 msgid "Menus"
 msgstr "Menu's"
+
+#. module: website
+#: model:ir.model,name:website.model_base_partner_merge_automatic_wizard
+msgid "Merge Partner Wizard"
+msgstr "Relaties samenvoegen wizard"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -9385,6 +9390,7 @@ msgstr ""
 "De volledige URL om toegang tot het document te krijgen via de website."
 
 #. module: website
+#: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
@@ -10759,6 +10765,7 @@ msgid "Website Pages"
 msgstr "Websitepagina's"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_path
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_path
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_path
 msgid "Website Path"
@@ -10813,6 +10820,7 @@ msgid "Website URL"
 msgstr "Website URL"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_base_automation__website_url
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
@@ -11030,7 +11038,7 @@ msgstr "Je kunt kleuren en achtergronden bewerken om functies te markeren."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "You can edit, duplicate..."
-msgstr "Je kunt wijzigen, dupliceren..."
+msgstr "Je kunt bewerken, dupliceren..."
 
 #. module: website
 #. odoo-python

@@ -4,6 +4,11 @@
 # 
 # Translators:
 # Nikola Iliev, 2023
+# Ивайло Малинов <iv.malinov@gmail.com>, 2023
+# aleksandar ivanov, 2023
+# Martin Trigaux, 2023
+# Albena Mincheva <albena_vicheva@abv.bg>, 2023
+# Maria Boyadjieva <marabo2000@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Nikola Iliev, 2023\n"
+"Last-Translator: Maria Boyadjieva <marabo2000@gmail.com>, 2023\n"
 "Language-Team: Bulgarian (https://www.transifex.com/odoo/teams/41243/bg/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +46,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__alert_time
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__alert_date
 msgid "Alert Date"
-msgstr ""
+msgstr "Дата на подаден сигнал"
 
 #. module: product_expiry
 #: model:mail.activity.type,name:product_expiry.mail_activity_type_alert_date_reached
@@ -57,7 +62,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__use_date
 msgid "Best before Date"
-msgstr ""
+msgstr "Най-добър до"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
@@ -72,7 +77,7 @@ msgstr "Настройки"
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 msgid "Confirm"
-msgstr ""
+msgstr "Потвърждение"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_expiry_picking_confirmation
@@ -84,7 +89,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
 #, python-format
 msgid "Confirmation"
-msgstr ""
+msgstr "Потвърждение"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__create_uid
@@ -102,17 +107,19 @@ msgid ""
 "Date to determine the expired lots and serial numbers using the filter "
 "\"Expiration Alerts\"."
 msgstr ""
+"Дата за определяне на партидите с изтекъл срок, използвайки филтъра "
+"\"Известия за изтичане на срока\"."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_move_form_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Dates"
-msgstr ""
+msgstr "Дати"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__description
 msgid "Description"
-msgstr ""
+msgstr "Описание"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
@@ -143,7 +150,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_product_form_expiry
 msgid "Expiration Date"
-msgstr ""
+msgstr "Дата на изтичане срока на годност"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
@@ -188,12 +195,12 @@ msgstr "Последно актуализирано на"
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__lot_ids
 msgid "Lot"
-msgstr ""
+msgstr "Партида"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_lot
 msgid "Lot/Serial"
-msgstr ""
+msgstr "Партиден/сериен"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_product_product__expiration_time
@@ -233,7 +240,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__picking_ids
 msgid "Picking"
-msgstr ""
+msgstr "Пикинг"
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.confirm_expiry_view
@@ -243,18 +250,18 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_procurement_group
 msgid "Procurement Group"
-msgstr ""
+msgstr "Група за доставки"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_template
 msgid "Product"
-msgstr ""
+msgstr "Продукт"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__product_expiry_alert
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__is_expired
 msgid "Product Expiry Alert"
-msgstr ""
+msgstr "Известие за изтичане на срока на годност на продукта"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move_line
@@ -264,12 +271,12 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
 msgid "Product Variant"
-msgstr ""
+msgstr "Продуктов вариант"
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_quant
 msgid "Quants"
-msgstr ""
+msgstr "Количества"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__removal_time
@@ -277,7 +284,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_stock_lot__removal_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_quant__removal_date
 msgid "Removal Date"
-msgstr ""
+msgstr "Дата на премахване"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__show_lots
@@ -287,7 +294,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Движение в склада"
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__product_expiry_alert
@@ -308,6 +315,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number may become "
 "dangerous and must not be consumed."
 msgstr ""
+"Това е датата, на която стоките с този сериен номер могат да станат опасни и"
+" не трябва да се консумират."
 
 #. module: product_expiry
 #: model:ir.model.fields,help:product_expiry.field_stock_lot__removal_date
@@ -323,6 +332,8 @@ msgid ""
 "This is the date on which the goods with this Serial Number start "
 "deteriorating, without being dangerous yet."
 msgstr ""
+"Това е датата, на която стоките с този сериен номер започват да се влошават,"
+" без да са все още опасни."
 
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.view_stock_move_line_detailed_operation_tree_expiry
@@ -339,7 +350,7 @@ msgstr ""
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_stock_picking
 msgid "Transfer"
-msgstr ""
+msgstr "Прехвърлете"
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__use_expiration_date

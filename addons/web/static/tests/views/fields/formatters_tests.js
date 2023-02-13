@@ -168,10 +168,20 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(2), "02:00");
         assert.strictEqual(formatFloatTime(3.5), "03:30");
         assert.strictEqual(formatFloatTime(0.25), "00:15");
+        assert.strictEqual(formatFloatTime(0.58), "00:35");
         assert.strictEqual(formatFloatTime(2 / 60, { displaySeconds: true }), "00:02:00");
-        assert.strictEqual(formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true }), "00:02:01");
-        assert.strictEqual(formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true }), "00:02:02");
-        assert.strictEqual(formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true }), "00:02:03");
+        assert.strictEqual(
+            formatFloatTime(2 / 60 + 1 / 3600, { displaySeconds: true }),
+            "00:02:01"
+        );
+        assert.strictEqual(
+            formatFloatTime(2 / 60 + 2 / 3600, { displaySeconds: true }),
+            "00:02:02"
+        );
+        assert.strictEqual(
+            formatFloatTime(2 / 60 + 3 / 3600, { displaySeconds: true }),
+            "00:02:03"
+        );
         assert.strictEqual(formatFloatTime(0.25, { displaySeconds: true }), "00:15:00");
         assert.strictEqual(formatFloatTime(0.25 + 15 / 3600, { displaySeconds: true }), "00:15:15");
         assert.strictEqual(formatFloatTime(0.25 + 45 / 3600, { displaySeconds: true }), "00:15:45");
@@ -182,17 +192,26 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(formatFloatTime(2, options), "2:00");
         assert.strictEqual(formatFloatTime(3.5, options), "3:30");
         assert.strictEqual(formatFloatTime(3.5, { ...options, displaySeconds: true }), "3:30:00");
-        assert.strictEqual(formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true }), "3:30:15");
-        assert.strictEqual(formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true }), "3:30:45");
-        assert.strictEqual(formatFloatTime(56 / 3600, {  ...options, displaySeconds: true }), "0:00:56");
+        assert.strictEqual(
+            formatFloatTime(3.5 + 15 / 3600, { ...options, displaySeconds: true }),
+            "3:30:15"
+        );
+        assert.strictEqual(
+            formatFloatTime(3.5 + 45 / 3600, { ...options, displaySeconds: true }),
+            "3:30:45"
+        );
+        assert.strictEqual(
+            formatFloatTime(56 / 3600, { ...options, displaySeconds: true }),
+            "0:00:56"
+        );
         assert.strictEqual(formatFloatTime(-0.5, options), "-0:30");
     });
 
     QUnit.test("formatJson", function (assert) {
-        assert.strictEqual(formatJson(false), '');
-        assert.strictEqual(formatJson({}), '{}');
-        assert.strictEqual(formatJson({1: 111}), '{"1":111}');
-        assert.strictEqual(formatJson({"9": 11, 666: 42}), '{"9":11,"666":42}');
+        assert.strictEqual(formatJson(false), "");
+        assert.strictEqual(formatJson({}), "{}");
+        assert.strictEqual(formatJson({ 1: 111 }), '{"1":111}');
+        assert.strictEqual(formatJson({ 9: 11, 666: 42 }), '{"9":11,"666":42}');
     });
 
     QUnit.test("formatInteger", function (assert) {
@@ -273,8 +292,8 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.deepEqual(
             formatMonetary(1234567.654, { currencyId: 11, digits: [69, 1] }),
-            "$\u00a01,234,567.65",
-            "currency digits should take over options digits when both are defined"
+            "$\u00a01,234,567.7",
+            "options digits should take over currency digits when both are defined"
         );
 
         // GES TODO do we keep below behavior ?

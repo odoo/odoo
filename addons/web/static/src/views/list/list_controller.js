@@ -4,6 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { DynamicRecordList } from "@web/views/relational_model";
+import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { ActionMenus } from "@web/search/action_menus/action_menus";
@@ -70,6 +71,7 @@ export class ListController extends Component {
             viewMode: "list",
             groupByInfo: this.archInfo.groupBy.fields,
             limit: this.archInfo.limit || this.props.limit,
+            countLimit: this.archInfo.countLimit,
             defaultOrder: this.archInfo.defaultOrder,
             expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
             groupsLimit: this.archInfo.groupsLimit,
@@ -311,10 +313,12 @@ export class ListController extends Component {
     }
 
     get defaultExportList() {
-        return this.props.archInfo.columns
-            .filter((col) => col.type === "field")
-            .map((col) => this.props.fields[col.name])
-            .filter((field) => field.exportable !== false);
+        return unique(
+            this.props.archInfo.columns
+                .filter((col) => col.type === "field")
+                .map((col) => this.props.fields[col.name])
+                .filter((field) => field.exportable !== false)
+        );
     }
 
     get display() {

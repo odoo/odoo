@@ -37,7 +37,7 @@ PYTHON_TRANSLATION_COMMENT = 'odoo-python'
 # translation used for javascript code in web client
 JAVASCRIPT_TRANSLATION_COMMENT = 'odoo-javascript'
 # used to notify web client that these translations should be loaded in the UI
-# depreciated comment since Odoo 16.0
+# deprecated comment since Odoo 16.0
 WEB_TRANSLATION_COMMENT = "openerp-web"
 
 SKIPPED_ELEMENTS = ('script', 'style', 'title')
@@ -1412,7 +1412,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, verbose=True, overwrite=False
 
 def get_locales(lang=None):
     if lang is None:
-        lang = locale.getdefaultlocale()[0]
+        lang = locale.getlocale()[0]
 
     if os.name == 'nt':
         lang = _LOCALE2WIN32.get(lang, lang)
@@ -1516,7 +1516,7 @@ class CodeTranslations:
         def filter_func(row):
             # In the pot files with new translations, a code translation should have either
             # PYTHON_TRANSLATION_COMMENT or JAVASCRIPT_TRANSLATION_COMMENT for comments.
-            # If a comment has neither the above comments, the pot file uses the depreciated
+            # If a comment has neither the above comments, the pot file uses the deprecated
             # comments. And all code translations are stored as python translations.
             return row.get('value') and (
                     PYTHON_TRANSLATION_COMMENT in row['comments']

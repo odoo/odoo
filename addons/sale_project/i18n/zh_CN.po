@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Raymond Yu <cl_yu@hotmail.com>, 2022
-# Martin Trigaux, 2022
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2022\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -42,6 +43,7 @@ msgstr ""
 "            "
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
@@ -63,11 +65,25 @@ msgstr ""
 " - 库存变动：数量来自已确认的选择\n"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
 msgstr "所有项目已加载"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Delivered Quantity (Manual)"
+msgstr ""
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Based on Milestones"
+msgstr "基于里程碑"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -97,7 +113,7 @@ msgid "Customer"
 msgstr "客户"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Delivered"
@@ -144,12 +160,14 @@ msgid "Invoice Count"
 msgstr "结算单计数"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
 msgstr "销售此服务后立即为订购数量开具结算单。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -159,6 +177,7 @@ msgid ""
 msgstr "一旦此服务售出，就对订购数量开具结算。为订单创建一个项目，其中包含每个销售订单行的任务以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -167,6 +186,7 @@ msgid ""
 msgstr "此服务售出后立即开具订购数量的结算。在现有项目中创建一个任务以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -175,6 +195,7 @@ msgid ""
 msgstr "此服务售出后立即开具订购数量的结算。为订单创建一个空项目以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -183,6 +204,7 @@ msgid ""
 msgstr "在交付此服务时为其开具结算（在销售订单行上手动设置数量）。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -192,6 +214,7 @@ msgid ""
 msgstr "在交付此服务时为其开具结算（在销售订单行上手动设置数量）。为订单创建一个项目，其中包含每个销售订单行的任务，以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -201,6 +224,7 @@ msgid ""
 msgstr "在交付此服务时为其开具结算（在销售订单行上手动设置数量）。在现有项目中创建一个任务以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -210,12 +234,14 @@ msgid ""
 msgstr "在交付此服务时为其开具结算（在销售订单行上手动设置数量）。为订单创建一个空项目以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
 msgstr "在达到里程碑时开具结算。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -224,6 +250,7 @@ msgid ""
 msgstr "在达到里程碑时开具结算。为订单创建一个项目，其中包含每个销售订单行的任务，以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -232,6 +259,7 @@ msgid ""
 msgstr "在达到里程碑时开具结算。在现有项目中创建一个任务以跟踪所花费的时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -245,13 +273,14 @@ msgid "Invoice your time and material to customers"
 msgstr "向客户开具您的时间和材料的结算单"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Invoiced"
 msgstr "已结算"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -279,7 +308,7 @@ msgid "Journal Item"
 msgstr "会计分录"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Load more"
@@ -298,6 +327,7 @@ msgstr ""
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
@@ -314,6 +344,7 @@ msgid "Milestone Count"
 msgstr "里程碑计数"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields.selection,name:sale_project.selection__sale_order_line__qty_delivered_method__milestones
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -322,6 +353,7 @@ msgid "Milestones"
 msgstr "里程碑"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "New"
@@ -364,13 +396,14 @@ msgstr ""
 "        “销售订单中的项目”:如果定义了，将使用销售订单配置的项目，或者根据选择的模板创建一个新项目。"
 
 #. module: sale_project
-#: code:addons/sale_project/models/project.py:0
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
 msgstr "其他收入"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Services"
@@ -382,6 +415,13 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr "一旦达到里程碑，将自动交付订购数量的百分比。"
+
+#. module: sale_project
+#. odoo-python
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid "Prepaid/Fixed Price"
+msgstr "预付/固定价格"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -429,6 +469,7 @@ msgid "Project's sale order"
 msgstr "项目销售订单"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
@@ -463,7 +504,7 @@ msgid "Sale Order Count"
 msgstr "销售订单计数"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sales"
@@ -475,7 +516,9 @@ msgid "Sales & Invoicing"
 msgstr "销售和开票"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
+#: code:addons/sale_project/models/project.py:0
 #: model:ir.model,name:sale_project.model_sale_order
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
@@ -492,6 +535,7 @@ msgid "Sales Order Id"
 msgstr "销售订单 id"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__sale_line_id
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
@@ -522,7 +566,8 @@ msgstr ""
 "移除销售订单项目，以使这项任务不计费。你也可以单独改变或移除每个工时表项目的销售订单项目。"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -535,6 +580,7 @@ msgid "Sales Order Line"
 msgstr "销售订单行"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
@@ -561,18 +607,21 @@ msgid "Sales order to which the task is linked."
 msgstr "任务关联的销售订单。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Invoice"
 msgstr "在结算单中搜索"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order"
 msgstr "在销售订单中搜索"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/controllers/portal.py:0
 #, python-format
 msgid "Search in Sales Order Item"
@@ -590,7 +639,7 @@ msgid "Service Invoicing Policy"
 msgstr "服务开票策略"
 
 #. module: sale_project
-#. openerp-web
+#. odoo-javascript
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Sold"
@@ -603,6 +652,7 @@ msgid "Task"
 msgstr "任务"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
@@ -630,6 +680,7 @@ msgid "Tasks associated to this sale"
 msgstr "与该销售关联的任务"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -638,6 +689,7 @@ msgid ""
 msgstr "产品%s不应该有一个全局项目，因为它将生成一个项目。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -646,6 +698,7 @@ msgid ""
 msgstr "产品模板%s不应该有项目或项目模板，因为它不会生成项目。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -654,6 +707,7 @@ msgid ""
 msgstr "产品模板%s不应具有项目模板，因为它将在全局项目中生成任务。"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
@@ -676,6 +730,7 @@ msgid "Vendor Bill Count"
 msgstr "供应商应付帐单数"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/models/project.py:0
 #, python-format
@@ -683,6 +738,7 @@ msgid "Vendor Bills"
 msgstr "供应商账单"
 
 #. module: sale_project
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid ""

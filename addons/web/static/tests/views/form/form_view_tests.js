@@ -12596,6 +12596,28 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["get_views", "onchange", "create", "read"]);
     });
 
+    QUnit.test("save a form view with a duplicated invisible required field", async function (assert) {
+        serverData.models.partner.fields.text = { string: "Text", type: "char", required: 1 };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="text"/>
+                        <field name="text" invisible="1"/>
+                    </group>
+                </form>`,
+        });
+
+        await clickSave(target);
+
+        assert.containsOnce(target, ".o_form_label.o_field_invalid");
+        assert.containsOnce(target, ".o_field_char.o_field_invalid");
+    });
+
     QUnit.test(
         "save a form view with an invisible required field in a x2many",
         async function (assert) {
@@ -12759,6 +12781,63 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
         await editInput(target, ".o_field_widget input", "dirty");
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test("status indicator: field dirty state", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="foo"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "dirty";
+        await triggerEvent(input, null, "input");
+
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test("status indicator: field dirty state (date)", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="date"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "03/26/2019";
+        await triggerEvent(input, null, "input");
+
+        assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
+    });
+
+    QUnit.test("status indicator: field dirty state (datetime)", async (assert) => {
+        // this test check that the indicator don't need the onchange to be displayed
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form><field name="datetime"/></form>`,
+        });
+
+        assert.containsOnce(target, ".o_form_status_indicator_buttons.invisible");
+
+        const input = target.querySelector(".o_field_widget input");
+        input.value = "12/12/2012 11:55:05";
+        await triggerEvent(input, null, "input");
+
         assert.containsNone(target, ".o_form_status_indicator_buttons.invisible");
     });
 
