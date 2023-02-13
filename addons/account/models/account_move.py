@@ -300,7 +300,13 @@ class AccountMove(models.Model):
 
     # ==== Reverse feature fields ====
     reversed_entry_id = fields.Many2one('account.move', string="Reversal of", readonly=True, copy=False,
+<<<<<<< HEAD
         check_company=True, index='btree_not_null')
+||||||| parent of 33971d1510a (temp)
+        check_company=True)
+=======
+        check_company=True, index=True)
+>>>>>>> 33971d1510a (temp)
     reversal_move_id = fields.One2many('account.move', 'reversed_entry_id')
 
     # =========================================================
