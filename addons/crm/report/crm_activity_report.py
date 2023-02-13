@@ -70,11 +70,10 @@ class ActivityReport(models.Model):
         """
 
     def _where(self):
-        disccusion_subtype = self.env.ref('mail.mt_comment')
         return """
             WHERE
-                m.model = 'crm.lead' AND (m.mail_activity_type_id IS NOT NULL OR m.subtype_id = %s)
-        """ % (disccusion_subtype.id,)
+                m.model = 'crm.lead' AND (m.mail_activity_type_id IS NOT NULL)
+        """
 
     def init(self):
         tools.drop_view_if_exists(self._cr, self._table)
