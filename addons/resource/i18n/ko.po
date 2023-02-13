@@ -3,16 +3,16 @@
 # 	* resource
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Sarah Park, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Sarah Park, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,6 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #: code:addons/resource/models/resource.py:0
 #, python-format
@@ -60,6 +61,7 @@ msgid ""
 msgstr "이 일정표를 2주 일정표로 전환하시겠습니까? 모든 항목이 손실됩니다."
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Attendances can't overlap."
@@ -176,6 +178,7 @@ msgid "First"
 msgstr "첫 번째"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "First week"
@@ -187,12 +190,14 @@ msgid "Friday"
 msgstr "금요일"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Afternoon"
 msgstr "금요일 오후"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Friday Morning"
@@ -255,19 +260,12 @@ msgid ""
 msgstr ""
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid ""
 "In a calendar with 2 weeks mode, all periods need to be in the sections."
 msgstr "2주 모드가 있는 달력에서는 모든 기간이 섹션에 있어야 합니다."
-
-#. module: resource
-#: model:ir.model.fields,field_description:resource.field_resource_calendar____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_attendance____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves____last_update
-#: model:ir.model.fields,field_description:resource.field_resource_resource____last_update
-msgid "Last Modified on"
-msgstr "최근 수정일"
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar__write_uid
@@ -286,17 +284,6 @@ msgid "Last Updated on"
 msgstr "최근 갱신 일자"
 
 #. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Leave Date"
-msgstr "휴가일"
-
-#. module: resource
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
-#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
-msgid "Leave Detail"
-msgstr "휴가 세부사항"
-
-#. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_resource__resource_type__material
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_resource_search
 msgid "Material"
@@ -308,12 +295,14 @@ msgid "Monday"
 msgstr "월요일"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Afternoon"
 msgstr "월요일 오후"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Monday Morning"
@@ -443,6 +432,7 @@ msgid "Second"
 msgstr "보조"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Second week"
@@ -459,6 +449,7 @@ msgid "Sequence"
 msgstr "순서"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/res_company.py:0
 #, python-format
 msgid "Standard 40 hours/week"
@@ -485,8 +476,8 @@ msgstr "시작일"
 
 #. module: resource
 #: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
-msgid "Starting Date of Leave"
-msgstr "휴가 시작일"
+msgid "Starting Date of Time Off"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields.selection,name:resource.selection__resource_calendar_attendance__dayofweek__6
@@ -509,12 +500,14 @@ msgid "Technical field for UX purpose."
 msgstr "UX용 기술 필드"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The current week (from %s to %s) correspond to the  %s one."
 msgstr ""
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "The start date of the time off must be earlier than the end date."
@@ -544,12 +537,14 @@ msgid "Thursday"
 msgstr "목요일"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Afternoon"
 msgstr "목요일 오후"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Thursday Morning"
@@ -561,6 +556,17 @@ msgstr "목요일 오전"
 #: model_terms:ir.ui.view,arch_db:resource.resource_calendar_form
 msgid "Time Off"
 msgstr "휴가"
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.view_resource_calendar_leaves_search
+msgid "Time Off Date"
+msgstr ""
+
+#. module: resource
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_form
+#: model_terms:ir.ui.view,arch_db:resource.resource_calendar_leave_tree
+msgid "Time Off Detail"
+msgstr ""
 
 #. module: resource
 #: model:ir.model.fields,field_description:resource.field_resource_calendar_leaves__time_type
@@ -590,12 +596,14 @@ msgid "Tuesday"
 msgstr "화요일"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Afternoon"
 msgstr "화요일 오후"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Tuesday Morning"
@@ -620,12 +628,14 @@ msgid "Wednesday"
 msgstr "수요일"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Afternoon"
 msgstr "수요일 오후"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Wednesday Morning"
@@ -672,6 +682,7 @@ msgid "Working Hours"
 msgstr "근무 시간"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "Working Hours of %s"
@@ -696,30 +707,35 @@ msgid "Working Times"
 msgstr "근무 시간"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "You can't delete section between weeks."
 msgstr "몇 주에 걸친 구간은 삭제할 수 없습니다."
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "first"
 msgstr ""
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "other week"
 msgstr ""
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "second"
 msgstr "초"
 
 #. module: resource
+#. odoo-python
 #: code:addons/resource/models/resource.py:0
 #, python-format
 msgid "this week"

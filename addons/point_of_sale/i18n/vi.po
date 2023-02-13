@@ -3,19 +3,17 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
-# Vo Thanh Thuy, 2022
-# Duy BQ <duybq86@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Thi Huong Nguyen, 2023
+# Duy BQ <duybq86@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Thi Huong Nguyen, 2023\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -114,11 +112,6 @@ msgid "+ New Shop"
 msgstr ""
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Quản lý\"/>"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<i class=\"fa fa-fw fa-arrow-right\"/>How to manage tax-included prices"
 msgstr "<i class=\"fa fa-fw fa-arrow-right\"/>Cách quản lý giá bao gồm thuế"
@@ -174,41 +167,14 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
 "<span class=\"o_form_label\">Barcodes</span>\n"
-"                                    <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
-msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Default Journals</span>"
+"                                <i class=\"fa fa-info-circle me-1\" title=\"This setting is common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
 msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Multi Employees per Session</span>"
 msgstr ""
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Order Reference</span>"
-msgstr "<span class=\"o_form_label\">Tham chiếu đơn hàng</span>"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "<span class=\"o_form_label\">Payment Methods</span>"
-msgstr "<span class=\"o_form_label\">Phương thức thanh toán</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -439,6 +405,8 @@ msgstr "Biểu tượng kiểu hoạt động"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/TextAreaPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductConfiguratorPopup.xml:0
 #, python-format
 msgid "Add"
@@ -670,21 +638,6 @@ msgid "An internal identification of the point of sale."
 msgstr "Một định danh nội bộ cho điểm bán lẻ này."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
-#, python-format
-msgid "An unknown error prevents us from getting closing information."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
-#, python-format
-msgid "An unknown error prevents us from loading product information."
-msgstr ""
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
@@ -745,6 +698,11 @@ msgid "Authorized Difference"
 msgstr "Sự khác biệt được ủy quyền"
 
 #. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__auto_validate_terminal_payment
+msgid "Auto Validate Terminal Payment"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
@@ -761,6 +719,19 @@ msgstr "In biên lai tự động"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
 msgid "Automatically open the cashdrawer."
 msgstr "Tự động mở két tiền mặt."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Automatically validate order"
+msgstr ""
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
+#: model:ir.model.fields,help:point_of_sale.field_pos_config__auto_validate_terminal_payment
+#: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_auto_validate_terminal_payment
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Automatically validates orders paid with a payment terminal."
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -794,7 +765,6 @@ msgstr "Giá trung bình"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Popups/ControlButtonPopup.js:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ScaleScreen/ScaleScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/ReprintReceiptScreen.xml:0
@@ -863,7 +833,7 @@ msgstr "Quy tắc mã vạch"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Barcode Scanner"
 msgstr "Máy quét mã vạch"
@@ -897,8 +867,8 @@ msgstr "Hoá đơn"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Bills &amp; Receipts"
-msgstr "Hoá đơn &amp; Biên lai"
+msgid "Bills & Receipts"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -911,7 +881,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Buffer:"
 msgstr "Đệm:"
@@ -956,16 +926,11 @@ msgstr "Không thể thay đổi khách hàng"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorBarcodePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/OfflineErrorPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/SelectionPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/TextAreaPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/TextInputPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductConfiguratorPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
@@ -988,21 +953,6 @@ msgstr "Hủy yêu cầu thanh toán"
 #: model:ir.model.fields.selection,name:point_of_sale.selection__report_pos_order__state__cancel
 msgid "Cancelled"
 msgstr "Đã hủy"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
-#, python-format
-msgid "Cannot access product information screen if offline."
-msgstr "Không thể truy cập màn hình thông tin sản phẩm nếu ngoại tuyến. "
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
-#, python-format
-msgid "Cannot close the session when offline."
-msgstr "Không thể đóng phiên khi ngoại tuyến. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1040,7 +990,6 @@ msgstr "Tiền mặt thu"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/CashMoveButton.xml:0
 #, python-format
 msgid "Cash In/Out"
@@ -1166,11 +1115,6 @@ msgid "Category used in the Point of Sale."
 msgstr "Loại sử dụng cho Điểm bán hàng"
 
 #. module: point_of_sale
-#: model:pos.category,name:point_of_sale.pos_category_chairs
-msgid "Chairs"
-msgstr "Ghế"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/CustomerFacingDisplay/CustomerFacingDisplayOrder.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenStatus.xml:0
@@ -1218,14 +1162,6 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
 msgstr "Kiểm tra số tiền của hộp tiền mặt khi mở và đóng."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
-#, python-format
-msgid "Check the internet connection then try again."
-msgstr "Kiểm tra kết nối internet và thử lại. "
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1401,11 +1337,15 @@ msgstr "Cấu hình &gt; Cài đặt"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
+#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_tree
 msgid "Configure at least one Point of Sale."
 msgstr "Định cấu hình ít nhất một Điểm bán hàng."
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/TextInputPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #, python-format
@@ -1467,31 +1407,10 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
-#, python-format
-msgid "Connection Error"
-msgstr "Lỗi kết nối"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
 #, python-format
 msgid "Connection error"
 msgstr "Lỗi kết nối"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
-#, python-format
-msgid "Connection is aborted"
-msgstr "Kết nối bị hủy bỏ"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
-#, python-format
-msgid "Connection is lost"
-msgstr "Mất kết nối"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1553,6 +1472,13 @@ msgstr "Chi phí: "
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
+#, python-format
+msgid "Couldn't connect to the server"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
 msgid "Counted"
@@ -1581,6 +1507,7 @@ msgstr "Tạo đơn hàng POS mới"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
+#: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_tree
 msgid "Create a new PoS"
 msgstr "Tạo một PoS mới"
 
@@ -1653,11 +1580,6 @@ msgid "Current Session State"
 msgstr "Trạng thái Phiên Hiện hành"
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.fabric_attribute_custom
-msgid "Custom"
-msgstr "Tùy chỉnh"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_header_or_footer
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_is_header_or_footer
 msgid "Custom Header & Footer"
@@ -1666,8 +1588,6 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
@@ -1801,6 +1721,13 @@ msgstr "Ngày"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
+#, python-format
+msgid "DatePicker"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Days"
@@ -1808,7 +1735,7 @@ msgstr "Ngày"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Debug Window"
 msgstr "Cửa sổ Gỡ lỗi"
@@ -1828,6 +1755,11 @@ msgstr "Tài khoản nhận mặc định (PoS)"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_default_fiscal_position_id
 msgid "Default Fiscal Position"
 msgstr "Vị thế tài khoá mặc định"
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Default Journals"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -1904,46 +1836,31 @@ msgstr "Xoá"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Delete Paid Orders"
 msgstr "Xóa đơn hàng đã thanh toán"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.js:0
 #, python-format
 msgid "Delete Paid Orders ?"
 msgstr "Xóa đơn hàng đã thanh toán?"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Delete Unpaid Orders"
 msgstr "Xóa đơn hàng chưa thanh toán"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.js:0
 #, python-format
 msgid "Delete Unpaid Orders ?"
 msgstr "Xóa đơn hàng chưa thanh toán?"
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.desk_organizer_product_template
-msgid "Desk Organizer"
-msgstr "Kệ để bàn"
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.desk_pad_product_template
-msgid "Desk Pad"
-msgstr "Tấm lót bàn"
-
-#. module: point_of_sale
-#: model:pos.category,name:point_of_sale.pos_category_desks
-msgid "Desks"
-msgstr "Bàn"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__account_id
@@ -1993,6 +1910,12 @@ msgstr "CK:"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/DatePickerPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/TextAreaPopup.js:0
+#: code:addons/point_of_sale/static/src/js/Popups/TextInputPopup.js:0
+#: code:addons/point_of_sale/static/src/xml/Popups/CashMovePopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/MoneyDetailsPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
@@ -2045,8 +1968,8 @@ msgstr "Chiết khấu"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Dismiss"
 msgstr "Bỏ qua"
@@ -2095,11 +2018,6 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr "Bạn có muốn mở danh sách khách hàng để chọn khách hàng không? "
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Tài liệu"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/OfflineErrorPopup.xml:0
 #, python-format
@@ -2115,14 +2033,14 @@ msgstr "Hoàn thành bởi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Download Paid Orders"
 msgstr "Tải vể các đơn đã thanh toan"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Download Unpaid Orders"
 msgstr "Tải vể các đơn chưa thanh toán"
@@ -2157,7 +2075,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_electronic_scale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_electronic_scale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2290,14 +2208,21 @@ msgstr "Được mong đợi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Expected delivery:"
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Export Paid Orders"
 msgstr "Xuất hóa đơn đã thanh toán"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Export Unpaid Orders"
 msgstr "Xuất đơn hàng chưa thanh toán"
@@ -2306,11 +2231,6 @@ msgstr "Xuất đơn hàng chưa thanh toán"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Extra Info"
 msgstr "Thông tin thêm"
-
-#. module: point_of_sale
-#: model:product.attribute,name:point_of_sale.fabric_attribute
-msgid "Fabric"
-msgstr "Vải"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__failed_pickings
@@ -2493,14 +2413,14 @@ msgstr "Kết nối đến IOT Box thất bại"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Hardware Events"
 msgstr "Thiết bị sự kiện"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Hardware Status"
 msgstr "Tình trạng phần cứng"
@@ -2641,12 +2561,13 @@ msgstr "Màn hình cho khách Iface"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__image
 msgid "Image"
 msgstr "Hình ảnh"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Import Orders"
 msgstr "Nhập đơn bán"
@@ -2714,14 +2635,7 @@ msgstr "Nhóm ban đầu"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #, python-format
-msgid "Insert a negative amount with the Cash Out option."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
-#, python-format
-msgid "Insert a positive amount with the Cash In option."
+msgid "Insert a positive amount"
 msgstr ""
 
 #. module: point_of_sale
@@ -2806,7 +2720,6 @@ msgstr "Quản lý Kho"
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__account_move
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #, python-format
@@ -2959,11 +2872,6 @@ msgid "Kpi Pos Total Value"
 msgstr "Tổng giá trị bán lẻ"
 
 #. module: point_of_sale
-#: model:product.template,name:point_of_sale.led_lamp_product_template
-msgid "LED Lamp"
-msgstr "Đèn bàn LED"
-
-#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__name
 msgid "Label"
 msgstr "Nhãn"
@@ -2980,24 +2888,6 @@ msgstr "Ngôn ngữ"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_big_scrollbars
 msgid "Large Scrollbars"
 msgstr "Thanh cuộn lớn"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_bill____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_category____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_pack_operation_lot____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session_check_product_wizard____last_update
-#: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order____last_update
-msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__last_session_closing_cash
@@ -3044,11 +2934,6 @@ msgid "Last Updated on"
 msgstr "Cập nhật lần cuối vào"
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.fabric_attribute_leather
-msgid "Leather"
-msgstr "Da"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Leave empty to use the default account from the company setting"
 msgstr "Để trống để sử dụng tài khoản mặc định từ cài đặt công ty"
@@ -3090,11 +2975,6 @@ msgstr ""
 "Đối với sổ kế toán tiền mặt, chúng tôi ghi trực tiếp vào tài khoản mặc định trên sổ kế toán thông qua các dòng sao kê.\n"
 "Đối với nhật ký ngân hàng, chúng tôi ghi vào tài khoản chưa thanh toán được chỉ định trong phương thức thanh toán này.\n"
 "Chỉ cho phép sổ kế toán tiền mặt và sổ kế toán ngân hàng. "
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.letter_tray_product_template
-msgid "Letter Tray"
-msgstr "Khay đựng thư"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
@@ -3167,7 +3047,7 @@ msgstr "Mã số trình tự đăng nhập"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Chrome.xml:0
+#: code:addons/point_of_sale/static/src/app/navbar/navbar.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
@@ -3192,11 +3072,6 @@ msgstr "Số Lô/Sê-ri là bắt buộc"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__pack_lot_ids
 msgid "Lot/serial Number"
 msgstr "Số Lô/Sê-ri"
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.magnetic_board_product_template
-msgid "Magnetic Board"
-msgstr "Bảng nam châm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_main_attachment_id
@@ -3294,11 +3169,6 @@ msgid "Method"
 msgstr "Phương thức"
 
 #. module: point_of_sale
-#: model:pos.category,name:point_of_sale.pos_category_miscellaneous
-msgid "Miscellaneous"
-msgstr "Thông tin khác"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #, python-format
@@ -3319,11 +3189,6 @@ msgid "Module Pos Hr"
 msgstr "Ứng dụng POS-HR"
 
 #. module: point_of_sale
-#: model:product.template,name:point_of_sale.monitor_stand_product_template
-msgid "Monitor Stand"
-msgstr "Kệ màn hình"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
 #, python-format
@@ -3341,6 +3206,11 @@ msgstr ""
 #, python-format
 msgid "More..."
 msgstr "Thêm..."
+
+#. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Multi Employees per Session"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__my_activity_date_deadline
@@ -3387,12 +3257,6 @@ msgstr "Cần tải khoản lãi cho sổ kế toán sau để vào sổ khoản
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Network Error"
@@ -3418,9 +3282,9 @@ msgid "New Session"
 msgstr "Phiên mới"
 
 #. module: point_of_sale
-#: model:product.template,name:point_of_sale.newspaper_rack_product_template
-msgid "Newspaper Rack"
-msgstr "Giá đựng báo"
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Sự kiện theo Lịch cho Hoạt động Kế tiếp"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3473,6 +3337,15 @@ msgid ""
 msgstr ""
 "Không tìm thấy báo cáo tiền mặt cho phiên này. Không thể ghi lại tiền mặt "
 "trả lại."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"No chart of account configured, go to the \"configuration / settings\" menu,"
+" and install one from the Invoicing tab."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3547,11 +3420,6 @@ msgid "Number of Actions"
 msgstr "Số lượng hành động"
 
 #. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_opened_session
-msgid "Number of Opened Session"
-msgstr "Số phiên đã mở"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Number of Partners Loaded"
 msgstr "Số đối tác đã tải"
@@ -3570,6 +3438,11 @@ msgstr "Số sản phẩm đã tải"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__refund_orders_count
 msgid "Number of Refund Orders"
 msgstr "Số đơn hàng hoàn tiền"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
+msgid "Number of Rescue Session"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -3608,7 +3481,6 @@ msgstr "KIỂM SOÁT TIỀN MẶT KHI MỞ"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/ProxyStatus.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
 #, python-format
 msgid "Offline"
 msgstr "Ngoại tuyến"
@@ -3629,23 +3501,13 @@ msgstr "Đơn Offline"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
-#, python-format
-msgid "OfflineErrorPopup"
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Popups/AlertPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorBarcodePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/NumberPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/OfflineErrorPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/OrderImportPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/TextAreaPopup.js:0
-#: code:addons/point_of_sale/static/src/js/Popups/TextInputPopup.js:0
 #: code:addons/point_of_sale/static/src/xml/Popups/EditListPopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/ErrorBarcodePopup.xml:0
 #: code:addons/point_of_sale/static/src/xml/Popups/OfflineErrorPopup.xml:0
@@ -3712,8 +3574,7 @@ msgstr "Chỉ hỗ trợ các hình phù hợp web có định dạng như .png 
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Open Cashbox"
 msgstr "Mở Cashbox"
@@ -3748,13 +3609,6 @@ msgstr "Mở popup chi tiết tiền "
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 msgid "Opened By"
 msgstr "Được mở bởi"
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "Opened Sessions"
-msgstr "Phiên đã mở"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -3872,6 +3726,11 @@ msgid "Order Ref"
 msgstr "Tham chiếu đơn hàng"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Order Reference"
+msgstr "Đơn hàng liên quan"
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__sequence_number
 msgid "Order Sequence Number"
 msgstr "Số Tham chiếu đơn hàng"
@@ -3882,13 +3741,6 @@ msgstr "Số Tham chiếu đơn hàng"
 #, python-format
 msgid "Order is empty"
 msgstr "Đơn hàng trống"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
-#, python-format
-msgid "Order is not synced. Check your internet connection"
-msgstr "Đơn hàng chưa đồng bộ. Hãy kiểm tra kết nối internet"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
@@ -3902,10 +3754,10 @@ msgstr ""
 "Dòng đơn hàng trong trường này là dòng đã hoàn tiền cho dòng đơn hàng này. "
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_filtered
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
@@ -3940,7 +3792,7 @@ msgstr "Thông tin khác"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Others"
 msgstr "Khác"
@@ -4043,8 +3895,6 @@ msgstr "Tải đối tác trong nền"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
@@ -4059,10 +3909,9 @@ msgid "Pay Order"
 msgstr "Thanh toán Đơn hàng"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
@@ -4124,22 +3973,13 @@ msgstr "Thanh toán thành công"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid ""
-"Payment Terminals\n"
-"                            <i class=\"fa fa-info-circle me-1\" title=\"Those settings are common to all PoS.\" pos-data-toggle=\"tooltip\"/>"
-msgstr ""
+msgid "Payment Terminals"
+msgstr "Các thiết bị thanh toán"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
 msgstr "ID giao dịch thanh toán"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#, python-format
-msgid "Payment method"
-msgstr "Phương thức thanh toán"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4268,11 +4108,6 @@ msgid "Picture"
 msgstr "Ảnh"
 
 #. module: point_of_sale
-#: model:product.attribute.value,name:point_of_sale.fabric_attribute_plastic
-msgid "Plastic"
-msgstr "Nhựa"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
@@ -4302,13 +4137,6 @@ msgid ""
 "Please check if the printer is still connected. \n"
 "Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 msgstr ""
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
-#, python-format
-msgid "Please check your internet connection and try again."
-msgstr "Vui lòng kiểm tra kết nối internet và thử lại. "
 
 #. module: point_of_sale
 #. odoo-python
@@ -4522,6 +4350,11 @@ msgid "Point of Sale Journal"
 msgstr "Sổ kế toán điểm bán hàng"
 
 #. module: point_of_sale
+#: model:ir.actions.act_window,name:point_of_sale.action_pos_config_tree
+msgid "Point of Sale List"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
 msgstr "Trình tạo thanh toán Điểm bán hàng"
@@ -4584,6 +4417,7 @@ msgstr "Nhóm người dùng PoS"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_bill__pos_config_ids
+#: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_list
 msgid "Point of Sales"
 msgstr "Điểm bán lẻ"
 
@@ -4781,7 +4615,7 @@ msgstr "In"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/ReceiptScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/ControlButtons/ReprintReceiptButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/ReprintReceiptScreen.xml:0
@@ -4922,18 +4756,6 @@ msgid "Product information"
 msgstr "Thông tin sản phẩm"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
-#, python-format
-msgid ""
-"Product is not loaded. Tried loading the product from the server but there "
-"is a network error."
-msgstr ""
-"Sản phẩm không được tải. Đã thử tải sản phẩm từ máy chủ nhưng gặp lỗi kết "
-"nối mạng. "
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
 msgstr "Giá sản phẩm trên biên lai"
@@ -5013,7 +4835,7 @@ msgstr "LÝ DO"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Read Weighing Scale"
 msgstr "Đọc trọng lượng"
@@ -5087,7 +4909,7 @@ msgstr "Phiên khôi phục"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Refresh Display"
 msgstr "Làm mới màn hình"
@@ -5216,7 +5038,7 @@ msgstr "Yêu cầu đã được gửi"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Reset"
 msgstr "Đặt lại"
@@ -5299,7 +5121,6 @@ msgstr "Thanh toán Đảo ngược"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Misc/MobileOrderWidget.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Review"
 msgstr "Xem trước"
@@ -5392,14 +5213,14 @@ msgstr "Tỉ lệ"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Scan"
 msgstr "Quét"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Scan EAN-13"
 msgstr "Quét mã EAN-13"
@@ -5492,13 +5313,6 @@ msgstr "Chọn đơn"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
-#, python-format
-msgid "Select either Cash In or Cash Out before confirming."
-msgstr "Chọn Tiền thu hoặc Tiền chi trước khi xác nhận. "
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Select the pricelist"
@@ -5510,6 +5324,13 @@ msgstr "Chọn bảng giá"
 #, python-format
 msgid "Select the product(s) to refund and set the quantity"
 msgstr "Chọn sản phẩm sẽ hoàn tiền và đặt số lượng"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Select the shipping date"
+msgstr ""
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5630,7 +5451,7 @@ msgstr "Đặt chênh lệch tối đa "
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Set Weight"
 msgstr "Thiết lập khối lượng"
@@ -5692,13 +5513,15 @@ msgid "Settings on this page will apply to this point of sale."
 msgstr ""
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__ship_later
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_ship_later
-#, python-format
 msgid "Ship Later"
 msgstr "Giao hàng sau"
+
+#. module: point_of_sale
+#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__shipping_date
+msgid "Shipping Date"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
@@ -5744,7 +5567,7 @@ msgstr "Hiển thị người dùng đăng nhập trên màn hình"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
-msgid "Show margins &amp; costs on product information"
+msgid "Show margins & costs on product information"
 msgstr ""
 
 #. module: point_of_sale
@@ -5763,11 +5586,6 @@ msgid "Six Payment Terminal"
 msgstr "Thiết bị thanh toán SIX"
 
 #. module: point_of_sale
-#: model:product.attribute,name:point_of_sale.size_attribute
-msgid "Size"
-msgstr "Kích thước"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Chrome.xml:0
 #, python-format
@@ -5779,11 +5597,6 @@ msgstr "Bỏ qua"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_print_skip_screen
 msgid "Skip Preview Screen"
 msgstr "Bỏ qua màn hình xem trước"
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.small_shelf_product_template
-msgid "Small Shelf"
-msgstr "Giá nhỏ"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6271,6 +6084,15 @@ msgstr "Số đơn bán lẻ liên quan đến khách hàng này"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
+#, python-format
+msgid ""
+"The operation couldn't be completed because you are offline. Check your "
+"internet connection and try again."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "The order could not be sent to the server due to an unknown error"
@@ -6410,6 +6232,16 @@ msgid "The server encountered an error while receiving your order."
 msgstr "Máy chủ đã gặp lỗi khi nhận được đơn đặt hàng của bạn."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"The session has been already closed by another User. All sales completed in "
+"the meantime have been saved in a Rescue Session, which can be reviewed "
+"anytime and posted to Accounting from Point of Sale's dashboard."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid ""
 "The session has been opened for an unusually long period. Please consider "
@@ -6458,11 +6290,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "Số dư Đóng theo Lý thuyết"
-
-#. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "There are"
-msgstr "Đây là"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6636,7 +6463,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.js:0
 #, python-format
 msgid ""
 "This operation will destroy all unpaid orders in the browser. You will lose "
@@ -6649,7 +6476,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/DebugWidget.js:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.js:0
 #, python-format
 msgid ""
 "This operation will permanently destroy all paid orders from the local "
@@ -6707,7 +6534,6 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
-#: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
 msgstr "Phiên đã được đóng. "
@@ -6719,11 +6545,9 @@ msgstr ""
 "Thuế này được áp dụng cho bất kỳ sản phẩm mới nào được tạo trong danh mục."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#, python-format
-msgid "Tip"
-msgstr "Hướng dẫn"
+#: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
+msgid "Those settings are common to all PoS."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
@@ -6790,11 +6614,6 @@ msgstr "Để tạo đơn hàng mới, bắt đầu một ca bán hàng mới"
 #, python-format
 msgid "To return product(s), you need to open a session in the POS %s"
 msgstr "Để trả sản phẩm, bạn cần mở 1 phiên trong POS %s"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_ship
-msgid "To ship"
-msgstr "Để giao hàng"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6947,13 +6766,6 @@ msgid "Unable to download invoice."
 msgstr "Unable to download invoice."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
-#, python-format
-msgid "Unable to invoice order."
-msgstr "Unable to invoice order."
-
-#. module: point_of_sale
 #. odoo-python
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
@@ -6966,14 +6778,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
-#, python-format
-msgid "Unable to save changes."
-msgstr "Không thể lưu các thay đổi."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
+#: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
 #, python-format
 msgid "Unable to show information about this error."
 msgstr "Không thể hiện thông tin về lỗi này. "
@@ -6999,20 +6804,11 @@ msgstr "Mã vạch không xác định"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Chrome.js:0
-#: code:addons/point_of_sale/static/src/js/ChromeWidgets/HeaderButton.js:0
+#: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Unknown Error"
 msgstr "Lỗi không xác định"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
-#, python-format
-msgid "Unknown error"
-msgstr "Lỗi chưa xác định"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7102,14 +6898,6 @@ msgid "Valid product lot"
 msgstr "Lô sản phẩm hợp lệ"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#, python-format
-msgid "Validate"
-msgstr "Xác nhận"
-
-#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Vantiv (US & Canada)"
 msgstr "Vantiv (US & Canada)"
@@ -7139,11 +6927,6 @@ msgid "Waiting for card"
 msgstr "Chờ thẻ"
 
 #. module: point_of_sale
-#: model:product.template,name:point_of_sale.wall_shelf_product_template
-msgid "Wall Shelf Unit"
-msgstr "Giá treo tường"
-
-#. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_warehouse
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__warehouse_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7167,7 +6950,7 @@ msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
+#: code:addons/point_of_sale/static/src/app/debug_widget/debug_widget.xml:0
 #, python-format
 msgid "Weighing"
 msgstr "Trọng lượng"
@@ -7200,16 +6983,6 @@ msgstr ""
 "Bất cứ khi nào bạn đóng một phiên, một mục được tạo trong nhật ký kế toán "
 "sau đây cho tất cả các đơn đặt hàng không được lập hoá đơn. Hóa đơn được "
 "hạch toán riêng trong kế toán."
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.whiteboard_product_template
-msgid "Whiteboard"
-msgstr "Whiteboard"
-
-#. module: point_of_sale
-#: model:product.template,name:point_of_sale.whiteboard_pen_product_template
-msgid "Whiteboard Pen"
-msgstr "Bút bảng trắng"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7562,11 +7335,6 @@ msgid "note"
 msgstr "ghi chú"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
-msgid "open sessions"
-msgstr "mở phiên"
-
-#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/ClosePosPopup.xml:0
 #, python-format
@@ -7581,11 +7349,23 @@ msgid "out"
 msgstr "chi"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
+msgid "outstanding rescue session"
+msgstr ""
+
+#. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/OrderImportPopup.xml:0
 #, python-format
 msgid "paid orders"
 msgstr "đơn hàng đã thanh toán"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/CustomerFacingDisplay/CustomerFacingDisplayOrder.xml:0
+#, python-format
+msgid "powered by"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-python

@@ -3,17 +3,15 @@
 # 	* purchase
 # 
 # Translators:
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Samer Ali, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
@@ -354,17 +352,6 @@ msgstr ""
 "                        <span class=\"d-block d-md-none\">المرجع.</span>"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"القيم المحددة هنا خاصة "
-"بالشركة فقط. \" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('state','not in',('draft','sent'))]}\">Request for Quotation </span>\n"
@@ -474,7 +461,7 @@ msgstr "<strong>التاريخ المتوقع</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Date:</strong>"
-msgstr "<strong>تاريخ طلب البيع:</strong>"
+msgstr "<strong>تاريخ الطلب:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -719,31 +706,19 @@ msgid ""
 msgstr "الوقت ما بين التاريخ المخطط له والطلب حسب التاريخ لكل بند أمر شراء. "
 
 #. module: purchase
-#: model:ir.model.fields,help:purchase.field_purchase_report__avg_days_to_purchase
-msgid ""
-"Amount of time between purchase approval and document creation date. Due to "
-"a hack needed to calculate this,               every record will show the "
-"same average value, therefore only use this as an aggregated value with "
-"group_operator=avg"
-msgstr ""
-"الوقت ما بين الموافقة على الشراء وتاريخ إنشاء المستند. بسبب الحاجة إلى "
-"استخدام طريقة معينة لحساب ذلك، سوف يُظهر كل سجل نفس القيمة المتوسطة، "
-"وبالتالي، استخدم ذلك فقط كقيمة إجمالية مع group_operator=avg "
-
-#. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
 msgstr "الوقت ما بين الموافقة على الشراء والطلب حسب التاريخ. "
 
 #. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
-msgid "Analytic"
-msgstr "تحليلي"
-
-#. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "الحساب التحليلي"
+
+#. module: purchase
+#: model:ir.model.fields,field_description:purchase.field_purchase_order_line__analytic_distribution
+msgid "Analytic Distribution"
+msgstr "التوزيع التحليلي"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_analytic_applicability
@@ -763,7 +738,7 @@ msgstr "الموافقة على الطلب "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_attachment_count
 msgid "Attachment Count"
-msgstr "عدد المرفقات"
+msgstr "تعداد المرفقات"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -822,11 +797,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
 msgstr "متوسط التكلفة "
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
-msgid "Average Days to Purchase"
-msgstr "متوسط عدد الأيام حتى الشراء "
 
 #. module: purchase
 #. odoo-javascript
@@ -939,7 +909,7 @@ msgstr "لا يمكن حذف بند أمر شراء في حالة '%s'."
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__product_uom_category_id
 msgid "Category"
-msgstr "فئة"
+msgstr "الفئة "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__commercial_partner_id
@@ -958,7 +928,7 @@ msgstr "الشركات "
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__company_id
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Company"
-msgstr "الشركة "
+msgstr "الشركة"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__company_currency_id
@@ -1034,7 +1004,7 @@ msgstr "أوامر الشراء المؤكّدة غير قابلة للتحري�
 #: model:ir.model,name:purchase.model_res_partner
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "Contact"
-msgstr "جهة الاتصال"
+msgstr "جهة اتصال "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchase_method
@@ -1205,11 +1175,6 @@ msgid "Display Type"
 msgstr "نوع العرض"
 
 #. module: purchase
-#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
-msgid "Documentation"
-msgstr "التوثيق"
-
-#. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_analytic_applicability__business_domain
 msgid "Domain"
 msgstr "النطاق"
@@ -1247,7 +1212,7 @@ msgstr "عنوان إحالة الشحن "
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr "معالج تأليف رسالة بريد إلكتروني"
+msgstr "معالج تكوين رسالة البريد الإلكتروني "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
@@ -1281,7 +1246,7 @@ msgstr "المتابعين "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "المتابعين (الشركاء) "
+msgstr "المتابعين (الشركاء)"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
@@ -1452,15 +1417,7 @@ msgstr "قيد اليومية"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "عنصر اليومية"
-
-#. module: purchase
-#: model:ir.model.fields,field_description:purchase.field_purchase_bill_union____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_order_line____last_update
-#: model:ir.model.fields,field_description:purchase.field_purchase_report____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
+msgstr "بنود اليومية "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__write_uid
@@ -1799,12 +1756,12 @@ msgstr "عدد الأخطاء "
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "عدد الرسائل التي تتطلب اتخاذ إجراء "
+msgstr "عدد الرسائل التي تتطلب إجراء"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "عدد الرسائل الحادث بها خطأ في التسليم"
+msgstr "عدد الرسائل التي بها خطأ في التسليم "
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_method__purchase
@@ -1920,7 +1877,7 @@ msgstr "كمية التعبئة "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
 msgid "Partner"
-msgstr "الشريك"
+msgstr "شريك "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__country_id
@@ -1930,7 +1887,7 @@ msgstr "دولة الشريك "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__payment_term_id
 msgid "Payment Terms"
-msgstr "شروط السداد"
+msgstr "شروط الدفع "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
@@ -1940,7 +1897,7 @@ msgstr "شروط الدفع "
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
 msgid "Portal Access URL"
-msgstr "رابط الوصول لبوابة العملاء"
+msgstr "رابط الوصول إلى بوابة العملاء "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2226,7 +2183,6 @@ msgstr "شراء المنتجات بمضاعفات عدد الوحدات لكل 
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.purchase_send_reminder_mail_ir_actions_server
-#: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
 msgstr "تذكير الشراء "
 
@@ -2481,7 +2437,7 @@ msgstr "تم تأكيد التذكير "
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report_main
 msgid "Reporting"
-msgstr "التقارير"
+msgstr "إعداد التقارير "
 
 #. module: purchase
 #. odoo-python
@@ -2605,6 +2561,11 @@ msgid ""
 msgstr ""
 "تحديد خيار \"تحذير\" سوف يخطر المستخدم بالرسالة، وتحديد \"حجب رسالة\" سيظهر "
 "استثناءً مع الرسالة ويوقف التدفق. يجب كتابة الرسالة في الحقل التالي. "
+
+#. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Sell and purchase products in different units of measure"
+msgstr "تمكن من بيع وشراء المنتجات بوحدات قياس مختلفة "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -3029,6 +2990,11 @@ msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
 #. module: purchase
+#: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
+msgid "Units Of Measure"
+msgstr "وحدات القياس "
+
+#. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
 msgstr "وحدات القياس"
@@ -3086,17 +3052,6 @@ msgstr "عاجل"
 #: model:res.groups,name:purchase.group_purchase_user
 msgid "User"
 msgstr "المستخدم"
-
-#. module: purchase
-#. odoo-python
-#: code:addons/purchase/report/purchase_report.py:0
-#, python-format
-msgid ""
-"Value: 'avg_days_to_purchase' should only be used to show an average. If you"
-" are seeing this message then it is being accessed incorrectly."
-msgstr ""
-"القيمة: 'avg_days_to_purchase' يجب استخدامها فقط لإظهار المتوسط. إذا كنت ترى"
-" هذه الرسالة، فهذا يعني أنه يتم الوصول إليها بشكل غير صحيح. "
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

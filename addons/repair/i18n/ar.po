@@ -3,18 +3,18 @@
 # 	* repair
 # 
 # Translators:
-# Jinjiu Liu, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
-# Martin Trigaux, 2022
-# Niyas Raphy, 2022
+# Jinjiu Liu, 2023
+# Niyas Raphy, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
-"PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
+"POT-Creation-Date: 2023-01-17 10:53+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,6 +63,7 @@ msgstr ""
 "* تُستخدم حالة 'تم الإلغاء' عندما يقوم المستخدم بإلغاء أمر الإصلاح. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
@@ -315,6 +316,7 @@ msgstr ""
 "التحويل بناءً على النسب."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -336,6 +338,7 @@ msgid "Create Mass Invoice (repair)"
 msgstr "إنشاء فاتورة جماعية (للإصلاح) "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
@@ -609,6 +612,7 @@ msgid "Invoice and shipping address:"
 msgstr "عنوان الشحن والفواتير:"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
@@ -641,16 +645,6 @@ msgstr "قيد اليومية"
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
 msgstr "عنصر اليومية"
-
-#. module: repair
-#: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_line____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_order____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
-#: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
-#: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_uid
@@ -736,18 +730,21 @@ msgid "No Invoice"
 msgstr "لا توجد فاتورة "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "لا يوجد حساب محدد للمنتج \"%s\"."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "لم يتم العثور على أي قوائم أسعار. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
@@ -759,6 +756,7 @@ msgid "No repair order found. Let's create one!"
 msgstr "لم يتم العثور على أمر إصلاح. فلنقم بإنشاء واحد! "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
@@ -803,6 +801,7 @@ msgid "Number of repairs linked to this picking"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
@@ -1007,6 +1006,7 @@ msgid "Repair Order Reference"
 msgstr "مرجع أمر الإصلاح "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
@@ -1035,36 +1035,34 @@ msgid "Repair Reference"
 msgstr "مرجع الإصلاح "
 
 #. module: repair
-#: model:product.product,name:repair.product_service_order_repair
-#: model:product.template,name:repair.product_service_order_repair_product_template
-msgid "Repair Services"
-msgstr "خدمات الإصلاح "
-
-#. module: repair
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
 msgstr "علامات تصنيف الإصلاح "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr "يجب أن يكون أمر الإصلاح ملغياً حتى يتم تعيينه كمسودة. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
 msgstr "يجب تأكيد أمر الإصلاح قبل بدء عملية الإصلاح. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "يجب تنفيذ أمر الإصلاح حتى تتمكن من إنشاء تحركات المنتج. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
@@ -1076,6 +1074,7 @@ msgid "Repair order count"
 msgstr "عدد أوامر الإصلاح "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
@@ -1188,6 +1187,7 @@ msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
@@ -1281,6 +1281,7 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "يجب أن يكون اسم أمر الإصلاح فريداً! "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1370,12 +1371,6 @@ msgid "Unit of Measure"
 msgstr "وحدة القياس"
 
 #. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Units"
-msgstr "الوحدات"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "المبلغ دون الضريبة "
@@ -1401,7 +1396,8 @@ msgid "Warn Insufficient Repair Quantity"
 msgstr "التحذير من كمية الإصلاح غير الكافية "
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0
+#. odoo-python
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "تحذير"
@@ -1423,6 +1419,7 @@ msgid "Website communication history"
 msgstr "سجل تواصل الموقع الإلكتروني "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1431,6 +1428,7 @@ msgid ""
 msgstr "لا يمكنك حذف أمر إصلاح بمجرد أن قد تم تأكيده. عليك إلغاؤه أولاً. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1439,12 +1437,14 @@ msgid ""
 msgstr "لا يمكنك حذف أمر إصلاح مرتبط بفاتورة قت تم ترحيلها من قبل. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "لا يمكنك إدخال كميات سالبة."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1455,6 +1455,7 @@ msgstr ""
 "يرجى تعيين واحدة قبل اختيار المنتج. "
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."

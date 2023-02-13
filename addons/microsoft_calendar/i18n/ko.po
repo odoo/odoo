@@ -3,15 +3,15 @@
 # 	* microsoft_calendar
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
-"PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2023-01-17 14:37+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,6 +44,13 @@ msgid "%s - At time of event"
 msgstr ""
 
 #. module: microsoft_calendar
+#. openerp-web
+#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
+#, python-format
+msgid "&nbsp;Outlook"
+msgstr ""
+
+#. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
@@ -58,7 +65,7 @@ msgstr "활성"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
@@ -74,6 +81,13 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
+
+#. module: microsoft_calendar
+#. openerp-web
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#, python-format
+msgid "Are you sure you want to delete this record ?"
+msgstr "이 내용을 삭제하시겠습니까?"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -107,8 +121,8 @@ msgstr "설정 구성"
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Configuration"
 msgstr "구성"
@@ -119,6 +133,13 @@ msgid "Confirm"
 msgstr "승인"
 
 #. module: microsoft_calendar
+#. openerp-web
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#, python-format
+msgid "Confirmation"
+msgstr "확정"
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
 msgid "Created by"
 msgstr "작성자"
@@ -127,6 +148,13 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_date
 msgid "Created on"
 msgstr "작성일자"
+
+#. module: microsoft_calendar
+#. openerp-web
+#: code:addons/microsoft_calendar/static/src/xml/microsoft_calendar_popover.xml:0
+#, python-format
+msgid "Delete"
+msgstr "삭제"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
@@ -267,8 +295,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
+#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
 #, python-format
 msgid "Outlook"
 msgstr ""
@@ -316,7 +343,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Success"
 msgstr "성공"
@@ -338,7 +365,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
@@ -353,7 +380,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
 msgstr ""
@@ -393,7 +420,7 @@ msgstr ""
 
 #. module: microsoft_calendar
 #. openerp-web
-#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"
