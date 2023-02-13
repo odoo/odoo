@@ -118,6 +118,7 @@
                                         </div>
                                         <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                                     </group>
+<<<<<<< HEAD
                                     <group id="right column" class="col-6">
                                         <span attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"
                                               class="o_form_label o_td_label">Match Invoice/bill with</span>
@@ -160,6 +161,91 @@
                                         <field name="match_partner_category_ids" nolabel="1"
                                                widget="many2many_tags"
                                                attrs="{'invisible': ['|', ('match_partner', '=', False), ('rule_type', '=', 'writeoff_button')]}"/>
+||||||| parent of e9ff23b1d51 (temp)
+                                    <group string="Counterpart Entries"
+                                           class="oe_inline"
+                                           attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('allow_payment_tolerance', '=', False), '&amp;', ('allow_payment_tolerance', '=', True), ('payment_tolerance_param', '=', 0.0)]}">
+                                        <group>
+                                            <field name="show_decimal_separator" invisible="1"/>
+                                            <field name="decimal_separator"
+                                                   attrs="{'invisible': [('show_decimal_separator', '=', False)]}"
+                                                   groups="base.group_no_one"/>
+                                        </group>
+                                        <field name="line_ids"
+                                               default="{'default_model_id': self, 'default_company_id': self.company_id}"
+                                               nolabel="1">
+                                            <tree editable="bottom">
+                                                <field name="show_force_tax_included" invisible="1"/>
+                                                <field name="company_id" invisible="1"/>
+
+                                                <field name="sequence"
+                                                       widget="handle"/>
+                                                <field name="account_id"/>
+                                                <field name="amount_type"/>
+                                                <field name="journal_id"
+                                                       attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"
+                                                       optional="hide"/>
+                                                <field name="amount_string"/>
+                                                <field name="tax_ids"
+                                                       widget="many2many_tags"
+                                                       optional="hide"/>
+                                                <field name="analytic_account_id"
+                                                       groups="analytic.group_analytic_accounting"
+                                                       optional="hide"/>
+                                                <field name="analytic_tag_ids"
+                                                       widget="many2many_tags"
+                                                       groups="analytic.group_analytic_tags"
+                                                       optional="hide"/>
+                                                <field name="force_tax_included"
+                                                       widget="boolean_toggle"
+                                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}"
+                                                       optional="hide"/>
+                                                <field name="label"/>
+                                            </tree>
+                                        </field>
+=======
+                                    <group string="Counterpart Entries"
+                                           colspan="2"
+                                           attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('allow_payment_tolerance', '=', False), '&amp;', ('allow_payment_tolerance', '=', True), ('payment_tolerance_param', '=', 0.0)]}">
+                                        <group>
+                                            <field name="show_decimal_separator" invisible="1"/>
+                                            <field name="decimal_separator"
+                                                   attrs="{'invisible': [('show_decimal_separator', '=', False)]}"
+                                                   groups="base.group_no_one"/>
+                                        </group>
+                                        <field name="line_ids"
+                                               default="{'default_model_id': self, 'default_company_id': self.company_id}"
+                                               nolabel="1">
+                                            <tree editable="bottom">
+                                                <field name="show_force_tax_included" invisible="1"/>
+                                                <field name="company_id" invisible="1"/>
+
+                                                <field name="sequence"
+                                                       widget="handle"/>
+                                                <field name="account_id"/>
+                                                <field name="amount_type"/>
+                                                <field name="journal_id"
+                                                       attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"
+                                                       optional="hide"/>
+                                                <field name="amount_string"/>
+                                                <field name="tax_ids"
+                                                       widget="many2many_tags"
+                                                       optional="hide"/>
+                                                <field name="analytic_account_id"
+                                                       groups="analytic.group_analytic_accounting"
+                                                       optional="hide"/>
+                                                <field name="analytic_tag_ids"
+                                                       widget="many2many_tags"
+                                                       groups="analytic.group_analytic_tags"
+                                                       optional="hide"/>
+                                                <field name="force_tax_included"
+                                                       widget="boolean_toggle"
+                                                       attrs="{'invisible': [('show_force_tax_included', '=', False)]}"
+                                                       optional="hide"/>
+                                                <field name="label"/>
+                                            </tree>
+                                        </field>
+>>>>>>> e9ff23b1d51 (temp)
                                     </group>
                                 </group>
                                 <group string="Counterpart Entries" colespan="4"
