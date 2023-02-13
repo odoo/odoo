@@ -6,8 +6,8 @@
 # Martin Trigaux, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Andy Yiu, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -142,7 +142,7 @@ msgstr "分析分配テンプレート"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "分析項目"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -273,17 +273,17 @@ msgstr "分析勘定表"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "子プラン数"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
 msgid "Childrens"
-msgstr ""
+msgstr "子"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "クリックして、新しい分析勘定プランを作成"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -298,7 +298,7 @@ msgstr "カラーインデクス"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_commercial_marketing
 msgid "Commercial & Marketing"
-msgstr ""
+msgstr "コマーシャル＆マーケティング"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__company_id
@@ -379,7 +379,7 @@ msgstr "日付"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "勘定を無効化"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -487,7 +487,7 @@ msgid ""
 "                analytic accounts. You can track costs and revenues to analyse\n"
 "                your margins easily."
 msgstr ""
-"Odooでは、販売オーダ、プロジェクトは分析勘定を使用します。\n"
+"Odooでは、販売注文、プロジェクトは分析勘定を使用します。\n"
 "                費用と収益を追跡して、簡単にマージンを分析することができます。"
 
 #. module: analytic
@@ -647,12 +647,12 @@ msgstr "OK"
 #: code:addons/analytic/models/analytic_mixin.py:0
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
-msgstr ""
+msgstr "1つ以上の行で100%の分析分配が必要です。"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
-msgstr ""
+msgstr "営業費用"
 
 #. module: analytic
 #. odoo-javascript
@@ -714,7 +714,7 @@ msgstr "参照"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_rd_department
 msgid "Research & Development"
-msgstr ""
+msgstr "研究開発"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action
@@ -726,13 +726,13 @@ msgid ""
 "                on expenses (e.g. reinvoicing of travel costs)."
 msgstr ""
 "収益は顧客請求書の作成時に自動的に作成されます。 \n"
-"顧客請求書は、販売オーダ（固定価格の請求書）や、タイムシート（実施された作業に基づく）、\n"
+"顧客請求書は、販売注文（固定価格の請求書）や、タイムシート（実施された作業に基づく）、\n"
 "経費（例：顧客負担の旅費交通費の請求）に基づいて作成することができます。"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "ルートプラン"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -750,7 +750,7 @@ msgid ""
 "Select a company for which the analytic distribution will be used (e.g. "
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
-msgstr ""
+msgstr "分析分配の対象となる会社を選択します（例：新規顧客請求書や販売注文を作成する際にこの会社を選択すると、自動的に分析勘定として扱われます）。"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -759,7 +759,7 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
-"分析分配の対象となるパートナーカテゴリを選択します（例：新規顧客請求書や販売オーダの作成時に、このパートナーを選択すると、自動的に分析勘定として扱われます）。"
+"分析分配の対象となるパートナーカテゴリを選択します（例：新規顧客請求書や販売注文の作成時に、このパートナーを選択すると、自動的に分析勘定として扱われます）。"
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -768,6 +768,7 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"分析分配の対象となるパートナーを選択します（例：新規顧客請求書や販売注文を作成する際に、このパートナーを選択すると、自動的に分析勘定として扱われます）。"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
@@ -791,7 +792,7 @@ msgstr "サブプラン"
 msgid ""
 "The selected account belongs to another company than the one you're trying "
 "to create an analytic item for"
-msgstr ""
+msgstr "選択されたアカウントは、分析項目を作成しようとしている会社とは別の会社に属しています。"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_absences
@@ -817,7 +818,7 @@ msgstr "単位"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__product_uom_category_id
 msgid "UoM Category"
-msgstr ""
+msgstr "単位カテゴリ"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__user_id
@@ -836,7 +837,7 @@ msgstr "ビュー"
 msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
-msgstr ""
+msgstr "分析勘定には分析項目が連動しているため、別の会社を設定することはできません。"
 
 #. module: analytic
 #. odoo-python
@@ -845,7 +846,7 @@ msgstr ""
 msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
-msgstr ""
+msgstr "特定の会社に属する分析勘定で分配を定義していますが、分配モデルは会社間または別の会社と共有されます。"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

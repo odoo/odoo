@@ -2019,7 +2019,6 @@ class Orderline extends PosModel {
         return {
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
-            "priceSumTaxVoid": all_taxes.total_void,
             "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
             "tax": taxtotal,
             "taxDetails": taxdetail,

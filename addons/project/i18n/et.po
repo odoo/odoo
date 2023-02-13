@@ -878,8 +878,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
-"Lisa veerge, et oma ülesandeid organiseerida <b>etappidesse</b> <i>nt. Uus -"
-" Töös - Tehtud.</i>"
+"Lisa veerge, et jagada ülesandeid <b>etappidesse</b> <i>nt. Uus - Töös - "
+"Tehtud.</i>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1179,7 +1179,7 @@ msgstr "Ülesande kuupäev"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__at_risk
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "At Risk"
-msgstr "Ohus"
+msgstr "Vajab tähelepanu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -1470,7 +1470,7 @@ msgid ""
 " and send messages."
 msgstr ""
 "Tehke efektiivset koostööd peamiste huvirühmadega, jagades nendega oma "
-"ülesannete Kanbani vaadet. Huvirühmad saavad ülesannete osi muuta ja "
+"ülesannete Kanbani vaadet. Huvirühmadel on võimalus ülesandeid muuta ning "
 "sõnumeid saata."
 
 #. module: project
@@ -2406,7 +2406,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Followed"
-msgstr "Jälgitud"
+msgstr "Jälgitavad"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -2535,8 +2535,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks. Use the"
 msgstr ""
-"Käsitlege oma ideede kogumist oma uue projekti ülesannetes ja arutage neid "
-"ülesannete logis. Kasuta"
+"Käsitlege oma ideede kogumist uue projekti ülesannetes ja arutlege nende üle"
+" ülesannete logis. Kasutage"
 
 #. module: project
 #. odoo-javascript
@@ -2631,7 +2631,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,field_description:project.field_project_update__activity_exception_icon
 msgid "Icon"
-msgstr "Ikoon"
+msgstr "sümbolit."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_icon
@@ -3459,7 +3459,7 @@ msgstr "Nimi lühendatud"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks"
-msgstr "Ülesannete nimi"
+msgstr "Ülesande nimi"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__name
@@ -3474,8 +3474,8 @@ msgid ""
 "Name used to refer to the tasks of your project e.g. tasks, tickets, "
 "sprints, etc..."
 msgstr ""
-"Nimi, mida kasutatakse projektis ülesannete kohta, nt. ülesanded, piletid, "
-"sprindid jne..."
+"Nimetus, mida kasutatakse projekti ülesannetele viitamiseks, nt ülesanded, "
+"piletid jne."
 
 #. module: project
 #: model:project.task.type,legend_blocked:project.project_stage_1
@@ -3631,7 +3631,7 @@ msgstr "Tegevustüüpe ei leitud. Loome ühe!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_collaborator_action
 msgid "No collaborators found"
-msgstr "Kaastöötajaid ei leitud"
+msgstr "Seotud kasutajaid ei leitud"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_project_report
@@ -3678,7 +3678,7 @@ msgstr "Ülesandeid ei leitud. Koostame ühe!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_update_all_action
 msgid "No updates found. Let's create one!"
-msgstr "Värskendusi ei leitud. Loome ühe!"
+msgstr "Uuendusi ei leitud. Loome ühe!"
 
 #. module: project
 #. odoo-python
@@ -3779,7 +3779,7 @@ msgstr "Oktoober"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__off_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "Off Track"
-msgstr "Arvestusest väljas"
+msgstr "Ei lähe plaanipäraselt"
 
 #. module: project
 #: model:account.analytic.account,name:project.analytic_office_design
@@ -3814,7 +3814,7 @@ msgstr "Ootel"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_track
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Track"
-msgstr "On teel"
+msgstr "On töös"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status_period__monthly
@@ -3958,18 +3958,18 @@ msgid ""
 msgstr ""
 "Inimesed, kellele see projekt ja selle ülesanded on nähtavad.\n"
 "\n"
-"- Kutsu ettevõttesiseseid kasutajaid: kui ettevõttesisesed kasutajad on määratudd projekti jälgijateks, saavad nad piiramatu juurdepääsu kõigile projektis sisalduvatele ülesannetele. Muidu on neil ligipääs ainult piiratud ülesannetele, mille jälgijad nad on.\n"
-" Projekti > administraatoriõigustegakasutaja omab endiselt juurdepääs sellele projektile ja selle ülesannetele, isegi kui ta ei ole otseselt jälgijate hulgas.\n"
+"- Kutsu ettevõttesiseseid kasutajaid: kui ettevõttesisesed kasutajad on määratudd projekti jälgijateks, saavad nad piiramatu juurdepääsu kõigile projektis sisalduvatele ülesannetele. Muidu on neil ligipääs ainult ülesannetele, mille jälgijad nad on.\n"
+" Projekti  administraatoriõigustega kasutaja omab endiselt juurdepääsu sellele projektile ja selle ülesannetele, isegi, kui ta ei ole otseselt jälgijate hulgas.\n"
 "\n"
-"- Kõik ettevõttesisesed kasutajad: kõigil sisekasutajatel on juurdepääs projektile ja kõikidele selle ülesannetele.\n"
+"- Kõik ettevõttesisesed kasutajad: kõigil ettevõttesisestel kasutajatel on juurdepääs projektile ja kõikidele selle ülesannetele.\n"
 "\n"
-"- Kutsutud portaali kasutajad ja ettevõttesisesed kasutajad: kõigil sisekasutajatel on juurdepääs projektile ja kõikidele selle ülesannetele.\n"
-"Projekti jälgides saavad portaali kasutajad juurdepääsu kõikidele selle ülesannetele, ei ole vahet,kas oled kutsutud portaalikasutaja või sisekasutajad. Muidu omaks nad juurdepääsu ainult konkreetsetele ülesannetele, mida nad järgivad\n"
+"- Kutsutud portaali kasutajad ja ettevõttesisesed kasutajad: kõigil ettevõttesisestel kasutajatel on juurdepääs projektile ja kõikidele selle ülesannetele.\n"
+"Projekti jälgides saavad portaali kasutajad juurdepääsu kõikidele selle ülesannetele, ei ole vahet, kas oled kutsutud portaalikasutaja või ettevõttesisene kasutaja. Muidu omaks nad juurdepääsu ainult konkreetsetele ülesannetele, mida nad järgivad.\n"
 "\n"
-"Kui projekti jagatakse kirjutuskaitstud kujul, saavad nad ülesandeid vaadata, kuid mitte muuta..\n"
+"Kui projekti jagatakse kirjutuskaitstud kujul, saavad nad ülesandeid vaadata, kuid mitte muuta.\n"
 "Kui projekti jagatakse nii, et seda saab ka redigeerida, avaneb ülesannete nimekiri kanban vaates. Neil on võimalik muuta märgitud ülesandeid.\n"
 "\n"
-"Igal juhul pääseb projekti juurdepääsuõigusteta sisekasutaja ülesandele juurde, eeldusel, et talle antakse vastav URL (ja kui projekt on privaatne, on ta osa jälgijatest)."
+"Igal juhul pääseb projekti juurdepääsuõigusteta ettevõttesisene kasutaja ülesandele juurde, eeldusel, et talle antakse vastav URL (ja kui projekt on privaatne, on ta jälgija)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -4285,7 +4285,7 @@ msgstr "Projekti värskendus"
 #: model:ir.actions.act_window,name:project.project_update_all_action
 #: model_terms:ir.ui.view,arch_db:project.project_view_kanban_inherit_project
 msgid "Project Updates"
-msgstr "Projekti värskendused"
+msgstr "Projekti uuendused"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
@@ -5829,7 +5829,7 @@ msgstr "Jälgi ülesannete täitmisel kliendi rahulolu"
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Track major progress points that must be reached to achieve success"
-msgstr "Jälgige peamisi edusamme, et jõuda soovitud tulemuseni."
+msgstr "Võimalus seada ja järgida eesmärke."
 
 #. module: project
 #. odoo-javascript
@@ -6168,7 +6168,7 @@ msgstr "Tööpäevade arv sulgemiseni"
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_hours_open
 msgid "Working Hours to Assign"
-msgstr "Tööaeg määrata"
+msgstr "Määratav tööaeg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
@@ -6394,7 +6394,7 @@ msgstr "avatar"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "bullets to indicate the status of a task."
-msgstr "täpid, mis näitavad ülesande olekut."
+msgstr "täppe, mis tähistavad ülesande olekut."
 
 #. module: project
 #. odoo-javascript
@@ -6403,7 +6403,7 @@ msgstr "täpid, mis näitavad ülesande olekut."
 msgid ""
 "button to inform your colleagues that a task is ready for the next stage."
 msgstr ""
-"nupp, et teavitada kolleege, et ülesanne on järgmiseks etapiks valmis."
+"nuppu, et teavitada kolleege, kui ülesanne on valmis järgmiseks etapiks."
 
 #. module: project
 #. odoo-javascript
@@ -6456,7 +6456,7 @@ msgstr "nt. toote turuletoomine"
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr "ikoon oma igapäevaste tegevuste korraldamiseks."
+msgstr "ikooni oma igapäevaste tegevuste korraldamiseks."
 
 #. module: project
 #. odoo-javascript
@@ -6516,7 +6516,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to indicate a problem or a need for discussion on a task."
-msgstr "osutada probleemile või vajadusele ülesande üle arutleda."
+msgstr "nuppu, et osutada probleemile või vajadusele ülesande üle arutleda."
 
 #. module: project
 #. odoo-javascript
@@ -6530,7 +6530,7 @@ msgstr "kommentaari sisestamiseks."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to signalize what is the current status of your Idea."
-msgstr "et anda märku Teie idee hetkeseisust."
+msgstr "täppe, et anda märku oma idee hetkeseisust."
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

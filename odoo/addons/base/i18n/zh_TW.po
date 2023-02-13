@@ -4,10 +4,10 @@
 # 
 # Translators:
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2022
-# Tony Ng, 2022
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8534,27 +8534,6 @@ msgid ""
 "\n"
 "**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 msgstr ""
-"\n"
-"This is the module to manage the accounting chart for France in Odoo.\n"
-"========================================================================\n"
-"\n"
-"This module applies to companies based in France mainland. It doesn't apply to\n"
-"companies based in the DOM-TOMs (Guadeloupe, Martinique, Guyane, Réunion, Mayotte).\n"
-"\n"
-"This localisation module creates the VAT taxes of type 'tax included' for purchases\n"
-"(it is notably required when you use the module 'hr_expense'). Beware that these\n"
-"'tax included' VAT taxes are not managed by the fiscal positions provided by this\n"
-"module (because it is complex to manage both 'tax excluded' and 'tax included'\n"
-"scenarios in fiscal positions).\n"
-"\n"
-"This localisation module doesn't properly handle the scenario when a France-mainland\n"
-"company sells services to a company based in the DOMs. We could manage it in the\n"
-"fiscal positions, but it would require to differentiate between 'product' VAT taxes\n"
-"and 'service' VAT taxes. We consider that it is too 'heavy' to have this by default\n"
-"in l10n_fr; companies that sell services to DOM-based companies should update the\n"
-"configuration of their taxes and fiscal positions manually.\n"
-"\n"
-"**Credits:** Sistheo, Zeekom, CrysaLEAD, Akretion and Camptocamp.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn
@@ -13164,7 +13143,7 @@ msgstr "您確定要執行自動合併列表聯繫人?"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Are you sure you want to hide these onboarding tips?"
-msgstr ""
+msgstr "要隱藏新手導覽？"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -19651,7 +19630,7 @@ msgstr "組"
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "Group By"
-msgstr "分組依據"
+msgstr "分組方式"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__full_name
@@ -22230,7 +22209,7 @@ msgstr "讓我們開始吧"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr "我們開始吧!"
+msgstr "開始設定"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__letter
@@ -26505,7 +26484,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Onboarding Tips"
-msgstr ""
+msgstr "新手導覽"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
@@ -30715,12 +30694,12 @@ msgstr "設為待辦"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_open_base_onboarding_company
 msgid "Set your company data"
-msgstr "設定您的公司資料"
+msgstr "設定公司資料"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Set your company's data for documents header/footer."
-msgstr "設定公司的文件頁首/頁尾資料."
+msgstr "設定公司資料，以便在文件頁首或頁尾顯示。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_url__binding_model_id
@@ -34082,7 +34061,7 @@ msgstr "%(use)s) 中的未知欄位 \"%(model)s.%(field)s\""
 #: code:addons/models.py:0
 #, python-format
 msgid "Unknown field %r in 'groupby'"
-msgstr "未知欄位 %r 在'分組依據'中"
+msgstr "「分組方式」包含未知欄位：%r"
 
 #. module: base
 #. odoo-python

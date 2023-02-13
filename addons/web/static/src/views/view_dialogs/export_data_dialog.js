@@ -364,4 +364,12 @@ export class ExportDataDialog extends Component {
     }
 }
 ExportDataDialog.components = { CheckBox, Dialog, ExportDataItem };
+ExportDataDialog.props = {
+    close: { type: Function },
+    context: { type: Object, optional: true },
+    defaultExportList: { type: Array },
+    download: { type: Function },
+    getExportedFields: { type: Function },
+    root: { type: Object },
+};
 ExportDataDialog.template = "web.ExportDataDialog";

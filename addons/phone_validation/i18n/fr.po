@@ -25,7 +25,7 @@ msgstr ""
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid " Please correct the number and try again."
-msgstr "Merci de corriger le numéro et d'essayer de nouveau"
+msgstr "Veuillez corriger le numéro et réessayer."
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_needaction
@@ -36,12 +36,12 @@ msgstr "Nécessite une action"
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__active
 msgid "Active"
-msgstr "Active"
+msgstr "Actif"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
 msgid "Add a phone number in the blacklist"
-msgstr "Ajouter un numéro de téléphone dans la liste noire"
+msgstr "Ajouter un numéro de téléphone à la liste noire"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
@@ -53,12 +53,12 @@ msgstr "Archivé"
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__message_attachment_count
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__message_attachment_count
 msgid "Attachment Count"
-msgstr "Compte des pièces jointes"
+msgstr "Nombre de pièces jointes"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 msgid "Blacklist"
-msgstr "Liste de blocage"
+msgstr "Liste noire"
 
 #. module: phone_validation
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
@@ -73,12 +73,12 @@ msgstr "Le téléphone sur la liste noire est mobile"
 #. module: phone_validation
 #: model:ir.actions.act_window,name:phone_validation.phone_blacklist_action
 msgid "Blacklisted Phone Numbers"
-msgstr "Numéros de téléphone sur la liste noire"
+msgstr "Numéros de téléphone sur liste noire"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr "Le téléphone sur la liste noire est mobile"
+msgstr "Le téléphone sur la liste noire est fixe"
 
 #. module: phone_validation
 #: model_terms:ir.actions.act_window,help:phone_validation.phone_blacklist_action
@@ -128,7 +128,7 @@ msgstr "Ignorer"
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__display_name
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist_remove__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Afficher le nom"
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized
@@ -173,7 +173,7 @@ msgstr "Si coché, de nouveaux messages demandent votre attention."
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__message_has_error
 #: model:ir.model.fields,help:phone_validation.field_phone_blacklist__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Si actif, certains messages ont une erreur de livraison."
+msgstr "Si coché, certains messages ont une erreur de livraison."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
@@ -181,8 +181,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
-"Si le numéro de téléphone nettoyé est sur la liste noire, le contact ne "
-"recevra plus de campagnes de mail, d'aucunes listes."
+"Si le numéro de téléphone nettoyé est sur liste noire, le contact ne recevra"
+" plus de campagnes de mail, d'aucune liste."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
@@ -199,7 +199,8 @@ msgid ""
 msgstr ""
 "Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
 "de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
-"quand il y a et un champ portable et un champ téléphone dans un modèle."
+"quand il y a à la fois un champ portable et un champ téléphone fixe dans un "
+"modèle."
 
 #. module: phone_validation
 #: model:ir.model.fields,help:phone_validation.field_mail_thread_phone__phone_blacklisted
@@ -210,13 +211,14 @@ msgid ""
 msgstr ""
 "Indique si un numéro de téléphone nettoyé et sur liste noire est un numéro "
 "de téléphone portable. Aide à distinguer quel numéro est sur liste noire "
-"quand il y a et un champ portable et un champ téléphone dans un modèle."
+"quand il y a à la fois un champ portable et un champ téléphone fixe dans un "
+"modèle."
 
 #. module: phone_validation
 #: code:addons/phone_validation/tools/phone_validation.py:0
 #, python-format
 msgid "Invalid number %s: probably incorrect prefix."
-msgstr "Numéro non valide %s: probablement le préfixe est incorrect."
+msgstr "Numéro invalide %s: le préfixe est probablement incorrect."
 
 #. module: phone_validation
 #: code:addons/phone_validation/models/mail_thread_phone.py:0
@@ -318,17 +320,17 @@ msgstr "Téléphone / SMS"
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_form
 #: model_terms:ir.ui.view,arch_db:phone_validation.phone_blacklist_view_tree
 msgid "Phone Blacklist"
-msgstr "Liste Noire de Téléphones"
+msgstr "Liste noire des téléphones"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr "Mixin de la Liste Noire de Téléphones"
+msgstr "Mixin de la liste noire des téléphones"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_mail_thread_phone__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr "Téléphone sur Liste Noire"
+msgstr "Téléphone sur liste noire"
 
 #. module: phone_validation
 #: model:ir.model.fields,field_description:phone_validation.field_phone_blacklist__number
@@ -382,7 +384,7 @@ msgstr "Supprimer de la liste noire"
 #: code:addons/phone_validation/models/phone_blacklist.py:0
 #, python-format
 msgid "Unblacklisting Reason: %s"
-msgstr "Raison de suppression de la liste noire: %s"
+msgstr "Motif de suppression de la liste noire : %s"
 
 #. module: phone_validation
 #: model:ir.model,name:phone_validation.model_res_users

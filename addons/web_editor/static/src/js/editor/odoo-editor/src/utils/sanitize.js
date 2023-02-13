@@ -16,7 +16,6 @@ import {
     isEditorTab,
     isZWS,
     getUrlsInfosInString,
-    URL_REGEX,
     isVoidElement,
 } from './utils.js';
 
@@ -240,16 +239,17 @@ class Sanitize {
             ) {
                 node.setAttribute('contenteditable', 'false');
             }
+
             if (node.firstChild) {
                 this._parse(node.firstChild);
             }
+
             // Update link URL if label is a new valid link.
             if (node.nodeName === 'A' && anchorEl === node) {
-                const linkLabel = node.textContent;
-                const match = linkLabel.match(URL_REGEX);
-                if (match && match[0] === node.textContent && !node.href.startsWith('mailto:')) {
-                    const urlInfo = getUrlsInfosInString(linkLabel)[0];
-                    node.setAttribute('href', urlInfo.url);
+                const linkLabel = node.innerText;
+                const urlInfo = getUrlsInfosInString(linkLabel);
+                if (urlInfo.length && urlInfo[0].label === linkLabel && !node.href.startsWith('mailto:')) {
+                    node.setAttribute('href', urlInfo[0].url);
                 }
             }
             node = node.nextSibling;

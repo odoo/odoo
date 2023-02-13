@@ -47,8 +47,8 @@ msgid ""
 "\"Optional\" allows guests to register from the order confirmation email to "
 "track their order."
 msgstr ""
-"\"Valikuline\" võimaldab külalistel registreeruda tellimuse kinnitusmeili "
-"kaudu, et oma tellimust jälgida."
+"\"Valikuline\" annab võimaluse külalistel registreeruda kinnitusmeili kaudu,"
+" et oma tellimust jälgida."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -345,8 +345,8 @@ msgid ""
 "<span class=\"o_form_label\">Automatically send abandoned checkout "
 "emails</span>"
 msgstr ""
-"<span class=\"o_form_label\">Saatke automaatselt e-kiri mahajäetud ostukorvi"
-" teemal</span>"
+"<span class=\"o_form_label\">Luba saata automaatselt e-kiri \"hüljatud "
+"ostukorvi\" teemal</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -356,8 +356,7 @@ msgstr "<span class=\"o_form_label\">Arvelduse meetod</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Jätke meile tagasiside</span>"
+msgstr "<span class=\"s_website_form_label_content\">Tagasiside vorm</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -367,7 +366,7 @@ msgstr "<span class=\"s_website_form_label_content\">Laadi üles dokument </span
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr "<span class=\"s_website_form_label_content\">Sinu viide</span>"
+msgstr "<span class=\"s_website_form_label_content\">Teema</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -441,6 +440,8 @@ msgid ""
 "<span>Process Checkout</span>\n"
 "                                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>Tellimuse vormistamine</span>\n"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -730,7 +731,9 @@ msgstr "Lisa meedia"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add a customizable form during checkout (after address)"
-msgstr "Lisa ostukorvi (peale aadressi täitmist) kohandatud vorm"
+msgstr ""
+"Ostukorvi lehele võib tekitada lisasammu. (Peale aadressi lisamist) "
+"Lisasammu võib kohandada veebilehe redaktoris. (nt. tagasisidevorm jne)"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -748,7 +751,7 @@ msgstr "Lisage võrdluseks läbikriipsutatud hind"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Add download link for customers at the end of checkout"
-msgstr "Lisage klientide jaoks allalaadimislink kaasa enne välja logimist"
+msgstr "Lisa klientide jaoks allalaadimislink ostukorvi lõpus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -800,17 +803,17 @@ msgstr "Kõik hinnakirjad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow customers to pay in person at your stores"
-msgstr "Lubage klientidel Teie kauplustes isiklikult maksta"
+msgstr "Luba klientidel maksta kauba kättesaamisel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow shoppers to compare products based on their attributes"
-msgstr "Lubage ostjatel tooteid võrrelda nende atribuutide põhjal. "
+msgstr "Luba ostjatel tooteid võrrelda nende atribuutide põhjal. "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow signed-in users to save product in a wishlist"
-msgstr "Lubage sisselogitud kasutajatel salvestada toode sooviloendisse"
+msgstr "Luba sisselogitud kasutajatel toote soovinimekirja salvestada"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_pricelist__selectable
@@ -820,7 +823,8 @@ msgstr "Võimaldage lõppkasutajal seda hinnakirja valida"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr "Lubage oma kliendil lisada ostukorvi eelmise tellimuse tooteid."
+msgstr ""
+"Kliendil on võimalik lisada ostukorvi eelmisel korral tellitud tooteid. "
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -942,7 +946,7 @@ msgstr "Suur"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_on_payment
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "Billing"
-msgstr "RMP arved"
+msgstr "Arveldus"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -1303,12 +1307,12 @@ msgstr "Koostisosad"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping cost and ship with Easypost"
-msgstr "Arvutage tarnekulud ja tarne Easypost abil"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine Easypost'iga"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Compute shipping costs and ship with DHL"
-msgstr "Reaalse transpordihinna arvutamine ja saatmine DHLga"
+msgstr "Reaalse transpordihinna arvutamine ja saatmine DHL'ga"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1636,7 +1640,7 @@ msgstr "Virtuaalne sisu"
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__disabled
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__disabled
 msgid "Disabled (buy as guest)"
-msgstr "Disabled (buy as guest)"
+msgstr "Keelatud (külalistel osta)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1846,7 +1850,7 @@ msgstr "Extra Product Media"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__enabled_extra_checkout_step
 msgid "Extra Step During Checkout"
-msgstr "Lisavalik välja logimise ajal"
+msgstr "Lisasamm ostukorvi lehel"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1921,7 +1925,7 @@ msgstr "Loo tellimusest arve."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "Genereeri arve automaatselt peale online makse kinnitamist"
+msgstr "Genereeri arve automaatselt peale veebimakse kinnitamist"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -2070,7 +2074,7 @@ msgstr "Pildi laius"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
-msgstr "Ostukorvi lisamise asemel pöördu otse kassasse"
+msgstr "Ostukorvi lisamise asemel suunatakse otse kassasse"
 
 #. module: website_sale
 #. odoo-python
@@ -2220,7 +2224,7 @@ msgstr "Võimalda klientidel sisestada tarneaadress"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Let the customer select a Mondial Relay shipping point"
-msgstr "Laske kliendil valida Mondial Relay tarnepunkt"
+msgstr "Mondial Relay tarnepunkti valikuvõimalus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2267,6 +2271,8 @@ msgid ""
 "Mail only sent to signed in customers with items available for sale in their"
 " cart."
 msgstr ""
+"E-kirjad saadetakse ainult sisselogitud kasutajatele, kelle ostukorvis "
+"olevad tooted on saadaval (müügis)."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2277,7 +2283,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
-"Hallake kampaaniaid, kuponge, lojaalsuskaarte, kinkekaarte ja eRahakotti"
+"Halda kampaaniaid, kuponge, lojaalsuskaarte, kinkekaarte ja eRahakotti"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2292,7 +2298,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__account_on_checkout__mandatory
 #: model:ir.model.fields.selection,name:website_sale.selection__website__account_on_checkout__mandatory
 msgid "Mandatory (no guest checkout)"
-msgstr ""
+msgstr "Kohustuslik (külalistel puudub ostukorv)"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2486,7 +2492,7 @@ msgstr "Toodete arv ruudustikus poes"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_picking
 msgid "On Site Payments & Picking"
-msgstr ""
+msgstr "Maksmine kättesaamisel"
 
 #. module: website_sale
 #. odoo-python
@@ -2745,7 +2751,7 @@ msgstr "Amet"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__website_sale_prevent_zero_price_sale
 msgid "Prevent Sale of Zero Priced Product"
-msgstr "Väldi 0 hinnaga toote müüki"
+msgstr "Väldi 0 hinnaga toodete müüki"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3128,7 +3134,7 @@ msgstr "Kogus:"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #, python-format
 msgid "Quantity"
-msgstr "Tehtud kogused"
+msgstr "Kogus"
 
 #. module: website_sale
 #. odoo-javascript
@@ -3594,7 +3600,7 @@ msgstr "Logi sisse"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Sign in/up at checkout"
-msgstr "Sisse logimine/Registreerimine kassas"
+msgstr "Sisselogimise ja registreerimise võimalus ostukorvis"
 
 #. module: website_sale
 #. odoo-python
@@ -4075,6 +4081,8 @@ msgstr "Laadige fail üles enda kohalikkust teegist."
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Use Google Places API to validate addresses entered by your visitors"
 msgstr ""
+"Kasuta \"Google Places API\" kasutajate sisestanud aadressite "
+"valideerimiseks"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart_options
@@ -4287,7 +4295,7 @@ msgstr "Veebilehed"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr ""
+msgstr "Mis juhtub kui vajutatakse \"Lisa ostukorvi\"?"
 
 #. module: website_sale
 #. odoo-python
