@@ -3340,11 +3340,11 @@ export class OdooEditor extends EventTarget {
             // cell that is itself selected, or if all its own cells are
             // selected.
             const isTableFullySelected =
-                table.parentElement && closestElement(table.parentElement, 'td.o_selected_td') ||
+                table.parentElement && !!closestElement(table.parentElement, 'td.o_selected_td') ||
                 [...table.querySelectorAll('td')]
                     .filter(td => closestElement(td, 'table') === table)
                     .every(td => td.classList.contains('o_selected_td'));
-            if (!isTableFullySelected(table)) {
+            if (!isTableFullySelected) {
                 for (const td of tableClone.querySelectorAll('td:not(.o_selected_td)')) {
                     if (closestElement(td, 'table') === tableClone) { // ignore nested
                         td.remove();
