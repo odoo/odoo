@@ -28,6 +28,7 @@ def log(logger, level, prefix, msg, depth=None):
 
 class WatchedFileHandler(logging.handlers.WatchedFileHandler):
     def __init__(self, filename):
+        self.errors = None  # py38
         super().__init__(filename)
         # Unfix bpo-26789, in case the fix is present
         self._builtin_open = None
