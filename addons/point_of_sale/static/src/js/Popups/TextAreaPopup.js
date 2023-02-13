@@ -3,15 +3,11 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
 const { onMounted, useRef, useState } = owl;
 
-// formerly TextAreaPopupWidget
 // IMPROVEMENT: This code is very similar to TextInputPopup.
 //      Combining them would reduce the code.
 export class TextAreaPopup extends AbstractAwaitablePopup {
-    static components = { Draggable };
     static template = "TextAreaPopup";
     static defaultProps = {
         confirmText: _lt("Add"),

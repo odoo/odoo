@@ -5,12 +5,9 @@ var _t = core._t;
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useListener, useService } from "@web/core/utils/hooks";
 
-import { Draggable } from "../Misc/Draggable";
-
 const { useState } = owl;
 
 export class NumberPopup extends AbstractAwaitablePopup {
-    static components = { Draggable };
     static template = "NumberPopup";
     static defaultProps = {
         confirmText: _t("Confirm"),
