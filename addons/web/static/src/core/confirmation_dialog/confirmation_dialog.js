@@ -28,7 +28,7 @@ export class ConfirmationDialog extends Component {
         }
         this.props.close();
     }
-    async _confirm() {
+    async _confirm(...args) {
         if (this.isConfirmedOrCancelled) {
             return;
         }
@@ -36,7 +36,7 @@ export class ConfirmationDialog extends Component {
         this.disableButtons();
         if (this.props.confirm) {
             try {
-                await this.props.confirm();
+                await this.props.confirm(...args);
             } catch (e) {
                 this.props.close();
                 throw e;
