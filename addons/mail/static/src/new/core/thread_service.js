@@ -696,6 +696,9 @@ export class ThreadService {
      * @param {Thread} thread
      */
     lastSeenBySelfMessageId(thread) {
+        if (thread.model !== "mail.channel") {
+            return null;
+        }
         const firstMessage = thread.messages[0];
         if (firstMessage && thread.serverLastSeenMsgBySelf < firstMessage.id) {
             return thread.serverLastSeenMsgBySelf;
