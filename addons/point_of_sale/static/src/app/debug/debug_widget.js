@@ -1,18 +1,18 @@
 /** @odoo-module */
 
 import { parse } from "web.field_utils";
-import { LegacyComponent } from "@web/legacy/legacy_component";
 import { Transition } from "@web/core/transition";
-import { Draggable } from "@point_of_sale/js/Misc/Draggable";
+import { constrain, getLimits, useMovable } from "@point_of_sale/app/movable_hook";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { OrderImportPopup } from "@point_of_sale/js/Popups/OrderImportPopup";
 import { useBus, useService } from "@web/core/utils/hooks";
 
-import { useRef, useState } from "@odoo/owl";
+import { useEffect, useRef, useState, Component } from "@odoo/owl";
 
-export class DebugWidget extends LegacyComponent {
-    static components = { Transition, Draggable };
+export class DebugWidget extends Component {
+    static components = { Transition };
     static template = "point_of_sale.DebugWidget";
+    static props = { state: { type: Object, shape: { showWidget: Boolean } } };
     setup() {
         super.setup();
         this.debug = useService("debug");
@@ -25,6 +25,27 @@ export class DebugWidget extends LegacyComponent {
             isPaidOrdersReady: false,
             isUnpaidOrdersReady: false,
             buffer: numberBuffer.get(),
+        });
+        this.root = useRef("root");
+        this.pos = useState({ left: null, top: null });
+        useEffect(
+            (root) => {
+                this.pos.left = root?.offsetLeft;
+                this.pos.top = root?.offsetTop;
+            },
+            () => [this.root.el]
+        );
+        let posBeforeMove;
+        useMovable({
+            ref: this.root,
+            onMoveStart: () => {
+                posBeforeMove = { ...this.pos };
+            },
+            onMove: ({ dx, dy }) => {
+                const { minX, minY, maxX, maxY } = getLimits(this.root.el, document.body);
+                this.pos.left = constrain(posBeforeMove.left + dx, minX, maxX);
+                this.pos.top = constrain(posBeforeMove.top + dy, minY, maxY);
+            },
         });
 
         // NOTE: Perhaps this can still be improved.
@@ -153,5 +174,9 @@ export class DebugWidget extends LegacyComponent {
     }
     get bufferRepr() {
         return `"${this.state.buffer}"`;
+    }
+    get style() {
+        const { left, top } = this.pos;
+        return top === null ? "" : `position: absolute; left: ${left}px; top: ${top}px;`;
     }
 }

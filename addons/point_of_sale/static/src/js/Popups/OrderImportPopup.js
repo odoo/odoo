@@ -3,11 +3,7 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
-// formerly OrderImportPopupWidget
 export class OrderImportPopup extends AbstractAwaitablePopup {
-    static components = { Draggable };
     static template = "OrderImportPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),

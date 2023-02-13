@@ -3,11 +3,7 @@
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
-// formerly ErrorBarcodePopupWidget
 export class ErrorBarcodePopup extends ErrorPopup {
-    static components = { Draggable };
     static template = "ErrorBarcodePopup";
     static defaultProps = {
         confirmText: _lt("Ok"),

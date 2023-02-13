@@ -317,3 +317,21 @@ export function useOwnedDialogs() {
     };
     return addDialog;
 }
+/**
+ * Manages an event listener on a ref. Useful for hooks that want to manage
+ * event listeners, especially more than one. Prefer using t-on directly in
+ * components. If your hook only needs a single event listener, consider simply
+ * returning it from the hook and letting the user attach it with t-on.
+ *
+ * @param {Ref} ref
+ * @param {Parameters<typeof EventTarget.prototype.addEventListener>} listener
+ */
+export function useRefListener(ref, ...listener) {
+    useEffect(
+        (el) => {
+            el?.addEventListener(...listener);
+            return () => el?.removeEventListener(...listener);
+        },
+        () => [ref.el]
+    );
+}
