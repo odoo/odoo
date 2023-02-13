@@ -104,7 +104,9 @@ PIP_TO_INSTALL="
     polib \
     pycups \
     pyusb \
-    v4l2"
+    v4l2 \
+    pysmb==1.2.9.1 \
+    cryptocode==0.1"
 
 pip3 install ${PIP_TO_INSTALL}
 
