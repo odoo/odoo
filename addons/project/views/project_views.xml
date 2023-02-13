@@ -80,6 +80,9 @@
             <field name="inherit_id" ref="view_task_search_form_project_fsm_base"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
+                <field name="description" position="after">
+                    <field string="Properties" name="task_properties"/>
+                </field>
                 <filter name="date_last_stage_update" position="after">
                     <filter string="Deadline" name="date_deadline" date="date_deadline"/>
                 </filter>
