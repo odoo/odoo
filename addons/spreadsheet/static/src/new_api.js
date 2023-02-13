@@ -7,7 +7,7 @@ const pivot = {
   colGroupBys: [],
   rowGroupBys: ["date"],
   name: "Partners by Date",
-  order: "ASC", // || undefined || "DESC"
+  order: {field: "probability", asc: true}, // || undefined
 }
 
 const list = {
@@ -16,7 +16,7 @@ const list = {
   id: "1",
   context: {},
   columns: ["name", "email"],
-  orderBy: [{field: "probability", asc: true}, {field: "name", asc: false}], // || null
+  orderBy: [{field: "probability", asc: true}, {field: "name", asc: false}], // || undefined
 }
 
 const chart = {
@@ -36,9 +36,9 @@ stacked: True,
 }
 
 const globalFilter = {
-id: "122",
-model: "res.users",
-type: "relation",
-label: "country",
-// ... a million other things
+  id: "122",
+  model: "res.users",
+  type: "relation",
+  label: "country",
+  // ... a million other things
 }

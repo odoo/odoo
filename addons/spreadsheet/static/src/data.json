@@ -16,24 +16,17 @@
             "title": "Opportunities",
             "background": "#FFFFFF",
             "legendPosition": "top",
-            "metaData": {
+            "definition": {
+              "id": "bb8b5846-b950-4541-8bc0-8dbe30e14b63",
               "groupBy": [
                 "stage_id",
                 "country_id"
               ],
               "measure": "__count",
               "order": "ASC",
-              "resModel": "crm.lead"
-            },
-            "searchParams": {
-              "comparison": null,
+              "model": "crm.lead",
               "context": {},
-              "domain": [],
-              "groupBy": [
-                "stage_id",
-                "country_id"
-              ],
-              "orderBy": []
+              "domain": []
             },
             "type": "odoo_bar",
             "verticalAxisPosition": "left",
@@ -41,12 +34,10 @@
             "fieldMatching": {
               "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
                 "chain": "create_date",
-                "type": "datetime",
                 "offset": 0
               },
               "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
-                "chain": "country_id",
-                "type": "many2one"
+                "chain": "country_id"
               }
             }
           }
@@ -68,7 +59,7 @@
       "id": "e7bf233b-d9e4-4159-865e-77edd1195fdb",
       "type": "relation",
       "label": "country",
-      "modelName": "res.country",
+      "model": "res.country",
       "defaultValue": [],
       "defaultValueDisplayNames": [],
       "rangeType": "year",
@@ -83,41 +74,20 @@
       "context": {},
       "domain": [],
       "id": "1",
-      "measures": [
-        {
-          "field": "expected_revenue"
-        },
-        {
-          "field": "recurring_revenue_monthly"
-        }
-      ],
+      "measures": ["expected_revenue", "recurring_revenue_monthly"],
       "model": "crm.lead",
       "rowGroupBys": [
         "create_date:month"
       ],
       "name": "Pipeline Analysis by Stage",
-      "sortedColumn": {
-        "groupId": [
-          [],
-          [
-            3
-          ]
-        ],
-        "measure": "expected_revenue",
-        "order": "asc",
-        "originIndexes": [
-          0
-        ]
-      },
+      "orderBy": { "field": "expected_revenue", "asc": true},
       "fieldMatching": {
         "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
           "chain": "create_date",
-          "type": "datetime",
           "offset": 0
         },
         "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
-          "chain": "country_id",
-          "type": "many2one"
+          "chain": "country_id"
         }
       }
     }
@@ -156,12 +126,10 @@
       "fieldMatching": {
         "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
           "chain": "create_date",
-          "type": "datetime",
           "offset": 0
         },
         "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
-          "chain": "country_id",
-          "type": "many2one"
+          "chain": "country_id"
         }
       }
     }
