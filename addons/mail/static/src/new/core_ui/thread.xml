@@ -11,8 +11,8 @@
                     <t t-if="props.thread.loadMore and !props.thread.isTransient and !props.thread.hasLoadingFailed" t-call="mail.thread.load_more"/>
                     <t t-if="props.thread.hasLoadingFailed" t-call="mail.thread.loading_error"/>
                 </t>
-                <t t-foreach="props.order === 'asc' ? props.thread.messages : [...props.thread.messages].reverse()" t-as="msg" t-key="msg.id">
-                    <t t-if="!msg.isEmpty and msg.dateDay !== currentDay">
+                <t t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
+                    <t t-if="msg.dateDay !== currentDay">
                         <div class="o-mail-thread-date d-flex align-items-center fw-bolder pt-4">
                             <hr class="flex-grow-1 border-top"/>
                             <span class="px-3"><t t-esc="msg.dateDay"/></span>
@@ -23,18 +23,16 @@
                     <t t-if="msg.isNotification">
                         <t t-call="mail.notification_message"/>
                     </t>
-                    <t t-elif="!msg.isEmpty">
-                        <Message
-                            isInChatWindow="props.isInChatWindow"
-                            message="msg"
-                            messageToReplyTo="props.messageToReplyTo"
-                            squashed="isSquashed(msg, prevMsg)"
-                            highlighted="props.messageHighlight and props.messageHighlight.highlightedMessageId === msg.id"
-                            onParentMessageClick="() => props.messageHighlight and msg.parentMessage and props.messageHighlight.highlightMessage(msg.parentMessage.id)"
-                            thread="props.thread"
-                            messageEdition="props.messageEdition"
-                        />
-                    </t>
+                    <Message t-else=""
+                        isInChatWindow="props.isInChatWindow"
+                        message="msg"
+                        messageToReplyTo="props.messageToReplyTo"
+                        squashed="isSquashed(msg, prevMsg)"
+                        highlighted="props.messageHighlight and props.messageHighlight.highlightedMessageId === msg.id"
+                        onParentMessageClick="() => props.messageHighlight and msg.parentMessage and props.messageHighlight.highlightMessage(msg.parentMessage.id)"
+                        thread="props.thread"
+                        messageEdition="props.messageEdition"
+                    />
                     <Transition visible="threadService.lastSeenBySelfMessageId(props.thread) === msg.id and !msg_last" name="'o-fade'" t-slot-scope="transition">
                         <div class="o-mail-thread-new-message d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
                             <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>

@@ -309,6 +309,10 @@ export class Thread {
         return oldestNonTransientMessage;
     }
 
+    get nonEmptyMessages() {
+        return this.messages.filter((message) => !message.isEmpty);
+    }
+
     get nonTransientMessages() {
         return this.messages.filter((message) => !message.isTransient);
     }
