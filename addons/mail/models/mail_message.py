@@ -118,7 +118,7 @@ class Message(models.Model):
     subtype_id = fields.Many2one('mail.message.subtype', 'Subtype', ondelete='set null', index=True)
     mail_activity_type_id = fields.Many2one(
         'mail.activity.type', 'Mail Activity Type',
-        index=True, ondelete='set null')
+        index='btree_not_null', ondelete='set null')
     is_internal = fields.Boolean('Employee Only', help='Hide to public / portal users, independently from subtype configuration.')
     # origin
     email_from = fields.Char('From', help="Email address of the sender. This field is set when no matching partner is found and replaces the author_id field in the chatter.")
