@@ -63,3 +63,4 @@ class ChooseDeliveryPackage(models.TransientModel):
             delivery_package.package_type_id = self.delivery_package_type_id
         if self.shipping_weight:
             delivery_package.shipping_weight = self.shipping_weight
+        return self.picking_id._post_put_in_pack_hook(delivery_package)

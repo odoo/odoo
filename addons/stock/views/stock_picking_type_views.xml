@@ -140,6 +140,14 @@
                                         </a>
                                     </div>
                                 </group>
+                                <group string='Print on "Put in Pack"' groups="stock.group_tracking_lot">
+                                    <label for="auto_print_package_label" string="Package Label"/>
+                                    <div class="o_row">
+                                        <field name="auto_print_package_label" string="Package Label"/>
+                                        <label for="package_label_to_print" string="Print label as:" invisible="not auto_print_package_label" class="fw-bold"/>
+                                        <field name="package_label_to_print" invisible="not auto_print_package_label"/>
+                                    </div>
+                                </group>
                             </group>
                         </page>
                     </notebook>
