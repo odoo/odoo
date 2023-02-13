@@ -188,6 +188,13 @@ class Lead(models.Model):
         'Email', tracking=40, index='trigram',
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
     email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
+    email_domain_criterion = fields.Char(
+        string='Email Domain Criterion',
+        compute="_compute_email_domain_criterion",
+        index='btree_not_null',  # used for exact match, void value do not matter
+        store=True,
+        unaccent=False,  # normalized, exact matching
+    )
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
@@ -448,6 +455,14 @@ class Lead(models.Model):
             if lead._get_partner_email_update():
                 lead.partner_id.email = lead.email_from
 
+    @api.depends('email_normalized')
+    def _compute_email_domain_criterion(self):
+        self.email_domain_criterion = False
+        for lead in self.filtered('email_normalized'):
+            lead.email_domain_criterion = iap_tools.mail_prepare_for_domain_search(
+                lead.email_normalized
+            )
+
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
@@ -532,11 +547,16 @@ class Lead(models.Model):
         for lead in self:
             lead.calendar_event_count = mapped_data.get(lead.id, 0)
 
-    @api.depends('email_from', 'partner_id', 'contact_name', 'partner_name')
+    @api.depends('email_domain_criterion', 'email_normalized', 'partner_id',
+                 'phone_sanitized')
     def _compute_potential_lead_duplicates(self):
-        MIN_EMAIL_LENGTH = 7
-        MIN_NAME_LENGTH = 6
-        MIN_PHONE_LENGTH = 8
+        """ Override potential lead duplicates computation to be more efficient
+        with high lead volume.
+        Criterions:
+          * email domain exact match;
+          * phone_sanitized exact match;
+          * same commercial entity;
+        """
         SEARCH_RESULT_LIMIT = 21
 
         def return_if_relevant(model_name, domain):
@@ -545,14 +565,12 @@ class Lead(models.Model):
             below a given threshold (i.e: `SEARCH_RESULT_LIMIT`). Otherwise, returns
             an empty recordset of the provided model as it indicates search term
             was not relevant.
-
             Note: The function will use the administrator privileges to guarantee
             that a maximum amount of leads will be included in the search results
-            and transcend multi-company record rules. It also includes archived records.
-            Idea is that counter indicates duplicates are present and that lead
-            could be escalated to managers.
+            and transcend multi-company record rules. It also includes archived
+            records. Idea is that counter indicates duplicates are present and
+            the lead could be escalated to managers.
             """
-            # Includes archived records and transcend multi-company record rules
             model = self.env[model_name].sudo().with_context(active_test=False)
             res = model.search(domain, limit=SEARCH_RESULT_LIMIT)
             return res if len(res) < SEARCH_RESULT_LIMIT else model
@@ -564,31 +582,23 @@ class Lead(models.Model):
             ]
 
             duplicate_lead_ids = self.env['crm.lead']
-            email_search = iap_tools.mail_prepare_for_domain_search(lead.email_from, min_email_length=MIN_EMAIL_LENGTH)
 
-            if email_search:
+            # check the "company" email domain duplicates
+            if lead.email_domain_criterion:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('email_normalized', 'ilike', email_search)
+                    ('email_domain_criterion', '=', lead.email_domain_criterion)
                 ])
-            if lead.partner_name and len(lead.partner_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('partner_name', 'ilike', lead.partner_name)
-                ])
-            if lead.contact_name and len(lead.contact_name) >= MIN_NAME_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('contact_name', 'ilike', lead.contact_name)
-                ])
+            # check for "same commercial entity" duplicates
             if lead.partner_id and lead.partner_id.commercial_partner_id:
                 duplicate_lead_ids |= lead.with_context(active_test=False).search(common_lead_domain + [
                     ("partner_id", "child_of", lead.partner_id.commercial_partner_id.id)
                 ])
-            if lead.phone and len(lead.phone) >= MIN_PHONE_LENGTH:
+            # check the phone number duplicates, based on phone_sanitized. Only
+            # exact matches are found, and the single one stored in phone_sanitized
+            # in case phone and mobile are both set.
+            if lead.phone_sanitized:
                 duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('phone_mobile_search', 'ilike', lead.phone)
-                ])
-            if lead.mobile and len(lead.mobile) >= MIN_PHONE_LENGTH:
-                duplicate_lead_ids |= return_if_relevant('crm.lead', common_lead_domain + [
-                    ('phone_mobile_search', 'ilike', lead.mobile)
+                    ('phone_sanitized', '=', lead.phone_sanitized)
                 ])
 
             lead.duplicate_lead_ids = duplicate_lead_ids + lead
