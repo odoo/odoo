@@ -111,7 +111,12 @@ class MyFilterMessages(Transform):
 
     def apply(self):
         for node in self.document.traverse(nodes.system_message):
-            _logger.warning("docutils' system message present: %s", str(node))
+            # Some docutils messages are only informative; this is the case for
+            # "Duplicate explicit target name" - see ``docutils/nodes.py`` >
+            # ``set_duplicate_name_id``: level=1 can be used for an info message.
+            level = node.get("level")
+            logger_method = _logger.info if level is not None and level <= 1 else _logger.warning
+            logger_method("docutils' system message present: %s", str(node))
             node.parent.remove(node)
 
 
