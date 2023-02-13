@@ -44,7 +44,7 @@ QUnit.module("Project", (hooks) => {
                     <template>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="last_update_status" widget="project_state_selection" options="{'color_field': 'last_update_color'}"/>
+                                <field name="last_update_status" widget="project_state_selection"/>
                             </div>
                         </t>
                     </template>
