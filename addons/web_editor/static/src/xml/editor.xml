@@ -74,28 +74,30 @@
                 </div>
             </div>
 
-            <div id="font-size" class="btn-group dropdown">
-                <button type="button" class="btn dropdown-toggle"
-                    data-bs-toggle="dropdown" tabindex="-1" data-bs-original-title="Font Size" aria-expanded="false">
-                    <span id="fontSizeCurrentValue" title="Font size"></span>
-                    <span id="fontSizeCurrentValue"></span>
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="16px">16</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
-                    <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
-                </ul>
-            </div>
+            <t t-if="widget.isMobile()"></t>  
+            <t t-else="">
+                <div id="font-size" class="btn-group dropdown">
+                    <button type="button" class="btn dropdown-toggle"
+                        data-bs-toggle="dropdown" title="Font size" tabindex="-1"
+                        data-bs-original-title="Font Size" aria-expanded="false">
+                        <span id="fontSizeCurrentValue"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
+                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
+                    </ul>
+                </div>
+            </t>    
 
             <div id="justify" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"
@@ -112,16 +114,37 @@
                 </div>
             </div>
 
-            <div id="list" class="btn-group">
-                <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
-                <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
-                <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
-                    <div class="small">
-                        <div class="fa fa-square-o d-block small"/>
-                        <div class="fa fa-check-square d-block small"/>
+            <t t-if="widget.isMobile()"> 
+                <button type="button" class="btn dropdown-toggle"
+                    data-bs-toggle="dropdown" title="Text align" tabindex="-1"
+                    data-bs-original-title="Paragrap" aria-expanded="false">
+                    <i id="paragraphDropdownButton" class="fa fa-list fa-fw"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <div id="list" class="btn-group">
+                        <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
+                        <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
+                        <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                            <div class="small">
+                                <div class="fa fa-square-o d-block small"/>
+                                <div class="fa fa-check-square d-block small"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </t>
+            <t t-else="">
+                <div id="list" class="btn-group">
+                    <div id="unordered" data-call="toggleList" data-arg1="UL" title="Toggle unordered list" class="oe-toggle-unordered fa fa-list-ul fa-fw btn"></div>
+                    <div id="ordered" data-call="toggleList" data-arg1="OL" title="Toggle ordered list" class="oe-toggle-ordered fa fa-list-ol fa-fw btn"></div>
+                    <div id="checklist" data-call="toggleList" data-arg1="CL" title="Toggle checklist" class="oe-toggle-checklist btn fa fa-fw">
+                        <div class="small">
+                            <div class="fa fa-square-o d-block small"/>
+                            <div class="fa fa-check-square d-block small"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
 
             <div id="link" class="btn-group">
                 <div id="media-insert" title="Insert media" class="fa fa-file-image-o fa-fw btn editor-ignore"></div>
