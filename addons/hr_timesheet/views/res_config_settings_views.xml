@@ -16,28 +16,6 @@
                             <field name="timesheet_encode_method" class="col-lg-5 ps-0" widget="radio"/>
                             <field name="is_encode_uom_days" invisible="1"/>
                         </setting>
-                        <setting help="Track your time from anywhere, even offline, with our web/mobile apps" id="synchronize_web_mobile_setting">
-                            <field name="module_project_timesheet_synchro" widget="upgrade_boolean"/>
-                            <div class="content-group">
-                                <div class="row mt16 oe_center">
-                                    <div class="col-lg-3 pe-0 o_chrome_store_link d-none d-sm-inline-block">
-                                        <a href="http://www.odoo.com/app/timesheet?platform=chrome" class="align-middle" target="_blank">
-                                            <img alt="Google Chrome Store" class="img img-fluid align-middle mt-1" style="height: 85% !important;" src="project/static/src/img/chrome_store.png"/>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-3 pe-0">
-                                        <a href="https://apps.apple.com/be/app/awesome-timesheet/id1078657549" class="align-middle" target="_blank">
-                                            <img alt="Apple App Store" class="img img-fluid h-100 o_config_app_store" src="project/static/src/img/app_store.png"/>
-                                        </a>
-                                    </div>
-                                    <div class="col-lg-3 pe-0">
-                                        <a href="https://play.google.com/store/apps/details?id=com.odoo.OdooTimesheets" class="align-middle" target="_blank">
-                                            <img alt="Google Play Store" class="img img-fluid h-100 o_config_play_store" src="project/static/src/img/play_store.png"/>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </setting>
                     </block>
                     <block title="Timesheets Control">
                         <setting id="reminder_user_allow" company_dependent="1" help="Send a periodical email reminder to timesheets users that still have timesheets to encode">
