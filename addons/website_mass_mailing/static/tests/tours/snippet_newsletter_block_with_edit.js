@@ -47,6 +47,20 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
         trigger: '[data-value="primary"]',
     },
     {
+        content: 'Verify that the shape option is not available for primary while the size option appeared',
+        trigger: 'we-customizeblock-option:not(:has([name="link_style_shape"]))',
+        extra_trigger: 'we-customizeblock-option:has([name="link_style_size"])',
+        isCheck: true,
+    },
+    {
+        content: 'Click on the link style button',
+        trigger: '.dropdown:has([name="link_style_color"]) > button',
+    },
+    {
+        content: 'Click on the custom style button',
+        trigger: '[data-value="custom"]',
+    },
+    {
         content: 'Change the shape of the button',
         trigger: '.dropdown:has([name="link_style_shape"]) > button',
     },
@@ -60,6 +74,6 @@ wTourUtils.registerWebsitePreviewTour('snippet_newsletter_block_with_edit', {
     // prevent to edit the button).
     {
         content: 'Check that the link style is correct',
-        trigger: 'iframe .s_newsletter_block .js_subscribed_btn.btn.btn-primary.flat:not(.btn-success)',
+        trigger: 'iframe .s_newsletter_block .js_subscribed_btn.btn.btn-custom.flat:not(.btn-success)',
     },
 ]);
