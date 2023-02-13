@@ -192,6 +192,7 @@ class Lead(models.Model):
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
     mobile = fields.Char('Mobile', compute='_compute_mobile', readonly=False, store=True)
+    phone_sanitized = fields.Char(index='btree_not_null')  # inherited via mail.thread.phone
     phone_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
