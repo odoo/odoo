@@ -18,6 +18,7 @@
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
+# Jairo Llopis <yajo.sk8@gmail.com>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
@@ -3981,7 +3982,7 @@ msgstr "Tipo de comunicación"
 #. module: account
 #: model:ir.model,name:account.model_res_company
 msgid "Companies"
-msgstr "Empresas"
+msgstr "Compañías"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__ref_company_ids
@@ -4029,7 +4030,7 @@ msgstr "Empresas que se refieren al partner"
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_search
 msgid "Company"
-msgstr "Empresa"
+msgstr "Compañía"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -4039,7 +4040,7 @@ msgstr "Cuenta bancaria de la empresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__company_country_id
 msgid "Company Country"
-msgstr "País de la empresa"
+msgstr "País de la compañía"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__currency_id
@@ -10012,7 +10013,7 @@ msgstr "Empresa"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__commercial_partner_id
 msgid "Partner Company"
-msgstr "Empresa partner"
+msgstr "Empresa relacionada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__contract_ids
@@ -14786,6 +14787,14 @@ msgid "There was an error processing this page."
 msgstr "Hubo un error al procesar esta página."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Estos impuestos se establecen en cualquier producto nuevo creado."
@@ -15464,6 +15473,12 @@ msgstr "Facturas no pagadas"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Sin asentar"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

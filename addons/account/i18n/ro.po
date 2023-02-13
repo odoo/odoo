@@ -4837,6 +4837,7 @@ msgid "Customer Invoice"
 msgstr "Factură client"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14733,6 +14734,14 @@ msgid "There was an error processing this page."
 msgstr "A apărut o eroare la procesarea acestei pagini."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Aceste taxe sunt setate în orice produs nou creat."
@@ -15413,6 +15422,12 @@ msgid "Unposted"
 msgstr "Nepostat"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Note contabile nepostate"
@@ -15761,6 +15776,7 @@ msgid "Vendor Bill Created"
 msgstr "Factură furnizor creată"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16223,8 +16239,8 @@ msgid ""
 "You can't manually change the state of journal entry %s, as it has been "
 "created by bank statement %s."
 msgstr ""
-"Nu puteți modifica manual starea notei contabile%s, aceasta a fost creată de"
-" linia de extras de bancă (registru de casă) %s."
+"Nu puteți modifica manual starea notei contabile %s, deoarece aceasta a fost"
+" creată de linia de extras de bancă / registru de casă %s."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0

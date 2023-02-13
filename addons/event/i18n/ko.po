@@ -166,6 +166,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    안녕하세요 <t t-out=\"object.name or ''\">Oscar Morgan</t>님,<br/>\n"
+"    문의주셔서 감사합니다.<br/>\n"
+"    다음 행사 관련 배지를 확인하시기 바랍니다<t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.<br/>\n"
+"    궁금한 점이 있으실 경우, 언제든 문의주시기 바랍니다.\n"
+"    <br/><br/>\n"
+"    감사합니다.\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
