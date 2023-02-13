@@ -115,10 +115,15 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
         }
 
         if (!fieldInfo.__no_fetch && FieldComponent && FieldComponent.fieldsToFetch) {
-            fieldInfo.relatedFields = { ...FieldComponent.fieldsToFetch };
+            let fieldsToFetch = FieldComponent.fieldsToFetch;
+            if (fieldsToFetch instanceof Function) {
+                fieldsToFetch = fieldsToFetch(fieldInfo.__WOWL_FIELD_DESCR__);
+            }
+            fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+            fieldInfo.relatedFields = { ...fieldsToFetch };
             fieldInfo.viewType = "default";
             const defaultView = {};
-            for (const fieldName of Object.keys(FieldComponent.fieldsToFetch)) {
+            for (const fieldName of Object.keys(fieldsToFetch)) {
                 defaultView[fieldName] = {};
                 if (fieldDescr.fieldsToFetch[fieldName]) {
                     defaultView[fieldName].__WOWL_FIELD_DESCR__ =
@@ -126,15 +131,6 @@ export function mapActiveFieldsToFieldsInfo(activeFields, fields, viewType, env)
                 }
             }
             fieldInfo.fieldsInfo = { default: defaultView };
-            const colorField = fieldInfo.options && fieldInfo.options.color_field;
-            if (colorField) {
-                fieldInfo.relatedFields[colorField] = { type: "integer" };
-                fieldInfo.fieldsInfo.default[colorField] = {};
-                if (fieldDescr.fieldsToFetch[colorField]) {
-                    fieldInfo.fieldsInfo.default[colorField].__WOWL_FIELD_DESCR__ =
-                        fieldDescr.fieldsToFetch[colorField];
-                }
-            }
         }
         if (fieldDescr.views && fieldDescr.views[fieldDescr.viewMode]) {
             fieldInfo.limit = fieldDescr.views[fieldDescr.viewMode].limit || 40;

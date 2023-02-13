@@ -87,9 +87,9 @@ FieldMany2ManyTagsEmail.components = {
     TagsList: FieldMany2ManyTagsEmailTagsList,
 };
 
-FieldMany2ManyTagsEmail.fieldsToFetch = Object.assign({}, Many2ManyTagsField.fieldsToFetch, {
-    email: { name: "email", type: "char" },
-});
+FieldMany2ManyTagsEmail.fieldsToFetch = (fieldInfo) => {
+    return [...Many2ManyTagsField.fieldsToFetch(fieldInfo), { name: "email", type: "char" }];
+};
 
 FieldMany2ManyTagsEmail.additionalClasses = ["o_field_many2many_tags"];
 
