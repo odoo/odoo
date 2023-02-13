@@ -73,8 +73,9 @@ const LinkTools = Link.extend({
             this.colorpickers[cssProperty].$el.appendTo(locationEl);
         }
         const customStyleProps = ['color', 'background-color', 'background-image', 'border-width', 'border-style', 'border-color'];
-        if (customStyleProps.some(s => link.style[s])) {
-            // Force custom style if style exists on the link.
+        const shapeClasses = ['btn-outline-primary', 'btn-outline-secondary', 'btn-fill-primary', 'btn-fill-secondary', 'rounded-circle', 'flat'];
+        if (customStyleProps.some(s => link.style[s]) || shapeClasses.some(c => link.classList.contains(c))) {
+            // Force custom style if style or shape exists on the link.
             const customOption = this.el.querySelector('[name="link_style_color"] we-button[data-value="custom"]');
             this._setSelectOption($(customOption), true);
             this._updateOptionsUI();
@@ -254,10 +255,14 @@ const LinkTools = Link.extend({
         const el = this.el.querySelector('[name="link_style_color"] we-button.active');
         if (el) {
             this.colorCombinationClass = el.dataset.value;
-            // Hide the size and shape options if the link is an unstyled anchor.
-            this.$('.link-size-row, .link-shape-row').toggleClass('d-none', !this.colorCombinationClass);
-            // Show custom colors only for Custom style.
-            this.$('.link-custom-color').toggleClass('d-none', el.dataset.value !== 'custom');
+            // Hide the size option if the link is an unstyled anchor.
+            for (const rowEl of this.el.querySelectorAll('.link-size-row')) {
+                rowEl.classList.toggle('d-none', !this.colorCombinationClass);
+            }
+            // Show custom colors and shape only for Custom style.
+            for (const rowEl of this.el.querySelectorAll('.link-custom-color, .link-shape-row')) {
+                rowEl.classList.toggle('d-none', el.dataset.value !== 'custom');
+            }
 
             // Note: the _updateColorpicker method is supposedly async but can
             // be used synchronously given the fact that _addColorPicker was
