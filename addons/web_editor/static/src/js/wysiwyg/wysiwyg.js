@@ -195,7 +195,7 @@ const Wysiwyg = Widget.extend({
             commands: commands,
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
