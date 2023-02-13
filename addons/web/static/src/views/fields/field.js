@@ -279,17 +279,16 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             viewMode = viewMode.replace("tree", "list");
         }
         fieldInfo.viewMode = viewMode;
-
-        const fieldsToFetch = { ...fieldInfo.FieldComponent.fieldsToFetch }; // should become an array?
-        // special case for color field
-        // GES: this is not nice, we will look for something better.
-        const colorField = fieldInfo.options.color_field;
-        if (colorField) {
-            fieldsToFetch[colorField] = { name: colorField, type: "integer", active: true };
-        }
-        fieldInfo.fieldsToFetch = fieldsToFetch;
         fieldInfo.relation = field.relation; // not really necessary
         fieldInfo.views = views;
+
+        let fieldsToFetch = fieldInfo.FieldComponent.fieldsToFetch;
+        if (fieldsToFetch) {
+            if (fieldsToFetch instanceof Function) {
+                fieldsToFetch = fieldsToFetch(fieldInfo);
+            }
+            fieldInfo.fieldsToFetch = Object.fromEntries(fieldsToFetch.map((f) => [f.name, f]));
+        }
     }
 
     return fieldInfo;

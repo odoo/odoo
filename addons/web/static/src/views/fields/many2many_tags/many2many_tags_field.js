@@ -245,8 +245,12 @@ Many2ManyTagsField.defaultProps = {
 
 Many2ManyTagsField.displayName = _lt("Tags");
 Many2ManyTagsField.supportedTypes = ["many2many"];
-Many2ManyTagsField.fieldsToFetch = {
-    display_name: { name: "display_name", type: "char" },
+Many2ManyTagsField.fieldsToFetch = (fieldInfo) => {
+    const fieldsToFetch = [{ name: "display_name", type: "char" }];
+    if (fieldInfo.options.color_field) {
+        fieldsToFetch.push({ name: fieldInfo.options.color_field, type: "integer" });
+    }
+    return fieldsToFetch;
 };
 Many2ManyTagsField.isSet = (value) => value.count > 0;
 
