@@ -275,6 +275,7 @@ Section $(TITLE_Odoo_Server) SectionOdoo_Server
       nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} AppParameters "\"$INSTDIR\server\odoo-bin\" -c "\"$INSTDIR\server\odoo.conf\"'
       nsExec::ExecToLog '"$INSTDIR\nssm\win32\nssm.exe" set ${SERVICENAME} ObjectName "LOCALSERVICE"'
     ${EndIf}
+    AccessControl::GrantOnFile  "$INSTDIR" "LOCALSERVICE" "FullAccess"
 
     Call RestartOdooService
 SectionEnd
