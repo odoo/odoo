@@ -8,7 +8,8 @@
 # Thomas Deleval <thd@odoo.com>, 2021
 # Camille Dantinne <cmd@odoo.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
-# Jolien De Paepe, 2022
+# Maruan Aguerdouh, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-11-16 13:18+0000\n"
 "PO-Revision-Date: 2021-09-14 12:26+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +33,7 @@ msgid ""
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
 "(\n"
-"                object.state == 'brouillon' et 'Devis de réparation - %s' % (object.name) ou\n"
+"                object.state == 'brouillon' and 'Devis de réparation - %s' % (object.name) or\n"
 "                'Ordre de réparation - %s' % (object.name))"
 
 #. module: repair
@@ -1406,6 +1407,12 @@ msgstr ""
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "Vous ne pouvez pas entrer des quantités négatives."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You cannot cancel a completed repair order."
+msgstr "Vous ne pouvez pas annuler un ordre de réparation complété."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0

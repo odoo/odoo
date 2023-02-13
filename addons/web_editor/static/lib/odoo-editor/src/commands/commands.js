@@ -92,12 +92,12 @@ function insert(editor, data, isText = true) {
         fakeEl.replaceChildren(...p.childNodes);
     } else if (fakeEl.childElementCount > 1) {
         // Grab the content of the first child block and isolate it.
-        if (isBlock(fakeEl.firstChild)) {
+        if (isBlock(fakeEl.firstChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.firstChild.nodeName)) {
             fakeElFirstChild.replaceChildren(...fakeEl.firstElementChild.childNodes);
             fakeEl.firstElementChild.remove();
         }
         // Grab the content of the last child block and isolate it.
-        if (isBlock(fakeEl.lastChild)) {
+        if (isBlock(fakeEl.lastChild) && !['TABLE', 'UL', 'OL'].includes(fakeEl.lastChild.nodeName)) {
             fakeElLastChild.replaceChildren(...fakeEl.lastElementChild.childNodes);
             fakeEl.lastElementChild.remove();
         }
@@ -342,7 +342,10 @@ export const editorCommands = {
         const restoreCursor = preserveCursor(editor.document);
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
-        for (const block of selectedBlocks) {
+        const deepestSelectedBlocks = selectedBlocks.filter(block => (
+            !descendants(block).some(descendant => selectedBlocks.includes(descendant))
+        ));
+        for (const block of deepestSelectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
                     block.nodeName,

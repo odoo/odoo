@@ -862,7 +862,7 @@ class ProductTemplate(models.Model):
                 # Forbid changing a product's company when quant(s) exist in another company.
                 quant = self.env['stock.quant'].sudo().search([
                     ('product_id', 'in', products_changing_company.product_variant_ids.ids),
-                    ('company_id', '!=', vals['company_id']),
+                    ('company_id', 'not in', [vals['company_id'], False]),
                     ('quantity', '!=', 0),
                 ], order=None, limit=1)
                 if quant:

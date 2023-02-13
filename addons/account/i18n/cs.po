@@ -20,6 +20,7 @@
 # David Kliment <daklime@gmail.com>, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
 # Michal Veselý <michal@veselyberanek.net>, 2022
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Michal Veselý <michal@veselyberanek.net>, 2022\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -997,7 +998,7 @@ msgstr "<strong>Společnost:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Datum dobropisu:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1179,7 +1180,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr ""
+msgstr "Řádek tohoto přesunu používá zastaralý účet, nemůžete jej odeslat."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -2021,6 +2022,8 @@ msgid ""
 "cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
 "{new_date}</li></ul>"
 msgstr ""
+"Pro tuto fakturu byly vytvořeny opravné položky:<ul><li>%(link1)s zavření "
+"{percent:f}%% z {amount}</li><li>%(link0)s odložení o {new_date}</li></ul>"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2050,7 +2053,7 @@ msgstr "Úprava záznamu ze dne {date} ({percent:f}% uznáno na {new_date})"
 #, python-format
 msgid ""
 "Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}"
-msgstr ""
+msgstr "Úprava položky {link}: {percent:f}% z {amount} uznané z {date}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__adjustment_type
@@ -3327,6 +3330,7 @@ msgid ""
 "Cannot create an invoice of type %(move_type)s with a journal having "
 "%(journal_type)s as type."
 msgstr ""
+"Nelze vytvořit fakturu typu %(move_type)s s deníkem typu %(journal_type)s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -3335,6 +3339,8 @@ msgid ""
 "Cannot create unbalanced journal entry. Ids: %s\n"
 "Differences debit - credit: %s"
 msgstr ""
+"Nelze vytvořit nevyvážený zápis do deníku. Id: %s\n"
+"Rozdíly debit - credit: %s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4705,6 +4711,7 @@ msgid "Customer Invoice"
 msgstr "Zákaznická faktura"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -7293,6 +7300,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Přerozdělení faktury a dobropisu by mělo mít alespoň jeden řádek "
+"přerozdělení daně."
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -8875,6 +8884,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"Ve společnosti nebyl nalezen žádný deník %(company_name)s pro žádný z těchto"
+" typů: %(journal_types)s"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax_report_line__carry_over_condition_method__no_negative_amount_carry_over_condition
@@ -10162,6 +10173,15 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr "Zkontrolujte, zda je v podniku nastaveno pole Převodní účet."
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check these taxes. They might be outdated. We did not update them. "
+"Indeed, they do not exactly match the taxes of the original version of the "
+"localization module.<br/>You might want to archive or adapt them.<br/><ul>"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Please define a payment method line on your payment."
@@ -10788,7 +10808,7 @@ msgstr "Části párování"
 #: code:addons/account/models/partner.py:0
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
-msgstr ""
+msgstr "Záznam nemohl být smazán. Partner je použit v účetnictví"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -13620,6 +13640,8 @@ msgid ""
 "The ending balance is incorrect !\n"
 "The expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s)."
 msgstr ""
+"Konečný zůstatek je nesprávný !\n"
+"Očekávaný zůstatek (%(real_balance)s) se liší od vypočteného (%(computed_balance)s)."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13697,6 +13719,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"Následující regulérní výraz není platný k vytvoření mapování partnera: %s"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13723,6 +13746,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"Nastavení zahraniční měny v deníku '%(journal)s' a účtu '%(account)s' musí "
+"být stejné."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_carryover_line__foreign_vat_fiscal_position_id
@@ -13968,14 +13993,6 @@ msgstr "Platba, která vytvořila tento záznam"
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
 msgstr "Měna platby."
-
-#. module: account
-#: code:addons/account/models/product.py:0
-#, python-format
-msgid ""
-"The product \"%s\" is used in invoices. You cannot change its Unit of "
-"Measure."
-msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14376,6 +14393,14 @@ msgid "There was an error processing this page."
 msgstr "Při zpracování této stránky došlo k chybě."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr ""
@@ -14404,6 +14429,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"Tento účet je nakonfigurován v deníku(-cích) %(journal_names)s (id "
+"%(journal_ids)s) jako účet debetní nebo platební karty. To znamená, že typ "
+"tohoto účtu by měl být kompatibilní."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -14652,6 +14680,14 @@ msgid ""
 msgstr ""
 "Tento platební termín se použije namísto výchozího pro objednávky a faktury "
 "zákazníků"
+
+#. module: account
+#: code:addons/account/models/product.py:0
+#, python-format
+msgid ""
+"This product is already being used in posted Journal Entries.\n"
+"If you want to change its Unit of Measure, please archive this product and create a new one."
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -15024,6 +15060,12 @@ msgid "Unposted"
 msgstr "Nezaúčtované"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "Nezaúčtované vnitřní účetní doklady"
@@ -15363,6 +15405,7 @@ msgid "Vendor Bill Created"
 msgstr "Přijatá faktura vytvořena"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16270,6 +16313,12 @@ msgid "You should update this document to reflect your T&amp;C."
 msgstr ""
 
 #. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid "Your taxes have been updated !"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Rozsah PSČ"
@@ -16566,6 +16615,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
 msgstr "mateřská společnost"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"The Unit of Measure (UoM) '%s' you have selected for product '%s', is "
+"incompatible with its category : %s."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_default_kanban

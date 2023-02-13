@@ -142,7 +142,7 @@ class AccruedExpenseRevenue(models.TransientModel):
         fnames = []
         total_balance = 0.0
         for order in orders:
-            if len(orders) == 1 and self.amount:
+            if len(orders) == 1 and self.amount and order.order_line:
                 total_balance = self.amount
                 order_line = order.order_line[0]
                 if is_purchase:

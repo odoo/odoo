@@ -10,6 +10,8 @@ from werkzeug import urls
 from odoo import _, http
 from odoo.exceptions import ValidationError
 from odoo.http import request
+from odoo.tools import html_escape
+
 
 _logger = logging.getLogger(__name__)
 
@@ -56,8 +58,8 @@ class PaypalController(http.Controller):
 
         The validation is done in four steps:
 
-        1. Make a POST request to Paypal with the `tx`, the GET param received with the PDT data,
-           and the two other required params `cmd` and `at`.
+        1. Make a POST request to Paypal with `tx`, the GET param received with the PDT data, and
+           with the two other required params `cmd` and `at`.
         2. PayPal sends back a response text starting with either 'SUCCESS' or 'FAIL'. If the
            validation was a success, the notification data are appended to the response text as a
            string formatted as follows: 'SUCCESS\nparam1=value1\nparam2=value2\n...'
@@ -70,15 +72,26 @@ class PaypalController(http.Controller):
         :return: The retrieved notification data
         :raise ValidationError: if the authenticity could not be verified
         """
-        if 'tx' not in data:  # We did not receive PDT data but directly notification data
-            # When PDT is not enabled, PayPal sends directly the notification data instead. We can't
-            # verify them but we can process them as is.
-            notification_data = data
+        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
+            'paypal', data
+        )
+        if 'tx' not in data:  # PDT is not enabled and PayPal directly sent the notification data.
+            tx_sudo._log_message_on_linked_documents(_(
+                "The status of transaction with reference %(ref)s was not synchronized because the "
+                "'Payment data transfer' option is not enabled on the PayPal dashboard.",
+                ref=tx_sudo.reference,
+            ))
+            raise ValidationError("PayPal: PDT are not enabled; cannot verify data origin")
         else:
-            acquirer_sudo = request.env['payment.transaction'].sudo()._get_tx_from_feedback_data(
-                'paypal', data
-            ).acquirer_id
+            acquirer_sudo = tx_sudo.acquirer_id
             if not acquirer_sudo.paypal_pdt_token:  # We received PDT data but can't verify them
+                record_link = f'<a href=# data-oe-model=payment.acquirer ' \
+                              f'data-oe-id={acquirer_sudo.id}>{html_escape(acquirer_sudo.name)}</a>'
+                tx_sudo._log_message_on_linked_documents(_(
+                    "The status of transaction with reference %(ref)s was not synchronized because "
+                    "the PDT Identify Token is not configured on the acquirer %(acq_link)s.",
+                    ref=tx_sudo.reference, acq_link=record_link
+                ))
                 raise ValidationError("PayPal: The PDT token is not set; cannot verify data origin")
             else:  # The PayPal account is configured to receive PDT data, and the PDT token is set
                 # Request a PDT data authenticity check and the notification data to PayPal

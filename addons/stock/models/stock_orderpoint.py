@@ -303,6 +303,10 @@ class StockWarehouseOrderpoint(models.Model):
             'to_date': datetime.combine(self.lead_days_date, time.max)
         }
 
+    def _product_exclude_list(self):
+        # added to be overwitten in mrp
+        return []
+
     def _get_orderpoint_action(self):
         """Create manual orderpoints for missing product in each warehouses. It also removes
         orderpoints that have been replenish. In order to do it:
@@ -329,16 +333,13 @@ class StockWarehouseOrderpoint(models.Model):
         # Take 3 months since it's the max for the forecast report
         to_date = add(fields.date.today(), months=3)
         qty_by_product_warehouse = self.env['report.stock.quantity'].read_group(
-            [('date', '=', to_date), ('state', '=', 'forecast')],
+            [('date', '=', to_date), ('state', '=', 'forecast'), ('product_qty', '<', 0.0), ('warehouse_id', '!=', False), ('product_id', 'not in', self._product_exclude_list())],
             ['product_id', 'product_qty', 'warehouse_id'],
             ['product_id', 'warehouse_id'], orderby="id", lazy=False)
         for group in qty_by_product_warehouse:
-            warehouse_id = group.get('warehouse_id') and group['warehouse_id'][0]
-            if group['product_qty'] >= 0.0 or not warehouse_id:
-                continue
             all_product_ids.append(group['product_id'][0])
-            all_warehouse_ids.append(warehouse_id)
-            to_refill[(group['product_id'][0], warehouse_id)] = group['product_qty']
+            all_warehouse_ids.append(group['warehouse_id'][0])
+            to_refill[(group['product_id'][0], group['warehouse_id'][0])] = group['product_qty']
         if not to_refill:
             return action
 

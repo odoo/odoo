@@ -30,7 +30,7 @@
 # yizhaq agronov <yizhaq@gmail.com>, 2022
 # NoaFarkash, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
-# hed shefer <hed@laylinetech.com>, 2022
+# hed shefer <hed@laylinetech.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: hed shefer <hed@laylinetech.com>, 2022\n"
+"Last-Translator: hed shefer <hed@laylinetech.com>, 2023\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4771,6 +4771,7 @@ msgid "Customer Invoice"
 msgstr "חשבונית לקוח"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4867,7 +4868,7 @@ msgstr "התאם אישית את עיצוב המסמך"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Cut-Off"
-msgstr "לחתוך"
+msgstr "הפרשה"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
@@ -9905,12 +9906,12 @@ msgstr "תשלום שער מטבע "
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Date"
-msgstr "תאריך תשלום"
+msgstr "תאריך אסמכתא"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "Payment Date:"
-msgstr "תאריך תשלום:"
+msgstr "תאריך אסמכתא:"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference
@@ -14247,6 +14248,14 @@ msgid "There was an error processing this page."
 msgstr "אירעה שגיאה בעיבוד הדף הזה."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "מיסים אלה נקבעים בכל מוצר חדש שנוצר."
@@ -14868,6 +14877,12 @@ msgid "Unposted"
 msgstr "לא נרשם"
 
 #. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
 msgid "Unposted Journal Entries"
 msgstr "פקודות יומן שלא נרשמו"
@@ -15196,6 +15211,7 @@ msgid "Vendor Bill Created"
 msgstr "חשבונית ספק נוצרה"
 
 #. module: account
+#: code:addons/account/models/account_analytic_line.py:0
 #: code:addons/account/models/chart_template.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_analytic_account_view_form_inherit
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

@@ -115,11 +115,12 @@ class Menu(models.Model):
     def _compute_visible(self):
         for menu in self:
             visible = True
-            if menu.page_id and not menu.user_has_groups('base.group_user') and \
-                (not menu.page_id.sudo().is_visible or
-                 (not menu.page_id.view_id._handle_visibility(do_raise=False) and
-                 menu.page_id.view_id.visibility != "password")):
-                visible = False
+            if menu.page_id and not menu.user_has_groups('base.group_user'):
+                page_sudo = menu.page_id.sudo()
+                if (not page_sudo.is_visible
+                    or (not page_sudo.view_id._handle_visibility(do_raise=False)
+                        and page_sudo.view_id.visibility != "password")):
+                    visible = False
             menu.is_visible = visible
 
     @api.model

@@ -171,7 +171,7 @@ class Web_Editor(http.Controller):
         else:
             return value
 
-        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6].decode("utf-8")
         record.write({filename: value})
 
         return value
