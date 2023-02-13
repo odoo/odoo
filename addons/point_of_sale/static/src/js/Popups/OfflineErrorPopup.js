@@ -3,14 +3,11 @@
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
 /**
  * This is a special kind of error popup as it introduces
  * an option to not show it again.
  */
 export class OfflineErrorPopup extends ErrorPopup {
-    static components = { Draggable };
     static template = "OfflineErrorPopup";
     static dontShow = false;
     static defaultProps = {

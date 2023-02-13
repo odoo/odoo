@@ -3,13 +3,9 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
 const { useState } = owl;
 
-// formerly SelectionPopupWidget
 export class SelectionPopup extends AbstractAwaitablePopup {
-    static components = { Draggable };
     static template = "SelectionPopup";
     static defaultProps = {
         cancelText: _lt("Cancel"),

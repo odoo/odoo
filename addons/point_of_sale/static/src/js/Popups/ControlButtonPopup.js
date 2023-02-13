@@ -3,10 +3,7 @@
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { _lt } from "@web/core/l10n/translation";
 
-import { Draggable } from "../Misc/Draggable";
-
 export class ControlButtonPopup extends AbstractAwaitablePopup {
-    static components = { Draggable };
     static template = "ControlButtonPopup";
     static defaultProps = {
         cancelText: _lt("Back"),

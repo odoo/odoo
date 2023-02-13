@@ -1,18 +1,13 @@
 /** @odoo-module */
 
-import { Draggable } from "@point_of_sale/js/Misc/Draggable";
-import { ResizeHandle } from "./resize_handle";
+import { getLimits, useMovable, constrain } from "@point_of_sale/app/movable_hook";
 import { onWillUnmount, useEffect, useRef, Component } from "@odoo/owl";
 import { Table } from "./table";
 
 const MIN_TABLE_SIZE = 30; // px
 
-function constrain(num, [min, max]) {
-    return Math.min(Math.max(num, min), max);
-}
 export class EditableTable extends Component {
     static template = "pos_restaurant.EditableTable";
-    static components = { Draggable, ResizeHandle };
     static props = {
         onSaveTable: Function,
         limit: { type: Object, shape: { el: [HTMLElement, { value: null }] } },
@@ -29,31 +24,55 @@ export class EditableTable extends Component {
             "bottom left": ["minX", "maxY"],
             "bottom right": ["maxX", "maxY"],
         };
+        // make table draggable
+        useMovable({
+            ref: this.root,
+            onMoveStart: () => this.onMoveStart(),
+            onMove: (delta) => this.onMove(delta),
+        });
+        // make table resizable
+        for (const [handle, toMove] of Object.entries(this.handles)) {
+            useMovable({
+                ref: useRef(handle),
+                onMoveStart: () => this.onMoveStart(),
+                onMove: (delta) => this.onResizeHandleMove(toMove, delta),
+            });
+        }
         onWillUnmount(() => this.props.onSaveTable(this.props.table));
     }
 
-    onHandleMoveStart() {
+    onMoveStart() {
         this.startTable = { ...this.props.table };
+        // stop the next click event from the touch/click release from unselecting the table
+        document.addEventListener("click", (ev) => ev.stopPropagation(), {
+            capture: true,
+            once: true,
+        });
     }
 
-    onHandleMove(dir, { dx, dy }) {
-        const table = this.startTable;
-        // Working with min/max x and y makes constraints much easier to apply uniformly
-        const { width, height, position_h: minX, position_v: minY } = table;
-        const maxX = minX + width;
-        const maxY = minY + height;
-        const newTable = { minX, minY, maxX, maxY };
+    onMove({ dx, dy }) {
+        const { position_h, position_v } = this.startTable;
+        const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
+        this.props.table.position_h = constrain(position_h + dx, minX, maxX);
+        this.props.table.position_v = constrain(position_v + dy, minY, maxY);
+        this._setElementStyle();
+    }
 
-        const [moveX, moveY] = this.handles[dir];
-        const { limits } = this;
+    onResizeHandleMove([moveX, moveY], { dx, dy }) {
+        // Working with min/max x and y makes constraints much easier to apply uniformly
+        const { width, height, position_h: minX, position_v: minY } = this.startTable;
+        const newTable = { minX, minY, maxX: minX + width, maxY: minY + height };
+
+        const limits = getLimits(this.root.el, this.props.limit.el);
+        const { width: elWidth, height: elHeight } = this.root.el.getBoundingClientRect();
         const bounds = {
-            maxX: [minX + MIN_TABLE_SIZE, limits.maxX],
-            minX: [limits.minX, maxX - MIN_TABLE_SIZE],
-            maxY: [minY + MIN_TABLE_SIZE, limits.maxY],
-            minY: [limits.minY, maxY - MIN_TABLE_SIZE],
+            maxX: [minX + MIN_TABLE_SIZE, limits.maxX + elWidth],
+            minX: [limits.minX, newTable.maxX - MIN_TABLE_SIZE],
+            maxY: [minY + MIN_TABLE_SIZE, limits.maxY + elHeight],
+            minY: [limits.minY, newTable.maxY - MIN_TABLE_SIZE],
         };
-        newTable[moveX] = constrain(newTable[moveX] + dx, bounds[moveX]);
-        newTable[moveY] = constrain(newTable[moveY] + dy, bounds[moveY]);
+        newTable[moveX] = constrain(newTable[moveX] + dx, ...bounds[moveX]);
+        newTable[moveY] = constrain(newTable[moveY] + dy, ...bounds[moveY]);
 
         // Convert back to server format at the end
         this.props.table.position_h = newTable.minX;
@@ -87,17 +106,6 @@ export class EditableTable extends Component {
             .join(" ");
     }
 
-    get limits() {
-        const limitRect = this.props.limit.el.getBoundingClientRect();
-        const offsetParentRect = this.root.el.offsetParent.getBoundingClientRect();
-        return {
-            minY: limitRect.top - offsetParentRect.top,
-            minX: limitRect.left - offsetParentRect.left,
-            maxY: limitRect.top - offsetParentRect.top + limitRect.height,
-            maxX: limitRect.left - offsetParentRect.left + limitRect.width,
-        };
-    }
-
     _setElementStyle() {
         const table = this.props.table;
         Object.assign(this.root.el.style, {
@@ -110,12 +118,5 @@ export class EditableTable extends Component {
             "border-radius": table.shape === "round" ? "1000px" : "3px",
             "font-size": table.height >= 150 && table.width >= 150 ? "32px" : "16px",
         });
-    }
-
-    onDragEnd(event) {
-        const { loc } = event.detail;
-        const table = this.props.table;
-        table.position_v = loc.top;
-        table.position_h = loc.left;
     }
 }
