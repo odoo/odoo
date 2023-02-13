@@ -1,0 +1,173 @@
+{
+  "version": 12,
+  "sheets": [
+    {
+      "id": "Sheet1",
+      "name": "Sheet1",
+      "figures": [
+        {
+          "id": "bb8b5846-b950-4541-8bc0-8dbe30e14b63",
+          "x": 10,
+          "y": 10,
+          "width": 536,
+          "height": 335,
+          "tag": "chart",
+          "data": {
+            "title": "Opportunities",
+            "background": "#FFFFFF",
+            "legendPosition": "top",
+            "metaData": {
+              "groupBy": [
+                "stage_id",
+                "country_id"
+              ],
+              "measure": "__count",
+              "order": "ASC",
+              "resModel": "crm.lead"
+            },
+            "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": [
+                "stage_id",
+                "country_id"
+              ],
+              "orderBy": []
+            },
+            "type": "odoo_bar",
+            "verticalAxisPosition": "left",
+            "stacked": true,
+            "fieldMatching": {
+              "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
+                "chain": "create_date",
+                "type": "datetime",
+                "offset": 0
+              },
+              "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
+                "chain": "country_id",
+                "type": "many2one"
+              }
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "odooVersion": 5,
+  "globalFilters": [
+    {
+      "id": "5efe8c20-c0a2-4ad5-bff6-379605a6aea0",
+      "type": "date",
+      "label": "date filter",
+      "defaultValue": {},
+      "rangeType": "year",
+      "defaultsToCurrentPeriod": false
+    },
+    {
+      "id": "e7bf233b-d9e4-4159-865e-77edd1195fdb",
+      "type": "relation",
+      "label": "country",
+      "modelName": "res.country",
+      "defaultValue": [],
+      "defaultValueDisplayNames": [],
+      "rangeType": "year",
+      "defaultsToCurrentPeriod": false
+    }
+  ],
+  "pivots": {
+    "1": {
+      "colGroupBys": [
+        "stage_id"
+      ],
+      "context": {},
+      "domain": [],
+      "id": "1",
+      "measures": [
+        {
+          "field": "expected_revenue"
+        },
+        {
+          "field": "recurring_revenue_monthly"
+        }
+      ],
+      "model": "crm.lead",
+      "rowGroupBys": [
+        "create_date:month"
+      ],
+      "name": "Pipeline Analysis by Stage",
+      "sortedColumn": {
+        "groupId": [
+          [],
+          [
+            3
+          ]
+        ],
+        "measure": "expected_revenue",
+        "order": "asc",
+        "originIndexes": [
+          0
+        ]
+      },
+      "fieldMatching": {
+        "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
+          "chain": "country_id",
+          "type": "many2one"
+        }
+      }
+    }
+  },
+  "pivotNextId": 2,
+  "lists": {
+    "1": {
+      "columns": [
+        "name",
+        "contact_name",
+        "email_from",
+        "phone",
+        "company_id",
+        "user_id",
+        "activity_ids",
+        "my_activity_date_deadline",
+        "expected_revenue",
+        "recurring_revenue_monthly",
+        "stage_id"
+      ],
+      "domain": [],
+      "model": "crm.lead",
+      "context": {},
+      "orderBy": [
+        {
+          "name": "my_activity_date_deadline",
+          "asc": true
+        },
+        {
+          "name": "user_id",
+          "asc": true
+        }
+      ],
+      "id": "1",
+      "name": "Pipeline by My Activity Deadline",
+      "fieldMatching": {
+        "5efe8c20-c0a2-4ad5-bff6-379605a6aea0": {
+          "chain": "create_date",
+          "type": "datetime",
+          "offset": 0
+        },
+        "e7bf233b-d9e4-4159-865e-77edd1195fdb": {
+          "chain": "country_id",
+          "type": "many2one"
+        }
+      }
+    }
+  },
+  "listNextId": 2,
+  "chartOdooMenusReferences": {
+    "bb8b5846-b950-4541-8bc0-8dbe30e14b63": "crm.crm_menu_root"
+  }
+}

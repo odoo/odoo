@@ -1,0 +1,435 @@
+[
+  {
+      "type": "INSERT_PIVOT",
+      "sheetId": "Sheet1",
+      "col": 0,
+      "row": 0,
+      "table": {
+          "cols": [
+              [
+                  {
+                      "fields": [
+                          "stage_id"
+                      ],
+                      "values": [
+                          "1"
+                      ],
+                      "width": 2
+                  },
+                  {
+                      "fields": [
+                          "stage_id"
+                      ],
+                      "values": [
+                          "2"
+                      ],
+                      "width": 2
+                  },
+                  {
+                      "fields": [
+                          "stage_id"
+                      ],
+                      "values": [
+                          "3"
+                      ],
+                      "width": 2
+                  },
+                  {
+                      "fields": [
+                          "stage_id"
+                      ],
+                      "values": [
+                          "4"
+                      ],
+                      "width": 2
+                  },
+                  {
+                      "fields": [],
+                      "values": [],
+                      "width": 2
+                  }
+              ],
+              [
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "1",
+                          "expected_revenue"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "1",
+                          "recurring_revenue_monthly"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "2",
+                          "expected_revenue"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "2",
+                          "recurring_revenue_monthly"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "3",
+                          "expected_revenue"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "3",
+                          "recurring_revenue_monthly"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "4",
+                          "expected_revenue"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "stage_id",
+                          "measure"
+                      ],
+                      "values": [
+                          "4",
+                          "recurring_revenue_monthly"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "measure"
+                      ],
+                      "values": [
+                          "expected_revenue"
+                      ],
+                      "width": 1
+                  },
+                  {
+                      "fields": [
+                          "measure"
+                      ],
+                      "values": [
+                          "recurring_revenue_monthly"
+                      ],
+                      "width": 1
+                  }
+              ]
+          ],
+          "rows": [
+              {
+                  "fields": [
+                      "create_date:month"
+                  ],
+                  "values": [
+                      "11/2022"
+                  ],
+                  "indent": 1
+              },
+              {
+                  "fields": [
+                      "create_date:month"
+                  ],
+                  "values": [
+                      "12/2022"
+                  ],
+                  "indent": 1
+              },
+              {
+                  "fields": [
+                      "create_date:month"
+                  ],
+                  "values": [
+                      "01/2023"
+                  ],
+                  "indent": 1
+              },
+              {
+                  "fields": [],
+                  "values": [],
+                  "indent": 0
+              }
+          ],
+          "measures": [
+              "expected_revenue",
+              "recurring_revenue_monthly"
+          ]
+      },
+      "id": "1",
+      "dataSourceId": "a075eea3-2c53-4ee3-8167-3e7d8719d417",
+      "definition": {
+          "metaData": {
+              "colGroupBys": [
+                  "stage_id"
+              ],
+              "rowGroupBys": [
+                  "create_date:month"
+              ],
+              "activeMeasures": [
+                  "expected_revenue",
+                  "recurring_revenue_monthly"
+              ],
+              "resModel": "crm.lead",
+              "sortedColumn": {
+                  "groupId": [
+                      [],
+                      [
+                          3
+                      ]
+                  ],
+                  "measure": "expected_revenue",
+                  "order": "asc",
+                  "originIndexes": [
+                      0
+                  ]
+              }
+          },
+          "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": [],
+              "orderBy": []
+          },
+          "name": "Pipeline Analysis by Stage"
+      }
+  },
+  {
+      "type": "INSERT_ODOO_LIST",
+      "sheetId": "f22bb302-72db-40a3-9489-9a456ad8edd4",
+      "col": 0,
+      "row": 0,
+      "id": "1",
+      "definition": {
+          "metaData": {
+              "resModel": "crm.lead",
+              "columns": [
+                  "name",
+                  "contact_name",
+                  "email_from",
+                  "phone",
+                  "company_id",
+                  "user_id",
+                  "activity_ids",
+                  "my_activity_date_deadline",
+                  "expected_revenue",
+                  "recurring_revenue_monthly",
+                  "stage_id"
+              ]
+          },
+          "searchParams": {
+              "domain": [],
+              "context": {},
+              "orderBy": [
+                  {
+                      "name": "my_activity_date_deadline",
+                      "asc": true
+                  },
+                  {
+                      "name": "user_id",
+                      "asc": true
+                  }
+              ]
+          },
+          "name": "Pipeline by My Activity Deadline"
+      },
+      "dataSourceId": "4fc9a122-b55a-49be-b834-ec2af1cb7e02",
+      "linesNumber": 13,
+      "columns": [
+          {
+              "name": "name",
+              "type": "char"
+          },
+          {
+              "name": "contact_name",
+              "type": "char"
+          },
+          {
+              "name": "email_from",
+              "type": "char"
+          },
+          {
+              "name": "phone",
+              "type": "char"
+          },
+          {
+              "name": "company_id",
+              "type": "many2one"
+          },
+          {
+              "name": "user_id",
+              "type": "many2one"
+          },
+          {
+              "name": "activity_ids",
+              "type": "one2many"
+          },
+          {
+              "name": "my_activity_date_deadline",
+              "type": "date"
+          },
+          {
+              "name": "expected_revenue",
+              "type": "monetary"
+          },
+          {
+              "name": "recurring_revenue_monthly",
+              "type": "monetary"
+          },
+          {
+              "name": "stage_id",
+              "type": "many2one"
+          }
+      ]
+  },
+  {
+      "type": "CREATE_CHART",
+      "sheetId": "Sheet1",
+      "id": "bb8b5846-b950-4541-8bc0-8dbe30e14b63",
+      "position": {
+          "x": 10,
+          "y": 10
+      },
+      "definition": {
+          "metaData": {
+              "groupBy": [
+                  "stage_id",
+                  "country_id"
+              ],
+              "measure": "__count",
+              "order": "ASC",
+              "resModel": "crm.lead"
+          },
+          "searchParams": {
+              "comparison": null,
+              "context": {},
+              "domain": [],
+              "groupBy": [
+                  "stage_id",
+                  "country_id"
+              ],
+              "orderBy": []
+          },
+          "stacked": true,
+          "title": "Opportunities",
+          "background": "#FFFFFF",
+          "legendPosition": "top",
+          "verticalAxisPosition": "left",
+          "type": "odoo_bar",
+          "dataSourceId": "71ff296a-8d27-48b9-ad4d-ae6aa0ed5840",
+          "id": "bb8b5846-b950-4541-8bc0-8dbe30e14b63"
+      }
+  },
+  {
+      "type": "LINK_ODOO_MENU_TO_CHART",
+      "chartId": "bb8b5846-b950-4541-8bc0-8dbe30e14b63",
+      "odooMenuId": "crm.crm_menu_root"
+  },
+  {
+      "type": "ADD_GLOBAL_FILTER",
+      "id": "5efe8c20-c0a2-4ad5-bff6-379605a6aea0",
+      "filter": {
+          "id": "5efe8c20-c0a2-4ad5-bff6-379605a6aea0",
+          "type": "date",
+          "label": "date filter",
+          "defaultValue": {},
+          "rangeType": "year",
+          "defaultsToCurrentPeriod": false
+      },
+      "pivot": {
+          "1": {
+              "chain": "create_date",
+              "type": "datetime",
+              "offset": 0
+          }
+      },
+      "list": {
+          "1": {
+              "chain": "create_date",
+              "type": "datetime",
+              "offset": 0
+          }
+      },
+      "chart": {
+          "bb8b5846-b950-4541-8bc0-8dbe30e14b63": {
+              "chain": "create_date",
+              "type": "datetime",
+              "offset": 0
+          }
+      }
+  },
+  {
+      "type": "ADD_GLOBAL_FILTER",
+      "id": "e7bf233b-d9e4-4159-865e-77edd1195fdb",
+      "filter": {
+          "id": "e7bf233b-d9e4-4159-865e-77edd1195fdb",
+          "type": "relation",
+          "label": "country",
+          "modelName": "res.country",
+          "defaultValue": [],
+          "defaultValueDisplayNames": [],
+          "rangeType": "year",
+          "defaultsToCurrentPeriod": false
+      },
+      "pivot": {
+          "1": {
+              "chain": "country_id",
+              "type": "many2one"
+          }
+      },
+      "list": {
+          "1": {
+              "chain": "country_id",
+              "type": "many2one"
+          }
+      },
+      "chart": {
+          "bb8b5846-b950-4541-8bc0-8dbe30e14b63": {
+              "chain": "country_id",
+              "type": "many2one"
+          }
+      }
+  }
+]
