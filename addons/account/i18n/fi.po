@@ -37,9 +37,10 @@
 # Pekka Ikonen, 2021
 # Joakim Weckman, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Konsta Aavaranta, 2023
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022\n"
+"Last-Translator: Konsta Aavaranta, 2023\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -245,12 +246,13 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
-"<?xml version=“1.0”?>\n"
-"<div style=“margin: 0px; padding: 0px;”>\n"
-"    <p style=“margin: 0px; padding: 0px; font-size: 13px;”>\n"
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hyvä ${object.partner_id.name}<br/><br/>\n"
 "        Kiitos maksustasi.\n"
-"        Tässä on maksukuittisi <strong>${(object.name or ‘’).replace(‘/‘,’-‘)}</strong> summalle <strong>${format_amount(object.amount, object.currency_id)}</strong> yrityksestä ${object.company_id.name}.\n"
+"        Tässä on kuittisi <strong>${(object.name or '').replace('/','-')}</strong> summalle\n"
+"         <strong>${format_amount(object.amount, object.currency_id)}</strong> yritykseltä ${object.company_id.name}.\n"
 "        <br/><br/>\n"
 "        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
 "        <br/><br/>\n"
@@ -429,8 +431,8 @@ msgid ""
 "<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
 "'/')]}\">Draft</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [‘|’, (‘state’, ‘!=‘, ‘draft’), (‘name’, ‘!=‘, "
-"‘/‘)]}”>Luonnos</span>"
+"<span attrs=\"{'invisible': ['|', ('state', '!=', 'draft'), ('name', '!=', "
+"'/')]}\">Luonnos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
@@ -453,8 +455,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&gt;’, 1)]}”>Ostolasku</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_bills_count’,’&lt;=‘, 1)]}”>Ostolaskut</span>"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Ostolasku</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Ostolaskut</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -462,8 +464,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Invoices</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_invoices_count’,’&gt;’, 1)]}”>IMyyntilasku</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_invoices_count’,’&lt;=‘, 1)]}”>Myyntilaskut</span>"
+"<span attrs=\"{'invisible': [('reconciled_invoices_count','&gt;', 1)]}\">Myyntilasku</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_invoices_count','&lt;=', 1)]}\">Myyntilaskut</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -471,8 +473,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
-"<span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&gt;’, 1)]}”>Tiliote</span>\n"
-"                                <span attrs=“{‘invisible’: [(‘reconciled_statements_count’,’&lt;=‘, 1)]}”>Tiliotteet</span>"
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Tiliote</span>\n"
+"                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Tiliotteet</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -545,8 +547,8 @@ msgid ""
 "('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> or "
 "</span>"
 msgstr ""
-"<span class=“o_form_label mx-3 oe_edit_only” attrs=“{‘invisible’: [‘|’, "
-"(‘state’, ‘!=‘, ‘draft’), (‘invoice_payment_term_id’, ‘!=‘, False)]}”> tai "
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': ['|', "
+"('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}\"> tai "
 "</span>"
 
 #. module: account
@@ -850,7 +852,7 @@ msgstr "<strong>Yritys:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Hyvityslaskun päivämäärä</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -2842,7 +2844,7 @@ msgstr "Laskutus"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
-msgstr ""
+msgstr "Talouden pääkäyttäjä"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -7827,7 +7829,7 @@ msgid ""
 "Matching number for this line, 'P' if it is only partially reconcile, or the"
 " name of the full reconcile if it exists."
 msgstr ""
-"Tämän rivin kohdistusnumero, ‘P’, jos se täsmäytetään vain osittain, tai "
+"Tämän rivin kohdistusnumero, 'P', jos se täsmäytetään vain osittain, tai "
 "täydellisen täsmäytyksen nimi, jos sellainen on olemassa."
 
 #. module: account
@@ -11651,7 +11653,7 @@ msgid ""
 "Tax report lines whose '+' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘+’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '+' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
@@ -11660,7 +11662,7 @@ msgid ""
 "Tax report lines whose '-' tag will be assigned to move lines by this "
 "repartition line"
 msgstr ""
-"Veroraporttirivit, joiden ‘-’ -tunniste määritetään tapahtumariveille tällä "
+"Veroraporttirivit, joiden '-' -tunniste määritetään tapahtumariveille tällä "
 "jakorivillä"
 
 #. module: account
@@ -13751,6 +13753,12 @@ msgstr "Maksamattomat laskut"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Kirjaamatta"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

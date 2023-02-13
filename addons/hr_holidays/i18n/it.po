@@ -16,7 +16,7 @@
 # Federico Zanuttini <fza@odoo.com>, 2020
 # Fabio Benedetti <benedetti.fabio@gmail.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,8 +43,8 @@ msgstr ""
 "\tNessun limite: nessuna assegnazione predefinita, gli utenti posso "
 "richiedere ferie liberamente; \tConsentire richieste dipendenti: assegnate "
 "dalle RU, gli utenti possono richiedere ferie e assegnazioni; \tImpostata da"
-" responsabile ferie: assegnate dalle RU, non possono essere aggirate; gli "
-"utenti possono richiedere ferie;"
+" addetto ferie: assegnate dalle RU, non possono essere aggirate; gli utenti "
+"possono richiedere ferie;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -1121,7 +1121,7 @@ msgstr "Per supervisore dipendente"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__both
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Manager and Time Off Officer"
-msgstr "Per supervisore dipendente e responsabile ferie"
+msgstr "Per supervisore dipendente e addetto ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1136,7 +1136,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Per responsabile ferie"
+msgstr "Per addetto ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2342,8 +2342,8 @@ msgid ""
 "Only a time off Officer/Responsible or Manager can approve or refuse time "
 "off requests."
 msgstr ""
-"Solo un responsabile ferie o un supervisore può approvare o respingere le "
-"richieste."
+"Solo un addetto/responsabile ferie o un supervisore può approvare o "
+"respingere le richieste."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2607,7 +2607,7 @@ msgstr "Sequenza"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr "Impostata da responsabile ferie"
+msgstr "Impostata da addetto ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2832,8 +2832,8 @@ msgid ""
 " and Time Off Officer'"
 msgstr ""
 "Utente responsabile dell'approvazione di questo tipo di ferie. Viene "
-"utilizzato solo se la convalida è \"Per responsabile ferie\" o \"Per "
-"supervisore dipendente e responsabile ferie\""
+"utilizzato solo se la convalida è \"Per addetto ferie\" o \"Per supervisore "
+"dipendente e addetto ferie\""
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -2923,8 +2923,8 @@ msgid ""
 "Time Off Officers allocate time off days to employees (e.g. paid time off).<br>\n"
 "                Employees request allocations to Time Off Officers (e.g. recuperation days)."
 msgstr ""
-"I responsabili assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
-"                I dipendenti avanzano richieste di assegnazione ai responsabili ferie (es. giorni di riposo)."
+"Gli addetti assegnano i giorni di ferie ai dipendenti (es. aspettativa retribuita).<br>\n"
+"                I dipendenti avanzano richieste di assegnazione agli addetti ferie (es. giorni di riposo)."
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave

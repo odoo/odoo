@@ -10,7 +10,7 @@
 # David Minneci <david@numeko.it>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
-# Sergio Zanchetta <primes2h@gmail.com>, 2021
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2021\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: crm_iap_lead_website
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_website.crm_reveal_rule_form
@@ -188,7 +188,7 @@ msgstr "Alta"
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
-msgstr "Crediti acquisti integrati (IAP)"
+msgstr "Crediti IAP"
 
 #. module: crm_iap_lead_website
 #: model:ir.model.fields,field_description:crm_iap_lead_website.field_crm_lead__id
@@ -397,7 +397,7 @@ msgid ""
 "with /page"
 msgstr ""
 "Espressione regolare per rilevare le pagine di un sito web. Lasciare vuoto "
-"per monitorare l'intero sito, oppure / per puntare alla pagina principale. "
+"per monitorare l'intero sito, oppure / per puntare alla pagina iniziale. "
 "Esempio: /pagina* rileva tutte le pagine che iniziano con /pagina"
 
 #. module: crm_iap_lead_website

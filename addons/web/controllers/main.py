@@ -1090,22 +1090,6 @@ class WebClient(http.Controller):
         return request.render('web.benchmark_suite')
 
 
-class Proxy(http.Controller):
-
-    @http.route('/web/proxy/post/<path:path>', type='http', auth='user', methods=['GET'])
-    def post(self, path):
-        """Effectively execute a POST request that was hooked through user login"""
-        with request.session.load_request_data() as data:
-            if not data:
-                raise werkzeug.exceptions.BadRequest()
-            from werkzeug.test import Client
-            base_url = request.httprequest.base_url
-            query_string = request.httprequest.query_string
-            client = Client(http.root, werkzeug.wrappers.Response)
-            headers = {'X-Openerp-Session-Id': request.session.sid}
-            return client.post('/' + path, base_url=base_url, query_string=query_string,
-                               headers=headers, data=data)
-
 class Database(http.Controller):
 
     def _render_template(self, **d):

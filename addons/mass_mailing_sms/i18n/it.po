@@ -4,8 +4,7 @@
 # 
 # Translators:
 # Paolo Valier, 2020
-# Friederike Fasterling-Nesselbosch, 2021
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -90,7 +89,7 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Sembra che tu non abbia abbastanza crediti IAP. Clicca qui per acquistare crediti.\n"
+"                            Sembra che i crediti IAP non siano sufficienti, fare clic qui per acquistarli.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -101,7 +100,7 @@ msgid ""
 "                        </strong>"
 msgstr ""
 "<strong>\n"
-"                            Sembra che il tuo account SMS non sia registrato. Clicca qui per impostare il tuo account.\n"
+"                            Sembra che il conto SMS non sia registrato, fare clic qui per impostarlo.\n"
 "                        </strong>"
 
 #. module: mass_mailing_sms
@@ -305,6 +304,8 @@ msgid ""
 "Following numbers are not correctly encoded: %s, example : \"+32 495 85 85 "
 "77, +33 545 55 55 55\""
 msgstr ""
+"I seguenti numeri non sono codificati in modo corretto: %s, esempio : \"+32 "
+"495 85 85 77, +33 545 55 55 55\""
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -344,9 +345,9 @@ msgid ""
 "related sms.sms can be deleted separately from its statistics. However the "
 "ID is needed for several action and controllers."
 msgstr ""
-"ID sms.sms correlato. Il campo è un intero perché il sms.sms correlato può "
-"essere eliminato separatamente dai suoi dati. Ad ogni modo l'ID è necessario"
-" per alcune azioni e controller."
+"ID del sms.sms correlato. Questo campo è un un intero perché il sms.sms può "
+"essere eliminato separatamente dalle sue statistiche. Tuttavia l'ID è "
+"necessario per alcune azioni e controlli."
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_contact__message_needaction
@@ -587,7 +588,7 @@ msgstr "Destinatari"
 #. module: mass_mailing_sms
 #: model:ir.ui.menu,name:mass_mailing_sms.mass_mailing_sms_menu_reporting
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Resoconti"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_trace__sms_sms_id
@@ -667,7 +668,7 @@ msgstr ""
 #: code:addons/mass_mailing_sms/wizard/sms_composer.py:0
 #, python-format
 msgid "STOP SMS : %s"
-msgstr "STOP SMS : %s"
+msgstr "FERMA SMS : %s"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__phone_sanitized
@@ -687,7 +688,7 @@ msgstr "Invia"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid "Send Directly"
-msgstr "Invia direttamente"
+msgstr "Invio diretto"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_form_sms
@@ -802,12 +803,12 @@ msgstr "Campagna UTM"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
 msgid "UX Field to propose to Register the SMS IAP account"
-msgstr ""
+msgstr "Campo UX per proporre di registrare un conto IAP per gli SMS"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_has_insufficient_credit
 msgid "UX Field to propose to buy IAP credits"
-msgstr ""
+msgstr "Campo UX per proporre di comprare crediti IAP"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_contact__message_unread
@@ -822,7 +823,7 @@ msgstr "Numero messaggi non letti"
 #. module: mass_mailing_sms
 #: model:ir.model.fields.selection,name:mass_mailing_sms.selection__mailing_trace__failure_type__sms_acc
 msgid "Unregistered Account"
-msgstr "Account non registrato"
+msgstr "Conto non registrato"
 
 #. module: mass_mailing_sms
 #: model:ir.model.fields,field_description:mass_mailing_sms.field_mailing_mailing__sms_has_unregistered_account
@@ -832,7 +833,7 @@ msgstr "Conto IAP non registrato"
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.mailing_mailing_view_kanban_sms
 msgid "Unregistered account"
-msgstr "Account non registrato"
+msgstr "Conto non registrato"
 
 #. module: mass_mailing_sms
 #: model_terms:ir.ui.view,arch_db:mass_mailing_sms.blacklist_main
@@ -848,7 +849,7 @@ msgstr "%s non supportato per SMS di massa"
 #. module: mass_mailing_sms
 #: model:ir.model.fields,help:mass_mailing_sms.field_mailing_mailing__sms_force_send
 msgid "Use at your own risks."
-msgstr ""
+msgstr "Utilizzare a proprio rischio e pericolo."
 
 #. module: mass_mailing_sms
 #: model:ir.model,name:mass_mailing_sms.model_res_users
