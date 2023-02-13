@@ -9,10 +9,8 @@
 # Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2020
 # Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Federico Zanuttini <fza@odoo.com>, 2020
 # Loris Balsamo <et94@live.it>, 2020
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,13 +18,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: it\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
@@ -39,13 +37,13 @@ msgstr ""
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s"
-msgstr "%(empl_name)s da %(check_in)s"
+msgstr "%(empl_name)s dal %(check_in)s"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_attendance.py:0
 #, python-format
 msgid "%(empl_name)s from %(check_in)s to %(check_out)s"
-msgstr "%(empl_name)s da %(check_in)s a %(check_out)s"
+msgstr "%(empl_name)s dal %(check_in)s al %(check_out)s"
 
 #. module: hr_attendance
 #. openerp-web
@@ -144,7 +142,7 @@ msgstr "Una mela al giorno leva il medico di torno"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Another good day's work! See you soon!"
-msgstr "Hai completato il tuo lavoro per oggi! Ci vediamo presto!"
+msgstr "Un'altra bella giornata di lavoro, a presto!"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_my_attendances
@@ -404,7 +402,7 @@ msgstr "Chi prima arriva, meglio alloggia"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr "Felice di rivederti, è passato un po' di tempo!"
+msgstr "Felici di rivederti, è passato un po'!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -533,14 +531,14 @@ msgstr "ID"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Identify Manually"
-msgstr "Identificare manualmente"
+msgstr "Identifica manualmente"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr "Se un lavoro va fatto, meglio farlo bene!"
+msgstr "Se un lavoro va fatto, vale la pena farlo bene!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -552,7 +550,7 @@ msgstr "Richiesta non valida, ritornare al menù principale."
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
 msgid "Kiosk Attendance"
-msgstr "Presenze Chiosco"
+msgstr "Presenza chiosco"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
@@ -647,14 +645,14 @@ msgstr "OK"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
 msgid "Officer"
-msgstr "Direttore"
+msgstr "Addetto"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr "Inserire il PIN per"
+msgstr "Digita il PIN per"
 
 #. module: hr_attendance
 #. openerp-web
@@ -666,7 +664,7 @@ msgstr "Ritornare al menù principale."
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
-msgstr "Rendicontazione"
+msgstr "Resoconti"
 
 #. module: hr_attendance
 #. openerp-web
@@ -814,7 +812,7 @@ msgstr "Benvenuto!"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_attendance_tree
 msgid "Work Hours"
-msgstr "Ore lavorative"
+msgstr "Ore di lavoro"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__worked_hours
