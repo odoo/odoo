@@ -197,8 +197,8 @@ class Task(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="['!', ('id', 'child_of', id)]", tracking=True)
-    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
+    parent_id = fields.Many2one('project.task', string='Parent Task', index=True, domain="[('project_id.allow_subtasks', '=', True), '!', ('id', 'child_of', id)]", tracking=True)
+    child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('project_id.allow_subtasks', '=', True), ('recurring_task', '=', False), '!', ('id', 'parent_of', id)]")
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     closed_subtask_count = fields.Integer("Closed Sub-tasks Count", compute='_compute_subtask_count')
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
