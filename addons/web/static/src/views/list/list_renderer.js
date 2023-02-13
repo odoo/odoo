@@ -521,7 +521,14 @@ export class ListRenderer extends Component {
             values = this.props.list.records.map((r) => r.data);
         }
         const aggregates = {};
-        for (const fieldName in this.props.list.activeFields) {
+        for (const column of this.allColumns) {
+            if (column.type !== "field") {
+                continue;
+            }
+            const fieldName = column.name;
+            if (fieldName in this.optionalActiveFields && !this.optionalActiveFields[fieldName]) {
+                continue;
+            }
             const field = this.fields[fieldName];
             const fieldValues = values.map((v) => v[fieldName]).filter((v) => v || v === 0);
             if (!fieldValues.length) {
@@ -531,7 +538,7 @@ export class ListRenderer extends Component {
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
             }
-            const { rawAttrs, widget } = this.props.list.activeFields[fieldName];
+            const { rawAttrs, widget } = column;
             const func =
                 (rawAttrs.sum && "sum") ||
                 (rawAttrs.avg && "avg") ||
@@ -864,12 +871,13 @@ export class ListRenderer extends Component {
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
         const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+        const optionalColumns = this.allColumns.filter((col) => col.optional);
         if (optionalActiveFields) {
-            this.allColumns.forEach((col) => {
+            optionalColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
         } else {
-            this.allColumns.forEach((col) => {
+            optionalColumns.forEach((col) => {
                 this.optionalActiveFields[col.name] = col.optional === "show";
             });
         }
