@@ -1072,7 +1072,7 @@ msgstr "<strong>Splatná částka</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Credit Note Date:</strong>"
-msgstr ""
+msgstr "<strong>Datum dobropisu:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1234,7 +1234,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "A line of this move is using a deprecated account, you cannot post it."
-msgstr ""
+msgstr "Řádek tohoto přesunu používá zastaralý účet, nemůžete jej odeslat."
 
 #. module: account
 #. odoo-python
@@ -7780,6 +7780,8 @@ msgid ""
 "Invoice and credit note repartition should have at least one tax repartition"
 " line."
 msgstr ""
+"Přerozdělení faktury a dobropisu by mělo mít alespoň jeden řádek "
+"přerozdělení daně."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_line_ids
@@ -9426,6 +9428,8 @@ msgid ""
 "No journal could be found in company %(company_name)s for any of those "
 "types: %(journal_types)s"
 msgstr ""
+"Ve společnosti nebyl nalezen žádný deník %(company_name)s pro žádný z těchto"
+" typů: %(journal_types)s"
 
 #. module: account
 #. odoo-python
@@ -13831,6 +13835,7 @@ msgstr ""
 msgid ""
 "The following regular expression is invalid to create a partner mapping: %s"
 msgstr ""
+"Následující regulérní výraz není platný k vytvoření mapování partnera: %s"
 
 #. module: account
 #. odoo-python
@@ -13847,6 +13852,8 @@ msgid ""
 "The foreign currency set on the journal '%(journal)s' and the account "
 "'%(account)s' must be the same."
 msgstr ""
+"Nastavení zahraniční měny v deníku '%(journal)s' a účtu '%(account)s' musí "
+"být stejné."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_external_value__foreign_vat_fiscal_position_id
@@ -14461,6 +14468,14 @@ msgid "There was an error processing this page."
 msgstr "Při zpracování této stránky došlo k chybě."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr ""
@@ -14512,6 +14527,9 @@ msgid ""
 "%(journal_ids)s) as payment debit or credit account. This means that this "
 "account's type should be reconcilable."
 msgstr ""
+"Tento účet je nakonfigurován v deníku(-cích) %(journal_names)s (id "
+"%(journal_ids)s) jako účet debetní nebo platební karty. To znamená, že typ "
+"tohoto účtu by měl být kompatibilní."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_account_payable_id
@@ -15168,6 +15186,12 @@ msgstr "Neuhrazené faktury"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Nezaúčtované"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

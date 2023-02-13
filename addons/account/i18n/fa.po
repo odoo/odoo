@@ -52,6 +52,11 @@ msgid ""
 "The total of debits equals %s and the total of credits equals %s.\n"
 "You might want to specify a default account on journal \"%s\" to automatically balance each move."
 msgstr ""
+"\n"
+"\n"
+"حرکت (%s) متعادل نیست.\n"
+"مجموع بدهی ها برابر است%sو مجموع اعتبارات برابر است%s.\n"
+"ممکن است بخواهید یک حساب پیش فرض در مجله مشخص کنید \"%s\"برای تعادل خودکار هر حرکت."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__amount_type
@@ -1193,7 +1198,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>مجموع گرد شده</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1248,6 +1253,8 @@ msgstr ""
 #, python-format
 msgid "A fiscal position with a foreign VAT already exists in this region."
 msgstr ""
+"یک موقعیت مالی با مالیات بر ارزش افزوده خارجی در حال حاضر در این منطقه وجود "
+"دارد."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -1261,7 +1268,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_journal_group_uniq_name
 msgid "A journal group name must be unique per company."
-msgstr ""
+msgstr "نام گروه مجله باید برای هر شرکت منحصر به فرد باشد."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1278,6 +1285,7 @@ msgstr ""
 #, python-format
 msgid "A line cannot have both children and a groupby value (line '%s')."
 msgstr ""
+"یک خط نمی تواند هم فرزند و هم مقدار دسته بندی بر اساس داشته باشد (خط '%s')."
 
 #. module: account
 #. odoo-python
@@ -1303,6 +1311,7 @@ msgid ""
 "A payment tolerance defined as a percentage should always be between 0 and "
 "100"
 msgstr ""
+"تحمل پرداخت که به عنوان درصد تعریف می شود همیشه باید بین 0 تا 100 باشد"
 
 #. module: account
 #. odoo-python
@@ -1310,12 +1319,12 @@ msgstr ""
 #, python-format
 msgid ""
 "A payment tolerance defined as an amount should always be higher than 0"
-msgstr ""
+msgstr "تحمل پرداخت که به عنوان مبلغ تعریف می شود باید همیشه بالاتر از 0 باشد"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_reconcile_model_name_unique
 msgid "A reconciliation model already bears this name."
-msgstr ""
+msgstr "یک مدل آشتی قبلاً این نام را دارد."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_report_line_code_uniq
@@ -1336,7 +1345,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "A second payment has been created: %s"
-msgstr ""
+msgstr "پرداخت دوم ایجاد شده است:%s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -1397,7 +1406,7 @@ msgstr "هشدار دسترسی"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report_expression__date_scope__normal
 msgid "According to each type of account"
-msgstr ""
+msgstr "با توجه به هر نوع حساب"
 
 #. module: account
 #. odoo-python
@@ -1440,7 +1449,7 @@ msgstr "قالب جدول حساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__account_codes_formula
 msgid "Account Codes Formula Shortcut"
-msgstr ""
+msgstr "میانبر فرمول کدهای حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__currency_id
@@ -1537,7 +1546,7 @@ msgstr "شماره حساب"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
 msgid "Account Onboarding Create Invoice State Flag"
-msgstr ""
+msgstr "ورود به حساب ایجاد پرچم ایالت فاکتور"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_payable_id
@@ -1559,7 +1568,7 @@ msgstr "حساب دریافتنی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__is_account_reconcile
 msgid "Account Reconcile"
-msgstr ""
+msgstr "تطبیق حساب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__account_root_id
@@ -1656,13 +1665,13 @@ msgstr "2 رقم اول کد حساب"
 msgid ""
 "Account for the difference amount after the expense discount has been "
 "granted"
-msgstr ""
+msgstr "پس از اعطای تخفیف هزینه، مبلغ مابه التفاوت را حساب کنید"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 msgid ""
 "Account for the difference amount after the income discount has been granted"
-msgstr ""
+msgstr "پس از اعطای تخفیف درآمد، مبلغ مابه التفاوت را حساب کنید"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_search
@@ -1696,7 +1705,7 @@ msgstr "حسابی که مقدار مالیات باید به آن ارسال ش
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__group_id
 msgid "Account prefixes can determine account groups."
-msgstr ""
+msgstr "پیشوندهای حساب می توانند گروه های حساب را تعیین کنند."
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_invoice_with_payments
@@ -1780,6 +1789,8 @@ msgid ""
 "Account: Post draft entries with auto_post enabled and accounting date up to"
 " today"
 msgstr ""
+"حساب: ورودی های پیش نویس را با فعال بودن auto_post و تاریخ حسابداری تا امروز"
+" ارسال کنید"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_accountant
@@ -1817,7 +1828,7 @@ msgstr "ورودی های حسابداری"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Firms mode"
-msgstr ""
+msgstr "حالت شرکت های حسابداری"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -1835,22 +1846,22 @@ msgstr "دوره های حسابداری"
 #. module: account
 #: model:ir.model,name:account.model_account_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "گزارش حسابداری"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_column
 msgid "Accounting Report Column"
-msgstr ""
+msgstr "ستون گزارش حسابداری"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_expression
 msgid "Accounting Report Expression"
-msgstr ""
+msgstr "بیان گزارش حسابداری"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_external_value
 msgid "Accounting Report External Value"
-msgstr ""
+msgstr "گزارش حسابداری ارزش خارجی"
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_line
@@ -1860,7 +1871,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting firm mode will change invoice/bill encoding:"
-msgstr ""
+msgstr "حالت شرکت حسابداری رمزگذاری فاکتور/قبض را تغییر می‌دهد:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1891,19 +1902,19 @@ msgstr "نگاشت حساب‌ها از نظر مالی"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_distribution_model__account_prefix
 msgid "Accounts Prefix"
-msgstr ""
+msgstr "پیشوند حسابها"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__account_id
 msgid "Accrual Account"
-msgstr ""
+msgstr "حساب تعهدی"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrual Moves"
-msgstr ""
+msgstr "تحرکات تعهدی"
 
 #. module: account
 #. odoo-python
@@ -1929,14 +1940,14 @@ msgstr "حساب تعهدی"
 #. module: account
 #: model:ir.model,name:account.model_account_accrued_orders_wizard
 msgid "Accrued Orders Wizard"
-msgstr ""
+msgstr "ویزارد سفارشات انباشته شده"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Accrued total"
-msgstr ""
+msgstr "جمع انباشته شده"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__action
@@ -2120,7 +2131,7 @@ msgstr "افزودن یک سطر به فاکتورتان"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
 msgid "Add a link to a Web Page"
-msgstr ""
+msgstr "یک پیوند به یک صفحه وب اضافه کنید"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -14482,6 +14493,14 @@ msgid "There was an error processing this page."
 msgstr "خطایی هنگام پردازش این صفحه رخ داد."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "این مالیاتها هنگام ایجاد هر محصول تعیین می‌شوند."
@@ -15194,6 +15213,12 @@ msgstr "فاکتورهای پرداخت نشده"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "ارسال نشده"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

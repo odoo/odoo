@@ -29,7 +29,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Champ technique utilisé pour relier plusieurs lignes de récompense d'une même récompense."
+"Champ technique utilisé pour relier plusieurs lignes de récompense d'une même récompense entre elles."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -41,7 +41,7 @@ msgstr "- Sur un produit avec les taxes suivantes : %(taxes)s"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "<span class=\"fa fa-clipboard\"/> Copy"
-msgstr "<span class=\"fa fa-clipboard\"/>Copier"
+msgstr "<span class=\"fa fa-clipboard\"/> Copier"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -74,12 +74,12 @@ msgstr "Récompenses disponibles"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose a product:"
-msgstr "Choisissez un produit :"
+msgstr "Choisir un produit :"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_loyalty_reward_wizard_view_form
 msgid "Choose your reward:"
-msgstr "Choisissez votre récompense :"
+msgstr "Choisir votre récompense :"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.used_gift_card
@@ -109,7 +109,7 @@ msgstr "Point de réduction"
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
 msgstr ""
-"Bon de réduction introuvable lors de la tentative d'ajout de la récompense "
+"Bon de réduction non trouvé lors de la tentative d'ajout de la récompense "
 "suivante : %s"
 
 #. module: sale_loyalty
@@ -181,12 +181,12 @@ msgstr "Cadeau #"
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_purchased_gift_card
 msgid "Gift Card Code"
-msgstr "Code carte cadeau"
+msgstr "Code carte-cadeau"
 
 #. module: sale_loyalty
 #: model:ir.ui.menu,name:sale_loyalty.menu_gift_ewallet_type_config
 msgid "Gift cards & eWallet"
-msgstr "Cartes cadeau & eWallet"
+msgstr "Cartes-cadeaux & eWallet"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_order_line__points_cost
@@ -205,14 +205,14 @@ msgstr "ID"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
-msgstr "Produit à réclamer non valide."
+msgstr "Produit invalide à réclamer."
 
 #. module: sale_loyalty
 #. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
-msgstr "Commande client invalide."
+msgstr "Bon de commande invalide."
 
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__is_reward_line
@@ -268,7 +268,7 @@ msgstr "Règles déclenchées manuellement"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__multi_product_reward
 msgid "Multi Product"
-msgstr "Multi Produits"
+msgstr "Produits multiples"
 
 #. module: sale_loyalty
 #. odoo-python
@@ -327,7 +327,7 @@ msgstr "Points"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_order_line__points_cost
 msgid "Points Cost"
-msgstr "Coût en points"
+msgstr "Coût des points"
 
 #. module: sale_loyalty
 #: model_terms:ir.ui.view,arch_db:sale_loyalty.sale_order_view_form_inherit_sale_loyalty
@@ -353,7 +353,7 @@ msgstr "Code d'identification de la récompense"
 #. module: sale_loyalty
 #: model:ir.model.fields,field_description:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
 msgid "Reward Products"
-msgstr "Produits récompenses"
+msgstr "Produits de récompense"
 
 #. module: sale_loyalty
 #: model:ir.model,name:sale_loyalty.model_sale_loyalty_coupon_wizard
@@ -425,7 +425,7 @@ msgstr ""
 #. module: sale_loyalty
 #: model:ir.model.constraint,message:sale_loyalty.constraint_sale_order_coupon_points_order_coupon_unique
 msgid "The coupon points entry already exists."
-msgstr "L'enregistrement des points de réduction existe déjà"
+msgstr "L'enregistrement des points de réduction existe déjà."
 
 #. module: sale_loyalty
 #. odoo-python
@@ -444,7 +444,7 @@ msgstr "Le bon de commande à partir duquel le bon de réduction est généré"
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
-msgstr "Il n'y a pas de remise à appliquer"
+msgstr "Il n'y a aucune remise à appliquer"
 
 #. module: sale_loyalty
 #: model:ir.model.fields,help:sale_loyalty.field_sale_loyalty_reward_wizard__reward_product_ids
@@ -529,5 +529,5 @@ msgid ""
 "You will find below your gift cards code. An email has been sent with it. "
 "You can use it starting right now."
 msgstr ""
-"Vous trouverez ci-dessous votre code carte cadeau. Il vous a également été "
-"envoyé par email. Vous pouvez l'utiliser dès maintenant."
+"Vous trouverez ci-dessous votre code de carte-cadeau. Il vous a également "
+"été envoyé par email. Vous pouvez l'utiliser dès maintenant."

@@ -8,9 +8,9 @@
 # 江口和志 <sandwhale1010@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Noma Yuki, 2022
-# Andy Yiu, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
 # Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Last-Translator: Andy Yiu, 2023\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -977,7 +977,7 @@ msgstr "<span>参照</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
-msgstr "<span>レポーティング</span>"
+msgstr "<span>レポート作成</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1588,7 +1588,7 @@ msgstr "口座保持者と異なる場合の口座名義"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account__account_src_id
 msgid "Account on Product"
-msgstr "プロダクトの勘定科目"
+msgstr "商品の勘定科目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__account_id
@@ -2055,7 +2055,7 @@ msgstr "連絡先を追加..."
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid ""
 "Add your terms &amp; conditions at the bottom of invoices/orders/quotations"
-msgstr "請求書/オーダ/見積書の下部に諸条件を追加"
+msgstr "請求書/注文/見積書の下部に諸条件を追加"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__partner_ids
@@ -2198,7 +2198,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_product_margin
 msgid "Allow Product Margin"
-msgstr "プロダクトマージンを許可する"
+msgstr "商品マージンを許可する"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__reconcile
@@ -3734,7 +3734,7 @@ msgstr "子供税"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr "プロダクトのデフォルト販売税を選択してください。"
+msgstr "商品のデフォルト販売税を選択してください。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_reversal__refund_method
@@ -5090,13 +5090,13 @@ msgstr "ローカル取引に適用されるデフォルト税"
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr "プロダクト購買時に適用されるデフォルト税"
+msgstr "商品購買時に適用されるデフォルト税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr "プロダクト販売時に適用されるデフォルト税"
+msgstr "商品販売時に適用されるデフォルト税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__allowed_journal_ids
@@ -6040,7 +6040,7 @@ msgstr "費用勘定"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_id
 msgid "Expense Account on Product Template"
-msgstr "プロダクトテンプレートの費用勘定"
+msgstr "商品テンプレートの費用勘定"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
@@ -6794,7 +6794,7 @@ msgstr "履歴"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "How total tax amount is computed in orders and invoices"
-msgstr "オーダおよび請求書での税額計算"
+msgstr "注文および請求書での税額計算"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__id
@@ -8203,7 +8203,7 @@ msgstr "オープンのまま残す"
 #: model:ir.model.fields,help:account.field_product_template__property_account_income_id
 msgid ""
 "Keep this field empty to use the default value from the product category."
-msgstr "プロダクトカテゴリのデフォルト値を使用するには、このフィールドを空のままにします。"
+msgstr "商品カテゴリのデフォルト値を使用するには、このフィールドを空のままにします。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__property_account_expense_id
@@ -8213,7 +8213,7 @@ msgid ""
 " anglo-saxon accounting with automated valuation method is configured, the "
 "expense account on the product category will be used."
 msgstr ""
-"プロダクトカテゴリのデフォルト値を使用するには、このフィールドを空のままにします。自動評価方式のアングロサクソン会計が設定されている場合は、プロダクトカテゴリの費用勘定が使用されます。"
+"商品カテゴリのデフォルト値を使用するには、このフィールドを空のままにします。自動評価方式のアングロサクソン会計が設定されている場合は、商品カテゴリの費用勘定が使用されます。"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
@@ -8839,7 +8839,7 @@ msgstr "マッチング番号"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__matching_order
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__matching_order
 msgid "Matching Order"
-msgstr "オーダの突合"
+msgstr "注文の突合"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_partner_category_ids
@@ -9000,7 +9000,7 @@ msgstr "金銭"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Monitor your product margins from invoices"
-msgstr "請求書でプロダクトマージンを捕捉"
+msgstr "請求書で商品マージンを捕捉"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__monthly
@@ -10821,12 +10821,12 @@ msgstr "仕入先への支払に小切手を印刷"
 #: model_terms:ir.ui.view,arch_db:account.view_account_analytic_line_filter_inherit_account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Product"
-msgstr "プロダクト"
+msgstr "商品"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_product_product_categories
 msgid "Product Categories"
-msgstr "プロダクトカテゴリ"
+msgstr "商品カテゴリ"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -10835,17 +10835,17 @@ msgstr "プロダクトカテゴリ"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__product_categ_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Product Category"
-msgstr "プロダクトカテゴリ"
+msgstr "商品カテゴリ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__quantity
 msgid "Product Quantity"
-msgstr "プロダクト数量"
+msgstr "商品数量"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
 msgid "Product Variant"
-msgstr "プロダクトバリアント"
+msgstr "商品バリアント"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.product_product_action_purchasable
@@ -10855,7 +10855,7 @@ msgstr "プロダクトバリアント"
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 #: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
 msgid "Products"
-msgstr "プロダクト"
+msgstr "商品"
 
 #. module: account
 #. odoo-javascript
@@ -11301,7 +11301,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr "レポーティング"
+msgstr "レポート作成"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -12972,7 +12972,7 @@ msgstr "税名は一意である必要があります！"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_tax__tax_src_id
 msgid "Tax on Product"
-msgstr "プロダクトの税"
+msgstr "商品の税"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line_template__plus_report_expression_ids
@@ -14140,7 +14140,7 @@ msgstr "ロックしたい期間に未調整の銀行取引明細書行がまだ
 msgid ""
 "There doesn't appear to be anything to invoice for the selected order. "
 "However, you can use the amount field to force an accrual entry."
-msgstr "選択されたオーダに請求書対象はないようです。しかし、金額フィールドを使用すると、強制的に未収計上を行うことができます。"
+msgstr "選択された注文に請求書対象はないようです。しかし、金額フィールドを使用すると、強制的に未収計上を行うことができます。"
 
 #. module: account
 #. odoo-python
@@ -14166,6 +14166,14 @@ msgstr "このジャーナルについては、データの不変性のフラグ
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_error
 msgid "There was an error processing this page."
 msgstr "このページの処理中にエラーが発生しました。"
+
+#. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14718,7 +14726,7 @@ msgstr "%sの転送"
 msgid ""
 "Trigger alerts when creating Invoices and Sales Orders for Partners with a "
 "Total Receivable amount exceeding a limit."
-msgstr "請求書や販売オーダを作成する際に、売掛金総額が上限を超えたパートナーに対してアラートを発生させることができます。"
+msgstr "請求書や販売注文を作成する際に、売掛金総額が上限を超えたパートナーに対してアラートを発生させることができます。"
 
 #. module: account
 #. odoo-python
@@ -14841,6 +14849,12 @@ msgstr "未払請求書"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "未記帳"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15071,7 +15085,7 @@ msgstr "ユーザ"
 #: model:ir.model.fields,help:account.field_account_accrued_orders_wizard__currency_id
 #: model:ir.model.fields,help:account.field_account_partial_reconcile__company_currency_id
 msgid "Utility field to express amount currency"
-msgstr "金額を表すユーティリティー項目"
+msgstr "金額を表すユーティリティ項目"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__is_storno

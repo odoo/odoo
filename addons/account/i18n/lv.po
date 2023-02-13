@@ -560,6 +560,9 @@ msgid ""
 "clock-o\" aria-label=\"Opened\" title=\"Opened\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Waiting for Payment</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-info\"><i class=\"fa fa-fw fa-"
+"clock-o\" aria-label=\"Atvērts\" title=\"Atvērts\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Gaida maksājumu</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -568,6 +571,9 @@ msgid ""
 "check\" aria-label=\"Paid\" title=\"Paid\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Paid</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Apmaksāts\" title=\"Apmaksāts\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Apmaksāts"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -576,6 +582,9 @@ msgid ""
 "check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Atmaksāts\" title=\"Atmaksāts\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\"> Atmaksāts</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -4164,7 +4173,7 @@ msgstr "Izveidot rēķinu"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Create Invoices upon Emails"
-msgstr ""
+msgstr "Izveidot rēķinus pēc e-pastiem"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -4196,7 +4205,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
 msgid "Create a customer invoice"
-msgstr ""
+msgstr "Izveidot klienta rēķinu"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_journal_line
@@ -4271,14 +4280,14 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_create_invoice
 msgid "Create first invoice"
-msgstr ""
+msgstr "Izveidot pirmo rēķinu"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Create invoice/bill"
-msgstr ""
+msgstr "Izveidot rēķinu"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_out_invoice_type
@@ -4286,6 +4295,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your customers."
 msgstr ""
+"Izveidojiet rēķinus, reģistrējiet maksājumus un sekojiet līdzi diskusijām ar"
+" Jūsu klientiem."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
@@ -4293,6 +4304,8 @@ msgid ""
 "Create invoices, register payments and keep track of the discussions with "
 "your vendors."
 msgstr ""
+"Izveidojiet rēķinus, reģistrējiet maksājumus un sekojiet līdzi diskusijām ar"
+" Jūsu piegādātājiem."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.rounding_list_action
@@ -4302,7 +4315,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr ""
+msgstr "Izveidojiet Jūsu pirmo rēķinu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_uid
@@ -5228,7 +5241,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_digest_digest
 msgid "Digest"
-msgstr ""
+msgstr "Apkopojums"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5576,7 +5589,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Draft Invoice"
-msgstr "Neapstiprināts Rēķins"
+msgstr "Neapstiprināts rēķins"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
@@ -7446,7 +7459,7 @@ msgstr ""
 #: model:mail.message.subtype,name:account.mt_invoice_created
 #, python-format
 msgid "Invoice Created"
-msgstr "Rēķins Izveidots"
+msgstr "Rēķins izveidots"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_out_invoice_tree
@@ -7499,7 +7512,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_payment
 msgid "Invoice Online Payment"
-msgstr ""
+msgstr "Rēķina tiešsaistes maksājums"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__invoice_outstanding_credits_debits_widget
@@ -7819,7 +7832,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__alias_name
 msgid "It creates draft invoices and bills by sending an email."
-msgstr ""
+msgstr "Tas izveido melnraksta rēķinus nosūtot e-pastu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
@@ -9386,7 +9399,7 @@ msgstr "Novembris"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Now, we'll create your first invoice."
-msgstr ""
+msgstr "Tagad izveidosim Jūsu pirmo rēķinu."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__num_journals_without_account
@@ -14072,6 +14085,14 @@ msgid "There was an error processing this page."
 msgstr "There was an error processing this page."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Šie nodokļi tiek iestatīti visos jaunizveidotajos produktos."
@@ -14395,6 +14416,8 @@ msgstr ""
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
 msgstr ""
+"Padoms: Nav nepieciešamības printēt, ievietojiet vēstulē un nosūtiet Jūsu "
+"rēķinus "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -14742,6 +14765,12 @@ msgstr "Neapmaksātie Rēķini"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Negrāmatots"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
