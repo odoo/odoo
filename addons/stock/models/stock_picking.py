@@ -8,7 +8,7 @@ from datetime import date, timedelta
 from collections import defaultdict
 from markupsafe import escape
 
-from odoo import SUPERUSER_ID, _, api, fields, models
+from odoo import SUPERUSER_ID, _, api, Command, fields, models
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
 from odoo.addons.web.controllers.utils import clean_action
 from odoo.exceptions import UserError, ValidationError
@@ -88,6 +88,13 @@ class PickingType(models.Model):
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
+
+    auto_print_package_label = fields.Boolean(
+        "Auto Print Package Label",
+        help="If this checkbox is ticked, Odoo will automatically print the package label when \"Put in Pack\" button is used.")
+    package_label_to_print = fields.Selection(
+        [('pdf', 'PDF'), ('zpl', 'ZPL')],
+        "Package Label to Print", default='pdf')
 
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
     count_picking_ready = fields.Integer(compute='_compute_picking_count')
@@ -1507,60 +1514,68 @@ class Picking(models.Model):
             return {}
 
     def _put_in_pack(self, move_line_ids, create_package_level=True):
-        package = False
-        for pick in self:
-            move_lines_to_pack = self.env['stock.move.line']
-            package = self.env['stock.quant.package'].create({})
+        self.ensure_one()
+        move_lines_to_pack = self.env['stock.move.line']
+        package = self.env['stock.quant.package'].create({})
+        precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
+            for line in move_line_ids:
+                line.qty_done = line.reserved_uom_qty
 
-            precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_is_zero(move_line_ids[0].qty_done, precision_digits=precision_digits):
-                for line in move_line_ids:
-                    line.qty_done = line.reserved_uom_qty
-
-            for ml in move_line_ids:
-                if float_compare(ml.qty_done, ml.reserved_uom_qty,
-                                 precision_rounding=ml.product_uom_id.rounding) >= 0:
-                    move_lines_to_pack |= ml
-                else:
-                    quantity_left_todo = float_round(
-                        ml.reserved_uom_qty - ml.qty_done,
-                        precision_rounding=ml.product_uom_id.rounding,
-                        rounding_method='HALF-UP')
-                    done_to_keep = ml.qty_done
-                    new_move_line = ml.copy(
-                        default={'reserved_uom_qty': 0, 'qty_done': ml.qty_done})
-                    vals = {'reserved_uom_qty': quantity_left_todo, 'qty_done': 0.0}
-                    if pick.picking_type_id.code == 'incoming':
-                        if ml.lot_id:
-                            vals['lot_id'] = False
-                        if ml.lot_name:
-                            vals['lot_name'] = False
-                    ml.write(vals)
-                    new_move_line.write({'reserved_uom_qty': done_to_keep})
-                    move_lines_to_pack |= new_move_line
-            if not package.package_type_id:
-                package_type = move_lines_to_pack.move_id.product_packaging_id.package_type_id
-                if len(package_type) == 1:
-                    package.package_type_id = package_type
-            if len(move_lines_to_pack) == 1:
-                default_dest_location = move_lines_to_pack._get_default_dest_location()
-                move_lines_to_pack.location_dest_id = default_dest_location._get_putaway_strategy(
-                    product=move_lines_to_pack.product_id,
-                    quantity=move_lines_to_pack.reserved_uom_qty,
-                    package=package)
-            move_lines_to_pack.write({
-                'result_package_id': package.id,
+        for ml in move_line_ids:
+            if float_compare(ml.qty_done, ml.reserved_uom_qty, precision_rounding=ml.product_uom_id.rounding) >= 0:
+                move_lines_to_pack |= ml
+            else:
+                quantity_left_todo = float_round(
+                    ml.reserved_uom_qty - ml.qty_done,
+                    precision_rounding=ml.product_uom_id.rounding,
+                    rounding_method='HALF-UP')
+                done_to_keep = ml.qty_done
+                new_move_line = ml.copy(
+                    default={'reserved_uom_qty': 0, 'qty_done': ml.qty_done})
+                vals = {'reserved_uom_qty': quantity_left_todo, 'qty_done': 0.0}
+                if self.picking_type_id.code == 'incoming':
+                    if ml.lot_id:
+                        vals['lot_id'] = False
+                    if ml.lot_name:
+                        vals['lot_name'] = False
+                ml.write(vals)
+                new_move_line.write({'reserved_uom_qty': done_to_keep})
+                move_lines_to_pack |= new_move_line
+        package_type = move_lines_to_pack.move_id.product_packaging_id.package_type_id
+        if len(package_type) == 1:
+            package.package_type_id = package_type
+        if len(move_lines_to_pack) == 1:
+            default_dest_location = move_lines_to_pack._get_default_dest_location()
+            move_lines_to_pack.location_dest_id = default_dest_location._get_putaway_strategy(
+                product=move_lines_to_pack.product_id,
+                quantity=move_lines_to_pack.reserved_uom_qty,
+                package=package)
+        move_lines_to_pack.write({
+            'result_package_id': package.id,
+        })
+        if create_package_level:
+            self.env['stock.package_level'].create({
+                'package_id': package.id,
+                'picking_id': self.id,
+                'location_id': False,
+                'location_dest_id': move_lines_to_pack.mapped('location_dest_id').id,
+                'move_line_ids': [Command.set(move_lines_to_pack.ids)],
+                'company_id': self.company_id.id,
             })
-            if create_package_level:
-                package_level = self.env['stock.package_level'].create({
-                    'package_id': package.id,
-                    'picking_id': pick.id,
-                    'location_id': False,
-                    'location_dest_id': move_lines_to_pack.mapped('location_dest_id').id,
-                    'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
-                    'company_id': pick.company_id.id,
-                })
         return package
+
+    def _post_put_in_pack_hook(self, package_id):
+        if package_id and self.picking_type_id.auto_print_package_label:
+            if self.picking_type_id.package_label_to_print == 'pdf':
+                action = self.env.ref("stock.action_report_quant_package_barcode_small").report_action(package_id.id, config=False)
+            elif self.picking_type_id.package_label_to_print == 'zpl':
+                action = self.env.ref("stock.label_package_template").report_action(package_id.id, config=False)
+            if action:
+                action.update({'close_on_report_download': True})
+                clean_action(action, self.env)
+                return action
+        return package_id
 
     def action_put_in_pack(self):
         self.ensure_one()
@@ -1587,7 +1602,8 @@ class Picking(models.Model):
             if move_line_ids:
                 res = self._pre_put_in_pack_hook(move_line_ids)
                 if not res:
-                    res = self._put_in_pack(move_line_ids)
+                    package = self._put_in_pack(move_line_ids)
+                    return self._post_put_in_pack_hook(package)
                 return res
             else:
                 raise UserError(_("Please add 'Done' quantities to the picking to create a new pack."))
