@@ -281,7 +281,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_adv_activity_mixin(self):
         record = self.env['mail.test.activity'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=7, employee=7):
+        with self.assertQueryCount(__system__=6, employee=6):
             activity = record.action_start('Test Start')
             # read activity_type to normalize cache between enterprise and community
             # voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -307,7 +307,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             for values in self.test_attachments_vals
         ])
 
-        with self.assertQueryCount(__system__=7, employee=7):
+        with self.assertQueryCount(__system__=6, employee=6):
             activity = record.action_start('Test Start')
             #read activity_type to normalize cache between enterprise and community
             #voip module read activity_type during create leading to one less query in enterprise on action_close
@@ -567,7 +567,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=19, employee=21):
+        with self.assertQueryCount(__system__=18, employee=20):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -822,8 +822,8 @@ class TestMailComplexPerformance(BaseMailPerformance):
             unlinked_mails |= set(records.ids)
         unlinked_mails = set()
 
-        with (self.assertQueryCount(__system__=44, employee=44),
-             patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink)):
+        with self.assertQueryCount(__system__=43, employee=43), \
+             patch.object(type(self.env['mail.mail']), 'unlink', _patched_unlink):
             self.env['mail.mail'].sudo().browse(mails.ids).send()
 
         for mail in mails[:-2]:
@@ -1293,8 +1293,9 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
             ('attach tuple 3', "attachement tupple content 3", {'cid': 'cid2'}),
         ]
         attachments = self.env['ir.attachment'].with_user(self.env.user).create(self.test_attachments_vals)
-        enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
-        with self.assertQueryCount(employee=68), enable_logging:
+        # enable_logging = self.cr._enable_logging() if self.warm else nullcontext()
+        # with self.assertQueryCount(employee=68), enable_logging:
+        with self.assertQueryCount(employee=68):
             record_container.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',
                 subject='Test Subject',
