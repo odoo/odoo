@@ -287,7 +287,12 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-            command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
+            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+                command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
+            else:
+                command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
             command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
             if not landscape and paperformat_id.orientation:
                 command_args.extend(['--orientation', str(paperformat_id.orientation)])
