@@ -104,6 +104,20 @@ patch(ThreadService.prototype, "mail/web", {
         }
         this._super(thread, replaceNewMessageChatWindow);
     },
+    /**
+     * @param {import("@mail/new/core/follower_model").Follower} follower
+     */
+    async removeFollower(follower) {
+        await this.orm.call(follower.followedThread.model, "message_unsubscribe", [
+            [follower.followedThread.id],
+            [follower.partner.id],
+        ]);
+        const index = follower.followedThread.followers.indexOf(follower);
+        if (index !== -1) {
+            follower.followedThread.followers.splice(index, 1);
+        }
+        delete this.store.followers[follower.id];
+    },
 });
 
 patch(threadService, "mail/web", {

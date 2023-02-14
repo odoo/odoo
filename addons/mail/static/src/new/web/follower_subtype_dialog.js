@@ -50,7 +50,7 @@ export class FollowerSubtypeDialog extends Component {
     async onClickApply() {
         const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
         if (selectedSubtypes.length === 0) {
-            await this.env.services["mail.chatter"].removeFollower(this.props.follower);
+            await this.env.services["mail.thread"].removeFollower(this.props.follower);
         } else {
             await this.env.services.orm.call(
                 this.props.follower.followedThread.resModel,

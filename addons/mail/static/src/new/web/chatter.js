@@ -289,13 +289,13 @@ export class Chatter extends Component {
      * @param {import("@mail/new/core/follower_model").Follower} follower
      */
     async onClickRemove(ev, follower) {
-        await this.chatterService.removeFollower(follower);
+        await this.threadService.removeFollower(follower);
         this.onFollowerChanged();
         document.body.click(); // hack to close dropdown
     }
 
     async onClickUnfollow() {
-        await this.chatterService.removeFollower(this.state.thread.followerOfSelf);
+        await this.threadService.removeFollower(this.state.thread.followerOfSelf);
         this.onFollowerChanged();
     }
 
