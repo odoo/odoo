@@ -84,6 +84,9 @@
             <field name="mode">primary</field>
             <field name="inherit_id" ref="task_type_tree"/>
             <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_group_by">project_ids</attribute>
+                </xpath>
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="mail_template_id" optional="hide"/>
                     <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
@@ -96,7 +99,7 @@
             <field name="name">project.task.type.kanban</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" sample="1">
+                <kanban class="o_kanban_mobile" sample="1" default_group_by="project_ids">
                     <field name="name"/>
                     <field name="fold"/>
                     <field name="description"/>
