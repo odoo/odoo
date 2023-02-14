@@ -2532,9 +2532,13 @@ class IrQWeb(models.AbstractModel):
 
     def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
+        from pprint import pprint
+        pprint(files)
+        pprint(remains)
         asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
-        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+        value = remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+        return value
 
     def _get_asset_link_urls(self, bundle, debug=False):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)

@@ -1627,6 +1627,20 @@ class TestAssetsManifest(AddonManifestPatched):
             't-js': 'true',
             't-css': 'true',
         })
+        origin_generate_assets_node = type(self.env['ir.qweb'])._generate_asset_nodes
+        def generate_asset_nodes(*args, **kwargs):
+            assets_nodes = origin_generate_assets_node(*args, **kwargs)
+            links = [assets_node[1].get('src') or assets_node[1].get('href') for assets_node in assets_nodes]
+            self.assertEqual(links, [
+                'http://test.external.link/javascript1.js',
+                'http://test.external.link/style1.css',
+                'http://test.external.link/javascript2.js',
+                'http://test.external.link/style2.css',
+                '/web/assets/b40ec5c/test_assetsbundle.bundle4.min.css',
+                '/web/assets/b40ec5c/test_assetsbundle.bundle4.min.js'
+            ])
+            return assets_nodes
+        self.patch(type(self.env['ir.qweb']), '_generate_asset_nodes', generate_asset_nodes)
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.bundle4')], order='create_date DESC', limit=2)
         attach_css = None
