@@ -610,7 +610,7 @@ QUnit.test("switch tab", async function (assert) {
     assert.doesNotHaveClass($('.o-mail-messaging-menu button:contains("Channels")'), "fw-bolder");
 });
 
-QUnit.test("new message", async function (assert) {
+QUnit.test("new message [REQUIRE FOCUS]", async function (assert) {
     const { click } = await start();
     await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
     await click(`.o-mail-messaging-menu button:contains("New Message")`);

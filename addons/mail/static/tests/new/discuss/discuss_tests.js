@@ -103,7 +103,7 @@ QUnit.test("can change the thread description of #general", async (assert) => {
     assert.verifySteps(["/web/dataset/call_kw/mail.channel/channel_change_description"]);
 });
 
-QUnit.test("can create a new channel", async (assert) => {
+QUnit.test("can create a new channel [REQUIRE FOCUS]", async (assert) => {
     await startServer();
     const { openDiscuss } = await start({
         mockRPC(route, params) {

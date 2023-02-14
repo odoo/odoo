@@ -323,7 +323,7 @@ QUnit.test("sidebar: unpin channel from bus", async function (assert) {
     assert.notOk($(target).find(".o-mail-discuss-thread-name")?.val() === "General");
 });
 
-QUnit.test("chat - channel should count unread message", async function (assert) {
+QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async function (assert) {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({
         name: "Demo",
@@ -351,7 +351,7 @@ QUnit.test("chat - channel should count unread message", async function (assert)
     assert.containsNone(target, ".o-mail-discuss-sidebar-counter");
 });
 
-QUnit.test("mark channel as seen on last message visible", async function (assert) {
+QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async function (assert) {
     const pyEnv = await startServer();
     const channelId = pyEnv["mail.channel"].create({
         name: "test",
