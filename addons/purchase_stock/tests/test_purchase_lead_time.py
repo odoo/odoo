@@ -318,7 +318,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         delivery_moves._action_confirm()
         self.env['procurement.group'].run_scheduler()
         po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), fields.Date.today() + timedelta(days=2))
+        expected_date_order = fields.Date.today() + timedelta(days=2)
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order)
         self.assertEqual(len(po_line), 1)
         self.assertEqual(po_line.product_uom_qty, 20.0)
         self.assertEqual(len(po_line.order_id), 1)
@@ -328,12 +329,10 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.mock_date.today.return_value = fields.Date.today() + timedelta(days=1)
         orderpoint._compute_qty()
         self.env['procurement.group'].run_scheduler()
-        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
-        self.assertEqual(len(po_line), 2)
-        self.assertEqual(len(po_line.order_id), 2)
-        new_order = po_line.order_id.sorted('date_order')[-1]
-        self.assertEqual(fields.Date.to_date(new_order.date_order), fields.Date.today() + timedelta(days=2))
-        self.assertEqual(new_order.order_line.product_uom_qty, 5.0)
+        po_line02 = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(po_line02, po_line, 'The orderpoint execution should not create a new POL')
+        self.assertEqual(fields.Date.to_date(po_line.order_id.date_order), expected_date_order, 'The Order Deadline should not change')
+        self.assertEqual(po_line.product_uom_qty, 25.0, 'The existing POL should be updated with the quantity of the last execution')
         self.patcher.stop()
 
     def test_supplier_lead_time(self):
