@@ -92,12 +92,16 @@
                 <field name="allow_billable" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="allow_billable" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='child_ids']/tree/field[@name='partner_id']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.allow_billable', '=', False)], 'invisible': [('allow_billable', '=', False)]}</attribute>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="after">
+                <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
                 <field name="allow_billable" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
@@ -127,7 +131,8 @@
         <field name="inherit_id" ref="project.project_task_view_tree_base"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="sale_line_id" optional="hide" options="{'no_create': True}" readonly="1"/>
+                <field name="sale_line_id" optional="hide" readonly="1" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" optional="hide" options="{'no_open': True}" readonly="1" groups="!sales_team.group_sale_salesman"/>
             </xpath>
         </field>
     </record>

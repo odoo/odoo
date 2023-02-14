@@ -378,12 +378,12 @@
                                     <field name="is_closed" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1}" />
                                     <field name="id" optional="hide"/>
+                                    <field name="priority" widget="priority" nolabel="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1}"/>
+                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
-                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="project_id" string="Project" optional="hide" options="{'no_open': 1}"/>
                                     <field name="milestone_id"
                                         optional="hide"
@@ -394,13 +394,14 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" invisible="1"/>
-                                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                                     <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
-                                        class="fw-bold" widget="badge" optional="hide" invisible="1"/>
+                                        class="fw-bold" widget="badge" optional="hide" invisible="1" groups="project.group_project_rating"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="hide" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"/>
                                 </tree>
@@ -413,12 +414,12 @@
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
                                     <field name="is_closed" invisible="1" />
-                                    <field name="priority" widget="priority" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
-                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="id" optional="hide"/>
+                                    <field name="priority" widget="priority" nolabel="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                                    <field name="name" widget="name_with_subtask_count"/>
                                     <field name="project_id" optional="hide" options="{'no_open': 1}" />
                                     <field name="milestone_id"
                                         optional="hide"
@@ -430,13 +431,14 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" invisible="1"/>
-                                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide" />
-                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
+                                    <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
+                                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
-                                        class="fw-bold" widget="badge" optional="hide" invisible="1"/>
+                                        class="fw-bold" widget="badge" optional="hide" invisible="1" groups="project.group_project_rating"/>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="hide"/>
                                     <button class="oe_link float-end" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
@@ -641,7 +643,6 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <tree string="Tasks" sample="1" default_order="state, priority desc, date_deadline asc, sequence, id desc">
-                    <field name="company_id" invisible="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="is_private" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -657,6 +658,7 @@
                     <field name="partner_id" optional="hide" widget="res_partner_many2one" attrs="{'invisible': [('project_id', '=', False)]}"/>
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" invisible="context.get('default_project_id')"/>
+                    <field name="company_id" invisible="1"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
