@@ -316,9 +316,10 @@ class StockRule(models.Model):
             ('company_id', '=', company_id.id),
             ('user_id', '=', False),
         )
-        if values.get('orderpoint_id'):
+        delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
+        if values.get('orderpoint_id') and delta_days is not False:
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
-            delta_days = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge') or 0)
+            delta_days = int(delta_days)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
                 ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))
