@@ -50,6 +50,7 @@ export class Thread {
     followers = [];
     isAdmin = false;
     loadMore = true;
+    isLoadingAttachments = false;
     isLoaded = false;
     /** @type {import("@mail/new/attachments/attachment_model").Attachment} */
     mainAttachment;

@@ -5,6 +5,8 @@ import { ThreadService, threadService } from "@mail/new/core/thread_service";
 import { createLocalId } from "@mail/new/utils/misc";
 import { parseEmail } from "@mail/js/utils";
 
+import { markup } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
@@ -13,6 +15,10 @@ let nextId = 1;
 patch(ThreadService.prototype, "mail/web", {
     setup(env, services) {
         this._super(env, services);
+        /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
+        this.attachmentService = services["mail.attachment"];
+        /** @type {import("@mail/new/web/activity/activity_service").ActivityService} */
+        this.activityService = services["mail.activity"];
         /** @type {import("@mail/new/chat/chat_window_service").ChatWindowService} */
         this.chatWindowService = services["mail.chat_window"];
     },
@@ -26,8 +32,11 @@ patch(ThreadService.prototype, "mail/web", {
         resModel,
         requestList = ["activities", "followers", "attachments", "messages", "suggestedRecipients"]
     ) {
+        const thread = this.insert({ model: resModel, id: resId });
+        thread.isLoadingAttachments =
+            thread.isLoadingAttachments || requestList.includes("attachments");
         if (requestList.includes("messages")) {
-            this.fetchNewMessages(this.insert({ model: resModel, id: resId }));
+            this.fetchNewMessages(thread);
         }
         const result = await this.rpc("/mail/thread/data", {
             request_list: requestList,
@@ -39,6 +48,47 @@ patch(ThreadService.prototype, "mail/web", {
                 ...attachment,
                 originThread: this.insert(attachment.originThread[0][1]),
             }));
+        }
+        thread.hasReadAccess = result.hasReadAccess;
+        thread.hasWriteAccess = result.hasWriteAccess;
+        if ("activities" in result) {
+            const existingIds = new Set();
+            for (const activity of result.activities) {
+                if (activity.note) {
+                    activity.note = markup(activity.note);
+                }
+                existingIds.add(this.activityService.insert(activity).id);
+            }
+            for (const activity of thread.activities) {
+                if (!existingIds.has(activity.id)) {
+                    this.activityService.delete(activity);
+                }
+            }
+        }
+        if ("attachments" in result) {
+            this.update(thread, {
+                attachments: result.attachments,
+            });
+            thread.isLoadingAttachments = false;
+        }
+        if ("mainAttachment" in result) {
+            thread.mainAttachment = result.mainAttachment.id
+                ? this.attachmentService.insert(result.mainAttachment)
+                : undefined;
+        }
+        if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
+            this.setMainAttachmentFromIndex(thread, 0);
+        }
+        if ("followers" in result) {
+            for (const followerData of result.followers) {
+                this.insertFollower({
+                    followedThread: thread,
+                    ...followerData,
+                });
+            }
+        }
+        if ("suggestedRecipients" in result) {
+            this.insertSuggestedRecipients(thread, result.suggestedRecipients);
         }
         return result;
     },
@@ -152,5 +202,10 @@ patch(ThreadService.prototype, "mail/web", {
 });
 
 patch(threadService, "mail/web", {
-    dependencies: [...threadService.dependencies, "mail.chat_window"],
+    dependencies: [
+        ...threadService.dependencies,
+        "mail.activity",
+        "mail.attachment",
+        "mail.chat_window",
+    ],
 });

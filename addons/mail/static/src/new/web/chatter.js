@@ -8,7 +8,6 @@ import { Composer } from "../composer/composer";
 import { Activity } from "@mail/new/web/activity/activity";
 import {
     Component,
-    markup,
     onMounted,
     onPatched,
     onWillStart,
@@ -82,20 +81,15 @@ export class Chatter extends Component {
         this.messaging = useMessaging();
         /** @type {import("@mail/new/activity/activity_service").ActivityService} */
         this.activityService = useState(useService("mail.activity"));
-        /** @type {import("@mail/new/attachments/attachment_service").AttachmentService} */
-        this.attachmentService = useService("mail.attachment");
         /** @type {import("@mail/new/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
-        /** @type {import('@mail/new/core/persona_service').PersonaService} */
-        this.personaService = useService("mail.persona");
         this.store = useStore();
         this.orm = useService("orm");
         this.rpc = useService("rpc");
         this.state = useState({
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
-            isLoadingAttachments: false,
-            /** @type {import("@mail/new/core/thread_model").Thread} */
             showActivities: true,
+            /** @type {import("@mail/new/core/thread_model").Thread} */
             thread: undefined,
         });
         this.unfollowHover = useHover("unfollow");
@@ -124,7 +118,6 @@ export class Chatter extends Component {
         );
         onWillUpdateProps((nextProps) => {
             if (nextProps.threadId !== this.props.threadId) {
-                this.state.isLoadingAttachments = false;
                 this.load(nextProps.threadId, ["followers", "attachments", "suggestedRecipients"]);
                 if (nextProps.threadId === false) {
                     this.state.thread.composer.type = false;
@@ -141,12 +134,7 @@ export class Chatter extends Component {
      * @returns {import("@mail/new/web/activity/activity_model").Activity[]}
      */
     get activities() {
-        return Object.values(this.store.activities).filter((activity) => {
-            return (
-                activity.res_model === this.props.threadModel &&
-                activity.res_id === this.props.threadId
-            );
-        });
+        return this.state.thread.activities;
     }
 
     get followerButtonLabel() {
@@ -180,63 +168,12 @@ export class Chatter extends Component {
         this.state.thread = this.threadService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
-            // todo: reset activities/attachments/followers
             return;
         }
-        this.state.isLoadingAttachments = requestList.includes("attachments");
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.threadService.fetchData(threadId, threadModel, requestList).then((result) => {
-            this.state.thread.hasReadAccess = result.hasReadAccess;
-            this.state.thread.hasWriteAccess = result.hasWriteAccess;
-            if ("activities" in result) {
-                const existingIds = new Set();
-                for (const activity of result.activities) {
-                    if (activity.note) {
-                        activity.note = markup(activity.note);
-                    }
-                    existingIds.add(this.activityService.insert(activity).id);
-                }
-                for (const activity of this.activities) {
-                    if (!existingIds.has(activity.id)) {
-                        this.activityService.delete(activity);
-                    }
-                }
-            }
-            if ("attachments" in result) {
-                this.threadService.update(this.state.thread, {
-                    attachments: result.attachments,
-                });
-                this.state.isLoadingAttachments = false;
-            }
-            if ("mainAttachment" in result) {
-                this.state.thread.mainAttachment = result.mainAttachment.id
-                    ? this.attachmentService.insert(result.mainAttachment)
-                    : undefined;
-            }
-            // TODO move this somewhere else to make sure it works in all flows (eg. attachment upload)
-            if (
-                !this.state.thread.mainAttachment &&
-                this.state.thread.attachmentsInWebClientView.length > 0
-            ) {
-                this.threadService.setMainAttachmentFromIndex(this.state.thread, 0);
-            }
-            if ("followers" in result) {
-                for (const followerData of result.followers) {
-                    this.threadService.insertFollower({
-                        followedThread: this.state.thread,
-                        ...followerData,
-                    });
-                }
-            }
-            if ("suggestedRecipients" in result) {
-                this.threadService.insertSuggestedRecipients(
-                    this.state.thread,
-                    result.suggestedRecipients
-                );
-            }
-        });
+        this.threadService.fetchData(threadId, threadModel, requestList);
     }
 
     onClickAddFollowers() {
