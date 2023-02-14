@@ -40,7 +40,6 @@
         'web.assets_backend': [
             'purchase/static/src/toaster_button/*',
             'purchase/static/src/views/*.js',
-            'purchase/static/src/views/*.scss',
             'purchase/static/src/js/tours/purchase.js',
             'purchase/static/src/**/*.xml',
         ],
