@@ -120,3 +120,52 @@ class AccountMove(models.Model):
             barcode = self.env['ir.actions.report'].barcode(barcode_type="QR", value=payment_url, width=120, height=120)
             return image_data_uri(base64.b64encode(barcode))
         return super()._generate_qr_code(silent_errors)
+
+    def _l10n_in_get_hsn_summary(self):
+        self.ensure_one()
+        hsn_tax_details = {}
+        display_uom = self.env.user.user_has_groups('uom.group_uom')
+        sign = self.is_inbound() and -1 or 1
+        for line in self.invoice_line_ids.filtered(lambda l: l.l10n_in_hsn_code):
+            gst_rate = line.l10n_in_gst_rate
+            hsn_code = line.product_id.l10n_in_hsn_code
+            # group by hsn, tax rate and uom
+            group_key = display_uom and "%s-%s-%s" % (hsn_code, gst_rate, line.product_uom_id) or "%s-%s" % (hsn_code, gst_rate)
+            hsn_tax_details.setdefault(group_key, {
+                'l10n_in_hsn_code': hsn_code,
+                'gst_tax_rate': gst_rate,
+                'quantity': 0.00,
+                'uom': display_uom and line.product_uom_id.name,
+                'base_amount_currency': 0.00,
+                'SGST_amount_currency': 0.00,
+                'CGST_amount_currency': 0.00,
+                'IGST_amount_currency': 0.00,
+                'CESS_amount_currency': 0.00,
+            })
+            hsn_tax_details[group_key]['SGST_amount_currency'] += line.l10n_in_sgst_amount_currency
+            hsn_tax_details[group_key]['CGST_amount_currency'] += line.l10n_in_cgst_amount_currency
+            hsn_tax_details[group_key]['IGST_amount_currency'] += line.l10n_in_igst_amount_currency
+            hsn_tax_details[group_key]['CESS_amount_currency'] += line.l10n_in_cess_amount_currency
+            hsn_tax_details[group_key]['quantity'] += line.quantity
+            hsn_tax_details[group_key]['base_amount_currency'] += sign * line.balance
+
+        display_gst = any(tax_detail['SGST_amount_currency'] > 0 for tax_detail in hsn_tax_details.values())
+        display_igst = any(tax_detail['IGST_amount_currency'] > 0 for tax_detail in hsn_tax_details.values())
+        display_cess = any(tax_detail['CESS_amount_currency'] > 0 for tax_detail in hsn_tax_details.values())
+        nb_columns = 4
+        if display_gst:
+            nb_columns += 2
+        if display_igst:
+            nb_columns += 1
+        if display_cess:
+            nb_columns += 1
+        column_details = {
+            'nb_columns': nb_columns,
+            'display_gst': display_gst,
+            'display_igst': display_igst,
+            'display_cess': display_cess,
+        }
+        return {
+            'column_details': column_details,
+            'hsn_tax_details': hsn_tax_details
+        }

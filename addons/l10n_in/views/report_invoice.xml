@@ -58,6 +58,47 @@
             </h2>
         </xpath>
 
+        <xpath expr="//div[@id='payment_term']" position="before">
+            <t t-if="o.company_id.account_fiscal_country_id.code == 'IN'">
+                <t t-set="l10n_in_hsn_summary_details" t-value="o._l10n_in_get_hsn_summary()"/>
+                <t t-set="l10n_in_tax_details" t-value="l10n_in_hsn_summary_details['hsn_tax_details'].values()"/>
+                <t t-set="l10n_in_hsn_columns_details" t-value="l10n_in_hsn_summary_details['column_details']"/>
+                <t t-if="l10n_in_tax_details">
+                    <div name="l10n_in_hsn_summary" class="mt-3">
+                        <table id="l10n_in_hsn_table" class="table table-sm table-borderless col-6" style="page-break-inside: avoid;">
+                            <thead>
+                                <th t-attf-colspan="l10n_in_hsn_columns_details['nb_columns']"><h3>HSN Summary</h3></th>
+                            </thead>
+                            <thead>
+                                <th>HSN/SAC</th>
+                                <th class="text-end">Quantity</th>
+                                <th class="text-end">Rate %</th>
+                                <th class="text-end">Taxable Value</th>
+                                <t t-if="l10n_in_hsn_columns_details['display_gst']">
+                                    <th class="text-end">SGST</th>
+                                    <th class="text-end">CGST</th>
+                                </t>
+                                <th t-if="l10n_in_hsn_columns_details['display_igst']" class="text-end">IGST</th>
+                                <th class="text-end" t-if="l10n_in_hsn_columns_details['display_cess']">CESS</th>
+                            </thead>
+                            <tr t-foreach="l10n_in_tax_details" t-as="tax_detail">
+                                <td><span t-esc="tax_detail['l10n_in_hsn_code']"/></td>
+                                <td class="text-end"><span t-esc="tax_detail['quantity']"/><span t-if="tax_detail['uom']">(<t t-esc="tax_detail['uom']"/>)</span></td>
+                                <td class="text-end"><span t-esc="tax_detail['gst_tax_rate']"/></td>
+                                <td class="text-end"><span t-esc="tax_detail['base_amount_currency']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                <t t-if="l10n_in_hsn_columns_details['display_gst']">
+                                    <td class="text-end"><span t-esc="tax_detail['SGST_amount_currency']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                    <td class="text-end"><span t-esc="tax_detail['CGST_amount_currency']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                </t>
+                                <td class="text-end" t-if="l10n_in_hsn_columns_details['display_igst']"><span t-esc="tax_detail['IGST_amount_currency']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                                <td class="text-end" t-if="l10n_in_hsn_columns_details['display_cess']"><span t-esc="tax_detail['CESS_amount_currency']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </t>
+            </t>
+        </xpath>
+
     </template>
 
 </odoo>
