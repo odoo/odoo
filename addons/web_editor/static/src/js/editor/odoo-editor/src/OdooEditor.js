@@ -10,6 +10,7 @@ import './commands/tab.js';
 import './commands/toggleList.js';
 import './commands/align.js';
 
+import { browser } from "@web/core/browser/browser";
 import { sanitize } from './utils/sanitize.js';
 import { serializeNode, unserializeNode, serializeSelection } from './utils/serialize.js';
 import {
@@ -4198,6 +4199,10 @@ export class OdooEditor extends EventTarget {
      */
     _onPaste(ev) {
         ev.preventDefault();
+        const wysiwyg = $(this.editable).data('wysiwyg');
+        if (this._pluginCall('onPasteBlock', [ev, wysiwyg])) {
+            return;
+        }
         const sel = this.document.getSelection();
         const files = getImageFiles(ev.clipboardData);
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
@@ -4607,7 +4612,7 @@ export class OdooEditor extends EventTarget {
     _pluginCall(method, args) {
         for (const plugin of this._plugins) {
             if (plugin[method]) {
-                plugin[method](...args);
+                return plugin[method](...args);
             }
         }
     }
