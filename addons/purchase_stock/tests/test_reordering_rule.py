@@ -791,3 +791,89 @@ class TestReorderingRule(TransactionCase):
             {'location_id': supplier_location_id, 'location_dest_id': input_location_id, 'product_qty': 1},
             {'location_id': input_location_id, 'location_dest_id': stock_location_id, 'product_qty': 1},
         ])
+
+    def test_add_line_to_existing_draft_po(self):
+        """
+        Days to purchase = 10
+        Two products P1, P2 from the same supplier
+        Several use cases, each time we run the RR one by one. Then, according
+        to the dates and the configuration, it should use the existing PO or not
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        self.env.company.days_to_purchase = 10
+        expected_order_date = dt.combine(dt.today() + td(days=10), dt.min.time())
+        expected_delivery_date = expected_order_date + td(days=1.0)
+        # expected_delivery_date = expected_delivery_date.replace(hour=12, minute=0, second=0)
+
+        product_02 = self.env['product.product'].create({
+            'name': 'Super Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': self.partner.id})],
+        })
+
+        op_01, op_02 = self.env['stock.warehouse.orderpoint'].create([{
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': p.id,
+            'product_min_qty': 1,
+            'product_max_qty': 0,
+        } for p in [self.product_01, product_02]])
+
+        op_01.action_replenish()
+        po01 = self.env['purchase.order'].search([], order='id desc', limit=1)
+        self.assertEqual(po01.date_order, expected_order_date)
+
+        op_02.action_replenish()
+        self.assertEqual(po01.date_order, expected_order_date)
+        self.assertRecordValues(po01.order_line, [
+            {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
+            {'product_id': product_02.id, 'date_planned': expected_delivery_date},
+        ])
+
+        # Reset and try another flow
+        po01.button_cancel()
+        op_01.action_replenish()
+        po02 = self.env['purchase.order'].search([], order='id desc', limit=1)
+        self.assertNotEqual(po02, po01)
+
+        with freeze_time(dt.today() + td(days=1)):
+            op_02.invalidate_cache(fnames=['lead_days_date'], ids=op_02.ids)
+            op_02.action_replenish()
+            self.assertEqual(po02.date_order, expected_order_date)
+            self.assertRecordValues(po02.order_line, [
+                {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
+                {'product_id': product_02.id, 'date_planned': expected_delivery_date + td(days=1)},
+            ])
+
+        # Restrict the merge with POs that have their order deadline in [today - 2 days, today + 2 days]
+        self.env['ir.config_parameter'].set_param('purchase_stock.delta_days_merge', '2')
+
+        # Reset and try with a second RR executed in the dates range (-> should still use the existing PO)
+        po02.button_cancel()
+        op_01.action_replenish()
+        po03 = self.env['purchase.order'].search([], order='id desc', limit=1)
+        self.assertNotEqual(po03, po02)
+
+        with freeze_time(dt.today() + td(days=2)):
+            op_02.invalidate_cache(fnames=['lead_days_date'], ids=op_02.ids)
+            op_02.action_replenish()
+            self.assertEqual(po03.date_order, expected_order_date)
+            self.assertRecordValues(po03.order_line, [
+                {'product_id': self.product_01.id, 'date_planned': expected_delivery_date},
+                {'product_id': product_02.id, 'date_planned': expected_delivery_date + td(days=2)},
+            ])
+
+        # Reset and try with a second RR executed after the dates range (-> should not use the existing PO)
+        po03.button_cancel()
+        op_01.action_replenish()
+        po04 = self.env['purchase.order'].search([], order='id desc', limit=1)
+        self.assertNotEqual(po04, po03)
+
+        with freeze_time(dt.today() + td(days=3)):
+            op_02.invalidate_cache(fnames=['lead_days_date'], ids=op_02.ids)
+            op_02.action_replenish()
+            self.assertEqual(po04.order_line.product_id, self.product_01, 'There should be only a line for product 01')
+            po05 = self.env['purchase.order'].search([], order='id desc', limit=1)
+            self.assertNotEqual(po05, po04, 'A new PO should be generated')
+            self.assertEqual(po05.order_line.product_id, product_02)
