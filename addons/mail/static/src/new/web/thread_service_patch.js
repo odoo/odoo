@@ -23,16 +23,13 @@ patch(ThreadService.prototype, "mail/web", {
         this.chatWindowService = services["mail.chat_window"];
     },
     /**
-     * @param {number} resId
-     * @param {string} resModel
+     * @param {import("@mail/new/core/thread_model").Thread} thread
      * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
      */
     async fetchData(
-        resId,
-        resModel,
+        thread,
         requestList = ["activities", "followers", "attachments", "messages", "suggestedRecipients"]
     ) {
-        const thread = this.insert({ model: resModel, id: resId });
         thread.isLoadingAttachments =
             thread.isLoadingAttachments || requestList.includes("attachments");
         if (requestList.includes("messages")) {
@@ -40,8 +37,8 @@ patch(ThreadService.prototype, "mail/web", {
         }
         const result = await this.rpc("/mail/thread/data", {
             request_list: requestList,
-            thread_id: resId,
-            thread_model: resModel,
+            thread_id: thread.id,
+            thread_model: thread.model,
         });
         if ("attachments" in result) {
             result["attachments"] = result["attachments"].map((attachment) => ({

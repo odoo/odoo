@@ -173,7 +173,7 @@ export class Chatter extends Component {
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.threadService.fetchData(threadId, threadModel, requestList);
+        this.threadService.fetchData(this.state.thread, requestList);
     }
 
     onClickAddFollowers() {
