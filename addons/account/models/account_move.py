@@ -949,7 +949,7 @@ class AccountMove(models.Model):
             invoice.needed_terms = {}
             invoice.needed_terms_dirty = True
             sign = 1 if invoice.is_inbound(include_receipts=True) else -1
-            if invoice.is_invoice(True):
+            if invoice.is_invoice(True) and invoice.invoice_line_ids:
                 if invoice.invoice_payment_term_id:
                     invoice_payment_terms = invoice.invoice_payment_term_id._compute_terms(
                         date_ref=invoice.invoice_date or invoice.date or fields.Date.today(),
