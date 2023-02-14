@@ -140,7 +140,7 @@ export class ListRenderer extends Component {
 
         if (this.env.searchModel) {
             useBus(this.env.searchModel, "focus-view", () => {
-                if (this.props.list.model.useSampleModel || !this.showTable) {
+                if (this.props.list.model.useSampleModel) {
                     return;
                 }
 
@@ -180,7 +180,7 @@ export class ListRenderer extends Component {
             () => {
                 this.freezeColumnWidths();
             },
-            () => [this.state.columns, this.isEmpty, this.showTable]
+            () => [this.state.columns, this.isEmpty]
         );
         useExternalListener(window, "resize", () => {
             this.columnWidths = null;
@@ -210,9 +210,6 @@ export class ListRenderer extends Component {
     // The following code manipulates the DOM directly to avoid having to wait for a
     // render + patch which would occur on the next frame and cause flickering.
     freezeColumnWidths() {
-        if (!this.showTable) {
-            return;
-        }
         if (!this.keepColumnWidths) {
             this.columnWidths = null;
         }
@@ -1510,11 +1507,6 @@ export class ListRenderer extends Component {
 
     showGroupPager(group) {
         return !group.isFolded && group.list.limit < group.list.count;
-    }
-
-    get showTable() {
-        const { model } = this.props.list;
-        return model.hasData() || !this.props.noContentHelp;
     }
 
     toggleGroup(group) {
