@@ -94,7 +94,7 @@ export class TourPointer extends Component {
                             const wouldOverflow =
                                 window.innerWidth - x - width / 2 < dimensions?.width;
                             el.classList.toggle("o_expand_left", wouldOverflow);
-                            reposition(anchor, el, {
+                            reposition(anchor, el, null, {
                                 position: this.position,
                                 margin: 6,
                                 onPositioned: (popper, position) => {
