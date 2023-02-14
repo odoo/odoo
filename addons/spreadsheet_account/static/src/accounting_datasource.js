@@ -23,10 +23,11 @@ export class AccountingDataSource {
      * @param {number} offset end date of the period to look
      * @param {number} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {boolean} includeChildren whether or not select children accounts
      * @returns {number | undefined}
      */
-    getCredit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getCredit(codes, dateRange, offset, companyId, includeUnposted, includeChildren) {
+        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted, includeChildren);
         return data.credit;
     }
 
@@ -37,10 +38,11 @@ export class AccountingDataSource {
      * @param {number} offset end  date of the period to look
      * @param {number} companyId specific company to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {boolean} includeChildren whether or not select children accounts
      * @returns {number | undefined}
      */
-    getDebit(codes, dateRange, offset, companyId, includeUnposted) {
-        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted);
+    getDebit(codes, dateRange, offset, companyId, includeUnposted, includeChildren) {
+        const data = this._fetchAccountData(codes, dateRange, offset, companyId, includeUnposted, includeChildren);
         return data.debit;
     }
 
@@ -78,9 +80,10 @@ export class AccountingDataSource {
      * @param {number} offset end  date of the period to look
      * @param {number | null} companyId specific companyId to target
      * @param {boolean} includeUnposted wether or not select unposted entries
+     * @param {boolean} includeChildren whether or not select children accounts
      * @returns {{ debit: number, credit: number }}
      */
-    _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted) {
+    _fetchAccountData(codes, dateRange, offset, companyId, includeUnposted, includeChildren) {
         dateRange.year += offset;
         // Excel dates start at 1899-12-30, we should not support date ranges
         // that do not cover dates prior to it.
@@ -98,7 +101,7 @@ export class AccountingDataSource {
                 const result = this.serverData.batch.get(
                     "account.account",
                     "spreadsheet_fetch_debit_credit",
-                    camelToSnakeObject({ dateRange, code, companyId, includeUnposted })
+                    camelToSnakeObject({ dateRange, code, companyId, includeUnposted, includeChildren })
                 );
                 results.push(result);
             } catch (err) {

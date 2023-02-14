@@ -52,6 +52,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
                             code: "100",
                             company_id: null,
                             include_unposted: false,
+                            include_children: false,
                             date_range: {
                                 range_type: "year",
                                 year: 2020,

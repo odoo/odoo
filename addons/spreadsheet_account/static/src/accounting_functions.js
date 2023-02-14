@@ -206,7 +206,8 @@ functionRegistry.add("ODOO.BALANCE", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = true,
+        includeChildren = false,
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
         offset = toNumber(offset);

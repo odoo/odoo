@@ -19,7 +19,7 @@ cellMenuRegistry.add("move_lines_see_records", {
     async action(env) {
         const cell = env.model.getters.getActiveCell();
         const { args } = getFirstAccountFunction(cell.content);
-        let [code, date_range, offset, companyId, includeUnposted] = args
+        let [code, date_range, offset, companyId, includeUnposted, includeChildren] = args
             .map(astToFormula)
             .map((arg) => env.model.getters.evaluateFormula(arg));
         code = toString(code);
@@ -27,11 +27,12 @@ cellMenuRegistry.add("move_lines_see_records", {
         dateRange.year += offset || 0;
         companyId = companyId || null;
         includeUnposted = toBoolean(includeUnposted);
+        includeChildren = toBoolean(includeChildren);
 
         const action = await env.services.orm.call(
             "account.account",
             "spreadsheet_move_line_action",
-            [camelToSnakeObject({ dateRange, companyId, code, includeUnposted })]
+            [camelToSnakeObject({ dateRange, companyId, code, includeUnposted, includeChildren })]
         );
         await env.services.action.doAction(action);
     },

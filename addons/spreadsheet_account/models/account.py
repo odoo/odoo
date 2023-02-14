@@ -51,7 +51,7 @@ class AccountMove(models.Model):
         )
 
         base_domain = [
-            ("account_id.code", "=like", f"{code}%"),
+            ("account_id.code", "=like", f"{code}%") if formula_params["include_children"] else ("account_id.code", "=", code),
             ("company_id", "=", company_id),
         ]
         if formula_params["include_unposted"]:

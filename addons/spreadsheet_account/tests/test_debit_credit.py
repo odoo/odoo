@@ -116,6 +116,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -131,6 +132,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             "code": self.account_revenue_c1.code,
             "company_id": None,
             "include_unposted": True,
+            "include_children": True,
         }
         request_2 = {
             "date_range": {
@@ -140,6 +142,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             "code": self.account_revenue_c1.code,
             "company_id": None,
             "include_unposted": True,
+            "include_children": True,
         }
         [o1_res1, o1_res2] = self.env["account.account"].spreadsheet_fetch_debit_credit(
             [request_1, request_2]
@@ -163,6 +166,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -206,6 +210,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -249,6 +254,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -294,6 +300,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -336,6 +343,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -374,6 +382,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -417,6 +426,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -485,6 +495,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -507,6 +518,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -552,6 +564,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -593,6 +606,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -639,6 +653,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -684,6 +699,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": False,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -702,6 +718,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -747,6 +764,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": False,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -765,6 +783,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": self.account_revenue_c1.code,
                         "company_id": None,
                         "include_unposted": True,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -785,6 +804,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                         "code": "",
                         "company_id": None,
                         "include_unposted": False,
+                        "include_children": True,
                     }
                 ]
             ),
@@ -803,6 +823,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "code": self.account_revenue_c1.code,
                 "company_id": self.account_revenue_c1.company_id.id,
                 "include_unposted": True,
+                "include_children": True,
             }
         )
         self.assertEqual(
@@ -850,6 +871,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "code": "",
                 "company_id": None,
                 "include_unposted": True,
+                "include_children": True,
             }
         )
         self.assertEqual(
