@@ -743,11 +743,14 @@ export class ThreadService {
         composer.attachments.length = 0;
         Object.assign(composer, {
             textInputContent: "",
-            selection: {
-                start: 0,
-                end: 0,
-                direction: "none",
-            },
+            // make sure not to redefine selection in this Object.assign,
+            // otherwise it will create a new object making the reference used
+            // in the useSelection hook obsolete
+        });
+        Object.assign(composer.selection, {
+            start: 0,
+            end: 0,
+            direction: "none",
         });
     }
 }

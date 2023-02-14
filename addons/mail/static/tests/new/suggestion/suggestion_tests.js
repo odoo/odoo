@@ -3,7 +3,7 @@
 import { Composer } from "@mail/new/composer/composer";
 import { makeDeferred } from "@mail/utils/deferred";
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 
 let target;
 
@@ -45,6 +45,39 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     await insertText(".o-mail-composer-textarea", "@");
     assert.containsN(target, ".o-composer-suggestion", 3);
 });
+
+QUnit.test(
+    'post a first message then display partner mention suggestions on typing "@"',
+    async function (assert) {
+        const pyEnv = await startServer();
+        const partnerId_1 = pyEnv["res.partner"].create({
+            email: "testpartner@odoo.com",
+            name: "TestPartner",
+        });
+        const partnerId_2 = pyEnv["res.partner"].create({
+            email: "testpartner2@odoo.com",
+            name: "TestPartner2",
+        });
+        pyEnv["res.users"].create({ partner_id: partnerId_1 });
+        const channelId = pyEnv["mail.channel"].create({
+            name: "general",
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: partnerId_1 }],
+                [0, 0, { partner_id: partnerId_2 }],
+            ],
+        });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        assert.containsNone(target, ".o-composer-suggestion");
+        await insertText(".o-mail-composer-textarea", "first message");
+        triggerHotkey("Enter");
+        await nextTick();
+
+        await insertText(".o-mail-composer-textarea", "@");
+        assert.containsN(target, ".o-composer-suggestion", 3);
+    }
+);
 
 QUnit.test('display partner mention suggestions on typing "@" in chatter', async function (assert) {
     const pyEnv = await startServer();
