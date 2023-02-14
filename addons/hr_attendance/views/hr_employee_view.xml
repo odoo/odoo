@@ -8,12 +8,14 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="attendance_state" invisible="1"/>
+                <field name="hours_last_month" groups="hr_attendance.group_hr_attendance_user" invisible="1"/>
                 <button name="%(hr_attendance_action)d"
                         class="oe_stat_button"
                         icon="fa-clock-o"
                         type="action"
                         context="{'search_default_employee_id': id, 'search_default_check_in_filter': '1'}"
                         groups="hr_attendance.group_hr_attendance_user"
+                        attrs="{'invisible': [('hours_last_month', '=', 0)]}"
                         help="Worked hours last month">
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
