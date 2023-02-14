@@ -5,8 +5,8 @@
             <field name="model">uom.uom</field>
             <field name="inherit_id" ref="uom.product_uom_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='uom_type']" position="after">
-                    <field name="l10n_eg_unit_code_id" attrs="{'invisible': [('fiscal_country_codes', 'not ilike', 'EG')]}"/>
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="fiscal_country_codes" invisible="1"/>
                 </xpath>
             </field>
         </record>

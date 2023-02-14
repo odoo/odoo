@@ -36,3 +36,4 @@ from . import ir_module
 from . import res_currency
 from . import account_report
 from . import template_generic_coa
+from . import uom_uom

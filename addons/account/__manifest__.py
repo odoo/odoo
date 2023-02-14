@@ -72,6 +72,7 @@ You could use this simplified accounting in case you work with an (external) acc
         'wizard/accrued_orders.xml',
         'views/bill_preview_template.xml',
         'data/account_reports_data.xml',
+        'views/uom_uom_views.xml',
     ],
     'demo': [
         'demo/account_demo.xml',
