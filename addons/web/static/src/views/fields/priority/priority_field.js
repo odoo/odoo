@@ -31,7 +31,7 @@ export class PriorityField extends Component {
                                     this.options.map((value) => ({
                                         name: value[1],
                                         action: () => {
-                                            this.props.update(value[0]);
+                                            this.updateRecord(value[0]);
                                         },
                                     })),
                             },
@@ -66,9 +66,21 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.value === value) {
             this.state.index = -1;
-            this.props.update(this.options[0][0]);
+            this.updateRecord(this.options[0][0]);
         } else {
-            this.props.update(value);
+            this.updateRecord(value);
+        }
+    }
+
+    async updateRecord(value) {
+        await this.props.record.update({ [this.props.name]: value });
+        const rootRecord =
+            this.props.record.model.root instanceof this.props.record.constructor &&
+            this.props.record.model.root;
+        const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
+        // We save only if we're on view mode readonly and no readonly field modifier
+        if (!isInEdition) {
+            return this.props.record.save();
         }
     }
 }

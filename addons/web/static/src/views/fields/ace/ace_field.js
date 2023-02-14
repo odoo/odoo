@@ -113,7 +113,7 @@ export class AceField extends Component {
         if (!this.props.readonly) {
             const value = this.aceSession.getValue();
             if (this.props.value !== value) {
-                return this.props.update(value);
+                return this.props.record.update({ [this.props.name]: value });
             }
         }
     }

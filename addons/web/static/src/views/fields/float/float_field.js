@@ -37,10 +37,14 @@ export class FloatField extends Component {
     }
 
     get formattedValue() {
-        if (this.props.inputType === "number" && !this.props.readonly && this.props.value) {
-            return this.props.value;
+        if (this.props.inputType === "number" && !this.props.readonly && this.value) {
+            return this.value;
         }
-        return formatFloat(this.props.value, { digits: this.props.digits });
+        return formatFloat(this.value, { digits: this.props.digits });
+    }
+
+    get value() {
+        return this.props.value;
     }
 }
 

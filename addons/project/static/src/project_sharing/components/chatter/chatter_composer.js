@@ -4,8 +4,7 @@ import { useService } from '@web/core/utils/hooks';
 import { TextField } from '@web/views/fields/text/text_field';
 import { PortalAttachDocument } from '../portal_attach_document/portal_attach_document';
 import { ChatterAttachmentsViewer } from './chatter_attachments_viewer';
-
-const { Component, useState, onWillUpdateProps } = owl;
+import { Component, useState, onWillUpdateProps, useRef } from "@odoo/owl";
 
 export class ChatterComposer extends Component {
     setup() {
@@ -16,6 +15,7 @@ export class ChatterComposer extends Component {
             message: '',
             loading: false,
         });
+        this.inputRef = useRef("textarea");
 
         onWillUpdateProps(this.onWillUpdateProps);
     }
@@ -23,6 +23,7 @@ export class ChatterComposer extends Component {
     onWillUpdateProps(nextProps) {
         this.clearErrors();
         this.state.message = '';
+        this.inputRef.el.value = "";
         this.state.attachments = nextProps.attachments.map(file => file.state === 'done');
     }
 
@@ -30,9 +31,9 @@ export class ChatterComposer extends Component {
         return `${window.location.href.split('#')[0]}#discussion`;
     }
 
-    update(change) {
+    update() {
         this.clearErrors();
-        this.state.message = change;
+        this.state.message = this.inputRef.el.value;
     }
 
     prepareMessageData() {

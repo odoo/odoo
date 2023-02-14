@@ -66,9 +66,10 @@ export class CharField extends Component {
             let dynamicPlaceholder = "{{object." + chain.join(".");
             dynamicPlaceholder +=
                 defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
-            this.props.update(
-                this.input.el.value.replace(triggerKeyReplaceRegex, "") + dynamicPlaceholder
-            );
+            this.props.record.update({
+                [this.props.name]:
+                    this.input.el.value.replace(triggerKeyReplaceRegex, "") + dynamicPlaceholder,
+            });
         }
     }
     onDynamicPlaceholderClose() {

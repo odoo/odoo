@@ -24,7 +24,7 @@ export class UpgradeBooleanField extends BooleanField {
                 {},
                 {
                     onClose: () => {
-                        this.props.update(false);
+                        this.props.record.update({ [this.props.name]: false });
                     },
                 }
             );

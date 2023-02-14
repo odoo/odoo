@@ -64,16 +64,16 @@ export function useInputField(params) {
                 try {
                     val = params.parse(val);
                 } catch {
-                    if (component.props.record) {
-                        component.props.record.setInvalidField(component.props.name);
-                    }
+                    component.props.record.setInvalidField(component.props.name);
                     isInvalid = true;
                 }
             }
 
             if (!isInvalid) {
                 pendingUpdate = true;
-                Promise.resolve(component.props.update(val)).then(() => {
+                Promise.resolve(
+                    component.props.record.update({ [component.props.name]: val })
+                ).then(() => {
                     pendingUpdate = false;
                 });
                 lastSetValue = ev.target.value;
@@ -114,10 +114,7 @@ export function useInputField(params) {
      * If it is not such a case, we update the field with the new value.
      */
     useEffect(() => {
-        const isInvalid = component.props.record
-            ? component.props.record.isInvalid(component.props.name)
-            : false;
-        if (inputRef.el && !isDirty && !isInvalid) {
+        if (inputRef.el && !isDirty && !component.props.record.isInvalid(component.props.name)) {
             inputRef.el.value = params.getValue();
             lastSetValue = inputRef.el.value;
         }
@@ -148,7 +145,7 @@ export function useInputField(params) {
                     isInvalid = true;
                     if (urgent) {
                         return;
-                    } else if (component.props.record) {
+                    } else {
                         component.props.record.setInvalidField(component.props.name);
                     }
                 }
@@ -159,7 +156,7 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.value || false)) {
-                await component.props.update(val);
+                await component.props.record.update({ [component.props.name]: val });
                 lastSetValue = inputRef.el.value;
                 if (component.props.setDirty) {
                     component.props.setDirty(isDirty);

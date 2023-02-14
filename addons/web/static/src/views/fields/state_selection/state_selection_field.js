@@ -37,7 +37,7 @@ export class StateSelectionField extends Component {
         for (const [index, [value, label]] of this.options.entries()) {
             useCommand(
                 sprintf(this.env._t("Set kanban state as %s"), label),
-                () => this.props.update(value),
+                () => this.updateRecord(value),
                 {
                     category: "smart_action",
                     hotkey: "alt+" + hotkeys[index],
@@ -75,6 +75,18 @@ export class StateSelectionField extends Component {
 
     statusColor(value) {
         return this.colors[value] ? this.colorPrefix + this.colors[value] : "";
+    }
+
+    async updateRecord(value) {
+        await this.props.record.update({ [this.props.name]: value });
+        const rootRecord =
+            this.props.record.model.root instanceof this.props.record.constructor &&
+            this.props.record.model.root;
+        const isInEdition = rootRecord ? rootRecord.isInEdition : this.props.record.isInEdition;
+        // We save only if we're on view mode readonly and no readonly field modifier
+        if (!isInEdition) {
+            return this.props.record.save();
+        }
     }
 }
 

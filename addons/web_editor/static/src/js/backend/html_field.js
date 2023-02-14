@@ -284,7 +284,7 @@ export class HtmlField extends Component {
         if (value !== null && !(!lastValue && stripHistoryIds(value) === "<p><br></p>") && value !== lastValue) {
             this.props.setDirty(false);
             this.currentEditingValue = value;
-            await this.props.update(value);
+            await this.props.record.update({ [this.props.name]: value });
         }
     }
     async startWysiwyg(wysiwyg) {
@@ -320,12 +320,12 @@ export class HtmlField extends Component {
         if (this.state.showCodeView) {
             this.wysiwyg.odooEditor.toolbarHide();
             const value = this.wysiwyg.getValue();
-            this.props.update(value);
+            this.props.record.update({ [this.props.name]: value });
         } else {
             this.wysiwyg.odooEditor.observerActive('toggleCodeView');
             const $codeview = $(this.codeViewRef.el);
             const value = $codeview.val();
-            this.props.update(value);
+            this.props.record.update({ [this.props.name]: value });
 
         }
     }
@@ -562,7 +562,7 @@ export class HtmlField extends Component {
             checked: !checked,
         });
         if (value) {
-            this.props.update(value);
+            this.props.record.update({ [this.props.name]: value });
         }
     }
     async _onReadonlyClickStar(ev) {
@@ -590,7 +590,7 @@ export class HtmlField extends Component {
             rating,
         });
         if (value) {
-            this.props.update(value);
+            this.props.record.update({ [this.props.name]: value });
         }
     }
 }

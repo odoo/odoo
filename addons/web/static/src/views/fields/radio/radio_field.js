@@ -58,10 +58,10 @@ export class RadioField extends Component {
     onChange(value) {
         switch (this.props.type) {
             case "selection":
-                this.props.update(value[0]);
+                this.props.record.update({ [this.props.name]: value[0] });
                 break;
             case "many2one":
-                this.props.update(value);
+                this.props.record.update({ [this.props.name]: value });
                 break;
         }
     }

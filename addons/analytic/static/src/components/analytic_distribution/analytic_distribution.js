@@ -415,7 +415,7 @@ export class AnalyticDistribution extends Component {
     async save() {
         const currentDistribution = this.listForJson;
         const dataToSave = currentDistribution;
-        await this.props.update(dataToSave);
+        await this.props.record.update({ [this.props.name]: dataToSave });
     }
 
     onSaveNew() {

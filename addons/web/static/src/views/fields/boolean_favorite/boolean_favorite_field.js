@@ -16,6 +16,10 @@ export class BooleanFavoriteField extends Component {
     static defaultProps = {
         noLabel: false,
     };
+
+    update() {
+        this.props.record.update({ [this.props.name]: !this.props.value });
+    }
 }
 
 export const booleanFavoriteField = {

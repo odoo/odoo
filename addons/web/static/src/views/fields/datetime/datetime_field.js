@@ -36,7 +36,7 @@ export class DateTimeField extends Component {
 
     onDateTimeChanged(date) {
         if (!areDateEquals(this.props.value || "", date)) {
-            this.props.update(date);
+            this.props.record.update({ [this.props.name]: date });
         }
     }
     onDatePickerInput(ev) {

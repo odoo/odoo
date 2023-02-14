@@ -57,6 +57,7 @@ export class Many2OneField extends Component {
         relation: { type: String, optional: true },
         string: { type: String, optional: true },
         canScanBarcode: { type: Boolean, optional: true },
+        update: { type: Function, optional: true },
         openTarget: {
             type: String,
             validate: (v) => ["current", "new"].includes(v),
@@ -101,7 +102,7 @@ export class Many2OneField extends Component {
             isToMany: false,
             onRecordSaved: async (record) => {
                 await this.props.record.load();
-                await this.props.update(m2oTupleFromData(record.data));
+                await this.updateRecord(m2oTupleFromData(record.data));
                 if (this.props.record.model.root.id !== this.props.record.id) {
                     this.props.record.switchMode("readonly");
                 }
@@ -115,7 +116,7 @@ export class Many2OneField extends Component {
                 value = m2oTupleFromData(value[0]);
             }
             this.state.isFloating = false;
-            return this.props.update(value);
+            return this.updateRecord(value);
         };
 
         if (this.props.canQuickCreate) {
@@ -123,7 +124,7 @@ export class Many2OneField extends Component {
                 if (params.triggeredOnBlur) {
                     return this.openConfirmationDialog(name);
                 }
-                return this.props.update([false, name]);
+                return this.updateRecord([false, name]);
             };
         }
 
@@ -135,6 +136,14 @@ export class Many2OneField extends Component {
             this.state.isFloating = !nextProps.value;
             this.computeActiveActions(nextProps);
         });
+    }
+
+    updateRecord(value) {
+        const changes = { [this.props.name]: value };
+        if (this.props.update) {
+            return this.props.update(changes);
+        }
+        return this.props.record.update(changes);
     }
 
     get relation() {
@@ -299,7 +308,6 @@ export const many2OneField = {
             nameCreateField: attrs.options.create_name_field,
             canScanBarcode: !!attrs.options.can_scan_barcode,
             openTarget: attrs.open_target,
-
             relation: field.relation,
             string: attrs.string || field.string,
         };

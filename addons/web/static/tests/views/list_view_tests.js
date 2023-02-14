@@ -11811,7 +11811,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         // Close the confirmation dialog
-        await click(target.querySelector(".modal .btn-primary"));
+        await click(target.querySelectorAll(".modal")[1], ".btn-primary");
 
         assert.strictEqual(
             target.querySelector(".o_data_cell").innerText,
