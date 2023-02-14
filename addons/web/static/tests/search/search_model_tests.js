@@ -49,6 +49,12 @@ QUnit.module("Search", (hooks) => {
                         date_field: { string: "Date", type: "date", store: true, sortable: true },
                         float_field: { string: "Float", type: "float" },
                         bar: { string: "Bar", type: "many2one", relation: "partner" },
+                        properties: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "bar",
+                            definition_record_field: "child_properties",
+                        },
                     },
                     records: [],
                 },
@@ -958,4 +964,31 @@ QUnit.module("Search", (hooks) => {
         model.toggleSearchItem(1);
         assert.deepEqual(model.domain, [["date_deadline", "<", "2021-09-17"]]);
     });
+
+    QUnit.test(
+        "a field of type 'properties' should not be accepted as a search_default",
+        async function (assert) {
+            const searchViewArch = `
+                <search>
+                    <field name="properties"/>
+                </search>
+            `;
+
+            const model = await makeSearchModel({
+                serverData,
+                searchViewArch,
+                context: {
+                    search_default_properties: true,
+                },
+            });
+            assert.deepEqual(sanitizeSearchItems(model), [
+                {
+                    description: "Properties",
+                    fieldName: "properties",
+                    fieldType: "properties",
+                    type: "field",
+                },
+            ]);
+        }
+    );
 });

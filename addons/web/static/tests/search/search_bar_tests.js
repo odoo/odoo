@@ -1064,50 +1064,75 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("search a property", async function (assert) {
         assert.expect(37);
 
-        async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "web_search_read" && model === "partner"
-                && kwargs.fields[0] === "display_name" && kwargs.fields[1] === "child_properties") {
+        async function mockRPC(_, { method, model, kwargs }) {
+            if (
+                method === "web_search_read" &&
+                model === "partner" &&
+                kwargs.fields[0] === "display_name" &&
+                kwargs.fields[1] === "child_properties"
+            ) {
+                const definition1 = [
+                    {
+                        type: "many2one",
+                        string: "My Partner",
+                        name: "my_partner",
+                        comodel: "partner",
+                    },
+                    {
+                        type: "many2many",
+                        string: "My Partners",
+                        name: "my_partners",
+                        comodel: "partner",
+                    },
+                    {
+                        type: "selection",
+                        string: "My Selection",
+                        name: "my_selection",
+                        selection: [
+                            ["a", "A"],
+                            ["b", "B"],
+                            ["c", "C"],
+                            ["aa", "AA"],
+                        ],
+                    },
+                    {
+                        type: "tags",
+                        string: "My Tags",
+                        name: "my_tags",
+                        tags: [
+                            ["a", "A", 1],
+                            ["b", "B", 5],
+                            ["c", "C", 3],
+                            ["aa", "AA", 2],
+                        ],
+                    },
+                ];
 
-                const definition1 = [{
-                    'type': 'many2one',
-                    'string': 'My Partner',
-                    'name': 'my_partner',
-                    'comodel': 'partner',
-                }, {
-                    'type': 'many2many',
-                    'string': 'My Partners',
-                    'name': 'my_partners',
-                    'comodel': 'partner',
-                }, {
-                    'type': 'selection',
-                    'string': 'My Selection',
-                    'name': 'my_selection',
-                    'selection': [['a', 'A'], ['b', 'B'], ['c', 'C'], ['aa', 'AA']],
-                }, {
-                    'type': 'tags',
-                    'string': 'My Tags',
-                    'name': 'my_tags',
-                    'tags': [['a', 'A', 1], ['b', 'B', 5], ['c', 'C', 3], ['aa', 'AA', 2]],
-                }];
-
-                const definition2 = [{
-                    'type': 'char',
-                    'string': 'My Text',
-                    'name': 'my_text',
-                }];
+                const definition2 = [
+                    {
+                        type: "char",
+                        string: "My Text",
+                        name: "my_text",
+                    },
+                ];
 
                 return {
                     records: [
-                        {'id': 1, 'display_name': 'Bar 1', 'child_properties': definition1},
-                        {'id': 2, 'display_name': 'Bar 2', 'child_properties': definition2},
+                        { id: 1, display_name: "Bar 1", child_properties: definition1 },
+                        { id: 2, display_name: "Bar 2", child_properties: definition2 },
                     ],
                 };
             } else if (method === "name_search" && model === "partner" && kwargs.name === "Bo") {
-                return [[5, "Bob"], [6, "Bobby"]];
+                return [
+                    [5, "Bob"],
+                    [6, "Bobby"],
+                ];
             } else if (method === "name_search" && model === "partner" && kwargs.name === "Ali") {
-                return [[9, "Alice"], [10, "Alicia"]];
+                return [
+                    [9, "Alice"],
+                    [10, "Alicia"],
+                ];
             }
-
         }
 
         const controlPanel = await makeWithSearch({
@@ -1126,17 +1151,18 @@ QUnit.module("Search", (hooks) => {
 
         // expand the properties field
         await editSearch(target, "a");
+
         await click(target.querySelector(".o_expand"));
 
-        let items = target.querySelectorAll('.o_searchview_input_container li');
+        let items = target.querySelectorAll(".o_searchview_input_container li");
         assert.strictEqual(items.length, 8);
-        assert.strictEqual(items[0].innerText, 'Search Properties');
-        assert.strictEqual(items[1].innerText, 'My Partner (Bar 1)');
-        assert.strictEqual(items[3].innerText, 'My Selection (Bar 1) for: A');
-        assert.strictEqual(items[4].innerText, 'My Selection (Bar 1) for: AA');
-        assert.strictEqual(items[5].innerText, 'My Tags (Bar 1) for: A');
-        assert.strictEqual(items[6].innerText, 'My Tags (Bar 1) for: AA');
-        assert.strictEqual(items[7].innerText, 'My Text (Bar 2) for: a');
+        assert.strictEqual(items[0].innerText, "Search Properties");
+        assert.strictEqual(items[1].innerText, "My Partner (Bar 1)");
+        assert.strictEqual(items[3].innerText, "My Selection (Bar 1) for: A");
+        assert.strictEqual(items[4].innerText, "My Selection (Bar 1) for: AA");
+        assert.strictEqual(items[5].innerText, "My Tags (Bar 1) for: A");
+        assert.strictEqual(items[6].innerText, "My Tags (Bar 1) for: AA");
+        assert.strictEqual(items[7].innerText, "My Text (Bar 2) for: a");
 
         // click again on the expand icon to hide the properties
         await click(target.querySelector(".o_expand"));
@@ -1169,7 +1195,11 @@ QUnit.module("Search", (hooks) => {
         // select Bobby
         await click(target.querySelector("li:nth-child(3) .o_expand"));
         await click(target.querySelector(".o_searchview_input_container li:nth-child(5)"));
-        assert.deepEqual(getDomain(controlPanel), ["&", ["bar", "=", 1], ["properties.my_partners", "in", 6]]);
+        assert.deepEqual(getDomain(controlPanel), [
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_partners", "in", 6],
+        ]);
 
         // expand the selection properties
         await click(target.querySelector(".o_control_panel"));
@@ -1182,7 +1212,15 @@ QUnit.module("Search", (hooks) => {
 
         // select the selection option "AA"
         await click(target.querySelector(".o_searchview_input_container li:nth-child(5)"));
-        let expectedDomain = ["&", "&", ["bar", "=", 1], ["properties.my_partners", "in", 6], "&", ["bar", "=", 1], ["properties.my_selection", "=", "aa"]];
+        let expectedDomain = [
+            "&",
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_partners", "in", 6],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_selection", "=", "aa"],
+        ];
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
 
         // select the selection option "A"
@@ -1192,19 +1230,22 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelector(".o_searchview_input_container li:nth-child(4)"));
         expectedDomain = [
             "&",
-                "&", ["bar", "=", 1],
-                ["properties.my_partners", "in", 6],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_partners", "in", 6],
             "|",
-                "&", ["bar", "=", 1],
-                ["properties.my_selection", "=", "aa"],
-                "&", ["bar", "=", 1],
-                ["properties.my_selection", "=", "a"],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_selection", "=", "aa"],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_selection", "=", "a"],
         ];
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
 
         // reset the search
-        await click(target.querySelector('.o_facet_remove'));
-        await click(target.querySelector('.o_facet_remove'));
+        await click(target.querySelector(".o_facet_remove"));
+        await click(target.querySelector(".o_facet_remove"));
 
         // search a many2one value
         await click(target.querySelector(".o_control_panel"));
@@ -1229,7 +1270,15 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(items[6].innerText, "My Tags (Bar 1) for: AA");
 
         await click(target.querySelector(".o_searchview_input_container li:nth-child(7)"));
-        expectedDomain = ["&", "&", ["bar", "=", 1], ["properties.my_partner", "=", 10], "&", ["bar", "=", 1], ["properties.my_tags", "in", "aa"]];
+        expectedDomain = [
+            "&",
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_partner", "=", 10],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_tags", "in", "aa"],
+        ];
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
         // add the tag "B"
         await click(target.querySelector(".o_control_panel"));
@@ -1241,13 +1290,17 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelector(".o_searchview_input_container li:nth-child(5)"));
         expectedDomain = [
             "&",
-                "&", ["bar", "=", 1],
-                ["properties.my_partner", "=", 10],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_partner", "=", 10],
             "|",
-                "&", ["bar", "=", 1],
-                ["properties.my_tags", "in", "aa"],
-                "&", ["bar", "=", 1],
-                ["properties.my_tags", "in", "b"]];
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_tags", "in", "aa"],
+            "&",
+            ["bar", "=", 1],
+            ["properties.my_tags", "in", "b"],
+        ];
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
 
         // try to click on the many2one properties without unfolding
@@ -1265,20 +1318,28 @@ QUnit.module("Search", (hooks) => {
         assert.expect(3);
 
         async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "web_search_read" && model === "partner"
-                && kwargs.fields[0] === "display_name" && kwargs.fields[1] === "child_properties") {
+            if (
+                method === "web_search_read" &&
+                model === "partner" &&
+                kwargs.fields[0] === "display_name" &&
+                kwargs.fields[1] === "child_properties"
+            ) {
+                assert.deepEqual(
+                    kwargs.domain,
+                    [["id", "=", 2]],
+                    "Should search only the active parent properties"
+                );
 
-                assert.deepEqual(kwargs.domain, [["id", "=", 2]],
-                    "Should search only the active parent properties");
-
-                const definition2 = [{
-                    'type': 'char',
-                    'string': 'My Text',
-                    'name': 'my_text',
-                }];
+                const definition2 = [
+                    {
+                        type: "char",
+                        string: "My Text",
+                        name: "my_text",
+                    },
+                ];
 
                 return {
-                    records: [{'id': 2, 'display_name': 'Bar 2', 'child_properties': definition2}],
+                    records: [{ id: 2, display_name: "Bar 2", child_properties: definition2 }],
                 };
             }
         }
@@ -1295,7 +1356,7 @@ QUnit.module("Search", (hooks) => {
                     </search>
                 `,
             mockRPC,
-            context: {active_id: 2},
+            context: { active_id: 2 },
         });
 
         await click(target.querySelector(".o_control_panel"));
@@ -1306,5 +1367,4 @@ QUnit.module("Search", (hooks) => {
         assert.strictEqual(items.length, 2, "Should show the search result");
         assert.strictEqual(items[1].innerText, "My Text (Bar 2) for: a");
     });
-
 });
