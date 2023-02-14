@@ -4,6 +4,7 @@
 import pytz
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 
 from odoo import api, fields, models, tools, _
 
@@ -117,7 +118,13 @@ class Meeting(models.Model):
                 attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
             else:
                 # Create new attendees
-                partner = self.env.user.partner_id if attendee.get('self') else self.env['res.partner'].find_or_create(attendee.get('email'))
+                try:
+                    # Google may accept some formats for email address which is not supported by Odoo and causes
+                    # the synchronization to fail. e.g. "; test"@odoo.com is acceptable by Google
+                    partner = self.env.user.partner_id if attendee.get('self') else self.env['res.partner'].find_or_create(attendee.get('email'))
+                except ValueError:
+                    raise UserError(_("Email %s in event %s is not a valid address for Odoo. "
+                                      "Please correct it from Google and try to sync again.") % (email, google_event.summary))
                 attendee_commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
                 if attendee.get('displayName') and not partner.name:
