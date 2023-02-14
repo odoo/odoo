@@ -15,7 +15,7 @@
 
     <record id="account_tax_report_line_chtax_200" model="account.tax.report.line">
         <field name="name">200 Total amount of agreed or collected consideration incl. from supplies opted for taxation, transfer of supplies acc. to the notification procedure and supplies provided abroad (worldwide turnover)</field>
-        <field name="formula">tax_ch_302a + tax_ch_312a + tax_ch_342a + tax_ch_289</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a + tax_ch_289</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chiffre_af"/>
@@ -81,7 +81,7 @@
         <field name="name">299 Taxable turnover (Ref. 200 minus Ref. 289)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="formula">tax_ch_302a + tax_ch_312a + tax_ch_342a</field>
+        <field name="formula">tax_ch_302a + tax_ch_303a + tax_ch_312a + tax_ch_313a + tax_ch_342a + tax_ch_343a</field>
     </record>
 
     <record id="account_tax_report_line_calc_impot" model="account.tax.report.line">
@@ -99,7 +99,7 @@
     </record>
 
     <record id="account_tax_report_line_chtax_302a" model="account.tax.report.line">
-        <field name="name">302a Taxable turnover at 7.7% (TS)</field>
+        <field name="name">302a Taxable turnover at 7.7% (TS) until 31.12.2023</field>
         <field name="tag_name">302a</field>
         <field name="code">tax_ch_302a</field>
         <field name="report_id" ref="tax_report"/>
@@ -107,8 +107,17 @@
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_303a" model="account.tax.report.line">
+        <field name="name">303a Taxable turnover at 8.1% (TS) from 01.01.2024</field>
+        <field name="tag_name">303a</field>
+        <field name="code">tax_ch_303a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_312a" model="account.tax.report.line">
-        <field name="name">312a Taxable turnover at 2.5% (TR)</field>
+        <field name="name">312a Taxable turnover at 2.5% (TR) until 31.12.2023</field>
         <field name="tag_name">312a</field>
         <field name="code">tax_ch_312a</field>
         <field name="report_id" ref="tax_report"/>
@@ -116,10 +125,28 @@
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_313a" model="account.tax.report.line">
+        <field name="name">313a Taxable turnover at 2.6% (TR) from 01.01.2024</field>
+        <field name="tag_name">313a</field>
+        <field name="code">tax_ch_313a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_342a" model="account.tax.report.line">
-        <field name="name">342a Taxable turnover at 3.7% (TS)</field>
+        <field name="name">342a Taxable turnover at 3.7% (TS) until 31.12.2023</field>
         <field name="tag_name">342a</field>
         <field name="code">tax_ch_342a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_343a" model="account.tax.report.line">
+        <field name="name">343a Taxable turnover at 3.8% (TS) from 01.01.2024</field>
+        <field name="tag_name">343a</field>
+        <field name="code">tax_ch_343a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot_chiffre"/>
@@ -141,8 +168,16 @@
     </record>
 
     <record id="account_tax_report_line_chtax_382a" model="account.tax.report.line">
-        <field name="name">382a Acquisition tax</field>
+        <field name="name">382a Acquisition tax until 31.12.2023</field>
         <field name="tag_name">382a</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_383a" model="account.tax.report.line">
+        <field name="name">383a Acquisition tax from 01.01.2024</field>
+        <field name="tag_name">383a</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_calc_impot_base"/>
@@ -157,24 +192,48 @@
     </record>
 
     <record id="account_tax_report_line_chtax_302b" model="account.tax.report.line">
-        <field name="name">302b Tax due at 7.7% (TS)</field>
+        <field name="name">302b Tax due at 7.7% (TS) until 31.12.2023</field>
         <field name="tag_name">302b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_303b" model="account.tax.report.line">
+        <field name="name">303b Tax due at 8.1% (TS) from 01.01.2024</field>
+        <field name="tag_name">303b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_312b" model="account.tax.report.line">
-        <field name="name">312b Tax due at 2.5% (TR)</field>
+        <field name="name">312b Tax due at 2.5% (TR) until 31.12.2023</field>
         <field name="tag_name">312b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_313b" model="account.tax.report.line">
+        <field name="name">313b Tax due at 2.6% (TR) from 01.01.2024</field>
+        <field name="tag_name">313b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_342b" model="account.tax.report.line">
-        <field name="name">342b Tax due at 3.7% (TS)</field>
+        <field name="name">342b Tax due at 3.7% (TS) until 31.12.2023</field>
         <field name="tag_name">342b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
+    <record id="account_tax_report_line_chtax_343b" model="account.tax.report.line">
+        <field name="name">343b Tax due at 3.8% (TS) from 01.01.2024</field>
+        <field name="tag_name">343b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
@@ -189,15 +248,23 @@
     </record>
 
     <record id="account_tax_report_line_chtax_382b" model="account.tax.report.line">
-        <field name="name">382b Acquisition tax</field>
+        <field name="name">382b Acquisition tax until 31.12.2023</field>
         <field name="tag_name">382b</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="5"/>
         <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
     </record>
 
+    <record id="account_tax_report_line_chtax_383b" model="account.tax.report.line">
+        <field name="name">383b Acquisition tax from 01.01.2024</field>
+        <field name="tag_name">383b</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+        <field name="parent_id" ref="account_tax_report_line_chtax_399"/>
+    </record>
+
     <record id="account_tax_report_line_chtax_479" model="account.tax.report.line">
-        <field name="name">479 TVA préalable</field>
+        <field name="name">479 Total from 400 to 420</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="4"/>
         <field name="code">tax_ch_479</field>
