@@ -233,7 +233,7 @@ export class Chatter extends Component {
                 }
             }
             if ("suggestedRecipients" in result) {
-                this.chatterService.insertSuggestedRecipients(
+                this.threadService.insertSuggestedRecipients(
                     this.state.thread,
                     result.suggestedRecipients
                 );

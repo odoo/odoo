@@ -20,6 +20,8 @@ export class SuggestedRecipient extends Component {
         this.dialogService = useService("dialog");
         /** @type {import("@mail/new/web/chatter_service").ChatterService)}*/
         this.chatterService = useService("mail.chatter");
+        /** @type {import("@mail/new/core/thread_service").ThreadService)}*/
+        this.threadService = useService("mail.thread");
     }
 
     get titleText() {
@@ -63,6 +65,6 @@ export class SuggestedRecipient extends Component {
             this.props.thread.model,
             ["suggestedRecipients"]
         );
-        this.chatterService.insertSuggestedRecipients(this.props.thread, data.suggestedRecipients);
+        this.threadService.insertSuggestedRecipients(this.props.thread, data.suggestedRecipients);
     }
 }

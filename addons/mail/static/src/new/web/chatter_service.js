@@ -4,9 +4,7 @@ import { Follower } from "@mail/new/core/follower_model";
 import { _t } from "@web/core/l10n/translation";
 import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
-import { parseEmail } from "@mail/js/utils";
 
-let nextId = 1;
 export class ChatterService {
     constructor(env, services) {
         this.env = env;
@@ -21,34 +19,6 @@ export class ChatterService {
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
         this.persona = services["mail.persona"];
     }
-
-    /**
-     * @param {import("@mail/new/core/thread_model").Thread} thread
-     * @param {import("@mail/new/web/suggested_recipient").SuggestedRecipient[]} dataList
-     */
-    async insertSuggestedRecipients(thread, dataList) {
-        const recipients = [];
-        for (const data of dataList) {
-            const [partner_id, emailInfo, lang, reason] = data;
-            const [name, email] = emailInfo && parseEmail(emailInfo);
-            recipients.push({
-                id: nextId++,
-                name,
-                email,
-                lang,
-                reason,
-                persona: partner_id
-                    ? this.persona.insert({
-                          type: "partner",
-                          id: partner_id,
-                      })
-                    : false,
-                checked: partner_id ? true : false,
-            });
-        }
-        thread.suggestedRecipients = recipients;
-    }
-
     /**
      * @param {number} resId
      * @param {string} resModel
