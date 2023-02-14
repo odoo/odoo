@@ -126,3 +126,81 @@ class AccountMove(models.Model):
         if logger_msg:
             _logger.info(logger_msg)
         return res
+
+    def _l10n_in_get_hsn_summary(self):
+        self.ensure_one()
+        igst_tag_id = self.env.ref("l10n_in.tax_tag_igst").id
+        cgst_tag_id = self.env.ref("l10n_in.tax_tag_cgst").id
+        sgst_tag_id = self.env.ref("l10n_in.tax_tag_sgst").id
+        cess_tag_id = self.env.ref("l10n_in.tax_tag_cess").id
+        all_gst_tag = (igst_tag_id, cgst_tag_id, sgst_tag_id)
+        tax_details_query, tax_details_params = self.env['account.move.line']._get_query_tax_details_from_domain(domain=[('move_id', '=', self.id)])
+        self._cr.execute(f'''
+              WITH RECURSIVE tax_child_tree(id, child_ids) AS (
+                 SELECT tax_fil_rel.parent_tax,
+                        ARRAY_AGG(tax_fil_rel.child_tax)
+                   FROM account_tax_filiation_rel tax_fil_rel
+               GROUP BY tax_fil_rel.parent_tax
+              UNION ALL
+                 SELECT tax_fil_rel.parent_tax, ARRAY_APPEND(ct.child_ids, tax_fil_rel.parent_tax)
+                   FROM account_tax_filiation_rel tax_fil_rel
+                   JOIN tax_child_tree ct ON ct.id = tax_fil_rel.child_tax
+             ),
+             base_line_with_gst_rate AS (
+                 SELECT aml.id, sum(CASE WHEN at.amount_type != 'group' THEN at.amount ELSE 0 END) as gst_rate
+                 FROM account_move_line aml
+                 JOIN account_move_line_account_tax_rel aml_taxs ON aml_taxs.account_move_line_id = aml.id
+                 LEFT JOIN tax_child_tree tax_child ON aml_taxs.account_tax_id = tax_child.id
+                 JOIN account_tax at ON at.id = aml_taxs.account_tax_id or at.id = any(tax_child.child_ids)
+                 WHERE EXISTS(SELECT 1
+                     FROM account_tax_repartition_line at_rl
+                     JOIN account_account_tag_account_tax_repartition_line_rel tax_tag ON tax_tag.account_tax_repartition_line_id = at_rl.id
+                    where (at_rl.invoice_tax_id = any(tax_child.child_ids) OR at_rl.invoice_tax_id = aml_taxs.account_tax_id)
+                      and tax_tag.account_account_tag_id in {all_gst_tag}
+                 )
+                 GROUP BY aml.id
+             ),
+             tax_line_with_tags AS (
+                 SELECT aml.id, array_agg(aml_tag.account_account_tag_id) as tag_ids
+                 FROM account_move_line aml
+                 JOIN account_account_tag_account_move_line_rel aml_tag ON aml_tag.account_move_line_id = aml.id
+                 GROUP BY aml.id
+             )
+             SELECT
+                 COALESCE(aml_gst_rate.gst_rate, 0) as gst_tax_rate,
+                 aml_tags.tag_ids,
+                 at.l10n_in_reverse_charge,
+                 CASE
+                     WHEN {igst_tag_id} = any(aml_tags.tag_ids) THEN 'IGST'
+                     WHEN {cgst_tag_id} = any(aml_tags.tag_ids) THEN 'CGST'
+                     WHEN {sgst_tag_id} = any(aml_tags.tag_ids) THEN 'SGST'
+                     WHEN {cess_tag_id} = any(aml_tags.tag_ids) THEN 'CESS'
+                 END as tax_type,
+                 pt.l10n_in_hsn_code,
+                 aml.move_id,
+                 tax_detail.*
+             FROM ({tax_details_query}) AS tax_detail
+        LEFT JOIN account_tax at ON at.id = tax_detail.tax_id
+        LEFT JOIN base_line_with_gst_rate aml_gst_rate ON aml_gst_rate.id = tax_detail.base_line_id
+        LEFT JOIN account_move_line aml ON aml.id = tax_detail.base_line_id
+        LEFT JOIN product_product p ON p.id = aml.product_id
+        LEFT JOIN product_template pt ON pt.id = p.product_tmpl_id
+        LEFT JOIN tax_line_with_tags aml_tags ON aml_tags.id = tax_detail.tax_line_id
+         ''', tax_details_params)
+        hsn_tax_details = {}
+        for tax_details in self._cr.dictfetchall():
+            sign = -1 if self.is_inbound(include_receipts=True) else 1
+            key = "%s-%s" % (tax_details.get('l10n_in_hsn_code'), tax_details.get('gst_tax_rate'))
+            hsn_tax_details.setdefault(key, {
+                'l10n_in_hsn_code': tax_details.get('l10n_in_hsn_code'),
+                'gst_tax_rate': tax_details.get('gst_tax_rate'),
+                'SGST_amount_currency': 0.00,
+                'CGST_amount_currency': 0.00,
+                'IGST_amount_currency': 0.00,
+                'CESS_amount_currency': 0.00,
+                'tax_details': []
+            })
+            hsn_tax_details[key]['tax_details'].append(tax_details)
+            if tax_details['tax_type'] in ['IGST', 'CGST', 'SGST', 'CESS']:
+                hsn_tax_details[key]['%s_amount_currency' % tax_details['tax_type']] += tax_details['tax_amount_currency'] * sign
+        return hsn_tax_details
