@@ -28,6 +28,7 @@ class TestBatchPicking(TransactionCase):
         cls.stock_location = cls.env.ref('stock.stock_location_stock')
         cls.customer_location = cls.env.ref('stock.stock_location_customers')
         cls.picking_type_out = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_out')
+        cls.picking_type_in = cls.env['ir.model.data']._xmlid_to_res_id('stock.picking_type_in')
         cls.user_demo = cls.env['res.users'].search([('login', '=', 'demo')])
 
         cls.productA = cls.env['product.product'].create({
@@ -412,3 +413,55 @@ class TestBatchPicking(TransactionCase):
         new_move._action_confirm()
         self.assertTrue(new_move.picking_id)
         self.assertTrue(new_move.picking_id.id not in [picking_1.id, move_line_to_wave.picking_id.id])
+
+    def test_operation_type_in_wave(self):
+        """
+        Check that the operation type of the picking is set correclty in the wave.
+        """
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        warehouse.reception_steps = 'three_steps'
+        self.productA = self.env['product.product'].create({
+            'name': 'Product Test A',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        self.productB = self.env['product.product'].create({
+            'name': 'Product Test B',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+        })
+        picking = self.env['stock.picking'].create({
+            'location_id': self.customer_location.id,
+            'location_dest_id': self.stock_location.id,
+            'picking_type_id': self.picking_type_in,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        self.env['stock.move'].create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': picking.id,
+            'location_id': self.customer_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        picking.action_confirm()
+        picking.move_lines.move_line_ids.write({'qty_done': 1})
+        res_dict = picking.button_validate()
+        self.env[res_dict['res_model']].with_context(res_dict['context']).process()
+
+        move_line = self.env["stock.move.line"].search([('product_id', '=', self.productA.id), ('location_id', '=', warehouse.wh_input_stock_loc_id.id)])
+        move_line._add_to_wave()
+        wave = self.env['stock.picking.batch'].search([
+            ('is_wave', '=', True)
+        ])
+        self.assertEqual(wave.picking_type_id, move_line.picking_type_id)
