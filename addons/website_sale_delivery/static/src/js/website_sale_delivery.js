@@ -13,6 +13,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
     events: {
         'change select[name="shipping_id"]': '_onSetAddress',
         'click #delivery_carrier .o_delivery_carrier_select': '_onCarrierClick',
+        'click #payment_method .o_payment_option_card': '_onPaymentClick',
     },
 
     /**
@@ -100,6 +101,9 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         if (result.new_amount_total_raw !== undefined) {
             this._updateShippingCost(result.new_amount_total_raw);
         }
+        if (!this._areSelectedPaymentAndCarrierCompatible()) {
+            $payButton.prop('disabled', true);
+        }
     },
     /**
      * @private
@@ -121,7 +125,32 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             $carrierBadge.text(result.error_message);
         }
     },
-
+    /**
+     * Checks if the payment provider is compatible with the carrier
+     * @param payment_provider {jQuery} The payment method
+     * @param delivery_carrier {jQuery} The carrier
+     * @returns {boolean} true if the payment provider is compatible with the carrier, else false,
+     * if there is no explicit mapping between the payment provider and the carrier, we suppose they are compatible.
+     * Overriden in other modules to extend the behaviour.
+     * @private
+     */
+    _isPaymentCompatibleWithCarrier: function(payment_provider, delivery_carrier) {
+        return true;
+    },
+    /**
+     * Checks if the selected payment provider is compatible with the selected carrier
+     * @returns {boolean} true if the payment provider is compatible with the carrier, else false,
+     * if either is unselected, we suppose they are compatible
+     * @private
+     */
+    _areSelectedPaymentAndCarrierCompatible: function() {
+        const $selected_payment = $('#payment_method .o_payment_option_card input[type="radio"]:checked');
+        const $selected_carrier = $('#delivery_carrier .o_delivery_carrier_select input[type="radio"]:checked');
+        if ($selected_payment && $selected_carrier) {
+            return this._isPaymentCompatibleWithCarrier($selected_payment, $selected_carrier);
+        }
+        return true;
+    },
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -162,6 +191,16 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             // Create a new address : show all countries available for billing
             $providerFree.show().attr('disabled', false).change();
             $providerRestricted.hide().attr('disabled', true);
+        }
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onPaymentClick: function (ev) {
+        const $payButton = $('button[name="o_payment_submit_button"]');
+        if (!this._areSelectedPaymentAndCarrierCompatible()) {
+           $payButton.prop('disabled', true);
         }
     },
 });
