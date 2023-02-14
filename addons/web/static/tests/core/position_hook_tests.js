@@ -165,7 +165,7 @@ QUnit.test("is positioned relative to its containing block", async (assert) => {
 
     const popBox1 = document.getElementById("popper").getBoundingClientRect();
     destroy(popper);
-    document.getElementById("reference").remove();
+    document.getElementById("target").remove();
 
     // make container the containing block instead of the viewport
     container.style.contain = "layout";

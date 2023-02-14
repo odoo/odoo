@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useThrottleForAnimation } from "./utils/timing";
-import { useEffect, useExternalListener, useRef } from "@odoo/owl";
+import { useEffect, useRef } from "@odoo/owl";
 import { localization } from "@web/core/l10n/localization";
 
 /**
@@ -73,6 +73,20 @@ const DEFAULTS = {
 };
 
 /**
+ * @param {HTMLElement} el
+ * @returns {HTMLIFrameElement?}
+ */
+function getIFrame(el) {
+    const parentDocument = el.ownerDocument.defaultView.parent?.document;
+    if (!parentDocument || parentDocument === el.ownerDocument) {
+        return;
+    }
+    return [...parentDocument.getElementsByTagName("iframe")].find((iframe) =>
+        iframe.contentDocument.contains(el)
+    );
+}
+
+/**
  * Returns the best positioning solution staying in the container or falls back
  * to the requested position.
  * The positioning data used to determine each possible position is based on
@@ -82,19 +96,23 @@ const DEFAULTS = {
  *
  * @param {HTMLElement} target
  * @param {HTMLElement} popper
+ * @param {HTMLIFrameElement?} [iframe]
  * @param {Options} options
  * @returns {PositioningSolution} the best positioning solution, relative to
  *                                the containing block of the popper.
  *                                => can be applied to popper.style.(top|left)
  */
-function getBestPosition(target, popper, { container, margin, position }) {
+function getBestPosition(target, popper, iframe, { container, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
     const directions =
         variantKey === "fit" ? FIT_FLIP_ORDER[directionKey] : DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
 
-    if (typeof container === "function") {
+    // Retrieve container
+    if (!container) {
+        container = target.ownerDocument.documentElement;
+    } else if (typeof container === "function") {
         container = container();
     }
 
@@ -102,27 +120,28 @@ function getBestPosition(target, popper, { container, margin, position }) {
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
+    const iframeBox = iframe?.getBoundingClientRect() || { top: 0, left: 0 };
 
-    const containerIsHTMLNode = container === document.firstElementChild;
+    const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
 
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: targetBox.top - popBox.height - margin,
-        b: targetBox.bottom + margin,
-        r: targetBox.right + margin,
-        l: targetBox.left - popBox.width - margin,
+        t: iframeBox.top + targetBox.top - popBox.height - margin,
+        b: iframeBox.top + targetBox.bottom + margin,
+        r: iframeBox.left + targetBox.right + margin,
+        l: iframeBox.left + targetBox.left - popBox.width - margin,
     };
     /** @type {VariantsData} */
     const variantsData = {
-        vf: targetBox.left,
-        vs: targetBox.left,
-        vm: targetBox.left + targetBox.width / 2 + -popBox.width / 2,
-        ve: targetBox.right - popBox.width,
-        hf: targetBox.top,
-        hs: targetBox.top,
-        hm: targetBox.top + targetBox.height / 2 + -popBox.height / 2,
-        he: targetBox.bottom - popBox.height,
+        vf: iframeBox.left + targetBox.left,
+        vs: iframeBox.left + targetBox.left,
+        vm: iframeBox.left + targetBox.left + targetBox.width / 2 + -popBox.width / 2,
+        ve: iframeBox.left + targetBox.right - popBox.width,
+        hf: iframeBox.top + targetBox.top,
+        hs: iframeBox.top + targetBox.top,
+        hm: iframeBox.top + targetBox.top + targetBox.height / 2 + -popBox.height / 2,
+        he: iframeBox.top + targetBox.bottom - popBox.height,
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
@@ -211,11 +230,10 @@ function getBestPosition(target, popper, { container, margin, position }) {
  *
  * @param {HTMLElement} target
  * @param {HTMLElement} popper
+ * @param {HTMLIFrameElement} [iframe]
  * @param {Options} options
  */
-export function reposition(target, popper, options) {
-    options = { ...DEFAULTS, container: document.documentElement, ...options };
-
+export function reposition(target, popper, iframe, options) {
     let [directionKey, variantKey = "middle"] = options.position.split("-");
     if (localization.direction === "rtl") {
         if (["bottom", "top"].includes(directionKey)) {
@@ -234,7 +252,7 @@ export function reposition(target, popper, options) {
     popper.style.left = "0px";
 
     // Get best positioning solution and apply it
-    const position = getBestPosition(target, popper, options);
+    const position = getBestPosition(target, popper, iframe, options);
     const { top, left, variant } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
@@ -265,15 +283,31 @@ export function reposition(target, popper, options) {
  */
 export function usePosition(target, options) {
     const popperRef = useRef(options.popper || DEFAULTS.popper);
-    const getTarget = target instanceof HTMLElement ? () => target : target;
-    const update = () => {
-        const targetEl = getTarget();
-        if (popperRef.el && targetEl) {
-            reposition(targetEl, popperRef.el, options);
-        }
-    };
-    useEffect(update);
-    const throttledUpdate = useThrottleForAnimation(update);
-    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
-    useExternalListener(window, "resize", throttledUpdate);
+    const getTarget = typeof target === "function" ? target : () => target;
+    const throttledReposition = useThrottleForAnimation(reposition);
+    useEffect(
+        (targetEl, popperEl) => {
+            if (!targetEl || !popperEl) {
+                return;
+            }
+
+            // Prepare
+            const targetDocument = targetEl.ownerDocument;
+            const iframe = getIFrame(targetEl);
+            const currentOptions = { ...DEFAULTS, ...options };
+
+            // Reposition
+            reposition(targetEl, popperEl, iframe, currentOptions);
+
+            // Attach listeners to keep the positioning up to date
+            const listener = () => throttledReposition(targetEl, popperEl, iframe, currentOptions);
+            targetDocument.addEventListener("scroll", listener, { capture: true });
+            window.addEventListener("resize", listener);
+            return () => {
+                targetDocument.removeEventListener("scroll", listener, { capture: true });
+                window.removeEventListener("resize", listener);
+            };
+        },
+        () => [getTarget(), popperRef.el]
+    );
 }

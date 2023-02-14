@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import { usePosition } from "../position_hook";
-
 import { Component } from "@odoo/owl";
 import { useForwardRefToParent } from "../utils/hooks";
+import { usePosition } from "@web/core/position_hook";
 
 export class Popover extends Component {
     setup() {
@@ -89,7 +88,14 @@ Popover.props = {
         type: Function,
         optional: true,
     },
-    target: HTMLElement,
+    target: {
+        validate: (target) => {
+            // target may be inside an iframe, so get the Element constructor
+            // to test against from its owner document's default view
+            const Element = target?.ownerDocument?.defaultView.Element;
+            return Boolean(Element) && target instanceof Element;
+        },
+    },
     slots: {
         type: Object,
         optional: true,
