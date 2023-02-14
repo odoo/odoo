@@ -73,9 +73,11 @@ export class TextField extends Component {
             let dynamicPlaceholder = "{{object." + chain.join(".");
             dynamicPlaceholder +=
                 defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
-            this.props.update(
-                this.textareaRef.el.value.replace(triggerKeyReplaceRegex, "") + dynamicPlaceholder
-            );
+            this.props.record.update({
+                [this.props.name]:
+                    this.textareaRef.el.value.replace(triggerKeyReplaceRegex, "") +
+                    dynamicPlaceholder,
+            });
         }
     }
     onDynamicPlaceholderClose() {

@@ -277,7 +277,7 @@ QUnit.module("Record Component", (hooks) => {
         Parent.components = { Record, Many2OneField };
         Parent.template = xml`
             <Record resModel="'partner'" fieldNames="['foo']" fields="fields" values="values" t-slot-scope="data" onRecordChanged.bind="onRecordChanged">
-                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo" update="(value) => data.record.update({ foo: value })"/>
+                <Many2OneField name="'foo'" record="data.record" relation="'bar'" value="data.record.data.foo"/>
             </Record>
         `;
 

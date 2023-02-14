@@ -1669,10 +1669,13 @@ class DynamicList extends DataPoint {
                 fieldNodes: this.model.fieldNodes,
             };
             this.model.trigger("list-confirmation-dialog-will-open");
-            await this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
-                onClose: () => {
-                    this.model.trigger("list-confirmation-dialog-closed");
-                },
+            await new Promise((resolve) => {
+                this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
+                    onClose: () => {
+                        this.model.trigger("list-confirmation-dialog-closed");
+                        resolve();
+                    },
+                });
             });
         } else {
             await record._save();

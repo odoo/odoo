@@ -22,7 +22,7 @@ export class BooleanField extends Component {
      * @param {boolean} newValue
      */
     onChange(newValue) {
-        this.props.update(newValue);
+        this.props.record.update({ [this.props.name]: newValue });
     }
 }
 

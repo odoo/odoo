@@ -125,7 +125,7 @@ export class DomainField extends Component {
 
     update(domain, isDebugEdited) {
         this.isDebugEdited = isDebugEdited;
-        return this.props.update(domain);
+        this.props.record.update({ [this.props.name]: domain });
     }
 
     onEditDialogBtnClick() {
@@ -134,7 +134,7 @@ export class DomainField extends Component {
             initialValue: this.props.value || "[]",
             readonly: this.props.readonly,
             isDebugMode: !!this.env.debug,
-            onSelected: this.props.update,
+            onSelected: (value) => this.props.record.update({ [this.props.name]: value }),
         });
     }
 }

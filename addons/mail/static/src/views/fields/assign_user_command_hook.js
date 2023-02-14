@@ -33,22 +33,26 @@ export function useAssignUserCommand() {
 
     const add = async (record) => {
         if (component.props.type === "many2one") {
-            component.props.update(record);
+            component.props.record.update({ [component.props.name]: record });
         } else if (component.props.type === "many2many") {
-            component.props.update({
-                operation: "REPLACE_WITH",
-                resIds: [...getCurrentIds(), record[0]],
+            component.props.record.update({
+                [component.props.name]: {
+                    operation: "REPLACE_WITH",
+                    resIds: [...getCurrentIds(), record[0]],
+                },
             });
         }
     };
 
     const remove = async (record) => {
         if (component.props.type === "many2one") {
-            component.props.update([]);
+            component.props.record.update({ [component.props.name]: [] });
         } else if (component.props.type === "many2many") {
-            component.props.update({
-                operation: "REPLACE_WITH",
-                resIds: getCurrentIds().filter((id) => id !== record[0]),
+            component.props.record.update({
+                [component.props.name]: {
+                    operation: "REPLACE_WITH",
+                    resIds: getCurrentIds().filter((id) => id !== record[0]),
+                },
             });
         }
     };

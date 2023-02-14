@@ -35,7 +35,7 @@ export class FontSelectionField extends Component {
      */
     onChange(ev) {
         const value = JSON.parse(ev.target.value);
-        this.props.update(value);
+        this.props.record.update({ [this.props.name]: value });
     }
 }
 

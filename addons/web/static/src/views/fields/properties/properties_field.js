@@ -193,7 +193,7 @@ export class PropertiesField extends Component {
         propertiesValues[targetIndex] = propertiesValues[propertyIndex];
         propertiesValues[propertyIndex] = prop;
         propertiesValues[propertyIndex].definition_changed = true;
-        this.props.update(propertiesValues).then(() => {
+        this.props.record.update({ [this.props.name]: propertiesValues }).then(() => {
             // move the popover once the DOM is updated
             this.shouldUpdatePopoverPosition = true;
         });
@@ -209,7 +209,7 @@ export class PropertiesField extends Component {
     onPropertyValueChange(propertyName, propertyValue) {
         const propertiesValues = this.propertiesList;
         propertiesValues.find((property) => property.name === propertyName).value = propertyValue;
-        this.props.update(propertiesValues);
+        this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
@@ -247,7 +247,7 @@ export class PropertiesField extends Component {
         this._regeneratePropertyName(propertyDefinition);
 
         propertiesValues[propertyIndex] = propertyDefinition;
-        this.props.update(propertiesValues);
+        this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
@@ -275,7 +275,7 @@ export class PropertiesField extends Component {
                 propertiesDefinitions.find(
                     (property) => property.name === propertyName
                 ).definition_deleted = true;
-                this.props.update(propertiesDefinitions);
+                this.props.record.update({ [this.props.name]: propertiesDefinitions });
             },
             cancel: () => {},
         };
@@ -307,7 +307,7 @@ export class PropertiesField extends Component {
             definition_changed: true,
         });
         this.openLastPropertyDefinition = true;
-        this.props.update(propertiesDefinitions);
+        this.props.record.update({ [this.props.name]: propertiesDefinitions });
     }
 
     /**

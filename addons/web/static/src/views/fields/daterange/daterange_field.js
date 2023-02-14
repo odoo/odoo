@@ -114,7 +114,7 @@ export class DateRangeField extends Component {
             this.props.record.setInvalidField(this.props.name);
             return;
         }
-        this.props.update(value);
+        this.props.record.update({ [this.props.name]: value });
     }
 
     onWindowScroll(ev) {
