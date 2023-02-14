@@ -25,7 +25,7 @@ Here is how it works:
     - Printing the invoice will trigger the download of two files: the invoice, and its ISR
     - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.
     """,
-    'version': '11.0',
+    'version': '11.1',
     'category': 'Accounting/Localizations/Account Charts',
 
     'depends': ['account', 'l10n_multilang', 'base_iban'],
@@ -37,7 +37,9 @@ Here is how it works:
         'data/account_data.xml',
         'data/account_tax_report_data.xml',
         'data/account_vat2011_data.xml',
+        'data/account_tax_template_data_2024.xml',
         'data/account_fiscal_position_data.xml',
+        'data/account_fiscal_position_data_2024.xml',
         'data/account_chart_template_data.xml',
         'report/isr_report.xml',
         'report/swissqr_report.xml',
