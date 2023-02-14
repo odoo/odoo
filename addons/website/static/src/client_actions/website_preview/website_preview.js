@@ -71,7 +71,7 @@ export class WebsitePreview extends Component {
         });
 
         useEffect(() => {
-            this.websiteService.currentWebsiteId = this.websiteId;
+            this.websiteService.setCurrentWebsite(this.websiteId);
             if (this.isRestored) {
                 return;
             }
@@ -119,6 +119,7 @@ export class WebsitePreview extends Component {
          * These changes are reverted when the component is unmounted.
          */
         useEffect(() => {
+            this.websiteContext.displaySystray = true;
             const backendIconEl = document.querySelector("link[rel~='icon']");
             // Save initial backend values.
             const backendIconHref = backendIconEl.href;
@@ -132,6 +133,7 @@ export class WebsitePreview extends Component {
                 }
             }, { once: true });
             return () => {
+                this.websiteContext.displaySystray = false;
                 // Restore backend initial values when leaving.
                 this.title.setParts({ zopenerp, action: null });
                 backendIconEl.href = backendIconHref;

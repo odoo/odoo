@@ -8,8 +8,6 @@ import { WebsiteLoader } from '../components/website_loader/website_loader';
 
 const { reactive, EventBus } = owl;
 
-const websiteSystrayRegistry = registry.category('website_systray');
-
 export const unslugHtmlDataObject = (repr) => {
     const match = repr && repr.match(/(.+)\((\d+),(.*)\)/);
     if (!match) {
@@ -25,7 +23,7 @@ const ANONYMOUS_PROCESS_ID = 'ANONYMOUS_PROCESS_ID';
 
 export const websiteService = {
     dependencies: ['orm', 'action', 'user', 'dialog', 'hotkey'],
-    async start(env, { orm, action, user, dialog, hotkey }) {
+    start(env, { orm, action, user, hotkey }) {
         let websites = [];
         let currentWebsiteId;
         let currentMetadata = {};
@@ -52,7 +50,15 @@ export const websiteService = {
             isPublicRootReady: false,
             snippetsLoaded: false,
             isMobile: false,
+            displaySystray: false,
         });
+        const websiteDef = {
+            id: null,
+            domain: null,
+            metadata: {},
+            name: null,
+        };
+        const currentWebsite = reactive({ ...websiteDef });
         const bus = new EventBus();
 
         hotkey.add("escape", () => {
@@ -76,14 +82,6 @@ export const websiteService = {
             props: { bus },
         });
         return {
-            set currentWebsiteId(id) {
-                if (id && id !== lastWebsiteId) {
-                    invalidateSnippetCache = true;
-                    lastWebsiteId = id;
-                }
-                currentWebsiteId = id;
-                websiteSystrayRegistry.trigger('EDIT-WEBSITE');
-            },
             /**
              * This represents the current website being edited in the
              * WebsitePreview client action. Multiple components based their
@@ -91,10 +89,6 @@ export const websiteService = {
              * not displayed.
              */
             get currentWebsite() {
-                const currentWebsite = websites.find(w => w.id === currentWebsiteId);
-                if (currentWebsite) {
-                    currentWebsite.metadata = currentMetadata;
-                }
                 return currentWebsite;
             },
             get websites() {
@@ -109,7 +103,7 @@ export const websiteService = {
             set pageDocument(document) {
                 pageDocument = document;
                 if (!document) {
-                    currentMetadata = {};
+                    Object.assign(currentWebsite, websiteDef);
                     contentWindow = null;
                     return;
                 }
@@ -118,14 +112,14 @@ export const websiteService = {
                 // Chrome.
                 const isWebsitePage = dataset && dataset.websiteId;
                 if (!isWebsitePage) {
-                    currentMetadata = {};
+                    currentWebsite.metadata = {};
                 } else {
                     const { mainObject, seoObject, isPublished, canPublish, editableInBackend, translatable, viewXmlid } = dataset;
                     const contentMenus = [...document.querySelectorAll('[data-content_menu_id]')].map(menu => [
                         menu.dataset.menu_name,
                         menu.dataset.content_menu_id,
                     ]);
-                    currentMetadata = {
+                    currentWebsite.metadata = {
                         path: document.location.href,
                         mainObject: unslugHtmlDataObject(mainObject),
                         seoObject: unslugHtmlDataObject(seoObject),
@@ -146,7 +140,6 @@ export const websiteService = {
                     };
                 }
                 contentWindow = document.defaultView;
-                websiteSystrayRegistry.trigger('CONTENT-UPDATED');
             },
             get pageDocument() {
                 return pageDocument;
@@ -187,6 +180,13 @@ export const websiteService = {
             },
             set invalidateSnippetCache(value) {
                 invalidateSnippetCache = value;
+            },
+
+            setCurrentWebsite(id) {
+                currentWebsite.id = id;
+                const { domain, name } = websites.find(w => w.id === id) || {};
+                currentWebsite.domain = domain;
+                currentWebsite.name = name;
             },
 
             goToWebsite({ websiteId, path, edition, translation, lang } = {}) {

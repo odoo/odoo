@@ -12,9 +12,9 @@ class PublishSystray extends Component {
     setup() {
         this.website = useService('website');
         this.rpc = useService('rpc');
+        this.currentWebsite = useState(this.website.currentWebsite);
 
         this.state = useState({
-            published: this.website.currentWebsite.metadata.isPublished,
             processing: false,
         });
 
@@ -34,8 +34,8 @@ class PublishSystray extends Component {
             return;
         }
         this.state.processing = true;
-        this.state.published = !this.state.published;
-        const { metadata: { mainObject } } = this.website.currentWebsite;
+        this.currentWebsite.published = !this.state.published;
+        const { metadata: { mainObject } } = this.currentWebsite;
         return this.rpc('/website/publish', {
             id: mainObject.id,
             object: mainObject.model,
@@ -56,7 +56,7 @@ class PublishSystray extends Component {
 PublishSystray.template = xml`
 <div t-on-click="publishContent" class="o_menu_systray_item d-md-flex ms-auto" data-hotkey="p" t-att-data-processing="state.processing and 1">
     <a href="#">
-        <Switch value="state.published" disabled="true" extraClasses="'mb-0 o_switch_danger_success'"/>
+        <Switch value="currentWebsite.published" disabled="true" extraClasses="'mb-0 o_switch_danger_success'"/>
         <span class="d-none d-md-block ms-2" t-esc="this.label"/>
     </a>
 </div>`;
@@ -66,7 +66,7 @@ PublishSystray.components = {
 
 export const systrayItem = {
     Component: PublishSystray,
-    isDisplayed: env => env.services.website.currentWebsite && env.services.website.currentWebsite.metadata.canPublish,
+    isDisplayed: env => env.services.website.currentWebsite.metadata.canPublish,
 };
 
 websiteSystrayRegistry.add("Publish", systrayItem, { sequence: 12 });

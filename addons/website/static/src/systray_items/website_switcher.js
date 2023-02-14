@@ -4,13 +4,14 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Component, useState } from "@odoo/owl";
 import wUtils from 'website.utils';
 
-const { Component } = owl;
 
 export class WebsiteSwitcherSystray extends Component {
     setup() {
         this.websiteService = useService('website');
+        this.currentWebsite = useState(this.websiteService.currentWebsite);
     }
 
     getElements() {
@@ -26,7 +27,7 @@ export class WebsiteSwitcherSystray extends Component {
                     this.websiteService.goToWebsite({ websiteId: website.id });
                 }
             },
-            class: website.id === this.websiteService.currentWebsite.id ? 'active' : '',
+            class: website.id === this.currentWebsite.id ? 'active' : '',
         }));
     }
 }

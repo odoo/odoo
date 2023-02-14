@@ -9,6 +9,7 @@ class EditWebsiteSystray extends Component {
     setup() {
         this.websiteService = useService('website');
         this.websiteContext = useState(this.websiteService.context);
+        this.currentWebsite = useState(this.websiteService.currentWebsite);
 
         this.state = useState({
             isLoading: false,
@@ -28,7 +29,7 @@ class EditWebsiteSystray extends Component {
     }
 
     get translatable() {
-        return this.websiteService.currentWebsite && this.websiteService.currentWebsite.metadata.translatable;
+        return this.currentWebsite.metadata.translatable;
     }
 
     get label() {
