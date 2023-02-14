@@ -337,13 +337,15 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'partner_id': self.partner_a.id,
             'invoice_date': fields.Date.from_string('2019-01-01'),
+            'invoice_line_ids': [Command.create({'name': 'Nope', 'price_unit': 0})],
         })
+        payment_term_line = zero_invoice.line_ids.filtered(lambda l: l.display_type == 'payment_term')
         self.assertRecordValues(zero_invoice, [{
             'state': 'draft',
             'payment_state': 'not_paid',
             'amount_total': 0.0,
         }])
-        self.assertTrue(zero_invoice.line_ids.reconciled)
+        self.assertTrue(payment_term_line.reconciled)
 
         zero_invoice.action_post()
         self.assertRecordValues(zero_invoice, [{
@@ -351,7 +353,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'payment_state': 'paid',
             'amount_total': 0.0,
         }])
-        self.assertTrue(zero_invoice.line_ids.reconciled)
+        self.assertTrue(payment_term_line.reconciled)
 
     def test_reconcile_lines_corner_case_1_zero_balance_same_foreign_currency(self):
         """ Test the reconciliation of lines having a zero balance in different currencies. In that case, the reconciliation should not be full until
