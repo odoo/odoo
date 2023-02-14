@@ -14,7 +14,7 @@
                 <thead>
                     <tr>
                         <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
-                            <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" className="'d-flex'" onChange.bind="toggleSelection"/>
+                            <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="selectAll" className="'d-flex m-0'" onChange.bind="toggleSelection"/>
                         </th>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <th t-if="column.type === 'field'"
