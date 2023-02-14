@@ -81,50 +81,60 @@ export class MassMailingHtmlField extends HtmlField {
         if (this.props.readonly || !this.isRendered) {
             return super.commitChanges();
         }
-
-        if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
-            this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+        if (!this._isDirty()) {
+            // In case there is still a pending change while committing the
+            // changes from the save button, we need to wait for the previous
+            // operation to finish, otherwise the "inline field" of the mass
+            // mailing might not be saved.
+            return this._pendingCommitChanges;
         }
 
-        const $editable = this.wysiwyg.getEditable();
-        this.wysiwyg.odooEditor.historyPauseSteps();
-        await this.wysiwyg.cleanForSave();
-        await this.wysiwyg.saveModifiedImages(this.$content);
+        this._pendingCommitChanges = (async () => {
+            if (this.wysiwyg.$iframeBody.find('.o_basic_theme').length) {
+                this.wysiwyg.$iframeBody.find('*').css('font-family', '');
+            }
 
-        await super.commitChanges();
+            const $editable = this.wysiwyg.getEditable();
+            this.wysiwyg.odooEditor.historyPauseSteps();
+            await this.wysiwyg.cleanForSave();
+            await this.wysiwyg.saveModifiedImages(this.$content);
 
-        const $editorEnable = $editable.closest('.editor_enable');
-        $editorEnable.removeClass('editor_enable');
-        // Prevent history reverts.
-        this.wysiwyg.odooEditor.observerUnactive('toInline');
-        const iframe = document.createElement('iframe');
-        iframe.style.height = '0px';
-        iframe.style.visibility = 'hidden';
-        const clonedHtmlNode = $editable[0].closest('html').cloneNode(true);
-        // Replace the body to only contain the target as we do not care for
-        // other elements (e.g. sidebar, toolbar, ...)
-        const clonedBody = clonedHtmlNode.querySelector('body');
-        const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
-        clonedBody.replaceChildren(clonedIframeTarget);
-        const editableClone = clonedHtmlNode.querySelector('.note-editable');
-        const iframePromise = new Promise((resolve) => {
-            iframe.addEventListener("load", resolve);
-        });
-        document.body.append(iframe);
-        iframe.contentDocument.firstChild.replaceWith(clonedHtmlNode);
-        // Wait for the css and images to be loaded.
-        await iframePromise;
-        this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
-        await toInline($(editableClone), this.cssRules, $(iframe));
-        iframe.remove();
-        this.wysiwyg.odooEditor.observerActive('toInline');
-        const inlineHtml = editableClone.innerHTML;
-        $editorEnable.addClass('editor_enable');
-        this.wysiwyg.odooEditor.historyUnpauseSteps();
-        this.wysiwyg.odooEditor.historyRevertCurrentStep();
+            await super.commitChanges();
 
-        const fieldName = this.props.inlineField;
-        return this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+            const $editorEnable = $editable.closest('.editor_enable');
+            $editorEnable.removeClass('editor_enable');
+            // Prevent history reverts.
+            this.wysiwyg.odooEditor.observerUnactive('toInline');
+            const iframe = document.createElement('iframe');
+            iframe.style.height = '0px';
+            iframe.style.visibility = 'hidden';
+            const clonedHtmlNode = $editable[0].closest('html').cloneNode(true);
+            // Replace the body to only contain the target as we do not care for
+            // other elements (e.g. sidebar, toolbar, ...)
+            const clonedBody = clonedHtmlNode.querySelector('body');
+            const clonedIframeTarget = clonedHtmlNode.querySelector('#iframe_target');
+            clonedBody.replaceChildren(clonedIframeTarget);
+            const editableClone = clonedHtmlNode.querySelector('.note-editable');
+            const iframePromise = new Promise((resolve) => {
+                iframe.addEventListener("load", resolve);
+            });
+            document.body.append(iframe);
+            iframe.contentDocument.firstChild.replaceWith(clonedHtmlNode);
+            // Wait for the css and images to be loaded.
+            await iframePromise;
+            this.cssRules = this.cssRules || getCSSRules($editable[0].ownerDocument);
+            await toInline($(editableClone), this.cssRules, $(iframe));
+            iframe.remove();
+            this.wysiwyg.odooEditor.observerActive('toInline');
+            const inlineHtml = editableClone.innerHTML;
+            $editorEnable.addClass('editor_enable');
+            this.wysiwyg.odooEditor.historyUnpauseSteps();
+            this.wysiwyg.odooEditor.historyRevertCurrentStep();
+
+            const fieldName = this.props.inlineField;
+            await this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+        })();
+        return this._pendingCommitChanges;
     }
     async startWysiwyg(...args) {
         await super.startWysiwyg(...args);
