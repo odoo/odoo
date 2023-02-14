@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
 import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
+import { pick } from "@web/core/utils/objects";
+
+/** @typedef {import("@web/core/utils/draggable_hook_builder").DraggableHandlerParams} DraggableHandlerParams */
 
 /**
  * @typedef DraggableParams
@@ -22,21 +25,14 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
  *
  * HANDLERS (also optional)
  *
- * @property {(DraggableHandlerParams) => any} [onDragStart]
+ * @property {(params: DraggableHandlerParams) => any} [onDragStart]
  *  called when a dragging sequence is initiated.
- * @property {(DraggableHandlerParams) => any} [onDrag]
+ * @property {(params: DraggableHandlerParams) => any} [onDrag]
  *  called on each "mousemove" during the drag sequence.
- * @property {(DraggableHandlerParams) => any} [onDragEnd]
+ * @property {(params: DraggableHandlerParams) => any} [onDragEnd]
  *  called when the dragging sequence ends, regardless of the reason.
- * @property {(DraggableHandlerParams) => any} [onDrop] called when the dragging sequence
+ * @property {(params: DraggableHandlerParams) => any} [onDrop] called when the dragging sequence
  *  ends on a mouseup action.
- */
-
-/**
- * @typedef DraggableHandlerParams
- * @property {number} x current mouse position on the X axis
- * @property {number} y current mouse position on the Y axis
- * @property {HTMLElement} element
  */
 
 /**
@@ -47,16 +43,8 @@ import { makeDraggableHook } from "@web/core/utils/draggable_hook_builder";
 /** @type {(params: DraggableParams) => DraggableState} */
 export const useDraggable = makeDraggableHook({
     name: "useDraggable",
-    onDragStart({ ctx, helpers }) {
-        helpers.execHandler("onDragStart", { element: ctx.currentElement });
-    },
-    onDrag({ ctx, helpers }) {
-        helpers.execHandler("onDrag", { element: ctx.currentElement });
-    },
-    onDragEnd({ ctx, helpers }) {
-        helpers.execHandler("onDragEnd", { element: ctx.currentElement });
-    },
-    onDrop({ ctx, helpers }) {
-        helpers.execHandler("onDrop", { element: ctx.currentElement });
-    },
+    onDragStart: ({ ctx }) => pick(ctx.current, "element"),
+    onDrag: ({ ctx }) => pick(ctx.current, "element"),
+    onDragEnd: ({ ctx }) => pick(ctx.current, "element"),
+    onDrop: ({ ctx }) => pick(ctx.current, "element"),
 });
