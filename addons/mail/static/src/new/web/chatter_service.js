@@ -1,7 +1,5 @@
 /** @odoo-module */
 
-import { _t } from "@web/core/l10n/translation";
-import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
 
 export class ChatterService {
@@ -17,36 +15,6 @@ export class ChatterService {
         this.orm = services.orm;
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
         this.persona = services["mail.persona"];
-    }
-
-    getThread(resModel, resId) {
-        const localId = createLocalId(resModel, resId);
-        if (localId in this.store.threads) {
-            if (resId === false) {
-                return this.store.threads[localId];
-            }
-            // to force a reload
-            this.store.threads[localId].status = "new";
-        }
-        const thread = this.thread.insert({
-            id: resId,
-            model: resModel,
-            type: "chatter",
-        });
-        if (resId === false) {
-            const tmpId = `virtual${this.nextId++}`;
-            const tmpData = {
-                id: tmpId,
-                author: { id: this.store.self.id },
-                body: _t("Creating a new record..."),
-                message_type: "notification",
-                trackingValues: [],
-                res_id: thread.id,
-                model: thread.model,
-            };
-            this.message.insert(tmpData);
-        }
-        return thread;
     }
 }
 

@@ -2,8 +2,10 @@
 
 import { Follower } from "@mail/new/core/follower_model";
 import { ThreadService, threadService } from "@mail/new/core/thread_service";
+import { createLocalId } from "@mail/new/utils/misc";
 import { parseEmail } from "@mail/js/utils";
 
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 
 let nextId = 1;
@@ -39,6 +41,35 @@ patch(ThreadService.prototype, "mail/web", {
             }));
         }
         return result;
+    },
+    getThread(resModel, resId) {
+        const localId = createLocalId(resModel, resId);
+        if (localId in this.store.threads) {
+            if (resId === false) {
+                return this.store.threads[localId];
+            }
+            // to force a reload
+            this.store.threads[localId].status = "new";
+        }
+        const thread = this.insert({
+            id: resId,
+            model: resModel,
+            type: "chatter",
+        });
+        if (resId === false) {
+            const tmpId = `virtual${this.nextId++}`;
+            const tmpData = {
+                id: tmpId,
+                author: { id: this.store.self.id },
+                body: _t("Creating a new record..."),
+                message_type: "notification",
+                trackingValues: [],
+                res_id: thread.id,
+                model: thread.model,
+            };
+            this.messageService.insert(tmpData);
+        }
+        return thread;
     },
     /**
      * @param {import("@mail/new/core/follower_model").Data} data

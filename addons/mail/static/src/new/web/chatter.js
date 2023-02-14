@@ -102,7 +102,7 @@ export class Chatter extends Component {
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
-            this.chatterService.getThread(this.props.threadModel, this.props.threadId)
+            this.threadService.getThread(this.props.threadModel, this.props.threadId)
         );
         this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
         this.rootRef = useRef("root");
@@ -179,7 +179,7 @@ export class Chatter extends Component {
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
         const { threadModel } = this.props;
-        this.state.thread = this.chatterService.getThread(threadModel, threadId);
+        this.state.thread = this.threadService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
             // todo: reset activities/attachments/followers

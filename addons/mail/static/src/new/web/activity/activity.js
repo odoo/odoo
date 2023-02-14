@@ -33,7 +33,7 @@ export class Activity extends Component {
         /** @type {import("@mail/new/web/activity/activity_service").ActivityService} */
         this.activityService = useService("mail.activity");
         this.messaging = useService("mail.messaging");
-        this.chatter = useState(useService("mail.chatter"));
+        this.threadService = useService("mail.thread");
         this.state = useState({
             showDetails: false,
         });
@@ -96,6 +96,6 @@ export class Activity extends Component {
     }
 
     get thread() {
-        return this.chatter.getThread(this.props.data.res_model, this.props.data.res_id);
+        return this.threadService.getThread(this.props.data.res_model, this.props.data.res_id);
     }
 }
