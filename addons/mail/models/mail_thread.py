@@ -3071,7 +3071,10 @@ class MailThread(models.AbstractModel):
             lang = force_email_lang
         elif {'default_template_id', 'default_model', 'default_res_ids'} <= self.env.context.keys():
             # TDE FIXME: this whole brol should be cleaned !
-            res_ids = self.env['mail.compose.message']._parse_res_ids(self.env.context['default_res_ids'])
+            if msg_vals.get('res_id'):
+                res_ids = [msg_vals['res_id']]
+            else:
+                res_ids = self.env['mail.compose.message']._parse_res_ids(self.env.context['default_res_ids'])
             template = self.env['mail.template'].browse(self.env.context['default_template_id'])
             if res_ids and template and template.lang:
                 lang = template._render_lang(res_ids)[res_ids[0]]
