@@ -39,6 +39,11 @@
                 <field name="company_id" invisible="1"/>
                 <setting help="Invoice your time and material to customers">
                     <field name="allow_billable"/>
+                    <div attrs="{'invisible': [('allow_billable', '=', False)]}">
+                        <label for="partner_id"/>
+                        <field name="partner_id" class="ms-1" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer'}"
+                            options="{'no_create_edit': True, 'no_open': True}"/>
+                    </div>
                 </setting>
             </xpath>
         </field>
