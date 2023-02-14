@@ -461,7 +461,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(
             target.querySelector(".o_kanban_group"),
-            "bg-100",
+            "bg-200",
             "o_kanban_group should have a background"
         );
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
@@ -12718,8 +12718,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(content.scrollLeft, 20);
         assert.containsOnce(target, ".o_kanban_record.o_dragged");
 
-        // next 20 frames
-        await advanceFrame(20);
+        // next 40 frames
+        await advanceFrame(40);
 
         // Should be at the end of the content
         assert.strictEqual(content.clientWidth + content.scrollLeft, content.scrollWidth);
@@ -12739,8 +12739,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_kanban_record.o_dragged");
 
-        // next 20 frames
-        await advanceFrame(20);
+        // next 40 frames
+        await advanceFrame(40);
 
         assert.strictEqual(content.scrollLeft, 0);
 
