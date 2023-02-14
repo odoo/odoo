@@ -28,16 +28,15 @@ class AccountBankStatementLine(models.Model):
         # to enter the next transaction, they do not have to enter the date and the statement every time until the
         # statement is completed. It is only possible if we know the journal that is used, so it can only be done
         # in a view in which the journal is already set and so is single journal view.
-        if'journal_id' in defaults:
+        if 'journal_id' in defaults and 'date' in fields_list:
             last_line = self.search([
                 ('journal_id', '=', defaults.get('journal_id')),
                 ('state', '=', 'posted'),
             ], limit=1)
             statement = last_line.statement_id
-            if statement and not statement.is_complete:
-                defaults.setdefault('statement_id', statement.id)
+            if statement:
                 defaults.setdefault('date', statement.date)
-            elif last_line and not statement:
+            elif last_line:
                 defaults.setdefault('date', last_line.date)
 
         return defaults
@@ -277,15 +276,6 @@ class AccountBankStatementLine(models.Model):
                 # The journal entry seems reconciled.
                 st_line.is_reconciled = True
 
-    @api.onchange('journal_id')
-    def _onchange_journal_id(self):
-        """
-        Reset the statement line when the journal is changed. In some rare cases that journal is not in the context
-        the journal_id field might be accessible to the user. In this cse we need to reset the statement_id field when
-        the journal_id is changed.
-        :return:
-        """
-        self.statement_id = self._get_default_statement(self.journal_id.id, self.date)
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -481,18 +471,6 @@ class AccountBankStatementLine(models.Model):
                 ('type', '=', journal_type),
                 ('company_id', '=', self.env.company.id)
             ], limit=1)
-
-    @api.model
-    def _get_default_statement(self, journal_id=None, date=None):
-        statement = self.search(
-            domain=[
-                ('journal_id', '=', journal_id or self._get_default_journal().id),
-                ('date', '<=', date or fields.Date.today()),
-            ],
-            limit=1
-        ).statement_id
-        if not statement.is_complete:
-            return statement
 
     def _get_st_line_strings_for_matching(self, allowed_fields=None):
         """ Collect the strings that could be used on the statement line to perform some matching.
