@@ -8,7 +8,7 @@ import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const { Component, useState, onWillUpdateProps, onWillStart, onWillDestroy } = owl;
 
-function formatMinutes(value) {
+export function formatMinutes(value) {
     if (value === false) {
         return "";
     }

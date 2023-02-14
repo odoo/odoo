@@ -112,13 +112,13 @@ export class ImageField extends Component {
     }
     onFileRemove() {
         this.state.isValid = true;
-        this.props.update(false);
+        this.props.record.update({ [this.props.name]: false });
     }
     onFileUploaded(info) {
         this.state.isValid = true;
         // Invalidate the `rawCacheKey`.
         this.rawCacheKey = null;
-        this.props.update(info.data);
+        this.props.record.update({ [this.props.name]: info.data });
     }
     onLoadFailed() {
         this.state.isValid = false;

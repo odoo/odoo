@@ -29,7 +29,9 @@ export class FloatToggleField extends Component {
         if (currentIndex > this.props.range.length - 1) {
             currentIndex = 0;
         }
-        this.props.update(this.props.range[currentIndex] / this.factor);
+        this.props.record.update({
+            [this.props.name]: this.props.range[currentIndex] / this.factor,
+        });
     }
 
     // This property has been created in order to allow overrides in other modules.

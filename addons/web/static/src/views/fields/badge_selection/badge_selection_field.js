@@ -54,13 +54,15 @@ export class BadgeSelectionField extends Component {
         switch (this.props.type) {
             case "many2one":
                 if (value === false) {
-                    this.props.update(false);
+                    this.props.record.update({ [this.props.name]: false });
                 } else {
-                    this.props.update(this.options.find((option) => option[0] === value));
+                    this.props.record.update({
+                        [this.props.name]: this.options.find((option) => option[0] === value),
+                    });
                 }
                 break;
             case "selection":
-                this.props.update(value);
+                this.props.record.update({ [this.props.name]: value });
                 break;
         }
     }

@@ -26,7 +26,7 @@ export class ColorPickerField extends Component {
     }
 
     switchColor(colorIndex) {
-        this.props.update(colorIndex);
+        this.props.record.update({ [this.props.name]: colorIndex });
     }
 }
 

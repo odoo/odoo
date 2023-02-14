@@ -18,6 +18,10 @@ export class BooleanIconField extends Component {
     get label() {
         return this.props.record.activeFields[this.props.name].string;
     }
+
+    update() {
+        this.props.record.update({ [this.props.name]: !this.props.value });
+    }
 }
 
 export const booleanIconField = {

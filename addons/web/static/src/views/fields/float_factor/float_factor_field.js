@@ -2,11 +2,8 @@
 
 import { registry } from "@web/core/registry";
 import { floatField, FloatField } from "../float/float_field";
-import { Component } from "@odoo/owl";
 
-export class FloatFactorField extends Component {
-    static template = "web.FloatFactorField";
-    static components = { FloatField };
+export class FloatFactorField extends FloatField {
     static props = {
         ...FloatField.props,
         factor: { type: Number, optional: true },
@@ -16,18 +13,16 @@ export class FloatFactorField extends Component {
         factor: 1,
     };
 
-    get factor() {
-        return this.props.factor;
+    parse(value) {
+        let factorValue = value / this.props.factor;
+        if (this.props.inputType !== "number") {
+            factorValue = factorValue.toString();
+        }
+        return super.parse(factorValue);
     }
 
-    get floatFieldProps() {
-        const result = {
-            ...this.props,
-            value: this.props.value * this.factor,
-            update: (value) => this.props.update(value / this.factor),
-        };
-        delete result.factor;
-        return result;
+    get value() {
+        return this.props.value * this.props.factor;
     }
 }
 
