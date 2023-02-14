@@ -4,6 +4,7 @@ import { ColorList } from "@web/core/colorlist/colorlist";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { registry } from "@web/core/registry";
 import { useTooltip } from "@web/core/tooltip/tooltip_hook";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
@@ -25,6 +26,8 @@ import { KanbanDropdownMenuWrapper } from "./kanban_dropdown_menu_wrapper";
 
 import { Component, onMounted, onWillUpdateProps, useRef } from "@odoo/owl";
 const { COLORS } = ColorList;
+
+const formatters = registry.category("formatters");
 
 // These classes determine whether a click on a record should open it.
 export const CANCEL_GLOBAL_CLICK = ["a", ".dropdown", ".oe_kanban_action"].join(",");
@@ -56,6 +59,59 @@ function getColorIndex(value) {
  */
 function getColorName(value) {
     return COLORS[getColorIndex(value)];
+}
+
+/**
+ * Returns a "raw" version of the field value on a given record.
+ *
+ * @param {Record} record
+ * @param {string} fieldName
+ * @returns {any}
+ */
+function getRawValue(record, fieldName) {
+    const field = record.fields[fieldName];
+    const value = record.data[fieldName];
+    switch (field.type) {
+        case "one2many":
+        case "many2many": {
+            return value.count ? value.currentIds : [];
+        }
+        case "many2one": {
+            return (value && value[0]) || false;
+        }
+        case "date":
+        case "datetime": {
+            return value && value.toISO();
+        }
+        default: {
+            return value;
+        }
+    }
+}
+
+/**
+ * Returns a formatted version of the field value on a given record.
+ *
+ * @param {Record} record
+ * @param {string} fieldName
+ * @returns {string}
+ */
+function getValue(record, fieldName) {
+    const field = record.fields[fieldName];
+    const value = record.data[fieldName];
+    const formatter = formatters.get(field.type, String);
+    return formatter(value, { field, data: record.data });
+}
+
+export function getFormattedRecord(record) {
+    const formattedRecord = {};
+    for (const fieldName in record.activeFields) {
+        formattedRecord[fieldName] = {
+            value: getValue(record, fieldName),
+            raw_value: getRawValue(record, fieldName),
+        };
+    }
+    return formattedRecord;
 }
 
 /**
@@ -132,7 +188,7 @@ export class KanbanRecord extends Component {
 
         if (KANBAN_TOOLTIP_ATTRIBUTE in templates) {
             useTooltip("root", {
-                info: { ...this, record: this.props.record.formattedRecord },
+                info: { ...this, record: getFormattedRecord(this.props.record) },
                 template: this.templates[KANBAN_TOOLTIP_ATTRIBUTE],
             });
         }
@@ -155,7 +211,7 @@ export class KanbanRecord extends Component {
         const { archInfo, list } = props;
         const { activeActions } = archInfo;
 
-        this.record = this.props.record.formattedRecord;
+        this.record = getFormattedRecord(this.props.record);
         // Widget
         const deletable = activeActions.delete && (!list.groupedBy || !list.groupedBy("m2m"));
         const editable = activeActions.edit;
