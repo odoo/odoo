@@ -26,12 +26,6 @@ class AssetsBundleMultiWebsite(AssetsBundle):
         res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, extension)
         return res
 
-    def _get_assets_domain_for_already_processed_css(self, assets):
-        res = super(AssetsBundleMultiWebsite, self)._get_assets_domain_for_already_processed_css(assets)
-        current_website = self.env['website'].get_current_website(fallback=False)
-        res = expression.AND([res, current_website.website_domain()])
-        return res
-
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
         website_id = self.env.context.get('website_id')
         website_id_path = website_id and ('%s/' % website_id) or ''

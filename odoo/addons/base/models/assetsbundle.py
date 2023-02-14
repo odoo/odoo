@@ -662,44 +662,6 @@ class AssetsBundle(object):
 
         return css_attachment
 
-    def _get_assets_domain_for_already_processed_css(self, assets):
-        """ Method to compute the attachments' domain to search the already process assets (css).
-        This method was created to be overridden.
-        """
-        return [('url', 'in', list(assets.keys()))]
-
-    def is_css_preprocessed(self):
-        preprocessed = True
-        old_attachments = self.env['ir.attachment'].sudo()
-        asset_types = [SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset]
-        if self.user_direction == 'rtl':
-            asset_types.append(StylesheetAsset)
-
-        for atype in asset_types:
-            outdated = False
-            assets = dict((asset.html_url, asset) for asset in self.stylesheets if isinstance(asset, atype))
-            if assets:
-                assets_domain = self._get_assets_domain_for_already_processed_css(assets)
-                attachments = self.env['ir.attachment'].sudo().search(assets_domain)
-                old_attachments += attachments
-                for attachment in attachments:
-                    asset = assets[attachment.url]
-                    if asset.last_modified > attachment.write_date:
-                        outdated = True
-                        break
-                    if asset._content is None:
-                        asset._content = (attachment.raw or b'').decode('utf8')
-                        if not asset._content and attachment.file_size > 0:
-                            asset._content = None # file missing, force recompile
-
-                if any(asset._content is None for asset in assets.values()):
-                    outdated = True
-
-                if outdated:
-                    preprocessed = False
-
-        return preprocessed, old_attachments
-
     def preprocess_css(self, debug=False, old_attachments=None):
         """
             Checks if the bundle contains any sass/less content, then compiles it to css.
