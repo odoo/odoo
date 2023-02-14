@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
         <!--
-        #  TVA - Taxe sur la Valeur Ajoutée
+        #  TVA - Taxe sur la Valeur Ajoutée (pre-2024 rates change)
         -->
         <record model="account.tax.template" id="vat_25">
             <field name="name">2.5% Sales</field>
@@ -750,8 +750,8 @@
         </record>
 
         <record model="account.tax.template" id="vat_77_purchase_return">
-            <field name="name">7.7% Sales (reverse)</field>
-            <field name="description">7.7% purch. (return)</field>
+            <field name="name">7.7% Purchase (reverse)</field>
+            <field name="description">7.7% purch. (reverse)</field>
             <field name="amount" eval="-7.7"/>
             <field name="amount_type">percent</field>
             <field name="sequence" eval="0"/>
