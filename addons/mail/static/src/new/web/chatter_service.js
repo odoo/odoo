@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Follower } from "@mail/new/core/follower_model";
 import { _t } from "@web/core/l10n/translation";
 import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
@@ -89,29 +88,6 @@ export class ChatterService {
             follower.followedThread.followers.splice(index, 1);
         }
         delete this.store.followers[follower.id];
-    }
-
-    /**
-     * @param {import("@mail/new/core/follower_model").Data} data
-     * @returns {import("@mail/new/core/follower_model").Follower}
-     */
-    insertFollower(data) {
-        let follower = this.store.followers[data.id];
-        if (!follower) {
-            this.store.followers[data.id] = new Follower();
-            follower = this.store.followers[data.id];
-        }
-        Object.assign(follower, {
-            followedThread: data.followedThread,
-            id: data.id,
-            isActive: data.is_active,
-            partner: this.persona.insert({ ...data.partner, type: "partner" }),
-            _store: this.store,
-        });
-        if (!follower.followedThread.followers.includes(follower)) {
-            follower.followedThread.followers.push(follower);
-        }
-        return follower;
     }
 }
 

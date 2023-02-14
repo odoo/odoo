@@ -226,7 +226,7 @@ export class Chatter extends Component {
             }
             if ("followers" in result) {
                 for (const followerData of result.followers) {
-                    this.chatterService.insertFollower({
+                    this.threadService.insertFollower({
                         followedThread: this.state.thread,
                         ...followerData,
                     });
