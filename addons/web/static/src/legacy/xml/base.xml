@@ -80,22 +80,6 @@
     </div>
 </t>
 
-<t t-name="web.CustomCheckbox" owl="1">
-    <div t-attf-class="{{ props.text ? 'form-check' : '' }}" t-att-class="props.class">
-        <input
-            t-att-id="props.id or _id"
-            type="checkbox"
-            class="form-check-input"
-            t-att-disabled="props.disabled"
-            t-att-checked="props.value"
-            t-on-change="(ev) => props.onChange(ev.target.checked)"
-            />
-        <label t-att-for="props.id or _id" class="form-check-label">
-            <t t-esc="props.text or '&#8203;'"/>
-        </label>
-    </div>
-</t>
-
 <t t-name="web.CustomFileInput" owl="1">
     <span class="o_file_input" aria-atomic="true" t-on-uploaded="(ev) => props.onUpload(ev.detail.files)">
         <span class="o_file_input_trigger" t-on-click.prevent="() => this._onTriggerClicked()">
