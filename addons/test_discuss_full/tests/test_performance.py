@@ -14,7 +14,7 @@ class TestDiscussFullPerformance(TransactionCase):
     def setUp(self):
         super().setUp()
         self.group_user = self.env.ref('base.group_user')
-        self.users = self.env['res.users'].create([
+        self.users = self.env['res.users'].with_context({'skip_onboarding_todo': True}).create([
             {
                 'email': 'e.e@example.com',
                 'groups_id': [Command.link(self.group_user.id)],

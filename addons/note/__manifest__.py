@@ -17,6 +17,7 @@
         'security/note_security.xml',
         'data/mail_activity_type_data.xml',
         'data/mail_template_data.xml',
+        'data/todo_template.xml',
         'views/note_views.xml',
         ],
     'demo': [
@@ -24,6 +25,7 @@
     ],
     'installable': True,
     'application': True,
+    'post_init_hook': '_init_onboarding_todo',
     'assets': {
         'mail.assets_messaging': [
             'note/static/src/models/*.js',

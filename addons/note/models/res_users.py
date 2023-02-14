@@ -33,3 +33,34 @@ class Users(models.Model):
                     'planned_count': 0
                 })
         return activities
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        users = super(Users, self).create(vals_list)
+        if not self.env.context.get('skip_onboarding_todo'):
+            users.filtered(lambda user: not user.partner_share)._generate_onboarding_todo()
+        return users
+
+    def _generate_onboarding_todo(self):
+        todos_to_create = []
+        for user in self:
+            self = self.with_context(lang=user.lang or self.env.user.lang)
+            render_ctx = {'object': user}
+            body = self.env['ir.qweb']._render(
+                'note.todo_user_onboarding',
+                render_ctx,
+                minimal_qcontext=True,
+                raise_if_not_found=False
+            )
+            if not body:
+                break
+
+            title = _lt('Welcome %s!', user.name)
+            todos_to_create.append({
+                'user_ids': [user.id],
+                'description': body,
+                'name': title,
+            })
+
+        if todos_to_create:
+            self.env['project.task'].sudo().with_context(onboarding_todo_creation=True).create(todos_to_create)
