@@ -1773,7 +1773,7 @@ class Dispatcher(ABC):
         root.set_csp(response)
 
     @abstractmethod
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Transform the exception into a valid HTTP response. Called upon
         any exception while serving a request.
@@ -1816,7 +1816,7 @@ class HttpDispatcher(Dispatcher):
         else:
             return endpoint(**self.request.params)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request
         to a `type='http'` route. Also handle exceptions that occurred
@@ -1825,8 +1825,7 @@ class HttpDispatcher(Dispatcher):
         json.
 
         :param Exception exc: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: :class:`werkzeug.wrapper.Response`
+        :returns: a WSGI application
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
@@ -1902,16 +1901,15 @@ class JsonRPCDispatcher(Dispatcher):
             result = endpoint(**self.request.params)
         return self._response(result)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request to
         a `type='json'` route. Also handle exceptions that occurred when
         no route matched the request path, that no fallback page could
         be delivered and that the request ``Content-Type`` was json.
 
-        :param exc Exception: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: Response
+        :param exc: the exception that occurred.
+        :returns: a WSGI application
         """
         error = {
             'code': 200,  # this code is the JSON-RPC level code, it is
@@ -2119,7 +2117,7 @@ class Application:
             if 'werkzeug' in config['dev_mode'] and request.dispatcher.routing_type != 'json':
                 raise
 
-            # Ensure there is always a Response attached to the exception.
+            # Ensure there is always a WSGI handler attached to the exception.
             if not hasattr(exc, 'error_response'):
                 exc.error_response = request.dispatcher.handle_error(exc)
 
