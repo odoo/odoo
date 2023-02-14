@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { browser } from '@web/core/browser/browser';
 import { registry } from '@web/core/registry';
 import { useService, useBus } from '@web/core/utils/hooks';
 import core from 'web.core';
@@ -375,7 +376,7 @@ export class WebsitePreview extends Component {
                 });
             } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
                 ev.preventDefault();
-                this.router.redirect(href);
+                browser.location.assign(href);
             } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
                 this.websiteService.websiteRootInstance = undefined;
             }

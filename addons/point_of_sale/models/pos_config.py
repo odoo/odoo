@@ -478,7 +478,6 @@ class PosConfig(models.Model):
         return {
              'type': 'ir.actions.client',
              'tag': 'reload',
-             'params': {'wait': True}
          }
 
     def _force_http(self):

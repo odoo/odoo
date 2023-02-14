@@ -2,7 +2,6 @@
 
 import { registry } from "@web/core/registry";
 import { makeTestEnv } from "../../helpers/mock_env";
-import { makeFakeRouterService } from "../../helpers/mock_services";
 import { setupWebClientRegistries, doAction, getActionManagerServerData } from "./../helpers";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
@@ -18,14 +17,11 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.module("URL actions");
 
     QUnit.test("execute an 'ir.actions.act_url' action with target 'self'", async (assert) => {
-        serviceRegistry.add(
-            "router",
-            makeFakeRouterService({
-                onRedirect(url) {
-                    assert.step(url);
-                },
-            })
-        );
+        patchWithCleanup(browser.location, {
+            assign: (url) => {
+                assert.step(url);
+            },
+        });
         setupWebClientRegistries();
         const env = await makeTestEnv({ serverData });
         await doAction(env, {
@@ -37,20 +33,17 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("an 'ir.actions.act_url' with target 'self' blocks the ui", async (assert) => {
-        serviceRegistry.add(
-            "ui",
-            {
-                start() {
-                    return {
-                        block: () => assert.step("block"),
-                        // we can't simulate a page unload in the tests, so in this scenario the
-                        // ui will be unblocked directly (and we thus need to define the unblock
-                        // function)
-                        unblock: () => {},
-                    };
-                },
-            }
-        );
+        serviceRegistry.add("ui", {
+            start() {
+                return {
+                    block: () => assert.step("block"),
+                    // we can't simulate a page unload in the tests, so in this scenario the
+                    // ui will be unblocked directly (and we thus need to define the unblock
+                    // function)
+                    unblock: () => {},
+                };
+            },
+        });
         setupWebClientRegistries();
         const env = await makeTestEnv({ serverData });
         await doAction(env, {

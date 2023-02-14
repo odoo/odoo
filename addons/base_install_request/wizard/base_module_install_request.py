@@ -84,5 +84,4 @@ class BaseModuleInstallReview(models.TransientModel):
         return {
             'type': 'ir.actions.client',
             'tag': 'home',
-            'params': {'wait': True},
         }

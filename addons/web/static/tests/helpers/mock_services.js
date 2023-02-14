@@ -161,7 +161,6 @@ export function makeMockFetch(mockRPC) {
 
 /**
  * @param {Object} [params={}]
- * @param {Object} [params.onRedirect] hook on the "redirect" method
  * @returns {typeof routerService}
  */
 export function makeFakeRouterService(params = {}) {
@@ -173,14 +172,6 @@ export function makeFakeRouterService(params = {}) {
                 browser.location.hash = objectToUrlEncodedString(hash);
             });
             registerCleanup(router.cancelPushes);
-            patchWithCleanup(router, {
-                async redirect() {
-                    await this._super(...arguments);
-                    if (params.onRedirect) {
-                        params.onRedirect(...arguments);
-                    }
-                },
-            });
             return router;
         },
     };
