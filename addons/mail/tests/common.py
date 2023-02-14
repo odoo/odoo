@@ -324,7 +324,7 @@ class MockEmail(common.BaseCase, MockSmtplibCase):
 
     def _find_sent_email(self, email_from, emails_to, subject=None):
         """ Find an outgoing email based on from / to and optional subject when
-        havign a conflict.
+        having conflicts.
 
         :return sent_email: an outgoing email generated during the mock;
         """
@@ -1248,12 +1248,13 @@ class MailCommon(common.TransactionCase, MailCase):
         })
 
     @staticmethod
-    def _generate_attachments_data(count, res_model, res_id, attach_values=None):
+    def _generate_attachments_data(count, res_model, res_id, attach_values=None, prefix=None):
         # attachment visibility depends on what they are attached to
         attach_values = attach_values or {}
+        prefix = prefix or ''
         return [{
             'datas': base64.b64encode(b'AttContent_%02d' % x),
-            'name': 'AttFileName_%02d.txt' % x,
+            'name': f'{prefix}AttFileName_{x:02d}.txt',
             'mimetype': 'text/plain',
             'res_model': res_model,
             'res_id': res_id,
