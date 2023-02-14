@@ -771,6 +771,7 @@ export function buildSampleORM(resModel, fields, user) {
         return sampleServer.mockRpc({ method, model, args, ...kwargs, groupBy });
     };
     const sampleORM = new ORM(fakeRPC, user);
+    sampleORM.isSample = true;
     sampleORM.setGroups = (groups) => sampleServer.setExistingGroups(groups);
     return sampleORM;
 }
