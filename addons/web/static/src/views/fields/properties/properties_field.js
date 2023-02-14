@@ -349,7 +349,7 @@ export class PropertiesField extends Component {
             `.o_property_field[property-name="${propertyName}"] .o_field_property_open_popover`
         );
 
-        reposition(targetElement, popover, { position: "top", margin: 10 });
+        reposition(targetElement, popover, null, { position: "top", margin: 10 });
 
         const arrow = popover.querySelector(".popover-arrow");
         if (arrow) {
