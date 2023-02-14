@@ -223,6 +223,18 @@
             </field>
         </record>
 
+        <record id="project_list_view_group_stage" model="ir.ui.view">
+            <field name="name">project.project.tree.group.stage</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="view_project"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_group_by">stage_id</attribute>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_project_config" model="ir.ui.view">
             <field name="name">project.project.tree.config</field>
             <field name="model">project.project</field>
@@ -236,6 +248,18 @@
                     <attribute name="invisible">0</attribute>
                     <attribute name="widget">handle</attribute>
                 </field>
+            </field>
+        </record>
+
+        <record id="view_project_config_group_stage" model="ir.ui.view">
+            <field name="name">project.project.tree.config.group.stage</field>
+            <field name="model">project.project</field>
+            <field name="inherit_id" ref="view_project_config"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_group_by">stage_id</attribute>
+                </tree>
             </field>
         </record>
 
@@ -479,6 +503,18 @@
             </field>
         </record>
 
+        <record id="project_kanban_view_group_stage" model="ir.ui.view">
+            <field name="name">project.project.kanban.group.stage</field>
+            <field name="model">project.project</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_project_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">stage_id</attribute>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_project_config_kanban" model="ir.ui.view">
             <field name="name">project.kanban.inherit.config.project</field>
             <field name="model">project.project</field>
@@ -488,6 +524,18 @@
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="action"></attribute>
                     <attribute name="default_order">sequence, name, id</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="view_project_config_kanban_group_stage" model="ir.ui.view">
+            <field name="name">project.kanban.inherit.config.project.group.stage</field>
+            <field name="model">project.project</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="view_project_config_kanban"/>
+            <field name="arch" type="xml">
+                <xpath expr="//kanban" position="attributes">
+                    <attribute name="default_group_by">stage_id</attribute>
                 </xpath>
             </field>
         </record>
@@ -539,7 +587,7 @@
         <record id="open_view_project_all_group_stage" model="ir.actions.act_window">
             <field name="name">Projects</field>
             <field name="res_model">project.project</field>
-            <field name="context">{'search_default_groupby_stage': 1}</field>
+            <field name="context">{}</field>
             <field name="domain">[]</field>
             <field name="view_mode">kanban,tree,form,calendar,activity</field>
             <field name="view_id" ref="view_project_kanban"/>
@@ -553,6 +601,19 @@
                     Projects contain tasks on the same topic, and each has its own dashboard.
                 </p>
             </field>
+        </record>
+
+        <record id="open_view_project_all_group_stage_kanban_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="10"/>
+            <field name="view_mode">kanban</field>
+            <field name="act_window_id" ref="open_view_project_all_group_stage"/>
+            <field name="view_id" ref="project_kanban_view_group_stage"/>
+        </record>
+        <record id="open_view_project_all_group_stage_tree_view" model="ir.actions.act_window.view">
+            <field name="sequence" eval="20"/>
+            <field name="view_mode">tree</field>
+            <field name="act_window_id" ref="open_view_project_all_group_stage"/>
+            <field name="view_id" ref="project_list_view_group_stage"/>
         </record>
 
         <!-- Please update both act_window when modifying one (open_view_project_all_config or open_view_project_all_config_group_stage) as one or the other is used in the menu menu_project_config -->
@@ -598,13 +659,13 @@
             <field name="sequence" eval="10"/>
             <field name="view_mode">tree</field>
             <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
-            <field name="view_id" ref="view_project_config"/>
+            <field name="view_id" ref="view_project_config_group_stage"/>
         </record>
         <record id="open_view_project_all_config_group_stage_kanban_action_view" model="ir.actions.act_window.view">
             <field name="sequence" eval="20"/>
             <field name="view_mode">kanban</field>
             <field name="act_window_id" ref="project.open_view_project_all_config_group_stage"/>
-            <field name="view_id" ref="view_project_config_kanban"/>
+            <field name="view_id" ref="view_project_config_kanban_group_stage"/>
         </record>
 
         <record id="project_view_kanban_inherit_project" model="ir.ui.view">
