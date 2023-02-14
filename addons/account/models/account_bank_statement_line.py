@@ -502,25 +502,17 @@ class AccountBankStatementLine(models.Model):
         """
         self.ensure_one()
 
-        def _get_text_value(field_name):
-            if self._fields[field_name].type == 'html':
-                return self[field_name] and html2plaintext(self[field_name])
-            else:
-                return self[field_name]
-
         st_line_text_values = []
-        if allowed_fields is None or 'payment_ref' in allowed_fields:
-            value = _get_text_value('payment_ref')
+        if not allowed_fields or 'payment_ref' in allowed_fields:
+            if self.payment_ref:
+                st_line_text_values.append(self.payment_ref)
+        if not allowed_fields or 'narration' in allowed_fields:
+            value = html2plaintext(self.narration or "")
             if value:
                 st_line_text_values.append(value)
-        if allowed_fields is None or 'narration' in allowed_fields:
-            value = _get_text_value('narration')
-            if value:
-                st_line_text_values.append(value)
-        if allowed_fields is None or 'ref' in allowed_fields:
-            value = _get_text_value('ref')
-            if value:
-                st_line_text_values.append(value)
+        if not allowed_fields or 'ref' in allowed_fields:
+            if self.ref:
+                st_line_text_values.append(self.ref)
         return st_line_text_values
 
     def _get_accounting_amounts_and_currencies(self):

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from freezegun import freeze_time
+from contextlib import contextmanager
 
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
@@ -219,75 +220,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_2: {'amls': self.invoice_line_1 + self.invoice_line_2 + self.invoice_line_3, 'model': self.rule_1},
             self.cash_line_1: {'amls': self.invoice_line_4, 'model': self.rule_1},
         })
-
-    @freeze_time('2020-01-01')
-    def test_matching_fields_match_text_location(self):
-        st_line = self._create_st_line(payment_ref="1111", ref="2222 3333", narration="4444 5555 6666")
-
-        inv1 = self._create_invoice_line(1000, self.partner_a, 'out_invoice', pay_reference="bernard 1111 gagnant")
-        inv2 = self._create_invoice_line(1000, self.partner_a, 'out_invoice', pay_reference="2222 turlututu 3333")
-        inv3 = self._create_invoice_line(1000, self.partner_a, 'out_invoice', pay_reference="4444 tsoin 5555 tsoin 6666")
-
-        rule = self._create_reconcile_model(
-            allow_payment_tolerance=False,
-            match_text_location_label=True,
-            match_text_location_reference=False,
-            match_text_location_note=False,
-        )
-        self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
-            {'amls': inv1, 'model': rule},
-        )
-
-        rule.match_text_location_reference = True
-        self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
-            {'amls': inv2, 'model': rule},
-        )
-
-        rule.match_text_location_note = True
-        self.assertDictEqual(
-            rule._apply_rules(st_line, st_line._retrieve_partner()),
-            {'amls': inv3, 'model': rule},
-        )
-
-    def test_matching_fields_match_text_location_no_partner(self):
-        self.bank_line_2.unlink() # One line is enough for this test
-        self.bank_line_1.partner_id = None
-
-        self.partner_1.name = "Bernard Gagnant"
-
-        self.rule_1.write({
-            'match_partner': False,
-            'match_partner_ids': [(5, 0, 0)],
-            'line_ids': [(5, 0, 0)],
-        })
-
-        st_line_initial_vals = {'ref': None, 'payment_ref': 'nothing', 'narration': None}
-        recmod_initial_vals = {'match_text_location_label': False, 'match_text_location_note': False, 'match_text_location_reference': False}
-
-        rec_mod_options_to_fields = {
-            'match_text_location_label': 'payment_ref',
-            'match_text_location_note': 'narration',
-            'match_text_location_reference': 'ref',
-        }
-
-        for rec_mod_field, st_line_field in rec_mod_options_to_fields.items():
-            self.rule_1.write({**recmod_initial_vals, rec_mod_field: True})
-            # Fully reinitialize the statement line
-            self.bank_line_1.write(st_line_initial_vals)
-
-            # Nothing should match
-            self._check_statement_matching(self.rule_1, {
-                self.bank_line_1: {},
-            })
-
-            # Test matching with the invoice ref
-            self.bank_line_1.write({st_line_field: self.invoice_line_1.move_id.payment_reference})
-
-            self._check_statement_matching(self.rule_1, {
-                self.bank_line_1: {'amls': self.invoice_line_1, 'model': self.rule_1},
-            })
 
     def test_matching_fields_match_journal_ids(self):
         self.rule_1.match_journal_ids |= self.cash_line_1.journal_id
@@ -1044,3 +976,131 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'status': 'write_off',
             },
         })
+
+    @freeze_time('2019-01-01')
+    def test_invoice_matching_using_match_text_location(self):
+        @contextmanager
+        def rollback():
+            savepoint = self.cr.savepoint()
+            yield
+            savepoint.rollback()
+
+        rule = self._create_reconcile_model(
+            match_partner=False,
+            allow_payment_tolerance=False,
+            match_text_location_label=False,
+            match_text_location_reference=False,
+            match_text_location_note=False,
+        )
+        st_line = self._create_st_line(amount=1000, partner_id=False)
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100,
+            })],
+        })
+        invoice.action_post()
+        term_line = invoice.line_ids.filtered(lambda x: x.display_type == 'payment_term')
+
+        # No match at all.
+        self.assertDictEqual(
+            rule._apply_rules(st_line, None),
+            {},
+        )
+
+        with rollback():
+            term_line.name = "1234"
+            st_line.payment_ref = "1234"
+
+            # Matching if no checkbox checked.
+            self.assertDictEqual(
+                rule._apply_rules(st_line, None),
+                {'amls': term_line, 'model': rule},
+            )
+
+            # No matching if other checkbox is checked.
+            rule.match_text_location_note = True
+            self.assertDictEqual(
+                rule._apply_rules(st_line, None),
+                {},
+            )
+
+        for rule_field, st_line_field in (
+            ('match_text_location_label', 'payment_ref'),
+            ('match_text_location_reference', 'ref'),
+            ('match_text_location_note', 'narration'),
+        ):
+            with self.subTest(rule_field=rule_field, st_line_field=st_line_field):
+
+                with rollback():
+                    rule[rule_field] = True
+                    st_line[st_line_field] = "123456"
+                    term_line.name = "123456"
+
+                    # Matching if the corresponding flag is enabled.
+                    self.assertDictEqual(
+                        rule._apply_rules(st_line, None),
+                        {'amls': term_line, 'model': rule},
+                    )
+
+                    # It works also if the statement line contains the word.
+                    st_line[st_line_field] = "payment for 123456 urgent!"
+                    self.assertDictEqual(
+                        rule._apply_rules(st_line, None),
+                        {'amls': term_line, 'model': rule},
+                    )
+
+                    # Not if the invoice has nothing in common even if numerical.
+                    term_line.name = "78910"
+                    self.assertDictEqual(
+                        rule._apply_rules(st_line, None),
+                        {},
+                    )
+
+                    # Exact matching on a single word.
+                    st_line[st_line_field] = "TURLUTUTU21"
+                    term_line.name = "TURLUTUTU21"
+                    self.assertDictEqual(
+                        rule._apply_rules(st_line, None),
+                        {'amls': term_line, 'model': rule},
+                    )
+
+                    # No matching if not enough numerical values.
+                    st_line[st_line_field] = "12"
+                    term_line.name = "selling 3 apples, 2 tomatoes and 12kg of potatoes"
+                    self.assertDictEqual(
+                        rule._apply_rules(st_line, None),
+                        {},
+                    )
+
+        invoice2 = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_line_ids': [Command.create({
+                'product_id': self.product_a.id,
+                'price_unit': 100,
+            })],
+        })
+        invoice2.action_post()
+        term_lines = (invoice + invoice2).line_ids.filtered(lambda x: x.display_type == 'payment_term')
+
+        # Matching multiple invoices.
+        rule.match_text_location_label = True
+        st_line.payment_ref = "paying invoices 1234 & 5678"
+        term_lines[0].name = "INV/1234"
+        term_lines[1].name = "INV/5678"
+        self.assertDictEqual(
+            rule._apply_rules(st_line, None),
+            {'amls': term_lines, 'model': rule},
+        )
+
+        # Matching multiple invoices sharing the same reference.
+        term_lines[1].name = "INV/1234"
+        self.assertDictEqual(
+            rule._apply_rules(st_line, None),
+            {'amls': term_lines, 'model': rule},
+        )
