@@ -129,7 +129,8 @@ class Assets(models.AbstractModel):
                 attachment = self._get_custom_attachment(url)
             else:
                 attachment = custom_attachments.filtered(lambda r: r.url == url)
-            return attachment and base64.b64decode(attachment.datas) or False
+            return attachment and len(attachment) == 1 and base64.b64decode(attachment.datas) or len(
+                attachment) > 1 and base64.b64decode(attachment[0].datas) or False
 
         # If the file is not yet customized, the content is found by reading
         # the local file
