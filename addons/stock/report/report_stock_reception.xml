@@ -42,14 +42,15 @@
 
     <template id="report_reception_body">
         <div class="o_report_reception justify-content-between">
-            <div class="o_report_reception_header my-4">
+            <div class="o_report_reception_header my-5">
                 <h3>
                     <t t-if="docs">
                         <t t-foreach="docs" t-as="doc">
-                            <div>
+                            <div class="p-2">
                                 <a href="#" t-att-res-model="doc_model" view-type="form" t-att-res-id="doc.id">
                                     <t t-esc="doc.display_name"/>
                                 </a>
+                                <span t-field="doc.display_name" t-options="{'widget': 'barcode', 'width': 300, 'height': 50}"/>
                                 <span t-field="doc.state" t-attf-class="badge rounded-pill bg-opacity-50 #{'bg-success' if doc.state == 'done' else 'bg-info'}"/>
                             </div>
                         </t>
@@ -59,11 +60,12 @@
                     </t>
                 </h3>
             </div>
-            <table t-if="sources_to_lines" class="o_report_reception_table table table-sm">
+            <table t-if="sources_to_lines" class="o_report_reception_table table table-sm text-start">
                 <t t-foreach="sources_to_lines" t-as="source">
                     <thead t-if="any(line['is_assigned'] for line in sources_to_lines[source])">
                         <tr class="bg-light">
                             <th>
+                                <span t-field="source[0].display_name" t-options="{'widget': 'barcode', 'width': 200, 'height': 30}"/>
                                 <i t-if="source[0].priority == '1'" class="o_priority o_priority_star fa fa-star"/>
                                 <a name="source_link" href="#" t-att-res-model="source[0]._name" view-type="form" t-att-res-id="source[0].id" t-out="source[0].display_name"/>
                                 <span t-if="len(source) > 1">
