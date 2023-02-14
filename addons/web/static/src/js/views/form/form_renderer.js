@@ -627,33 +627,36 @@ var FormRenderer = BasicRenderer.extend({
                     colspan = 1;
                 }
             }
-            var finalColspan = colspan - (isLabeledField ? 1 : 0);
-            currentColspan += colspan;
 
-            if (currentColspan > col) {
-                rows.push($currentRow);
-                $currentRow = $('<tr/>');
-                currentColspan = colspan;
-            }
+            if(!child.attrs.invisible){
+                var finalColspan = colspan - (isLabeledField ? 1 : 0);
+                currentColspan += colspan;
 
-            var $tds;
-            if (child.tag === 'field') {
-                $tds = self._renderInnerGroupField(child);
-            } else if (child.tag === 'label') {
-                $tds = self._renderInnerGroupLabel(child);
-            } else {
-                var $td = $('<td/>');
-                var $child = self._renderNode(child);
-                if ($child.hasClass('o_td_label')) { // transfer classname to outer td for css reasons
-                    $td.addClass('o_td_label');
-                    $child.removeClass('o_td_label');
+                if (currentColspan > col) {
+                    rows.push($currentRow);
+                    $currentRow = $('<tr/>');
+                    currentColspan = colspan;
                 }
-                $tds = $td.append($child);
+
+                var $tds;
+                if (child.tag === 'field') {
+                    $tds = self._renderInnerGroupField(child);
+                } else if (child.tag === 'label') {
+                    $tds = self._renderInnerGroupLabel(child);
+                } else {
+                    var $td = $('<td/>');
+                    var $child = self._renderNode(child);
+                    if ($child.hasClass('o_td_label')) { // transfer classname to outer td for css reasons
+                        $td.addClass('o_td_label');
+                        $child.removeClass('o_td_label');
+                    }
+                    $tds = $td.append($child);
+                }
+                if (finalColspan > 1) {
+                    $tds.last().attr('colspan', finalColspan);
+                }
+                $currentRow.append($tds);
             }
-            if (finalColspan > 1) {
-                $tds.last().attr('colspan', finalColspan);
-            }
-            $currentRow.append($tds);
         });
         rows.push($currentRow);
 

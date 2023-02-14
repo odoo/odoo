@@ -592,6 +592,27 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('invisible fields in group tag don`t take space in ui', async function (assert) {
+        assert.expect(1);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" invisible="1"/>' +
+                            '<field name="bar"/>' +
+                         '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 1,
+        });
+        assert.strictEqual(form.$('tr').length, 1)
+        form.destroy();
+    });
+
     QUnit.test('invisible elements are properly hidden', async function (assert) {
         assert.expect(3);
 
