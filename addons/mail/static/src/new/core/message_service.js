@@ -82,6 +82,10 @@ export class MessageService {
     }
 
     getMentionsFromText(rawMentions, body) {
+        if (!this.store.user) {
+            // mentions are not supported for guests
+            return {};
+        }
         const validMentions = {};
         const partners = [];
         const threads = [];
