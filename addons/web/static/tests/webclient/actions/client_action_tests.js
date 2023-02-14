@@ -613,16 +613,14 @@ QUnit.module("ActionManager", (hooks) => {
 
     QUnit.test("test reload client action", async function (assert) {
         patchWithCleanup(browser.location, {
+            assign: (url) => {
+                assert.step(url);
+            },
             origin: "",
             hash: "#test=42",
         });
 
         const webClient = await createWebClient({ serverData });
-        patchWithCleanup(webClient.env.services.router, {
-            redirect: (url) => {
-                assert.step(url);
-            },
-        });
 
         await doAction(webClient, {
             type: "ir.actions.client",

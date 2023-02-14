@@ -48,10 +48,9 @@ registry.category("actions").add("invalid_action", InvalidAction);
  * Client action to reload the whole interface.
  * If action.params.menu_id, it opens the given menu entry.
  * If action.params.action_id, it opens the given action.
- * If action.params.wait, reload will wait the server to be reachable before reloading
  */
 function reload(env, action) {
-    const { menu_id, action_id, wait } = action.params || {};
+    const { menu_id, action_id } = action.params || {};
     const { router } = env.services;
     const route = { ...router.current };
 
@@ -65,7 +64,7 @@ function reload(env, action) {
         }
     }
 
-    // We want to force location.assign(...) (in router.redirect(...)) to do a page reload.
+    // We want to force location.assign(...) to do a page reload.
     // To do this, we need to make sure that the url is different.
     route.search = { ...route.search };
     if ("reload" in route.search) {
@@ -76,20 +75,28 @@ function reload(env, action) {
     const url = browser.location.origin + routeToUrl(route);
 
     env.bus.trigger("CLEAR-CACHES");
-    router.redirect(url, wait);
+    browser.location.assign(url);
 }
 
 registry.category("actions").add("reload", reload);
 
 /**
  * Client action to go back home.
- * If action.params.wait, reload will wait the server to be reachable before reloading
  */
-function home(env, action) {
-    const { wait } = action.params || {};
+async function home(env) {
+    await new Promise((resolve) => {
+        const waitForServer = (delay) => {
+            browser.setTimeout(async () => {
+                env.services
+                    .rpc("/web/webclient/version_info", {})
+                    .then(resolve)
+                    .catch(() => waitForServer(250));
+            }, delay);
+        };
+        waitForServer(1000);
+    });
     const url = "/" + (browser.location.search || "");
-    env.services.router.redirect(url, wait);
-    browser.location.reload(url);
+    browser.location.assign(url);
 }
 
 registry.category("actions").add("home", home);
