@@ -469,6 +469,60 @@ class AccountBankStatementLine(models.Model):
         if not statement.is_complete:
             return statement
 
+<<<<<<< HEAD
+||||||| parent of 60bbd03f77e (temp)
+    def _get_st_line_strings_for_matching(self, allowed_fields=None):
+        """ Collect the strings that could be used on the statement line to perform some matching.
+
+        :param allowed_fields: A explicit list of fields to consider.
+        :return: A list of strings.
+        """
+        self.ensure_one()
+
+        def _get_text_value(field_name):
+            if self._fields[field_name].type == 'html':
+                return self[field_name] and html2plaintext(self[field_name])
+            else:
+                return self[field_name]
+
+        st_line_text_values = []
+        if allowed_fields is None or 'payment_ref' in allowed_fields:
+            value = _get_text_value('payment_ref')
+            if value:
+                st_line_text_values.append(value)
+        if allowed_fields is None or 'narration' in allowed_fields:
+            value = _get_text_value('narration')
+            if value:
+                st_line_text_values.append(value)
+        if allowed_fields is None or 'ref' in allowed_fields:
+            value = _get_text_value('ref')
+            if value:
+                st_line_text_values.append(value)
+        return st_line_text_values
+
+=======
+    def _get_st_line_strings_for_matching(self, allowed_fields=None):
+        """ Collect the strings that could be used on the statement line to perform some matching.
+
+        :param allowed_fields: A explicit list of fields to consider.
+        :return: A list of strings.
+        """
+        self.ensure_one()
+
+        st_line_text_values = []
+        if not allowed_fields or 'payment_ref' in allowed_fields:
+            if self.payment_ref:
+                st_line_text_values.append(self.payment_ref)
+        if not allowed_fields or 'narration' in allowed_fields:
+            value = html2plaintext(self.narration or "")
+            if value:
+                st_line_text_values.append(value)
+        if not allowed_fields or 'ref' in allowed_fields:
+            if self.ref:
+                st_line_text_values.append(self.ref)
+        return st_line_text_values
+
+>>>>>>> 60bbd03f77e (temp)
     def _get_accounting_amounts_and_currencies(self):
         """ Retrieve the transaction amount, journal amount and the company amount with their corresponding currencies
         from the journal entry linked to the statement line.
