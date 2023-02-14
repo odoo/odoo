@@ -1191,7 +1191,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA 5% Adquisición Intracomunitario. Servicios corrientes</field>
+        <field name="name">IVA 5% Adquisición de servicios intracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_5"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -1273,7 +1273,7 @@
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount_type">percent</field>
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA 0% Adquisición Intracomunitario. Servicios corrientes</field>
+        <field name="name">IVA 0% Adquisición de servicios intracomunitarios</field>
         <field name="tax_group_id" ref="tax_group_iva_0"/>
         <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
@@ -1695,7 +1695,7 @@
     </record>
     <record id="account_tax_template_p_iva5_isc" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA 5% Importaciones servicios corrientes</field>
+        <field name="name">IVA 5% Adquisición de servicios extracomunitarios</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="5"/>
         <field name="amount_type">percent</field>
@@ -1704,13 +1704,20 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_32')],
+                'tag_ids': [ref('mod_303_12'), ref('mod_303_28')],
+            }),
+
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_477'),
+                'tag_ids': [ref('mod_303_13')],
             }),
 
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'tax',
-                'tag_ids': [ref('mod_303_33')],
+                'tag_ids': [ref('mod_303_29')],
                 'account_id': ref('l10n_es.account_common_472'),
             }),
 
@@ -1719,7 +1726,14 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_40')],
+                'tag_ids': [ref('mod_303_14_purchase'), ref('mod_303_40')],
+            }),
+
+            (0,0, {
+                'factor_percent': -100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_477'),
+                'tag_ids': [ref('mod_303_15')],
             }),
 
             (0,0, {
@@ -1765,7 +1779,7 @@
     </record>
     <record id="account_tax_template_p_iva0_isc" model="account.tax.template">
         <field name="type_tax_use">purchase</field>
-        <field name="name">IVA 0% Importaciones servicios corrientes</field>
+        <field name="name">IVA 0% Adquisición de servicios extracomunitarios</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
@@ -1774,7 +1788,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_32')],
+                'tag_ids': [ref('mod_303_12'), ref('mod_303_28')],
             }),
 
             (0,0, {
@@ -1787,7 +1801,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_40')],
+                'tag_ids': [ref('mod_303_14_purchase'), ref('mod_303_40')],
             }),
 
             (0,0, {
