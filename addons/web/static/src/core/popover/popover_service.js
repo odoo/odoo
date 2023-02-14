@@ -8,6 +8,7 @@ import { EventBus } from "@odoo/owl";
 /**
  * @typedef {{
  *   closeOnClickAway?: boolean;
+ *   iframe?: HTMLIFrameElement;
  *   onClose?: () => void;
  *   popoverClass?: string;
  *   position?: import("@web/core/position_hook").Direction;
@@ -44,6 +45,7 @@ export const popoverService = {
                 Component,
                 props,
                 close: closeFn,
+                iframe: options.iframe,
                 onClose: options.onClose,
                 position: options.position,
                 onPositioned: options.onPositioned,

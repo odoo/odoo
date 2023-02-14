@@ -13,6 +13,7 @@ import { localization } from "@web/core/l10n/localization";
  * @typedef {{
  *  popper?: string;
  *  container?: HTMLElement | (() => HTMLElement);
+ *  iframe?: HTMLIFrameElement;
  *  margin?: number;
  *  position?: Direction | Position;
  *  onPositioned?: PositionEventHandler;
@@ -86,7 +87,7 @@ const DEFAULTS = {
  * @param {Options} options
  * @returns {PositioningSolution} the best positioning solution
  */
-function getBestPosition(reference, popper, { container, margin, position }) {
+function getBestPosition(reference, popper, { container, iframe, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
     const directions =
@@ -101,27 +102,28 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     const popBox = popper.getBoundingClientRect();
     const refBox = reference.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
+    const iframeBox = iframe?.getBoundingClientRect() || { top: 0, left: 0 };
 
-    const containerIsHTMLNode = container === document.firstElementChild;
+    const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
 
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: refBox.top - popBox.height - margin,
-        b: refBox.bottom + margin,
-        r: refBox.right + margin,
-        l: refBox.left - popBox.width - margin,
+        t: iframeBox.top + refBox.top - popBox.height - margin,
+        b: iframeBox.top + refBox.bottom + margin,
+        r: iframeBox.left + refBox.right + margin,
+        l: iframeBox.left + refBox.left - popBox.width - margin,
     };
     /** @type {VariantsData} */
     const variantsData = {
-        vf: refBox.left,
-        vs: refBox.left,
-        vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
-        ve: refBox.right - popBox.width,
-        hf: refBox.top,
-        hs: refBox.top,
-        hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
-        he: refBox.bottom - popBox.height,
+        vf: iframeBox.left + refBox.left,
+        vs: iframeBox.left + refBox.left,
+        vm: iframeBox.left + refBox.left + refBox.width / 2 + -popBox.width / 2,
+        ve: iframeBox.left + refBox.right - popBox.width,
+        hf: iframeBox.top + refBox.top,
+        hs: iframeBox.top + refBox.top,
+        hm: iframeBox.top + refBox.top + refBox.height / 2 + -popBox.height / 2,
+        he: iframeBox.top + refBox.bottom - popBox.height,
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
@@ -210,7 +212,7 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 export function reposition(reference, popper, options) {
     const [directionKey, variantKey = "middle"] = options.position.split("-");
     options = {
-        container: document.documentElement,
+        container: reference.ownerDocument.documentElement,
         ...options,
     };
 
@@ -267,7 +269,7 @@ export function usePosition(reference, options) {
     }
 
     const popperRef = useRef(popper);
-    const getReference = reference instanceof HTMLElement ? () => reference : reference;
+    const getReference = typeof reference === "function" ? reference : () => reference;
     const update = () => {
         const ref = getReference();
         if (popperRef.el && ref) {
@@ -278,5 +280,9 @@ export function usePosition(reference, options) {
     const throttledUpdate = throttleForAnimation(update);
     useExternalListener(document, "scroll", throttledUpdate, { capture: true });
     useExternalListener(window, "resize", throttledUpdate);
+    if (options.iframe) {
+        const { contentWindow: iframeWindow } = options.iframe;
+        useExternalListener(iframeWindow, "scroll", throttledUpdate, { capture: true });
+    }
     onWillUnmount(throttledUpdate.cancel);
 }

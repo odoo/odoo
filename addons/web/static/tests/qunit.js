@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { isInstanceOf } from "@web/core/utils/objects";
 import { isVisible as isElemVisible } from "@web/core/utils/ui";
 import { UncaughtClientError, UncaughtPromiseError } from "@web/core/errors/error_service";
 import {
@@ -62,7 +63,7 @@ export function setupQUnit() {
             }
             $el = $(target.el);
         } else {
-            $el = target instanceof Element ? $(target) : target;
+            $el = isInstanceOf(target, Element) ? $(target) : target;
         }
         msg = msg || `Selector '${selector}' should have exactly ${n} matches inside the target`;
         QUnit.assert.strictEqual($el.find(selector).length, n, msg);
@@ -103,7 +104,7 @@ export function setupQUnit() {
         if (el) {
             if (el._widgetRenderAndInsert) {
                 el = el.el; // legacy widget
-            } else if (!(el instanceof Element)) {
+            } else if (!isInstanceOf(el, Element)) {
                 el = el[0];
             }
         }
@@ -162,7 +163,7 @@ export function setupQUnit() {
             }
             $el = $(target.el);
         } else {
-            $el = target instanceof Element ? $(target) : target;
+            $el = isInstanceOf(target, Element) ? $(target) : target;
         }
 
         if ($el.length !== 1) {
@@ -191,7 +192,7 @@ export function setupQUnit() {
         if (el) {
             if (el._widgetRenderAndInsert) {
                 el = el.el; // legacy widget
-            } else if (!(el instanceof Element)) {
+            } else if (!isInstanceOf(el, Element)) {
                 el = el[0];
             }
         }

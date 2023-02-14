@@ -28,6 +28,24 @@ export function deepCopy(obj) {
 }
 
 /**
+ * Check if an object is an instance of the 'type' interface,
+ * regardless of the window it belongs to.
+ * This is useful i.e. when the object to check is inside an iframe.
+ *
+ * @param {*} obj
+ * @param {Function} type
+ * @returns true if obj is an instance of type, regardless of the window it belongs to
+ */
+export function isInstanceOf(obj, type) {
+    for (let p = obj.__proto__; p; p = p.__proto__) {
+        if (p.constructor.name === type.name) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Returns a shallow copy of object with every property in properties removed
  * if present in object.
  *

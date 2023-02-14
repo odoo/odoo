@@ -2,7 +2,15 @@
 
 import { Popover } from "./popover";
 
-import { EventBus, Component, onMounted, onWillUnmount, useExternalListener, useState, xml } from "@odoo/owl";
+import {
+    EventBus,
+    Component,
+    onMounted,
+    onWillUnmount,
+    useExternalListener,
+    useState,
+    xml,
+} from "@odoo/owl";
 
 class PopoverController extends Component {
     setup() {
@@ -23,6 +31,7 @@ class PopoverController extends Component {
         return {
             id: this.props.id,
             target: this.target,
+            iframe: this.props.iframe,
             position: this.props.position,
             popoverClass: this.props.popoverClass,
             onPositioned: this.props.onPositioned,

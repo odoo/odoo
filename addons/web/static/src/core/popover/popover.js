@@ -1,12 +1,43 @@
 /** @odoo-module **/
 
-import { usePosition } from "../position_hook";
-
 import { Component } from "@odoo/owl";
+import { isInstanceOf } from "@web/core/utils/objects";
+import { usePosition } from "@web/core/position_hook";
 
 export class Popover extends Component {
+    static template = "web.PopoverWowl";
+    static defaultProps = { position: "bottom" };
+    static props = {
+        id: {
+            optional: true,
+            type: Number,
+        },
+        popoverClass: {
+            optional: true,
+            type: String,
+        },
+        position: {
+            type: String,
+            validate: (p) => ["top", "bottom", "left", "right"].includes(p),
+            optional: true,
+        },
+        onPositioned: {
+            type: Function,
+            optional: true,
+        },
+        iframe: { type: HTMLIFrameElement, optional: true },
+        target: { validate: (target) => isInstanceOf(target, Element) },
+        slots: {
+            type: Object,
+            optional: true,
+            shape: {
+                default: { optional: true },
+            },
+        },
+    };
     setup() {
         usePosition(this.props.target, {
+            iframe: this.props.iframe,
             onPositioned: this.props.onPositioned || this.onPositioned.bind(this),
             position: this.props.position,
         });
@@ -62,35 +93,3 @@ export class Popover extends Component {
         }
     }
 }
-
-Popover.template = "web.PopoverWowl";
-Popover.defaultProps = {
-    position: "bottom",
-};
-Popover.props = {
-    id: {
-        optional: true,
-        type: Number,
-    },
-    popoverClass: {
-        optional: true,
-        type: String,
-    },
-    position: {
-        type: String,
-        validate: (p) => ["top", "bottom", "left", "right"].includes(p),
-        optional: true,
-    },
-    onPositioned: {
-        type: Function,
-        optional: true,
-    },
-    target: HTMLElement,
-    slots: {
-        type: Object,
-        optional: true,
-        shape: {
-            default: { optional: true },
-        },
-    },
-};
