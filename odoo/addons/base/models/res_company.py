@@ -300,3 +300,7 @@ class Company(models.Model):
             main_company = self.env['res.company'].sudo().search([], limit=1, order="id")
 
         return main_company
+
+    def _get_layout_background(self):
+        with tools.file_open("base/static/img/bg_background_template.jpg", 'rb') as bg_file:
+            return base64.b64encode(bg_file.read()).decode()

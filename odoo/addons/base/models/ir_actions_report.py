@@ -334,6 +334,9 @@ class IrActionsReport(models.Model):
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
 
+        # body loading done
+        command_args.extend(['--window-status', 'report_rendered'])
+
         return command_args
 
     def _prepare_html(self, html):
@@ -364,7 +367,7 @@ class IrActionsReport(models.Model):
 
         header_node = etree.Element('div', id='minimal_layout_report_headers')
         footer_node = etree.Element('div', id='minimal_layout_report_footers')
-        bodies = []
+        bodies_html = []
         res_ids = []
 
         body_parent = root.xpath('//main')[0]
@@ -391,15 +394,15 @@ class IrActionsReport(models.Model):
                 if not layout_sections or node.get('data-oe-lang') == self.env.lang:
                     layout_sections = layout_with_lang
             body = layout_with_lang._render(dict(subst=False, body=lxml.html.tostring(node), base_url=base_url, report_xml_id=self.xml_id))
-            bodies.append(body)
+            bodies_html.append(body)
             if node.get('data-oe-model') == self.model:
                 res_ids.append(int(node.get('data-oe-id', 0)))
             else:
                 res_ids.append(None)
 
-        if not bodies:
+        if not bodies_html:
             body = bytearray().join([lxml.html.tostring(c) for c in body_parent.getchildren()])
-            bodies.append(body)
+            bodies_html.append(body)
 
         # Get paperformat arguments set in the root html tag. They are prioritized over
         # paperformat-record arguments.
@@ -408,8 +411,18 @@ class IrActionsReport(models.Model):
             if attribute[0].startswith('data-report-'):
                 specific_paperformat_args[attribute[0]] = attribute[1]
 
-        header = (layout_sections or layout)._render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
-        footer = (layout_sections or layout)._render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+        header_html = (layout_sections or layout)._render(dict(subst=True, body=lxml.html.tostring(header_node), base_url=base_url))
+        footer_html = (layout_sections or layout)._render(dict(subst=True, body=lxml.html.tostring(footer_node), base_url=base_url))
+
+        def _append_render_done(node_html):
+            node_root = lxml.html.fromstring(node_html)
+            node_body = node_root.find('.//body')
+            node_body.attrib['onload'] = node_body.attrib.get('onload', '') + ";setTimeout(function () { window.status = 'report_rendered'; }, 500);"
+            return lxml.html.tostring(node_root)
+
+        header = _append_render_done(header_html)
+        footer = _append_render_done(footer_html)
+        bodies = [_append_render_done(body) for body in bodies_html]
 
         return bodies, res_ids, header, footer, specific_paperformat_args
 

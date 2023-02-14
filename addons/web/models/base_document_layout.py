@@ -3,6 +3,8 @@ from odoo import api, fields, models, tools
 
 from odoo.modules import get_resource_path
 
+import base64
+
 try:
     import sass as libsass
 except ImportError:
@@ -278,3 +280,7 @@ class BaseDocumentLayout(models.TransientModel):
             )
         except libsass.CompileError as e:
             raise libsass.CompileError(e.args[0])
+
+    def _get_layout_background(self):
+        with tools.file_open("base/static/img/bg_background_template.jpg", 'rb') as bg_file:
+            return base64.b64encode(bg_file.read()).decode()

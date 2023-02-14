@@ -351,7 +351,7 @@
             </div>
         </div>
 
-        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_background" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+        <div t-attf-class="o_company_#{company.id}_layout article o_report_layout_background" t-attf-style="background-image: url({{ 'data:image/png;base64,%s' % company._get_layout_background() }});" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
             <t t-call="web.address_layout"/>
             <t t-raw="0"/>
         </div>
