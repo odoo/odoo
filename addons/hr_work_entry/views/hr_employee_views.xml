@@ -7,7 +7,8 @@
         <field name="priority" eval="90"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <button type="object" class="oe_stat_button" id="open_work_entries"
+                <field name="has_work_entries" invisible="1"/>
+                <button attrs="{'invisible': [('has_work_entries', '=', False)]}" type="object" class="oe_stat_button" id="open_work_entries"
                     icon="fa-calendar" name="action_open_work_entries" string="Work Entries">
                 </button>
             </div>
