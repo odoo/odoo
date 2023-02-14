@@ -345,30 +345,36 @@ class SaleOrder(models.Model):
         self.ensure_one()
         programs = self.env['sale.coupon.program'].with_context(
             no_outdated_coupons=True
-        ).search([
-            ('company_id', 'in', [self.company_id.id, False]),
-            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', fields.Datetime.now()),
-            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', fields.Datetime.now()),
-        ], order="id")._filter_programs_from_common_rules(self)
+        ).search(self._get_applicable_programs_domain(), order="id")._filter_programs_from_common_rules(self)
         # no impact code...
         # should be programs = programs.filtered if we really want to filter...
         # if self.promo_code:
         #     programs._filter_promo_programs_with_code(self)
         return programs
-
+    
+    def _get_applicable_programs_domain(self):
+        return [
+            ('company_id', 'in', [self.company_id.id, False]),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', fields.Datetime.now()),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', fields.Datetime.now()),
+        ]
+    
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
         programs = self.env['sale.coupon.program'].with_context(
             no_outdated_coupons=True,
             applicable_coupon=True,
-        ).search([
+        ).search(self._get_applicable_no_code_promo_program_domain())._filter_programs_from_common_rules(self)
+        return programs
+    
+    def _get_applicable_no_code_promo_program(self):
+        return [
             ('promo_code_usage', '=', 'no_code_needed'),
             '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', fields.Datetime.now()),
             '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', fields.Datetime.now()),
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
-        ])._filter_programs_from_common_rules(self)
-        return programs
-
+        ]
+    
     def _get_applied_coupon_program_coming_from_another_so(self):
         # TODO: Remove me in master as no more used
         pass
