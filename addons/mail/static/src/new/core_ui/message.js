@@ -205,6 +205,9 @@ export class Message extends Component {
         if (this.message.isSelfAuthored) {
             return false;
         }
+        if (this.store.inPublicPage) {
+            return false;
+        }
         return this.props.thread.chatPartnerId !== this.message.author.id;
     }
 

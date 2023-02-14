@@ -22,8 +22,18 @@ export class ChannelMemberList extends Component {
         });
     }
 
-    openChatAvatar(member) {
+    canOpenChatWith(member) {
+        if (this.store.inPublicPage) {
+            return false;
+        }
         if (member.persona === this.store.self) {
+            return false;
+        }
+        return true;
+    }
+
+    openChatAvatar(member) {
+        if (!this.canOpenChatWith(member)) {
             return;
         }
         this.threadService.openChat({ partnerId: member.persona.id });

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, useState, useEffect } from "@odoo/owl";
+import { Component, useEffect, useState } from "@odoo/owl";
 import { WelcomePage } from "./welcome_page";
 import { Discuss } from "./../discuss/discuss";
 import { useMessaging, useStore } from "../core/messaging_hook";

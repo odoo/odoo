@@ -33,6 +33,12 @@ export class Store {
      */
     guest = null;
 
+    /**
+     * Indicates whether the current user is using the application through the
+     * public page.
+     */
+    inPublicPage = false;
+
     /** @type {Object.<number, import("@mail/new/core/channel_member_model").ChannelMember>} */
     channelMembers = {};
     /** @type {import("@mail/new/core_ui/message").Message|null} */

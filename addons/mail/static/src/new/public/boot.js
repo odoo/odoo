@@ -37,6 +37,7 @@ Component.env = legacyEnv;
     // });
     const env = makeEnv();
     await startServices(env);
+    env.services["mail.store"].inPublicPage = true;
     mapLegacyEnvToWowlEnv(Component.env, env);
     odoo.isReady = true;
     await mount(MainComponentsContainer, document.body, { env, templates, dev: env.debug });
