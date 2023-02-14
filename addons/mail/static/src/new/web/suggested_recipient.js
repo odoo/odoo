@@ -50,15 +50,11 @@ export class SuggestedRecipient extends Component {
                     force_email: true,
                     ref: "compound_context",
                 },
-                onRecordSaved: () => this._onDialogSaved(),
+                onRecordSaved: () =>
+                    this.threadService.fetchData(this.props.thread, ["suggestedRecipients"]),
                 resModel: "res.partner",
                 title: _t("Please complete customer's information"),
             });
         }
-    }
-
-    async _onDialogSaved() {
-        const data = await this.threadService.fetchData(this.props.thread, ["suggestedRecipients"]);
-        this.threadService.insertSuggestedRecipients(this.props.thread, data.suggestedRecipients);
     }
 }
