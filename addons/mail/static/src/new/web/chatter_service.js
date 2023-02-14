@@ -18,32 +18,6 @@ export class ChatterService {
         /** @type {import("@mail/new/core/persona_service").PersonaService} */
         this.persona = services["mail.persona"];
     }
-    /**
-     * @param {number} resId
-     * @param {string} resModel
-     * @param {['activities'|'followers'|'attachments'|'messages'|'suggestedRecipients']} requestList
-     */
-    async fetchData(
-        resId,
-        resModel,
-        requestList = ["activities", "followers", "attachments", "messages", "suggestedRecipients"]
-    ) {
-        if (requestList.includes("messages")) {
-            this.thread.fetchNewMessages(this.thread.insert({ model: resModel, id: resId }));
-        }
-        const result = await this.rpc("/mail/thread/data", {
-            request_list: requestList,
-            thread_id: resId,
-            thread_model: resModel,
-        });
-        if ("attachments" in result) {
-            result["attachments"] = result["attachments"].map((attachment) => ({
-                ...attachment,
-                originThread: this.thread.insert(attachment.originThread[0][1]),
-            }));
-        }
-        return result;
-    }
 
     getThread(resModel, resId) {
         const localId = createLocalId(resModel, resId);

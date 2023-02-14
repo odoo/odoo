@@ -60,7 +60,7 @@ export class SuggestedRecipient extends Component {
     }
 
     async _onDialogSaved() {
-        const data = await this.chatterService.fetchData(
+        const data = await this.threadService.fetchData(
             this.props.thread.id,
             this.props.thread.model,
             ["suggestedRecipients"]

@@ -189,7 +189,7 @@ export class Chatter extends Component {
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.chatterService.fetchData(threadId, threadModel, requestList).then((result) => {
+        this.threadService.fetchData(threadId, threadModel, requestList).then((result) => {
             this.state.thread.hasReadAccess = result.hasReadAccess;
             this.state.thread.hasWriteAccess = result.hasWriteAccess;
             if ("activities" in result) {
