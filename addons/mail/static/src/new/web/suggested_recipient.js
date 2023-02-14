@@ -18,8 +18,6 @@ export class SuggestedRecipient extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        /** @type {import("@mail/new/web/chatter_service").ChatterService)}*/
-        this.chatterService = useService("mail.chatter");
         /** @type {import("@mail/new/core/thread_service").ThreadService)}*/
         this.threadService = useService("mail.thread");
     }

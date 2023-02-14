@@ -31,7 +31,6 @@ import { chatWindowService } from "@mail/new/web/chat_window/chat_window_service
 import { threadService } from "@mail/new/core/thread_service";
 import { messageService } from "@mail/new/core/message_service";
 import { activityService } from "@mail/new/web/activity/activity_service";
-import { chatterService } from "@mail/new/web/chatter_service";
 import { DiscussClientAction } from "@mail/new/discuss/discuss_client_action";
 import { personaService } from "@mail/new/core/persona_service";
 import { attachmentService } from "@mail/new/attachments/attachment_service";
@@ -165,7 +164,6 @@ async function setupMessagingServiceRegistries({
         "mail.store": storeService,
         "mail.activity": activityService,
         "mail.attachment": attachmentService,
-        "mail.chatter": chatterService,
         "mail.thread": threadService,
         "mail.message": messageService,
         "mail.chat_window": chatWindowService,

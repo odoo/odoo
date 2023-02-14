@@ -18,7 +18,6 @@ export class ActivityMarkAsDone extends Component {
     setup() {
         this.messaging = useMessaging();
         this.threadService = useState(useService("mail.thread"));
-        this.chatter = useState(useService("mail.chatter"));
         this.textArea = useRef("textarea");
         onMounted(() => {
             this.textArea.el.focus();
