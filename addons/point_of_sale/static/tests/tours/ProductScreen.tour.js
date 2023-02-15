@@ -130,3 +130,11 @@ TextAreaPopup.do.clickConfirm();
 ProductScreen.check.orderlineHasCustomerNote("Desk Organizer", "1", "Test customer note");
 
 registry.category("web_tour.tours").add("ProductScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.enterOpeningAmount('90');
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.check.checkSecondCashClosingDetailsLineAmount('10.00', '-');
+
+registry.category("web_tour.tours").add("CashClosingDetails", { test: true, url: "/pos/ui", steps: getSteps() });
