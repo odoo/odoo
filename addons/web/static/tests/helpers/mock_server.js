@@ -1002,15 +1002,18 @@ export class MockServer {
         const groupByFieldNames = groupBy.map((groupByField) => {
             return groupByField.split(":")[0];
         });
-        let aggregatedFields = [];
+        const aggregatedFields = [];
         // if no fields have been given, the server picks all stored fields
         if (kwargs.fields.length === 0) {
-            aggregatedFields = Object.keys(fields).filter(
-                (fieldName) => !groupByFieldNames.includes(fieldName)
-            );
+            for (const fieldName in fields) {
+                if (groupByFieldNames.includes(fieldName)) {
+                    continue;
+                }
+                aggregatedFields.push({ fieldName, name: fieldName });
+            }
         } else {
-            kwargs.fields.forEach((field) => {
-                const [, name, func, fname] = field.match(regex_field_agg);
+            kwargs.fields.forEach((fspec) => {
+                const [, name, func, fname] = fspec.match(regex_field_agg);
                 const fieldName = func ? fname || name : name;
                 if (func && !VALID_AGGREGATE_FUNCTIONS.includes(func)) {
                     throw new Error(`Invalid aggregation function ${func}.`);
@@ -1023,29 +1026,36 @@ export class MockServer {
                     return;
                 }
                 if (
-                    fields[fieldName] &&
                     fields[fieldName].type === "many2one" &&
-                    func !== "count_distinct"
+                    !["count_distinct", "array_agg"].includes(func)
                 ) {
                     return;
                 }
-                aggregatedFields.push(fieldName);
+
+                aggregatedFields.push({ fieldName, func, name });
             });
         }
         function aggregateFields(group, records) {
-            let type;
-            for (let i = 0; i < aggregatedFields.length; i++) {
-                type = fields[aggregatedFields[i]].type;
-                if (type === "float" || type === "integer") {
-                    group[aggregatedFields[i]] = null;
-                    for (let j = 0; j < records.length; j++) {
-                        const value = group[aggregatedFields[i]] || 0;
-                        group[aggregatedFields[i]] = value + records[j][aggregatedFields[i]];
+            for (const { fieldName, func, name } of aggregatedFields) {
+                switch (fields[fieldName].type) {
+                    case "integer":
+                    case "float": {
+                        group[name] = 0;
+                        for (const r of records) {
+                            group[name] += r[fieldName];
+                        }
+                        break;
                     }
-                }
-                if (type === "many2one") {
-                    const ids = records.map((record) => record[aggregatedFields[i]]);
-                    group[aggregatedFields[i]] = [...new Set(ids)].length || null;
+                    case "many2one": {
+                        const ids = records.map((r) => r[fieldName]);
+                        if (func === "array_agg") {
+                            group[name] = ids.map((id) => (id ? id : null));
+                        } else {
+                            const uniqueIds = [...new Set(ids)];
+                            group[name] = uniqueIds.length || null;
+                        }
+                        break;
+                    }
                 }
             }
         }
