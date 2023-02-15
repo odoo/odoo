@@ -1372,7 +1372,7 @@
             <field name="arch" type="xml">
                 <form class="o_form_project_tasks">
                     <group>
-                        <field name="name" string = "Task Title" placeholder="e.g. Send Invitations"/>
+                        <field name="display_name" string = "Task Title" placeholder="e.g. Send Invitations" required="True"/>
                         <field name="project_id" widget="project_private_task" invisible="context.get('default_project_id', False)" placeholder="Private" class="o_project_task_project_field"/>
                         <field name="user_ids" options="{'no_open': True, 'no_quick_create': True}" domain="[('share', '=', False), ('active', '=', True)]"
                             widget="many2many_avatar_user"/>

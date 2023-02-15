@@ -3,6 +3,7 @@
 
 import ast
 import json
+import re
 from pytz import UTC
 from collections import defaultdict
 from datetime import timedelta, datetime, time
@@ -1336,6 +1337,15 @@ class Task(models.Model):
             "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
             "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary.")
 
+    # Quick creation shortcuts
+    display_name = fields.Char(compute='_compute_display_name', inverse='_inverse_display_name',
+        help="""Use these keywords in the title to set new tasks:\n
+            #tags Set tags on the task
+            @user Assign the task to a user
+            ! Set the task a high priority\n
+            Make sure to use the right format and order e.g. Improve the configuration screen #feature #v16 @Mitchell !""",
+    )
+
     _sql_constraints = [
         ('recurring_task_has_no_parent', 'CHECK (NOT (recurring_task IS TRUE AND parent_id IS NOT NULL))', "A subtask cannot be recurrent.")
     ]
@@ -1708,6 +1718,70 @@ class Task(models.Model):
         for task in self:
             task.display_parent_task_button = task.parent_id in accessible_parent_tasks
 
+    def _get_group_pattern(self):
+        return {
+            'tags_and_users': r'\s([#@]%s[^\s]+)',
+            'priority': r'\s(!)$',
+        }
+
+    def _get_groups_patterns(self):
+        group_pattern = self._get_group_pattern()
+        return [
+            r'(?:%s)*' % (group_pattern['tags_and_users'] % ''),
+            r'(?:%s)?' % group_pattern['priority'],
+        ]
+
+    def _get_cannot_start_with_patterns(self):
+        return [r'(?![#!@\s])']
+
+    def _extract_tags_and_users(self):
+        tags = []
+        users = []
+        tags_and_users_group = self._get_group_pattern()['tags_and_users']
+        for word in re.findall(tags_and_users_group % '', self.display_name):
+            (tags if word.startswith('#') else users).append(word[1:])
+        users_to_keep = []
+        user_ids = []
+        for user in users:
+            matched_users = self.env['res.users'].name_search(user)
+            if len(matched_users) == 1:
+                user_ids.append(Command.link(matched_users[0][0]))
+            else:
+                users_to_keep.append(r'%s\b' % user)
+        self.user_ids = user_ids
+        if tags:
+            domain = expression.OR([[('name', '=ilike', tag)] for tag in tags])
+            existing_tags = self.env['project.tags'].search(domain)
+            existing_tags_names = {tag.name.lower() for tag in existing_tags}
+            new_tags_names = {tag for tag in tags if tag.lower() not in existing_tags_names}
+            self.tag_ids = [Command.set(existing_tags.ids)] + [Command.create({'name': name}) for name in new_tags_names]
+        pattern = tags_and_users_group % ('(?!%s)' % ('|').join(users_to_keep) if users_to_keep else '')
+        self.display_name, dummy = re.subn(pattern, '', self.display_name)
+
+    def _extract_priority(self):
+        self.priority = "1"
+        priority_group = self._get_group_pattern()['priority']
+        self.display_name, dummy = re.subn(priority_group, '', self.display_name)
+
+    def _get_groups(self):
+        return [
+            lambda task: task._extract_tags_and_users(),
+            lambda task: task._extract_priority(),
+        ]
+
+    def _inverse_display_name(self):
+        for task in self:
+            pattern = re.compile(r'^%s.+?%s$' % (
+                ('').join(task._get_cannot_start_with_patterns()),
+                ('').join(task._get_groups_patterns()))
+            )
+            match = pattern.match(task.display_name)
+            if match:
+                for group, extract_data in enumerate(task._get_groups(), start=1):
+                    if match.group(group):
+                        extract_data(task)
+                task.name = task.display_name.strip()
+
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         if default is None:
@@ -1949,6 +2023,8 @@ class Task(models.Model):
         default_stage = dict()
         recurrences = self.env['project.task.recurrence']
         for vals in vals_list:
+            if not vals.get('name') and vals.get('display_name'):
+                vals['name'] = vals['display_name']
             if is_portal_user:
                 self._ensure_fields_are_accessible(vals.keys(), operation='write', check_group_user=False)
 
