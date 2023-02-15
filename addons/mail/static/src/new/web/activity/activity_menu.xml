@@ -12,12 +12,12 @@
                 <div t-if="store.activityCounter === 0" class="o-mail-no-activity align-items-center text-muted p-2 opacity-50 d-flex justify-content-center">
                     <span>Congratulations, you're done with your activities.</span>
                 </div>
-                <div class="d-flex flex-column overflow-auto cursor-pointer" name="activityGroups">
+                <div class="d-flex flex-column overflow-hidden cursor-pointer" name="activityGroups">
                     <t t-foreach="store.activityGroups" t-as="group" t-key="group.id" name="activityGroupLoop">
                         <div class="o-mail-activity-group d-flex p-2 border-bottom" t-att-data-model_name="group.model" t-on-click="() => this.openActivityGroup(group)">
                             <img class="o-mail-activity-img" alt="Activity" t-att-src="group.icon"/>
-                            <div class="flex-grow-1">
-                                <div class="d-flex px-2">
+                            <div class="flex-grow-1 overflow-hidden">
+                                <div class="d-flex px-2" name="activityTitle">
                                     <span class="flex-grow-1"><t t-esc="group.name"/></span>
                                     <t t-foreach="group.actions or []" t-as="action" t-key="action_index">
                                         <button class="btn fa p-0" type="button" t-att-title="action.name" t-att-class="action.icon"/>
