@@ -7,7 +7,7 @@
             <search string="HR Attendance Search">
                 <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
-                <filter name="check_in" string="Check In" date="check_in"/>
+                <filter name="check_in" string="Check In" date="check_in" default_period="last_month"/>
                 <group expand="0" string="Group By">
                     <filter string="Employee" name="groupby_employee" context="{'group_by': 'employee_id'}"/>
                     <filter string="Check In" name="groupby_check_in" context="{'group_by': 'check_in'}"/>
@@ -47,7 +47,7 @@
         <field name="res_model">hr.attendance.report</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_attendance_report_view_search"/>
-        <field name="context">{'group_by': ['check_in:day', 'employee_id']}</field>
+        <field name="context">{'group_by': ['check_in:day', 'employee_id'], 'search_default_check_in': '1'}</field>
     </record>
 
     <record id="hr_attendance_report_action_filtered" model="ir.actions.act_window">
