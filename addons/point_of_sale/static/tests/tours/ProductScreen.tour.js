@@ -141,3 +141,19 @@ odoo.define('point_of_sale.tour.FixedPriceNegativeQty', function (require) {
 
     Tour.register('FixedTaxNegativeQty', { test: true, url: '/pos/ui' }, getSteps());
 });
+
+odoo.define('point_of_sale.tour.OpenCloseCashCount', function (require) {
+    'use strict';
+
+    const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
+    const { getSteps, startSteps } = require('point_of_sale.tour.utils');
+    var Tour = require('web_tour.tour');
+
+    startSteps();
+
+    ProductScreen.do.enterOpeningAmount('90');
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.check.checkSecondCashClosingDetailsLineAmount('10.00', '-');
+
+    Tour.register('CashClosingDetails', { test: true, url: '/pos/ui' }, getSteps());
+});

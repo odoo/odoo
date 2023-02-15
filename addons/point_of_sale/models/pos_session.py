@@ -1492,28 +1492,16 @@ class PosSession(models.Model):
         self.state = 'opened'
         self.opening_notes = notes
         difference = cashbox_value - self.cash_register_id.balance_start
-        self.cash_register_id.balance_start = cashbox_value
         self._post_cash_details_message('Opening', difference, notes)
         #if there is a difference create an account move to register the loss
         if difference:
-            account_to_use = self.cash_register_id.journal_id.loss_account_id.id if difference < 0 else self.cash_register_id.journal_id.profit_account_id.id
-            self.env['account.move'].create({
-                'ref': 'Opening Balance difference for %s' % (self.name),
+            self.env['account.bank.statement.line'].create({
+                'payment_ref': 'Opening Balance difference for %s' % (self.name),
                 'journal_id': self.cash_register_id.journal_id.id,
                 'date': self.start_at,
-                'line_ids': [
-                    (0, 0, {
-                        'account_id': self.cash_register_id.journal_id.default_account_id.id,
-                        'debit': difference > 0 and difference or 0,
-                        'credit': difference < 0 and -difference or 0,
-                    }),
-                    (0, 0, {
-                        'account_id': account_to_use,
-                        'credit': difference > 0 and difference or 0,
-                        'debit': difference < 0 and -difference or 0,
-                    }),
-                ]
-            }).action_post()
+                'amount': difference,
+                'statement_id': self.cash_register_id.id,
+            })
 
     def _post_cash_details_message(self, state, difference, notes):
         message = ""
