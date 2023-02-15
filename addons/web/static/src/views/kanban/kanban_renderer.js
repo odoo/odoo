@@ -543,16 +543,19 @@ export class KanbanRenderer extends Component {
      */
     focusNextCard(area, direction) {
         const { isGrouped } = this.props.list;
+        const closestCard = document.activeElement.closest(".o_kanban_record");
+        if (!closestCard) {
+            return;
+        }
         const groups = isGrouped ? [...area.querySelectorAll(".o_kanban_group")] : [area];
         const cards = [...groups]
             .map((group) => [...group.querySelectorAll(".o_kanban_record")])
             .filter((group) => group.length);
 
-        // Search current card position
         let iGroup;
         let iCard;
         for (iGroup = 0; iGroup < cards.length; iGroup++) {
-            const i = cards[iGroup].indexOf(document.activeElement);
+            const i = cards[iGroup].indexOf(closestCard);
             if (i !== -1) {
                 iCard = i;
                 break;

@@ -401,6 +401,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         last_modified=mtime,
         etag=add_etags,
         max_age=cache_timeout,
+        response_class=Response,
         conditional=conditional
     )
 

@@ -219,7 +219,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
             collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
-            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link'],
+            renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
