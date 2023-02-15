@@ -324,9 +324,16 @@ class MergePartnerAutomatic(models.TransientModel):
         _logger.info("dst_partner: %s", dst_partner.id)
 
         # FIXME: is it still required to make and exception for account.move.line since accounting v9.0 ?
-        if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])]):
+        if extra_checks and 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([('partner_id', 'in', [partner.id for partner in src_partners])], limit=1):
             raise UserError(_("Only the destination contact may be linked to existing Journal Items. Please ask the Administrator if you need to merge several contacts linked to existing Journal Items."))
 
+        # Prevent break the hash
+        if 'account.move.line' in self.env and self.env['account.move.line'].sudo().search([
+            ('partner_id', 'in', src_partners.ids),
+            ('parent_state', '=', 'posted'),
+            ('move_id.secure_sequence_number', '!=', 0)], limit=1):
+            raise UserError(_('You cannot merge a contact linked to a posted and hashed Journal Entry with another contact.'))
+            
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
             partner_ids.mapped('user_ids').sudo().write({
