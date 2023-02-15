@@ -38,8 +38,8 @@ class pos_session(models.Model):
         return super(pos_session, self).open_frontend_cb()
 
 
-ORDER_FIELDS = ['date_order', 'user_id', 'lines', 'payment_ids', 'pricelist_id', 'partner_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id']
-LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids', 'tax_ids_after_fiscal_position']
+ORDER_FIELDS = ['date_order', 'user_id', 'lines', 'payment_ids', 'pricelist_id', 'session_id', 'pos_reference', 'sale_journal', 'fiscal_position_id']
+LINE_FIELDS = ['notice', 'product_id', 'qty', 'price_unit', 'discount', 'tax_ids', 'tax_ids_after_fiscal_position', 'full_product_name']
 ERR_MSG = _lt('According to the French law, you cannot modify a %s. Forbidden fields: %s.')
 
 

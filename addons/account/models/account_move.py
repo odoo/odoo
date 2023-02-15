@@ -32,7 +32,7 @@ from odoo.tools import (
 
 #forbidden fields
 INTEGRITY_HASH_MOVE_FIELDS = ('date', 'journal_id', 'company_id')
-INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'partner_id')
+INTEGRITY_HASH_LINE_FIELDS = ('debit', 'credit', 'account_id', 'name', 'date')
 
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
