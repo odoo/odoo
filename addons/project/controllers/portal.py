@@ -428,7 +428,7 @@ class ProjectCustomerPortal(CustomerPortal):
                 else:
                     grouped_tasks = [Task_sudo.concat(*g) for k, g in groupbyelem(tasks, itemgetter(group))]
             else:
-                grouped_tasks = [tasks]
+                grouped_tasks = [tasks] if tasks else []
 
 
             task_states = dict(Task_sudo._fields['state']._description_selection(request.env))
