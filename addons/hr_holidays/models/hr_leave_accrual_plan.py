@@ -8,6 +8,7 @@ class AccrualPlan(models.Model):
     _name = "hr.leave.accrual.plan"
     _description = "Accrual Plan"
 
+    active = fields.Boolean(default=True)
     name = fields.Char('Name', required=True)
     time_off_type_id = fields.Many2one('hr.leave.type', string="Time Off Type",
         check_company=True,

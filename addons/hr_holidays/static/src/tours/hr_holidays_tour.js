@@ -62,7 +62,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
         position: 'bottom',
     },
     {
-        trigger: 'button[data-menu-xmlid="hr_holidays.menu_hr_holidays_approvals"]',
+        trigger: 'button[data-menu-xmlid="hr_holidays.menu_hr_holidays_management"]',
         content: _t("Let's go validate it"),
         position: 'bottom'
     },

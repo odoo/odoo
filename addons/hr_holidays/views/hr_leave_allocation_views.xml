@@ -12,10 +12,12 @@
                 <filter domain="[('state', '=', 'confirm')]" string="To Approve" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
                 <separator/>
-                <filter name="year" string="Current Year"
+                <filter name="year" string="Currently Valid"
                     domain="[
-                        ('date_from', '&gt;=', context_today().strftime('%Y-1-1')),
-                        ('date_from', '&lt;=', context_today().strftime('%Y-12-31')),
+                        ('date_from', '&lt;=', context_today().strftime('%Y-%m-%d')),
+                        '|',
+                        ('date_to', '=', False),
+                        ('date_to', '&gt;=', context_today().strftime('%Y-%m-%d')),
                     ]"
                      help="Active Allocations"/>
                 <separator/>
@@ -75,15 +77,16 @@
                     <div class="oe_button_box" name="button_box">
                     </div>
                     <div id="title" class="oe_title">
-                        <h2><field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
+                        <h2><field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))], 'readonly': True}"/>
                         <field name="name_validity" attrs="{'invisible': [('state', 'in', ('draft', 'confirm'))]}"/></h2>
                     </div>
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
+                            <field name="has_accrual_plan" invisible="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id, 'default_date_from':current_date, 'request_type':'allocation'}"/>
                             <field name="allocation_type" invisible="1" widget="radio"
-                                attrs="{'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
+                                attrs="{'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))], 'invisible': [('has_accrual_plan', '=', False)]}"/>
                             <field name="is_officer" invisible="1"/>
                             <field name="accrual_plan_id" attrs="{'invisible': [('allocation_type', '=', 'regular')], 'readonly': ['|', ('is_officer', '=', False), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             <div class="o_td_label" name="validity_label">
@@ -100,7 +103,7 @@
 
                             <field name="number_of_days" invisible="1"/>
                             <div class="o_td_label">
-                                <label for="number_of_days_display" string="Duration"
+                                <label for="number_of_days_display" string="Amount"
                                     attrs="{'readonly': [('allocation_type', '=', 'accrual'), ('state', 'not in', ('draft', 'confirm'))]}"/>
                             </div>
                             <div name="duration_display">
@@ -247,7 +250,7 @@
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id" class="fw-bold"/>
                 <field name="name"/>
-                <field name="duration_display" string="Duration"/>
+                <field name="duration_display" string="Amount"/>
                 <field name="date_from" string="Validity Start" optional="hide"/>
                 <field name="date_to" string="Validity Stop" optional="hide"/>
                 <field name="allocation_type"/>
@@ -307,6 +310,18 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//filter[@name='my_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+             <xpath expr="//filter[@name='active_employee']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='active_types']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='inactive']" position="attributes">
+                <attribute name="string">Archived Time Off Type</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='group_employee']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
@@ -416,7 +431,7 @@
                 Employees request allocations to Time Off Officers (e.g. recuperation days).
             </p>
         </field>
-        <field name="context">{}</field>
+        <field name="context">{'search_default_year': 1 , 'is_employee_allocation': True}</field>
         <field name="domain">[('employee_id.user_id', '=', uid)]</field>
     </record>
     <record id="hr_leave_allocation_action_my_view_tree" model="ir.actions.act_window.view">

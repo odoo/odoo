@@ -7,7 +7,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     setup(params, services) {
         super.setup(params, services);
 
-        this.data.stressDays = {};
+        this.data.mandatoryDays = {};
         if (this.env.isSmall) {
             this.meta.scale = 'month';
         }
@@ -46,7 +46,7 @@ export class TimeOffCalendarModel extends CalendarModel {
     async updateData(data) {
         await super.updateData(data);
 
-        data.stressDays = await this.fetchStressDays(data);
+        data.mandatoryDays = await this.fetchMandatoryDays(data);
     }
 
     /**
@@ -64,16 +64,16 @@ export class TimeOffCalendarModel extends CalendarModel {
         });
     }
 
-    async fetchStressDays(data) {
-        return this.orm.call("hr.employee", "get_stress_days", [
+    async fetchMandatoryDays(data) {
+        return this.orm.call("hr.employee", "get_mandatory_days", [
             this.employeeId,
             serializeDate(data.range.start, "datetime"),
             serializeDate(data.range.end, "datetime"),
         ]);
     }
 
-    get stressDays() {
-        return this.data.stressDays;
+    get mandatoryDays() {
+        return this.data.mandatoryDays;
     }
 
     get employeeId() {
