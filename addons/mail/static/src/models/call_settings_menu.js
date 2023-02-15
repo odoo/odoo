@@ -12,6 +12,16 @@ Model({
         async _created() {
             browser.addEventListener("keydown", this._onKeyDown);
             browser.addEventListener("keyup", this._onKeyUp);
+            if (!this.messaging.browser.navigator.mediaDevices) {
+                // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
+                this.messaging.userNotificationManager.sendNotification({
+                    message: this.env._t("SSL might not be set up properly"),
+                    title: this.env._t("Media devices unobtainable"),
+                    type: "warning",
+                });
+                console.warn("Media devices unobtainable. SSL might not be set up properly.");
+                return;
+            }
             this.update({
                 userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices(),
             });
