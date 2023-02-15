@@ -49,7 +49,7 @@
                             <strong class="me-1 text-truncate" t-esc="message.author.name"/>
                         </span>
                         <small t-if="!message.isTransient" class="o-mail-message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
-                            <t t-if="shouldDisplayAuthorName">-</t>
+                            <t t-if="shouldDisplayAuthorName">- </t>
                             <RelativeTime datetime="message.datetime" />
                         </small>
                         <MessageSeenIndicator
