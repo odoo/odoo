@@ -208,6 +208,9 @@ export class Message extends Component {
         if (this.store.inPublicPage) {
             return false;
         }
+        if (this.message.author.type === "guest") {
+            return false;
+        }
         return this.props.thread.chatPartnerId !== this.message.author.id;
     }
 

@@ -29,6 +29,9 @@ export class ChannelMemberList extends Component {
         if (member.persona === this.store.self) {
             return false;
         }
+        if (member.persona.type === "guest") {
+            return false;
+        }
         return true;
     }
 
