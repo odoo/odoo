@@ -59,8 +59,8 @@ class TestProjectSubtasks(TestProjectCommon):
         """
             Create a task in the quick create form should take the default project in the context
         """
-        with Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form") as task_form:
-            task_form.name = 'Test Task 2'
+        task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
+        task_form.display_name = 'Test Task 2'
         task = task_form.save()
 
         self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project.")
@@ -72,10 +72,11 @@ class TestProjectSubtasks(TestProjectCommon):
         """
         form_views = self.env['ir.ui.view'].search([('model', '=', 'project.task'), ('type', '=', 'form')])
         for form_view in form_views:
-            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id, 'default_name': 'Test Task 1'}), view=form_view)
+            task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id, 'default_name': 'Test Task 1', 'default_display_name': 'Test Task 1'}), view=form_view)
             # Some views have the `name` field invisible
             # As the goal is simply to test the default project field and not the name, we can skip setting the name
             # in the view and set it using `default_name` instead
+            # Quick create form use display_name and for the same goal, we can add default_display_name for that form
             task = task_form.save()
 
             self.assertEqual(task.project_id, self.project_pigs, "The project should be assigned from the default project, form_view name : %s." % form_view.name)

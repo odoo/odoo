@@ -60,7 +60,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     trigger: 'button.o-kanban-button-new',
     content: 'Click on Create button to create a task into your project.',
 }, {
-    trigger: 'div[name="name"] > input',
+    trigger: 'div[name="display_name"] > input',
     content: 'Select the name of the task (e.g. Onboarding)',
     run: 'text Onboarding',
 }, {
