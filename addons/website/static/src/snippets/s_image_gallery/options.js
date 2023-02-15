@@ -275,7 +275,7 @@ options.registry.gallery = options.Class.extend({
             src: img.getAttribute('src'),
             alt: img.getAttribute('alt'),
         }));
-        var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
+        var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
             images: images,
             index: 0,

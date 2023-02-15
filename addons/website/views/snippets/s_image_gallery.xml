@@ -80,6 +80,11 @@
                 <!-- Hidden option -->
                 <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
             </we-select>
+            <!--
+            TODO adapt in master: this was patched in JS to replace
+            data-attribute-name="interval" by data-attribute-name="bsInterval"
+            in order to be consistent with Bootstrap 5.
+            -->
             <we-input string="Speed"
                 data-dependencies="slideshow_mode_opt"
                 data-apply-to=".carousel:first"

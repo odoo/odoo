@@ -117,6 +117,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 </we-select>
             </div>
         `, _t("Position"), _t("Cover"), _t("Contain"))));
+        // TODO remove me in master
+        $html.find('[data-attribute-name="interval"]')[0].dataset.attributeName = "bsInterval";
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
