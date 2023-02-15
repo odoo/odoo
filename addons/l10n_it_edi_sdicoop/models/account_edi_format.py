@@ -33,6 +33,7 @@ class AccountEdiFormat(models.Model):
                 res = proxy_user._make_request(proxy_user._get_server_url() + '/api/l10n_it_edi/1/in/RicezioneInvoice',
                                                params={'recipient_codice_fiscale': company.l10n_it_codice_fiscale})
             except AccountEdiProxyError as e:
+                res = {}
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
             proxy_acks = []
