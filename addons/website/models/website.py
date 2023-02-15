@@ -1193,6 +1193,7 @@ class Website(models.Model):
             domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
+        pages = pages._get_most_specific_pages()
         return pages
 
     def search_pages(self, needle=None, limit=None):

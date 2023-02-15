@@ -2240,7 +2240,7 @@ msgstr "Afegir una línia"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr "Afegiu una línia a la vostra factura"
+msgstr "Afegeix una línia a la factura"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__terms_type__html
@@ -2550,7 +2550,7 @@ msgstr "Import Empresa Moneda Signada"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_amount
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_amount
 msgid "Amount Condition"
-msgstr "Condició de la Quantitat"
+msgstr "Estat de l'import"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__amount_residual
@@ -3245,7 +3245,7 @@ msgid ""
 "Bank Transactions are posted immediately after import or synchronization. Their counterparty is the bank suspense account.\n"
 "Reconciliation replaces the latter by the definitive account(s)."
 msgstr ""
-"Les transaccions bancàries es publiquen immediatament després de la importació o la sincronització.                                                                      La seva contrapart és el compte de suspens bancari.\n"
+"Les transaccions bancàries es publiquen immediatament després de la importació o la sincronització. La seva contrapart és el compte de suspens bancari.\n"
 "La conciliació substitueix aquest últim pel compte definitiu."
 
 #. module: account
@@ -3476,7 +3476,7 @@ msgstr "Etiqueta de botó"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_button
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_button
 msgid "Button to generate counterpart entry"
-msgstr "Botó per generar l'entrada de contrapartida"
+msgstr "Botó per generar l'entrada de la contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_report_line__foldable
@@ -8611,7 +8611,7 @@ msgstr "Diaris"
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_journal_ids
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model_template__match_journal_ids
 msgid "Journals Availability"
-msgstr "Disponibilitat de revistes"
+msgstr "Diaris disponibles"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__period_lock_date
@@ -12134,13 +12134,13 @@ msgstr "Arbre arrodonit"
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__invoice_matching
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__invoice_matching
 msgid "Rule to match invoices/bills"
-msgstr "Regla per a coincidir amb els invoices/biells"
+msgstr "Regla per reconciliar les factures"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model__rule_type__writeoff_suggestion
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__rule_type__writeoff_suggestion
 msgid "Rule to suggest counterpart entry"
-msgstr "Regla a suggerir l' entrada homòleg"
+msgstr "Regla per a suggerir l'entrada de la contrapartida"
 
 #. module: account
 #: model:ir.model,name:account.model_account_reconcile_model_line
@@ -14939,6 +14939,16 @@ msgid "There was an error processing this page."
 msgstr "Hi ha hagut un error el processar la pàgina."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+"S'ha produït un error en intentar afegir el bàner al PDF original.\n"
+"Assegureu-vos que el fitxer font és vàlid."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Aquests impostos s'estableixen en qualsevol nou producte creat."
@@ -15674,6 +15684,12 @@ msgstr "Factures impagades"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Sense comptabilitzar"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

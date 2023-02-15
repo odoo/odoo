@@ -10,24 +10,24 @@
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2022
 # Sandra Franch <sandra.franch@upc.edu>, 2022
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # M Palau <mpalau@tda.ad>, 2022
 # Martin Trigaux, 2022
 # Arnau Ros, 2022
 # marcescu, 2022
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # Quim - eccit <quim@eccit.com>, 2022
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2022
 # Farouk Jabiri, 2022
 # Ivan Espinola, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2023-02-07 08:56+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -65,7 +65,7 @@ msgstr ""
 "                                <i class=\"fa fa-long-arrow-down d-block text-muted mx-3 my-2\" style=\"font-size: 1.5rem\"/>"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "<b>Drag and Drop</b> this snippet below the event title."
@@ -319,12 +319,14 @@ msgid "Add to Calendar"
 msgstr "Afegeix al calendari"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "All Countries"
 msgstr "Tots els països"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "All Events"
@@ -371,6 +373,7 @@ msgid "Author"
 msgstr "Autor"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Business Workshops"
@@ -399,6 +402,7 @@ msgid "Close"
 msgstr "Tancar"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
 #: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
@@ -419,6 +423,7 @@ msgid "Company"
 msgstr "Empresa"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Conference For Architects"
@@ -491,16 +496,11 @@ msgid "Display community tab on website"
 msgstr "Mostra la pestanya de comunitat al lloc web"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Don't forget to click <b>save</b> when you're done."
-msgstr "No oblideu fer clic <b>desa</b> quan hagis acabat."
-
-#. module: website_event
-#: model:ir.ui.menu,name:website_event.menu_edit_menu
-msgid "Edit Event Menu"
-msgstr "Modifica el menú Esdeveniment"
+msgstr "No oblidis fer clic a <b>desar</b> quan hagis acabat."
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -607,6 +607,7 @@ msgid "Event unpublished"
 msgstr "Esdeveniment despublicat"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website.py:0
 #: model:ir.ui.menu,name:website_event.menu_event_pages
 #: model:website.menu,name:website_event.menu_events
@@ -668,6 +669,7 @@ msgid "Google"
 msgstr "Google"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Great Reno Ballon Race"
@@ -679,6 +681,7 @@ msgid "Grid"
 msgstr "Graella"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Hockey Tournament"
@@ -690,6 +693,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__introduction
 #, python-format
@@ -758,12 +762,14 @@ msgid "List"
 msgstr "Llista"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "Live Music Festival"
 msgstr "Festival de música en viu"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__location
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
@@ -782,7 +788,7 @@ msgid "Location Menus"
 msgstr "Menús d'ubicació"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
@@ -823,6 +829,7 @@ msgid "New Event"
 msgstr "Nou esdeveniment"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website.py:0
 #, python-format
 msgid "Next Events"
@@ -854,6 +861,7 @@ msgid "Not Published"
 msgstr "No publicat"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
 msgid "OpenWood Collection Online Reveal"
@@ -870,6 +878,7 @@ msgid "Our Trainings"
 msgstr "Les nostres formacions"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Past Events"
@@ -887,7 +896,7 @@ msgid "Photos"
 msgstr "Fotos"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/website_event.js:0
 #, python-format
 msgid "Please select at least one ticket."
@@ -915,7 +924,8 @@ msgid "Ref:"
 msgstr "Ref:"
 
 #. module: website_event
-#. openerp-web
+#. odoo-python
+#. odoo-javascript
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -946,6 +956,7 @@ msgid "Registered Events"
 msgstr "Esdeveniments registrats"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/controllers/main.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
@@ -1095,13 +1106,14 @@ msgid "The full URL to access the document through the website."
 msgstr "L'URL completa per accedir al document a través del lloc web."
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "This month"
 msgstr "Aquest mes"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "This shortcut will bring you right back to the event form."
@@ -1111,6 +1123,13 @@ msgstr "Aquesta drecera us portarà de tornada al formulari d'esdeveniment."
 #: model_terms:ir.actions.act_window,help:website_event.website_event_menu_action
 msgid "This technical menu displays all event sub-menu items."
 msgstr "Aquest menú tècnic mostra tots els elements del submenú esdeveniment."
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/controllers/main.py:0
+#, python-format
+msgid "This ticket is not available for sale for this event"
+msgstr "Aquest tiquet no està disponible per a aquest esdeveniment"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -1128,6 +1147,7 @@ msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr "Els tiquets d'aquest esdeveniment són <b>Venuts</b>"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
 msgid "Today"
@@ -1144,6 +1164,7 @@ msgid "Top Bar Filter"
 msgstr "Filtre de barra superior"
 
 #. module: website_event
+#. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model:website.snippet.filter,name:website_event.website_snippet_filter_event_list
 #: model_terms:ir.ui.view,arch_db:website_event.event_time
@@ -1157,7 +1178,7 @@ msgid "Use the top button '<b>+ New</b>' to create an event."
 msgstr "Utilitzeu el botó superior '<b>+ Nou</b>' per crear un esdeveniment."
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Use this <b>shortcut</b> to easily access your event web page."
@@ -1280,7 +1301,7 @@ msgid "Whether event is going to start today if still not ongoing"
 msgstr "Si l'esdeveniment començarà avui si encara no està en curs"
 
 #. module: website_event
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""

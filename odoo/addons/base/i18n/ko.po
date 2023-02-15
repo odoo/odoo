@@ -2294,6 +2294,20 @@ msgid ""
 "    valid ones.\n"
 "    "
 msgstr ""
+"\n"
+"    이 모듈은 'account_edi_ubl_cii' 모듈을 테스트하며, 일부 현지화 실행을 위한 종속성 항목 필요로 인해 \n"
+"    분리되어 있습니다. 런봇 과부하를 방지하기 위해 'l10n' 로 시작하는 이름을 부여하였습니다.\n"
+"    \n"
+"    테스트 파일은 소스별로 구분되며 다음에서 가져왔습니다:\n"
+"    \n"
+"    * the factur-x doc (form the FNFE)\n"
+"    * the peppol-bis-invoice-3 doc (the github repository: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples contains examples)\n"
+"    * odoo, these files pass all validation tests (using ecosio or the FNFE validator)\n"
+"    \n"
+"    외부의 샘플을 정확히 가져왔는지 테스트합니다 (환율, 총액 및 세금 총액 일치 여부)..\n"
+"   주어진 매개변수를 사용하여 odoo에서 xml 를 생성시 예상되는 유효한 xml과 정확히 일치하는 xml이 도출되는지\n"
+"    테스트합니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_ebay
@@ -2368,6 +2382,14 @@ msgid ""
 "- the portal security settings page if the user is not internal. \n"
 "    "
 msgstr ""
+"\n"
+"2FA 초대 메일\n"
+"===============\n"
+"사용자가 다른 사용자에게 이메일을 보내 2단계 인증을 사용하도록 \n"
+"초대할 수 있습니다. 이 이메일을 통해 다음의 페이지로 이동합니다 :\n"
+"- 내부 사용자인 경우 사용자 보안 설정.\n"
+"- 내부 사용자가 아닌 경우 포털 보안 설정 페이지. \n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp_mail_enforce
@@ -2381,6 +2403,14 @@ msgid ""
 "and encourage users to configure their 2FA using an authenticator app.\n"
 "    "
 msgstr ""
+"\n"
+"2FA 메일\n"
+"===============\n"
+"인증 앱을 사용하는 2FA가 구성되지 않은 경우 사용자의 이메일\n"
+"받은 편지함에 코드를 전송하여 2단계 인증을 수행합니다.\n"
+"사용자가 기본적으로 2단계 인증을 사용하는 것을 필수로 하여,\n"
+"인증 앱을 사용하여 2FA를 구성하도록 권장합니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_intrastat
@@ -2776,6 +2806,10 @@ msgid ""
 "==================\n"
 "    "
 msgstr ""
+"\n"
+"회계 보고서\n"
+"==================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_reports
@@ -2800,6 +2834,12 @@ msgid ""
 "to the administration.\n"
 "    "
 msgstr ""
+"\n"
+"회계 보고서 세무 알림\n"
+"===============================\n"
+"이 모듈은 세금 보고서를 관련 담당 부처에 보낼 준비가 끝나면 알림을\n"
+"추가합니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -2879,6 +2919,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"이탈리아 회계 보고서\n"
+"============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_reports
@@ -2889,6 +2934,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"케냐 회계 보고서\n"
+"============================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lu_reports
@@ -2911,6 +2961,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"노르웨이 회계 보고서\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_syscohada_reports
@@ -2930,6 +2985,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"포르투갈 회계 보고서\n"
+"================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_sg_reports
@@ -2941,6 +3001,12 @@ msgid ""
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
 msgstr ""
+"\n"
+"싱가포르 회계 보고서\n"
+"================================\n"
+"이 모듈을 사용하면 IRAS 감사 파일을 생성할 수 있습니다.\n"
+" - IRAS 감사 파일을 생성하려면, 회계 -> 보고 -> IRAS 감사 파일 로 이동하십시오.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -2948,6 +3014,8 @@ msgid ""
 "\n"
 "Add Subcontracting information in Cost Analysis Report and The Production Analysis\n"
 msgstr ""
+"\n"
+"원가분석보고서 및 생산분석보고서에 하청 관련 정보 추가\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract_reports
@@ -3101,6 +3169,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"웹사이트 양식에 기능을 추가하여 CRM 앱에서 잠재고객을 확보하고 영업기회를 생성하십시오.\n"
+"영업기회를 생성하기 위해서는 *웹사이트 빌더* 내에서 양식을 커스터마이징해야 합니다.\n"
+"\n"
+"이 모듈에는 연락처 전화번호 및 휴대폰 번호 인증 절차가 포함되어 있습니다."
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_email_template
@@ -3136,6 +3209,8 @@ msgid ""
 "\n"
 "Add supports to fill three optional fields used when using Chorus Pro, especially when invoicing public services.\n"
 msgstr ""
+"\n"
+"Chorus Pro를 사용할 경우, 특히 공공 서비스 부문에 대한 청구서 발송 시 사용되는 세 가지 선택 항목을 채우기 위한 지원을 추가합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_project
@@ -3187,6 +3262,8 @@ msgid ""
 "\n"
 "Adds an action to sign documents attached to tasks.\n"
 msgstr ""
+"\n"
+"작업에 첨부된 문서에 서명하는 업무를 추가합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_fleet
@@ -3214,6 +3291,8 @@ msgid ""
 "\n"
 "Adds the ability to set workspace templates on products.\n"
 msgstr ""
+"\n"
+"품목에 워크스페이스 서식을 추가하는 기능을 추가합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_voip_crm
@@ -3291,6 +3370,10 @@ msgid ""
 "=====================================================\n"
 "    "
 msgstr ""
+"\n"
+"내부 사용자의 모듈 설치 요청을 허용합니다\n"
+"=====================================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_wishlist
@@ -3310,6 +3393,9 @@ msgid ""
 "Allow the user to select if he wants to receive email notifications when a product of his wishlist gets back in stock.\n"
 "    "
 msgstr ""
+"\n"
+"관심상품 목록에 있는 품목이 재입고될 경우 이메일로 알림을 수신할지 여부를 사용자가 선택할 수 있습니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_crm
@@ -3319,6 +3405,10 @@ msgid ""
 "-----------------------------------------------------------------------\n"
 "\n"
 msgstr ""
+"\n"
+"웹사이트 상에서 예약한 약속 일정에서 영업제안을 생성하는 것을 허용합니다\n"
+"-----------------------------------------------------------------------\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -3361,6 +3451,8 @@ msgid ""
 "\n"
 "Allows customers to pay for their orders at a shop, instead of paying online.\n"
 msgstr ""
+"\n"
+"고객이 온라인 결제 대산 매장에서 현장 결제를 할 수 있도록 허용합니다.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase
@@ -3382,6 +3474,9 @@ msgid ""
 "Allows to compute accurate margin for Service sales.\n"
 "======================================================\n"
 msgstr ""
+"\n"
+"서비스 영업 관련 정확한 마진을 계산할 수 있도록 합니다.\n"
+"======================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project
@@ -3997,6 +4092,53 @@ msgid ""
 "    encode in in the payroll Settings, with the .pem file and the related password, if any.\n"
 "    "
 msgstr ""
+"\n"
+"벨기에 급여 업무 규칙.\n"
+"======================\n"
+"\n"
+"    * 직원 세부 정보\n"
+"    * 직원 계약서\n"
+"    * 여권 기준 계약서\n"
+"    * 수당/공제\n"
+"    * 기본/총/순 급여 구성 허용\n"
+"    * 직원 급여 명세서\n"
+"    * 월간 급여 대장\n"
+"    * 휴가 관리 항목과의 통합\n"
+"    * 급여 Maj, ONSS, 원천징수액, 자녀수당 외\n"
+"\n"
+"자동 DmfA 서명\n"
+"========================\n"
+"\n"
+"전제 조건:\n"
+"--------------\n"
+"\n"
+"- Global Sign에서 제공하는 벨기에 정부가 승인한 디지털 인증서가 필요합니다.\n"
+"  참조: https://shop.globalsign.com/en/belgian-government-services\n"
+"\n"
+"- 기술 관련 업무 사용자용 파일을 생성하고 (.cer 파일) ONSS(.pem) 파일을 원격으로 \n"
+"  인증하는데 필요한 SSL 인증서 (.pfx 파일)을 생성합니다.\n"
+"   UNIX 시스템에서는 다음 명령을 사용할 수 있습니다 :\n"
+"\n"
+"  - PFX -> CRT : openssl pkcs12 -in my_cert.pfx -out my_cert.crt -nokeys -clcerts\n"
+"\n"
+"  - CRT -> CER : openssl x509 -inform pem -in my_cert.crt -outform der -out my_cert.cer\n"
+"\n"
+"  - PFX -> PEM : openssl pkcs12 -in my_cert.pfx -out my_cert.pem -nodes\n"
+"\n"
+"  - PFX -> KEY : openssl pkcs12 -in my_cert.pfx -out my_cert.key -nocerts\n"
+"\n"
+"- 사회 보장 REST 웹 서비스를 사용하려면 먼저 본인 또는 클라이언트용으로 계정을 생성하고\n"
+"  계생성하고 보안 항목을 구성해야 합니다. (전체 절차에 대한 내용은 다음에서 확인하실 수\n"
+"  있습니다 https://www.socialsecurity.be/site_fr/general/helpcentre/batch/sftp/previewstep.htm)\n"
+"\n"
+"  - 기술 업무 사용자 생성 및 SFTP 채널 활성화: 고객은 이제 액세스 관리 온라인 서비스에서 기술 사용자를 생성해야 합니다.\n"
+"    다음 절차를 확인하시기 바랍니다: https://www.socialsecurity.be/site_fr/general/helpcentre/rest/documents/pdf/webservices_creer_le_canal_FR.pdf\n"
+"\n"
+"  - SFTP 클라이언트 구성: https://www.socialsecurity.be/site_fr/general/helpcentre/batch/document/pdf/step6_sftp_F.pdf\n"
+"\n"
+"  - 절차가 완료되면 \"ONSS Expeditor 번호\" 를 확인하실 수 있습니다. 급여 설정에서\n"
+"    .pem 파일 및 관련 비밀번호 (해당되는 경우)를 인코딩할 수 있습니다.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_blackbox_be
@@ -4310,6 +4452,10 @@ msgid ""
 "Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
 "    "
 msgstr ""
+"\n"
+"칠레 회계 계정 과목표 및 세금 현지화.\n"
+"Plan contable chileno e impuestos de acuerdo a disposiciones vigentes.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_sale
@@ -4446,6 +4592,10 @@ msgid ""
 "or generate a ticket from a business inquiry\n"
 "        "
 msgstr ""
+"\n"
+"헬프데스크 파이프라인에 비즈니스 관련 문의가 실수로 배정된 경우 이를 변환하거나,\n"
+"비즈니스 관련 문의 내역에서 상담을 진행합니다.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_holidays_attendance

@@ -12112,8 +12112,8 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Valides 'Hoiatus' teavitab see kasutaja teatega, valides 'Blokeerimise "
-"teade' teavitab kasutajat ja peatab tegevuse. Teade tuleb kirjutada "
+"Valides 'Hoiatus' , saab kasutaja teavituse, valides 'Blokeerimise teade' "
+"saab kasutaja teavituse ja tegevus peatatakse. Teade tuleb kirjutada "
 "järgmisse lahtrisse."
 
 #. module: account
@@ -14384,6 +14384,14 @@ msgid "There was an error processing this page."
 msgstr "Lehe töötlemisel tekkis viga."
 
 #. module: account
+#: code:addons/account/models/ir_actions_report.py:0
+#, python-format
+msgid ""
+"There was an error when trying to add the banner to the original PDF.\n"
+"Please make sure the source file is valid."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "These taxes are set in any new product created."
 msgstr "Need maksud määratakse iga uue tootega."
@@ -15080,6 +15088,12 @@ msgstr "Tasumata müügiarved"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Unposted"
 msgstr "Sisestamata"
+
+#. module: account
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Unposted Entries"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

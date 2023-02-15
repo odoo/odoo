@@ -40,8 +40,8 @@ tour.register('website_event_booth_tour', {
     trigger: 'tr#order_total_taxes .oe_currency_value:containsExact(20.00)',
     run: function () {},
 }, {
-    content: 'Click confirm to continue',
-    trigger: 'a[role="button"] span:contains("Confirm")',
+    content: 'Click Process Checkout to continue',
+    trigger: 'a[role="button"] span:contains("Process Checkout")',
 }, {
     content: 'Check if the price is correct',
     trigger: 'tr#order_total_untaxed .oe_currency_value:containsExact(200.00)',

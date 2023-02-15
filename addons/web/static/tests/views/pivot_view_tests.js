@@ -279,6 +279,48 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("Pivot with integer row group by with 0 as header", async function (assert) {
+        serverData.models.partner.records[0].foo = 0;
+        serverData.models.partner.records[1].foo = 0;
+        serverData.models.partner.records[2].foo = 0;
+        serverData.models.partner.records[3].foo = 0;
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot string="Partners">
+                    <field name="foo" type="measure"/>
+                    <field name="foo" type="row"/>
+                </pivot>`,
+        });
+        const { rows } = pivot.model.getTable();
+        assert.strictEqual(rows.length, 2);
+        assert.strictEqual(rows[0].title, "Total");
+        assert.strictEqual(rows[1].title, 0);
+    });
+
+    QUnit.test("Pivot with integer col group by with 0 as header", async function (assert) {
+        serverData.models.partner.records[0].foo = 0;
+        serverData.models.partner.records[1].foo = 0;
+        serverData.models.partner.records[2].foo = 0;
+        serverData.models.partner.records[3].foo = 0;
+
+        const pivot = await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot string="Partners">
+                    <field name="foo" type="measure"/>
+                    <field name="foo" type="col"/>
+                </pivot>`,
+        });
+        const { headers } = pivot.model.getTable();
+        assert.strictEqual(headers[1][0].title, 0);
+    });
+
     QUnit.test(
         "pivot rendering with string attribute on non stored field",
         async function (assert) {
@@ -5524,6 +5566,31 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll("th")].slice(1, 3).map((el) => el.innerText),
                 ["Total", "Computed and not stored"]
             );
+        }
+    );
+
+    QUnit.test(
+        "no class 'o_view_sample_data' when real data are presented",
+        async function (assert) {
+            serverData.models.partner.fields.foo.store = true;
+            serverData.models.partner.records = [];
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <pivot sample="1">
+                        <field name="product_id" type="row"/>
+                    </pivot>
+                `,
+            });
+
+            assert.containsOnce(target, ".o_pivot_view .o_view_sample_data");
+            assert.containsOnce(target, ".o_pivot_view table");
+            await toggleMenu(target, "Measures");
+            await toggleMenuItem(target, "Foo");
+            assert.containsNone(target, ".o_pivot_view .o_view_sample_data");
+            assert.containsNone(target, ".o_pivot_view table");
         }
     );
 });

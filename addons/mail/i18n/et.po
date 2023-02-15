@@ -19,9 +19,9 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Anna, 2023
 # Leaanika Randmets, 2023
 # Jana Jaakson, 2023
-# Anna, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Anna, 2023\n"
+"Last-Translator: Jana Jaakson, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -220,7 +220,7 @@ msgstr "%s kirjutab..."
 #: code:addons/mail/models/mail_channel_member.py:0
 #, python-format
 msgid "%s started a live conference"
-msgstr "%s alustas otsekonverentsi"
+msgstr "%s alustas koosoleku"
 
 #. module: mail
 #. odoo-javascript
@@ -853,7 +853,7 @@ msgid ""
 "document and</span>"
 msgstr ""
 "<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
-"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Jälgijad dokumendil "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Dokumendi jälgijad "
 "ja </span>"
 
 #. module: mail
@@ -1299,7 +1299,7 @@ msgstr "Lisa kasutajaid"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Add your twilio credentials for ICE servers"
-msgstr "Lisage twilio andmed ICE serveri jaoks"
+msgstr "Lisa Twilio andmed ICE serveri jaoks"
 
 #. module: mail
 #. odoo-python
@@ -2425,6 +2425,7 @@ msgstr "Ettevõtted"
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2450,7 +2451,7 @@ msgstr "Seadistus"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your ICE server list for webRTC"
-msgstr "Seadistage oma ICE serverite loend webRTC jaoks"
+msgstr "Seadista ICE serverite loend webRTC jaoks"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -2460,7 +2461,7 @@ msgstr "Konfigureeri oma tegevustüübid"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your own email servers"
-msgstr "Konfigureeri omaenda e-posti serverid"
+msgstr "Konfigureeri kohandatud meiliserverid"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -3558,7 +3559,7 @@ msgstr "Tellitud jälgimise lubamine"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr ""
+msgstr "Luba Push-to-talk"
 
 #. module: mail
 #. odoo-javascript
@@ -5432,7 +5433,7 @@ msgstr "Lae rohkem"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Load template"
-msgstr "Lae mall"
+msgstr "Lae fail"
 
 #. module: mail
 #. odoo-javascript
@@ -5494,6 +5495,7 @@ msgstr "Lisa sisemise märkusena"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "Lisa märkus"
@@ -5993,7 +5995,7 @@ msgstr "Sõnumid võivad olla <b>tähistatud</b> tuletamaks meelde vaadata üle.
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "Messages marked as read will appear in the history."
-msgstr ""
+msgstr "Siia ilmuvad loetud sõnumid."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__internal
@@ -6284,7 +6286,7 @@ msgstr "Uued sõnumid"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "New messages appear here."
-msgstr "Siin ilmuvad uued sõnumid."
+msgstr "Siia ilmuvad uued sõnumid."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form

@@ -669,7 +669,8 @@ export function getTraversedNodes(editable, range = getDeepRange(editable)) {
             const selectedTable = closestElement(node, '.o_selected_table');
             if (selectedTable) {
                 for (const selectedTd of selectedTable.querySelectorAll('.o_selected_td')) {
-                    traversedNodes.add(selectedTd, ...descendants(selectedTd));
+                    traversedNodes.add(selectedTd);
+                    descendants(selectedTd).forEach(descendant => traversedNodes.add(descendant));
                 }
             } else {
                 traversedNodes.add(node);
@@ -692,7 +693,7 @@ export function getSelectedNodes(editable) {
         return [];
     }
     const range = sel.getRangeAt(0);
-    return getTraversedNodes(editable).flatMap(
+    return [...new Set(getTraversedNodes(editable).flatMap(
         node => {
             const td = closestElement(node, '.o_selected_td');
             if (td) {
@@ -703,7 +704,7 @@ export function getSelectedNodes(editable) {
                 return [];
             }
         },
-    );
+    ))];
 }
 
 /**
@@ -2573,4 +2574,15 @@ export function peek(arr) {
  */
 export function isMacOS() {
     return window.navigator.userAgent.includes('Mac');
+}
+
+/**
+ * Remove zero-width spaces from the provided node and its descendants.
+ *
+ * @param {Node} node
+ */
+export function cleanZWS(node) {
+    [node, ...descendants(node)]
+        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }
