@@ -50,3 +50,10 @@ class StockPickingType(models.Model):
         super()._compute_warehouse_id()
         if self.default_location_src_id.usage == 'supplier' and self.default_location_dest_id.usage == 'customer':
             self.warehouse_id = False
+
+    @api.depends('code')
+    def _compute_show_picking_type(self):
+        super()._compute_show_picking_type()
+        for record in self:
+            if record.code == "dropship":
+                record.show_picking_type = True
