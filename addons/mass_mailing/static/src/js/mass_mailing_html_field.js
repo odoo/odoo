@@ -43,8 +43,10 @@ export class MassMailingHtmlField extends HtmlField {
         });
 
         useEffect(() => {
-            const listener = () => {
-                this._lastClickInIframe = false;
+            const listener = (ev) => {
+                if (!ev.target.closest(".oe-powerbox-wrapper")) {
+                    this._lastClickInIframe = false;
+                }
             };
             document.addEventListener('mousedown', listener, true);
 
