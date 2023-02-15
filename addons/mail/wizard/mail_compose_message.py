@@ -877,7 +877,7 @@ class MailComposer(models.TransientModel):
 
         # langs, used currently only to propagate in comment mode for notification
         # layout translation
-        langs = self._render_field('lang', res_ids) if not email_mode else {}
+        langs = self._render_field('lang', res_ids)
         subjects = self._render_field('subject', res_ids, compute_lang=True)
         bodies = self._render_field(
             'body', res_ids, compute_lang=True,
@@ -979,7 +979,7 @@ class MailComposer(models.TransientModel):
             # recipients: transform partner_ids (field used in mail_message) into
             # recipient_ids, used by mail_mail
             if email_mode:
-                recipient_ids_all = mail_values.pop('partner_ids', []) + self.partner_ids.ids
+                recipient_ids_all = set(mail_values.pop('partner_ids', [])) | set(self.partner_ids.ids)
                 mail_values['recipient_ids'] = [(4, pid) for pid in recipient_ids_all]
 
             # when having no specific reply_to -> fetch rendered email_from
@@ -988,6 +988,42 @@ class MailComposer(models.TransientModel):
                 if not reply_to:
                     reply_to = mail_values.get('email_from', False)
                 mail_values['reply_to'] = reply_to
+
+            # body: render layout in email mode (comment mode is managed by the
+            # notification process, see @_notify_thread_by_email)
+            if email_mode and self.email_layout_xmlid and mail_values['recipient_ids']:
+                lang = langs[res_id]
+                recipient_ids = [command[1] for command in mail_values['recipient_ids']]
+                msg_vals = {
+                    'email_layout_xmlid': self.email_layout_xmlid,
+                    'model': self.model,
+                    'res_id': res_id,
+                }
+                message_inmem = self.env['mail.message'].new({
+                    'body': mail_values['body'],
+                })
+                for _lang, render_values, recipients_group_data in record._notify_get_classified_recipients_iterator(
+                    message_inmem,
+                    [{
+                        'active': True,
+                        'id': pid,
+                        'lang': lang,
+                        'notif': 'email',
+                        'share': True,
+                        'type': 'customer',
+                        'ushare': False,
+                    } for pid in recipient_ids],
+                    msg_vals=msg_vals,
+                    model_description=False,  # force dynamic computation
+                    force_email_lang=lang,
+                ):
+                    mail_body = record._notify_by_email_render_layout(
+                        message_inmem,
+                        recipients_group_data,
+                        msg_vals=msg_vals,
+                        render_values=render_values,
+                    )
+                    mail_values['body_html'] = mail_body
 
         return mail_values_all
 
