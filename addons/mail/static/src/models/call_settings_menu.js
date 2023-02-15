@@ -13,7 +13,7 @@ registerModel({
         async _created() {
             browser.addEventListener('keydown', this._onKeyDown);
             browser.addEventListener('keyup', this._onKeyUp);
-            this.update({ userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices() });
+            await this.enumerateDevices();
         },
         _willDelete() {
             browser.removeEventListener('keydown', this._onKeyDown);
@@ -97,6 +97,17 @@ registerModel({
             ev.preventDefault();
             this.userSetting.update({
                 isRegisteringKey: false,
+            });
+        },
+        async enumerateDevices() {
+            if (!this.messaging.browser.navigator.mediaDevices) {
+                // zxing-js: isMediaDevicesSuported or canEnumerateDevices is false.
+                console.warn('Media devices unobtainable. SSL might not be set up properly.');
+                return
+            }
+
+            this.update({
+                userDevices: await this.messaging.browser.navigator.mediaDevices.enumerateDevices()
             });
         },
     },
